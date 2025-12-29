@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Super LTC</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <div class="logo">
+        <span class="logo-icon">S</span>
+        <span class="logo-text">Super LTC</span>
+      </div>
+    </header>
+
+    <main class="main">
+      <div class="info-section">
+        <div class="info-row">
+          <span class="label">Facility</span>
+          <span class="value" id="facility">Loading...</span>
+        </div>
+        <div class="info-row">
+          <span class="label">Organization</span>
+          <span class="value" id="org">Loading...</span>
+        </div>
+        <div class="info-row">
+          <span class="label">User</span>
+          <span class="value" id="user">Demo User</span>
+        </div>
+      </div>
+
+      <div class="status-section" id="status-section">
+        <div class="status-indicator" id="status-indicator">
+          <span class="status-dot"></span>
+          <span class="status-text" id="status-text">Checking connection...</span>
+        </div>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <button class="login-btn" id="login-btn" disabled>
+        Login (Coming Soon)
+      </button>
+    </footer>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
