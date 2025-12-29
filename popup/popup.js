@@ -6,6 +6,77 @@ document.addEventListener('DOMContentLoaded', async () => {
   const userEl = document.getElementById('user');
   const statusDot = document.querySelector('.status-dot');
   const statusText = document.getElementById('status-text');
+  const loginBtn = document.getElementById('login-btn');
+  const logoutBtn = document.getElementById('logout-btn');
+
+  // Update UI based on auth state
+  function updateAuthUI(authenticated, user) {
+    if (authenticated && user) {
+      userEl.textContent = user.email || user.name || 'Logged in';
+      userEl.classList.remove('error');
+      loginBtn.style.display = 'none';
+      logoutBtn.style.display = 'block';
+    } else {
+      userEl.textContent = 'Not logged in';
+      userEl.classList.add('error');
+      loginBtn.style.display = 'block';
+      logoutBtn.style.display = 'none';
+    }
+  }
+
+  // Check auth state on load
+  try {
+    const authState = await chrome.runtime.sendMessage({ type: 'GET_AUTH_STATE' });
+    updateAuthUI(authState.authenticated, authState.user);
+  } catch (error) {
+    console.error('Error checking auth state:', error);
+    updateAuthUI(false, null);
+  }
+
+  // Login button click
+  loginBtn.addEventListener('click', async () => {
+    loginBtn.disabled = true;
+    loginBtn.textContent = 'Opening...';
+
+    try {
+      const response = await chrome.runtime.sendMessage({ type: 'LOGIN' });
+      if (response.success && response.authUrl) {
+        // Open auth URL in new tab
+        chrome.tabs.create({ url: response.authUrl });
+        // Close popup
+        window.close();
+      } else {
+        loginBtn.textContent = 'Login failed';
+        setTimeout(() => {
+          loginBtn.textContent = 'Login with Super LTC';
+          loginBtn.disabled = false;
+        }, 2000);
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      loginBtn.textContent = 'Login failed';
+      setTimeout(() => {
+        loginBtn.textContent = 'Login with Super LTC';
+        loginBtn.disabled = false;
+      }, 2000);
+    }
+  });
+
+  // Logout button click
+  logoutBtn.addEventListener('click', async () => {
+    logoutBtn.disabled = true;
+    logoutBtn.textContent = 'Logging out...';
+
+    try {
+      await chrome.runtime.sendMessage({ type: 'LOGOUT' });
+      updateAuthUI(false, null);
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
+
+    logoutBtn.disabled = false;
+    logoutBtn.textContent = 'Logout';
+  });
 
   // Check if we're on a PCC page
   const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
@@ -58,7 +129,4 @@ document.addEventListener('DOMContentLoaded', async () => {
     statusDot.classList.add('disconnected');
     statusText.textContent = 'Content script not loaded';
   }
-
-  // Placeholder user (will be replaced with auth)
-  userEl.textContent = 'Demo User';
 });

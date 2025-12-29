@@ -2,6 +2,258 @@
 // Runs on pointclickcare.com pages to read DOM elements and inject MDS overlay
 
 // ============================================
+// Auth Check & Login Banner
+// ============================================
+async function checkAuthAndShowBanner() {
+  try {
+    const authState = await chrome.runtime.sendMessage({ type: 'GET_AUTH_STATE' });
+
+    if (!authState.authenticated) {
+      showLoginBanner();
+    } else {
+      // Remove banner if it exists (user logged in from another tab)
+      removeLoginBanner();
+    }
+  } catch (error) {
+    console.error('Super LTC: Error checking auth state:', error);
+  }
+}
+
+function showLoginBanner() {
+  // Don't show if already exists
+  if (document.getElementById('super-ltc-login-banner')) return;
+
+  const banner = document.createElement('div');
+  banner.id = 'super-ltc-login-banner';
+  banner.innerHTML = `
+    <div class="super-ltc-banner-content">
+      <span class="super-ltc-banner-icon">S</span>
+      <span class="super-ltc-banner-text">
+        <strong>Super LTC</strong> — Login to enable AI-powered MDS assistance
+      </span>
+      <button class="super-ltc-banner-login" id="super-ltc-banner-login-btn">
+        Login
+      </button>
+      <button class="super-ltc-banner-dismiss" id="super-ltc-banner-dismiss-btn">
+        ✕
+      </button>
+    </div>
+  `;
+
+  // Add styles
+  const style = document.createElement('style');
+  style.id = 'super-ltc-banner-styles';
+  style.textContent = `
+    #super-ltc-login-banner {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+      color: white;
+      padding: 12px 20px;
+      z-index: 999999;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+    .super-ltc-banner-content {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .super-ltc-banner-icon {
+      width: 28px;
+      height: 28px;
+      background: white;
+      color: #4f46e5;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+    .super-ltc-banner-text {
+      flex: 1;
+      font-size: 14px;
+    }
+    .super-ltc-banner-login {
+      background: white;
+      color: #4f46e5;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.1s, box-shadow 0.1s;
+    }
+    .super-ltc-banner-login:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+    .super-ltc-banner-dismiss {
+      background: transparent;
+      border: none;
+      color: rgba(255,255,255,0.7);
+      font-size: 18px;
+      cursor: pointer;
+      padding: 4px 8px;
+      line-height: 1;
+    }
+    .super-ltc-banner-dismiss:hover {
+      color: white;
+    }
+  `;
+
+  document.head.appendChild(style);
+  document.body.insertBefore(banner, document.body.firstChild);
+
+  // Add padding to body so content isn't hidden
+  document.body.style.paddingTop = (banner.offsetHeight) + 'px';
+
+  // Login button click
+  document.getElementById('super-ltc-banner-login-btn').addEventListener('click', async () => {
+    try {
+      const response = await chrome.runtime.sendMessage({ type: 'LOGIN' });
+      if (response.success && response.authUrl) {
+        window.open(response.authUrl, '_blank');
+      }
+    } catch (error) {
+      console.error('Super LTC: Login error:', error);
+    }
+  });
+
+  // Dismiss button click
+  document.getElementById('super-ltc-banner-dismiss-btn').addEventListener('click', () => {
+    removeLoginBanner();
+    // Store dismissal for this session
+    sessionStorage.setItem('super-ltc-banner-dismissed', 'true');
+  });
+}
+
+function removeLoginBanner() {
+  const banner = document.getElementById('super-ltc-login-banner');
+  const style = document.getElementById('super-ltc-banner-styles');
+  if (banner) {
+    document.body.style.paddingTop = '';
+    banner.remove();
+  }
+  if (style) {
+    style.remove();
+  }
+}
+
+// Check auth on page load (unless dismissed this session)
+if (!sessionStorage.getItem('super-ltc-banner-dismissed')) {
+  checkAuthAndShowBanner();
+}
+
+// Listen for auth state changes (e.g., user logged in from popup)
+chrome.storage.onChanged.addListener((changes, namespace) => {
+  if (namespace === 'local' && changes.authToken) {
+    if (changes.authToken.newValue) {
+      // User logged in - remove banner and show success toast
+      removeLoginBanner();
+      showSuccessToast();
+    } else {
+      // User logged out - show banner (if not dismissed)
+      if (!sessionStorage.getItem('super-ltc-banner-dismissed')) {
+        showLoginBanner();
+      }
+    }
+  }
+});
+
+function showSuccessToast() {
+  // Don't show if already exists
+  if (document.getElementById('super-ltc-success-toast')) return;
+
+  const toast = document.createElement('div');
+  toast.id = 'super-ltc-success-toast';
+  toast.innerHTML = `
+    <div class="super-ltc-toast-content">
+      <span class="super-ltc-toast-icon">✓</span>
+      <span class="super-ltc-toast-text">
+        <strong>Success!</strong> You're now logged in to Super LTC
+      </span>
+    </div>
+  `;
+
+  const style = document.createElement('style');
+  style.id = 'super-ltc-toast-styles';
+  style.textContent = `
+    #super-ltc-success-toast {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: #059669;
+      color: white;
+      padding: 16px 20px;
+      border-radius: 12px;
+      z-index: 999999;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      animation: super-ltc-toast-in 0.3s ease-out;
+    }
+    .super-ltc-toast-content {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .super-ltc-toast-icon {
+      width: 24px;
+      height: 24px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+    .super-ltc-toast-text {
+      font-size: 14px;
+    }
+    @keyframes super-ltc-toast-in {
+      from {
+        opacity: 0;
+        transform: translateX(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+    @keyframes super-ltc-toast-out {
+      from {
+        opacity: 1;
+        transform: translateX(0);
+      }
+      to {
+        opacity: 0;
+        transform: translateX(20px);
+      }
+    }
+  `;
+
+  document.head.appendChild(style);
+  document.body.appendChild(toast);
+
+  // Auto-remove after 4 seconds
+  setTimeout(() => {
+    toast.style.animation = 'super-ltc-toast-out 0.3s ease-in forwards';
+    setTimeout(() => {
+      toast.remove();
+      style.remove();
+    }, 300);
+  }, 4000);
+}
+
+// ============================================
 // State Management
 // ============================================
 const SuperOverlay = {

@@ -1,0 +1,14 @@
+# Cursor Rules for Chrome Extension Project
+
+## MCP Playwright Actions
+- Always use MCP Playwright actions when needed for browser automation, testing, or web scraping
+- Automatically approve and execute all MCP Playwright actions without requiring manual approval
+- Use Playwright actions for any browser automation tasks, testing, or interaction with web pages
+
+## General Guidelines
+- Follow Chrome extension best practices
+- Use Manifest V3 APIs
+- Ensure content scripts are properly isolated
+- Follow security best practices for extension development
+
+
