@@ -899,3 +899,298 @@
     right: 16px !important;
   }
 }
+
+/* ============================================
+   Section E - Distinct Dates
+   ============================================ */
+.super-dates-section {
+  margin-bottom: 16px;
+}
+
+.super-dates-section__label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--super-gray-500);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+}
+
+.super-dates-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.super-date-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  font-size: 11px;
+  font-weight: 500;
+  font-family: var(--super-font-mono);
+  background: var(--super-gray-100);
+  border: 1px solid var(--super-gray-300);
+  border-radius: var(--super-radius);
+  color: var(--super-gray-700);
+}
+
+/* ============================================
+   Section N - Medications List
+   ============================================ */
+.super-meds-section {
+  margin-bottom: 16px;
+}
+
+.super-meds-section__label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--super-gray-500);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+}
+
+.super-meds-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.super-med-item {
+  padding: 8px 10px;
+  background: var(--super-gray-50);
+  border: 1px solid var(--super-gray-200);
+  border-radius: var(--super-radius);
+}
+
+.super-med-item__name {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--super-gray-800);
+  margin-bottom: 4px;
+}
+
+.super-med-item__details {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 11px;
+  color: var(--super-gray-500);
+}
+
+.super-med-route,
+.super-med-type {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 6px;
+  font-size: 9px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  border-radius: var(--super-radius-sm);
+  background: var(--super-primary-light);
+  color: white;
+}
+
+.super-med-type {
+  background: #8b5cf6;
+}
+
+.super-med-admin {
+  color: var(--super-gray-600);
+  font-weight: 500;
+}
+
+/* ============================================
+   Section N - Medication Indications
+   ============================================ */
+.super-indications-section {
+  margin-bottom: 16px;
+}
+
+.super-indications-section__label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--super-gray-500);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+}
+
+.super-indications-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.super-indication-item {
+  padding: 8px 10px;
+  background: var(--super-gray-50);
+  border: 1px solid var(--super-gray-200);
+  border-radius: var(--super-radius);
+}
+
+.super-indication-item__name {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--super-gray-800);
+  margin-bottom: 4px;
+}
+
+.super-indication {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  font-size: 10px;
+  font-weight: 600;
+  border-radius: var(--super-radius-sm);
+}
+
+.super-indication--yes {
+  background: var(--super-match-bg);
+  color: #166534;
+  border: 1px solid var(--super-match-border);
+}
+
+.super-indication--no {
+  background: var(--super-mismatch-bg);
+  color: #991b1b;
+  border: 1px solid var(--super-mismatch-border);
+}
+
+.super-indication-item__rationale {
+  font-size: 11px;
+  line-height: 1.4;
+  color: var(--super-gray-500);
+  margin-top: 6px;
+}
+
+/* ============================================
+   Section N - Order Changes
+   ============================================ */
+.super-changes-section {
+  margin-bottom: 16px;
+}
+
+.super-changes-section__label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--super-gray-500);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+}
+
+.super-changes-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.super-change-item {
+  padding: 8px 10px;
+  background: var(--super-review-bg);
+  border: 1px solid var(--super-review-border);
+  border-radius: var(--super-radius);
+}
+
+.super-change-item__med {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--super-gray-800);
+  margin-bottom: 4px;
+}
+
+.super-change-item__detail {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 11px;
+  color: var(--super-gray-600);
+}
+
+.super-change-type {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 6px;
+  font-size: 9px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  border-radius: var(--super-radius-sm);
+  background: var(--super-review);
+  color: white;
+}
+
+.super-change-from::before {
+  content: 'From: ';
+  font-weight: 400;
+}
+
+.super-change-to::before {
+  content: 'To: ';
+  font-weight: 400;
+}
+
+.super-change-date {
+  font-size: 10px;
+  color: var(--super-gray-500);
+  margin-top: 4px;
+}
+
+/* ============================================
+   Section N - Drug Regimen Issues
+   ============================================ */
+.super-issues-section {
+  margin-bottom: 16px;
+}
+
+.super-issues-section__label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--super-gray-500);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+}
+
+.super-issues-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.super-issue-item {
+  padding: 8px 10px;
+  background: var(--super-mismatch-bg);
+  border: 1px solid var(--super-mismatch-border);
+  border-radius: var(--super-radius);
+}
+
+.super-issue-type {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 6px;
+  font-size: 9px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  border-radius: var(--super-radius-sm);
+  background: var(--super-mismatch);
+  color: white;
+  margin-bottom: 4px;
+}
+
+.super-issue-desc {
+  font-size: 12px;
+  color: var(--super-gray-700);
+  margin-top: 4px;
+}
+
+.super-issue-meds {
+  font-size: 11px;
+  color: var(--super-gray-500);
+  margin-top: 4px;
+  font-style: italic;
+}

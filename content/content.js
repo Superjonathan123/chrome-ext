@@ -565,6 +565,191 @@ function transformSectionI(results) {
   return { items };
 }
 
+/**
+ * Transform Section E API response to overlay format
+ * Section E - Behavior
+ * Path: run.results (e0100, e0200, e0300, etc.)
+ */
+function transformSectionE(results) {
+  const items = [];
+
+  // E0100: Potential Indicators of Psychosis (subItems A, B, Z)
+  if (results.e0100) {
+    Object.entries(results.e0100.subItems || {}).forEach(([subItem, data]) => {
+      items.push({
+        mdsItem: `E0100${subItem}`,
+        description: getSectionEDescription(`E0100${subItem}`),
+        columns: {
+          '': {
+            answer: data.answer,
+            confidence: data.confidence,
+            rationale: data.rationale,
+            evidence: data.evidence || []
+          }
+        }
+      });
+    });
+  }
+
+  // E0200: Behavioral Symptoms - Frequency (subItems A, B, C with frequencyCode)
+  if (results.e0200) {
+    Object.entries(results.e0200.subItems || {}).forEach(([subItem, data]) => {
+      items.push({
+        mdsItem: `E0200${subItem}`,
+        description: getSectionEDescription(`E0200${subItem}`),
+        columns: {
+          '': {
+            answer: String(data.frequencyCode),
+            confidence: data.confidence,
+            rationale: data.rationale,
+            evidence: data.evidence || [],
+            distinctDates: data.distinctDates
+          }
+        }
+      });
+    });
+  }
+
+  // E0300: Overall Presence of Behavioral Symptoms (derived)
+  if (results.e0300) {
+    items.push({
+      mdsItem: 'E0300',
+      description: getSectionEDescription('E0300'),
+      columns: {
+        '': {
+          answer: String(results.e0300.answer),
+          confidence: 'high',
+          rationale: results.e0300.rationale,
+          evidence: []
+        }
+      }
+    });
+  }
+
+  // E0500: Impact on Resident
+  if (results.e0500 && !results.e0500.skipped) {
+    items.push({
+      mdsItem: 'E0500',
+      description: getSectionEDescription('E0500'),
+      columns: {
+        '': {
+          answer: results.e0500.answer,
+          confidence: results.e0500.confidence,
+          rationale: results.e0500.rationale,
+          evidence: results.e0500.evidence || []
+        }
+      }
+    });
+  }
+
+  // E0600: Impact on Others
+  if (results.e0600 && !results.e0600.skipped) {
+    items.push({
+      mdsItem: 'E0600',
+      description: getSectionEDescription('E0600'),
+      columns: {
+        '': {
+          answer: results.e0600.answer,
+          confidence: results.e0600.confidence,
+          rationale: results.e0600.rationale,
+          evidence: results.e0600.evidence || []
+        }
+      }
+    });
+  }
+
+  // E0800: Rejection of Care (frequencyCode)
+  if (results.e0800) {
+    items.push({
+      mdsItem: 'E0800',
+      description: getSectionEDescription('E0800'),
+      columns: {
+        '': {
+          answer: String(results.e0800.frequencyCode),
+          confidence: results.e0800.confidence,
+          rationale: results.e0800.rationale,
+          evidence: results.e0800.evidence || [],
+          distinctDates: results.e0800.distinctDates
+        }
+      }
+    });
+  }
+
+  // E0900: Wandering (frequencyCode)
+  if (results.e0900) {
+    items.push({
+      mdsItem: 'E0900',
+      description: getSectionEDescription('E0900'),
+      columns: {
+        '': {
+          answer: String(results.e0900.frequencyCode),
+          confidence: results.e0900.confidence,
+          rationale: results.e0900.rationale,
+          evidence: results.e0900.evidence || [],
+          distinctDates: results.e0900.distinctDates
+        }
+      }
+    });
+  }
+
+  // E1000: Wandering Impact (subItems A, B)
+  if (results.e1000 && !results.e1000.skipped) {
+    Object.entries(results.e1000.subItems || {}).forEach(([subItem, data]) => {
+      items.push({
+        mdsItem: `E1000${subItem}`,
+        description: getSectionEDescription(`E1000${subItem}`),
+        columns: {
+          '': {
+            answer: data.answer,
+            confidence: data.confidence,
+            rationale: data.rationale,
+            evidence: data.evidence || []
+          }
+        }
+      });
+    });
+  }
+
+  // E1100: Change in Behavior Symptoms (changeCode, 90-day lookback)
+  if (results.e1100 && !results.e1100.skipped) {
+    items.push({
+      mdsItem: 'E1100',
+      description: getSectionEDescription('E1100'),
+      columns: {
+        '': {
+          answer: String(results.e1100.changeCode),
+          confidence: results.e1100.confidence,
+          rationale: results.e1100.rationale,
+          evidence: results.e1100.evidence || []
+        }
+      }
+    });
+  }
+
+  return { items };
+}
+
+// Helper: Section E MDS item descriptions
+function getSectionEDescription(mdsItem) {
+  const descriptions = {
+    'E0100A': 'Hallucinations',
+    'E0100B': 'Delusions',
+    'E0100Z': 'None of the above (Psychosis)',
+    'E0200A': 'Physical behavioral symptoms',
+    'E0200B': 'Verbal behavioral symptoms',
+    'E0200C': 'Other behavioral symptoms',
+    'E0300': 'Overall presence of behavioral symptoms',
+    'E0500': 'Impact on resident',
+    'E0600': 'Impact on others',
+    'E0800': 'Rejection of care',
+    'E0900': 'Wandering',
+    'E1000A': 'Wandering - places at risk',
+    'E1000B': 'Wandering - intrudes on others',
+    'E1100': 'Change in behavior symptoms'
+  };
+  return descriptions[mdsItem] || mdsItem;
+}
+
 // Helper: Section I MDS item descriptions
 function getSectionIDescription(mdsItem) {
   const descriptions = {
@@ -632,6 +817,252 @@ function getSectionMDescription(mdsItem) {
 }
 
 /**
+ * Transform Section N API response to overlay format
+ * Section N - Medications
+ * Path: run.results (n0300, n0350a, n0350b, n0415, n0450, n2001, n2003, n2005)
+ */
+function transformSectionN(results) {
+  const items = [];
+
+  // N0300: Number of days injections received (NUMERIC - day count 0-7)
+  if (results.n0300) {
+    items.push({
+      mdsItem: 'N0300',
+      description: getSectionNDescription('N0300'),
+      columns: {
+        '': {
+          answer: String(results.n0300.answer),
+          confidence: results.n0300.confidence,
+          rationale: results.n0300.rationale,
+          evidence: results.n0300.evidence || [],
+          distinctDays: results.n0300.distinctDays,
+          injections: results.n0300.injections,
+          isNumeric: true
+        }
+      }
+    });
+  }
+
+  // N0350A: Insulin injections - days received (NUMERIC - day count 0-7)
+  if (results.n0350a) {
+    items.push({
+      mdsItem: 'N0350A',
+      description: getSectionNDescription('N0350A'),
+      columns: {
+        '': {
+          answer: String(results.n0350a.answer),
+          confidence: results.n0350a.confidence,
+          rationale: results.n0350a.rationale,
+          evidence: results.n0350a.evidence || [],
+          distinctDays: results.n0350a.distinctDays,
+          insulinInjections: results.n0350a.insulinInjections,
+          isNumeric: true
+        }
+      }
+    });
+  }
+
+  // N0350B: Insulin order changes (NUMERIC - day count 0-7)
+  if (results.n0350b) {
+    items.push({
+      mdsItem: 'N0350B',
+      description: getSectionNDescription('N0350B'),
+      columns: {
+        '': {
+          answer: String(results.n0350b.answer),
+          confidence: results.n0350b.confidence,
+          rationale: results.n0350b.rationale,
+          evidence: results.n0350b.evidence || [],
+          distinctDays: results.n0350b.distinctDays,
+          orderChanges: results.n0350b.orderChanges,
+          isNumeric: true
+        }
+      }
+    });
+  }
+
+  // N0415: High-Risk Drug Classes (A-K, Z with columns 1 and 2)
+  if (results.n0415) {
+    Object.entries(results.n0415).forEach(([drugClass, data]) => {
+      if (!data.result) return;
+
+      const col1 = data.result.column1;
+      const col2 = data.result.column2;
+
+      // Column 1: Was the medication taken?
+      if (col1) {
+        items.push({
+          mdsItem: `N0415${drugClass}`,
+          description: `${data.description || getSectionNDescription(`N0415${drugClass}`)}`,
+          columns: {
+            '1': {
+              answer: col1.answer,
+              confidence: col1.confidence,
+              rationale: col1.rationale,
+              evidence: [],
+              medicationsTaken: col1.medicationsTaken
+            }
+          }
+        });
+      }
+
+      // Column 2: Documented indication? (only if col1 is yes)
+      if (col2 && col1?.answer === 'yes') {
+        items.push({
+          mdsItem: `N0415${drugClass}`,
+          description: `${data.description || getSectionNDescription(`N0415${drugClass}`)} - Indication`,
+          columns: {
+            '2': {
+              answer: col2.answer,
+              confidence: col2.confidence,
+              rationale: col2.rationale,
+              evidence: [],
+              medicationsWithIndication: col2.medicationsWithIndication
+            }
+          }
+        });
+      }
+    });
+  }
+
+  // N0450: Antipsychotic Medication Review
+  if (results.n0450) {
+    // N0450A: Was antipsychotic received?
+    if (results.n0450.n0450a) {
+      items.push({
+        mdsItem: 'N0450A',
+        description: getSectionNDescription('N0450A'),
+        columns: {
+          '': {
+            answer: String(results.n0450.n0450a.answer),
+            confidence: results.n0450.n0450a.confidence,
+            rationale: results.n0450.n0450a.rationale,
+            evidence: results.n0450.n0450a.evidence || [],
+            routineMedications: results.n0450.n0450a.routineMedications,
+            prnMedications: results.n0450.n0450a.prnMedications
+          }
+        }
+      });
+    }
+
+    // N0450B: GDR attempted?
+    if (results.n0450.n0450b) {
+      items.push({
+        mdsItem: 'N0450B',
+        description: getSectionNDescription('N0450B'),
+        columns: {
+          '': {
+            answer: String(results.n0450.n0450b.answer),
+            confidence: results.n0450.n0450b.confidence,
+            rationale: results.n0450.n0450b.rationale,
+            evidence: results.n0450.n0450b.evidence || [],
+            gdrDate: results.n0450.n0450b.gdrDate
+          }
+        }
+      });
+    }
+
+    // N0450C: Date of last GDR attempt
+    if (results.n0450.n0450c) {
+      items.push({
+        mdsItem: 'N0450C',
+        description: getSectionNDescription('N0450C'),
+        columns: {
+          '': {
+            answer: results.n0450.n0450c,
+            confidence: 'high',
+            rationale: `Last GDR attempt: ${results.n0450.n0450c}`,
+            evidence: []
+          }
+        }
+      });
+    }
+  }
+
+  // N2001: Drug Regimen Review (5-Day PPS only)
+  if (results.n2001) {
+    items.push({
+      mdsItem: 'N2001',
+      description: getSectionNDescription('N2001'),
+      columns: {
+        '': {
+          answer: String(results.n2001.answer),
+          confidence: results.n2001.confidence,
+          rationale: results.n2001.rationale,
+          evidence: results.n2001.evidence || [],
+          issuesFound: results.n2001.issuesFound
+        }
+      }
+    });
+  }
+
+  // N2003: Medication Follow-up (only if N2001 = 1)
+  if (results.n2003) {
+    items.push({
+      mdsItem: 'N2003',
+      description: getSectionNDescription('N2003'),
+      columns: {
+        '': {
+          answer: String(results.n2003.answer),
+          confidence: results.n2003.confidence,
+          rationale: results.n2003.rationale,
+          evidence: results.n2003.evidence || [],
+          physicianContacted: results.n2003.physicianContacted,
+          contactDate: results.n2003.contactDate
+        }
+      }
+    });
+  }
+
+  // N2005: Medication Intervention (PPS Discharge only)
+  if (results.n2005) {
+    items.push({
+      mdsItem: 'N2005',
+      description: getSectionNDescription('N2005'),
+      columns: {
+        '': {
+          answer: String(results.n2005.answer),
+          confidence: results.n2005.confidence,
+          rationale: results.n2005.rationale,
+          evidence: results.n2005.evidence || [],
+          issueEvents: results.n2005.issueEvents
+        }
+      }
+    });
+  }
+
+  return { items };
+}
+
+// Helper: Section N MDS item descriptions
+function getSectionNDescription(mdsItem) {
+  const descriptions = {
+    'N0300': 'Number of days injections received',
+    'N0350A': 'Insulin injections - days received',
+    'N0350B': 'Insulin - orders changed',
+    'N0415A': 'Antipsychotic',
+    'N0415B': 'Antianxiety',
+    'N0415C': 'Antidepressant',
+    'N0415D': 'Hypnotic',
+    'N0415E': 'Anticoagulant',
+    'N0415F': 'Antibiotic',
+    'N0415G': 'Diuretic',
+    'N0415H': 'Opioid',
+    'N0415I': 'Antiplatelet',
+    'N0415J': 'Hypoglycemic',
+    'N0415K': 'Anticonvulsant',
+    'N0415Z': 'None of the above',
+    'N0450A': 'Antipsychotic medication received',
+    'N0450B': 'GDR attempted',
+    'N0450C': 'Date of last GDR attempt',
+    'N2001': 'Drug regimen review',
+    'N2003': 'Medication follow-up',
+    'N2005': 'Medication intervention'
+  };
+  return descriptions[mdsItem] || mdsItem;
+}
+
+/**
  * Transform API response based on section type
  */
 function transformAPIResponse(apiResponse, section) {
@@ -640,15 +1071,19 @@ function transformAPIResponse(apiResponse, section) {
 
   // Section-specific transformers
   switch (section) {
+    case 'E':
+      return transformSectionE(results);
     case 'I':
       return transformSectionI(results);
     case 'K':
       return transformSectionK(results);
     case 'M':
       return transformSectionM(results);
+    case 'N':
+      return transformSectionN(results);
     case 'O':
       return transformSectionO(results);
-    // Future: Add transformers for N, L, E, H, P, J
+    // Future: Add transformers for L, H, P, J
     default:
       console.warn(`Super LTC: No transformer for section ${section}`);
       return { items: [] };
@@ -833,10 +1268,17 @@ function normalizeAnswer(answer) {
 
 /**
  * Format answer for display (converts 0/1 to No/Yes for readability)
+ * @param {string|number} answer - The answer value
+ * @param {boolean} isNumeric - If true, display as number (don't convert 0/1 to No/Yes)
  */
-function formatAnswerForDisplay(answer) {
+function formatAnswerForDisplay(answer, isNumeric = false) {
   if (answer === null || answer === undefined) return '?';
   const str = String(answer).trim();
+
+  // For numeric fields (like day counts), display as-is
+  if (isNumeric) {
+    return str;
+  }
 
   // Convert 0/1 to No/Yes for better readability
   if (str === '0') return 'No';
@@ -926,7 +1368,7 @@ function injectBadge(questionEl, result) {
   badge.setAttribute('data-column', result.column);
 
   // Set status class and text
-  const answerText = formatAnswerForDisplay(result.aiAnswer.answer);
+  const answerText = formatAnswerForDisplay(result.aiAnswer.answer, result.aiAnswer.isNumeric);
 
   switch (result.status) {
     case 'match':
@@ -1020,6 +1462,19 @@ function buildPopoverHTML(result) {
   const icd10HTML = renderIcd10Suggestions(ai.suggestedIcd10);
   const statusBadgeHTML = renderStatusBadge(ai.status);
 
+  // Section E: Distinct dates for frequency items
+  const distinctDatesHTML = renderDistinctDates(ai.distinctDates);
+
+  // Section N: Medications
+  const injectionsHTML = renderMedications(ai.injections, 'Injections');
+  const insulinHTML = renderMedications(ai.insulinInjections, 'Insulin Injections');
+  const medicationsTakenHTML = renderMedications(ai.medicationsTaken, 'Medications Taken');
+  const routineMedsHTML = renderMedications(ai.routineMedications, 'Routine Medications');
+  const prnMedsHTML = renderMedications(ai.prnMedications, 'PRN Medications');
+  const indicationsHTML = renderMedicationIndications(ai.medicationsWithIndication);
+  const orderChangesHTML = renderOrderChanges(ai.orderChanges);
+  const issuesHTML = renderDrugRegimenIssues(ai.issuesFound);
+
   return `
     <div class="super-popover-header">
       <div>
@@ -1032,7 +1487,7 @@ function buildPopoverHTML(result) {
       <div class="super-answer-row">
         <div class="super-answer">
           <span class="super-answer__label">Super Answer:</span>
-          <span class="super-answer__value super-answer__value--${normalizeAnswer(ai.answer)}">${formatAnswerForDisplay(ai.answer)}</span>
+          <span class="super-answer__value super-answer__value--${normalizeAnswer(ai.answer)}">${formatAnswerForDisplay(ai.answer, ai.isNumeric)}</span>
         </div>
         <div class="super-confidence">
           <span class="super-confidence__label">Confidence:</span>
@@ -1044,7 +1499,7 @@ function buildPopoverHTML(result) {
       <div class="super-answer-row" style="padding-top: 0; border: none; margin-bottom: 8px;">
         <div class="super-answer">
           <span class="super-answer__label">PCC Answer:</span>
-          <span class="super-answer__value super-answer__value--${normalizeAnswer(result.pccAnswer)}">${formatAnswerForDisplay(result.pccAnswer)}</span>
+          <span class="super-answer__value super-answer__value--${normalizeAnswer(result.pccAnswer)}">${formatAnswerForDisplay(result.pccAnswer, ai.isNumeric)}</span>
         </div>
         <div style="font-size: 12px; color: ${result.status === 'match' ? 'var(--super-match)' : result.status === 'mismatch' ? 'var(--super-mismatch)' : 'var(--super-review)'}; font-weight: 600;">
           ${result.status === 'match' ? 'Match' : result.status === 'mismatch' ? 'Mismatch' : 'Needs Review'}
@@ -1059,6 +1514,15 @@ function buildPopoverHTML(result) {
 
       ${triggersHTML}
       ${icd10HTML}
+      ${distinctDatesHTML}
+      ${injectionsHTML}
+      ${insulinHTML}
+      ${medicationsTakenHTML}
+      ${routineMedsHTML}
+      ${prnMedsHTML}
+      ${indicationsHTML}
+      ${orderChangesHTML}
+      ${issuesHTML}
       ${datesHTML}
       ${evidenceHTML}
     </div>
@@ -1242,6 +1706,124 @@ function renderDates(aiAnswer) {
   return datesHTML;
 }
 
+// Helper: Render distinct dates for Section E frequency items
+function renderDistinctDates(distinctDates) {
+  if (!distinctDates || distinctDates.length === 0) return '';
+
+  return `
+    <div class="super-dates-section">
+      <div class="super-dates-section__label">Dates Observed (${distinctDates.length})</div>
+      <div class="super-dates-list">
+        ${distinctDates.map(date => `<span class="super-date-chip">${date}</span>`).join('')}
+      </div>
+    </div>
+  `;
+}
+
+// Helper: Render medications for Section N items
+function renderMedications(medications, label = 'Medications') {
+  if (!medications || medications.length === 0) return '';
+
+  const medItems = medications.map(med => {
+    const adminInfo = med.administrationCount
+      ? `<span class="super-med-admin">${med.administrationCount} admin${med.administrationCount > 1 ? 's' : ''}</span>`
+      : '';
+    const routeInfo = med.route ? `<span class="super-med-route">${med.route}</span>` : '';
+    const typeInfo = med.insulinType ? `<span class="super-med-type">${med.insulinType}</span>` : '';
+
+    return `
+      <div class="super-med-item">
+        <div class="super-med-item__name">${med.medicationName}</div>
+        <div class="super-med-item__details">
+          ${routeInfo}${typeInfo}${adminInfo}
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  return `
+    <div class="super-meds-section">
+      <div class="super-meds-section__label">${label} (${medications.length})</div>
+      <div class="super-meds-list">${medItems}</div>
+    </div>
+  `;
+}
+
+// Helper: Render medication indications for N0415 Column 2
+function renderMedicationIndications(medicationsWithIndication) {
+  if (!medicationsWithIndication || medicationsWithIndication.length === 0) return '';
+
+  const medItems = medicationsWithIndication.map(med => {
+    const indicationStatus = med.hasIndication
+      ? '<span class="super-indication super-indication--yes">Has Indication</span>'
+      : '<span class="super-indication super-indication--no">No Indication</span>';
+
+    return `
+      <div class="super-indication-item">
+        <div class="super-indication-item__name">${med.medicationName}</div>
+        ${indicationStatus}
+        ${med.rationale ? `<div class="super-indication-item__rationale">${med.rationale}</div>` : ''}
+      </div>
+    `;
+  }).join('');
+
+  return `
+    <div class="super-indications-section">
+      <div class="super-indications-section__label">Indication Status</div>
+      <div class="super-indications-list">${medItems}</div>
+    </div>
+  `;
+}
+
+// Helper: Render order changes for N0350B
+function renderOrderChanges(orderChanges) {
+  if (!orderChanges || orderChanges.length === 0) return '';
+
+  const changeItems = orderChanges.map(change => {
+    return `
+      <div class="super-change-item">
+        <div class="super-change-item__med">${change.medicationName}</div>
+        <div class="super-change-item__detail">
+          <span class="super-change-type">${change.changeType}</span>
+          ${change.previousValue ? `<span class="super-change-from">${change.previousValue}</span>` : ''}
+          ${change.newValue ? `<span class="super-change-to">${change.newValue}</span>` : ''}
+        </div>
+        ${change.changeDate ? `<div class="super-change-date">${change.changeDate}</div>` : ''}
+      </div>
+    `;
+  }).join('');
+
+  return `
+    <div class="super-changes-section">
+      <div class="super-changes-section__label">Order Changes (${orderChanges.length})</div>
+      <div class="super-changes-list">${changeItems}</div>
+    </div>
+  `;
+}
+
+// Helper: Render drug regimen issues for N2001
+function renderDrugRegimenIssues(issuesFound) {
+  if (!issuesFound || issuesFound.length === 0) return '';
+
+  const issueItems = issuesFound.map(issue => {
+    const meds = issue.medications?.join(', ') || '';
+    return `
+      <div class="super-issue-item">
+        <span class="super-issue-type">${issue.issueType?.replace(/_/g, ' ')}</span>
+        <div class="super-issue-desc">${issue.description}</div>
+        ${meds ? `<div class="super-issue-meds">${meds}</div>` : ''}
+      </div>
+    `;
+  }).join('');
+
+  return `
+    <div class="super-issues-section">
+      <div class="super-issues-section__label">Issues Found (${issuesFound.length})</div>
+      <div class="super-issues-list">${issueItems}</div>
+    </div>
+  `;
+}
+
 function positionPopover(popover, anchorEl) {
   const anchorRect = anchorEl.getBoundingClientRect();
   const popoverRect = popover.getBoundingClientRect();
@@ -1357,8 +1939,8 @@ function buildPanelItemHTML(result) {
     ? 'super-panel-item__icon--mismatch'
     : 'super-panel-item__icon--review';
   const icon = result.status === 'mismatch' ? '&#10007;' : '&#9888;';
-  const aiAnswer = formatAnswerForDisplay(result.aiAnswer.answer);
-  const pccAnswer = formatAnswerForDisplay(result.pccAnswer);
+  const aiAnswer = formatAnswerForDisplay(result.aiAnswer.answer, result.aiAnswer.isNumeric);
+  const pccAnswer = formatAnswerForDisplay(result.pccAnswer, result.aiAnswer.isNumeric);
 
   return `
     <div class="super-panel-item" data-element-id="${result.elementId}">
