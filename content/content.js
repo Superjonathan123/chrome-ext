@@ -287,9 +287,378 @@ function getFacilityInfo() {
 }
 
 // ============================================
+// API Integration
+// ============================================
+
+/**
+ * Extract MDS page parameters from URL
+ * URL format: /mds3/section.xhtml?ESOLassessid=4767518&sectioncode=O
+ */
+function getMDSPageParams() {
+  const url = new URL(window.location.href);
+  return {
+    assessmentId: url.searchParams.get('ESOLassessid'),
+    section: url.searchParams.get('sectioncode')
+  };
+}
+
+/**
+ * Gather all parameters needed for API call
+ */
+async function getAPIParams() {
+  const { assessmentId, section } = getMDSPageParams();
+
+  // Get org from background (cookie)
+  const orgResponse = await chrome.runtime.sendMessage({ type: 'GET_ORG' });
+  const orgSlug = orgResponse?.org;
+
+  // Get facility from DOM
+  const facilityInfo = getFacilityInfo();
+  const facilityName = facilityInfo?.facility;
+
+  return { assessmentId, section, orgSlug, facilityName };
+}
+
+/**
+ * Fetch section data from API via background script
+ */
+async function fetchSectionData(params) {
+  const { assessmentId, section, orgSlug, facilityName } = params;
+
+  const endpoint = `/api/extension/mds/sections/${section}?` +
+    `externalAssessmentId=${assessmentId}` +
+    `&facilityName=${encodeURIComponent(facilityName)}` +
+    `&orgSlug=${orgSlug}`;
+
+  const response = await chrome.runtime.sendMessage({
+    type: 'API_REQUEST',
+    endpoint
+  });
+
+  if (!response.success) {
+    throw new Error(response.error);
+  }
+
+  return response.data;
+}
+
+/**
+ * Transform Section O API response to overlay format
+ */
+function transformSectionO(results) {
+  if (!results.items) {
+    return { items: [] };
+  }
+
+  return {
+    items: results.items.map(item => ({
+      mdsItem: item.mdsItem,
+      description: item.description,
+      columns: item.columns
+    }))
+  };
+}
+
+/**
+ * Transform Section K API response to overlay format
+ * K has individual properties (k0100, k0200, etc.) instead of items array
+ */
+function transformSectionK(results) {
+  const items = [];
+
+  // K0100: Swallowing Disorder (subItems A-D, Z)
+  // Note: Use empty string as column key so element lookup is K0100A_wrapper, not K0100AA_wrapper
+  if (results.k0100) {
+    const k0100 = results.k0100;
+    // Each subItem becomes a separate overlay item
+    Object.entries(k0100.subItems || {}).forEach(([subItem, data]) => {
+      items.push({
+        mdsItem: `K0100${subItem}`,
+        description: getK0100Description(subItem),
+        columns: {
+          '': {
+            answer: data.answer,
+            confidence: data.confidence,
+            rationale: data.rationale,
+            evidence: data.evidence || []
+          }
+        }
+      });
+    });
+  }
+
+  // K0200: Height and Weight (special - numeric values)
+  // Note: Use empty string as column key so element lookup is K0200A_wrapper, not K0200AA_wrapper
+  if (results.k0200) {
+    const k0200 = results.k0200;
+    // Height
+    if (k0200.heightInInches !== null) {
+      items.push({
+        mdsItem: 'K0200A',
+        description: 'Height (in inches)',
+        columns: {
+          '': {
+            answer: String(k0200.heightRounded || k0200.heightInInches),
+            confidence: 'high',
+            rationale: `Height: ${k0200.heightInInches} inches`,
+            evidence: k0200.heightEvidence ? [k0200.heightEvidence] : []
+          }
+        }
+      });
+    }
+    // Weight
+    if (k0200.weightInPounds !== null) {
+      items.push({
+        mdsItem: 'K0200B',
+        description: 'Weight (in pounds)',
+        columns: {
+          '': {
+            answer: String(k0200.weightRounded || k0200.weightInPounds),
+            confidence: 'high',
+            rationale: `Weight: ${k0200.weightInPounds} pounds`,
+            evidence: k0200.weightEvidence ? [k0200.weightEvidence] : []
+          }
+        }
+      });
+    }
+  }
+
+  // K0300: Weight Loss
+  // Note: Use empty string as column key so element lookup is K0300_wrapper
+  if (results.k0300) {
+    items.push({
+      mdsItem: 'K0300',
+      description: 'Weight Loss',
+      columns: {
+        '': {
+          answer: results.k0300.answer,
+          confidence: results.k0300.confidence,
+          rationale: results.k0300.rationale,
+          evidence: results.k0300.evidence ? [results.k0300.evidence] : []
+        }
+      }
+    });
+  }
+
+  // K0310: Weight Gain (not on IPA)
+  // Note: Use empty string as column key so element lookup is K0310_wrapper
+  if (results.k0310) {
+    items.push({
+      mdsItem: 'K0310',
+      description: 'Weight Gain',
+      columns: {
+        '': {
+          answer: results.k0310.answer,
+          confidence: results.k0310.confidence,
+          rationale: results.k0310.rationale,
+          evidence: results.k0310.evidence ? [results.k0310.evidence] : []
+        }
+      }
+    });
+  }
+
+  // K0520: Nutritional Approaches (items A-D, Z with columns 1-4)
+  if (results.k0520) {
+    Object.entries(results.k0520.items || {}).forEach(([itemKey, itemData]) => {
+      // Each K0520 item has columns 1, 2, 3, 4
+      const columns = {};
+      Object.entries(itemData.columns || {}).forEach(([colNum, colData]) => {
+        // Map column numbers to letters for consistency (1->A, 2->B, etc.)
+        // Or keep as numbers - let's keep as numbers since that's how K0520 works
+        columns[colNum] = {
+          answer: colData.answer,
+          confidence: colData.confidence,
+          rationale: colData.rationale,
+          evidence: colData.evidence || []
+        };
+      });
+
+      items.push({
+        mdsItem: `K0520${itemKey}`,
+        description: getK0520Description(itemKey),
+        columns: columns
+      });
+    });
+  }
+
+  // K0710: Percent Intake (only if triggered)
+  if (results.k0710 && results.k0710.triggered) {
+    // K0710 has columns 2 and 3, each with A (percent) and B (fluid intake)
+    Object.entries(results.k0710.columns || {}).forEach(([colNum, colData]) => {
+      if (colData.A) {
+        items.push({
+          mdsItem: `K0710A`,
+          description: `Percent Intake (Column ${colNum})`,
+          columns: {
+            [colNum]: {
+              answer: String(colData.A.percent),
+              confidence: colData.A.confidence,
+              rationale: colData.A.rationale,
+              evidence: []
+            }
+          }
+        });
+      }
+    });
+  }
+
+  return { items };
+}
+
+// Helper: K0100 sub-item descriptions
+function getK0100Description(subItem) {
+  const descriptions = {
+    A: 'Loss of liquids/solids from mouth',
+    B: 'Holding food in mouth/cheeks',
+    C: 'Coughing/choking during meals',
+    D: 'Complaints of difficulty swallowing',
+    Z: 'None of the above'
+  };
+  return descriptions[subItem] || `Swallowing (${subItem})`;
+}
+
+// Helper: K0520 item descriptions
+function getK0520Description(itemKey) {
+  const descriptions = {
+    A: 'Parenteral/IV Feeding',
+    B: 'Feeding Tube',
+    C: 'Mechanically Altered Diet',
+    D: 'Therapeutic Diet',
+    Z: 'None of the Above'
+  };
+  return descriptions[itemKey] || `Nutritional Approach (${itemKey})`;
+}
+
+/**
+ * Transform Section I API response to overlay format
+ * Section I - Active Diagnoses
+ * Path: run.results.sectionI.items
+ */
+function transformSectionI(results) {
+  const items = [];
+  const sectionIData = results.sectionI?.items || {};
+
+  Object.entries(sectionIData).forEach(([mdsItem, data]) => {
+    // Skip items with no recommendation (dont_code with no evidence)
+    // But include items that need coding or physician query
+    if (data.status === 'dont_code' && data.confidence !== 'low') {
+      // Still include dont_code items so we can show mismatches
+    }
+
+    items.push({
+      mdsItem: mdsItem,
+      description: getSectionIDescription(mdsItem),
+      columns: {
+        '': {
+          answer: data.answer,
+          confidence: data.confidence || 'medium',
+          rationale: data.rationale || '',
+          evidence: data.evidence || [],
+          status: data.status, // code, needs_physician_query, dont_code
+          triggers: data.triggers, // for needs_physician_query items
+          suggestedIcd10: data.suggestedIcd10
+        }
+      }
+    });
+  });
+
+  return { items };
+}
+
+// Helper: Section I MDS item descriptions
+function getSectionIDescription(mdsItem) {
+  const descriptions = {
+    'I2100': 'Septicemia',
+    'I2500': 'Wound Infection',
+    'I2900': 'Diabetes Mellitus',
+    'I5600': 'Malnutrition',
+    'I1100': 'Cirrhosis',
+    'I1700': 'MDRO',
+    'I2000': 'Pneumonia',
+    'I4300': 'Aphasia',
+    'I6200': 'Asthma/COPD',
+    'I6300': 'Respiratory Failure'
+  };
+  return descriptions[mdsItem] || mdsItem;
+}
+
+/**
+ * Transform Section M API response to overlay format
+ * Section M - Skin Conditions
+ * Path: run.results.comparisons (flat at root, not wrapped)
+ */
+function transformSectionM(results) {
+  const items = [];
+  const comparisons = results.comparisons || [];
+
+  comparisons.forEach(comparison => {
+    items.push({
+      mdsItem: comparison.mdsItem,
+      description: comparison.mdsLabel || getSectionMDescription(comparison.mdsItem),
+      columns: {
+        '': {
+          answer: comparison.solvedValue,
+          confidence: comparison.status === 'match' ? 'high' : 'medium',
+          rationale: `AI recommends: ${comparison.solvedValue}, Currently coded: ${comparison.codedValue || 'not coded'}`,
+          evidence: [],
+          comparisonStatus: comparison.status // match, mismatch, not_coded, needs_review
+        }
+      }
+    });
+  });
+
+  return { items };
+}
+
+// Helper: Section M MDS item descriptions
+function getSectionMDescription(mdsItem) {
+  const descriptions = {
+    'M0100': 'Determination of Pressure Ulcer Risk',
+    'M0150': 'Risk of Pressure Ulcers',
+    'M0210A': 'Unhealed Pressure Ulcer Stage 2',
+    'M0210B': 'Unhealed Pressure Ulcer Stage 3',
+    'M0210C': 'Unhealed Pressure Ulcer Stage 4',
+    'M0300A': 'Stage 1 Pressure Ulcers',
+    'M0300B': 'Stage 2 Pressure Ulcers',
+    'M0300C': 'Stage 3 Pressure Ulcers',
+    'M0300D': 'Stage 4 Pressure Ulcers',
+    'M0300E': 'Unstageable - Deep Tissue',
+    'M0300F': 'Unstageable - Slough/Eschar',
+    'M0300G': 'Unstageable - Suspected Deep Tissue',
+    'M1030': 'Venous/Arterial Ulcers',
+    'M1040': 'Other Skin Conditions'
+  };
+  return descriptions[mdsItem] || mdsItem;
+}
+
+/**
+ * Transform API response based on section type
+ */
+function transformAPIResponse(apiResponse, section) {
+  const { run } = apiResponse;
+  const results = run.results;
+
+  // Section-specific transformers
+  switch (section) {
+    case 'I':
+      return transformSectionI(results);
+    case 'K':
+      return transformSectionK(results);
+    case 'M':
+      return transformSectionM(results);
+    case 'O':
+      return transformSectionO(results);
+    // Future: Add transformers for N, L, E, H, P, J
+    default:
+      console.warn(`Super LTC: No transformer for section ${section}`);
+      return { items: [] };
+  }
+}
+
+// ============================================
 // Initialization
 // ============================================
-function initSuperOverlay() {
+async function initSuperOverlay() {
   if (SuperOverlay.initialized) return;
 
   // Check if we're on an MDS section page
@@ -300,23 +669,54 @@ function initSuperOverlay() {
 
   console.log('Super LTC: MDS page detected, initializing overlay');
 
-  // Load dismissed items from storage
-  loadDismissedItems().then(() => {
-    // Get mock data (will be replaced with API call later)
-    const mockData = window.SUPER_MOCK_DATA;
-    if (!mockData || !mockData.items) {
-      console.log('Super LTC: No AI data available');
+  // Check auth first
+  const authState = await chrome.runtime.sendMessage({ type: 'GET_AUTH_STATE' });
+  if (!authState.authenticated) {
+    console.log('Super LTC: Not authenticated, skipping overlay');
+    return;
+  }
+
+  try {
+    // Gather API parameters
+    const params = await getAPIParams();
+    console.log('Super LTC: API params:', params);
+
+    // Validate required params
+    if (!params.assessmentId || !params.section) {
+      console.log('Super LTC: Missing URL params (assessmentId or section)');
       return;
     }
 
-    // Process each MDS item
-    processItems(mockData.items);
+    if (!params.orgSlug || !params.facilityName) {
+      console.log('Super LTC: Missing org or facility info');
+      return;
+    }
 
-    // Create summary panel
+    // Fetch from API
+    console.log('Super LTC: Fetching section data from API...');
+    const apiResponse = await fetchSectionData(params);
+    console.log('Super LTC: API response:', apiResponse);
+
+    // Transform response to overlay format
+    const data = transformAPIResponse(apiResponse, params.section);
+
+    if (!data.items || data.items.length === 0) {
+      console.log('Super LTC: No items in API response');
+      return;
+    }
+
+    // Load dismissed items and process
+    await loadDismissedItems();
+    processItems(data.items);
     createSummaryPanel();
 
     SuperOverlay.initialized = true;
-  });
+    console.log('Super LTC: Overlay initialized with', data.items.length, 'items');
+
+  } catch (error) {
+    console.error('Super LTC: Failed to fetch section data:', error);
+    // TODO: Show error state in UI
+  }
 }
 
 function isMDSPage() {
@@ -387,34 +787,63 @@ function processQuestion(questionEl, item, column, aiAnswer) {
 }
 
 function getPCCAnswer(questionEl) {
-  // Look for selected response
+  // Look for selected response - return raw data-value
   const selectedResponse = questionEl.querySelector('.responses a.selected');
   if (selectedResponse) {
-    const value = selectedResponse.getAttribute('data-value');
-    if (value === '1') return 'yes';
-    if (value === '0') return 'no';
-    if (value === '-') return 'dash';
+    return selectedResponse.getAttribute('data-value');
   }
 
   // Try to find from signed response area
   const signedResponse = questionEl.querySelector('.signed_response .responses a.selected');
   if (signedResponse) {
-    const value = signedResponse.getAttribute('data-value');
-    if (value === '1') return 'yes';
-    if (value === '0') return 'no';
-    if (value === '-') return 'dash';
+    return signedResponse.getAttribute('data-value');
   }
 
   // Check for locked response
   const lockedResponse = questionEl.querySelector('.locked_response .responses a.selected');
   if (lockedResponse) {
-    const value = lockedResponse.getAttribute('data-value');
-    if (value === '1') return 'yes';
-    if (value === '0') return 'no';
-    if (value === '-') return 'dash';
+    return lockedResponse.getAttribute('data-value');
+  }
+
+  // Check for numeric input (like K0200 height/weight)
+  const numericInput = questionEl.querySelector('.readonlyquestionvalue b');
+  if (numericInput) {
+    return numericInput.textContent?.trim();
   }
 
   return null;
+}
+
+/**
+ * Normalize answer to common format for comparison
+ * Converts yes/no to 1/0, handles needs_review, etc.
+ */
+function normalizeAnswer(answer) {
+  if (!answer) return null;
+  const lower = String(answer).toLowerCase().trim();
+
+  // Convert yes/no to 1/0
+  if (lower === 'yes') return '1';
+  if (lower === 'no') return '0';
+  if (lower === 'dash') return '-';
+  if (lower === 'needs_review') return null; // Treat as no answer for comparison
+
+  return lower;
+}
+
+/**
+ * Format answer for display (converts 0/1 to No/Yes for readability)
+ */
+function formatAnswerForDisplay(answer) {
+  if (answer === null || answer === undefined) return '?';
+  const str = String(answer).trim();
+
+  // Convert 0/1 to No/Yes for better readability
+  if (str === '0') return 'No';
+  if (str === '1') return 'Yes';
+  if (str === '-') return '-';
+
+  return str.toUpperCase();
 }
 
 function determineStatus(aiAnswer, pccAnswer) {
@@ -424,14 +853,50 @@ function determineStatus(aiAnswer, pccAnswer) {
     return 'dismissed';
   }
 
-  // Needs review if low/medium confidence
-  if (aiAnswer.confidence === 'low' || aiAnswer.confidence === 'medium') {
+  // Section I: Handle special status values (code, needs_physician_query, dont_code, needs_review)
+  if (aiAnswer.status === 'needs_physician_query' || aiAnswer.status === 'needs_review') {
     return 'review';
   }
 
-  // Compare answers
-  const aiValue = aiAnswer.answer?.toLowerCase();
-  const pccValue = pccAnswer?.toLowerCase();
+  // Section I: code/dont_code statuses are definitive - skip confidence check
+  const hasDefinitiveStatus = aiAnswer.status === 'code' || aiAnswer.status === 'dont_code';
+
+  // Section M: Use comparisonStatus from API if available
+  if (aiAnswer.comparisonStatus) {
+    switch (aiAnswer.comparisonStatus) {
+      case 'match':
+        return 'match';
+      case 'mismatch':
+        return 'mismatch';
+      case 'needs_review':
+      case 'not_coded':
+        return 'review';
+    }
+  }
+
+  // Needs review if low/medium confidence or needs_review answer
+  // BUT skip this check if we have a definitive status (code/dont_code)
+  if (!hasDefinitiveStatus) {
+    if (aiAnswer.confidence === 'low' || aiAnswer.confidence === 'medium') {
+      return 'review';
+    }
+
+    if (aiAnswer.answer?.toLowerCase() === 'needs_review') {
+      return 'review';
+    }
+  }
+
+  // Normalize both answers for comparison
+  // Use status field to derive answer for Section I items (code=Yes, dont_code=No)
+  let aiValue;
+  if (aiAnswer.status === 'dont_code') {
+    aiValue = '0'; // No
+  } else if (aiAnswer.status === 'code') {
+    aiValue = '1'; // Yes
+  } else {
+    aiValue = normalizeAnswer(aiAnswer.answer);
+  }
+  const pccValue = normalizeAnswer(pccAnswer);
 
   if (!pccValue) {
     return 'review'; // No PCC answer yet
@@ -461,7 +926,7 @@ function injectBadge(questionEl, result) {
   badge.setAttribute('data-column', result.column);
 
   // Set status class and text
-  const answerText = result.aiAnswer.answer?.toUpperCase() || '?';
+  const answerText = formatAnswerForDisplay(result.aiAnswer.answer);
 
   switch (result.status) {
     case 'match':
@@ -488,17 +953,34 @@ function injectBadge(questionEl, result) {
     showPopover(badge, result);
   });
 
-  // Find the best place to insert the badge
-  const responseArea = questionEl.querySelector('.question_content') ||
-                       questionEl.querySelector('.responses')?.parentElement;
+  // Find the best place to insert the badge based on question type
+  const questionType = questionEl.getAttribute('data-questiontype');
 
-  if (responseArea) {
-    const responsesUl = responseArea.querySelector('.responses');
-    if (responsesUl) {
-      responsesUl.style.display = 'inline-block';
-      responsesUl.parentElement.appendChild(badge);
+  if (questionType === 'rad') {
+    // For radio questions, place badge after the question label
+    const questionLabel = questionEl.querySelector('.question_label');
+    if (questionLabel) {
+      badge.style.display = 'inline-block';
+      badge.style.marginLeft = '12px';
+      badge.style.verticalAlign = 'middle';
+      questionLabel.appendChild(badge);
     } else {
-      responseArea.appendChild(badge);
+      // Fallback: append to question element
+      questionEl.appendChild(badge);
+    }
+  } else {
+    // For other question types (checkboxes, numeric), place after responses
+    const responseArea = questionEl.querySelector('.question_content') ||
+                         questionEl.querySelector('.responses')?.parentElement;
+
+    if (responseArea) {
+      const responsesUl = responseArea.querySelector('.responses');
+      if (responsesUl) {
+        responsesUl.style.display = 'inline-block';
+        responsesUl.parentElement.appendChild(badge);
+      } else {
+        responseArea.appendChild(badge);
+      }
     }
   }
 }
@@ -534,12 +1016,15 @@ function buildPopoverHTML(result) {
   const confidenceDots = renderConfidenceDots(ai.confidence);
   const evidenceHTML = renderEvidence(ai.evidence || []);
   const datesHTML = renderDates(ai);
+  const triggersHTML = renderTriggers(ai.triggers);
+  const icd10HTML = renderIcd10Suggestions(ai.suggestedIcd10);
+  const statusBadgeHTML = renderStatusBadge(ai.status);
 
   return `
     <div class="super-popover-header">
       <div>
         <div class="super-popover-header__title">${result.mdsItem} - ${result.description}</div>
-        <div class="super-popover-header__subtitle">Column ${result.column}</div>
+        <div class="super-popover-header__subtitle">Column ${result.column}${statusBadgeHTML}</div>
       </div>
       <button class="super-popover-close" aria-label="Close">&times;</button>
     </div>
@@ -547,7 +1032,7 @@ function buildPopoverHTML(result) {
       <div class="super-answer-row">
         <div class="super-answer">
           <span class="super-answer__label">Super Answer:</span>
-          <span class="super-answer__value super-answer__value--${ai.answer}">${ai.answer?.toUpperCase() || '?'}</span>
+          <span class="super-answer__value super-answer__value--${normalizeAnswer(ai.answer)}">${formatAnswerForDisplay(ai.answer)}</span>
         </div>
         <div class="super-confidence">
           <span class="super-confidence__label">Confidence:</span>
@@ -559,7 +1044,7 @@ function buildPopoverHTML(result) {
       <div class="super-answer-row" style="padding-top: 0; border: none; margin-bottom: 8px;">
         <div class="super-answer">
           <span class="super-answer__label">PCC Answer:</span>
-          <span class="super-answer__value super-answer__value--${result.pccAnswer}">${result.pccAnswer?.toUpperCase() || '?'}</span>
+          <span class="super-answer__value super-answer__value--${normalizeAnswer(result.pccAnswer)}">${formatAnswerForDisplay(result.pccAnswer)}</span>
         </div>
         <div style="font-size: 12px; color: ${result.status === 'match' ? 'var(--super-match)' : result.status === 'mismatch' ? 'var(--super-mismatch)' : 'var(--super-review)'}; font-weight: 600;">
           ${result.status === 'match' ? 'Match' : result.status === 'mismatch' ? 'Mismatch' : 'Needs Review'}
@@ -572,13 +1057,64 @@ function buildPopoverHTML(result) {
         <div class="super-rationale__text">${ai.rationale || 'No rationale provided.'}</div>
       </div>
 
+      ${triggersHTML}
+      ${icd10HTML}
       ${datesHTML}
-
       ${evidenceHTML}
     </div>
     <div class="super-popover-actions">
       <button class="super-btn super-btn--agree" data-action="agree">&#10003; Agree</button>
       <button class="super-btn super-btn--disagree" data-action="disagree">&#10007; Disagree</button>
+    </div>
+  `;
+}
+
+// Helper: Render status badge for Section I items
+function renderStatusBadge(status) {
+  if (!status) return '';
+
+  const badges = {
+    'code': '<span style="margin-left: 8px; background: #059669; color: white; padding: 2px 8px; border-radius: 4px; font-size: 11px;">Recommend Coding</span>',
+    'needs_physician_query': '<span style="margin-left: 8px; background: #d97706; color: white; padding: 2px 8px; border-radius: 4px; font-size: 11px;">Query Physician</span>',
+    'dont_code': '<span style="margin-left: 8px; background: #6b7280; color: white; padding: 2px 8px; border-radius: 4px; font-size: 11px;">No Evidence</span>'
+  };
+
+  return badges[status] || '';
+}
+
+// Helper: Render triggers for Section I needs_physician_query items
+function renderTriggers(triggers) {
+  if (!triggers || triggers.length === 0) return '';
+
+  const triggerItems = triggers.map(t => {
+    const operator = { lt: '<', gt: '>', lte: '≤', gte: '≥', eq: '=' }[t.operator] || t.operator;
+    return `
+      <div class="super-trigger-item">
+        <span class="super-trigger-item__type">${t.type?.toUpperCase() || 'LAB'}</span>
+        <span class="super-trigger-item__detail">${t.field}: ${t.actualValue} ${operator} ${t.threshold}</span>
+        ${t.metAt ? `<span class="super-trigger-item__date">${t.metAt}</span>` : ''}
+      </div>
+    `;
+  }).join('');
+
+  return `
+    <div class="super-triggers-section">
+      <div class="super-triggers-section__label">Triggers Found</div>
+      <div class="super-triggers-list">${triggerItems}</div>
+    </div>
+  `;
+}
+
+// Helper: Render ICD10 suggestions for Section I items
+function renderIcd10Suggestions(icd10Codes) {
+  if (!icd10Codes || icd10Codes.length === 0) return '';
+
+  return `
+    <div class="super-icd10-section">
+      <div class="super-icd10-section__label">Suggested ICD-10 Codes</div>
+      <div class="super-icd10-list">
+        ${icd10Codes.map(code => `<span class="super-icd10-code">${code}</span>`).join('')}
+      </div>
     </div>
   `;
 }
@@ -601,18 +1137,30 @@ function renderEvidence(evidence) {
   }
 
   const cards = evidence.map(ev => {
-    const typeClass = `super-evidence-card__type--${ev.sourceType}`;
-    const typeLabel = formatSourceType(ev.sourceType);
+    // Handle multiple evidence formats:
+    // - Section I documents: quoteText, displayName, rationale
+    // - Section I orders: orderDescription, displayName
+    // - Other sections: quote, sourceType
+    const quote = ev.quoteText || ev.orderDescription || ev.quote || '';
+    const sourceType = ev.sourceType || inferSourceType(ev.displayName, ev.evidenceId);
+    const typeClass = `super-evidence-card__type--${sourceType}`;
+    const typeLabel = ev.displayName || formatSourceType(sourceType);
+
+    // Skip if no quote text at all
+    if (!quote) return '';
 
     return `
       <div class="super-evidence-card">
         <div class="super-evidence-card__header">
           <span class="super-evidence-card__type ${typeClass}">${typeLabel}</span>
         </div>
-        <div class="super-evidence-card__quote">${ev.quote}</div>
+        <div class="super-evidence-card__quote">${quote}</div>
+        ${ev.rationale ? `<div class="super-evidence-card__rationale">${ev.rationale}</div>` : ''}
       </div>
     `;
-  }).join('');
+  }).filter(card => card).join('');
+
+  if (!cards) return '';
 
   return `
     <div class="super-evidence-section">
@@ -620,6 +1168,28 @@ function renderEvidence(evidence) {
       <div class="super-evidence-list">${cards}</div>
     </div>
   `;
+}
+
+// Helper: Infer source type from filename/evidenceId for Section I evidence
+function inferSourceType(displayName, evidenceId) {
+  // Check evidenceId first (e.g., "order-jc9js716uh70")
+  if (evidenceId) {
+    if (evidenceId.startsWith('order-')) return 'order';
+    if (evidenceId.startsWith('mar-')) return 'mar';
+    if (evidenceId.startsWith('lab-')) return 'lab-result';
+  }
+
+  if (!displayName) return 'document';
+  const lower = displayName.toLowerCase();
+  if (lower.includes('dc_summary') || lower.includes('discharge')) return 'progress-note';
+  if (lower.includes('lab')) return 'lab-result';
+  if (lower.includes('order')) return 'order';
+  if (lower.includes('mar')) return 'mar';
+  if (lower.includes('vital')) return 'vital-signs';
+  if (lower.includes('nursing')) return 'nursing-note';
+  if (lower.includes('history') || lower.includes('h&p') || lower.includes('physical')) return 'progress-note';
+  if (lower.includes('eval') || lower.includes('st ') || lower.includes('slp')) return 'progress-note';
+  return 'document';
 }
 
 function formatSourceType(type) {
@@ -787,8 +1357,8 @@ function buildPanelItemHTML(result) {
     ? 'super-panel-item__icon--mismatch'
     : 'super-panel-item__icon--review';
   const icon = result.status === 'mismatch' ? '&#10007;' : '&#9888;';
-  const aiAnswer = result.aiAnswer.answer?.toUpperCase() || '?';
-  const pccAnswer = result.pccAnswer?.toUpperCase() || '?';
+  const aiAnswer = formatAnswerForDisplay(result.aiAnswer.answer);
+  const pccAnswer = formatAnswerForDisplay(result.pccAnswer);
 
   return `
     <div class="super-panel-item" data-element-id="${result.elementId}">

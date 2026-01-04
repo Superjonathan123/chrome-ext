@@ -232,11 +232,13 @@
   text-transform: uppercase;
 }
 
-.super-answer__value--yes {
+.super-answer__value--yes,
+.super-answer__value--1 {
   color: var(--super-match);
 }
 
-.super-answer__value--no {
+.super-answer__value--no,
+.super-answer__value--0 {
   color: var(--super-mismatch);
 }
 
@@ -389,6 +391,15 @@
 
 .super-evidence-card__quote::after {
   content: '"';
+}
+
+.super-evidence-card__rationale {
+  font-size: 11px;
+  line-height: 1.4;
+  color: var(--super-gray-500);
+  margin-top: 6px;
+  padding-top: 6px;
+  border-top: 1px solid var(--super-gray-200);
 }
 
 /* Date Range */
@@ -778,6 +789,98 @@
   text-align: center;
   color: var(--super-gray-500);
   font-size: 13px;
+}
+
+/* ============================================
+   Section I - Triggers
+   ============================================ */
+.super-triggers-section {
+  margin-bottom: 16px;
+}
+
+.super-triggers-section__label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--super-gray-500);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+}
+
+.super-triggers-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.super-trigger-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  background: #fef3c7;
+  border: 1px solid #fcd34d;
+  border-radius: var(--super-radius);
+  font-size: 12px;
+}
+
+.super-trigger-item__type {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 6px;
+  font-size: 9px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-radius: var(--super-radius-sm);
+  background: #d97706;
+  color: white;
+}
+
+.super-trigger-item__detail {
+  flex: 1;
+  color: var(--super-gray-700);
+  font-weight: 500;
+}
+
+.super-trigger-item__date {
+  font-size: 11px;
+  color: var(--super-gray-500);
+}
+
+/* ============================================
+   Section I - ICD-10 Suggestions
+   ============================================ */
+.super-icd10-section {
+  margin-bottom: 16px;
+}
+
+.super-icd10-section__label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--super-gray-500);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+}
+
+.super-icd10-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.super-icd10-code {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  font-family: var(--super-font-mono);
+  background: var(--super-gray-100);
+  border: 1px solid var(--super-gray-300);
+  border-radius: var(--super-radius);
+  color: var(--super-gray-700);
 }
 
 /* ============================================
