@@ -132,7 +132,7 @@ function createChatPanel() {
         Super Assistant
       </div>
       <div class="super-chat-header__actions">
-        <button class="super-chat-header__btn" id="super-chat-clear" title="Clear chat">
+        <button class="super-chat-header__btn" id="super-chat-clear" title="Clear conversation">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <polyline points="3 6 5 6 21 6"/>
             <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
@@ -151,10 +151,10 @@ function createChatPanel() {
       <textarea
         class="super-chat-input"
         id="super-chat-input"
-        placeholder="Ask about this patient..."
+        placeholder="Ask me anything about this patient..."
         rows="1"
       ></textarea>
-      <button class="super-chat-send" id="super-chat-send" disabled>
+      <button class="super-chat-send" id="super-chat-send" disabled aria-label="Send message">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <line x1="22" y1="2" x2="11" y2="13"/>
           <polygon points="22 2 15 22 11 13 2 9 22 2"/>
@@ -203,11 +203,9 @@ function setupChatPanelListeners() {
     }
   });
 
-  // Clear chat
+  // Clear chat - no confirmation needed
   clearBtn.addEventListener('click', () => {
-    if (confirm('Clear chat history?')) {
-      clearChatSession();
-    }
+    clearChatSession();
   });
 
   // Close panel
@@ -243,9 +241,9 @@ function renderChatMessages() {
   if (SuperChat.messages.length === 0) {
     container.innerHTML = `
       <div class="super-chat-empty">
-        <div class="super-chat-empty__icon">&#128172;</div>
-        <div class="super-chat-empty__title">Ask me anything</div>
-        <div class="super-chat-empty__text">I can search this patient's medications, vitals, clinical notes, and more.</div>
+        <div class="super-chat-empty__icon">&#10024;</div>
+        <div class="super-chat-empty__title">Hi, I'm your AI assistant</div>
+        <div class="super-chat-empty__text">I can search medications, labs, vitals, clinical notes, and help you find information about this patient.</div>
       </div>
     `;
     return;
@@ -267,7 +265,7 @@ function renderChatMessages() {
             <div class="super-chat-typing__dot"></div>
             <div class="super-chat-typing__dot"></div>
           </div>
-          <span>Thinking...</span>
+          <span>Analyzing patient data...</span>
         </div>
       </div>
     `;
@@ -344,8 +342,20 @@ function renderAssistantContent(message) {
 
   // Render tool calls first
   const toolParts = parts.filter(p => p.type && p.type.startsWith('tool-'));
+  const hasRunningTools = toolParts.some(p => p.status === 'running');
+
   if (toolParts.length > 0) {
+    html += '<div class="super-chat-tools-container">';
     html += toolParts.map(renderToolCall).join('');
+
+    // Show progress indicator if any tools are still running
+    if (hasRunningTools) {
+      html += `<div class="super-chat-tools-progress">
+        <span class="super-chat-tools-progress__spinner"></span>
+        <span>Working...</span>
+      </div>`;
+    }
+    html += '</div>';
   }
 
   // Render text content
@@ -359,24 +369,37 @@ function renderAssistantContent(message) {
     html += `<div class="super-chat-message__content">${formatMarkdown(message.content)}</div>`;
   }
 
-  return html || '<div class="super-chat-message__content">...</div>';
+  // If we have tool calls but no text yet, don't show anything extra (tools container handles it)
+  // If we have nothing at all, show a minimal loading indicator
+  if (!html) {
+    return `<div class="super-chat-message__content super-chat-message__loading">
+      <span class="super-chat-inline-loader">
+        <span></span><span></span><span></span>
+      </span>
+    </div>`;
+  }
+
+  return html;
 }
 
 function renderToolCall(part) {
   const toolName = part.type.replace('tool-', '');
   const isThinking = toolName === 'think';
   const hasResult = part.output !== undefined && part.output !== null;
-  const displayName = isThinking ? 'Thinking' : formatToolName(toolName);
+  const displayName = isThinking ? 'Reasoning' : formatToolName(toolName);
   const isRunning = part.status === 'running' && !hasResult;
 
   // Create a friendly summary of what's being searched
   const summary = getToolSummary(toolName, part.input);
 
+  // Get appropriate icon for tool type
+  const toolIcon = getToolIcon(toolName);
+
   let inputDisplay = '';
   if (part.input) {
     if (isThinking && part.input.thought) {
       inputDisplay = `<div class="super-chat-tool__section">
-        <div class="super-chat-tool__section-label">Thought</div>
+        <div class="super-chat-tool__section-label">Thought Process</div>
         <pre>${escapeHtml(part.input.thought)}</pre>
       </div>`;
     } else {
@@ -393,7 +416,7 @@ function renderToolCall(part) {
       ? part.output
       : JSON.stringify(part.output, null, 2);
     outputDisplay = `<div class="super-chat-tool__section">
-      <div class="super-chat-tool__section-label">Result</div>
+      <div class="super-chat-tool__section-label">Results</div>
       <pre>${escapeHtml(outputStr)}</pre>
     </div>`;
   }
@@ -405,7 +428,7 @@ function renderToolCall(part) {
   return `
     <div class="super-chat-tool ${isThinking ? 'super-chat-tool--thinking' : ''} ${isRunning ? 'super-chat-tool--running' : ''}">
       <div class="super-chat-tool__header">
-        <span class="super-chat-tool__icon">${isThinking ? '&#128161;' : '&#128269;'}</span>
+        <span class="super-chat-tool__icon">${toolIcon}</span>
         <span class="super-chat-tool__name">${displayName}</span>
         ${summary ? `<span class="super-chat-tool__summary">${escapeHtml(summary)}</span>` : ''}
         <span class="super-chat-tool__status ${statusClass}">
@@ -419,6 +442,25 @@ function renderToolCall(part) {
       </div>
     </div>
   `;
+}
+
+// Get appropriate icon for different tool types
+function getToolIcon(toolName) {
+  const icons = {
+    'think': '&#128161;',           // Light bulb
+    'searchVitals': '&#128147;',    // Heart
+    'searchLabs': '&#129514;',      // Test tube
+    'searchMedications': '&#128138;', // Pill
+    'searchOrders': '&#128203;',    // Clipboard
+    'searchClinicalNotes': '&#128221;', // Memo
+    'searchDocuments': '&#128196;', // Document
+    'getPatientContext': '&#128100;', // Person
+    'readDocument': '&#128214;',    // Open book
+    'searchSemantically': '&#128269;', // Magnifying glass
+    'searchCarePlans': '&#128203;', // Clipboard
+    'searchAdministrationRecords': '&#128137;' // Syringe
+  };
+  return icons[toolName] || '&#128269;'; // Default: magnifying glass
 }
 
 // Generate a friendly summary of what the tool is doing
@@ -491,7 +533,11 @@ function escapeHtml(text) {
 function scrollToBottom() {
   const container = document.getElementById('super-chat-messages');
   if (container) {
-    container.scrollTop = container.scrollHeight;
+    // Use smooth scrolling for better UX
+    container.scrollTo({
+      top: container.scrollHeight,
+      behavior: 'smooth'
+    });
   }
 }
 
@@ -789,7 +835,15 @@ function updateInputState() {
     const isReady = SuperChat.status === 'ready';
     input.disabled = !isReady;
     sendBtn.disabled = !isReady || !input.value.trim();
-    input.placeholder = isReady ? 'Ask about this patient...' : 'Waiting for response...';
+
+    // Dynamic placeholder based on state
+    if (isReady) {
+      input.placeholder = 'Ask me anything about this patient...';
+    } else if (SuperChat.status === 'submitted') {
+      input.placeholder = 'Searching patient records...';
+    } else {
+      input.placeholder = 'Generating response...';
+    }
   }
 }
 

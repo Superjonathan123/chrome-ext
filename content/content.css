@@ -935,6 +935,14 @@
   color: var(--super-gray-700);
 }
 
+/* Section H - Lookback Window Info */
+.super-lookback-info {
+  font-size: 11px;
+  color: var(--super-gray-500);
+  margin-bottom: 8px;
+  font-family: var(--super-font-mono);
+}
+
 /* ============================================
    Section N - Medications List
    ============================================ */

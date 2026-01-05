@@ -28,7 +28,7 @@
   "content_scripts": [
     {
       "matches": ["*://*.pointclickcare.com/*"],
-      "js": ["lib/pdf.min.js", "content/mockData.js", "content/chatbot.js", "content/evidence-viewers.js", "content/content.js"],
+      "js": ["lib/pdf.min.js", "content/mockData.js", "content/chatbot.js", "content/evidence-viewers.js", "content/section-transformers.js", "content/content.js"],
       "css": ["content/content.css", "content/chatbot.css"],
       "run_at": "document_idle"
     }
