@@ -1613,13 +1613,30 @@ function renderEvidence(evidence) {
     // Skip if no quote text at all
     if (!quote) return '';
 
+    // Check if this is an order evidence that can show administrations
+    const isOrder = sourceType === 'order';
+    const orderId = ev.sourceId || ev.evidenceId || '';
+    const clickableClass = isOrder ? 'super-evidence-card--clickable' : '';
+    const orderDataAttr = isOrder ? `data-order-id="${orderId}"` : '';
+
+    // View Administrations action for orders
+    const actionHTML = isOrder ? `
+      <div class="super-evidence-card__action">
+        <span>View Administrations</span>
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M5 12h14M12 5l7 7-7 7"/>
+        </svg>
+      </div>
+    ` : '';
+
     return `
-      <div class="super-evidence-card">
+      <div class="super-evidence-card ${clickableClass}" ${orderDataAttr}>
         <div class="super-evidence-card__header">
           <span class="super-evidence-card__type ${typeClass}">${typeLabel}</span>
         </div>
         <div class="super-evidence-card__quote">${quote}</div>
         ${ev.rationale ? `<div class="super-evidence-card__rationale">${ev.rationale}</div>` : ''}
+        ${actionHTML}
       </div>
     `;
   }).filter(card => card).join('');
@@ -1725,17 +1742,25 @@ function renderMedications(medications, label = 'Medications') {
   if (!medications || medications.length === 0) return '';
 
   const medItems = medications.map(med => {
-    const adminInfo = med.administrationCount
+    const hasAdmins = med.administrationCount && med.administrationCount > 0;
+    const orderId = med.orderId || med.sourceId || '';
+    const isClickable = hasAdmins && orderId;
+
+    const adminInfo = hasAdmins
       ? `<span class="super-med-admin">${med.administrationCount} admin${med.administrationCount > 1 ? 's' : ''}</span>`
       : '';
     const routeInfo = med.route ? `<span class="super-med-route">${med.route}</span>` : '';
     const typeInfo = med.insulinType ? `<span class="super-med-type">${med.insulinType}</span>` : '';
 
+    const clickableClass = isClickable ? 'super-med-item--clickable' : '';
+    const orderDataAttr = isClickable ? `data-order-id="${orderId}"` : '';
+
     return `
-      <div class="super-med-item">
+      <div class="super-med-item ${clickableClass}" ${orderDataAttr}>
         <div class="super-med-item__name">${med.medicationName}</div>
         <div class="super-med-item__details">
           ${routeInfo}${typeInfo}${adminInfo}
+          ${isClickable ? '<span class="super-med-view">View →</span>' : ''}
         </div>
       </div>
     `;
@@ -1860,11 +1885,502 @@ function setupPopoverListeners(popover, result) {
   popover.querySelector('[data-action="disagree"]').addEventListener('click', () => {
     handleAction('disagree', result);
   });
+
+  // Order evidence click handlers for viewing administrations
+  setupAdministrationViewers(popover);
+}
+
+function setupAdministrationViewers(popover) {
+  // Handle clicks on order evidence cards
+  popover.querySelectorAll('.super-evidence-card--clickable').forEach(card => {
+    card.addEventListener('click', async (e) => {
+      e.stopPropagation();
+      const orderId = card.dataset.orderId;
+      if (!orderId) {
+        console.error('Super LTC: No order ID found on evidence card');
+        return;
+      }
+      await showAdministrationModal(orderId);
+    });
+  });
+
+  // Handle clicks on medication items with administrations
+  popover.querySelectorAll('.super-med-item--clickable').forEach(item => {
+    item.addEventListener('click', async (e) => {
+      e.stopPropagation();
+      const orderId = item.dataset.orderId;
+      if (!orderId) {
+        console.error('Super LTC: No order ID found on medication item');
+        return;
+      }
+      await showAdministrationModal(orderId);
+    });
+  });
 }
 
 function closePopover() {
   document.querySelector('.super-popover')?.remove();
   document.querySelector('.super-backdrop')?.remove();
+}
+
+// ============================================
+// Administration Modal (MAR/TAR Viewer)
+// ============================================
+
+async function showAdministrationModal(orderId) {
+  // Get current page context
+  const params = await getAPIParams();
+
+  // Create and show loading modal
+  const modal = createAdminModalShell();
+  document.body.appendChild(modal);
+
+  try {
+    // Fetch administration data
+    const data = await fetchAdministrations(orderId, params);
+
+    // Render the full modal content
+    renderAdminModalContent(modal, data, orderId, params);
+  } catch (error) {
+    console.error('Super LTC: Failed to fetch administrations', error);
+    renderAdminModalError(modal, error.message);
+  }
+}
+
+function createAdminModalShell() {
+  const modal = document.createElement('div');
+  modal.className = 'super-admin-modal';
+  modal.innerHTML = `
+    <div class="super-admin-modal__backdrop"></div>
+    <div class="super-admin-modal__container">
+      <div class="super-admin-modal__header">
+        <div class="super-admin-modal__title">
+          <span class="super-admin-modal__order-name">Loading...</span>
+        </div>
+        <button class="super-admin-modal__close">&times;</button>
+      </div>
+      <div class="super-admin-modal__body">
+        <div class="super-admin-loading">
+          <div class="super-admin-loading__spinner"></div>
+          <span>Loading administration records...</span>
+        </div>
+      </div>
+    </div>
+  `;
+
+  // Setup close handlers
+  modal.querySelector('.super-admin-modal__close').addEventListener('click', () => modal.remove());
+  modal.querySelector('.super-admin-modal__backdrop').addEventListener('click', () => modal.remove());
+
+  // Close on Escape key
+  const escHandler = (e) => {
+    if (e.key === 'Escape') {
+      modal.remove();
+      document.removeEventListener('keydown', escHandler);
+    }
+  };
+  document.addEventListener('keydown', escHandler);
+
+  return modal;
+}
+
+function renderAdminModalContent(modal, data, orderId, params) {
+  const { order, dateRange, adminRecords } = data;
+
+  // Determine report type from first record or order category
+  const firstRecord = adminRecords?.[0];
+  const reportType = firstRecord?.type === 'treatment' ? 'tar' : 'mar';
+
+  const container = modal.querySelector('.super-admin-modal__container');
+  container.innerHTML = buildAdminModalHTML(order, dateRange, adminRecords || [], reportType);
+
+  // Setup event listeners
+  setupAdminModalListeners(modal, orderId, params, dateRange);
+}
+
+function buildAdminModalHTML(order, dateRange, adminRecords, reportType) {
+  const formattedDateRange = formatDateRangeDisplay(dateRange.startDate, dateRange.endDate);
+  const isMar = reportType === 'mar' || order.category === 'Medication';
+  const typeIcon = isMar ? '💊' : '⚡';
+  const typeBadge = isMar ? 'MAR' : 'TAR';
+  const typeBadgeClass = isMar ? 'super-admin-badge--mar' : 'super-admin-badge--tar';
+
+  // Build the grid data
+  const gridData = buildAdminGridData(adminRecords);
+  const eventCount = countEvents(gridData);
+
+  return `
+    <div class="super-admin-modal__header">
+      <div class="super-admin-modal__title-row">
+        <span class="super-admin-modal__icon">${typeIcon}</span>
+        <div class="super-admin-modal__title">
+          <span class="super-admin-modal__order-name">${escapeHTML(order.name || 'Order')}</span>
+          <span class="super-admin-badge ${typeBadgeClass}">${typeBadge}</span>
+        </div>
+        <button class="super-admin-modal__close">&times;</button>
+      </div>
+      ${order.directions ? `<div class="super-admin-modal__directions">${escapeHTML(order.directions)}</div>` : ''}
+      <div class="super-admin-modal__meta">${gridData.times.length} time slot${gridData.times.length !== 1 ? 's' : ''}</div>
+    </div>
+
+    <div class="super-admin-modal__date-bar">
+      <button class="super-admin-modal__nav-btn" data-dir="prev" title="Previous week">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M15 18l-6-6 6-6"/>
+        </svg>
+      </button>
+      <span class="super-admin-modal__date-range">📅 ${formattedDateRange}</span>
+      <button class="super-admin-modal__nav-btn" data-dir="next" title="Next week">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M9 18l6-6-6-6"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="super-admin-modal__body">
+      ${adminRecords.length > 0
+        ? renderAdminGrid(gridData)
+        : '<div class="super-admin-empty">No events found in this date range</div>'
+      }
+    </div>
+
+    <div class="super-admin-modal__footer">
+      <span class="super-admin-modal__event-count">${eventCount} event${eventCount !== 1 ? 's' : ''}</span>
+      <div class="super-admin-legend">
+        <span class="super-admin-legend__item super-admin-legend__item--given">✓ Given</span>
+        <span class="super-admin-legend__item super-admin-legend__item--refused">2 Refused</span>
+        <span class="super-admin-legend__item super-admin-legend__item--loa">3 LOA</span>
+        <span class="super-admin-legend__item super-admin-legend__item--hold">5 Hold</span>
+      </div>
+    </div>
+  `;
+}
+
+// Build grid data structure: times as rows, dates as columns
+function buildAdminGridData(adminRecords) {
+  const allTimes = new Set();
+  const allDates = new Set();
+
+  // Collect all unique times and dates from events
+  for (const record of adminRecords) {
+    if (!record.events) continue;
+    for (const event of record.events) {
+      if (event.time) allTimes.add(event.time);
+      if (event.date) {
+        // Normalize date to YYYY-MM-DD for consistent keys
+        allDates.add(normalizeDateKey(event.date));
+      }
+    }
+  }
+
+  // Sort times (numeric times first, then alpha like "BS")
+  const times = [...allTimes].sort((a, b) => {
+    const aIsNumeric = /^\d+$/.test(a);
+    const bIsNumeric = /^\d+$/.test(b);
+    if (aIsNumeric && bIsNumeric) return a.localeCompare(b);
+    if (aIsNumeric) return -1;
+    if (bIsNumeric) return 1;
+    return a.localeCompare(b);
+  });
+
+  // Sort dates
+  const dates = [...allDates].sort();
+
+  // Build lookup: { time: { date: GridCell } }
+  const grid = {};
+
+  for (const record of adminRecords) {
+    if (!record.events) continue;
+    for (const event of record.events) {
+      if (!event.time || !event.date) continue;
+      const dateKey = normalizeDateKey(event.date);
+      if (!grid[event.time]) grid[event.time] = {};
+      grid[event.time][dateKey] = {
+        status: mapAdminStatus(event.status),
+        staffInitials: event.staffInitials || '',
+        value: event.value || '',
+        chartCode: event.chartCode || null,
+      };
+    }
+  }
+
+  return { times, dates, grid };
+}
+
+function mapAdminStatus(status) {
+  if (!status) return 'scheduled';
+  const s = status.toLowerCase();
+  if (s === 'given' || s === 'administered') return 'given';
+  if (s === 'measured') return 'measured';
+  if (s === 'refused') return 'refused';
+  return 'not_given';
+}
+
+function countEvents(gridData) {
+  let count = 0;
+  for (const time of Object.keys(gridData.grid)) {
+    count += Object.keys(gridData.grid[time]).length;
+  }
+  return count;
+}
+
+// Render the grid with times as rows, dates as columns
+function renderAdminGrid(gridData) {
+  const { times, dates, grid } = gridData;
+
+  if (times.length === 0 || dates.length === 0) {
+    return '<div class="super-admin-empty">No events found in this date range</div>';
+  }
+
+  // Build date headers with day name and date
+  const dateHeaders = dates.map(date => {
+    const formatted = formatGridDate(date);
+    return `<th class="super-admin-grid__date-header">
+      <div class="super-admin-grid__day">${formatted.day}</div>
+      <div class="super-admin-grid__date">${formatted.date}</div>
+    </th>`;
+  }).join('');
+
+  // Build rows (one per time slot)
+  const rows = times.map(time => {
+    const cells = dates.map(date => {
+      const cell = grid[time]?.[date];
+      return renderGridCell(cell);
+    }).join('');
+
+    return `
+      <tr class="super-admin-grid__row">
+        <td class="super-admin-grid__time">${formatTime(time)}</td>
+        ${cells}
+      </tr>
+    `;
+  }).join('');
+
+  return `
+    <div class="super-admin-grid-wrapper">
+      <table class="super-admin-grid">
+        <thead>
+          <tr>
+            <th class="super-admin-grid__time-header">Time</th>
+            ${dateHeaders}
+          </tr>
+        </thead>
+        <tbody>
+          ${rows}
+        </tbody>
+      </table>
+    </div>
+  `;
+}
+
+function renderGridCell(cell) {
+  if (!cell) {
+    return '<td class="super-admin-grid__cell super-admin-grid__cell--empty">-</td>';
+  }
+
+  const { status, staffInitials, value, chartCode } = cell;
+  let cellClass = 'super-admin-grid__cell';
+  let content = '';
+
+  // Chart codes have special display
+  if (chartCode) {
+    cellClass += ` super-admin-grid__cell--code-${chartCode}`;
+    content = `<span class="super-admin-grid__code">${chartCode}</span>`;
+    if (staffInitials) {
+      content += `<span class="super-admin-grid__initials">${escapeHTML(staffInitials)}</span>`;
+    }
+  } else if (status === 'given' || status === 'measured') {
+    cellClass += ' super-admin-grid__cell--given';
+    content = '<span class="super-admin-grid__check">✓</span>';
+    if (staffInitials) {
+      content += `<span class="super-admin-grid__initials">${escapeHTML(staffInitials)}</span>`;
+    }
+    if (value) {
+      content += `<span class="super-admin-grid__value">${escapeHTML(value)}</span>`;
+    }
+  } else {
+    cellClass += ' super-admin-grid__cell--empty';
+    content = '-';
+  }
+
+  return `<td class="${cellClass}">${content}</td>`;
+}
+
+// Helper functions
+function escapeHTML(str) {
+  if (!str) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
+function formatDateRangeDisplay(startDate, endDate) {
+  const start = parseDate(startDate);
+  const end = parseDate(endDate);
+  const options = { month: 'short', day: 'numeric', year: 'numeric' };
+  return `${start.toLocaleDateString('en-US', options)} - ${end.toLocaleDateString('en-US', options)}`;
+}
+
+function formatGridDate(dateStr) {
+  const date = parseDate(dateStr);
+
+  // Handle invalid dates
+  if (isNaN(date.getTime())) {
+    return { day: '???', date: dateStr };
+  }
+
+  const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  return {
+    day: days[date.getDay()],
+    date: `${months[date.getMonth()]} ${date.getDate()}`
+  };
+}
+
+function formatTime(time) {
+  // Handle non-standard times like "BS" (blood sugar)
+  if (!time) return time;
+
+  // If it's not a 4-digit time, return as-is
+  if (!/^\d{4}$/.test(time)) return time;
+
+  // Convert "0800" to "8:00 AM"
+  const hours = parseInt(time.substring(0, 2), 10);
+  const mins = time.substring(2, 4);
+  const ampm = hours >= 12 ? 'PM' : 'AM';
+  const hour12 = hours % 12 || 12;
+  return `${hour12}:${mins} ${ampm}`;
+}
+
+function parseDate(dateStr) {
+  // Handle ISO format, "MM/DD/YYYY", and "YYYY-MM-DD" formats
+  if (!dateStr) return new Date();
+
+  // Already an ISO string with T (e.g., "2025-10-22T00:00:00.000Z")
+  if (dateStr.includes('T')) {
+    return new Date(dateStr);
+  }
+
+  // MM/DD/YYYY format
+  if (dateStr.includes('/')) {
+    const [month, day, year] = dateStr.split('/');
+    return new Date(year, month - 1, day);
+  }
+
+  // YYYY-MM-DD format
+  return new Date(dateStr + 'T00:00:00');
+}
+
+// Normalize date to YYYY-MM-DD string for consistent grid keys
+function normalizeDateKey(dateStr) {
+  if (!dateStr) return '';
+
+  // If it's already YYYY-MM-DD format, return as-is
+  if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
+    return dateStr;
+  }
+
+  // For ISO strings like "2025-10-22T00:00:00.000Z", extract the date part
+  if (dateStr.includes('T')) {
+    return dateStr.split('T')[0];
+  }
+
+  // For other formats, parse and format
+  const date = parseDate(dateStr);
+  if (isNaN(date.getTime())) return dateStr;
+  return formatDateForAPI(date);
+}
+
+function shiftDateRange(dateRange, days) {
+  const start = parseDate(dateRange.startDate);
+  const end = parseDate(dateRange.endDate);
+  start.setDate(start.getDate() + days);
+  end.setDate(end.getDate() + days);
+  return {
+    startDate: formatDateForAPI(start),
+    endDate: formatDateForAPI(end),
+    isDefault: false
+  };
+}
+
+function formatDateForAPI(date) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
+// API fetch function
+async function fetchAdministrations(orderId, params, dateRange = {}) {
+  let endpoint = `/api/extension/orders/${orderId}/administrations?` +
+    `externalAssessmentId=${params.assessmentId}` +
+    `&facilityName=${encodeURIComponent(params.facilityName)}` +
+    `&orgSlug=${params.orgSlug}` +
+    `&type=both`;
+
+  if (dateRange.startDate) endpoint += `&startDate=${dateRange.startDate}`;
+  if (dateRange.endDate) endpoint += `&endDate=${dateRange.endDate}`;
+
+  const response = await chrome.runtime.sendMessage({
+    type: 'API_REQUEST',
+    endpoint
+  });
+
+  if (!response.success) throw new Error(response.error || 'Failed to fetch data');
+  return response.data;
+}
+
+// Event listeners for modal
+function setupAdminModalListeners(modal, orderId, params, currentDateRange) {
+  // Close button
+  modal.querySelector('.super-admin-modal__close')?.addEventListener('click', () => modal.remove());
+
+  // Date navigation
+  modal.querySelectorAll('.super-admin-modal__nav-btn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const dir = btn.dataset.dir;
+      const newRange = shiftDateRange(currentDateRange, dir === 'next' ? 7 : -7);
+
+      // Show loading in body
+      const body = modal.querySelector('.super-admin-modal__body');
+      body.innerHTML = '<div class="super-admin-loading"><div class="super-admin-loading__spinner"></div><span>Loading...</span></div>';
+
+      try {
+        const data = await fetchAdministrations(orderId, params, newRange);
+        // Re-render the full modal content
+        renderAdminModalContent(modal, data, orderId, params);
+      } catch (error) {
+        body.innerHTML = `<div class="super-admin-error"><p>Failed to load data</p><span>${escapeHTML(error.message)}</span></div>`;
+      }
+    });
+  });
+}
+
+function renderAdminModalError(modal, message) {
+  const container = modal.querySelector('.super-admin-modal__container');
+  container.innerHTML = `
+    <div class="super-admin-modal__header">
+      <div class="super-admin-modal__title">
+        <span class="super-admin-modal__order-name">Error</span>
+      </div>
+      <button class="super-admin-modal__close">&times;</button>
+    </div>
+    <div class="super-admin-modal__body">
+      <div class="super-admin-error">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/>
+          <path d="M12 8v4M12 16h.01"/>
+        </svg>
+        <p>Failed to load administration records</p>
+        <span class="super-admin-error__detail">${escapeHTML(message)}</span>
+      </div>
+    </div>
+  `;
+
+  modal.querySelector('.super-admin-modal__close').addEventListener('click', () => modal.remove());
 }
 
 // ============================================
