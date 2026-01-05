@@ -319,6 +319,9 @@ async function getAPIParams() {
   return { assessmentId, section, orgSlug, facilityName };
 }
 
+// Expose getAPIParams globally for evidence-viewers.js
+window.getCurrentParams = getAPIParams;
+
 /**
  * Fetch section data from API via background script
  */
@@ -346,17 +349,94 @@ async function fetchSectionData(params) {
  * Transform Section O API response to overlay format
  */
 function transformSectionO(results) {
-  if (!results.items) {
-    return { items: [] };
+  const items = [];
+
+  console.log('Super LTC: transformSectionO called with keys:', Object.keys(results || {}));
+
+  // Transform sectionO items (O0110 special treatments)
+  if (results.sectionO?.items) {
+    console.log('Super LTC: Found sectionO.items:', results.sectionO.items.length);
+    results.sectionO.items.forEach(item => {
+      if (item.comparisons) {
+        item.comparisons.forEach(comparison => {
+          const columnData = item.columns?.[comparison.column];
+          console.log(`Super LTC: ${item.mdsItem} col ${comparison.column}: status=${comparison.status}`);
+          // Include ALL items (matches and non-matches) - processQuestion will determine display status
+          if (columnData) {
+            console.log(`Super LTC: >> Adding ${item.mdsItem} col ${comparison.column}`);
+            items.push({
+              mdsItem: item.mdsItem,
+              description: item.description || getSectionODescription(item.mdsItem),
+              columns: {
+                [comparison.column]: {
+                  answer: columnData.answer,
+                  confidence: columnData.confidence,
+                  rationale: columnData.rationale,
+                  evidence: columnData.evidence || []
+                }
+              }
+            });
+          }
+        });
+      }
+    });
+  } else {
+    console.log('Super LTC: No sectionO.items found');
   }
 
-  return {
-    items: results.items.map(item => ({
-      mdsItem: item.mdsItem,
-      description: item.description,
-      columns: item.columns
-    }))
+  // Transform immunization items (O0250, O0300, O0350)
+  if (results.sectionOImmunizations?.comparisons) {
+    console.log('Super LTC: Found immunization comparisons:', results.sectionOImmunizations.comparisons.length);
+    results.sectionOImmunizations.comparisons.forEach(comparison => {
+      console.log(`Super LTC: Immunization ${comparison.questionCode}: status=${comparison.status}`);
+      // Include ALL items (matches and non-matches)
+      console.log(`Super LTC: >> Adding immunization ${comparison.questionCode}`);
+      items.push({
+        mdsItem: comparison.questionCode,
+        description: comparison.questionLabel || getSectionODescription(comparison.questionCode),
+        columns: {
+          '': {
+            answer: comparison.solvedAnswer,
+            confidence: comparison.confidence,
+            rationale: comparison.rationale,
+            evidence: comparison.evidence || []
+          }
+        }
+      });
+    });
+  } else {
+    console.log('Super LTC: No sectionOImmunizations.comparisons found');
+  }
+
+  console.log('Super LTC: transformSectionO returning', items.length, 'items');
+  return { items };
+}
+
+// Helper: Section O MDS item descriptions
+function getSectionODescription(mdsItem) {
+  const descriptions = {
+    'O0110A1': 'Chemotherapy',
+    'O0110B1': 'Radiation',
+    'O0110C1': 'Oxygen Therapy',
+    'O0110D1': 'Suctioning',
+    'O0110E1': 'Tracheostomy Care',
+    'O0110F1': 'Invasive Mechanical Ventilator',
+    'O0110G1': 'Non-invasive Mechanical Ventilator',
+    'O0110H1': 'IV Medications',
+    'O0110I1': 'Transfusions',
+    'O0110J1': 'Dialysis',
+    'O0110K1': 'Hospice Care',
+    'O0110L1': 'Respite Care',
+    'O0110M1': 'Isolation/Quarantine for Infectious Disease',
+    'O0110N1': 'Physician Examining',
+    'O0110O1': 'IV Access',
+    'O0250A': 'Influenza Vaccine Received',
+    'O0250C': 'Reason Influenza Vaccine Not Received',
+    'O0300A': 'Pneumococcal Vaccine Up to Date',
+    'O0300B': 'Reason Pneumococcal Vaccine Not Up to Date',
+    'O0350': 'COVID-19 Vaccine Up to Date'
   };
+  return descriptions[mdsItem] || mdsItem;
 }
 
 /**
@@ -1063,6 +1143,74 @@ function getSectionNDescription(mdsItem) {
 }
 
 /**
+ * Transform Section P API response to overlay format
+ * Section P - Restraints
+ * Path: run.results (p0100, p0200)
+ */
+function transformSectionP(results) {
+  const items = [];
+
+  // P0100: Physical Restraints (subItems A-H with frequencyCode 0-3)
+  if (results.p0100) {
+    Object.entries(results.p0100.subItems || {}).forEach(([subItem, data]) => {
+      items.push({
+        mdsItem: `P0100${subItem}`,
+        description: getSectionPDescription(`P0100${subItem}`),
+        columns: {
+          '': {
+            answer: String(data.frequencyCode),
+            confidence: data.confidence,
+            rationale: data.rationale,
+            evidence: data.evidence || [],
+            distinctDates: data.distinctDates
+          }
+        }
+      });
+    });
+  }
+
+  // P0200: Bed Rail for Positioning (subItems A-D, may be skipped)
+  if (results.p0200 && !results.p0200.skipped) {
+    Object.entries(results.p0200.subItems || {}).forEach(([subItem, data]) => {
+      items.push({
+        mdsItem: `P0200${subItem}`,
+        description: getSectionPDescription(`P0200${subItem}`),
+        columns: {
+          '': {
+            answer: String(data.frequencyCode),
+            confidence: data.confidence,
+            rationale: data.rationale,
+            evidence: data.evidence || [],
+            distinctDates: data.distinctDates
+          }
+        }
+      });
+    });
+  }
+
+  return { items };
+}
+
+// Helper: Section P MDS item descriptions
+function getSectionPDescription(mdsItem) {
+  const descriptions = {
+    'P0100A': 'Full bed rails on all open sides',
+    'P0100B': 'Other types of bed rails',
+    'P0100C': 'Trunk restraint',
+    'P0100D': 'Limb restraint',
+    'P0100E': 'Chair prevents rising',
+    'P0100F': 'Mitts',
+    'P0100G': 'Self-release seat belt',
+    'P0100H': 'Other types of restraints',
+    'P0200A': 'Bed rail - bed mobility',
+    'P0200B': 'Bed rail - transfer',
+    'P0200C': 'Bed rail - enables turning',
+    'P0200D': 'Bed rail - resident requested'
+  };
+  return descriptions[mdsItem] || mdsItem;
+}
+
+/**
  * Transform API response based on section type
  */
 function transformAPIResponse(apiResponse, section) {
@@ -1083,7 +1231,9 @@ function transformAPIResponse(apiResponse, section) {
       return transformSectionN(results);
     case 'O':
       return transformSectionO(results);
-    // Future: Add transformers for L, H, P, J
+    case 'P':
+      return transformSectionP(results);
+    // Future: Add transformers for L, H, J
     default:
       console.warn(`Super LTC: No transformer for section ${section}`);
       return { items: [] };
@@ -1170,6 +1320,8 @@ function isMDSPage() {
 function processItems(items) {
   SuperOverlay.results = [];
 
+  console.log('Super LTC: processItems called with', items.length, 'items:', items);
+
   items.forEach(item => {
     // Process each column (A, B, C)
     Object.keys(item.columns || {}).forEach(column => {
@@ -1178,22 +1330,30 @@ function processItems(items) {
 
       // Find the corresponding DOM element
       const elementId = `${item.mdsItem}${column}_wrapper`;
+      console.log(`Super LTC: Looking for element: ${elementId}`);
       const questionEl = document.getElementById(elementId);
 
       if (!questionEl) {
+        console.log(`Super LTC: Not found: ${elementId}, trying alternatives...`);
         // Try alternative ID format
         const altElementId = `${item.mdsItem}${column}`;
         const altQuestionEl = document.querySelector(`[id="${altElementId}_wrapper"]`) ||
                               document.querySelector(`[id^="${item.mdsItem}"][id$="${column}_wrapper"]`);
         if (altQuestionEl) {
+          console.log(`Super LTC: Found alt element: ${altQuestionEl.id}`);
           processQuestion(altQuestionEl, item, column, aiAnswer);
+        } else {
+          console.log(`Super LTC: No element found for ${item.mdsItem} col ${column} (n/a field)`);
         }
         return;
       }
 
+      console.log(`Super LTC: Found element: ${elementId}`);
       processQuestion(questionEl, item, column, aiAnswer);
     });
   });
+
+  console.log('Super LTC: processItems complete, SuperOverlay.results:', SuperOverlay.results.length);
 }
 
 function processQuestion(questionEl, item, column, aiAnswer) {
@@ -1616,13 +1776,43 @@ function renderEvidence(evidence) {
     // Check if this is an order evidence that can show administrations
     const isOrder = sourceType === 'order';
     const orderId = ev.sourceId || ev.evidenceId || '';
-    const clickableClass = isOrder ? 'super-evidence-card--clickable' : '';
-    const orderDataAttr = isOrder ? `data-order-id="${orderId}"` : '';
 
-    // View Administrations action for orders
-    const actionHTML = isOrder ? `
+    // Check if this evidence has a viewable type (clinical note, therapy doc, PDF)
+    const { viewerType, id: viewerId } = typeof parseEvidenceForViewer === 'function'
+      ? parseEvidenceForViewer(ev)
+      : { viewerType: null, id: null };
+
+    const isViewable = isOrder || viewerType;
+    const clickableClass = isViewable ? 'super-evidence-card--clickable' : '';
+
+    // Data attributes for click handling
+    let dataAttrs = '';
+    if (isOrder) {
+      dataAttrs = `data-order-id="${orderId}"`;
+    } else if (viewerType) {
+      dataAttrs = `data-viewer-type="${viewerType}" data-viewer-id="${viewerId}"`;
+      // Add quote text for highlighting in therapy documents
+      if (quote) {
+        const escapedQuote = quote.replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        dataAttrs += ` data-quote="${escapedQuote}"`;
+      }
+      // Add wordBlocks data if available (for PDF documents)
+      if (ev.wordBlocks && Array.isArray(ev.wordBlocks) && ev.wordBlocks.length > 0) {
+        const wordBlocksJson = JSON.stringify(ev.wordBlocks).replace(/"/g, '&quot;');
+        dataAttrs += ` data-word-blocks="${wordBlocksJson}"`;
+      }
+    }
+
+    // Action text based on type
+    let actionText = '';
+    if (isOrder) actionText = 'View Administrations';
+    else if (viewerType === 'therapy-document') actionText = 'View Document';
+    else if (viewerType === 'clinical-note') actionText = 'View Note';
+    else if (viewerType === 'document') actionText = 'View PDF';
+
+    const actionHTML = isViewable ? `
       <div class="super-evidence-card__action">
-        <span>View Administrations</span>
+        <span>${actionText}</span>
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M5 12h14M12 5l7 7-7 7"/>
         </svg>
@@ -1630,7 +1820,7 @@ function renderEvidence(evidence) {
     ` : '';
 
     return `
-      <div class="super-evidence-card ${clickableClass}" ${orderDataAttr}>
+      <div class="super-evidence-card ${clickableClass}" ${dataAttrs}>
         <div class="super-evidence-card__header">
           <span class="super-evidence-card__type ${typeClass}">${typeLabel}</span>
         </div>
@@ -1891,16 +2081,48 @@ function setupPopoverListeners(popover, result) {
 }
 
 function setupAdministrationViewers(popover) {
-  // Handle clicks on order evidence cards
+  // Handle clicks on clickable evidence cards (orders, notes, therapy docs, PDFs)
   popover.querySelectorAll('.super-evidence-card--clickable').forEach(card => {
     card.addEventListener('click', async (e) => {
       e.stopPropagation();
+
+      // Check for order first (existing functionality)
       const orderId = card.dataset.orderId;
-      if (!orderId) {
-        console.error('Super LTC: No order ID found on evidence card');
+      if (orderId) {
+        await showAdministrationModal(orderId);
         return;
       }
-      await showAdministrationModal(orderId);
+
+      // Check for other viewer types (from evidence-viewers.js)
+      const viewerType = card.dataset.viewerType;
+      const viewerId = card.dataset.viewerId;
+
+      if (viewerType && viewerId) {
+        // Extract wordBlocks if available (for PDF documents)
+        let wordBlocks = null;
+        if (card.dataset.wordBlocks) {
+          try {
+            wordBlocks = JSON.parse(card.dataset.wordBlocks);
+          } catch (err) {
+            console.error('Super LTC: Failed to parse wordBlocks:', err);
+          }
+        }
+
+        if (viewerType === 'therapy-document' && typeof showTherapyDocModal === 'function') {
+          // Pass quote text for highlighting in the therapy document
+          const highlightQuote = card.dataset.quote || null;
+          await showTherapyDocModal(viewerId, highlightQuote);
+        } else if (viewerType === 'clinical-note' && typeof showClinicalNoteModal === 'function') {
+          await showClinicalNoteModal(viewerId);
+        } else if (viewerType === 'document' && typeof showDocumentModal === 'function') {
+          await showDocumentModal(viewerId, wordBlocks);
+        } else {
+          console.error('Super LTC: Unknown viewer type or function not available:', viewerType);
+        }
+        return;
+      }
+
+      console.error('Super LTC: No valid ID found on evidence card');
     });
   });
 

@@ -1,0 +1,1582 @@
+/**
+ * Evidence Viewers for Clinical Notes, Therapy Documents, and PDFs
+ *
+ * This module provides modal viewers for different types of patient evidence:
+ * - Clinical Notes (progress notes, practitioner notes)
+ * - Therapy Documents (EVAL, TEN, PR, RECERT, DISCH)
+ * - PDF Documents
+ */
+
+// =============================================================================
+// EVIDENCE DETECTION
+// =============================================================================
+
+/**
+ * Parse evidence object to determine if it has a viewable type
+ * Handles both patterns:
+ * 1. Direct: sourceType="progress-note" + sourceId
+ * 2. evidenceId prefix: "pcc-prognote-xxx", "therapy-doc-xxx", etc.
+ */
+function parseEvidenceForViewer(ev) {
+  const { sourceType, sourceId, evidenceId } = ev;
+
+  // Pattern 1: Direct sourceType (from some API responses)
+  if (sourceType === 'progress-note' && sourceId) {
+    return { viewerType: 'clinical-note', id: sourceId };
+  }
+  if (sourceType === 'therapy-doc' && sourceId) {
+    return { viewerType: 'therapy-document', id: sourceId };
+  }
+
+  // Pattern 2: evidenceId prefixes
+  if (evidenceId) {
+    if (evidenceId.startsWith('therapy-doc-')) {
+      return { viewerType: 'therapy-document', id: evidenceId.replace('therapy-doc-', '') };
+    }
+    if (evidenceId.startsWith('pcc-prognote-')) {
+      return { viewerType: 'clinical-note', id: evidenceId.replace('pcc-prognote-', '') };
+    }
+    if (evidenceId.startsWith('patient-practnote-')) {
+      return { viewerType: 'clinical-note', id: evidenceId.replace('patient-practnote-', '') };
+    }
+    if (evidenceId.includes('-chunk-')) {
+      // Document chunks: "abc123-chunk-1" -> "abc123"
+      return { viewerType: 'document', id: evidenceId.split('-chunk-')[0] };
+    }
+  }
+
+  return { viewerType: null, id: null };
+}
+
+// =============================================================================
+// API FETCH FUNCTIONS
+// =============================================================================
+
+async function fetchClinicalNote(noteId, params) {
+  const endpoint = `/api/extension/clinical-notes/${noteId}?` +
+    `facilityName=${encodeURIComponent(params.facilityName)}` +
+    `&orgSlug=${params.orgSlug}`;
+
+  const response = await chrome.runtime.sendMessage({
+    type: 'API_REQUEST',
+    endpoint
+  });
+  if (!response.success) throw new Error(response.error);
+  return response.data;
+}
+
+async function fetchTherapyDocument(therapyDocId, params) {
+  const endpoint = `/api/extension/therapy-documents/${therapyDocId}?` +
+    `facilityName=${encodeURIComponent(params.facilityName)}` +
+    `&orgSlug=${params.orgSlug}`;
+
+  const response = await chrome.runtime.sendMessage({
+    type: 'API_REQUEST',
+    endpoint
+  });
+  if (!response.success) throw new Error(response.error);
+  return response.data;
+}
+
+async function fetchDocument(documentId, params) {
+  const endpoint = `/api/extension/documents/${documentId}?` +
+    `facilityName=${encodeURIComponent(params.facilityName)}` +
+    `&orgSlug=${params.orgSlug}`;
+
+  const response = await chrome.runtime.sendMessage({
+    type: 'API_REQUEST',
+    endpoint
+  });
+  if (!response.success) throw new Error(response.error);
+  return response.data;
+}
+
+// =============================================================================
+// SHARED MODAL UTILITIES
+// =============================================================================
+
+function escapeHTMLViewer(str) {
+  if (!str) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
+function formatDateDisplay(dateStr) {
+  if (!dateStr) return '';
+  try {
+    const date = new Date(dateStr);
+    return date.toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric'
+    });
+  } catch {
+    return dateStr;
+  }
+}
+
+function formatDateTimeDisplay(dateStr) {
+  if (!dateStr) return '';
+  try {
+    const date = new Date(dateStr);
+    return date.toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+      hour: 'numeric',
+      minute: '2-digit'
+    });
+  } catch {
+    return dateStr;
+  }
+}
+
+// =============================================================================
+// HIGHLIGHTING UTILITIES
+// =============================================================================
+
+const HIGHLIGHT_DATA_ATTR = 'data-evidence-highlight';
+
+/**
+ * Normalize text for comparison - lowercase, collapse whitespace, trim
+ */
+function normalizeText(text) {
+  if (!text) return '';
+  return text.toLowerCase().replace(/\s+/g, ' ').trim();
+}
+
+/**
+ * Check if a field's text matches (contains or is contained by) the quote text
+ */
+function textMatchesQuote(fieldText, quoteText) {
+  if (!fieldText || !quoteText) return false;
+
+  const normalizedField = normalizeText(fieldText);
+  const normalizedQuote = normalizeText(quoteText);
+
+  // Skip very short texts to avoid false positives
+  if (normalizedField.length < 10 || normalizedQuote.length < 10) return false;
+
+  // Check if field contains quote or quote contains field
+  return normalizedField.includes(normalizedQuote) || normalizedQuote.includes(normalizedField);
+}
+
+/**
+ * Check if at least 2 words from the quote appear in the field text
+ * More lenient matching for when exact substring doesn't work
+ */
+function textHasWordOverlap(fieldText, quoteText, minWordLength = 4) {
+  if (!fieldText || !quoteText) return false;
+
+  const normalizedField = normalizeText(fieldText);
+  const normalizedQuote = normalizeText(quoteText);
+
+  // Extract words from quote that are long enough
+  const quoteWords = normalizedQuote
+    .split(/\s+/)
+    .filter(word => word.length >= minWordLength);
+
+  // Check if at least 2 significant words from quote appear in field
+  const matchingWords = quoteWords.filter(word => normalizedField.includes(word));
+
+  return matchingWords.length >= 2;
+}
+
+/**
+ * Check if field text should be highlighted based on quote
+ */
+function isTextHighlighted(highlightQuote, fieldText) {
+  return textMatchesQuote(fieldText, highlightQuote) || textHasWordOverlap(fieldText, highlightQuote);
+}
+
+/**
+ * Check if any text in an array matches the quote
+ */
+function anyTextMatchesQuote(texts, quoteText) {
+  return texts.some(text => textMatchesQuote(text, quoteText) || textHasWordOverlap(text, quoteText));
+}
+
+// =============================================================================
+// FIELD EXTRACTION UTILITIES
+// =============================================================================
+
+/**
+ * Safely extract string value from field with PascalCase/camelCase support
+ */
+function getStringField(obj, pascalKey, camelKey) {
+  const value = getField(obj, pascalKey, camelKey);
+  return value ? String(value) : '';
+}
+
+/**
+ * Format date string as M/D/YYYY
+ */
+function formatDocumentDateNew(dateString) {
+  if (!dateString) return '';
+  try {
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) return dateString;
+    return `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
+  } catch {
+    return dateString;
+  }
+}
+
+/**
+ * Format date with time for signatures (M/D/YYYY H:MM:SS AM/PM)
+ */
+function formatSignatureDateTime(dateString) {
+  if (!dateString) return '';
+  try {
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) return dateString;
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
+    const year = date.getFullYear();
+    let hours = date.getHours();
+    const minutes = date.getMinutes().toString().padStart(2, '0');
+    const seconds = date.getSeconds().toString().padStart(2, '0');
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    hours = hours % 12 || 12;
+    return `${month}/${day}/${year} ${hours}:${minutes}:${seconds} ${ampm}`;
+  } catch {
+    return dateString;
+  }
+}
+
+function setupModalCloseHandlers(modal, modalClass) {
+  // Prevent body scroll when modal is open
+  document.body.style.overflow = 'hidden';
+
+  // Restore body scroll when modal closes
+  const closeModal = () => {
+    document.body.style.overflow = '';
+    modal.remove();
+  };
+
+  // Close button
+  modal.querySelector(`.${modalClass}__close`).addEventListener('click', closeModal);
+
+  // Backdrop click
+  modal.querySelector(`.${modalClass}__backdrop`).addEventListener('click', closeModal);
+
+  // Escape key
+  const escHandler = (e) => {
+    if (e.key === 'Escape') {
+      closeModal();
+      document.removeEventListener('keydown', escHandler);
+    }
+  };
+  document.addEventListener('keydown', escHandler);
+}
+
+function renderModalError(modal, errorMessage, modalClass) {
+  const body = modal.querySelector(`.${modalClass}__body`);
+  body.innerHTML = `
+    <div class="super-viewer-error">
+      <div class="super-viewer-error__icon">⚠️</div>
+      <div class="super-viewer-error__message">${escapeHTMLViewer(errorMessage)}</div>
+    </div>
+  `;
+}
+
+// =============================================================================
+// CLINICAL NOTES MODAL
+// =============================================================================
+
+async function showClinicalNoteModal(noteId) {
+  // Get params from content.js (exposed on window)
+  const params = await window.getCurrentParams();
+
+  const modal = createNoteModalShell();
+  document.body.appendChild(modal);
+
+  try {
+    const data = await fetchClinicalNote(noteId, params);
+    renderNoteModalContent(modal, data.note);
+  } catch (error) {
+    renderModalError(modal, error.message, 'super-note-modal');
+  }
+}
+
+function createNoteModalShell() {
+  const modal = document.createElement('div');
+  modal.className = 'super-note-modal';
+  modal.innerHTML = `
+    <div class="super-note-modal__backdrop"></div>
+    <div class="super-note-modal__container">
+      <div class="super-note-modal__header">
+        <div class="super-note-modal__title">
+          <span class="super-note-modal__name">Loading...</span>
+        </div>
+        <button class="super-note-modal__close">&times;</button>
+      </div>
+      <div class="super-note-modal__body">
+        <div class="super-viewer-loading">
+          <div class="super-viewer-loading__spinner"></div>
+          <span>Loading note...</span>
+        </div>
+      </div>
+    </div>
+  `;
+
+  setupModalCloseHandlers(modal, 'super-note-modal');
+  return modal;
+}
+
+function renderNoteModalContent(modal, note) {
+  const container = modal.querySelector('.super-note-modal__container');
+
+  const noteTypeLabel = note.noteType === 'practitioner' ? 'Practitioner Note' : 'Progress Note';
+  const noteTypeBadgeClass = note.noteType === 'practitioner' ? 'super-note-badge--practitioner' : 'super-note-badge--progress';
+
+  container.innerHTML = `
+    <div class="super-note-modal__header">
+      <div class="super-note-modal__title-row">
+        <span class="super-note-modal__icon">📝</span>
+        <div class="super-note-modal__title">
+          <span class="super-note-modal__name">${escapeHTMLViewer(note.department || noteTypeLabel)}</span>
+          <span class="super-note-badge ${noteTypeBadgeClass}">${noteTypeLabel}</span>
+        </div>
+        <button class="super-note-modal__close">&times;</button>
+      </div>
+      ${note.provider ? `<div class="super-note-modal__provider">${escapeHTMLViewer(note.provider)}</div>` : ''}
+      <div class="super-note-modal__meta">
+        ${note.effectiveDate ? `<span>${formatDateDisplay(note.effectiveDate)}</span>` : ''}
+        ${note.visitType ? `<span class="super-note-modal__visit-type">${escapeHTMLViewer(note.visitType)}</span>` : ''}
+        ${note.task ? `<span class="super-note-modal__task">${escapeHTMLViewer(note.task)}</span>` : ''}
+      </div>
+    </div>
+
+    <div class="super-note-modal__body">
+      <div class="super-note-modal__text">${escapeHTMLViewer(note.noteText || 'No note content available.')}</div>
+    </div>
+
+    <div class="super-note-modal__footer">
+      ${note.signedDate ? `<span class="super-note-modal__signed">Signed: ${formatDateTimeDisplay(note.signedDate)}</span>` : ''}
+      ${note.hasAddendum ? `<span class="super-note-modal__addendum">Has Addendum</span>` : ''}
+    </div>
+  `;
+
+  setupModalCloseHandlers(modal, 'super-note-modal');
+}
+
+// =============================================================================
+// THERAPY DOCUMENTS MODAL
+// =============================================================================
+
+async function showTherapyDocModal(therapyDocId, highlightQuote = null) {
+  const params = await window.getCurrentParams();
+
+  const modal = createTherapyModalShell();
+  document.body.appendChild(modal);
+
+  try {
+    const data = await fetchTherapyDocument(therapyDocId, params);
+    renderTherapyModalContent(modal, data.therapyDocument, highlightQuote);
+  } catch (error) {
+    renderModalError(modal, error.message, 'super-therapy-modal');
+  }
+}
+
+function createTherapyModalShell() {
+  const modal = document.createElement('div');
+  modal.className = 'super-therapy-modal';
+  modal.dataset.zoom = '100';
+  modal.innerHTML = `
+    <div class="super-therapy-modal__backdrop"></div>
+    <div class="super-therapy-modal__container">
+      <div class="super-therapy-modal__toolbar">
+        <div class="super-therapy-modal__toolbar-title">Loading...</div>
+        <div class="super-therapy-modal__toolbar-controls">
+          <div class="super-therapy-modal__zoom">
+            <button class="super-therapy-modal__zoom-btn" data-zoom-action="out" title="Zoom Out">−</button>
+            <span class="super-therapy-modal__zoom-level">100%</span>
+            <button class="super-therapy-modal__zoom-btn" data-zoom-action="in" title="Zoom In">+</button>
+          </div>
+          <button class="super-therapy-modal__close">&times;</button>
+        </div>
+      </div>
+      <div class="super-therapy-modal__body">
+        <div class="super-viewer-loading">
+          <div class="super-viewer-loading__spinner"></div>
+          <span>Loading therapy document...</span>
+        </div>
+      </div>
+      <div class="super-therapy-modal__footer">
+        <button class="super-therapy-modal__btn super-therapy-modal__btn--secondary super-therapy-modal__close-btn">Close</button>
+      </div>
+    </div>
+  `;
+
+  setupModalCloseHandlers(modal, 'super-therapy-modal');
+  setupTherapyZoomHandlers(modal);
+
+  // Also set up close for the footer button
+  modal.querySelector('.super-therapy-modal__close-btn')?.addEventListener('click', () => {
+    document.body.style.overflow = '';
+    modal.remove();
+  });
+
+  return modal;
+}
+
+function setupTherapyZoomHandlers(modal) {
+  const zoomLevels = [50, 75, 100, 125, 150];
+
+  modal.querySelectorAll('.super-therapy-modal__zoom-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const action = btn.dataset.zoomAction;
+      const currentZoom = parseInt(modal.dataset.zoom) || 100;
+      const currentIndex = zoomLevels.indexOf(currentZoom);
+
+      let newZoom = currentZoom;
+      if (action === 'in' && currentIndex < zoomLevels.length - 1) {
+        newZoom = zoomLevels[currentIndex + 1];
+      } else if (action === 'out' && currentIndex > 0) {
+        newZoom = zoomLevels[currentIndex - 1];
+      }
+
+      modal.dataset.zoom = newZoom;
+
+      // Update zoom level display
+      const zoomDisplay = modal.querySelector('.super-therapy-modal__zoom-level');
+      if (zoomDisplay) zoomDisplay.textContent = `${newZoom}%`;
+
+      // Apply zoom to document
+      const doc = modal.querySelector('.super-therapy-doc');
+      if (doc) {
+        doc.style.transform = `scale(${newZoom / 100})`;
+        doc.style.transformOrigin = 'top center';
+      }
+    });
+  });
+}
+
+function renderTherapyModalContent(modal, doc, highlightQuote = null) {
+  const { documentType } = doc;
+
+  // Route to type-specific renderer
+  switch (documentType) {
+    case 'EVAL':
+      renderEvalDocument(modal, doc, highlightQuote);
+      break;
+    case 'TEN':
+      renderTENDocument(modal, doc, highlightQuote);
+      break;
+    case 'PR':
+      renderProgressReport(modal, doc, highlightQuote);
+      break;
+    case 'RECERT':
+      renderRecertDocument(modal, doc, highlightQuote);
+      break;
+    case 'DISCH':
+      renderDischargeDocument(modal, doc, highlightQuote);
+      break;
+    default:
+      renderGenericTherapyDoc(modal, doc, highlightQuote);
+  }
+
+  // Setup highlight navigation if there are highlights
+  if (highlightQuote) {
+    setTimeout(() => {
+      setupHighlightNavigation(modal);
+    }, 100);
+  }
+}
+
+function setupHighlightNavigation(modal) {
+  const highlights = modal.querySelectorAll(`[${HIGHLIGHT_DATA_ATTR}="true"]`);
+  if (highlights.length === 0) return;
+
+  // Scroll to first highlight
+  highlights[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+  // If only one highlight, no need for navigation
+  if (highlights.length === 1) return;
+
+  // Create floating navigation UI
+  const nav = document.createElement('div');
+  nav.className = 'super-therapy-highlight-nav';
+  nav.innerHTML = `
+    <button class="super-therapy-highlight-nav__btn" data-action="prev" title="Previous highlight">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="15 18 9 12 15 6"></polyline>
+      </svg>
+    </button>
+    <span class="super-therapy-highlight-nav__count">1 of ${highlights.length}</span>
+    <button class="super-therapy-highlight-nav__btn" data-action="next" title="Next highlight">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="9 18 15 12 9 6"></polyline>
+      </svg>
+    </button>
+  `;
+
+  const modalBody = modal.querySelector('.super-therapy-modal__body');
+  if (modalBody) {
+    modalBody.appendChild(nav);
+  }
+
+  let currentIndex = 0;
+
+  const goToHighlight = (index) => {
+    // Remove active class from all
+    highlights.forEach(h => h.classList.remove('super-therapy-highlight--active'));
+
+    // Add active class to current
+    highlights[index].classList.add('super-therapy-highlight--active');
+    highlights[index].scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+    // Update counter
+    nav.querySelector('.super-therapy-highlight-nav__count').textContent = `${index + 1} of ${highlights.length}`;
+  };
+
+  nav.querySelectorAll('.super-therapy-highlight-nav__btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const action = btn.dataset.action;
+      if (action === 'prev') {
+        currentIndex = currentIndex > 0 ? currentIndex - 1 : highlights.length - 1;
+      } else {
+        currentIndex = currentIndex < highlights.length - 1 ? currentIndex + 1 : 0;
+      }
+      goToHighlight(currentIndex);
+    });
+  });
+
+  // Mark first as active
+  highlights[0].classList.add('super-therapy-highlight--active');
+}
+
+// Discipline full names for document headers
+const DISCIPLINE_NAMES = {
+  'PT': 'Physical Therapy',
+  'OT': 'Occupational Therapy',
+  'ST': 'Speech Therapy'
+};
+
+// Document type labels for toolbar
+const DOC_TYPE_LABELS = {
+  'EVAL': 'Initial Evaluation',
+  'TEN': 'Treatment Note',
+  'PR': 'Progress Report',
+  'RECERT': 'Recertification',
+  'DISCH': 'Discharge Summary'
+};
+
+// Get document name mappings for the centered document title
+const DOC_TYPE_TITLES = {
+  'EVAL': 'Initial Evaluation',
+  'TEN': 'Treatment Encounter Note(s)',
+  'PR': 'Progress Report',
+  'RECERT': 'Recertification',
+  'DISCH': 'Discharge Summary'
+};
+
+// Get field from NetHealth JSON (handles PascalCase and camelCase)
+function getField(data, ...keys) {
+  for (const key of keys) {
+    if (data[key] !== undefined) return data[key];
+    // Try PascalCase
+    const pascal = key.charAt(0).toUpperCase() + key.slice(1);
+    if (data[pascal] !== undefined) return data[pascal];
+  }
+  return null;
+}
+
+// =============================================================================
+// PDF-STYLE SHARED RENDERING COMPONENTS
+// =============================================================================
+
+// Render the document header (centered discipline + title, provider/patient row)
+function renderDocumentHeader(doc) {
+  const json = doc.jsonData || {};
+  const params = json.Parameters || json.parameters || {};
+
+  const discipline = doc.discipline || '';
+  const disciplineName = DISCIPLINE_NAMES[discipline] || discipline || 'Therapy';
+  const docType = doc.documentType || '';
+  const docTitle = DOC_TYPE_TITLES[docType] || json.BodyDocumentName || json.bodyDocumentName || docType;
+
+  const providerName = doc.providerName ||
+    getField(params, 'ProviderName', 'providerName') ||
+    getField(json, 'HeaderProviderName', 'headerProviderName') || '';
+
+  const patientName = getField(params, 'PatientName', 'patientName') ||
+    getField(json, 'HeaderPatientName', 'headerPatientName') ||
+    getField(json, 'BodyPatientName', 'bodyPatientName') || '';
+
+  return `
+    <div class="super-therapy-doc__header">
+      <div class="super-therapy-doc__discipline">${escapeHTMLViewer(disciplineName)}</div>
+      <div class="super-therapy-doc__title">${escapeHTMLViewer(docTitle)}</div>
+    </div>
+    <div class="super-therapy-doc__info-row">
+      <div class="super-therapy-doc__provider">
+        <span class="super-therapy-doc__provider-label">Provider: </span>${escapeHTMLViewer(providerName)}
+      </div>
+      <div class="super-therapy-doc__patient">${escapeHTMLViewer(patientName)}</div>
+    </div>
+  `;
+}
+
+// Render Identification Information table with blue header
+function renderIdentificationTable(doc) {
+  const json = doc.jsonData || {};
+  const params = json.Parameters || json.parameters || {};
+
+  const patientName = getField(params, 'PatientName', 'patientName') ||
+    getField(json, 'BodyPatientName', 'bodyPatientName') || '';
+  const mrn = getField(params, 'MedicalRecordNumber', 'medicalRecordNumber') ||
+    getField(json, 'BodyMRN', 'bodyMRN') || '';
+  const dob = getField(params, 'DateOfBirth', 'dateOfBirth') ||
+    getField(json, 'BodyDOB', 'bodyDOB') || '';
+  const payer = getField(params, 'PayerName', 'payerName') || '';
+  const startOfCare = getField(params, 'StartOfCare', 'startOfCare') || '';
+
+  return `
+    <div class="super-therapy-section">
+      <div class="super-therapy-section-header">Identification Information</div>
+      <div class="super-therapy-section__body">
+        <table class="super-therapy-id-table">
+          <tr>
+            <td class="super-therapy-id-table__label">Patient:</td>
+            <td class="super-therapy-id-table__value">${escapeHTMLViewer(patientName)}</td>
+            ${dob ? `<td class="super-therapy-id-table__label">DOB:</td><td class="super-therapy-id-table__value">${escapeHTMLViewer(dob)}</td>` : ''}
+            ${startOfCare ? `<td class="super-therapy-id-table__label">Start of Care:</td><td class="super-therapy-id-table__value">${escapeHTMLViewer(startOfCare)}</td>` : ''}
+          </tr>
+          <tr>
+            ${payer ? `<td class="super-therapy-id-table__label">Payer:</td><td class="super-therapy-id-table__value">${escapeHTMLViewer(payer)}</td>` : ''}
+            <td class="super-therapy-id-table__label">MRN:</td>
+            <td class="super-therapy-id-table__value" ${payer ? '' : 'colspan="3"'}>${escapeHTMLViewer(mrn)}</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  `;
+}
+
+// Render Diagnoses table with blue header
+function renderDiagnosesTable(diagnoses) {
+  if (!diagnoses || diagnoses.length === 0) return '';
+
+  const medicalDx = diagnoses.filter(d => d.IsMedicalDx || d.isMedicalDx);
+  const treatmentDx = diagnoses.filter(d => d.IsTreatmentDx || d.isTreatmentDx);
+
+  if (medicalDx.length === 0 && treatmentDx.length === 0) return '';
+
+  return `
+    <div class="super-therapy-section">
+      <div class="super-therapy-section-header">Diagnoses</div>
+      <div class="super-therapy-section__body">
+        <table class="super-therapy-dx-table">
+          <thead>
+            <tr>
+              <th>Type</th>
+              <th>Code</th>
+              <th>Description</th>
+              <th>Onset</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${medicalDx.map(d => `
+              <tr>
+                <td>Medical</td>
+                <td class="super-therapy-dx-table__code">${escapeHTMLViewer(d.Code || d.code || '')}</td>
+                <td>${escapeHTMLViewer(d.Description || d.description || '')}</td>
+                <td>${formatDateDisplay(d.OnsetDate || d.onsetDate) || '-'}</td>
+              </tr>
+            `).join('')}
+            ${treatmentDx.map(d => `
+              <tr>
+                <td>Treatment</td>
+                <td class="super-therapy-dx-table__code">${escapeHTMLViewer(d.Code || d.code || '')}</td>
+                <td>${escapeHTMLViewer(d.Description || d.description || '')}</td>
+                <td>${formatDateDisplay(d.OnsetDate || d.onsetDate) || '-'}</td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  `;
+}
+
+// Render a single goal card matching the main app format
+function renderGoalCard(goal, isLongTerm = false, highlightQuote = null) {
+  const goalType = isLongTerm ? 'LTG' : 'STG';
+  const goalNum = goal.GoalNum || goal.goalNum || '?';
+  const status = goal.GoalStatus || goal.goalStatus || 'Continue';
+  const statusClass = `super-therapy-goal__status--${status.toLowerCase().replace(/\s+/g, '')}`;
+  const goalText = goal.GoalText || goal.goalText || '';
+  const targetDate = goal.TargetDate || goal.targetDate || '';
+  const plofText = goal.GoalPlofText || goal.goalPlofText || '';
+  const baselineText = goal.BaselineValueText || goal.baselineValueText || '';
+  const priorText = goal.PriorValueText || goal.priorValueText || '';
+  const currentText = goal.CurrentValueText || goal.currentValueText || '';
+  const comments = goal.Comments || goal.comments || '';
+  const measurementCaption = goal.MeasurementCaption || goal.measurementCaption || '';
+
+  // Check highlighting
+  const allTexts = [goalText, comments, baselineText, priorText, currentText, plofText];
+  const hasMatch = anyTextMatchesQuote(allTexts, highlightQuote);
+  const highlightAttr = hasMatch ? `${HIGHLIGHT_DATA_ATTR}="true"` : '';
+  const goalTextHighlight = isTextHighlighted(highlightQuote, goalText) ? 'super-therapy-highlight' : '';
+  const commentsHighlight = isTextHighlighted(highlightQuote, comments) ? 'super-therapy-highlight' : '';
+
+  return `
+    <div class="super-therapy-goal" ${highlightAttr}>
+      <div class="super-therapy-goal__header">
+        <div class="super-therapy-goal__title">${goalType} #${goalNum} - ${status}</div>
+        <span class="super-therapy-goal__status ${statusClass}">${status}</span>
+      </div>
+      <div class="super-therapy-goal__body">
+        <p class="super-therapy-goal__text ${goalTextHighlight}">${escapeHTMLViewer(goalText)}</p>
+        ${targetDate ? `<p class="super-therapy-goal__target">Target: ${formatDateDisplay(targetDate)}</p>` : ''}
+      </div>
+      <div class="super-therapy-goal__progress">
+        <div>
+          <div class="super-therapy-goal__progress-item">
+            <div class="super-therapy-goal__progress-label">PLOF</div>
+            <div class="super-therapy-goal__progress-value">${escapeHTMLViewer(plofText || 'Not specified')}</div>
+          </div>
+          ${baselineText ? `
+            <div class="super-therapy-goal__progress-item">
+              <div class="super-therapy-goal__progress-label">Baseline${measurementCaption ? ` <span class="super-therapy-goal__progress-sublabel">(${escapeHTMLViewer(measurementCaption)})</span>` : ''}</div>
+              <div class="super-therapy-goal__progress-value">${escapeHTMLViewer(baselineText)}</div>
+            </div>
+          ` : ''}
+        </div>
+        <div>
+          ${priorText ? `
+            <div class="super-therapy-goal__progress-item">
+              <div class="super-therapy-goal__progress-label">Previous</div>
+              <div class="super-therapy-goal__progress-value">${escapeHTMLViewer(priorText)}</div>
+            </div>
+          ` : ''}
+          ${currentText ? `
+            <div class="super-therapy-goal__progress-item">
+              <div class="super-therapy-goal__progress-label">Current</div>
+              <div class="super-therapy-goal__progress-value">${escapeHTMLViewer(currentText)}</div>
+            </div>
+          ` : ''}
+        </div>
+      </div>
+      ${comments ? `
+        <div class="super-therapy-goal__comments">
+          <span class="super-therapy-goal__comments-label">Comments: </span>
+          <span class="${commentsHighlight}">${escapeHTMLViewer(comments)}</span>
+        </div>
+      ` : ''}
+    </div>
+  `;
+}
+
+// Render Goals section with blue header
+function renderGoalsSection(goals, highlightQuote = null) {
+  if (!goals || goals.length === 0) return '';
+
+  const stGoals = goals.filter(g => !g.IsLongTerm && !g.isLongTerm);
+  const ltGoals = goals.filter(g => g.IsLongTerm || g.isLongTerm);
+
+  return `
+    <div class="super-therapy-section">
+      <div class="super-therapy-section-header">Goals</div>
+      <div class="super-therapy-section__body">
+        ${ltGoals.length > 0 ? `
+          <div class="super-therapy-goals-title">Long-Term Goals</div>
+          ${ltGoals.map(g => renderGoalCard(g, true, highlightQuote)).join('')}
+        ` : ''}
+        ${stGoals.length > 0 ? `
+          <div class="super-therapy-goals-title">Short-Term Goals</div>
+          ${stGoals.map(g => renderGoalCard(g, false, highlightQuote)).join('')}
+        ` : ''}
+      </div>
+    </div>
+  `;
+}
+
+// Render Interventions/Approaches section
+function renderInterventionsSection(approaches) {
+  if (!approaches || approaches.length === 0) return '';
+
+  return `
+    <div class="super-therapy-section">
+      <div class="super-therapy-section-header">Plan of Treatment - Interventions</div>
+      <div class="super-therapy-section__body">
+        ${approaches.map(a => `
+          <div class="super-therapy-intervention">
+            <span class="super-therapy-intervention__code">${escapeHTMLViewer(a.Code || a.code || '')}</span>
+            - ${escapeHTMLViewer(a.Description || a.description || '')}
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `;
+}
+
+// Render Assessment sections with blue headers
+function renderAssessmentSections(assessmentLayout, highlightQuote = null) {
+  if (!assessmentLayout || assessmentLayout.length === 0) return '';
+
+  // Group by PrintSectionName
+  const sections = {};
+  assessmentLayout.forEach(item => {
+    const sectionName = item.PrintSectionName || item.printSectionName || item.SectionName || item.sectionName || 'Assessment';
+    const groupName = item.PrintGroupName || item.printGroupName || item.GroupName || item.groupName || '';
+    const values = item.GroupValues || item.groupValues || '';
+
+    if (!sections[sectionName]) {
+      sections[sectionName] = [];
+    }
+    sections[sectionName].push({ groupName, values });
+  });
+
+  return Object.entries(sections).map(([sectionName, items]) => `
+    <div class="super-therapy-section">
+      <div class="super-therapy-section-header">${escapeHTMLViewer(sectionName)}</div>
+      <div class="super-therapy-section__body">
+        ${items.map(item => {
+          const isHighlighted = isTextHighlighted(highlightQuote, item.values);
+          const highlightAttr = isHighlighted ? `${HIGHLIGHT_DATA_ATTR}="true"` : '';
+          const highlightClass = isHighlighted ? 'super-therapy-highlight' : '';
+
+          return `
+            <div class="super-therapy-detail-item" ${highlightAttr}>
+              ${item.groupName ? `<div class="super-therapy-detail-item__name">${escapeHTMLViewer(item.groupName)}</div>` : ''}
+              <div class="super-therapy-detail-item__value ${highlightClass}">${escapeHTMLViewer(item.values)}</div>
+            </div>
+          `;
+        }).join('')}
+      </div>
+    </div>
+  `).join('');
+}
+
+// Render Service Matrix table
+function renderServiceMatrix(serviceMatrixData) {
+  if (!serviceMatrixData) return '';
+
+  const dates = serviceMatrixData.Dates || serviceMatrixData.dates || [];
+  const rows = serviceMatrixData.ServiceRows || serviceMatrixData.serviceRows || [];
+
+  if (dates.length === 0 || rows.length === 0) return '';
+
+  return `
+    <div class="super-therapy-section">
+      <div class="super-therapy-section-header">Service Matrix</div>
+      <div class="super-therapy-section__body">
+        <table class="super-therapy-matrix">
+          <thead>
+            <tr>
+              <th class="super-therapy-matrix__service-col">Service</th>
+              ${dates.map(d => `<th>${escapeHTMLViewer(d)}</th>`).join('')}
+            </tr>
+          </thead>
+          <tbody>
+            ${rows.map(row => `
+              <tr>
+                <td class="super-therapy-matrix__service-col">${escapeHTMLViewer(row.ServiceCodeAndAbbrev || '')}</td>
+                ${dates.map(d => {
+                  const mins = row.DurationsByDate?.[d] || '';
+                  return `<td>${mins ? mins + 'm' : '-'}</td>`;
+                }).join('')}
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+        ${serviceMatrixData.TotalUniqueDays ? `<div style="margin-top: 8px; font-size: 12px; color: #6b7280;">Total Treatment Days: ${serviceMatrixData.TotalUniqueDays}</div>` : ''}
+      </div>
+    </div>
+  `;
+}
+
+// Render Signature section
+function renderSignatureSection(signatures) {
+  if (!signatures) return '';
+
+  const origSig = signatures.OriginalSignatureText || signatures.originalSignatureText;
+  const origDate = signatures.OriginalSignatureDate || signatures.originalSignatureDate;
+  const coSig = signatures.OriginalCoSignatureText || signatures.originalCoSignatureText;
+  const coDate = signatures.OriginalCosignatureDate || signatures.originalCosignatureDate;
+
+  if (!origSig && !coSig) return '';
+
+  return `
+    <div class="super-therapy-signatures">
+      ${origSig ? `
+        <div class="super-therapy-signature">
+          <div class="super-therapy-signature__line">
+            <div class="super-therapy-signature__name-area">
+              <div class="super-therapy-signature__name">${escapeHTMLViewer(origSig)}</div>
+              <div class="super-therapy-signature__label">Original Signature:</div>
+            </div>
+            ${origDate ? `
+              <div class="super-therapy-signature__date-area">
+                <div class="super-therapy-signature__date">${formatSignatureDateTime(origDate)}</div>
+                <div class="super-therapy-signature__date-label">Date</div>
+              </div>
+            ` : ''}
+          </div>
+        </div>
+      ` : ''}
+      ${coSig ? `
+        <div class="super-therapy-signature">
+          <div class="super-therapy-signature__line">
+            <div class="super-therapy-signature__name-area">
+              <div class="super-therapy-signature__name">${escapeHTMLViewer(coSig)}</div>
+              <div class="super-therapy-signature__label">Cosignature:</div>
+            </div>
+            ${coDate ? `
+              <div class="super-therapy-signature__date-area">
+                <div class="super-therapy-signature__date">${formatSignatureDateTime(coDate)}</div>
+                <div class="super-therapy-signature__date-label">Date</div>
+              </div>
+            ` : ''}
+          </div>
+        </div>
+      ` : ''}
+      <div class="super-therapy-page-num">Page 1 of 1</div>
+    </div>
+  `;
+}
+
+// =============================================================================
+// DOCUMENT TYPE RENDERERS
+// =============================================================================
+
+// Helper to generate toolbar HTML with zoom controls
+function renderTherapyToolbar(title, currentZoom = 100) {
+  return `
+    <div class="super-therapy-modal__toolbar">
+      <div class="super-therapy-modal__toolbar-title">${escapeHTMLViewer(title)}</div>
+      <div class="super-therapy-modal__toolbar-controls">
+        <div class="super-therapy-modal__zoom">
+          <button class="super-therapy-modal__zoom-btn" data-zoom-action="out" title="Zoom Out">−</button>
+          <span class="super-therapy-modal__zoom-level">${currentZoom}%</span>
+          <button class="super-therapy-modal__zoom-btn" data-zoom-action="in" title="Zoom In">+</button>
+        </div>
+        <button class="super-therapy-modal__close">&times;</button>
+      </div>
+    </div>
+  `;
+}
+
+// TEN (Treatment Note) Document Renderer
+function renderTENDocument(modal, doc, highlightQuote = null) {
+  const container = modal.querySelector('.super-therapy-modal__container');
+  const json = doc.jsonData || {};
+  const currentZoom = parseInt(modal.dataset.zoom) || 100;
+  const title = doc.displayName || `${doc.discipline} TEN - Treatment Note`;
+
+  // Extract data
+  const sections = json.Sections || json.sections || [];
+  const completedDate = getField(json, 'CompletedDateFormatted', 'completedDateFormatted') || '';
+  const assessmentDate = getField(json, 'AssessmentDateFormatted', 'assessmentDateFormatted') || completedDate;
+  const signatures = {
+    OriginalSignatureText: json.OriginalSignatureText || json.originalSignatureText,
+    OriginalSignatureDate: json.OriginalSignatureDate || json.originalSignatureDate,
+    OriginalCoSignatureText: json.OriginalCoSignatureText || json.originalCoSignatureText,
+    OriginalCosignatureDate: json.OriginalCosignatureDate || json.originalCosignatureDate
+  };
+
+  // Extract treatment details
+  const treatmentDetails = [];
+  const dailyServicesSections = sections[0];
+  if (dailyServicesSections) {
+    const details = dailyServicesSections.Details || dailyServicesSections.details || [];
+    details.forEach(detail => {
+      treatmentDetails.push({
+        name: detail.PrintGroupName || detail.printGroupName || '',
+        value: detail.GroupValues || detail.groupValues || ''
+      });
+    });
+  }
+
+  container.innerHTML = `
+    ${renderTherapyToolbar(title, currentZoom)}
+    <div class="super-therapy-modal__body">
+      <div class="super-therapy-doc">
+        ${renderDocumentHeader(doc)}
+        ${renderIdentificationTable(doc)}
+
+        <!-- Date of Service box -->
+        <div class="super-therapy-dates-box">
+          <div class="super-therapy-dates-box__item">Date of Service: ${escapeHTMLViewer(assessmentDate)}</div>
+          <div class="super-therapy-dates-box__item">Completed Date: ${escapeHTMLViewer(completedDate)}</div>
+        </div>
+
+        <!-- Summary of Daily Skilled Services -->
+        ${treatmentDetails.length > 0 ? `
+          <div class="super-therapy-section">
+            <div class="super-therapy-section-header">Summary of Daily Skilled Services</div>
+            <div class="super-therapy-section__body">
+              ${treatmentDetails.map(td => {
+                const isCode = /^\d{5}/.test(td.name);
+                const isHighlighted = isTextHighlighted(highlightQuote, td.value);
+                const highlightAttr = isHighlighted ? `${HIGHLIGHT_DATA_ATTR}="true"` : '';
+                const highlightClass = isHighlighted ? 'super-therapy-highlight' : '';
+
+                return `
+                  <div class="super-therapy-detail-item" ${highlightAttr}>
+                    <div class="super-therapy-detail-item__name ${isCode ? 'super-therapy-detail-item__name--code' : ''}">${escapeHTMLViewer(td.name)}</div>
+                    <div class="super-therapy-detail-item__value ${highlightClass}">${escapeHTMLViewer(td.value)}</div>
+                  </div>
+                `;
+              }).join('')}
+            </div>
+          </div>
+        ` : ''}
+
+        ${renderSignatureSection(signatures)}
+      </div>
+    </div>
+    <div class="super-therapy-modal__footer">
+      <button class="super-therapy-modal__btn super-therapy-modal__btn--secondary super-therapy-modal__close-btn">Close</button>
+    </div>
+  `;
+
+  setupModalCloseHandlers(modal, 'super-therapy-modal');
+  setupTherapyZoomHandlers(modal);
+  modal.querySelector('.super-therapy-modal__close-btn')?.addEventListener('click', () => {
+    document.body.style.overflow = '';
+    modal.remove();
+  });
+}
+
+// EVAL Document Renderer
+function renderEvalDocument(modal, doc, highlightQuote = null) {
+  const container = modal.querySelector('.super-therapy-modal__container');
+  const json = doc.jsonData || {};
+  const currentZoom = parseInt(modal.dataset.zoom) || 100;
+  const title = doc.displayName || `${doc.discipline} Eval - Initial Evaluation`;
+
+  // Extract data
+  const identifierInfo = json.IdentifierInfo || json.identifierInfo || {};
+  const diagnoses = json.Diagnoses || json.diagnoses || [];
+  const goals = json.GoalTargets || json.goalTargets || [];
+  const approaches = json.Approaches || json.approaches || [];
+  const assessment = json.AssessmentLayout || json.assessmentLayout || [];
+  const signatures = json.ESignatures || json.eSignatures || {};
+
+  // Plan info
+  const frequency = getField(identifierInfo, 'Frequency', 'frequency') || '';
+  const duration = getField(identifierInfo, 'Duration', 'duration') || '';
+  const intensity = getField(identifierInfo, 'Intensity', 'intensity') || '';
+  const dateRange = getField(identifierInfo, 'DateRange', 'dateRange') || '';
+  const physicianName = getField(identifierInfo, 'PhysicianFullName', 'physicianFullName') || '';
+  const physicianNPI = getField(identifierInfo, 'NPI', 'npi') || '';
+
+  container.innerHTML = `
+    ${renderTherapyToolbar(title, currentZoom)}
+    <div class="super-therapy-modal__body">
+      <div class="super-therapy-doc">
+        ${renderDocumentHeader(doc)}
+        ${renderIdentificationTable(doc)}
+
+        <!-- Treatment Plan Info -->
+        ${(frequency || duration || intensity || dateRange) ? `
+          <div class="super-therapy-plan-info">
+            ${dateRange ? `<div class="super-therapy-plan-info__item"><span class="super-therapy-plan-info__label">Certification Period: </span>${escapeHTMLViewer(dateRange)}</div>` : ''}
+            ${frequency ? `<div class="super-therapy-plan-info__item"><span class="super-therapy-plan-info__label">Frequency: </span>${escapeHTMLViewer(frequency)}</div>` : ''}
+            ${duration ? `<div class="super-therapy-plan-info__item"><span class="super-therapy-plan-info__label">Duration: </span>${escapeHTMLViewer(duration)}</div>` : ''}
+            ${intensity ? `<div class="super-therapy-plan-info__item"><span class="super-therapy-plan-info__label">Intensity: </span>${escapeHTMLViewer(intensity)}</div>` : ''}
+          </div>
+        ` : ''}
+
+        <!-- Physician Certification -->
+        ${physicianName ? `
+          <div class="super-therapy-section">
+            <div class="super-therapy-section-header">Physician Certification</div>
+            <div class="super-therapy-section__body">
+              <div><strong>Physician:</strong> ${escapeHTMLViewer(physicianName)}</div>
+              ${physicianNPI ? `<div><strong>NPI:</strong> ${escapeHTMLViewer(physicianNPI)}</div>` : ''}
+            </div>
+          </div>
+        ` : ''}
+
+        ${renderDiagnosesTable(diagnoses)}
+        ${renderGoalsSection(goals, highlightQuote)}
+        ${renderInterventionsSection(approaches)}
+        ${renderAssessmentSections(assessment, highlightQuote)}
+        ${renderSignatureSection(signatures)}
+      </div>
+    </div>
+    <div class="super-therapy-modal__footer">
+      <button class="super-therapy-modal__btn super-therapy-modal__btn--secondary super-therapy-modal__close-btn">Close</button>
+    </div>
+  `;
+
+  setupModalCloseHandlers(modal, 'super-therapy-modal');
+  setupTherapyZoomHandlers(modal);
+  modal.querySelector('.super-therapy-modal__close-btn')?.addEventListener('click', () => {
+    document.body.style.overflow = '';
+    modal.remove();
+  });
+}
+
+// PR (Progress Report) Document Renderer
+function renderProgressReport(modal, doc, highlightQuote = null) {
+  const container = modal.querySelector('.super-therapy-modal__container');
+  const json = doc.jsonData || {};
+  const currentZoom = parseInt(modal.dataset.zoom) || 100;
+  const title = doc.displayName || `${doc.discipline} PR - Progress Report`;
+
+  const diagnoses = json.Diagnoses || json.diagnoses || [];
+  const stGoals = json.AllActiveShortTermGoals || json.allActiveShortTermGoals || [];
+  const ltGoals = json.AllActiveLongTermGoals || json.allActiveLongTermGoals || [];
+  const allGoals = [...stGoals.map(g => ({...g, IsLongTerm: false})), ...ltGoals.map(g => ({...g, IsLongTerm: true}))];
+  const approaches = json.Approaches || json.approaches || [];
+  const assessment = json.AssessmentLayout || json.assessmentLayout || [];
+  const serviceMatrix = json.ServiceMatrixData || json.serviceMatrixData || {};
+  const signatures = json.ESignatures || json.eSignatures || {};
+
+  container.innerHTML = `
+    ${renderTherapyToolbar(title, currentZoom)}
+    <div class="super-therapy-modal__body">
+      <div class="super-therapy-doc">
+        ${renderDocumentHeader(doc)}
+        ${renderIdentificationTable(doc)}
+        ${renderDiagnosesTable(diagnoses)}
+        ${renderGoalsSection(allGoals, highlightQuote)}
+        ${renderServiceMatrix(serviceMatrix)}
+        ${renderInterventionsSection(approaches)}
+        ${renderAssessmentSections(assessment, highlightQuote)}
+        ${renderSignatureSection(signatures)}
+      </div>
+    </div>
+    <div class="super-therapy-modal__footer">
+      <button class="super-therapy-modal__btn super-therapy-modal__btn--secondary super-therapy-modal__close-btn">Close</button>
+    </div>
+  `;
+
+  setupModalCloseHandlers(modal, 'super-therapy-modal');
+  setupTherapyZoomHandlers(modal);
+  modal.querySelector('.super-therapy-modal__close-btn')?.addEventListener('click', () => {
+    document.body.style.overflow = '';
+    modal.remove();
+  });
+}
+
+// RECERT Document Renderer
+function renderRecertDocument(modal, doc, highlightQuote = null) {
+  const container = modal.querySelector('.super-therapy-modal__container');
+  const json = doc.jsonData || {};
+  const currentZoom = parseInt(modal.dataset.zoom) || 100;
+  const title = doc.displayName || `${doc.discipline} Recert - Recertification`;
+
+  const diagnoses = json.Diagnoses || json.diagnoses || [];
+  const goals = json.ProgressGoalTargets || json.progressGoalTargets || [];
+  const approaches = json.Approaches || json.approaches || [];
+  const assessment = json.AssessmentLayout || json.assessmentLayout || [];
+  const serviceMatrix = json.ServiceMatrixData || json.serviceMatrixData || {};
+  const signatures = json.ESignatures || json.eSignatures || {};
+
+  container.innerHTML = `
+    ${renderTherapyToolbar(title, currentZoom)}
+    <div class="super-therapy-modal__body">
+      <div class="super-therapy-doc">
+        ${renderDocumentHeader(doc)}
+        ${renderIdentificationTable(doc)}
+        ${renderDiagnosesTable(diagnoses)}
+        ${renderGoalsSection(goals, highlightQuote)}
+        ${renderServiceMatrix(serviceMatrix)}
+        ${renderInterventionsSection(approaches)}
+        ${renderAssessmentSections(assessment, highlightQuote)}
+        ${renderSignatureSection(signatures)}
+      </div>
+    </div>
+    <div class="super-therapy-modal__footer">
+      <button class="super-therapy-modal__btn super-therapy-modal__btn--secondary super-therapy-modal__close-btn">Close</button>
+    </div>
+  `;
+
+  setupModalCloseHandlers(modal, 'super-therapy-modal');
+  setupTherapyZoomHandlers(modal);
+  modal.querySelector('.super-therapy-modal__close-btn')?.addEventListener('click', () => {
+    document.body.style.overflow = '';
+    modal.remove();
+  });
+}
+
+// DISCH (Discharge) Document Renderer
+function renderDischargeDocument(modal, doc, highlightQuote = null) {
+  const container = modal.querySelector('.super-therapy-modal__container');
+  const json = doc.jsonData || {};
+  const currentZoom = parseInt(modal.dataset.zoom) || 100;
+  const title = doc.displayName || `${doc.discipline} Disch - Discharge Summary`;
+
+  const diagnoses = json.Diagnoses || json.diagnoses || [];
+  const assessment = json.AssessmentLayout || json.assessmentLayout || [];
+  const signatures = json.ESignatures || json.eSignatures || {};
+
+  container.innerHTML = `
+    ${renderTherapyToolbar(title, currentZoom)}
+    <div class="super-therapy-modal__body">
+      <div class="super-therapy-doc">
+        ${renderDocumentHeader(doc)}
+        ${renderIdentificationTable(doc)}
+        ${renderDiagnosesTable(diagnoses)}
+        ${renderAssessmentSections(assessment, highlightQuote)}
+        ${renderSignatureSection(signatures)}
+      </div>
+    </div>
+    <div class="super-therapy-modal__footer">
+      <button class="super-therapy-modal__btn super-therapy-modal__btn--secondary super-therapy-modal__close-btn">Close</button>
+    </div>
+  `;
+
+  setupModalCloseHandlers(modal, 'super-therapy-modal');
+  setupTherapyZoomHandlers(modal);
+  modal.querySelector('.super-therapy-modal__close-btn')?.addEventListener('click', () => {
+    document.body.style.overflow = '';
+    modal.remove();
+  });
+}
+
+// Generic Therapy Document Renderer (fallback)
+function renderGenericTherapyDoc(modal, doc, highlightQuote = null) {
+  const container = modal.querySelector('.super-therapy-modal__container');
+  const json = doc.jsonData || {};
+  const currentZoom = parseInt(modal.dataset.zoom) || 100;
+  const title = doc.displayName || 'Therapy Document';
+
+  container.innerHTML = `
+    ${renderTherapyToolbar(title, currentZoom)}
+    <div class="super-therapy-modal__body">
+      <div class="super-therapy-doc">
+        ${renderDocumentHeader(doc)}
+        ${renderIdentificationTable(doc)}
+        <div class="super-therapy-section">
+          <div class="super-therapy-section-header">Document Content</div>
+          <div class="super-therapy-section__body">
+            <pre class="super-therapy-raw-content">${escapeHTMLViewer(JSON.stringify(json, null, 2))}</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="super-therapy-modal__footer">
+      <button class="super-therapy-modal__btn super-therapy-modal__btn--secondary super-therapy-modal__close-btn">Close</button>
+    </div>
+  `;
+
+  setupModalCloseHandlers(modal, 'super-therapy-modal');
+  setupTherapyZoomHandlers(modal);
+  modal.querySelector('.super-therapy-modal__close-btn')?.addEventListener('click', () => {
+    document.body.style.overflow = '';
+    modal.remove();
+  });
+}
+
+// =============================================================================
+// PDF DOCUMENT MODAL
+// =============================================================================
+
+async function showDocumentModal(documentId, wordBlocks = null) {
+  const params = await window.getCurrentParams();
+
+  const modal = createPdfModalShell();
+  document.body.appendChild(modal);
+
+  try {
+    const data = await fetchDocument(documentId, params);
+    renderPdfModalContent(modal, data.document, wordBlocks);
+  } catch (error) {
+    renderModalError(modal, error.message, 'super-pdf-modal');
+  }
+}
+
+function createPdfModalShell() {
+  const modal = document.createElement('div');
+  modal.className = 'super-pdf-modal';
+  modal.innerHTML = `
+    <div class="super-pdf-modal__backdrop"></div>
+    <div class="super-pdf-modal__container">
+      <div class="super-pdf-modal__header">
+        <div class="super-pdf-modal__title">
+          <span class="super-pdf-modal__name">Loading...</span>
+        </div>
+        <button class="super-pdf-modal__close">&times;</button>
+      </div>
+      <div class="super-pdf-modal__body">
+        <div class="super-viewer-loading">
+          <div class="super-viewer-loading__spinner"></div>
+          <span>Loading document...</span>
+        </div>
+      </div>
+    </div>
+  `;
+
+  setupModalCloseHandlers(modal, 'super-pdf-modal');
+  return modal;
+}
+
+function renderPdfModalContent(modal, doc, wordBlocks = null) {
+  const container = modal.querySelector('.super-pdf-modal__container');
+
+  // Format file size
+  let fileSizeStr = '';
+  if (doc.fileSize) {
+    const kb = doc.fileSize / 1024;
+    fileSizeStr = kb > 1024 ? `${(kb / 1024).toFixed(1)} MB` : `${kb.toFixed(0)} KB`;
+  }
+
+  // Determine target page from wordBlocks
+  const targetPage = wordBlocks && wordBlocks.length > 0 && wordBlocks[0].p ? wordBlocks[0].p : 1;
+
+  container.innerHTML = `
+    <div class="super-pdf-modal__header">
+      <div class="super-pdf-modal__title-row">
+        <span class="super-pdf-modal__icon">📄</span>
+        <div class="super-pdf-modal__title">
+          <span class="super-pdf-modal__name">${escapeHTMLViewer(doc.title || 'Document')}</span>
+          ${doc.documentType ? `<span class="super-pdf-badge">${escapeHTMLViewer(doc.documentType)}</span>` : ''}
+        </div>
+        <button class="super-pdf-modal__close">&times;</button>
+      </div>
+      <div class="super-pdf-modal__meta">
+        ${doc.effectiveDate ? `<span>${formatDateDisplay(doc.effectiveDate)}</span>` : ''}
+        ${fileSizeStr ? `<span>${fileSizeStr}</span>` : ''}
+      </div>
+    </div>
+
+    <div class="super-pdf-modal__body">
+      ${doc.signedUrl ? `
+        <div class="super-pdf-canvas-container">
+          <canvas class="super-pdf-canvas"></canvas>
+          <canvas class="super-pdf-highlight-overlay"></canvas>
+        </div>
+        <div class="super-pdf-page-controls">
+          <button class="super-pdf-page-btn super-pdf-page-btn--prev">← Previous</button>
+          <span class="super-pdf-page-info">
+            <span class="super-pdf-page-current">1</span> / <span class="super-pdf-page-total">1</span>
+          </span>
+          <button class="super-pdf-page-btn super-pdf-page-btn--next">Next →</button>
+        </div>
+      ` : `
+        <div class="super-viewer-error">
+          <div class="super-viewer-error__icon">⚠️</div>
+          <div class="super-viewer-error__message">No document URL available</div>
+        </div>
+      `}
+    </div>
+
+    <div class="super-pdf-modal__footer">
+      <span class="super-pdf-modal__expiry-warning">⏱️ Link expires in 15 minutes</span>
+      ${doc.signedUrl ? `
+        <a href="${escapeHTMLViewer(doc.signedUrl)}" target="_blank" class="super-pdf-modal__open-btn">Open in New Tab ↗</a>
+      ` : ''}
+    </div>
+  `;
+
+  setupModalCloseHandlers(modal, 'super-pdf-modal');
+
+  // Render PDF with PDF.js if URL is available
+  if (doc.signedUrl) {
+    renderPdfWithHighlights(modal, doc.signedUrl, wordBlocks, targetPage);
+  }
+}
+
+// =============================================================================
+// PDF.JS RENDERING WITH HIGHLIGHTS
+// =============================================================================
+
+/**
+ * Render PDF using PDF.js with optional wordBlock highlights
+ * @param {HTMLElement} modal - The modal element
+ * @param {string} pdfUrl - URL to the PDF document
+ * @param {Array} wordBlocks - Array of wordBlock objects with x, y, w, h, p properties
+ * @param {number} targetPage - Initial page to display
+ */
+async function renderPdfWithHighlights(modal, pdfUrl, wordBlocks, targetPage = 1) {
+  // Configure PDF.js worker
+  if (typeof pdfjsLib !== 'undefined') {
+    const workerSrc = chrome.runtime.getURL('lib/pdf.worker.min.js');
+    pdfjsLib.GlobalWorkerOptions.workerSrc = workerSrc;
+  } else {
+    console.error('Super LTC: PDF.js library not loaded');
+    return;
+  }
+
+  const canvas = modal.querySelector('.super-pdf-canvas');
+  const highlightCanvas = modal.querySelector('.super-pdf-highlight-overlay');
+  const pageCurrentEl = modal.querySelector('.super-pdf-page-current');
+  const pageTotalEl = modal.querySelector('.super-pdf-page-total');
+  const prevBtn = modal.querySelector('.super-pdf-page-btn--prev');
+  const nextBtn = modal.querySelector('.super-pdf-page-btn--next');
+
+  if (!canvas || !highlightCanvas) {
+    console.error('Super LTC: Canvas elements not found');
+    return;
+  }
+
+  const ctx = canvas.getContext('2d');
+  const highlightCtx = highlightCanvas.getContext('2d');
+
+  let pdfDoc = null;
+  let currentPageNum = targetPage;
+
+  try {
+    // Load the PDF document
+    const loadingTask = pdfjsLib.getDocument(pdfUrl);
+    pdfDoc = await loadingTask.promise;
+
+    // Update total pages
+    pageTotalEl.textContent = pdfDoc.numPages;
+
+    // Function to render a specific page
+    const renderPage = async (pageNum) => {
+      if (pageNum < 1 || pageNum > pdfDoc.numPages) return;
+
+      currentPageNum = pageNum;
+      pageCurrentEl.textContent = pageNum;
+
+      // Update button states
+      prevBtn.disabled = pageNum === 1;
+      nextBtn.disabled = pageNum === pdfDoc.numPages;
+
+      // Get page
+      const page = await pdfDoc.getPage(pageNum);
+
+      // Calculate scale to fit in container
+      const container = modal.querySelector('.super-pdf-canvas-container');
+      const containerWidth = container.clientWidth;
+      const viewport = page.getViewport({ scale: 1 });
+      const scale = Math.min(containerWidth / viewport.width, 1.5);
+      const scaledViewport = page.getViewport({ scale });
+
+      // Set canvas dimensions
+      canvas.width = scaledViewport.width;
+      canvas.height = scaledViewport.height;
+      highlightCanvas.width = scaledViewport.width;
+      highlightCanvas.height = scaledViewport.height;
+
+      // Clear previous content
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      highlightCtx.clearRect(0, 0, highlightCanvas.width, highlightCanvas.height);
+
+      // Render PDF page
+      const renderContext = {
+        canvasContext: ctx,
+        viewport: scaledViewport
+      };
+      await page.render(renderContext).promise;
+
+      // Draw highlights if wordBlocks exist for this page
+      if (wordBlocks && Array.isArray(wordBlocks)) {
+        const pageBlocks = drawHighlights(highlightCtx, wordBlocks, pageNum, scaledViewport.width, scaledViewport.height);
+        
+        // Auto-scroll to first highlight on initial page load
+        if (pageNum === targetPage && pageBlocks.length > 0) {
+          setTimeout(() => {
+            scrollToFirstHighlight(container, pageBlocks[0], scaledViewport.width, scaledViewport.height);
+          }, 100);
+        }
+      }
+    };
+
+    // Set up navigation buttons
+    prevBtn.addEventListener('click', () => {
+      if (currentPageNum > 1) {
+        renderPage(currentPageNum - 1);
+      }
+    });
+
+    nextBtn.addEventListener('click', () => {
+      if (currentPageNum < pdfDoc.numPages) {
+        renderPage(currentPageNum + 1);
+      }
+    });
+
+    // Render initial page
+    await renderPage(targetPage);
+
+  } catch (error) {
+    console.error('Super LTC: Error rendering PDF:', error);
+    const body = modal.querySelector('.super-pdf-modal__body');
+    body.innerHTML = `
+      <div class="super-viewer-error">
+        <div class="super-viewer-error__icon">⚠️</div>
+        <div class="super-viewer-error__message">Failed to load PDF: ${escapeHTMLViewer(error.message)}</div>
+      </div>
+    `;
+  }
+}
+
+/**
+ * Draw highlight rectangles for wordBlocks on a specific page
+ * @param {CanvasRenderingContext2D} ctx - Canvas context for drawing
+ * @param {Array} wordBlocks - Array of wordBlock objects
+ * @param {number} pageNum - Current page number
+ * @param {number} pageWidth - Rendered page width in pixels
+ * @param {number} pageHeight - Rendered page height in pixels
+ * @returns {Array} - Array of wordBlocks for this page
+ */
+function drawHighlights(ctx, wordBlocks, pageNum, pageWidth, pageHeight) {
+  // Filter wordBlocks for current page
+  const pageBlocks = wordBlocks.filter(wb => wb.p === pageNum);
+
+  if (pageBlocks.length === 0) return [];
+
+  // Set highlight style
+  ctx.fillStyle = 'rgba(255, 235, 59, 0.4)'; // Yellow with transparency
+  ctx.strokeStyle = 'rgba(255, 193, 7, 0.6)';
+  ctx.lineWidth = 1;
+
+  // Draw each word block
+  pageBlocks.forEach(wb => {
+    const rect = normalizeWordBlockCoords(wb, pageWidth, pageHeight);
+    
+    // Draw filled rectangle
+    ctx.fillRect(rect.x, rect.y, rect.width, rect.height);
+    
+    // Draw border
+    ctx.strokeRect(rect.x, rect.y, rect.width, rect.height);
+  });
+
+  return pageBlocks;
+}
+
+/**
+ * Convert relative wordBlock coordinates (0-1) to pixel coordinates
+ * @param {Object} wordBlock - WordBlock with x, y, w, h properties (0-1 relative)
+ * @param {number} pageWidth - Page width in pixels
+ * @param {number} pageHeight - Page height in pixels
+ * @returns {Object} - Pixel coordinates {x, y, width, height}
+ */
+function normalizeWordBlockCoords(wordBlock, pageWidth, pageHeight) {
+  return {
+    x: wordBlock.x * pageWidth,
+    y: wordBlock.y * pageHeight,
+    width: wordBlock.w * pageWidth,
+    height: wordBlock.h * pageHeight
+  };
+}
+
+/**
+ * Scroll the container to show the first highlight
+ * @param {HTMLElement} container - The scrollable container
+ * @param {Object} wordBlock - The first wordBlock to scroll to
+ * @param {number} pageWidth - Page width in pixels
+ * @param {number} pageHeight - Page height in pixels
+ */
+function scrollToFirstHighlight(container, wordBlock, pageWidth, pageHeight) {
+  // Find the modal body which is the actual scrollable container
+  const modalBody = container.closest('.super-pdf-modal__body');
+  if (!modalBody) return;
+
+  const rect = normalizeWordBlockCoords(wordBlock, pageWidth, pageHeight);
+  
+  // Calculate scroll position to center the highlight vertically
+  // Account for the 20px padding at the top
+  const scrollTop = rect.y + 20 - (modalBody.clientHeight / 3);
+  
+  // Smooth scroll to the highlight
+  modalBody.scrollTo({
+    top: Math.max(0, scrollTop),
+    behavior: 'smooth'
+  });
+}

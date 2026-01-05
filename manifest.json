@@ -28,8 +28,8 @@
   "content_scripts": [
     {
       "matches": ["*://*.pointclickcare.com/*"],
-      "js": ["content/mockData.js", "content/content.js"],
-      "css": ["content/content.css"],
+      "js": ["lib/pdf.min.js", "content/mockData.js", "content/chatbot.js", "content/evidence-viewers.js", "content/content.js"],
+      "css": ["content/content.css", "content/chatbot.css"],
       "run_at": "document_idle"
     }
   ],
@@ -40,7 +40,7 @@
   },
   "web_accessible_resources": [
     {
-      "resources": ["callback.html"],
+      "resources": ["callback.html", "lib/pdf.worker.min.js"],
       "matches": ["<all_urls>"]
     }
   ]

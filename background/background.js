@@ -184,6 +184,86 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   }
 });
 
+// ============================================
+// Streaming Chat Handler (Port-based)
+// ============================================
+chrome.runtime.onConnect.addListener((port) => {
+  if (port.name !== 'chat-stream') return;
+
+  port.onMessage.addListener(async (msg) => {
+    if (msg.type === 'START_STREAM') {
+      await handleChatStream(port, msg.patientId, msg.orgSlug, msg.facilityName, msg.messages);
+    }
+  });
+});
+
+async function handleChatStream(port, patientId, orgSlug, facilityName, messages) {
+  try {
+    const { authToken } = await chrome.storage.local.get('authToken');
+    if (!authToken) {
+      port.postMessage({ type: 'ERROR', error: 'Not authenticated' });
+      return;
+    }
+
+    // Build URL with query params for extension auth
+    const params = new URLSearchParams();
+    if (orgSlug) params.append('orgSlug', orgSlug);
+    if (facilityName) params.append('facilityName', facilityName);
+
+    const url = `${CONFIG.API_BASE}/api/patients/${patientId}/search?${params.toString()}`;
+    console.log('Super LTC Chat: Starting stream to', url);
+
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${authToken}`
+      },
+      body: JSON.stringify({ messages })
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('Super LTC Chat: API error', response.status, errorText);
+      port.postMessage({ type: 'ERROR', error: `API error: ${response.status}` });
+      return;
+    }
+
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder();
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+
+      const chunk = decoder.decode(value, { stream: true });
+      try {
+        port.postMessage({ type: 'CHUNK', data: chunk });
+      } catch (e) {
+        // Port disconnected
+        console.log('Super LTC Chat: Port disconnected during stream');
+        break;
+      }
+    }
+
+    try {
+      port.postMessage({ type: 'DONE' });
+    } catch (e) {
+      // Port already disconnected
+    }
+
+    console.log('Super LTC Chat: Stream complete');
+
+  } catch (error) {
+    console.error('Super LTC Chat: Stream error', error);
+    try {
+      port.postMessage({ type: 'ERROR', error: error.message });
+    } catch (e) {
+      // Port disconnected
+    }
+  }
+}
+
 // Log when service worker starts
 console.log('Super LTC background service worker started');
 console.log('API Base:', CONFIG.API_BASE);
