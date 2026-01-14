@@ -101,11 +101,12 @@ function getSectionODescription(mdsItem) {
  */
 function transformSectionK(results) {
   const items = [];
+  const sectionData = results.sectionK || results;
 
   // K0100: Swallowing Disorder (subItems A-D, Z)
   // Note: Use empty string as column key so element lookup is K0100A_wrapper, not K0100AA_wrapper
-  if (results.k0100) {
-    const k0100 = results.k0100;
+  if (sectionData.k0100) {
+    const k0100 = sectionData.k0100;
     // Each subItem becomes a separate overlay item
     Object.entries(k0100.subItems || {}).forEach(([subItem, data]) => {
       items.push({
@@ -125,8 +126,8 @@ function transformSectionK(results) {
 
   // K0200: Height and Weight (special - numeric values)
   // Note: Use empty string as column key so element lookup is K0200A_wrapper, not K0200AA_wrapper
-  if (results.k0200) {
-    const k0200 = results.k0200;
+  if (sectionData.k0200) {
+    const k0200 = sectionData.k0200;
     // Height
     if (k0200.heightInInches !== null) {
       items.push({
@@ -161,16 +162,16 @@ function transformSectionK(results) {
 
   // K0300: Weight Loss
   // Note: Use empty string as column key so element lookup is K0300_wrapper
-  if (results.k0300) {
+  if (sectionData.k0300) {
     items.push({
       mdsItem: 'K0300',
       description: 'Weight Loss',
       columns: {
         '': {
-          answer: results.k0300.answer,
-          confidence: results.k0300.confidence,
-          rationale: results.k0300.rationale,
-          evidence: results.k0300.evidence ? [results.k0300.evidence] : []
+          answer: sectionData.k0300.answer,
+          confidence: sectionData.k0300.confidence,
+          rationale: sectionData.k0300.rationale,
+          evidence: sectionData.k0300.evidence ? [sectionData.k0300.evidence] : []
         }
       }
     });
@@ -178,24 +179,24 @@ function transformSectionK(results) {
 
   // K0310: Weight Gain (not on IPA)
   // Note: Use empty string as column key so element lookup is K0310_wrapper
-  if (results.k0310) {
+  if (sectionData.k0310) {
     items.push({
       mdsItem: 'K0310',
       description: 'Weight Gain',
       columns: {
         '': {
-          answer: results.k0310.answer,
-          confidence: results.k0310.confidence,
-          rationale: results.k0310.rationale,
-          evidence: results.k0310.evidence ? [results.k0310.evidence] : []
+          answer: sectionData.k0310.answer,
+          confidence: sectionData.k0310.confidence,
+          rationale: sectionData.k0310.rationale,
+          evidence: sectionData.k0310.evidence ? [sectionData.k0310.evidence] : []
         }
       }
     });
   }
 
   // K0520: Nutritional Approaches (items A-D, Z with columns 1-4)
-  if (results.k0520) {
-    Object.entries(results.k0520.items || {}).forEach(([itemKey, itemData]) => {
+  if (sectionData.k0520) {
+    Object.entries(sectionData.k0520.items || {}).forEach(([itemKey, itemData]) => {
       // Each K0520 item has columns 1, 2, 3, 4
       const columns = {};
       Object.entries(itemData.columns || {}).forEach(([colNum, colData]) => {
@@ -218,9 +219,9 @@ function transformSectionK(results) {
   }
 
   // K0710: Percent Intake (only if triggered)
-  if (results.k0710 && results.k0710.triggered) {
+  if (sectionData.k0710 && sectionData.k0710.triggered) {
     // K0710 has columns 2 and 3, each with A (percent) and B (fluid intake)
-    Object.entries(results.k0710.columns || {}).forEach(([colNum, colData]) => {
+    Object.entries(sectionData.k0710.columns || {}).forEach(([colNum, colData]) => {
       if (colData.A) {
         items.push({
           mdsItem: `K0710A`,
@@ -308,10 +309,11 @@ function transformSectionI(results) {
  */
 function transformSectionE(results) {
   const items = [];
+  const sectionData = results.sectionE || results;
 
   // E0100: Potential Indicators of Psychosis (subItems A, B, Z)
-  if (results.e0100) {
-    Object.entries(results.e0100.subItems || {}).forEach(([subItem, data]) => {
+  if (sectionData.e0100) {
+    Object.entries(sectionData.e0100.subItems || {}).forEach(([subItem, data]) => {
       items.push({
         mdsItem: `E0100${subItem}`,
         description: getSectionEDescription(`E0100${subItem}`),
@@ -328,8 +330,8 @@ function transformSectionE(results) {
   }
 
   // E0200: Behavioral Symptoms - Frequency (subItems A, B, C with frequencyCode)
-  if (results.e0200) {
-    Object.entries(results.e0200.subItems || {}).forEach(([subItem, data]) => {
+  if (sectionData.e0200) {
+    Object.entries(sectionData.e0200.subItems || {}).forEach(([subItem, data]) => {
       items.push({
         mdsItem: `E0200${subItem}`,
         description: getSectionEDescription(`E0200${subItem}`),
@@ -347,15 +349,15 @@ function transformSectionE(results) {
   }
 
   // E0300: Overall Presence of Behavioral Symptoms (derived)
-  if (results.e0300) {
+  if (sectionData.e0300) {
     items.push({
       mdsItem: 'E0300',
       description: getSectionEDescription('E0300'),
       columns: {
         '': {
-          answer: String(results.e0300.answer),
+          answer: String(sectionData.e0300.answer),
           confidence: 'high',
-          rationale: results.e0300.rationale,
+          rationale: sectionData.e0300.rationale,
           evidence: []
         }
       }
@@ -363,74 +365,74 @@ function transformSectionE(results) {
   }
 
   // E0500: Impact on Resident
-  if (results.e0500 && !results.e0500.skipped) {
+  if (sectionData.e0500 && !sectionData.e0500.skipped) {
     items.push({
       mdsItem: 'E0500',
       description: getSectionEDescription('E0500'),
       columns: {
         '': {
-          answer: results.e0500.answer,
-          confidence: results.e0500.confidence,
-          rationale: results.e0500.rationale,
-          evidence: results.e0500.evidence || []
+          answer: sectionData.e0500.answer,
+          confidence: sectionData.e0500.confidence,
+          rationale: sectionData.e0500.rationale,
+          evidence: sectionData.e0500.evidence || []
         }
       }
     });
   }
 
   // E0600: Impact on Others
-  if (results.e0600 && !results.e0600.skipped) {
+  if (sectionData.e0600 && !sectionData.e0600.skipped) {
     items.push({
       mdsItem: 'E0600',
       description: getSectionEDescription('E0600'),
       columns: {
         '': {
-          answer: results.e0600.answer,
-          confidence: results.e0600.confidence,
-          rationale: results.e0600.rationale,
-          evidence: results.e0600.evidence || []
+          answer: sectionData.e0600.answer,
+          confidence: sectionData.e0600.confidence,
+          rationale: sectionData.e0600.rationale,
+          evidence: sectionData.e0600.evidence || []
         }
       }
     });
   }
 
   // E0800: Rejection of Care (frequencyCode)
-  if (results.e0800) {
+  if (sectionData.e0800) {
     items.push({
       mdsItem: 'E0800',
       description: getSectionEDescription('E0800'),
       columns: {
         '': {
-          answer: String(results.e0800.frequencyCode),
-          confidence: results.e0800.confidence,
-          rationale: results.e0800.rationale,
-          evidence: results.e0800.evidence || [],
-          distinctDates: results.e0800.distinctDates
+          answer: String(sectionData.e0800.frequencyCode),
+          confidence: sectionData.e0800.confidence,
+          rationale: sectionData.e0800.rationale,
+          evidence: sectionData.e0800.evidence || [],
+          distinctDates: sectionData.e0800.distinctDates
         }
       }
     });
   }
 
   // E0900: Wandering (frequencyCode)
-  if (results.e0900) {
+  if (sectionData.e0900) {
     items.push({
       mdsItem: 'E0900',
       description: getSectionEDescription('E0900'),
       columns: {
         '': {
-          answer: String(results.e0900.frequencyCode),
-          confidence: results.e0900.confidence,
-          rationale: results.e0900.rationale,
-          evidence: results.e0900.evidence || [],
-          distinctDates: results.e0900.distinctDates
+          answer: String(sectionData.e0900.frequencyCode),
+          confidence: sectionData.e0900.confidence,
+          rationale: sectionData.e0900.rationale,
+          evidence: sectionData.e0900.evidence || [],
+          distinctDates: sectionData.e0900.distinctDates
         }
       }
     });
   }
 
   // E1000: Wandering Impact (subItems A, B)
-  if (results.e1000 && !results.e1000.skipped) {
-    Object.entries(results.e1000.subItems || {}).forEach(([subItem, data]) => {
+  if (sectionData.e1000 && !sectionData.e1000.skipped) {
+    Object.entries(sectionData.e1000.subItems || {}).forEach(([subItem, data]) => {
       items.push({
         mdsItem: `E1000${subItem}`,
         description: getSectionEDescription(`E1000${subItem}`),
@@ -447,16 +449,16 @@ function transformSectionE(results) {
   }
 
   // E1100: Change in Behavior Symptoms (changeCode, 90-day lookback)
-  if (results.e1100 && !results.e1100.skipped) {
+  if (sectionData.e1100 && !sectionData.e1100.skipped) {
     items.push({
       mdsItem: 'E1100',
       description: getSectionEDescription('E1100'),
       columns: {
         '': {
-          answer: String(results.e1100.changeCode),
-          confidence: results.e1100.confidence,
-          rationale: results.e1100.rationale,
-          evidence: results.e1100.evidence || []
+          answer: String(sectionData.e1100.changeCode),
+          confidence: sectionData.e1100.confidence,
+          rationale: sectionData.e1100.rationale,
+          evidence: sectionData.e1100.evidence || []
         }
       }
     });
@@ -559,20 +561,21 @@ function getSectionMDescription(mdsItem) {
  */
 function transformSectionN(results) {
   const items = [];
+  const sectionData = results.sectionN || results;
 
   // N0300: Number of days injections received (NUMERIC - day count 0-7)
-  if (results.n0300) {
+  if (sectionData.n0300) {
     items.push({
       mdsItem: 'N0300',
       description: getSectionNDescription('N0300'),
       columns: {
         '': {
-          answer: String(results.n0300.answer),
-          confidence: results.n0300.confidence,
-          rationale: results.n0300.rationale,
-          evidence: results.n0300.evidence || [],
-          distinctDays: results.n0300.distinctDays,
-          injections: results.n0300.injections,
+          answer: String(sectionData.n0300.answer),
+          confidence: sectionData.n0300.confidence,
+          rationale: sectionData.n0300.rationale,
+          evidence: sectionData.n0300.evidence || [],
+          distinctDays: sectionData.n0300.distinctDays,
+          injections: sectionData.n0300.injections,
           isNumeric: true
         }
       }
@@ -580,18 +583,18 @@ function transformSectionN(results) {
   }
 
   // N0350A: Insulin injections - days received (NUMERIC - day count 0-7)
-  if (results.n0350a) {
+  if (sectionData.n0350a) {
     items.push({
       mdsItem: 'N0350A',
       description: getSectionNDescription('N0350A'),
       columns: {
         '': {
-          answer: String(results.n0350a.answer),
-          confidence: results.n0350a.confidence,
-          rationale: results.n0350a.rationale,
-          evidence: results.n0350a.evidence || [],
-          distinctDays: results.n0350a.distinctDays,
-          insulinInjections: results.n0350a.insulinInjections,
+          answer: String(sectionData.n0350a.answer),
+          confidence: sectionData.n0350a.confidence,
+          rationale: sectionData.n0350a.rationale,
+          evidence: sectionData.n0350a.evidence || [],
+          distinctDays: sectionData.n0350a.distinctDays,
+          insulinInjections: sectionData.n0350a.insulinInjections,
           isNumeric: true
         }
       }
@@ -599,18 +602,18 @@ function transformSectionN(results) {
   }
 
   // N0350B: Insulin order changes (NUMERIC - day count 0-7)
-  if (results.n0350b) {
+  if (sectionData.n0350b) {
     items.push({
       mdsItem: 'N0350B',
       description: getSectionNDescription('N0350B'),
       columns: {
         '': {
-          answer: String(results.n0350b.answer),
-          confidence: results.n0350b.confidence,
-          rationale: results.n0350b.rationale,
-          evidence: results.n0350b.evidence || [],
-          distinctDays: results.n0350b.distinctDays,
-          orderChanges: results.n0350b.orderChanges,
+          answer: String(sectionData.n0350b.answer),
+          confidence: sectionData.n0350b.confidence,
+          rationale: sectionData.n0350b.rationale,
+          evidence: sectionData.n0350b.evidence || [],
+          distinctDays: sectionData.n0350b.distinctDays,
+          orderChanges: sectionData.n0350b.orderChanges,
           isNumeric: true
         }
       }
@@ -618,8 +621,8 @@ function transformSectionN(results) {
   }
 
   // N0415: High-Risk Drug Classes (A-K, Z with columns 1 and 2)
-  if (results.n0415) {
-    Object.entries(results.n0415).forEach(([drugClass, data]) => {
+  if (sectionData.n0415) {
+    Object.entries(sectionData.n0415).forEach(([drugClass, data]) => {
       if (!data.result) return;
 
       const col1 = data.result.column1;
@@ -662,52 +665,52 @@ function transformSectionN(results) {
   }
 
   // N0450: Antipsychotic Medication Review
-  if (results.n0450) {
+  if (sectionData.n0450) {
     // N0450A: Was antipsychotic received?
-    if (results.n0450.n0450a) {
+    if (sectionData.n0450.n0450a) {
       items.push({
         mdsItem: 'N0450A',
         description: getSectionNDescription('N0450A'),
         columns: {
           '': {
-            answer: String(results.n0450.n0450a.answer),
-            confidence: results.n0450.n0450a.confidence,
-            rationale: results.n0450.n0450a.rationale,
-            evidence: results.n0450.n0450a.evidence || [],
-            routineMedications: results.n0450.n0450a.routineMedications,
-            prnMedications: results.n0450.n0450a.prnMedications
+            answer: String(sectionData.n0450.n0450a.answer),
+            confidence: sectionData.n0450.n0450a.confidence,
+            rationale: sectionData.n0450.n0450a.rationale,
+            evidence: sectionData.n0450.n0450a.evidence || [],
+            routineMedications: sectionData.n0450.n0450a.routineMedications,
+            prnMedications: sectionData.n0450.n0450a.prnMedications
           }
         }
       });
     }
 
     // N0450B: GDR attempted?
-    if (results.n0450.n0450b) {
+    if (sectionData.n0450.n0450b) {
       items.push({
         mdsItem: 'N0450B',
         description: getSectionNDescription('N0450B'),
         columns: {
           '': {
-            answer: String(results.n0450.n0450b.answer),
-            confidence: results.n0450.n0450b.confidence,
-            rationale: results.n0450.n0450b.rationale,
-            evidence: results.n0450.n0450b.evidence || [],
-            gdrDate: results.n0450.n0450b.gdrDate
+            answer: String(sectionData.n0450.n0450b.answer),
+            confidence: sectionData.n0450.n0450b.confidence,
+            rationale: sectionData.n0450.n0450b.rationale,
+            evidence: sectionData.n0450.n0450b.evidence || [],
+            gdrDate: sectionData.n0450.n0450b.gdrDate
           }
         }
       });
     }
 
     // N0450C: Date of last GDR attempt
-    if (results.n0450.n0450c) {
+    if (sectionData.n0450.n0450c) {
       items.push({
         mdsItem: 'N0450C',
         description: getSectionNDescription('N0450C'),
         columns: {
           '': {
-            answer: results.n0450.n0450c,
+            answer: sectionData.n0450.n0450c,
             confidence: 'high',
-            rationale: `Last GDR attempt: ${results.n0450.n0450c}`,
+            rationale: `Last GDR attempt: ${sectionData.n0450.n0450c}`,
             evidence: []
           }
         }
@@ -716,52 +719,52 @@ function transformSectionN(results) {
   }
 
   // N2001: Drug Regimen Review (5-Day PPS only)
-  if (results.n2001) {
+  if (sectionData.n2001) {
     items.push({
       mdsItem: 'N2001',
       description: getSectionNDescription('N2001'),
       columns: {
         '': {
-          answer: String(results.n2001.answer),
-          confidence: results.n2001.confidence,
-          rationale: results.n2001.rationale,
-          evidence: results.n2001.evidence || [],
-          issuesFound: results.n2001.issuesFound
+          answer: String(sectionData.n2001.answer),
+          confidence: sectionData.n2001.confidence,
+          rationale: sectionData.n2001.rationale,
+          evidence: sectionData.n2001.evidence || [],
+          issuesFound: sectionData.n2001.issuesFound
         }
       }
     });
   }
 
   // N2003: Medication Follow-up (only if N2001 = 1)
-  if (results.n2003) {
+  if (sectionData.n2003) {
     items.push({
       mdsItem: 'N2003',
       description: getSectionNDescription('N2003'),
       columns: {
         '': {
-          answer: String(results.n2003.answer),
-          confidence: results.n2003.confidence,
-          rationale: results.n2003.rationale,
-          evidence: results.n2003.evidence || [],
-          physicianContacted: results.n2003.physicianContacted,
-          contactDate: results.n2003.contactDate
+          answer: String(sectionData.n2003.answer),
+          confidence: sectionData.n2003.confidence,
+          rationale: sectionData.n2003.rationale,
+          evidence: sectionData.n2003.evidence || [],
+          physicianContacted: sectionData.n2003.physicianContacted,
+          contactDate: sectionData.n2003.contactDate
         }
       }
     });
   }
 
   // N2005: Medication Intervention (PPS Discharge only)
-  if (results.n2005) {
+  if (sectionData.n2005) {
     items.push({
       mdsItem: 'N2005',
       description: getSectionNDescription('N2005'),
       columns: {
         '': {
-          answer: String(results.n2005.answer),
-          confidence: results.n2005.confidence,
-          rationale: results.n2005.rationale,
-          evidence: results.n2005.evidence || [],
-          issueEvents: results.n2005.issueEvents
+          answer: String(sectionData.n2005.answer),
+          confidence: sectionData.n2005.confidence,
+          rationale: sectionData.n2005.rationale,
+          evidence: sectionData.n2005.evidence || [],
+          issueEvents: sectionData.n2005.issueEvents
         }
       }
     });
@@ -805,10 +808,11 @@ function getSectionNDescription(mdsItem) {
  */
 function transformSectionJ(results) {
   const items = [];
+  const sectionData = results.sectionJ || results;
 
   // J0100: Pain Management (subItems A, B, C - numeric 0/1)
-  if (results.j0100) {
-    Object.entries(results.j0100.subItems || {}).forEach(([subItem, data]) => {
+  if (sectionData.j0100) {
+    Object.entries(sectionData.j0100.subItems || {}).forEach(([subItem, data]) => {
       items.push({
         mdsItem: `J0100${subItem}`,
         description: getSectionJDescription(`J0100${subItem}`),
@@ -818,23 +822,23 @@ function transformSectionJ(results) {
             confidence: data.confidence,
             rationale: data.rationale,
             evidence: data.evidence || [],
-            lookbackWindow: results.j0100.lookbackWindow
+            lookbackWindow: sectionData.j0100.lookbackWindow
           }
         }
       });
     });
 
     // Include pain medications info if available
-    if (results.j0100.painMedications) {
-      const scheduled = results.j0100.painMedications.scheduled || [];
-      const prn = results.j0100.painMedications.prn || [];
+    if (sectionData.j0100.painMedications) {
+      const scheduled = sectionData.j0100.painMedications.scheduled || [];
+      const prn = sectionData.j0100.painMedications.prn || [];
       // This data is available on the j0100A/B items for display
     }
   }
 
   // J1100: Shortness of Breath (subItems A, B, C, Z)
-  if (results.j1100) {
-    Object.entries(results.j1100.subItems || {}).forEach(([subItem, data]) => {
+  if (sectionData.j1100) {
+    Object.entries(sectionData.j1100.subItems || {}).forEach(([subItem, data]) => {
       items.push({
         mdsItem: `J1100${subItem}`,
         description: getSectionJDescription(`J1100${subItem}`),
@@ -844,7 +848,7 @@ function transformSectionJ(results) {
             confidence: data.confidence,
             rationale: data.rationale,
             evidence: data.evidence || [],
-            lookbackWindow: results.j1100.lookbackWindow
+            lookbackWindow: sectionData.j1100.lookbackWindow
           }
         }
       });
@@ -852,77 +856,77 @@ function transformSectionJ(results) {
   }
 
   // J1300: Current Tobacco Use
-  if (results.j1300) {
+  if (sectionData.j1300) {
     items.push({
       mdsItem: 'J1300',
       description: getSectionJDescription('J1300'),
       columns: {
         '': {
-          answer: String(results.j1300.answer),
-          confidence: results.j1300.confidence,
-          rationale: results.j1300.rationale,
-          evidence: results.j1300.evidence || []
+          answer: String(sectionData.j1300.answer),
+          confidence: sectionData.j1300.confidence,
+          rationale: sectionData.j1300.rationale,
+          evidence: sectionData.j1300.evidence || []
         }
       }
     });
   }
 
   // J1400: Prognosis (life expectancy < 6 months)
-  if (results.j1400) {
+  if (sectionData.j1400) {
     items.push({
       mdsItem: 'J1400',
       description: getSectionJDescription('J1400'),
       columns: {
         '': {
-          answer: String(results.j1400.answer),
-          confidence: results.j1400.confidence,
-          rationale: results.j1400.rationale,
-          evidence: results.j1400.evidence || [],
-          isHospiceEnrolled: results.j1400.isHospiceEnrolled,
-          prognosisDocumented: results.j1400.prognosisDocumented
+          answer: String(sectionData.j1400.answer),
+          confidence: sectionData.j1400.confidence,
+          rationale: sectionData.j1400.rationale,
+          evidence: sectionData.j1400.evidence || [],
+          isHospiceEnrolled: sectionData.j1400.isHospiceEnrolled,
+          prognosisDocumented: sectionData.j1400.prognosisDocumented
         }
       }
     });
   }
 
   // J1700: Fall History on Admission (if present)
-  if (results.j1700 && !results.j1700.skipped) {
+  if (sectionData.j1700 && !sectionData.j1700.skipped) {
     items.push({
       mdsItem: 'J1700',
       description: getSectionJDescription('J1700'),
       columns: {
         '': {
-          answer: String(results.j1700.answer),
-          confidence: results.j1700.confidence,
-          rationale: results.j1700.rationale,
-          evidence: results.j1700.evidence || []
+          answer: String(sectionData.j1700.answer),
+          confidence: sectionData.j1700.confidence,
+          rationale: sectionData.j1700.rationale,
+          evidence: sectionData.j1700.evidence || []
         }
       }
     });
   }
 
   // J1800: Any Falls Since Admission
-  if (results.j1800) {
+  if (sectionData.j1800) {
     items.push({
       mdsItem: 'J1800',
       description: getSectionJDescription('J1800'),
       columns: {
         '': {
-          answer: String(results.j1800.answer),
-          confidence: results.j1800.confidence,
-          rationale: results.j1800.rationale,
+          answer: String(sectionData.j1800.answer),
+          confidence: sectionData.j1800.confidence,
+          rationale: sectionData.j1800.rationale,
           evidence: [],
-          fallCount: results.j1800.fallCount,
-          falls: results.j1800.falls,
-          lookbackWindow: results.j1800.lookbackWindow
+          fallCount: sectionData.j1800.fallCount,
+          falls: sectionData.j1800.falls,
+          lookbackWindow: sectionData.j1800.lookbackWindow
         }
       }
     });
   }
 
   // J1900: Number of Falls (subItems A, B, C - only if J1800 > 0)
-  if (results.j1900 && !results.j1900.skipped) {
-    Object.entries(results.j1900.subItems || {}).forEach(([subItem, data]) => {
+  if (sectionData.j1900 && !sectionData.j1900.skipped) {
+    Object.entries(sectionData.j1900.subItems || {}).forEach(([subItem, data]) => {
       items.push({
         mdsItem: `J1900${subItem}`,
         description: getSectionJDescription(`J1900${subItem}`),
@@ -941,16 +945,16 @@ function transformSectionJ(results) {
   }
 
   // J2000: Prior Surgery (if present)
-  if (results.j2000 && !results.j2000.skipped) {
+  if (sectionData.j2000 && !sectionData.j2000.skipped) {
     items.push({
       mdsItem: 'J2000',
       description: getSectionJDescription('J2000'),
       columns: {
         '': {
-          answer: String(results.j2000.answer),
-          confidence: results.j2000.confidence,
-          rationale: results.j2000.rationale,
-          evidence: results.j2000.evidence || []
+          answer: String(sectionData.j2000.answer),
+          confidence: sectionData.j2000.confidence,
+          rationale: sectionData.j2000.rationale,
+          evidence: sectionData.j2000.evidence || []
         }
       }
     });
@@ -988,10 +992,11 @@ function getSectionJDescription(mdsItem) {
  */
 function transformSectionL(results) {
   const items = [];
+  const sectionData = results.sectionL || results;
 
   // L0200: Dental (subItems A-F, Z)
-  if (results.l0200) {
-    Object.entries(results.l0200.subItems || {}).forEach(([subItem, data]) => {
+  if (sectionData.l0200) {
+    Object.entries(sectionData.l0200.subItems || {}).forEach(([subItem, data]) => {
       items.push({
         mdsItem: `L0200${subItem}`,
         description: getSectionLDescription(`L0200${subItem}`),
@@ -1001,7 +1006,7 @@ function transformSectionL(results) {
             confidence: data.confidence,
             rationale: data.rationale,
             evidence: data.evidence || [],
-            lookbackWindow: results.l0200.lookbackWindow
+            lookbackWindow: sectionData.l0200.lookbackWindow
           }
         }
       });
@@ -1032,11 +1037,12 @@ function getSectionLDescription(mdsItem) {
  */
 function transformSectionH(results) {
   const items = [];
+  const sectionData = results.sectionH || results;
 
   // H0100: Appliances (subItems A-D, Z)
   // A = Indwelling catheter, B = External catheter, C = Ostomy, D = Intermittent cath, Z = None
-  if (results.h0100) {
-    Object.entries(results.h0100.subItems || {}).forEach(([subItem, data]) => {
+  if (sectionData.h0100) {
+    Object.entries(sectionData.h0100.subItems || {}).forEach(([subItem, data]) => {
       items.push({
         mdsItem: `H0100${subItem}`,
         description: getSectionHDescription(`H0100${subItem}`),
@@ -1054,48 +1060,48 @@ function transformSectionH(results) {
   }
 
   // H0200: Urinary Toileting Program (may be skipped if not applicable)
-  if (results.h0200 && !results.h0200.skipped) {
+  if (sectionData.h0200 && !sectionData.h0200.skipped) {
     // H0200A: Trial toileting program attempted
-    if (results.h0200.a !== undefined) {
+    if (sectionData.h0200.a !== undefined) {
       items.push({
         mdsItem: 'H0200A',
         description: getSectionHDescription('H0200A'),
         columns: {
           '': {
-            answer: results.h0200.a.answer,
-            confidence: results.h0200.a.confidence,
-            rationale: results.h0200.a.rationale,
-            evidence: results.h0200.a.evidence || []
+            answer: sectionData.h0200.a.answer,
+            confidence: sectionData.h0200.a.confidence,
+            rationale: sectionData.h0200.a.rationale,
+            evidence: sectionData.h0200.a.evidence || []
           }
         }
       });
     }
     // H0200B: Response to program
-    if (results.h0200.b !== undefined) {
+    if (sectionData.h0200.b !== undefined) {
       items.push({
         mdsItem: 'H0200B',
         description: getSectionHDescription('H0200B'),
         columns: {
           '': {
-            answer: results.h0200.b.answer,
-            confidence: results.h0200.b.confidence,
-            rationale: results.h0200.b.rationale,
-            evidence: results.h0200.b.evidence || []
+            answer: sectionData.h0200.b.answer,
+            confidence: sectionData.h0200.b.confidence,
+            rationale: sectionData.h0200.b.rationale,
+            evidence: sectionData.h0200.b.evidence || []
           }
         }
       });
     }
     // H0200C: Current toileting program
-    if (results.h0200.c !== undefined) {
+    if (sectionData.h0200.c !== undefined) {
       items.push({
         mdsItem: 'H0200C',
         description: getSectionHDescription('H0200C'),
         columns: {
           '': {
-            answer: results.h0200.c.answer,
-            confidence: results.h0200.c.confidence,
-            rationale: results.h0200.c.rationale,
-            evidence: results.h0200.c.evidence || []
+            answer: sectionData.h0200.c.answer,
+            confidence: sectionData.h0200.c.confidence,
+            rationale: sectionData.h0200.c.rationale,
+            evidence: sectionData.h0200.c.evidence || []
           }
         }
       });
@@ -1103,68 +1109,68 @@ function transformSectionH(results) {
   }
 
   // H0300: Urinary Continence (frequencyCode 0-9)
-  if (results.h0300) {
+  if (sectionData.h0300) {
     items.push({
       mdsItem: 'H0300',
       description: getSectionHDescription('H0300'),
       columns: {
         '': {
-          answer: String(results.h0300.code),
-          confidence: results.h0300.confidence,
-          rationale: results.h0300.rationale,
-          evidence: results.h0300.evidence || [],
-          incontinenceEpisodeDates: results.h0300.incontinenceEpisodeDates,
-          lookbackWindow: results.h0300.lookbackWindow
+          answer: String(sectionData.h0300.code),
+          confidence: sectionData.h0300.confidence,
+          rationale: sectionData.h0300.rationale,
+          evidence: sectionData.h0300.evidence || [],
+          incontinenceEpisodeDates: sectionData.h0300.incontinenceEpisodeDates,
+          lookbackWindow: sectionData.h0300.lookbackWindow
         }
       }
     });
   }
 
   // H0400: Bowel Continence (frequencyCode 0-9)
-  if (results.h0400) {
+  if (sectionData.h0400) {
     items.push({
       mdsItem: 'H0400',
       description: getSectionHDescription('H0400'),
       columns: {
         '': {
-          answer: String(results.h0400.code),
-          confidence: results.h0400.confidence,
-          rationale: results.h0400.rationale,
-          evidence: results.h0400.evidence || [],
-          incontinenceEpisodeDates: results.h0400.incontinenceEpisodeDates,
-          lookbackWindow: results.h0400.lookbackWindow
+          answer: String(sectionData.h0400.code),
+          confidence: sectionData.h0400.confidence,
+          rationale: sectionData.h0400.rationale,
+          evidence: sectionData.h0400.evidence || [],
+          incontinenceEpisodeDates: sectionData.h0400.incontinenceEpisodeDates,
+          lookbackWindow: sectionData.h0400.lookbackWindow
         }
       }
     });
   }
 
   // H0500: Bowel Toileting Program (may be skipped)
-  if (results.h0500 && !results.h0500.skipped) {
+  if (sectionData.h0500 && !sectionData.h0500.skipped) {
     items.push({
       mdsItem: 'H0500',
       description: getSectionHDescription('H0500'),
       columns: {
         '': {
-          answer: results.h0500.answer,
-          confidence: results.h0500.confidence,
-          rationale: results.h0500.rationale,
-          evidence: results.h0500.evidence || []
+          answer: sectionData.h0500.answer,
+          confidence: sectionData.h0500.confidence,
+          rationale: sectionData.h0500.rationale,
+          evidence: sectionData.h0500.evidence || []
         }
       }
     });
   }
 
   // H0600: Bowel Patterns (may be skipped)
-  if (results.h0600 && !results.h0600.skipped) {
+  if (sectionData.h0600 && !sectionData.h0600.skipped) {
     items.push({
       mdsItem: 'H0600',
       description: getSectionHDescription('H0600'),
       columns: {
         '': {
-          answer: results.h0600.answer,
-          confidence: results.h0600.confidence,
-          rationale: results.h0600.rationale,
-          evidence: results.h0600.evidence || []
+          answer: sectionData.h0600.answer,
+          confidence: sectionData.h0600.confidence,
+          rationale: sectionData.h0600.rationale,
+          evidence: sectionData.h0600.evidence || []
         }
       }
     });
@@ -1199,10 +1205,11 @@ function getSectionHDescription(mdsItem) {
  */
 function transformSectionP(results) {
   const items = [];
+  const sectionData = results.sectionP || results;
 
   // P0100: Physical Restraints (subItems A-H with frequencyCode 0-3)
-  if (results.p0100) {
-    Object.entries(results.p0100.subItems || {}).forEach(([subItem, data]) => {
+  if (sectionData.p0100) {
+    Object.entries(sectionData.p0100.subItems || {}).forEach(([subItem, data]) => {
       items.push({
         mdsItem: `P0100${subItem}`,
         description: getSectionPDescription(`P0100${subItem}`),
@@ -1220,8 +1227,8 @@ function transformSectionP(results) {
   }
 
   // P0200: Bed Rail for Positioning (subItems A-D, may be skipped)
-  if (results.p0200 && !results.p0200.skipped) {
-    Object.entries(results.p0200.subItems || {}).forEach(([subItem, data]) => {
+  if (sectionData.p0200 && !sectionData.p0200.skipped) {
+    Object.entries(sectionData.p0200.subItems || {}).forEach(([subItem, data]) => {
       items.push({
         mdsItem: `P0200${subItem}`,
         description: getSectionPDescription(`P0200${subItem}`),
