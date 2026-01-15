@@ -28,7 +28,23 @@
   "content_scripts": [
     {
       "matches": ["*://*.pointclickcare.com/*"],
-      "js": ["lib/pdf.min.js", "content/mockData.js", "content/chatbot.js", "content/evidence-viewers.js", "content/section-transformers.js", "content/content.js"],
+      "js": [
+        "lib/pdf.min.js",
+        "content/mockData.js",
+        "content/chatbot.js",
+        "content/evidence-viewers.js",
+        "content/section-transformers.js",
+        "content/components/modal.js",
+        "content/components/dropdown.js",
+        "content/components/toast.js",
+        "content/queries/query-api.js",
+        "content/queries/query-state.js",
+        "content/queries/query-badges.js",
+        "content/queries/query-panel.js",
+        "content/queries/query-modal.js",
+        "content/queries/query-send-modal.js",
+        "content/content.js"
+      ],
       "css": ["content/content.css", "content/chatbot.css"],
       "run_at": "document_idle"
     }

@@ -265,6 +265,9 @@ const SuperOverlay = {
   patientId: null  // Stored from API response for diagnosis queries
 };
 
+// Expose on window for other content scripts (query-send-modal.js, etc.)
+window.SuperOverlay = SuperOverlay;
+
 // ============================================
 // Message Listener (existing functionality)
 // ============================================
@@ -404,6 +407,11 @@ async function initSuperOverlay() {
       return;
     }
 
+    // Store context for query features
+    SuperOverlay.assessmentId = params.assessmentId;
+    SuperOverlay.facilityName = params.facilityName;
+    SuperOverlay.orgSlug = params.orgSlug;
+
     // Load dismissed items and process
     await loadDismissedItems();
     processItems(data.items);
@@ -411,6 +419,9 @@ async function initSuperOverlay() {
 
     SuperOverlay.initialized = true;
     console.log('Super LTC: Overlay initialized with', data.items.length, 'items');
+
+    // Load queries for this assessment (async, non-blocking)
+    loadAssessmentQueries(params.assessmentId, params.facilityName, params.orgSlug);
 
   } catch (error) {
     console.error('Super LTC: Failed to fetch section data:', error);
@@ -701,27 +712,9 @@ function injectBadge(questionEl, result) {
   }
 
   // Add secondary query badge for Section I items (all diagnoses can be queried)
+  // Uses QueryBadges module which shows status if query exists, or "Query" button if not
   if (result.mdsItem && result.mdsItem.startsWith('I')) {
-    // Remove existing query badge if any
-    const existingQueryBadge = questionEl.querySelector('.super-badge--query');
-    if (existingQueryBadge) {
-      existingQueryBadge.remove();
-    }
-
-    const queryBadge = document.createElement('div');
-    queryBadge.className = 'super-badge super-badge--query';
-    queryBadge.setAttribute('data-mds-item', result.mdsItem);
-    queryBadge.innerHTML = `<span class="super-badge__icon">?</span> Query`;
-
-    queryBadge.addEventListener('click', (e) => {
-      e.stopPropagation();
-      showQueryModal(result);
-    });
-
-    // Insert query badge after main badge
-    if (badge.parentElement) {
-      badge.parentElement.appendChild(queryBadge);
-    }
+    QueryBadges.injectQueryBadge(questionEl, result, badge);
   }
 }
 
@@ -2487,6 +2480,28 @@ function saveDismissedItems() {
     });
   } catch (e) {
     console.log('Super LTC: Could not save dismissed items', e);
+  }
+}
+
+// ============================================
+// Query Loading
+// ============================================
+async function loadAssessmentQueries(assessmentId, facilityName, orgSlug) {
+  try {
+    console.log('Super LTC: Loading queries for assessment', assessmentId);
+
+    // Use QueryState to load queries (from queries/query-state.js)
+    await QueryState.loadQueries(assessmentId, facilityName, orgSlug);
+
+    // Update badges to show query status
+    if (QueryState.queries.length > 0) {
+      QueryBadges.updateAllBadges();
+      QueryPanel.updatePanel();
+      console.log('Super LTC: Updated UI with', QueryState.queries.length, 'queries');
+    }
+  } catch (error) {
+    console.error('Super LTC: Failed to load queries (non-fatal):', error);
+    // Non-fatal - queries are supplementary
   }
 }
 
