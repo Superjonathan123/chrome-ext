@@ -261,7 +261,8 @@ const SuperOverlay = {
   currentMismatchIndex: -1,
   dismissedItems: new Set(),
   panelExpanded: false,
-  initialized: false
+  initialized: false,
+  patientId: null  // Stored from API response for diagnosis queries
 };
 
 // ============================================
@@ -388,6 +389,12 @@ async function initSuperOverlay() {
     console.log('Super LTC: Fetching section data from API...');
     const apiResponse = await fetchSectionData(params);
     console.log('Super LTC: API response:', apiResponse);
+
+    // Store patientId from assessment for diagnosis queries
+    if (apiResponse.assessment?.patientId) {
+      SuperOverlay.patientId = apiResponse.assessment.patientId;
+      console.log('Super LTC: Stored patientId:', SuperOverlay.patientId);
+    }
 
     // Transform response to overlay format
     const data = transformAPIResponse(apiResponse, params.section);
@@ -692,6 +699,30 @@ function injectBadge(questionEl, result) {
       }
     }
   }
+
+  // Add secondary query badge for Section I items (all diagnoses can be queried)
+  if (result.mdsItem && result.mdsItem.startsWith('I')) {
+    // Remove existing query badge if any
+    const existingQueryBadge = questionEl.querySelector('.super-badge--query');
+    if (existingQueryBadge) {
+      existingQueryBadge.remove();
+    }
+
+    const queryBadge = document.createElement('div');
+    queryBadge.className = 'super-badge super-badge--query';
+    queryBadge.setAttribute('data-mds-item', result.mdsItem);
+    queryBadge.innerHTML = `<span class="super-badge__icon">?</span> Query`;
+
+    queryBadge.addEventListener('click', (e) => {
+      e.stopPropagation();
+      showQueryModal(result);
+    });
+
+    // Insert query badge after main badge
+    if (badge.parentElement) {
+      badge.parentElement.appendChild(queryBadge);
+    }
+  }
 }
 
 // ============================================
@@ -800,6 +831,9 @@ function buildPopoverHTML(result) {
     <div class="super-popover-actions">
       <button class="super-btn super-btn--agree" data-action="agree">&#10003; Agree</button>
       <button class="super-btn super-btn--disagree" data-action="disagree">&#10007; Disagree</button>
+      ${result.mdsItem && result.mdsItem.startsWith('I') ? `
+        <button class="super-btn super-btn--query" data-action="query">? Query Physician</button>
+      ` : ''}
     </div>
   `;
 }
@@ -1205,6 +1239,15 @@ function setupPopoverListeners(popover, result) {
   popover.querySelector('[data-action="disagree"]').addEventListener('click', () => {
     handleAction('disagree', result);
   });
+
+  // Query button (for Section I diagnosis items)
+  const queryBtn = popover.querySelector('[data-action="query"]');
+  if (queryBtn) {
+    queryBtn.addEventListener('click', () => {
+      closePopover();
+      showQueryModal(result);
+    });
+  }
 
   // Order evidence click handlers for viewing administrations
   setupAdministrationViewers(popover);
@@ -1733,6 +1776,501 @@ function renderAdminModalError(modal, message) {
   `;
 
   modal.querySelector('.super-admin-modal__close').addEventListener('click', () => modal.remove());
+}
+
+// ============================================
+// Diagnosis Query Modal
+// ============================================
+
+// Get context needed for query modal
+async function getQueryContext() {
+  const url = new URL(window.location.href);
+  const assessmentId = url.searchParams.get('ESOLassessid');
+
+  // Use stored patientId from API response (preferred), fallback to URL param
+  const patientId = SuperOverlay.patientId || url.searchParams.get('ESOLclientid');
+
+  // Get org from cookie
+  const orgResponse = await chrome.runtime.sendMessage({ type: 'GET_ORG' });
+  const orgSlug = orgResponse?.org;
+
+  // Get facility from DOM
+  const facilityInfo = getFacilityInfo();
+  const facilityName = facilityInfo?.facility;
+
+  // Get patient name from DOM (PCC header)
+  const patientNameEl = document.querySelector('.patient-name, #patientName, .patientName, [class*="patient-name"]');
+  const patientName = patientNameEl?.textContent?.trim() || 'Patient';
+
+  // Get DOB if available
+  const dobEl = document.querySelector('.patient-dob, #patientDOB, [class*="patient-dob"]');
+  const patientDOB = dobEl?.textContent?.trim() || '';
+
+  return {
+    patientId,
+    patientName,
+    patientDOB,
+    facilityName,
+    orgSlug,
+    assessmentId
+  };
+}
+
+// Fetch practitioners for dropdown
+async function fetchPractitioners(facilityName, orgSlug) {
+  const endpoint = `/api/extension/practitioners?facilityName=${encodeURIComponent(facilityName)}&orgSlug=${orgSlug}`;
+
+  const response = await chrome.runtime.sendMessage({
+    type: 'API_REQUEST',
+    endpoint
+  });
+
+  if (!response.success) throw new Error(response.error || 'Failed to fetch practitioners');
+  return response.data?.practitioners || [];
+}
+
+// Create and send diagnosis query
+async function createAndSendQuery(queryData, practitionerId, nurseNote) {
+  const { facilityName, orgSlug } = queryData;
+
+  // Step 1: Create the query
+  const createEndpoint = `/api/extension/diagnosis-queries`;
+  const createBody = {
+    patientId: queryData.patientId,
+    facilityName: facilityName,
+    orgSlug: orgSlug,
+    mdsAssessmentId: queryData.assessmentId,
+    mdsItem: queryData.mdsItem,
+    mdsItemName: queryData.mdsItemName,
+    queryReason: queryData.queryReason,
+    keyFindings: queryData.keyFindings,
+    queryEvidence: queryData.queryEvidence,
+    recommendedIcd10: queryData.recommendedIcd10,
+    aiGeneratedNote: nurseNote
+  };
+
+  const createResponse = await chrome.runtime.sendMessage({
+    type: 'API_REQUEST',
+    endpoint: createEndpoint,
+    options: {
+      method: 'POST',
+      body: JSON.stringify(createBody)
+    }
+  });
+
+  if (!createResponse.success) throw new Error(createResponse.error || 'Failed to create query');
+
+  const queryId = createResponse.data?.query?.id;
+  if (!queryId) throw new Error('No query ID returned');
+
+  // Step 2: Send the query to the practitioner
+  const sendEndpoint = `/api/extension/diagnosis-queries/${queryId}/send`;
+  const sendBody = {
+    practitionerIds: [practitionerId],
+    nurseEditedNote: nurseNote
+  };
+
+  const sendResponse = await chrome.runtime.sendMessage({
+    type: 'API_REQUEST',
+    endpoint: sendEndpoint,
+    options: {
+      method: 'POST',
+      body: JSON.stringify(sendBody)
+    }
+  });
+
+  if (!sendResponse.success) throw new Error(sendResponse.error || 'Failed to send query');
+
+  return sendResponse.data;
+}
+
+// Create query modal shell with loading state
+function createQueryModalShell() {
+  const modal = document.createElement('div');
+  modal.className = 'super-query-modal';
+  modal.innerHTML = `
+    <div class="super-query-modal__backdrop"></div>
+    <div class="super-query-modal__container">
+      <div class="super-query-modal__header">
+        <div class="super-query-modal__title-row">
+          <span class="super-query-modal__icon">?</span>
+          <span class="super-query-modal__name">Query Physician</span>
+        </div>
+        <button class="super-query-modal__close">&times;</button>
+      </div>
+      <div class="super-query-modal__body">
+        <div class="super-query-loading">
+          <div class="super-query-loading__spinner"></div>
+          <span>Loading...</span>
+        </div>
+      </div>
+    </div>
+  `;
+
+  // Close handlers
+  const closeModal = () => {
+    modal.remove();
+    document.body.style.overflow = '';
+  };
+  modal.querySelector('.super-query-modal__close').addEventListener('click', closeModal);
+  modal.querySelector('.super-query-modal__backdrop').addEventListener('click', closeModal);
+
+  const escHandler = (e) => {
+    if (e.key === 'Escape') {
+      closeModal();
+      document.removeEventListener('keydown', escHandler);
+    }
+  };
+  document.addEventListener('keydown', escHandler);
+
+  return modal;
+}
+
+// Show the query modal
+async function showQueryModal(result) {
+  const modal = createQueryModalShell();
+  document.body.appendChild(modal);
+  document.body.style.overflow = 'hidden';
+
+  try {
+    // Get context first
+    const context = await getQueryContext();
+
+    // Fetch practitioners
+    const practitioners = await fetchPractitioners(context.facilityName, context.orgSlug);
+
+    // Render the modal content
+    renderQueryModalContent(modal, result, context, practitioners);
+  } catch (error) {
+    console.error('Super LTC: Failed to load query modal', error);
+    renderQueryModalError(modal, error.message);
+  }
+}
+
+// Generate default note text (fallback if API fails)
+function generateDefaultNote(result) {
+  const ai = result.aiAnswer;
+  const diagnosisName = ai.mdsItemName || result.description;
+  return `Please review the clinical evidence for potential ${diagnosisName} diagnosis. See supporting evidence below.`;
+}
+
+// Fetch AI-generated note from backend
+async function fetchAIGeneratedNote(result) {
+  // Pass the MDS item code and entire solver result object
+  const mdsItem = result.mdsItem;  // e.g., "I5600" for Malnutrition
+  const solverResult = result.aiAnswer;
+
+  const endpoint = `/api/extension/diagnosis-queries/generate-note`;
+  const body = {
+    mdsItem: mdsItem,
+    solverResult: solverResult
+  };
+
+  const response = await chrome.runtime.sendMessage({
+    type: 'API_REQUEST',
+    endpoint: endpoint,
+    options: {
+      method: 'POST',
+      body: JSON.stringify(body)
+    }
+  });
+
+  if (!response.success || !response.data?.note) {
+    throw new Error(response.error || 'No note returned');
+  }
+
+  // Return full response including ICD-10 data
+  return {
+    note: response.data.note,
+    preferredIcd10: response.data.preferredIcd10 || null,
+    icd10Options: response.data.icd10Options || []
+  };
+}
+
+// Build evidence accordion HTML
+function buildQueryEvidenceHTML(evidence) {
+  if (!evidence || evidence.length === 0) {
+    return '<div class="super-query-evidence-empty">No evidence available</div>';
+  }
+
+  return evidence.map(ev => {
+    const quote = ev.findingText || ev.quoteText || ev.quote || ev.orderDescription || '';
+    const source = ev.source || ev.displayName || ev.sourceType || 'Document';
+    const rationale = ev.rationale || '';
+
+    return `
+      <div class="super-query-evidence-item">
+        <div class="super-query-evidence-source">${escapeHTML(source)}</div>
+        <div class="super-query-evidence-quote">"${escapeHTML(quote)}"</div>
+        ${rationale ? `<div class="super-query-evidence-rationale">${escapeHTML(rationale)}</div>` : ''}
+      </div>
+    `;
+  }).join('');
+}
+
+// Render the query modal content
+function renderQueryModalContent(modal, result, context, practitioners) {
+  const ai = result.aiAnswer;
+  const container = modal.querySelector('.super-query-modal__container');
+
+  // Build key findings HTML
+  const keyFindingsHTML = (ai.keyFindings || []).map(f =>
+    `<li class="super-query-finding">${escapeHTML(f)}</li>`
+  ).join('') || '<li class="super-query-finding--empty">No key findings provided</li>';
+
+  // Build evidence accordion HTML
+  const evidenceData = ai.queryEvidence?.length > 0 ? ai.queryEvidence : ai.evidence || [];
+  const evidenceHTML = buildQueryEvidenceHTML(evidenceData);
+
+  // Build practitioners dropdown HTML
+  const practitionerOptionsHTML = practitioners.map(p => {
+    const displayName = p.firstName && p.lastName
+      ? `${p.firstName} ${p.lastName}${p.title ? `, ${p.title}` : ''}`
+      : p.name || 'Unknown';
+    return `<option value="${escapeHTML(p.id)}">${escapeHTML(displayName)}</option>`;
+  }).join('');
+
+  container.innerHTML = `
+    <div class="super-query-modal__header">
+      <div class="super-query-modal__title-row">
+        <span class="super-query-modal__icon">?</span>
+        <div class="super-query-modal__title">
+          <span class="super-query-modal__name">Diagnosis Query</span>
+          <span class="super-query-badge">${escapeHTML(result.mdsItem)}</span>
+        </div>
+      </div>
+      <button class="super-query-modal__close">&times;</button>
+    </div>
+
+    <div class="super-query-modal__body">
+      <!-- Patient Info Header -->
+      <div class="super-query-patient-header">
+        <div class="super-query-patient-header__name">${escapeHTML(context.patientName)}</div>
+        <div class="super-query-patient-header__info">
+          ${context.patientDOB ? `<span>DOB: ${escapeHTML(context.patientDOB)}</span>` : ''}
+          <span>${escapeHTML(context.facilityName || 'Unknown Facility')}</span>
+        </div>
+      </div>
+
+      <!-- Diagnosis Name -->
+      <div class="super-query-section">
+        <div class="super-query-section__label">Diagnosis</div>
+        <div class="super-query-diagnosis-name">${escapeHTML(ai.mdsItemName || result.description)}</div>
+      </div>
+
+      <!-- ICD-10 Code Selection -->
+      <div class="super-query-section">
+        <div class="super-query-section__label">ICD-10 Code</div>
+        <select class="super-query-icd10-select" id="super-query-icd10">
+          <option value="">Loading ICD-10 codes...</option>
+        </select>
+      </div>
+
+      <!-- Note (editable) -->
+      <div class="super-query-section">
+        <div class="super-query-section__label">Query Note</div>
+        <div class="super-query-note-wrapper">
+          <textarea class="super-query-note super-query-note--loading" id="super-query-note" rows="4" placeholder="Enter note for physician..." disabled>Generating note...</textarea>
+          <div class="super-query-note-spinner"></div>
+        </div>
+      </div>
+
+      <!-- Key Findings (read-only) -->
+      <div class="super-query-section">
+        <div class="super-query-section__label">Key Findings</div>
+        <ul class="super-query-findings-list">${keyFindingsHTML}</ul>
+      </div>
+
+      <!-- Evidence Preview (collapsible) -->
+      <div class="super-query-section">
+        <details class="super-query-evidence-accordion">
+          <summary class="super-query-evidence-toggle">
+            Evidence Preview (${evidenceData.length})
+          </summary>
+          <div class="super-query-evidence-content">${evidenceHTML}</div>
+        </details>
+      </div>
+
+      <!-- Practitioner Dropdown -->
+      <div class="super-query-section">
+        <div class="super-query-section__label">Send To</div>
+        <select class="super-query-practitioner" id="super-query-practitioner">
+          <option value="">Select a practitioner...</option>
+          ${practitionerOptionsHTML}
+        </select>
+      </div>
+    </div>
+
+    <div class="super-query-modal__footer">
+      <button class="super-query-modal__btn super-query-modal__btn--secondary" data-action="cancel">Cancel</button>
+      <button class="super-query-modal__btn super-query-modal__btn--primary" data-action="send" disabled>Send Query</button>
+    </div>
+  `;
+
+  setupQueryModalListeners(modal, result, context);
+
+  // Fetch AI-generated note asynchronously
+  fetchAndPopulateNote(modal, result);
+}
+
+// Fetch AI note and populate textarea + ICD-10 dropdown
+async function fetchAndPopulateNote(modal, result) {
+  const textarea = modal.querySelector('#super-query-note');
+  const spinner = modal.querySelector('.super-query-note-spinner');
+  const icd10Select = modal.querySelector('#super-query-icd10');
+
+  if (!textarea) return;
+
+  try {
+    const { note, preferredIcd10, icd10Options } = await fetchAIGeneratedNote(result);
+    textarea.value = note;
+
+    // Populate ICD-10 dropdown if we have options
+    if (icd10Select && icd10Options.length > 0) {
+      const optionsHTML = icd10Options.map(opt => {
+        const code = typeof opt === 'object' ? opt.code : opt;
+        const desc = typeof opt === 'object' ? opt.description : '';
+        const isPreferred = preferredIcd10 && preferredIcd10.code === code;
+        return `<option value="${escapeHTML(code)}" ${isPreferred ? 'selected' : ''}>${escapeHTML(code)}${desc ? ` - ${escapeHTML(desc)}` : ''}</option>`;
+      }).join('');
+      icd10Select.innerHTML = `<option value="">Select ICD-10 code...</option>${optionsHTML}`;
+
+      // If we have a preferred code, pre-select it
+      if (preferredIcd10) {
+        icd10Select.value = preferredIcd10.code;
+      }
+    }
+  } catch (error) {
+    console.error('Super LTC: Failed to generate AI note, using fallback', error);
+    textarea.value = generateDefaultNote(result);
+  } finally {
+    // Remove loading state
+    textarea.classList.remove('super-query-note--loading');
+    textarea.disabled = false;
+    if (spinner) spinner.remove();
+  }
+}
+
+// Render error state in query modal
+function renderQueryModalError(modal, message) {
+  const container = modal.querySelector('.super-query-modal__container');
+  container.innerHTML = `
+    <div class="super-query-modal__header">
+      <div class="super-query-modal__title-row">
+        <span class="super-query-modal__icon">!</span>
+        <span class="super-query-modal__name">Error</span>
+      </div>
+      <button class="super-query-modal__close">&times;</button>
+    </div>
+    <div class="super-query-modal__body">
+      <div class="super-query-error">
+        <p>Failed to load query form</p>
+        <span class="super-query-error__detail">${escapeHTML(message)}</span>
+      </div>
+    </div>
+    <div class="super-query-modal__footer">
+      <button class="super-query-modal__btn super-query-modal__btn--secondary" data-action="cancel">Close</button>
+    </div>
+  `;
+
+  const closeModal = () => {
+    modal.remove();
+    document.body.style.overflow = '';
+  };
+
+  modal.querySelector('.super-query-modal__close').addEventListener('click', closeModal);
+  modal.querySelector('[data-action="cancel"]').addEventListener('click', closeModal);
+}
+
+// Setup event listeners for query modal
+function setupQueryModalListeners(modal, result, context) {
+  const closeModal = () => {
+    modal.remove();
+    document.body.style.overflow = '';
+  };
+
+  // Close button
+  modal.querySelector('.super-query-modal__close').addEventListener('click', closeModal);
+
+  // Cancel button
+  modal.querySelector('[data-action="cancel"]').addEventListener('click', closeModal);
+
+  // Practitioner selection enables Send button
+  const practitionerSelect = modal.querySelector('#super-query-practitioner');
+  const sendBtn = modal.querySelector('[data-action="send"]');
+
+  practitionerSelect.addEventListener('change', () => {
+    sendBtn.disabled = !practitionerSelect.value;
+  });
+
+  // Send button
+  sendBtn.addEventListener('click', async () => {
+    const practitionerId = practitionerSelect.value;
+    const noteText = modal.querySelector('#super-query-note').value;
+    const selectedIcd10 = modal.querySelector('#super-query-icd10')?.value || '';
+
+    if (!practitionerId) {
+      alert('Please select a practitioner');
+      return;
+    }
+
+    // Show loading state
+    sendBtn.disabled = true;
+    sendBtn.textContent = 'Sending...';
+
+    try {
+      const ai = result.aiAnswer;
+
+      // Build recommendedIcd10 array - include selected code first if present
+      let recommendedIcd10 = ai.recommendedIcd10 || [];
+      if (selectedIcd10 && !recommendedIcd10.some(c => (typeof c === 'object' ? c.code : c) === selectedIcd10)) {
+        recommendedIcd10 = [{ code: selectedIcd10 }, ...recommendedIcd10];
+      }
+
+      const queryData = {
+        mdsItem: result.mdsItem,
+        mdsItemName: ai.mdsItemName || ai.kbCategory?.categoryName || result.description,
+        queryReason: ai.rationale || ai.queryReason || '',
+        keyFindings: ai.keyFindings || [],
+        queryEvidence: ai.evidence || ai.queryEvidence || [],
+        recommendedIcd10: recommendedIcd10,
+        patientId: context.patientId,
+        assessmentId: context.assessmentId,
+        facilityName: context.facilityName,
+        orgSlug: context.orgSlug
+      };
+
+      await createAndSendQuery(queryData, practitionerId, noteText);
+
+      // Show success and close
+      showQuerySuccessToast();
+      closeModal();
+
+    } catch (error) {
+      console.error('Super LTC: Failed to send query', error);
+      sendBtn.disabled = false;
+      sendBtn.textContent = 'Send Query';
+      alert(`Failed to send query: ${error.message}`);
+    }
+  });
+}
+
+// Show success toast after sending query
+function showQuerySuccessToast() {
+  const toast = document.createElement('div');
+  toast.className = 'super-query-success-toast';
+  toast.innerHTML = `
+    <div class="super-query-success-toast__content">
+      <span class="super-query-success-toast__icon">&#10003;</span>
+      <span>Query sent successfully!</span>
+    </div>
+  `;
+  document.body.appendChild(toast);
+
+  setTimeout(() => {
+    toast.style.animation = 'superToastOut 0.3s ease-in forwards';
+    setTimeout(() => toast.remove(), 300);
+  }, 3000);
 }
 
 // ============================================

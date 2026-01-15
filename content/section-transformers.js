@@ -293,7 +293,14 @@ function transformSectionI(results) {
           evidence: data.evidence || [],
           status: data.status, // code, needs_physician_query, dont_code
           triggers: data.triggers, // for needs_physician_query items
-          suggestedIcd10: data.suggestedIcd10
+          suggestedIcd10: data.suggestedIcd10,
+          // Query-related fields for needs_physician_query items
+          mdsItemName: data.kbCategory?.categoryName || getSectionIDescription(mdsItem),
+          queryReason: data.queryReason || '',
+          keyFindings: data.keyFindings || [],
+          queryEvidence: data.queryEvidence || [],
+          recommendedIcd10: data.recommendedIcd10 || data.suggestedIcd10 || [],
+          aiGeneratedNote: data.aiGeneratedNote || ''
         }
       }
     });
