@@ -45,7 +45,22 @@
         "content/queries/query-send-modal.js",
         "content/content.js"
       ],
-      "css": ["content/content.css", "content/chatbot.css"],
+      "css": [
+        "content/css/variables.css",
+        "content/css/base.css",
+        "content/css/popover.css",
+        "content/css/panel.css",
+        "content/css/sections.css",
+        "content/css/evidence-viewer.css",
+        "content/css/admin-modal.css",
+        "content/css/clinical-notes-modal.css",
+        "content/css/therapy-modal.css",
+        "content/css/pdf-modal.css",
+        "content/css/diagnosis-query-modal.css",
+        "content/css/super-components.css",
+        "content/css/query.css",
+        "content/chatbot.css"
+      ],
       "run_at": "document_idle"
     }
   ],

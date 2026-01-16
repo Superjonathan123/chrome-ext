@@ -1,0 +1,124 @@
+/* ============================================
+   Badge Styles
+   ============================================ */
+.super-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  margin-left: 8px;
+  font-family: var(--super-font);
+  font-size: 11px;
+  font-weight: 600;
+  border-radius: var(--super-radius);
+  cursor: pointer;
+  transition: var(--super-transition);
+  white-space: nowrap;
+  vertical-align: middle;
+  box-shadow: var(--super-shadow-sm);
+  border: 1px solid transparent;
+}
+
+.super-badge:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--super-shadow);
+}
+
+.super-badge:active {
+  transform: translateY(0);
+}
+
+.super-badge--match {
+  background: var(--super-match-bg);
+  color: #166534;
+  border-color: var(--super-match-border);
+}
+
+.super-badge--match:hover {
+  background: #bbf7d0;
+}
+
+.super-badge--mismatch {
+  background: var(--super-mismatch-bg);
+  color: #991b1b;
+  border-color: var(--super-mismatch-border);
+}
+
+.super-badge--mismatch:hover {
+  background: #fecaca;
+}
+
+.super-badge--review {
+  background: var(--super-review-bg);
+  color: #92400e;
+  border-color: var(--super-review-border);
+}
+
+.super-badge--review:hover {
+  background: #fde68a;
+}
+
+.super-badge--dismissed {
+  opacity: 0.5;
+  text-decoration: line-through;
+}
+
+.super-badge__icon {
+  font-size: 10px;
+}
+
+/* ============================================
+   Highlight Animation
+   ============================================ */
+.super-highlight {
+  animation: superHighlight 2s ease-out;
+}
+
+@keyframes superHighlight {
+  0% {
+    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.5);
+  }
+  100% {
+    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0);
+  }
+}
+
+/* ============================================
+   Backdrop (for closing popover)
+   ============================================ */
+.super-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 99998;
+}
+
+/* ============================================
+   No Data State
+   ============================================ */
+.super-no-data {
+  padding: 16px;
+  text-align: center;
+  color: var(--super-gray-500);
+  font-size: 13px;
+}
+
+/* ============================================
+   Responsive Adjustments
+   ============================================ */
+@media (max-width: 768px) {
+  .super-panel {
+    width: calc(100vw - 40px);
+    left: 20px;
+    right: 20px;
+  }
+
+  .super-popover {
+    width: calc(100vw - 32px);
+    left: 16px !important;
+    right: 16px !important;
+  }
+}
+

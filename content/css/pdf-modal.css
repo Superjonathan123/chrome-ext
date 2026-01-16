@@ -1,0 +1,222 @@
+/* ============================================
+   PDF Document Modal
+   ============================================ */
+
+.super-pdf-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 100002;
+}
+
+.super-pdf-modal__backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 100002;
+}
+
+.super-pdf-modal__container {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 900px;
+  max-width: calc(100vw - 32px);
+  max-height: 700px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  z-index: 100003;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: superAdminModalIn 0.2s ease-out;
+}
+
+.super-pdf-modal__header {
+  padding: 16px 20px 12px;
+  background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+  color: white;
+}
+
+.super-pdf-modal__title-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.super-pdf-modal__icon {
+  font-size: 20px;
+  line-height: 1;
+}
+
+.super-pdf-modal__title {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.super-pdf-modal__name {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.super-pdf-badge {
+  display: inline-flex;
+  padding: 2px 8px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+}
+
+.super-pdf-modal__close {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: white;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  font-size: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  transition: background 0.15s;
+}
+
+.super-pdf-modal__close:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.super-pdf-modal__meta {
+  display: flex;
+  gap: 12px;
+  font-size: 11px;
+  opacity: 0.75;
+  margin-top: 4px;
+}
+
+.super-pdf-modal__body {
+  flex: 1;
+  overflow: auto;
+  background: var(--super-gray-100);
+  position: relative;
+}
+
+.super-pdf-modal__iframe {
+  width: 100%;
+  height: 100%;
+  min-height: 700px;
+  border: none;
+}
+
+.super-pdf-modal__footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 20px;
+  border-top: 1px solid var(--super-gray-200);
+  background: var(--super-gray-50);
+}
+
+.super-pdf-modal__expiry-warning {
+  font-size: 11px;
+  color: #d97706;
+}
+
+.super-pdf-modal__open-btn {
+  font-size: 12px;
+  color: #6366f1;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.super-pdf-modal__open-btn:hover {
+  text-decoration: underline;
+}
+
+/* PDF Canvas Container */
+.super-pdf-canvas-container {
+  position: relative;
+  width: 100%;
+  min-height: 600px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 20px;
+}
+
+.super-pdf-canvas {
+  display: block;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin: 0 auto;
+}
+
+.super-pdf-highlight-overlay {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: block;
+  pointer-events: none;
+}
+
+/* PDF Page Controls */
+.super-pdf-page-controls {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 10px 16px;
+  background: white;
+  border-radius: 24px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 10;
+}
+
+.super-pdf-page-btn {
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #6366f1;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.super-pdf-page-btn:hover:not(:disabled) {
+  background: #f9fafb;
+  border-color: #6366f1;
+}
+
+.super-pdf-page-btn:disabled {
+  color: #9ca3af;
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.super-pdf-page-info {
+  font-size: 13px;
+  font-weight: 500;
+  color: #374151;
+  min-width: 80px;
+  text-align: center;
+}
+
+.super-pdf-page-current {
+  font-weight: 700;
+  color: #6366f1;
+}
+
