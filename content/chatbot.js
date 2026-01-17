@@ -1,18 +1,23 @@
-// Super LTC AI Chatbot for Chrome Extension
-// Self-contained module for patient-specific AI chat
+// Super LTC Super Menu for Chrome Extension
+// Combines global dashboard with patient-specific AI chat
 
 // ============================================
 // State Management
 // ============================================
-const SuperChat = {
+const SuperMenu = {
   isOpen: false,
+  activeView: 'dashboard', // 'dashboard' | 'chat'
+  initialized: false,
+  // Chat state
   patientId: null,
   messages: [],
   status: 'ready', // ready | submitted | streaming
   streamingPort: null,
-  currentAssistantMessage: null,
-  initialized: false
+  currentAssistantMessage: null
 };
+
+// Alias for backward compatibility with chat functions
+const SuperChat = SuperMenu;
 
 // ============================================
 // Patient ID Detection
@@ -93,7 +98,7 @@ function clearChatSession() {
 }
 
 // ============================================
-// UI Creation - Chat Button (FAB)
+// UI Creation - Super Menu FAB
 // ============================================
 function createChatButton() {
   if (document.getElementById('super-chat-button')) return;
@@ -101,11 +106,10 @@ function createChatButton() {
   const button = document.createElement('button');
   button.id = 'super-chat-button';
   button.className = 'super-chat-fab';
-  button.setAttribute('aria-label', 'Open AI Assistant');
+  button.setAttribute('aria-label', 'Open Super Menu');
   button.innerHTML = `
-    <svg class="super-chat-fab__icon super-chat-fab__icon--chat" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-    </svg>
+    <div class="super-menu-fab__logo super-chat-fab__icon--chat">S</div>
+    <div class="super-menu-fab__badge" id="super-menu-badge" style="display: none;">0</div>
     <svg class="super-chat-fab__icon super-chat-fab__icon--close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
       <line x1="18" y1="6" x2="6" y2="18"/>
       <line x1="6" y1="6" x2="18" y2="18"/>
@@ -114,10 +118,13 @@ function createChatButton() {
 
   button.addEventListener('click', toggleChatPanel);
   document.body.appendChild(button);
+
+  // Load badge count
+  updateMenuBadge();
 }
 
 // ============================================
-// UI Creation - Chat Panel
+// UI Creation - Super Menu Panel
 // ============================================
 function createChatPanel() {
   if (document.getElementById('super-chat-panel')) return;
@@ -127,12 +134,33 @@ function createChatPanel() {
   panel.className = 'super-chat-panel';
   panel.innerHTML = `
     <div class="super-chat-header">
+      <div class="super-menu-header__nav">
+        <button class="super-menu-nav-btn super-menu-nav-btn--active" data-view="dashboard" title="Queries Dashboard">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="7" height="7"/>
+            <rect x="14" y="3" width="7" height="7"/>
+            <rect x="14" y="14" width="7" height="7"/>
+            <rect x="3" y="14" width="7" height="7"/>
+          </svg>
+        </button>
+        <button class="super-menu-nav-btn" data-view="chat" title="AI Assistant">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+          </svg>
+        </button>
+      </div>
       <div class="super-chat-header__title">
         <div class="super-chat-header__logo">S</div>
-        Super Assistant
+        <span class="super-menu-header__title-text" id="super-menu-title">Queries</span>
       </div>
       <div class="super-chat-header__actions">
-        <button class="super-chat-header__btn" id="super-chat-clear" title="Clear conversation">
+        <button class="super-chat-header__btn" id="super-menu-refresh" title="Refresh">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="23 4 23 10 17 10"/>
+            <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+          </svg>
+        </button>
+        <button class="super-chat-header__btn" id="super-chat-clear" title="Clear conversation" style="display: none;">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <polyline points="3 6 5 6 21 6"/>
             <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
@@ -146,8 +174,11 @@ function createChatPanel() {
         </button>
       </div>
     </div>
-    <div class="super-chat-messages" id="super-chat-messages"></div>
-    <div class="super-chat-input-area">
+    <div class="super-menu-content" id="super-menu-content">
+      <!-- Dashboard or Chat content rendered here -->
+    </div>
+    <div class="super-chat-messages" id="super-chat-messages" style="display: none;"></div>
+    <div class="super-chat-input-area" id="super-chat-input-area" style="display: none;">
       <textarea
         class="super-chat-input"
         id="super-chat-input"
@@ -165,6 +196,7 @@ function createChatPanel() {
 
   document.body.appendChild(panel);
   setupChatPanelListeners();
+  setupNavListeners();
 }
 
 function setupChatPanelListeners() {
@@ -215,21 +247,169 @@ function setupChatPanelListeners() {
 }
 
 function toggleChatPanel() {
-  SuperChat.isOpen = !SuperChat.isOpen;
+  SuperMenu.isOpen = !SuperMenu.isOpen;
 
   const panel = document.getElementById('super-chat-panel');
   const button = document.getElementById('super-chat-button');
 
-  if (SuperChat.isOpen) {
+  if (SuperMenu.isOpen) {
     panel.classList.add('super-chat-panel--open');
     button.classList.add('super-chat-fab--open');
-    document.getElementById('super-chat-input').focus();
-    scrollToBottom();
+
+    // Always open to dashboard view first
+    switchView('dashboard');
+
+    // Load dashboard data if needed
+    if (window.DashboardState && DashboardState.needsRefresh()) {
+      renderDashboard();
+    }
   } else {
     panel.classList.remove('super-chat-panel--open');
     button.classList.remove('super-chat-fab--open');
+
+    // Update badge when closing
+    updateMenuBadge();
   }
 }
+
+// ============================================
+// Navigation & View Switching
+// ============================================
+function setupNavListeners() {
+  // Nav button clicks
+  document.querySelectorAll('.super-menu-nav-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const view = btn.dataset.view;
+      if (view) switchView(view);
+    });
+  });
+
+  // Refresh button
+  const refreshBtn = document.getElementById('super-menu-refresh');
+  if (refreshBtn) {
+    refreshBtn.addEventListener('click', async () => {
+      if (SuperMenu.activeView === 'dashboard') {
+        refreshBtn.classList.add('super-menu-refresh-spinning');
+        await renderDashboard(true);
+        refreshBtn.classList.remove('super-menu-refresh-spinning');
+      }
+    });
+  }
+}
+
+function switchView(viewName) {
+  SuperMenu.activeView = viewName;
+
+  // Update nav button states
+  document.querySelectorAll('.super-menu-nav-btn').forEach(btn => {
+    btn.classList.toggle('super-menu-nav-btn--active', btn.dataset.view === viewName);
+  });
+
+  // Update title
+  const titleEl = document.getElementById('super-menu-title');
+  if (titleEl) {
+    titleEl.textContent = viewName === 'dashboard' ? 'Queries' : 'AI Assistant';
+  }
+
+  // Update header action buttons visibility
+  const refreshBtn = document.getElementById('super-menu-refresh');
+  const clearBtn = document.getElementById('super-chat-clear');
+  if (refreshBtn) refreshBtn.style.display = viewName === 'dashboard' ? '' : 'none';
+  if (clearBtn) clearBtn.style.display = viewName === 'chat' ? '' : 'none';
+
+  // Show/hide content areas
+  const dashboardContent = document.getElementById('super-menu-content');
+  const chatMessages = document.getElementById('super-chat-messages');
+  const chatInputArea = document.getElementById('super-chat-input-area');
+
+  if (viewName === 'dashboard') {
+    dashboardContent.style.display = '';
+    chatMessages.style.display = 'none';
+    chatInputArea.style.display = 'none';
+    renderDashboard();
+  } else {
+    dashboardContent.style.display = 'none';
+    chatMessages.style.display = '';
+    chatInputArea.style.display = '';
+    renderChatMessages();
+    document.getElementById('super-chat-input')?.focus();
+    scrollToBottom();
+  }
+}
+
+// ============================================
+// Dashboard Rendering
+// ============================================
+async function renderDashboard(forceRefresh = false) {
+  const container = document.getElementById('super-menu-content');
+  if (!container) return;
+
+  // Check if DashboardState and DashboardView are available
+  if (!window.DashboardState || !window.DashboardView) {
+    container.innerHTML = `
+      <div class="super-menu-error">
+        <div class="super-menu-error__icon">&#9888;</div>
+        <div class="super-menu-error__text">Dashboard components not loaded</div>
+      </div>
+    `;
+    return;
+  }
+
+  // Show loading if no data yet
+  if (!DashboardState.data || forceRefresh) {
+    container.innerHTML = DashboardView._renderLoading();
+
+    try {
+      await DashboardState.loadDashboard(forceRefresh);
+    } catch (err) {
+      console.error('Super Menu: Failed to load dashboard:', err);
+    }
+  }
+
+  // Render the dashboard
+  container.innerHTML = DashboardView.render();
+  DashboardView.setupListeners(container);
+
+  // Update badge
+  updateMenuBadge();
+}
+
+// ============================================
+// Badge Management
+// ============================================
+async function updateMenuBadge() {
+  const badge = document.getElementById('super-menu-badge');
+  if (!badge) return;
+
+  let count = 0;
+
+  // Try to get count from DashboardState
+  if (window.DashboardState) {
+    // Load data if we don't have it yet
+    if (!DashboardState.data && !DashboardState.loading) {
+      try {
+        await DashboardState.loadDashboard();
+      } catch (err) {
+        console.warn('Super Menu: Failed to load badge count:', err);
+      }
+    }
+    count = DashboardState.getTotalActionable();
+  }
+
+  if (count > 0) {
+    badge.textContent = count > 99 ? '99+' : count;
+    badge.style.display = '';
+  } else {
+    badge.style.display = 'none';
+  }
+}
+
+// Expose renderDashboard for DashboardView to call
+window.SuperMenu = {
+  renderDashboard,
+  updateMenuBadge,
+  switchView
+};
 
 // ============================================
 // Message Rendering
@@ -868,32 +1048,27 @@ function showChatError(errorMessage) {
 // Initialization
 // ============================================
 function initSuperChat() {
+  if (SuperMenu.initialized) {
+    console.log('Super Menu: Already initialized');
+    return;
+  }
+
+  console.log('Super Menu: Initializing');
+
+  // Check for patient ID (for chat functionality)
   const patientId = getChatPatientId();
-
-  if (!patientId) {
-    console.log('Super LTC Chat: No patient ID found, skipping initialization');
-    return;
+  if (patientId) {
+    console.log('Super Menu: Patient context detected:', patientId);
+    // Load existing chat session
+    loadChatSession();
   }
 
-  if (SuperChat.initialized) {
-    console.log('Super LTC Chat: Already initialized');
-    return;
-  }
-
-  console.log('Super LTC Chat: Initializing for patient', patientId);
-
-  // Load existing session
-  loadChatSession();
-
-  // Create UI
+  // Create UI (always - dashboard is global)
   createChatButton();
   createChatPanel();
 
-  // Render any existing messages
-  renderChatMessages();
-
-  SuperChat.initialized = true;
-  console.log('Super LTC Chat: Initialization complete');
+  SuperMenu.initialized = true;
+  console.log('Super Menu: Initialization complete');
 }
 
 // Initialize when DOM is ready
@@ -909,15 +1084,29 @@ if (document.readyState === 'loading') {
 let chatLastUrl = window.location.href;
 const chatUrlObserver = new MutationObserver(() => {
   if (window.location.href !== chatLastUrl) {
+    const oldUrl = chatLastUrl;
     chatLastUrl = window.location.href;
-    SuperChat.initialized = false;
 
-    // Remove existing UI
-    document.getElementById('super-chat-button')?.remove();
-    document.getElementById('super-chat-panel')?.remove();
+    // Check if patient context changed
+    const oldPatientId = new URL(oldUrl).searchParams.get('ESOLclientid');
+    const newPatientId = getChatPatientId();
 
-    // Re-initialize after short delay
-    setTimeout(initSuperChat, 500);
+    if (oldPatientId !== newPatientId) {
+      console.log('Super Menu: Patient context changed, updating chat session');
+      // Clear old chat session and load new one
+      if (newPatientId) {
+        loadChatSession();
+      }
+      // Re-render chat if it's the active view
+      if (SuperMenu.activeView === 'chat') {
+        renderChatMessages();
+      }
+    }
+
+    // Invalidate dashboard cache on navigation (data might have changed)
+    if (window.DashboardState) {
+      DashboardState.invalidateCache();
+    }
   }
 });
 

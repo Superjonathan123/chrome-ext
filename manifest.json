@@ -31,7 +31,6 @@
       "js": [
         "lib/pdf.min.js",
         "content/mockData.js",
-        "content/chatbot.js",
         "content/evidence-viewers.js",
         "content/section-transformers.js",
         "content/components/modal.js",
@@ -43,6 +42,9 @@
         "content/queries/query-panel.js",
         "content/queries/query-modal.js",
         "content/queries/query-send-modal.js",
+        "content/super-menu/dashboard-state.js",
+        "content/super-menu/dashboard-view.js",
+        "content/chatbot.js",
         "content/content.js"
       ],
       "css": [
