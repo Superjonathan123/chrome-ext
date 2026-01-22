@@ -29,6 +29,7 @@
     {
       "matches": ["*://*.pointclickcare.com/*"],
       "js": [
+        "config.js",
         "lib/pdf.min.js",
         "content/mockData.js",
         "content/evidence-viewers.js",
@@ -42,9 +43,19 @@
         "content/queries/query-panel.js",
         "content/queries/query-modal.js",
         "content/queries/query-send-modal.js",
+        "content/super-menu/state.js",
+        "content/super-menu/utils.js",
+        "content/super-menu/context.js",
+        "content/super-menu/session.js",
+        "content/super-menu/fab.js",
+        "content/super-menu/panel.js",
+        "content/super-menu/navigation.js",
         "content/super-menu/dashboard-state.js",
         "content/super-menu/dashboard-view.js",
-        "content/chatbot.js",
+        "content/super-menu/mds-view.js",
+        "content/super-menu/chat-view.js",
+        "content/super-menu/streaming.js",
+        "content/super-menu/init.js",
         "content/content.js"
       ],
       "css": [
