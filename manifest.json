@@ -52,6 +52,8 @@
         "content/super-menu/navigation.js",
         "content/super-menu/dashboard-state.js",
         "content/super-menu/dashboard-view.js",
+        "content/super-menu/facility-dashboard-state.js",
+        "content/super-menu/facility-dashboard-view.js",
         "content/super-menu/mds-view.js",
         "content/super-menu/chat-view.js",
         "content/super-menu/streaming.js",

@@ -23,7 +23,10 @@ const MDSViewState = {
   loading: false,
   error: null,
   context: null, // Current context being displayed
-  manualContext: null // Manual navigation override (cleared on URL change)
+  manualContext: null, // Manual navigation override (cleared on URL change)
+  cameFromDashboard: false, // Track if user drilled down from facility dashboard
+  showAllAssessments: false, // Override auto-select to show full list
+  autoSelectAttempt: null // Track auto-select attempts { patientId, patientName } to fallback on error
 };
 
 // FAB position storage key

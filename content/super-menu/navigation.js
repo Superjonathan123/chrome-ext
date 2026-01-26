@@ -21,7 +21,7 @@ function setupNavListeners() {
     refreshBtn.addEventListener('click', async () => {
       refreshBtn.classList.add('super-menu-refresh-spinning');
       if (SuperMenu.activeView === 'dashboard') {
-        await renderDashboard(true);
+        await renderFacilityDashboard(true);
       } else if (SuperMenu.activeView === 'mds') {
         await renderMDSView(true);
       }
@@ -70,7 +70,7 @@ function switchView(viewName) {
     let title = 'Super Menu';
 
     if (viewName === 'dashboard') {
-      title = 'Queries';
+      title = 'Dashboard';
     } else if (viewName === 'mds') {
       // Context-aware title for MDS view
       const context = typeof getMDSContext === 'function' ? getMDSContext() : { scope: 'global' };
@@ -103,7 +103,7 @@ function switchView(viewName) {
     dashboardContent.style.display = '';
     chatMessages.style.display = 'none';
     chatInputArea.style.display = 'none';
-    renderDashboard();
+    renderFacilityDashboard();
   } else if (viewName === 'mds') {
     dashboardContent.style.display = '';
     chatMessages.style.display = 'none';
@@ -120,13 +120,13 @@ function switchView(viewName) {
   }
 }
 
-// Dashboard Rendering
-async function renderDashboard(forceRefresh = false) {
+// Facility Dashboard Rendering
+async function renderFacilityDashboard(forceRefresh = false) {
   const container = document.getElementById('super-menu-content');
   if (!container) return;
 
-  // Check if DashboardState and DashboardView are available
-  if (!window.DashboardState || !window.DashboardView) {
+  // Check if FacilityDashboardState and FacilityDashboardView are available
+  if (!window.FacilityDashboardState || !window.FacilityDashboardView) {
     container.innerHTML = `
       <div class="super-menu-error">
         <div class="super-menu-error__icon">&#9888;</div>
@@ -137,19 +137,19 @@ async function renderDashboard(forceRefresh = false) {
   }
 
   // Show loading if no data yet
-  if (!DashboardState.data || forceRefresh) {
-    container.innerHTML = DashboardView._renderLoading();
+  if (!FacilityDashboardState.data || forceRefresh) {
+    container.innerHTML = FacilityDashboardView._renderLoading();
 
     try {
-      await DashboardState.loadDashboard(forceRefresh);
+      await FacilityDashboardState.loadDashboard(forceRefresh);
     } catch (err) {
-      console.error('Super Menu: Failed to load dashboard:', err);
+      console.error('Super Menu: Failed to load facility dashboard:', err);
     }
   }
 
   // Render the dashboard
-  container.innerHTML = DashboardView.render();
-  DashboardView.setupListeners(container);
+  container.innerHTML = FacilityDashboardView.render();
+  FacilityDashboardView.setupListeners(container);
 
   // Update badge
   updateMenuBadge();
@@ -162,17 +162,17 @@ async function updateMenuBadge() {
 
   let count = 0;
 
-  // Try to get count from DashboardState
-  if (window.DashboardState) {
+  // Try to get count from FacilityDashboardState
+  if (window.FacilityDashboardState) {
     // Load data if we don't have it yet
-    if (!DashboardState.data && !DashboardState.loading) {
+    if (!FacilityDashboardState.data && !FacilityDashboardState.loading) {
       try {
-        await DashboardState.loadDashboard();
+        await FacilityDashboardState.loadDashboard();
       } catch (err) {
         console.warn('Super Menu: Failed to load badge count:', err);
       }
     }
-    count = DashboardState.getTotalActionable();
+    count = FacilityDashboardState.getTotalActionable();
   }
 
   if (count > 0) {
@@ -185,7 +185,7 @@ async function updateMenuBadge() {
 
 // Expose functions for external access
 window.SuperMenu = {
-  renderDashboard,
+  renderFacilityDashboard,
   renderMDSView,
   updateMenuBadge,
   switchView,

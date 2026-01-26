@@ -3285,3 +3285,429 @@
   opacity: 0.4;
   flex-shrink: 0;
 }
+
+/* ============================================
+   Facility Dashboard
+   ============================================ */
+.super-facility-dashboard {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* Facility Dashboard - Action Cards Grid */
+.super-facility-cards {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--chat-border);
+  flex-shrink: 0;
+  background: var(--chat-bg);
+}
+
+.super-facility-card {
+  background: var(--chat-bg);
+  border-radius: var(--chat-radius-sm);
+  border: 1px solid var(--chat-border-light);
+  transition: var(--chat-transition-fast);
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.super-facility-card:hover {
+  border-color: var(--chat-border);
+  box-shadow: var(--chat-shadow-sm);
+}
+
+.super-facility-card__header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px;
+  position: relative;
+  cursor: pointer;
+}
+
+.super-facility-card__header:hover {
+  background: var(--chat-surface);
+}
+
+.super-facility-card__icon {
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.super-facility-card__count {
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.super-facility-card__label {
+  font-size: 10px;
+  color: var(--chat-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  font-weight: 500;
+  flex: 1;
+  line-height: 1.2;
+}
+
+.super-facility-card__toggle {
+  font-size: 10px;
+  color: var(--chat-text-muted);
+  position: absolute;
+  right: 8px;
+  top: 8px;
+}
+
+/* Card Color Variants */
+.super-facility-card--yellow {
+  border-left: 3px solid #f59e0b;
+}
+.super-facility-card--yellow .super-facility-card__count { color: #f59e0b; }
+.super-facility-card--yellow .super-facility-card__icon { color: #f59e0b; }
+
+.super-facility-card--orange {
+  border-left: 3px solid #f97316;
+}
+.super-facility-card--orange .super-facility-card__count { color: #f97316; }
+.super-facility-card--orange .super-facility-card__icon { color: #f97316; }
+
+.super-facility-card--green {
+  border-left: 3px solid #10b981;
+}
+.super-facility-card--green .super-facility-card__count { color: #10b981; }
+.super-facility-card--green .super-facility-card__icon { color: #10b981; }
+
+.super-facility-card--red {
+  border-left: 3px solid #ef4444;
+}
+.super-facility-card--red .super-facility-card__count { color: #ef4444; }
+.super-facility-card--red .super-facility-card__icon { color: #ef4444; }
+
+/* Card Expanded State */
+.super-facility-card--expanded {
+  grid-column: 1 / -1;
+}
+
+.super-facility-card__items {
+  border-top: 1px solid var(--chat-border-light);
+  padding: 8px 0;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.super-facility-card__item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: var(--chat-transition-fast);
+}
+
+.super-facility-card__item:hover {
+  background: var(--chat-surface);
+}
+
+.super-facility-card__item-name {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--chat-text);
+}
+
+.super-facility-card__item-detail {
+  font-size: 11px;
+  color: var(--chat-text-muted);
+}
+
+/* Facility Dashboard - Filter Toggle */
+.super-facility-filter {
+  display: flex;
+  gap: 8px;
+  padding: 12px 20px;
+  background: var(--chat-surface);
+  border-bottom: 1px solid var(--chat-border-light);
+  flex-shrink: 0;
+}
+
+.super-facility-filter__btn {
+  flex: 1;
+  padding: 8px 12px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--chat-text-secondary);
+  background: var(--chat-bg);
+  border: 1px solid var(--chat-border);
+  border-radius: var(--chat-radius-xs);
+  cursor: pointer;
+  transition: var(--chat-transition-fast);
+}
+
+.super-facility-filter__btn:hover {
+  background: var(--chat-surface);
+  border-color: var(--chat-text-muted);
+}
+
+.super-facility-filter__btn--active {
+  background: var(--chat-primary);
+  color: white;
+  border-color: var(--chat-primary);
+}
+
+.super-facility-filter__btn--active:hover {
+  background: var(--chat-primary-dark);
+  border-color: var(--chat-primary-dark);
+}
+
+/* Facility Dashboard - Assessments List */
+.super-facility-assessments {
+  flex: 1;
+  overflow-y: auto;
+  background: var(--chat-surface);
+}
+
+.super-facility-assessments::-webkit-scrollbar {
+  width: 6px;
+}
+
+.super-facility-assessments::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.super-facility-assessments::-webkit-scrollbar-thumb {
+  background: var(--chat-border);
+  border-radius: 3px;
+}
+
+.super-facility-assessments__header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px 8px;
+  position: sticky;
+  top: 0;
+  background: var(--chat-surface);
+  z-index: 1;
+}
+
+.super-facility-assessments__title {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--chat-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.super-facility-assessments__count {
+  font-size: 11px;
+  color: var(--chat-text-muted);
+}
+
+.super-facility-assessments__list {
+  padding: 0 12px 12px;
+}
+
+/* Facility Dashboard - Assessment Item */
+.super-facility-assessment {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  background: var(--chat-bg);
+  border-radius: var(--chat-radius-sm);
+  border: 1px solid var(--chat-border-light);
+  margin-bottom: 8px;
+  cursor: pointer;
+  transition: var(--chat-transition-fast);
+}
+
+.super-facility-assessment:hover {
+  border-color: var(--chat-border);
+  box-shadow: var(--chat-shadow-sm);
+}
+
+.super-facility-assessment:last-child {
+  margin-bottom: 0;
+}
+
+.super-facility-assessment__main {
+  flex: 1;
+  min-width: 0;
+}
+
+.super-facility-assessment__name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--chat-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.super-facility-assessment__meta {
+  font-size: 12px;
+  color: var(--chat-text-muted);
+  margin-top: 2px;
+}
+
+.super-facility-assessment__right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.super-facility-assessment__hipps {
+  font-size: 13px;
+  font-weight: 600;
+  font-family: 'SF Mono', 'Monaco', 'Inconsolata', monospace;
+  color: #059669;
+  letter-spacing: 0.5px;
+}
+
+.super-facility-assessment__badges {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.super-facility-assessment__chevron {
+  font-size: 14px;
+  color: var(--chat-text-muted);
+  opacity: 0.4;
+  flex-shrink: 0;
+}
+
+/* Facility Dashboard - Badges */
+.super-facility-badge {
+  font-size: 9px;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.super-facility-badge--hipps {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.super-facility-badge--query {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.super-facility-badge--compliance {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.super-facility-badge--ok {
+  background: #f3f4f6;
+  color: #6b7280;
+}
+
+/* Facility Dashboard - Empty State */
+.super-facility-empty {
+  padding: 40px 20px;
+  text-align: center;
+}
+
+.super-facility-empty__icon {
+  font-size: 32px;
+  margin-bottom: 12px;
+  opacity: 0.5;
+}
+
+.super-facility-empty__text {
+  font-size: 14px;
+  color: var(--chat-text-muted);
+}
+
+/* MDS View - Dashboard Navigation Header */
+.super-mds-nav-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: var(--chat-surface);
+  border-bottom: 1px solid var(--chat-border-light);
+}
+
+.super-mds-nav-header__back {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--chat-text-secondary);
+  background: var(--chat-bg);
+  border: 1px solid var(--chat-border);
+  border-radius: var(--chat-radius-xs);
+  cursor: pointer;
+  transition: var(--chat-transition-fast);
+}
+
+.super-mds-nav-header__back:hover {
+  background: var(--chat-surface);
+  border-color: var(--chat-text-muted);
+}
+
+.super-mds-nav-header__title {
+  flex: 1;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--chat-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.super-mds-nav-header__actions {
+  display: flex;
+  gap: 6px;
+}
+
+.super-mds-nav-header__pcc-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  font-size: 14px;
+  color: var(--chat-text-secondary);
+  background: var(--chat-bg);
+  border: 1px solid var(--chat-border);
+  border-radius: var(--chat-radius-xs);
+  cursor: pointer;
+  transition: var(--chat-transition-fast);
+}
+
+.super-mds-nav-header__pcc-btn:hover {
+  background: var(--chat-primary);
+  color: white;
+  border-color: var(--chat-primary);
+}
+
+/* MDS View - View All Assessments Link */
+.super-mds-view-all {
+  display: block;
+  padding: 8px 16px;
+  font-size: 12px;
+  color: var(--chat-primary);
+  text-align: center;
+  cursor: pointer;
+  transition: var(--chat-transition-fast);
+}
+
+.super-mds-view-all:hover {
+  background: var(--chat-primary-subtle);
+}

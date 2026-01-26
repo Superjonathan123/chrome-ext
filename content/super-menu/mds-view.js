@@ -33,6 +33,8 @@ async function renderMDSView(forceRefresh = false) {
 
     try {
       await loadMDSData(context, forceRefresh);
+      // Clear auto-select tracking on success
+      MDSViewState.autoSelectAttempt = null;
     } catch (err) {
       console.error('Super Menu: Failed to load MDS data:', err);
       MDSViewState.error = err.message || 'Failed to load MDS data';
@@ -41,6 +43,39 @@ async function renderMDSView(forceRefresh = false) {
   }
 
   if (MDSViewState.error) {
+    // Check if this was an auto-select attempt - fall back to showing MDS list
+    if (MDSViewState.autoSelectAttempt) {
+      console.log('Super Menu: Auto-select failed, falling back to MDS list');
+      const fallback = MDSViewState.autoSelectAttempt;
+
+      // Reset state for patient view
+      MDSViewState.error = null;
+      MDSViewState.autoSelectAttempt = null;
+      MDSViewState.showAllAssessments = true;
+      MDSViewState.manualContext = {
+        scope: 'patient',
+        assessmentId: null,
+        patientId: fallback.patientId,
+        patientName: fallback.patientName
+      };
+      MDSViewState.context = MDSViewState.manualContext;
+
+      // Use cached assessments if available, otherwise re-render will fetch
+      if (fallback.assessments) {
+        MDSViewState.data = {
+          scope: 'patient',
+          patientId: fallback.patientId,
+          patientName: fallback.patientName,
+          assessments: fallback.assessments
+        };
+        container.innerHTML = renderMDSContent(MDSViewState.data, MDSViewState.context);
+        setupMDSListeners(container);
+      } else {
+        // Re-render will fetch patient data
+        renderMDSView(true);
+      }
+      return;
+    }
     container.innerHTML = renderMDSError(MDSViewState.error, context);
   } else if (MDSViewState.data) {
     container.innerHTML = renderMDSContent(MDSViewState.data, context);
@@ -184,22 +219,76 @@ function renderMDSEmpty(context) {
 function renderMDSContent(data, context) {
   const breadcrumb = renderMDSBreadcrumb(data, context);
 
-  if (context.scope === 'mds' && data.success) {
+  if (context.scope === 'mds') {
     // Single MDS view with all the cards
     // Order: HIPPS display, Would Change HIPPS (top priority), Queries, Compliance
-    return `
-      <div class="super-mds-dashboard">
-        ${breadcrumb}
-        ${renderHippsDisplay(data)}
-        ${renderWouldChangeHippsCard(data)}
-        ${renderPendingQueriesCard(data)}
-        ${renderRecentQueriesCard(data)}
-        ${renderComplianceCard(data)}
-        ${renderNoHippsChangeSection(data)}
-      </div>
-    `;
+    if (data.success) {
+      return `
+        <div class="super-mds-dashboard">
+          ${breadcrumb}
+          ${renderHippsDisplay(data)}
+          ${renderWouldChangeHippsCard(data)}
+          ${renderPendingQueriesCard(data)}
+          ${renderRecentQueriesCard(data)}
+          ${renderComplianceCard(data)}
+          ${renderNoHippsChangeSection(data)}
+        </div>
+      `;
+    } else {
+      // MDS data failed to load but still show nav header so user can go back
+      return `
+        <div class="super-mds-dashboard">
+          ${breadcrumb}
+          <div class="super-mds-error">
+            <div class="super-mds-error__icon">&#9888;</div>
+            <div class="super-mds-error__text">Unable to load MDS analysis</div>
+            <button class="super-mds-error__retry" onclick="renderMDSView(true)">Retry</button>
+          </div>
+        </div>
+      `;
+    }
   } else if (context.scope === 'patient') {
-    // Patient view with MDS list
+    // Patient view - auto-select latest open MDS unless user wants to see all
+    const assessments = data.assessments || [];
+
+    // Find latest open MDS by ARD date
+    const openAssessments = assessments.filter(a => a.status === 'open');
+    const latestOpen = openAssessments.length > 0
+      ? openAssessments.sort((a, b) => new Date(b.ardDate) - new Date(a.ardDate))[0]
+      : null;
+
+    // Auto-select if: has open assessment, not showing all, and not already in MDS detail
+    if (latestOpen && !MDSViewState.showAllAssessments) {
+      // Trigger auto-select - switch to MDS detail view
+      setTimeout(() => {
+        // Track this auto-select attempt for fallback on error
+        MDSViewState.autoSelectAttempt = {
+          patientId: context.patientId,
+          patientName: data.patientName,
+          assessments: assessments // Cache assessments for fallback
+        };
+        MDSViewState.manualContext = {
+          scope: 'mds',
+          assessmentId: latestOpen.id || latestOpen.externalAssessmentId,
+          patientId: context.patientId,
+          patientName: data.patientName
+        };
+        MDSViewState.context = MDSViewState.manualContext;
+        MDSViewState.data = null;
+        // Preserve cameFromDashboard state
+        renderMDSView();
+      }, 0);
+
+      // Show loading while we transition
+      return `
+        <div class="super-mds-loading">
+          <div class="super-mds-loading__spinner"></div>
+          <div class="super-mds-loading__text">Loading latest assessment...</div>
+        </div>
+      `;
+    }
+
+    // Show full list (either no open assessments or user requested all)
     return `
       <div class="super-patient-view">
         ${breadcrumb}
@@ -241,19 +330,55 @@ function renderMDSBreadcrumb(data, context) {
   }
 
   if (context.scope === 'mds') {
-    // MDS view - show back to patient
     const patientId = context.patientId || data?.assessment?.patientId;
     const patientName = data?.patientName || context.patientName || 'Patient';
     const mdsLabel = data?.assessment ? `${data.assessment.description || 'MDS'}` : 'MDS';
+    const assessmentId = context.assessmentId || data?.assessment?.externalAssessmentId;
+
+    // Determine back button destination
+    let backButton;
+    if (MDSViewState.cameFromDashboard) {
+      // Came from facility dashboard - back goes to dashboard
+      backButton = `
+        <button class="super-mds-nav-header__back" data-action="back-to-dashboard" title="Back to Dashboard">
+          &#8592; Dashboard
+        </button>
+      `;
+    } else {
+      // Normal flow - back goes to patient
+      backButton = `
+        <button class="super-mds-nav-header__back" data-scope="patient" data-patient-id="${patientId || ''}" title="Back to ${escapeHtml(patientName)}">
+          &#8592; ${escapeHtml(patientName)}
+        </button>
+      `;
+    }
+
+    // "Open in PCC" buttons
+    const pccButtons = `
+      <div class="super-mds-nav-header__actions">
+        <button class="super-mds-nav-header__pcc-btn" data-action="open-patient" data-patient-id="${patientId || ''}" title="Open patient in PCC">
+          &#128100;
+        </button>
+        <button class="super-mds-nav-header__pcc-btn" data-action="open-mds" data-assessment-id="${assessmentId || ''}" title="Open MDS in PCC">
+          &#128203;
+        </button>
+      </div>
+    `;
+
+    // "View all assessments" link if came from auto-select
+    const viewAllLink = MDSViewState.cameFromDashboard || context.patientId ? `
+      <a class="super-mds-view-all" data-action="view-all-assessments" data-patient-id="${patientId || ''}">
+        View all assessments
+      </a>
+    ` : '';
 
     return `
-      <div class="super-nav-header">
-        <button class="super-nav-header__back" data-scope="patient" data-patient-id="${patientId || ''}" title="Back to ${escapeHtml(patientName)}">
-          <span class="super-nav-header__back-arrow">&#8592;</span>
-          <span class="super-nav-header__back-label">${escapeHtml(patientName)}</span>
-        </button>
-        <div class="super-nav-header__title">${escapeHtml(mdsLabel)}</div>
+      <div class="super-mds-nav-header">
+        ${backButton}
+        <div class="super-mds-nav-header__title">${escapeHtml(patientName)} - ${escapeHtml(mdsLabel)}</div>
+        ${pccButtons}
       </div>
+      ${viewAllLink}
     `;
   }
 
@@ -782,12 +907,24 @@ function setupMDSListeners(container) {
     btn.addEventListener('click', () => {
       const scope = btn.dataset.scope;
       const patientId = btn.dataset.patientId;
+      const action = btn.dataset.action;
 
-      if (scope === 'global') {
+      if (action === 'back-to-dashboard') {
+        // Go back to facility dashboard - clear all state
+        MDSViewState.manualContext = null;
+        MDSViewState.context = null;
+        MDSViewState.data = null;
+        MDSViewState.cameFromDashboard = false;
+        MDSViewState.showAllAssessments = false;
+        if (typeof switchView === 'function') {
+          switchView('dashboard');
+        }
+      } else if (scope === 'global') {
         // Go back to dashboard view - clear manual context
         MDSViewState.manualContext = null;
         MDSViewState.context = null;
         MDSViewState.data = null;
+        MDSViewState.cameFromDashboard = false;
         if (typeof switchView === 'function') {
           switchView('dashboard');
         }
@@ -801,6 +938,83 @@ function setupMDSListeners(container) {
         };
         MDSViewState.context = MDSViewState.manualContext;
         MDSViewState.data = null;
+        MDSViewState.showAllAssessments = true; // Show list when going back
+        renderMDSView();
+      }
+    });
+  });
+
+  // MDS nav header back button (for MDS view with dashboard drill-down)
+  container.querySelectorAll('.super-mds-nav-header__back').forEach(btn => {
+    btn.addEventListener('click', () => {
+      console.log('MDS nav back button clicked');
+      const action = btn.dataset.action;
+      const scope = btn.dataset.scope;
+      const patientId = btn.dataset.patientId;
+      console.log('Back button data:', { action, scope, patientId });
+
+      if (action === 'back-to-dashboard') {
+        // Go back to facility dashboard
+        console.log('Going back to dashboard');
+        MDSViewState.manualContext = null;
+        MDSViewState.context = null;
+        MDSViewState.data = null;
+        MDSViewState.cameFromDashboard = false;
+        MDSViewState.showAllAssessments = false;
+        if (typeof switchView === 'function') {
+          switchView('dashboard');
+        }
+      } else if (scope === 'patient' && patientId) {
+        // Go back to patient view
+        MDSViewState.manualContext = {
+          scope: 'patient',
+          assessmentId: null,
+          patientId,
+          patientName: MDSViewState.data?.patientName || null
+        };
+        MDSViewState.context = MDSViewState.manualContext;
+        MDSViewState.data = null;
+        MDSViewState.cameFromDashboard = false;
+        MDSViewState.showAllAssessments = true;
+        renderMDSView();
+      }
+    });
+  });
+
+  // "Open in PCC" buttons
+  container.querySelectorAll('.super-mds-nav-header__pcc-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const action = btn.dataset.action;
+      const patientId = btn.dataset.patientId;
+      const assessmentId = btn.dataset.assessmentId;
+
+      const currentUrl = new URL(window.location.href);
+      const origin = currentUrl.origin;
+
+      if (action === 'open-patient' && patientId) {
+        window.location.href = `${origin}/admin/patient.xhtml?ESOLclientid=${patientId}`;
+      } else if (action === 'open-mds' && assessmentId) {
+        window.location.href = `${origin}/clinical/mds3/sectionlisting.xhtml?ESOLassessid=${assessmentId}`;
+      }
+    });
+  });
+
+  // "View all assessments" link
+  container.querySelectorAll('[data-action="view-all-assessments"]').forEach(link => {
+    link.addEventListener('click', () => {
+      const patientId = link.dataset.patientId;
+      if (patientId) {
+        MDSViewState.manualContext = {
+          scope: 'patient',
+          assessmentId: null,
+          patientId,
+          patientName: MDSViewState.data?.patientName || null
+        };
+        MDSViewState.context = MDSViewState.manualContext;
+        MDSViewState.data = null;
+        MDSViewState.showAllAssessments = true; // Force show full list
+        MDSViewState.cameFromDashboard = false;
         renderMDSView();
       }
     });
