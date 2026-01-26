@@ -259,6 +259,14 @@
   background: #6366f1;
 }
 
+.super-evidence-card__type--therapy-doc {
+  background: #14b8a6;
+}
+
+.super-evidence-card__type--document {
+  background: #64748b;
+}
+
 .super-evidence-card__quote {
   font-size: 12px;
   line-height: 1.5;

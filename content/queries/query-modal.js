@@ -260,3 +260,490 @@ const QueryDetailModal = {
 
 // Make available globally
 window.QueryDetailModal = QueryDetailModal;
+
+// ============================================================================
+// EVIDENCE MODAL
+// Shows AI recommendation, evidence, and actions for MDS items
+// ============================================================================
+
+const EvidenceModal = {
+  /**
+   * Show the evidence modal for an MDS item
+   * @param {Object} itemData - Data from /api/extension/mds/items/{itemCode}
+   * @param {Object} assessmentContext - Context for the assessment
+   */
+  show(itemData, assessmentContext = {}) {
+    const { itemCode, section, item, assessment } = itemData;
+    // Get item name from multiple possible sources
+    const itemName = item?.name || item?.kbCategory?.categoryName || itemData.itemName || '';
+
+    // Build HIPPS impact string
+    const hippsImpact = this._buildHippsImpact(itemData);
+
+    const content = this._buildContent(itemData);
+    const actions = this._buildActions(itemData, assessmentContext);
+
+    SuperModal.show({
+      title: `${itemCode}${itemName ? ` - ${itemName}` : ''}`,
+      icon: '&#9889;',
+      badge: hippsImpact || `Section ${section || itemCode?.charAt(0) || '?'}`,
+      content,
+      actions,
+      size: 'large',
+      className: 'super-evidence-modal'
+    });
+
+    // Set up click handlers for evidence cards after modal is shown
+    setTimeout(() => {
+      this._setupEvidenceCardHandlers();
+    }, 50);
+  },
+
+  /**
+   * Set up click handlers for clickable evidence cards
+   */
+  _setupEvidenceCardHandlers() {
+    const modal = SuperModal.activeModal;
+    if (!modal) return;
+
+    modal.querySelectorAll('.super-evidence-card--clickable').forEach(card => {
+      card.addEventListener('click', async (e) => {
+        e.stopPropagation();
+
+        const orderId = card.dataset.orderId;
+        const viewerType = card.dataset.viewerType;
+        const viewerId = card.dataset.viewerId;
+        const quote = card.dataset.quote;
+        const wordBlocksStr = card.dataset.wordBlocks;
+
+        if (orderId) {
+          // Show order administrations modal
+          if (typeof showAdministrationModal === 'function') {
+            await showAdministrationModal(orderId);
+          } else {
+            console.error('EvidenceModal: showAdministrationModal function not available');
+          }
+        } else if (viewerType === 'therapy-document' && viewerId) {
+          if (typeof showTherapyDocModal === 'function') {
+            await showTherapyDocModal(viewerId, quote);
+          }
+        } else if (viewerType === 'clinical-note' && viewerId) {
+          if (typeof showClinicalNoteModal === 'function') {
+            await showClinicalNoteModal(viewerId);
+          }
+        } else if (viewerType === 'document' && viewerId) {
+          if (typeof showDocumentModal === 'function') {
+            const wordBlocks = wordBlocksStr ? JSON.parse(wordBlocksStr) : null;
+            await showDocumentModal(viewerId, wordBlocks);
+          }
+        } else {
+          console.error('EvidenceModal: No valid viewer type found on card');
+        }
+      });
+    });
+  },
+
+  /**
+   * Build HIPPS impact string from item data
+   * @param {Object} itemData
+   * @returns {string}
+   */
+  _buildHippsImpact(itemData) {
+    const impact = itemData.impact || itemData.item?.impact || {};
+    const parts = [];
+
+    if (impact.nta?.wouldChangeLevel) {
+      parts.push(`NTA: ${impact.nta.currentLevel} → ${impact.nta.newLevel}`);
+    }
+    if (impact.slp?.wouldChangeGroup) {
+      parts.push(`SLP: ${impact.slp.currentGroup} → ${impact.slp.newGroup}`);
+    }
+    if (impact.nursing?.wouldChangeGroup) {
+      parts.push(`Nursing: ${impact.nursing.currentPaymentGroup} → ${impact.nursing.newPaymentGroup}`);
+    }
+    if (impact.ptot?.wouldChangeGroup) {
+      parts.push(`PT/OT: ${impact.ptot.currentGroup} → ${impact.ptot.newGroup}`);
+    }
+
+    return parts.length > 0 ? parts[0] : '';
+  },
+
+  /**
+   * Build modal content HTML
+   * @param {Object} itemData
+   * @returns {string}
+   */
+  _buildContent(itemData) {
+    const { itemCode, section, item, assessment } = itemData;
+    const itemName = item?.name || item?.kbCategory?.categoryName || itemData.itemName || '';
+
+    // AI recommendation section
+    const aiSection = this._buildAISection(item);
+
+    // Evidence section
+    const evidenceSection = this._buildEvidenceSection(item?.evidence || itemData.evidence || []);
+
+    // HIPPS impact details
+    const impactSection = this._buildImpactSection(itemData);
+
+    return `
+      <div class="super-evidence">
+        ${impactSection}
+        ${aiSection}
+        ${evidenceSection}
+      </div>
+    `;
+  },
+
+  /**
+   * Build AI recommendation section
+   * @param {Object} item
+   * @returns {string}
+   */
+  _buildAISection(item) {
+    if (!item) {
+      return `
+        <div class="super-evidence__section">
+          <div class="super-evidence__section-title">AI Recommendation</div>
+          <div class="super-evidence__empty">No AI recommendation available</div>
+        </div>
+      `;
+    }
+
+    const answer = item.answer || item.recommendedValue || '—';
+    const confidence = item.confidence || 'medium';
+    const rationale = item.rationale || item.reason || '';
+
+    // Confidence dots
+    const confidenceDots = this._buildConfidenceDots(confidence);
+
+    return `
+      <div class="super-evidence__section">
+        <div class="super-evidence__section-title">AI Recommendation</div>
+        <div class="super-evidence__recommendation">
+          <div class="super-evidence__answer-row">
+            <span class="super-evidence__answer-label">Recommended Value:</span>
+            <span class="super-evidence__answer-value">${this._escapeHTML(String(answer))}</span>
+            ${confidenceDots}
+          </div>
+          ${rationale ? `
+            <div class="super-evidence__rationale">
+              ${this._escapeHTML(rationale)}
+            </div>
+          ` : ''}
+        </div>
+      </div>
+    `;
+  },
+
+  /**
+   * Build confidence dots indicator
+   * @param {string} confidence - 'high', 'medium', or 'low'
+   * @returns {string}
+   */
+  _buildConfidenceDots(confidence) {
+    const level = confidence?.toLowerCase() || 'medium';
+    const filled = level === 'high' ? 3 : level === 'medium' ? 2 : 1;
+
+    const dots = [1, 2, 3].map(i =>
+      `<span class="super-evidence__dot ${i <= filled ? 'super-evidence__dot--filled' : ''}"></span>`
+    ).join('');
+
+    return `
+      <span class="super-evidence__confidence" title="${level} confidence">
+        ${dots}
+      </span>
+    `;
+  },
+
+  /**
+   * Build evidence cards section using existing evidence card pattern
+   * @param {Array} evidence
+   * @returns {string}
+   */
+  _buildEvidenceSection(evidence) {
+    if (!evidence || evidence.length === 0) {
+      return `
+        <div class="super-evidence-section">
+          <div class="super-evidence-section__label">Supporting Evidence</div>
+          <div class="super-evidence__empty">No evidence available</div>
+        </div>
+      `;
+    }
+
+    const cards = evidence.map(ev => {
+      // Handle multiple evidence formats - same as content.js renderEvidence()
+      const quote = ev.quoteText || ev.orderDescription || ev.quote || ev.findingText || '';
+      const sourceType = ev.sourceType || this._inferSourceType(ev.displayName, ev.evidenceId);
+      const typeClass = `super-evidence-card__type--${sourceType}`;
+      const typeLabel = ev.displayName || this._formatSourceType(sourceType);
+
+      // Skip if no quote text at all
+      if (!quote) return '';
+
+      // Check if this is an order evidence that can show administrations
+      const isOrder = sourceType === 'order';
+      const orderId = ev.sourceId || ev.evidenceId || '';
+
+      // Check if this evidence has a viewable type (clinical note, therapy doc, PDF)
+      const { viewerType, id: viewerId } = typeof parseEvidenceForViewer === 'function'
+        ? parseEvidenceForViewer(ev)
+        : { viewerType: null, id: null };
+
+      const isViewable = isOrder || viewerType;
+      const clickableClass = isViewable ? 'super-evidence-card--clickable' : '';
+
+      // Data attributes for click handling
+      let dataAttrs = '';
+      if (isOrder) {
+        dataAttrs = `data-order-id="${orderId}"`;
+      } else if (viewerType) {
+        dataAttrs = `data-viewer-type="${viewerType}" data-viewer-id="${viewerId}"`;
+        // Add quote text for highlighting in therapy documents
+        if (quote) {
+          const escapedQuote = quote.replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+          dataAttrs += ` data-quote="${escapedQuote}"`;
+        }
+        // Add wordBlocks data if available (for PDF documents)
+        if (ev.wordBlocks && Array.isArray(ev.wordBlocks) && ev.wordBlocks.length > 0) {
+          const wordBlocksJson = JSON.stringify(ev.wordBlocks).replace(/"/g, '&quot;');
+          dataAttrs += ` data-word-blocks="${wordBlocksJson}"`;
+        }
+      }
+
+      // Action text based on type
+      let actionText = '';
+      if (isOrder) actionText = 'View Administrations';
+      else if (viewerType === 'therapy-document') actionText = 'View Document';
+      else if (viewerType === 'clinical-note') actionText = 'View Note';
+      else if (viewerType === 'document') actionText = 'View PDF';
+
+      const actionHTML = isViewable ? `
+        <div class="super-evidence-card__action">
+          <span>${actionText}</span>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M5 12h14M12 5l7 7-7 7"/>
+          </svg>
+        </div>
+      ` : '';
+
+      return `
+        <div class="super-evidence-card ${clickableClass}" ${dataAttrs}>
+          <div class="super-evidence-card__header">
+            <span class="super-evidence-card__type ${typeClass}">${typeLabel}</span>
+          </div>
+          <div class="super-evidence-card__quote">${this._escapeHTML(quote)}</div>
+          ${ev.rationale ? `<div class="super-evidence-card__rationale">${this._escapeHTML(ev.rationale)}</div>` : ''}
+          ${actionHTML}
+        </div>
+      `;
+    }).filter(card => card).join('');
+
+    if (!cards) {
+      return `
+        <div class="super-evidence-section">
+          <div class="super-evidence-section__label">Supporting Evidence</div>
+          <div class="super-evidence__empty">No evidence available</div>
+        </div>
+      `;
+    }
+
+    return `
+      <div class="super-evidence-section">
+        <div class="super-evidence-section__label">Evidence (${evidence.length})</div>
+        <div class="super-evidence-list">${cards}</div>
+      </div>
+    `;
+  },
+
+  /**
+   * Infer source type from filename/evidenceId
+   * @param {string} displayName
+   * @param {string} evidenceId
+   * @returns {string}
+   */
+  _inferSourceType(displayName, evidenceId) {
+    // Check evidenceId first
+    if (evidenceId) {
+      if (evidenceId.startsWith('order-')) return 'order';
+      if (evidenceId.startsWith('mar-')) return 'mar';
+      if (evidenceId.startsWith('lab-')) return 'lab-result';
+      if (evidenceId.startsWith('therapy-doc-')) return 'therapy-doc';
+      if (evidenceId.startsWith('pcc-prognote-')) return 'progress-note';
+    }
+
+    if (!displayName) return 'document';
+    const lower = displayName.toLowerCase();
+    if (lower.includes('dc_summary') || lower.includes('discharge')) return 'progress-note';
+    if (lower.includes('lab')) return 'lab-result';
+    if (lower.includes('order')) return 'order';
+    if (lower.includes('mar')) return 'mar';
+    if (lower.includes('vital')) return 'vital-signs';
+    if (lower.includes('nursing')) return 'nursing-note';
+    if (lower.includes('history') || lower.includes('h&p') || lower.includes('physical')) return 'progress-note';
+    if (lower.includes('eval') || lower.includes('st ') || lower.includes('slp')) return 'progress-note';
+    return 'document';
+  },
+
+  /**
+   * Build HIPPS impact details section
+   * @param {Object} itemData
+   * @returns {string}
+   */
+  _buildImpactSection(itemData) {
+    const impact = itemData.impact || itemData.item?.impact || {};
+    const parts = [];
+
+    if (impact.nta?.wouldChangeLevel) {
+      parts.push({
+        label: 'NTA',
+        from: impact.nta.currentLevel,
+        to: impact.nta.newLevel
+      });
+    }
+    if (impact.slp?.wouldChangeGroup) {
+      parts.push({
+        label: 'SLP',
+        from: impact.slp.currentGroup,
+        to: impact.slp.newGroup
+      });
+    }
+    if (impact.nursing?.wouldChangeGroup) {
+      parts.push({
+        label: 'Nursing',
+        from: impact.nursing.currentPaymentGroup,
+        to: impact.nursing.newPaymentGroup
+      });
+    }
+    if (impact.ptot?.wouldChangeGroup) {
+      parts.push({
+        label: 'PT/OT',
+        from: impact.ptot.currentGroup,
+        to: impact.ptot.newGroup
+      });
+    }
+
+    if (parts.length === 0) {
+      return '';
+    }
+
+    const badges = parts.map(p => `
+      <div class="super-evidence__impact-badge">
+        <span class="super-evidence__impact-label">${p.label}</span>
+        <span class="super-evidence__impact-change">${p.from} → ${p.to}</span>
+      </div>
+    `).join('');
+
+    return `
+      <div class="super-evidence__impact-row">
+        ${badges}
+      </div>
+    `;
+  },
+
+  /**
+   * Build action buttons
+   * @param {Object} itemData
+   * @param {Object} assessmentContext
+   * @returns {Array}
+   */
+  _buildActions(itemData, assessmentContext) {
+    const { itemCode, section, item } = itemData;
+    const actions = [];
+
+    // Secondary: Go to Section
+    actions.push({
+      label: `Go to Section ${section || itemCode?.charAt(0) || '?'}`,
+      variant: 'secondary',
+      action: () => {
+        SuperModal.close();
+        if (typeof navigateToMDSItem === 'function') {
+          navigateToMDSItem(itemCode);
+        }
+      }
+    });
+
+    // Primary: Send Query
+    actions.push({
+      label: 'Send Query',
+      variant: 'primary',
+      action: () => {
+        // Build result object for QuerySendModal
+        const diagnosisName = item?.kbCategory?.categoryName || item?.name || itemData.itemName || '';
+        const result = {
+          mdsItem: itemCode,
+          description: diagnosisName,
+          aiAnswer: {
+            mdsItem: itemCode,
+            mdsItemName: diagnosisName,
+            answer: item?.answer,
+            status: item?.status,
+            confidence: item?.confidence,
+            rationale: item?.rationale || '',
+            evidence: item?.evidence || [],
+            kbCategory: item?.kbCategory
+          }
+        };
+        // Close without animation to avoid race condition, then open new modal
+        SuperModal.close(false);
+        if (window.QuerySendModal) {
+          window.QuerySendModal.show(result);
+        }
+      }
+    });
+
+    return actions;
+  },
+
+  /**
+   * Format source type for display
+   * @param {string} type
+   * @returns {string}
+   */
+  _formatSourceType(type) {
+    const labels = {
+      'order': 'Order',
+      'mar': 'MAR',
+      'lab-result': 'Lab',
+      'progress-note': 'Progress Note',
+      'nursing-note': 'Nursing Note',
+      'vital-signs': 'Vital Signs',
+      'therapy-doc': 'Therapy Doc',
+      'document': 'Document'
+    };
+    return labels[type] || 'Document';
+  },
+
+  /**
+   * Format date for display
+   * @param {string} dateStr
+   * @returns {string}
+   */
+  _formatDate(dateStr) {
+    try {
+      const date = new Date(dateStr);
+      return date.toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric'
+      });
+    } catch {
+      return dateStr;
+    }
+  },
+
+  /**
+   * Escape HTML
+   * @param {string} str
+   * @returns {string}
+   */
+  _escapeHTML(str) {
+    if (!str) return '';
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+  }
+};
+
+// Make available globally
+window.EvidenceModal = EvidenceModal;

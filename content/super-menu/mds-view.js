@@ -865,10 +865,95 @@ function handleComplianceAction(action) {
   // TODO: Implement view unsigned orders/therapy docs
 }
 
-function handleImpactItemClick(mdsItem) {
+async function handleImpactItemClick(mdsItem) {
   console.log('Impact item clicked:', mdsItem);
-  // TODO: Navigate to MDS item or show code/query options
-  navigateToMDSItem(mdsItem);
+
+  // Show loading modal
+  SuperModal.show({
+    title: mdsItem,
+    icon: '&#9889;',
+    content: `
+      <div class="super-evidence__loading">
+        <div class="super-modal__spinner"></div>
+        <span>Loading item details...</span>
+      </div>
+    `,
+    actions: [],
+    size: 'medium',
+    className: 'super-evidence-modal'
+  });
+
+  try {
+    // Fetch item data from API
+    const itemData = await fetchMDSItem(mdsItem);
+
+    if (!itemData.success) {
+      throw new Error(itemData.error || 'Failed to load item data');
+    }
+
+    // Get assessment context for the modal
+    const assessmentContext = {
+      assessmentId: MDSViewState.manualContext?.assessmentId || MDSViewState.context?.assessmentId,
+      patientId: MDSViewState.context?.patientId,
+      patientName: MDSViewState.data?.patientName
+    };
+
+    // Close loading modal and show evidence modal
+    SuperModal.close(false);
+    window.EvidenceModal.show(itemData, assessmentContext);
+
+  } catch (error) {
+    console.error('Super Menu: Failed to fetch MDS item data:', error);
+    SuperModal.showError(`Failed to load: ${error.message}`);
+    SuperModal.updateActions([{
+      label: 'Close',
+      variant: 'secondary',
+      action: () => SuperModal.close()
+    }]);
+  }
+}
+
+/**
+ * Fetch MDS item details from the API
+ * @param {string} itemCode - MDS item code (e.g., "I5600")
+ * @returns {Promise<Object>}
+ */
+async function fetchMDSItem(itemCode) {
+  const authState = await chrome.runtime.sendMessage({ type: 'GET_AUTH_STATE' });
+  if (!authState.authenticated) {
+    throw new Error('Please log in to view item details');
+  }
+
+  const orgResponse = await chrome.runtime.sendMessage({ type: 'GET_ORG' });
+  const orgSlug = orgResponse?.org;
+  const facilityName = getChatFacilityInfo();
+  const assessmentId = MDSViewState.manualContext?.assessmentId || MDSViewState.context?.assessmentId;
+
+  if (!orgSlug || !facilityName) {
+    throw new Error('Could not determine organization or facility');
+  }
+
+  if (!assessmentId) {
+    throw new Error('No assessment context available');
+  }
+
+  const params = new URLSearchParams({
+    externalAssessmentId: assessmentId,
+    facilityName,
+    orgSlug
+  });
+
+  const result = await chrome.runtime.sendMessage({
+    type: 'API_REQUEST',
+    endpoint: `/api/extension/mds/items/${itemCode}?${params}`,
+    options: { method: 'GET' }
+  });
+
+  if (!result.success) {
+    throw new Error(result.error || 'Failed to load item data');
+  }
+
+  return result.data || result;
 }
 
 function handleQueryClick(queryId, mdsItem) {
@@ -901,9 +986,40 @@ function handleQueryClick(queryId, mdsItem) {
   }
 }
 
+/**
+ * Navigate to the MDS section page in PCC for a given item code
+ * @param {string} itemCode - MDS item code (e.g., "I5600" → Section I)
+ */
 function navigateToMDSItem(itemCode) {
   console.log('Navigate to MDS item:', itemCode);
-  // TODO: Navigate to specific MDS item in PCC
+
+  if (!itemCode) {
+    console.error('Super Menu: No item code provided for navigation');
+    return;
+  }
+
+  // Extract section letter from item code (e.g., "I5600" → "I")
+  const section = itemCode.charAt(0).toUpperCase();
+  const assessmentId = MDSViewState.manualContext?.assessmentId || MDSViewState.context?.assessmentId;
+
+  if (!assessmentId) {
+    console.error('Super Menu: No assessment ID available for navigation');
+    SuperToast?.warning('Unable to navigate: no assessment context');
+    return;
+  }
+
+  // Build PCC MDS section URL
+  // Correct format: /clinical/mds3/section.xhtml?ESOLassessid=XXX&sectioncode=I
+  // Preserve the origin (including subdomain like www21)
+  const currentUrl = new URL(window.location.href);
+  const origin = currentUrl.origin; // e.g., https://www21.pointclickcare.com
+
+  const sectionUrl = `${origin}/clinical/mds3/section.xhtml?ESOLassessid=${assessmentId}&sectioncode=${section}`;
+
+  console.log('Super Menu: Navigating to MDS section:', sectionUrl);
+
+  // Navigate in current tab
+  window.location.href = sectionUrl;
 }
 
 // ============================================================================

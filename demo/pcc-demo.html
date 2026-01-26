@@ -1,0 +1,2578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PointClickCare - MDS 3.0</title>
+  <style>
+    /* ============================================
+       PCC Base Styles - Exact Match
+       ============================================ */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 12px;
+      color: #333;
+      background: #fff;
+      line-height: 1.4;
+    }
+
+    /* ============================================
+       PCC Header
+       ============================================ */
+    .pcc-header {
+      background: #f5f5f5;
+      border-bottom: 1px solid #ccc;
+      padding: 8px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .pcc-logo {
+      font-family: Arial, sans-serif;
+      font-size: 18px;
+      font-weight: bold;
+      color: #333;
+      font-style: italic;
+    }
+
+    .pcc-header-right {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .pcc-facility {
+      font-size: 13px;
+      font-weight: bold;
+      color: #333;
+    }
+
+    .pcc-header-icons {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .pcc-header-icon {
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #666;
+      cursor: pointer;
+    }
+
+    .pcc-user {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+    }
+
+    .pcc-user-avatar {
+      width: 28px;
+      height: 28px;
+      background: #ddd;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #666;
+    }
+
+    .pcc-user-name {
+      font-size: 13px;
+      color: #333;
+    }
+
+    /* ============================================
+       PCC Navigation
+       ============================================ */
+    .pcc-nav {
+      background: #f0f0f0;
+      border-bottom: 1px solid #ccc;
+      padding: 0 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .pcc-nav-menu {
+      display: flex;
+      align-items: center;
+      gap: 0;
+    }
+
+    .pcc-nav-item {
+      padding: 8px 16px;
+      font-size: 13px;
+      color: #333;
+      cursor: pointer;
+      border: 1px solid transparent;
+      background: transparent;
+    }
+
+    .pcc-nav-item:hover {
+      background: #e0e0e0;
+    }
+
+    .pcc-nav-item--active {
+      background: #d0d0d0;
+      border: 1px solid #bbb;
+      border-radius: 4px 4px 0 0;
+    }
+
+    .pcc-nav-dropdown {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .pcc-nav-dropdown::after {
+      content: "▼";
+      font-size: 8px;
+    }
+
+    .pcc-search {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .pcc-search input {
+      padding: 4px 8px;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+      font-size: 12px;
+      width: 180px;
+    }
+
+    .pcc-search-btn {
+      padding: 4px 12px;
+      background: #f0f0f0;
+      border: 1px solid #999;
+      border-radius: 3px;
+      font-size: 12px;
+      cursor: pointer;
+    }
+
+    /* ============================================
+       Page Title
+       ============================================ */
+    .pcc-page-title {
+      padding: 12px 16px;
+      font-size: 14px;
+      font-weight: bold;
+      color: #333;
+      background: #fff;
+      border-bottom: 1px solid #ddd;
+    }
+
+    /* ============================================
+       Patient Info Banner - 5 Sections
+       ============================================ */
+    .pcc-patient-banner {
+      display: flex;
+      border-bottom: 2px solid #666;
+    }
+
+    .pcc-banner-section {
+      flex: 1;
+      padding: 8px 12px;
+      font-size: 11px;
+      border-right: 1px solid #999;
+    }
+
+    .pcc-banner-section:last-child {
+      border-right: none;
+    }
+
+    .pcc-banner-section--resident {
+      background: #c4c19f;
+    }
+
+    .pcc-banner-section--assessment {
+      background: #90b080;
+    }
+
+    .pcc-banner-section--rug {
+      background: #c4c19f;
+    }
+
+    .pcc-banner-section--pdpm {
+      background: #90b080;
+    }
+
+    .pcc-banner-section--submission {
+      background: #c4c19f;
+    }
+
+    .pcc-banner-title {
+      text-align: center;
+      font-weight: bold;
+      margin-bottom: 4px;
+      color: #333;
+    }
+
+    .pcc-banner-row {
+      display: flex;
+      margin: 2px 0;
+    }
+
+    .pcc-banner-label {
+      font-weight: bold;
+      margin-right: 4px;
+      white-space: nowrap;
+    }
+
+    .pcc-banner-value {
+      color: #333;
+    }
+
+    .pcc-banner-value--link {
+      color: #0066cc;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+
+    /* ============================================
+       MDS Summary Page Styles
+       ============================================ */
+    .mds-summary {
+      padding: 20px;
+    }
+
+    .mds-workflow {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      margin-bottom: 20px;
+      padding: 16px;
+      background: #f9f9f9;
+      border: 1px solid #ddd;
+    }
+
+    .mds-workflow-item {
+      text-align: center;
+      cursor: pointer;
+    }
+
+    .mds-workflow-icon {
+      width: 60px;
+      height: 60px;
+      border: 2px solid #999;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #fff;
+      margin-bottom: 6px;
+      font-size: 24px;
+    }
+
+    .mds-workflow-icon--complete {
+      background: #d4edda;
+      border-color: #28a745;
+    }
+
+    .mds-workflow-label {
+      font-size: 11px;
+      color: #333;
+    }
+
+    .mds-workflow-status {
+      font-size: 10px;
+      color: #666;
+    }
+
+    .mds-progress {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 40px;
+      margin: 16px 0;
+      font-size: 11px;
+      color: #666;
+    }
+
+    .mds-progress-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #ddd;
+    }
+
+    .mds-progress-dot--active {
+      background: #0066cc;
+    }
+
+    .mds-actions {
+      display: flex;
+      gap: 8px;
+      padding: 12px 16px;
+      background: #f5f5f5;
+      border: 1px solid #ddd;
+      margin-bottom: 16px;
+    }
+
+    .mds-action-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      background: #fff;
+      border: 1px solid #999;
+      border-radius: 4px;
+      font-size: 12px;
+      cursor: pointer;
+    }
+
+    .mds-action-btn:hover {
+      background: #e8e8e8;
+    }
+
+    .mds-action-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    /* MDS Section Grid */
+    .mds-sections-header {
+      background: #666;
+      color: white;
+      text-align: center;
+      padding: 8px;
+      font-weight: bold;
+      font-size: 13px;
+    }
+
+    .mds-sections-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 8px;
+      padding: 16px;
+      background: #f0f0f0;
+    }
+
+    .mds-section-card {
+      background: #90c050;
+      border: 2px solid #70a030;
+      border-radius: 8px;
+      padding: 8px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .mds-section-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    }
+
+    .mds-section-card--na {
+      background: #d0d0d0;
+      border-color: #aaa;
+    }
+
+    .mds-section-card--active {
+      background: #4080c0;
+      border-color: #306090;
+      color: white;
+    }
+
+    .mds-section-name {
+      font-size: 10px;
+      margin-bottom: 4px;
+      line-height: 1.2;
+      min-height: 24px;
+    }
+
+    .mds-section-letter {
+      font-size: 32px;
+      font-weight: bold;
+      margin: 4px 0;
+    }
+
+    .mds-section-status {
+      font-size: 10px;
+      color: #333;
+    }
+
+    .mds-section-card--na .mds-section-status {
+      color: #666;
+    }
+
+    /* ============================================
+       Section Navigation Bar
+       ============================================ */
+    .pcc-section-nav {
+      display: flex;
+      align-items: center;
+      padding: 8px 16px;
+      background: #f5f5f5;
+      border-bottom: 1px solid #ccc;
+      gap: 4px;
+      flex-wrap: wrap;
+    }
+
+    .pcc-section-letter {
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #e8e8e8;
+      border: 1px solid #999;
+      border-radius: 3px;
+      font-size: 12px;
+      font-weight: bold;
+      cursor: pointer;
+      color: #333;
+    }
+
+    .pcc-section-letter:hover {
+      background: #d8d8d8;
+    }
+
+    .pcc-section-letter--active {
+      background: #4080c0;
+      border-color: #306090;
+      color: white;
+    }
+
+    .pcc-section-letter--complete {
+      background: #90c050;
+      border-color: #70a030;
+    }
+
+    .pcc-exit-btn {
+      padding: 6px 16px;
+      background: #f0f0f0;
+      border: 1px solid #999;
+      border-radius: 3px;
+      font-size: 12px;
+      cursor: pointer;
+      margin-left: 8px;
+    }
+
+    /* ============================================
+       MDS Form Section Styles
+       ============================================ */
+    .mds-form {
+      padding: 0;
+    }
+
+    .mds-section-header {
+      background: #336699;
+      color: white;
+      padding: 8px 16px;
+      font-weight: bold;
+      font-size: 13px;
+    }
+
+    .mds-question {
+      border-bottom: 1px solid #ddd;
+      position: relative;
+    }
+
+    .mds-question-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding: 12px 16px;
+      background: #fff;
+    }
+
+    .mds-question-id {
+      font-weight: bold;
+      margin-right: 8px;
+    }
+
+    .mds-question-text {
+      flex: 1;
+    }
+
+    .mds-question-note {
+      font-size: 11px;
+      color: #666;
+      padding: 0 16px 8px;
+      font-style: italic;
+    }
+
+    .mds-tools-btn {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 8px;
+      background: transparent;
+      border: none;
+      color: #666;
+      font-size: 11px;
+      cursor: pointer;
+    }
+
+    .mds-tools-icon {
+      width: 20px;
+      height: 20px;
+      background: #ccc;
+      border-radius: 50%;
+    }
+
+    /* Response Locked Box */
+    .mds-response {
+      margin: 0 16px 16px;
+      background: #ffffcc;
+      border: 1px solid #cccc99;
+    }
+
+    .mds-response--locked {
+      background: linear-gradient(to bottom, #ffffcc 0%, #f5f5cc 100%);
+    }
+
+    .mds-response-header {
+      text-align: center;
+      padding: 8px;
+      color: #999;
+      font-size: 11px;
+    }
+
+    .mds-response-signed {
+      text-align: center;
+      padding: 4px 8px 8px;
+      font-size: 11px;
+      color: #333;
+    }
+
+    .mds-response-signed strong {
+      color: #000;
+    }
+
+    .mds-response-content {
+      padding: 8px 16px 12px;
+    }
+
+    /* Category List (Section I) */
+    .mds-category-list {
+      padding: 8px 16px 16px;
+    }
+
+    .mds-category-item {
+      display: inline-block;
+      padding: 4px 8px;
+      margin: 2px;
+      background: #e8e8e8;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+      font-size: 11px;
+      cursor: pointer;
+    }
+
+    .mds-category-item:hover {
+      background: #d8d8d8;
+    }
+
+    .mds-category-item--selected {
+      background: #4080c0;
+      border-color: #306090;
+      color: white;
+    }
+
+    /* Yes/No Buttons */
+    .mds-yesno-group {
+      display: flex;
+      gap: 2px;
+    }
+
+    .mds-yesno-btn {
+      padding: 4px 12px;
+      border: 1px solid #999;
+      background: #f5f5f5;
+      font-size: 11px;
+      cursor: pointer;
+    }
+
+    .mds-yesno-btn:first-child {
+      border-radius: 3px 0 0 3px;
+    }
+
+    .mds-yesno-btn:last-child {
+      border-radius: 0 3px 3px 0;
+    }
+
+    .mds-yesno-btn--selected {
+      background: #4080c0;
+      border-color: #306090;
+      color: white;
+    }
+
+    .mds-yesno-btn--yes.mds-yesno-btn--selected {
+      background: #28a745;
+      border-color: #1e7e34;
+    }
+
+    .mds-yesno-btn--no.mds-yesno-btn--selected {
+      background: #666;
+      border-color: #444;
+      color: white;
+    }
+
+    .mds-yesno-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    /* ICD Code Display */
+    .mds-icd-code {
+      display: inline-block;
+      padding: 4px 12px;
+      background: #f0f0f0;
+      border: 1px solid #ccc;
+      font-family: monospace;
+      font-size: 12px;
+    }
+
+    /* ============================================
+       Group Headers (Heart/Circulation, etc.)
+       ============================================ */
+    .mds-group-header {
+      background: #333;
+      color: white;
+      padding: 6px 16px;
+      font-weight: bold;
+      font-size: 12px;
+    }
+
+    /* ============================================
+       Super Extension Styles
+       ============================================ */
+    :root {
+      --super-primary: #6366f1;
+      --super-primary-dark: #4f46e5;
+      --super-match: #22c55e;
+      --super-match-bg: #dcfce7;
+      --super-mismatch: #ef4444;
+      --super-mismatch-bg: #fee2e2;
+      --super-review: #f59e0b;
+      --super-review-bg: #fef3c7;
+      --super-gray-50: #f9fafb;
+      --super-gray-100: #f3f4f6;
+      --super-gray-200: #e5e7eb;
+      --super-gray-300: #d1d5db;
+      --super-gray-400: #9ca3af;
+      --super-gray-500: #6b7280;
+      --super-gray-600: #4b5563;
+      --super-gray-700: #374151;
+      --super-gray-800: #1f2937;
+    }
+
+    /* Super Badge */
+    .super-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      cursor: pointer;
+      margin-left: 8px;
+    }
+
+    .super-badge--match {
+      background: var(--super-match-bg);
+      color: #166534;
+      border: 1px solid #86efac;
+    }
+
+    .super-badge--mismatch {
+      background: var(--super-mismatch-bg);
+      color: #991b1b;
+      border: 1px solid #fca5a5;
+    }
+
+    .super-badge--review {
+      background: var(--super-review-bg);
+      color: #92400e;
+      border: 1px solid #fcd34d;
+    }
+
+    .super-badge:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    /* Super FAB */
+    .super-fab {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      width: 48px;
+      height: 48px;
+      background: var(--super-primary);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 20px;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+      z-index: 99998;
+      transition: all 0.2s;
+    }
+
+    .super-fab:hover {
+      transform: scale(1.05);
+      box-shadow: 0 6px 16px rgba(99, 102, 241, 0.5);
+    }
+
+    /* Super Panel */
+    .super-panel {
+      position: fixed;
+      bottom: 80px;
+      left: 20px;
+      width: 340px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      overflow: hidden;
+      z-index: 99999;
+      display: none;
+    }
+
+    .super-panel--visible {
+      display: block;
+      animation: superPanelIn 0.3s ease-out;
+    }
+
+    @keyframes superPanelIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .super-panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px;
+      background: linear-gradient(135deg, var(--super-primary), var(--super-primary-dark));
+      color: white;
+    }
+
+    .super-panel-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .super-panel-logo {
+      width: 24px;
+      height: 24px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+    }
+
+    .super-panel-actions {
+      display: flex;
+      gap: 4px;
+    }
+
+    .super-panel-btn {
+      width: 24px;
+      height: 24px;
+      background: rgba(255,255,255,0.2);
+      border: none;
+      border-radius: 4px;
+      color: white;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .super-panel-btn:hover {
+      background: rgba(255,255,255,0.3);
+    }
+
+    .super-panel-summary {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px;
+      background: var(--super-gray-50);
+      border-bottom: 1px solid var(--super-gray-200);
+    }
+
+    .super-panel-counts {
+      display: flex;
+      gap: 16px;
+    }
+
+    .super-panel-count {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .super-panel-count--match { color: var(--super-match); }
+    .super-panel-count--mismatch { color: var(--super-mismatch); }
+    .super-panel-count--review { color: var(--super-review); }
+
+    .super-panel-next {
+      padding: 6px 12px;
+      background: var(--super-primary);
+      border: none;
+      border-radius: 6px;
+      color: white;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .super-panel-next:hover {
+      background: var(--super-primary-dark);
+    }
+
+    .super-panel-body {
+      padding: 16px;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+
+    .super-panel-section {
+      margin-bottom: 16px;
+    }
+
+    .super-panel-section-title {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--super-gray-500);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+    }
+
+    /* HIPPS Breakdown */
+    .super-hipps {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .super-hipps-item {
+      flex: 1;
+      min-width: 60px;
+      padding: 8px;
+      background: var(--super-gray-50);
+      border: 1px solid var(--super-gray-200);
+      border-radius: 6px;
+      text-align: center;
+    }
+
+    .super-hipps-label {
+      font-size: 10px;
+      color: var(--super-gray-500);
+      margin-bottom: 2px;
+    }
+
+    .super-hipps-value {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--super-primary);
+    }
+
+    /* Compliance Checks */
+    .super-compliance-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .super-compliance-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 10px;
+      background: var(--super-gray-50);
+      border-radius: 6px;
+      font-size: 12px;
+    }
+
+    .super-compliance-icon {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      color: white;
+    }
+
+    .super-compliance-icon--pass {
+      background: var(--super-match);
+    }
+
+    .super-compliance-icon--fail {
+      background: var(--super-mismatch);
+    }
+
+    .super-compliance-icon--review {
+      background: var(--super-review);
+    }
+
+    /* Query Card */
+    .super-query-card {
+      padding: 10px;
+      background: var(--super-review-bg);
+      border: 1px solid #fcd34d;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .super-query-card:hover {
+      background: #fef9c3;
+    }
+
+    .super-query-title {
+      font-size: 12px;
+      font-weight: 600;
+      color: #92400e;
+      margin-bottom: 4px;
+    }
+
+    .super-query-desc {
+      font-size: 11px;
+      color: #a16207;
+    }
+
+    /* Super Popover */
+    .super-popover {
+      position: fixed;
+      z-index: 100001;
+      width: 380px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      display: none;
+    }
+
+    .super-popover--visible {
+      display: block;
+      animation: superPopoverIn 0.2s ease-out;
+    }
+
+    @keyframes superPopoverIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    .super-popover-header {
+      padding: 12px 16px;
+      background: linear-gradient(135deg, var(--super-primary), var(--super-primary-dark));
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+
+    .super-popover-title {
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .super-popover-subtitle {
+      font-size: 11px;
+      opacity: 0.85;
+      margin-top: 2px;
+    }
+
+    .super-popover-close {
+      width: 24px;
+      height: 24px;
+      background: rgba(255,255,255,0.2);
+      border: none;
+      border-radius: 50%;
+      color: white;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .super-popover-body {
+      padding: 16px;
+      max-height: 350px;
+      overflow-y: auto;
+    }
+
+    .super-answer-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 12px;
+      margin-bottom: 12px;
+      border-bottom: 1px solid var(--super-gray-200);
+    }
+
+    .super-answer-label {
+      font-size: 11px;
+      color: var(--super-gray-500);
+    }
+
+    .super-answer-value {
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .super-answer-value--match {
+      color: var(--super-match);
+    }
+
+    .super-answer-value--mismatch {
+      color: var(--super-mismatch);
+    }
+
+    .super-confidence {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .super-confidence-dots {
+      display: flex;
+      gap: 3px;
+    }
+
+    .super-confidence-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--super-gray-200);
+    }
+
+    .super-confidence-dot--filled {
+      background: var(--super-match);
+    }
+
+    .super-rationale {
+      margin-bottom: 16px;
+    }
+
+    .super-rationale-label {
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--super-gray-500);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+    }
+
+    .super-rationale-text {
+      font-size: 13px;
+      line-height: 1.5;
+      color: var(--super-gray-700);
+    }
+
+    .super-evidence-section {
+      margin-bottom: 16px;
+    }
+
+    .super-evidence-label {
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--super-gray-500);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+    }
+
+    .super-evidence-card {
+      padding: 10px 12px;
+      background: var(--super-gray-50);
+      border: 1px solid var(--super-gray-200);
+      border-radius: 6px;
+      margin-bottom: 8px;
+    }
+
+    .super-evidence-type {
+      display: inline-block;
+      padding: 2px 6px;
+      background: var(--super-primary);
+      color: white;
+      font-size: 9px;
+      font-weight: 600;
+      text-transform: uppercase;
+      border-radius: 3px;
+      margin-bottom: 6px;
+    }
+
+    .super-evidence-type--mar { background: #06b6d4; }
+    .super-evidence-type--order { background: #8b5cf6; }
+    .super-evidence-type--note { background: #10b981; }
+
+    .super-evidence-quote {
+      font-size: 12px;
+      color: var(--super-gray-600);
+      font-style: italic;
+    }
+
+    .super-popover-actions {
+      display: flex;
+      gap: 8px;
+      padding: 12px 16px;
+      background: var(--super-gray-50);
+      border-top: 1px solid var(--super-gray-200);
+    }
+
+    .super-popover-btn {
+      flex: 1;
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+    }
+
+    .super-popover-btn--agree {
+      background: white;
+      border: 1px solid #86efac;
+      color: #166534;
+    }
+
+    .super-popover-btn--agree:hover {
+      background: var(--super-match-bg);
+    }
+
+    .super-popover-btn--disagree {
+      background: white;
+      border: 1px solid #fca5a5;
+      color: #991b1b;
+    }
+
+    .super-popover-btn--disagree:hover {
+      background: var(--super-mismatch-bg);
+    }
+
+    /* Modal Overlay */
+    .super-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 100002;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0,0,0,0.5);
+      backdrop-filter: blur(2px);
+    }
+
+    .super-modal--visible {
+      display: flex;
+      animation: superModalIn 0.2s ease-out;
+    }
+
+    @keyframes superModalIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .super-modal-container {
+      width: 600px;
+      max-height: 80vh;
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .super-modal-header {
+      padding: 16px 20px;
+      background: linear-gradient(135deg, var(--super-primary), var(--super-primary-dark));
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .super-modal-title {
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .super-modal-close {
+      width: 32px;
+      height: 32px;
+      background: rgba(255,255,255,0.2);
+      border: none;
+      border-radius: 6px;
+      color: white;
+      font-size: 18px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .super-modal-body {
+      padding: 20px;
+      overflow-y: auto;
+      flex: 1;
+    }
+
+    /* Clinical Notes Modal */
+    .clinical-note {
+      padding: 16px;
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      margin-bottom: 16px;
+    }
+
+    .clinical-note-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .clinical-note-type {
+      font-weight: 600;
+      color: #333;
+    }
+
+    .clinical-note-date {
+      font-size: 11px;
+      color: #666;
+    }
+
+    .clinical-note-text {
+      font-size: 13px;
+      line-height: 1.6;
+      color: #444;
+    }
+
+    .clinical-highlight {
+      background: #ffeb3b;
+      padding: 1px 2px;
+      border-radius: 2px;
+    }
+
+    /* MAR Grid */
+    .mar-grid {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 11px;
+    }
+
+    .mar-grid th,
+    .mar-grid td {
+      border: 1px solid #ddd;
+      padding: 6px 8px;
+      text-align: center;
+    }
+
+    .mar-grid th {
+      background: #f5f5f5;
+      font-weight: 600;
+    }
+
+    .mar-grid td:first-child {
+      text-align: left;
+      font-weight: 500;
+    }
+
+    .mar-cell--given {
+      background: #d4edda;
+      color: #155724;
+    }
+
+    .mar-cell--hold {
+      background: #fff3cd;
+      color: #856404;
+    }
+
+    .mar-cell--refused {
+      background: #f8d7da;
+      color: #721c24;
+    }
+
+    /* View toggle */
+    .pcc-view-toggle {
+      display: flex;
+      gap: 8px;
+      padding: 8px 16px;
+      background: #fff;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .pcc-view-btn {
+      padding: 6px 16px;
+      background: #f0f0f0;
+      border: 1px solid #999;
+      border-radius: 4px;
+      font-size: 12px;
+      cursor: pointer;
+    }
+
+    .pcc-view-btn--active {
+      background: #4080c0;
+      border-color: #306090;
+      color: white;
+    }
+
+    /* Scrollable content area */
+    .pcc-content {
+      height: calc(100vh - 200px);
+      overflow-y: auto;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- PCC Header -->
+  <div class="pcc-header">
+    <div class="pcc-logo">PointClickCare</div>
+    <div class="pcc-header-right">
+      <div class="pcc-facility">BURLINGTON HEALTH AND REHABILITATION CENTER ▼</div>
+      <div class="pcc-header-icons">
+        <div class="pcc-header-icon">?</div>
+        <div class="pcc-header-icon">*</div>
+      </div>
+      <div class="pcc-user">
+        <div class="pcc-user-avatar">O</div>
+        <span class="pcc-user-name">Jonathan Cameron ▼</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- PCC Navigation -->
+  <div class="pcc-nav">
+    <div class="pcc-nav-menu">
+      <div class="pcc-nav-item"><span class="pcc-nav-dropdown">Home</span></div>
+      <div class="pcc-nav-item"><span class="pcc-nav-dropdown">Admin</span></div>
+      <div class="pcc-nav-item pcc-nav-item--active"><span class="pcc-nav-dropdown">Clinical</span></div>
+      <div class="pcc-nav-item">Reports</div>
+    </div>
+    <div class="pcc-search">
+      <span>H</span>
+      <input type="text" placeholder="Search resident, room #, ID #...">
+      <button class="pcc-search-btn">Search</button>
+    </div>
+  </div>
+
+  <!-- Page Title -->
+  <div class="pcc-page-title" id="pageTitle">MDS 3.0 Section I - Active Diagnoses</div>
+
+  <!-- Patient Banner -->
+  <div class="pcc-patient-banner">
+    <div class="pcc-banner-section pcc-banner-section--resident">
+      <div class="pcc-banner-title">Resident Information</div>
+      <div class="pcc-banner-row"><span class="pcc-banner-label">Resident:</span> <span class="pcc-banner-value">Allen, Leonard (23568)</span></div>
+      <div class="pcc-banner-row"><span class="pcc-banner-label">Admit Date:</span> <span class="pcc-banner-value">02/21/2020</span></div>
+      <div class="pcc-banner-row"><span class="pcc-banner-label">Payer:</span> <span class="pcc-banner-value">Medicaid Managed Care WI - 48 Levels</span></div>
+      <div class="pcc-banner-row"><span class="pcc-banner-label">Mdcr Start Date:</span></div>
+    </div>
+    <div class="pcc-banner-section pcc-banner-section--assessment">
+      <div class="pcc-banner-title">Assessment Information</div>
+      <div class="pcc-banner-row"><span class="pcc-banner-label">ARD/Target Date:</span> <span class="pcc-banner-value">2025-11-18</span></div>
+      <div class="pcc-banner-row"><span class="pcc-banner-label">OBRA Reason:</span> <span class="pcc-banner-value">Annual</span></div>
+      <div class="pcc-banner-row"><span class="pcc-banner-label">PPS Reason:</span> <span class="pcc-banner-value">None of the above</span></div>
+      <div class="pcc-banner-row"><span class="pcc-banner-label">PPS OMRA:</span></div>
+      <div class="pcc-banner-row"><span class="pcc-banner-label">Entry/Discharge:</span> <span class="pcc-banner-value">None of the above</span></div>
+    </div>
+    <div class="pcc-banner-section pcc-banner-section--rug">
+      <div class="pcc-banner-title">RUG Information</div>
+      <div class="pcc-banner-row"><span class="pcc-banner-label">State:</span> <span class="pcc-banner-value pcc-banner-value--link">KAQD</span></div>
+      <div class="pcc-banner-row"><span class="pcc-banner-label">State Alternate:</span></div>
+      <div class="pcc-banner-row"><span class="pcc-banner-label">Insurance Billing:</span></div>
+      <div class="pcc-banner-row"><span class="pcc-banner-label">Insurance Non-Therapy:</span></div>
+    </div>
+    <div class="pcc-banner-section pcc-banner-section--pdpm">
+      <div class="pcc-banner-title">PDPM Information</div>
+      <div class="pcc-banner-row"><span class="pcc-banner-label">Primary Diagnosis:</span> <span class="pcc-banner-value">TYPE 2 DIABETES M...</span></div>
+      <div class="pcc-banner-row"><span class="pcc-banner-label">Clinical Category:</span> <span class="pcc-banner-value">Medical Management</span></div>
+      <div class="pcc-banner-row"><span class="pcc-banner-label">Recent Surgery:</span> <span class="pcc-banner-value">No</span></div>
+      <div class="pcc-banner-row">
+        <span class="pcc-banner-label">PT/OT:</span> <span class="pcc-banner-value pcc-banner-value--link">TK</span>
+        <span class="pcc-banner-label" style="margin-left: 12px;">SLP:</span> <span class="pcc-banner-value pcc-banner-value--link">SA</span>
+      </div>
+      <div class="pcc-banner-row">
+        <span class="pcc-banner-label">Nursing:</span> <span class="pcc-banner-value pcc-banner-value--link">CA1</span>
+        <span class="pcc-banner-label" style="margin-left: 12px;">NTA:</span> <span class="pcc-banner-value pcc-banner-value--link">ND</span>
+      </div>
+      <div class="pcc-banner-row"><span class="pcc-banner-label">HIPPS:</span> <span class="pcc-banner-value pcc-banner-value--link">KAQD</span></div>
+    </div>
+    <div class="pcc-banner-section pcc-banner-section--submission">
+      <div class="pcc-banner-title">Submission Information</div>
+      <div class="pcc-banner-row"><span class="pcc-banner-label">MDS Status:</span> <span class="pcc-banner-value pcc-banner-value--link">Accepted</span></div>
+      <div class="pcc-banner-row"><span class="pcc-banner-label">A0410:</span> <span class="pcc-banner-value pcc-banner-value--link">3.Unit is Medicare and/or Medicaid certified</span></div>
+      <div class="pcc-banner-row"><span class="pcc-banner-label">Submit Req:</span> <span class="pcc-banner-value">Submit to CMS</span></div>
+    </div>
+  </div>
+
+  <!-- View Toggle -->
+  <div class="pcc-view-toggle">
+    <button class="pcc-view-btn" onclick="showView('summary')">MDS Summary</button>
+    <button class="pcc-view-btn pcc-view-btn--active" onclick="showView('section')">Section View</button>
+  </div>
+
+  <!-- Section Navigation (for section view) -->
+  <div class="pcc-section-nav" id="sectionNav">
+    <span class="pcc-section-letter pcc-section-letter--complete" onclick="goToSection('A')">A</span>
+    <span class="pcc-section-letter pcc-section-letter--complete" onclick="goToSection('B')">B</span>
+    <span class="pcc-section-letter pcc-section-letter--complete" onclick="goToSection('C')">C</span>
+    <span class="pcc-section-letter pcc-section-letter--complete" onclick="goToSection('D')">D</span>
+    <span class="pcc-section-letter pcc-section-letter--complete" onclick="goToSection('E')">E</span>
+    <span class="pcc-section-letter pcc-section-letter--complete" onclick="goToSection('F')">F</span>
+    <span class="pcc-section-letter" onclick="goToSection('G')">G</span>
+    <span class="pcc-section-letter pcc-section-letter--complete" onclick="goToSection('GG')">GG</span>
+    <span class="pcc-section-letter pcc-section-letter--complete" onclick="goToSection('H')">H</span>
+    <span class="pcc-section-letter pcc-section-letter--active" onclick="goToSection('I')">I</span>
+    <span class="pcc-section-letter pcc-section-letter--complete" onclick="goToSection('J')">J</span>
+    <span class="pcc-section-letter pcc-section-letter--complete" onclick="goToSection('K')">K</span>
+    <span class="pcc-section-letter pcc-section-letter--complete" onclick="goToSection('L')">L</span>
+    <span class="pcc-section-letter pcc-section-letter--complete" onclick="goToSection('M')">M</span>
+    <span class="pcc-section-letter pcc-section-letter--complete" onclick="goToSection('N')">N</span>
+    <span class="pcc-section-letter pcc-section-letter--complete" onclick="goToSection('O')">O</span>
+    <span class="pcc-section-letter pcc-section-letter--complete" onclick="goToSection('P')">P</span>
+    <span class="pcc-section-letter pcc-section-letter--complete" onclick="goToSection('Q')">Q</span>
+    <span class="pcc-section-letter pcc-section-letter--complete" onclick="goToSection('V')">V</span>
+    <span class="pcc-section-letter" onclick="goToSection('X')">X</span>
+    <button class="pcc-exit-btn">Exit</button>
+  </div>
+
+  <!-- Scrollable Content Area -->
+  <div class="pcc-content">
+
+    <!-- MDS Summary View -->
+    <div id="summaryView" class="mds-summary" style="display: none;">
+      <!-- Workflow Steps -->
+      <div class="mds-workflow">
+        <div class="mds-workflow-item">
+          <div class="mds-workflow-icon mds-workflow-icon--complete">E</div>
+          <div class="mds-workflow-label">Acknowledge<br>Questions</div>
+          <div class="mds-workflow-status">Remaining: 0</div>
+        </div>
+        <div class="mds-workflow-item">
+          <div class="mds-workflow-icon mds-workflow-icon--complete">!</div>
+          <div class="mds-workflow-label">Validation</div>
+          <div class="mds-workflow-status">Errors: 0<br>Warnings: 0</div>
+        </div>
+        <div class="mds-workflow-item">
+          <div class="mds-workflow-icon mds-workflow-icon--complete">/</div>
+          <div class="mds-workflow-label">Sign</div>
+          <div class="mds-workflow-status">Unsigned: 0<br>Signed: 721</div>
+        </div>
+        <div class="mds-workflow-item">
+          <div class="mds-workflow-icon mds-workflow-icon--complete">*</div>
+          <div class="mds-workflow-label">Complete<br>MDS</div>
+          <div class="mds-workflow-status">Completed:<br>12/01/2025</div>
+        </div>
+        <div class="mds-workflow-item">
+          <div class="mds-workflow-icon mds-workflow-icon--complete">*</div>
+          <div class="mds-workflow-label">Care Areas</div>
+          <div class="mds-workflow-status">Completed:<br>12/01/2025</div>
+        </div>
+        <div class="mds-workflow-item">
+          <div class="mds-workflow-icon mds-workflow-icon--complete">?</div>
+          <div class="mds-workflow-label">Care Plan<br>Decisions</div>
+          <div class="mds-workflow-status">Completed:<br>12/01/2025</div>
+        </div>
+        <div class="mds-workflow-item">
+          <div class="mds-workflow-icon mds-workflow-icon--complete">L</div>
+          <div class="mds-workflow-label">Lock</div>
+          <div class="mds-workflow-status">Accepted:<br>12/04/2025</div>
+        </div>
+      </div>
+
+      <!-- Progress Indicators -->
+      <div class="mds-progress">
+        <span>MDS In Progress</span>
+        <div class="mds-progress-dot"></div>
+        <span>Assessment Complete</span>
+        <div class="mds-progress-dot"></div>
+        <span>CAAs</span>
+        <div class="mds-progress-dot"></div>
+        <span>CP Decisions</span>
+        <div class="mds-progress-dot mds-progress-dot--active"></div>
+        <span>Submission</span>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="mds-actions">
+        <button class="mds-action-btn">< Back to MDS List</button>
+        <button class="mds-action-btn">Refresh MDS Data</button>
+        <button class="mds-action-btn">Verify</button>
+        <button class="mds-action-btn">Print MDS Reports</button>
+        <button class="mds-action-btn" disabled>Change ARD/Type</button>
+        <button class="mds-action-btn" disabled>Regenerate Triggers</button>
+      </div>
+
+      <!-- MDS Sections Grid -->
+      <div class="mds-sections-header">MDS Sections</div>
+      <div class="mds-sections-grid">
+        <div class="mds-section-card" onclick="goToSection('A')">
+          <div class="mds-section-name">Identification Information</div>
+          <div class="mds-section-letter">A</div>
+          <div class="mds-section-status">Complete</div>
+        </div>
+        <div class="mds-section-card" onclick="goToSection('B')">
+          <div class="mds-section-name">Hearing, Speech, and Vision</div>
+          <div class="mds-section-letter">B</div>
+          <div class="mds-section-status">Complete</div>
+        </div>
+        <div class="mds-section-card" onclick="goToSection('C')">
+          <div class="mds-section-name">Cognitive Patterns</div>
+          <div class="mds-section-letter">C</div>
+          <div class="mds-section-status">Complete</div>
+        </div>
+        <div class="mds-section-card" onclick="goToSection('D')">
+          <div class="mds-section-name">Mood</div>
+          <div class="mds-section-letter">D</div>
+          <div class="mds-section-status">Complete</div>
+        </div>
+        <div class="mds-section-card" onclick="goToSection('E')">
+          <div class="mds-section-name">Behavior</div>
+          <div class="mds-section-letter">E</div>
+          <div class="mds-section-status">Complete</div>
+        </div>
+        <div class="mds-section-card" onclick="goToSection('F')">
+          <div class="mds-section-name">Preferences for Routine & Activities</div>
+          <div class="mds-section-letter">F</div>
+          <div class="mds-section-status">Complete</div>
+        </div>
+        <div class="mds-section-card mds-section-card--na" onclick="goToSection('G')">
+          <div class="mds-section-name">Functional Status</div>
+          <div class="mds-section-letter">G</div>
+          <div class="mds-section-status">Not Applicable</div>
+        </div>
+        <div class="mds-section-card" onclick="goToSection('GG')">
+          <div class="mds-section-name">Functional Abilities</div>
+          <div class="mds-section-letter">GG</div>
+          <div class="mds-section-status">Complete</div>
+        </div>
+        <div class="mds-section-card" onclick="goToSection('H')">
+          <div class="mds-section-name">Bladder and Bowel</div>
+          <div class="mds-section-letter">H</div>
+          <div class="mds-section-status">Complete</div>
+        </div>
+        <div class="mds-section-card mds-section-card--active" onclick="goToSection('I')">
+          <div class="mds-section-name">Active Diagnoses</div>
+          <div class="mds-section-letter">I</div>
+          <div class="mds-section-status">Complete</div>
+        </div>
+        <div class="mds-section-card" onclick="goToSection('J')">
+          <div class="mds-section-name">Health Conditions</div>
+          <div class="mds-section-letter">J</div>
+          <div class="mds-section-status">Complete</div>
+        </div>
+        <div class="mds-section-card" onclick="goToSection('K')">
+          <div class="mds-section-name">Swallowing / Nutritional Status</div>
+          <div class="mds-section-letter">K</div>
+          <div class="mds-section-status">Complete</div>
+        </div>
+        <div class="mds-section-card" onclick="goToSection('L')">
+          <div class="mds-section-name">Oral / Dental Status</div>
+          <div class="mds-section-letter">L</div>
+          <div class="mds-section-status">Complete</div>
+        </div>
+        <div class="mds-section-card" onclick="goToSection('M')">
+          <div class="mds-section-name">Skin Conditions</div>
+          <div class="mds-section-letter">M</div>
+          <div class="mds-section-status">Complete</div>
+        </div>
+        <div class="mds-section-card" onclick="goToSection('N')">
+          <div class="mds-section-name">Medications</div>
+          <div class="mds-section-letter">N</div>
+          <div class="mds-section-status">Complete</div>
+        </div>
+        <div class="mds-section-card" onclick="goToSection('O')">
+          <div class="mds-section-name">Special Treatments, Procedures, and Programs</div>
+          <div class="mds-section-letter">O</div>
+          <div class="mds-section-status">Complete</div>
+        </div>
+        <div class="mds-section-card" onclick="goToSection('P')">
+          <div class="mds-section-name">Restraints and Alarms</div>
+          <div class="mds-section-letter">P</div>
+          <div class="mds-section-status">Complete</div>
+        </div>
+        <div class="mds-section-card" onclick="goToSection('Q')">
+          <div class="mds-section-name">Participation in Assessment and Goal Setting</div>
+          <div class="mds-section-letter">Q</div>
+          <div class="mds-section-status">Complete</div>
+        </div>
+        <div class="mds-section-card" onclick="goToSection('V')">
+          <div class="mds-section-name">Care Area Assessment (CAA) Summary</div>
+          <div class="mds-section-letter">V</div>
+          <div class="mds-section-status">Complete</div>
+        </div>
+        <div class="mds-section-card mds-section-card--na" onclick="goToSection('X')">
+          <div class="mds-section-name">Correction Request</div>
+          <div class="mds-section-letter">X</div>
+          <div class="mds-section-status">Not Applicable</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section I View -->
+    <div id="sectionView" class="mds-form">
+      <!-- I0020 - Primary Medical Condition Category -->
+      <div class="mds-section-header">Indicate the resident's primary medical condition category</div>
+
+      <div class="mds-question">
+        <div class="mds-question-header">
+          <div>
+            <span class="mds-question-id">I0020.</span>
+            <span class="mds-question-text">Indicate the resident's primary medical condition category that best describes the primary reason for admission</span>
+          </div>
+          <button class="mds-tools-btn"><div class="mds-tools-icon"></div> Tools ▼</button>
+        </div>
+        <div class="mds-question-note">Complete only if A0310B = 01 or if state requires completion with an OBRA assessment</div>
+
+        <div class="mds-response mds-response--locked">
+          <div class="mds-response-header">Response Locked</div>
+          <div class="mds-response-signed">Signed by: <strong>ldenius2</strong> on <strong>Mon Nov 24, 2025 at 01:21:26 PM</strong></div>
+
+          <div class="mds-category-list">
+            <span class="mds-category-item">01. Stroke</span>
+            <span class="mds-category-item">02. Non-Traumatic Brain Dysfunction</span>
+            <span class="mds-category-item">03. Traumatic Brain Dysfunction</span>
+            <span class="mds-category-item">04. Non-Traumatic Spinal Cord Dysfunction</span>
+            <span class="mds-category-item">05. Traumatic Spinal Cord Dysfunction</span>
+            <span class="mds-category-item">06. Progressive Neurological Conditions</span>
+            <span class="mds-category-item">07. Other Neurological Conditions</span>
+            <span class="mds-category-item">08. Amputation</span>
+            <span class="mds-category-item">09. Hip and Knee Replacement</span>
+            <span class="mds-category-item">10. Fractures and Other Multiple Trauma</span>
+            <span class="mds-category-item">11. Other Orthopedic Conditions</span>
+            <span class="mds-category-item">12. Debility, Cardiorespiratory Conditions</span>
+            <span class="mds-category-item mds-category-item--selected">13. Medically Complex Conditions</span>
+            <span class="super-badge super-badge--match" onclick="showSuperPopover('I0020', this)">+ Super: 13</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Primary Medical Condition ICD -->
+      <div class="mds-question">
+        <div class="mds-question-header">
+          <div>
+            <span class="mds-question-text"><strong>Primary Medical Condition ICD</strong></span>
+          </div>
+          <button class="mds-tools-btn"><div class="mds-tools-icon"></div> Tools ▼</button>
+        </div>
+
+        <div class="mds-response mds-response--locked">
+          <div class="mds-response-header">Response Locked</div>
+          <div class="mds-response-signed">Signed by: <strong>ldenius2</strong> on <strong>Mon Nov 24, 2025 at 01:21:26 PM</strong></div>
+
+          <div class="mds-response-content">
+            <span class="mds-icd-code">E11.42</span>
+            <span style="margin-left: 12px;">TYPE 2 DIABETES MELLITUS WITH DIABETIC POLYNEUROPATHY</span>
+            <span class="super-badge super-badge--match" onclick="showSuperPopover('ICD', this)">+ Super: E11.42</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cancer Section -->
+      <div class="mds-group-header">Cancer</div>
+
+      <div class="mds-question">
+        <div class="mds-question-header">
+          <div>
+            <span class="mds-question-id">I0100.</span>
+            <span class="mds-question-text">Cancer (with or without metastasis)</span>
+          </div>
+          <button class="mds-tools-btn"><div class="mds-tools-icon"></div> Tools ▼</button>
+        </div>
+
+        <div class="mds-response mds-response--locked">
+          <div class="mds-response-header">Response Locked</div>
+          <div class="mds-response-signed">Signed by: <strong>ldenius2</strong> on <strong>Mon Nov 24, 2025 at 01:21:26 PM</strong></div>
+
+          <div class="mds-response-content">
+            <div class="mds-yesno-group">
+              <button class="mds-yesno-btn mds-yesno-btn--yes">Yes</button>
+              <button class="mds-yesno-btn mds-yesno-btn--no mds-yesno-btn--selected">No</button>
+              <button class="mds-yesno-btn">-</button>
+            </div>
+            <span class="super-badge super-badge--match" onclick="showSuperPopover('I0100', this)">+ Super: No</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Heart/Circulation Section -->
+      <div class="mds-group-header">Heart/Circulation</div>
+
+      <div class="mds-question">
+        <div class="mds-question-header">
+          <div>
+            <span class="mds-question-id">I0200.</span>
+            <span class="mds-question-text">Anemia</span>
+          </div>
+          <button class="mds-tools-btn"><div class="mds-tools-icon"></div> Tools ▼</button>
+        </div>
+
+        <div class="mds-response mds-response--locked">
+          <div class="mds-response-header">Response Locked</div>
+          <div class="mds-response-signed">Signed by: <strong>ldenius2</strong> on <strong>Mon Nov 24, 2025 at 01:21:26 PM</strong></div>
+
+          <div class="mds-response-content">
+            <div class="mds-yesno-group">
+              <button class="mds-yesno-btn mds-yesno-btn--yes mds-yesno-btn--selected">Yes</button>
+              <button class="mds-yesno-btn mds-yesno-btn--no">No</button>
+              <button class="mds-yesno-btn">-</button>
+            </div>
+            <span class="super-badge super-badge--match" onclick="showSuperPopover('I0200', this)">+ Super: Yes</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="mds-question">
+        <div class="mds-question-header">
+          <div>
+            <span class="mds-question-id">I0300.</span>
+            <span class="mds-question-text">Atrial fibrillation and other dysrhythmias</span>
+          </div>
+          <button class="mds-tools-btn"><div class="mds-tools-icon"></div> Tools ▼</button>
+        </div>
+
+        <div class="mds-response mds-response--locked">
+          <div class="mds-response-header">Response Locked</div>
+          <div class="mds-response-signed">Signed by: <strong>ldenius2</strong> on <strong>Mon Nov 24, 2025 at 01:21:26 PM</strong></div>
+
+          <div class="mds-response-content">
+            <div class="mds-yesno-group">
+              <button class="mds-yesno-btn mds-yesno-btn--yes">Yes</button>
+              <button class="mds-yesno-btn mds-yesno-btn--no mds-yesno-btn--selected">No</button>
+              <button class="mds-yesno-btn">-</button>
+            </div>
+            <span class="super-badge super-badge--match" onclick="showSuperPopover('I0300', this)">+ Super: No</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="mds-question">
+        <div class="mds-question-header">
+          <div>
+            <span class="mds-question-id">I0400.</span>
+            <span class="mds-question-text">Coronary artery disease (CAD)</span>
+          </div>
+          <button class="mds-tools-btn"><div class="mds-tools-icon"></div> Tools ▼</button>
+        </div>
+
+        <div class="mds-response mds-response--locked">
+          <div class="mds-response-header">Response Locked</div>
+          <div class="mds-response-signed">Signed by: <strong>ldenius2</strong> on <strong>Mon Nov 24, 2025 at 01:21:26 PM</strong></div>
+
+          <div class="mds-response-content">
+            <div class="mds-yesno-group">
+              <button class="mds-yesno-btn mds-yesno-btn--yes mds-yesno-btn--selected">Yes</button>
+              <button class="mds-yesno-btn mds-yesno-btn--no">No</button>
+              <button class="mds-yesno-btn">-</button>
+            </div>
+            <span class="super-badge super-badge--mismatch" onclick="showSuperPopover('I0400', this)">X Super: No</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="mds-question">
+        <div class="mds-question-header">
+          <div>
+            <span class="mds-question-id">I0500.</span>
+            <span class="mds-question-text">Deep venous thrombosis (DVT), PE, or PTE</span>
+          </div>
+          <button class="mds-tools-btn"><div class="mds-tools-icon"></div> Tools ▼</button>
+        </div>
+
+        <div class="mds-response mds-response--locked">
+          <div class="mds-response-header">Response Locked</div>
+          <div class="mds-response-signed">Signed by: <strong>ldenius2</strong> on <strong>Mon Nov 24, 2025 at 01:21:26 PM</strong></div>
+
+          <div class="mds-response-content">
+            <div class="mds-yesno-group">
+              <button class="mds-yesno-btn mds-yesno-btn--yes">Yes</button>
+              <button class="mds-yesno-btn mds-yesno-btn--no mds-yesno-btn--selected">No</button>
+              <button class="mds-yesno-btn">-</button>
+            </div>
+            <span class="super-badge super-badge--match" onclick="showSuperPopover('I0500', this)">+ Super: No</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="mds-question">
+        <div class="mds-question-header">
+          <div>
+            <span class="mds-question-id">I0600.</span>
+            <span class="mds-question-text">Heart failure</span>
+          </div>
+          <button class="mds-tools-btn"><div class="mds-tools-icon"></div> Tools ▼</button>
+        </div>
+
+        <div class="mds-response mds-response--locked">
+          <div class="mds-response-header">Response Locked</div>
+          <div class="mds-response-signed">Signed by: <strong>ldenius2</strong> on <strong>Mon Nov 24, 2025 at 01:21:26 PM</strong></div>
+
+          <div class="mds-response-content">
+            <div class="mds-yesno-group">
+              <button class="mds-yesno-btn mds-yesno-btn--yes">Yes</button>
+              <button class="mds-yesno-btn mds-yesno-btn--no mds-yesno-btn--selected">No</button>
+              <button class="mds-yesno-btn">-</button>
+            </div>
+            <span class="super-badge super-badge--match" onclick="showSuperPopover('I0600', this)">+ Super: No</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="mds-question">
+        <div class="mds-question-header">
+          <div>
+            <span class="mds-question-id">I0700.</span>
+            <span class="mds-question-text">Hypertension</span>
+          </div>
+          <button class="mds-tools-btn"><div class="mds-tools-icon"></div> Tools ▼</button>
+        </div>
+
+        <div class="mds-response mds-response--locked">
+          <div class="mds-response-header">Response Locked</div>
+          <div class="mds-response-signed">Signed by: <strong>ldenius2</strong> on <strong>Mon Nov 24, 2025 at 01:21:26 PM</strong></div>
+
+          <div class="mds-response-content">
+            <div class="mds-yesno-group">
+              <button class="mds-yesno-btn mds-yesno-btn--yes mds-yesno-btn--selected">Yes</button>
+              <button class="mds-yesno-btn mds-yesno-btn--no">No</button>
+              <button class="mds-yesno-btn">-</button>
+            </div>
+            <span class="super-badge super-badge--match" onclick="showSuperPopover('I0700', this)">+ Super: Yes</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="mds-question">
+        <div class="mds-question-header">
+          <div>
+            <span class="mds-question-id">I0800.</span>
+            <span class="mds-question-text">Orthostatic hypotension</span>
+          </div>
+          <button class="mds-tools-btn"><div class="mds-tools-icon"></div> Tools ▼</button>
+        </div>
+
+        <div class="mds-response mds-response--locked">
+          <div class="mds-response-header">Response Locked</div>
+          <div class="mds-response-signed">Signed by: <strong>ldenius2</strong> on <strong>Mon Nov 24, 2025 at 01:21:26 PM</strong></div>
+
+          <div class="mds-response-content">
+            <div class="mds-yesno-group">
+              <button class="mds-yesno-btn mds-yesno-btn--yes">Yes</button>
+              <button class="mds-yesno-btn mds-yesno-btn--no mds-yesno-btn--selected">No</button>
+              <button class="mds-yesno-btn">-</button>
+            </div>
+            <span class="super-badge super-badge--match" onclick="showSuperPopover('I0800', this)">+ Super: No</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="mds-question">
+        <div class="mds-question-header">
+          <div>
+            <span class="mds-question-id">I0900.</span>
+            <span class="mds-question-text">Peripheral vascular disease (PVD) or peripheral arterial disease (PAD)</span>
+          </div>
+          <button class="mds-tools-btn"><div class="mds-tools-icon"></div> Tools ▼</button>
+        </div>
+
+        <div class="mds-response mds-response--locked">
+          <div class="mds-response-header">Response Locked</div>
+          <div class="mds-response-signed">Signed by: <strong>ldenius2</strong> on <strong>Mon Nov 24, 2025 at 01:21:26 PM</strong></div>
+
+          <div class="mds-response-content">
+            <div class="mds-yesno-group">
+              <button class="mds-yesno-btn mds-yesno-btn--yes">Yes</button>
+              <button class="mds-yesno-btn mds-yesno-btn--no mds-yesno-btn--selected">No</button>
+              <button class="mds-yesno-btn">-</button>
+            </div>
+            <span class="super-badge super-badge--review" onclick="showSuperPopover('I0900', this)">! Super: Needs Review</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Gastrointestinal Section -->
+      <div class="mds-group-header">Gastrointestinal</div>
+
+      <div class="mds-question">
+        <div class="mds-question-header">
+          <div>
+            <span class="mds-question-id">I1100.</span>
+            <span class="mds-question-text">Cirrhosis</span>
+          </div>
+          <button class="mds-tools-btn"><div class="mds-tools-icon"></div> Tools ▼</button>
+        </div>
+
+        <div class="mds-response mds-response--locked">
+          <div class="mds-response-header">Response Locked</div>
+          <div class="mds-response-signed">Signed by: <strong>ldenius2</strong> on <strong>Mon Nov 24, 2025 at 01:21:26 PM</strong></div>
+
+          <div class="mds-response-content">
+            <div class="mds-yesno-group">
+              <button class="mds-yesno-btn mds-yesno-btn--yes">Yes</button>
+              <button class="mds-yesno-btn mds-yesno-btn--no mds-yesno-btn--selected">No</button>
+              <button class="mds-yesno-btn">-</button>
+            </div>
+            <span class="super-badge super-badge--match" onclick="showSuperPopover('I1100', this)">+ Super: No</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="mds-question">
+        <div class="mds-question-header">
+          <div>
+            <span class="mds-question-id">I1200.</span>
+            <span class="mds-question-text">GERD</span>
+          </div>
+          <button class="mds-tools-btn"><div class="mds-tools-icon"></div> Tools ▼</button>
+        </div>
+
+        <div class="mds-response mds-response--locked">
+          <div class="mds-response-header">Response Locked</div>
+          <div class="mds-response-signed">Signed by: <strong>ldenius2</strong> on <strong>Mon Nov 24, 2025 at 01:21:26 PM</strong></div>
+
+          <div class="mds-response-content">
+            <div class="mds-yesno-group">
+              <button class="mds-yesno-btn mds-yesno-btn--yes mds-yesno-btn--selected">Yes</button>
+              <button class="mds-yesno-btn mds-yesno-btn--no">No</button>
+              <button class="mds-yesno-btn">-</button>
+            </div>
+            <span class="super-badge super-badge--match" onclick="showSuperPopover('I1200', this)">+ Super: Yes</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Metabolic Section -->
+      <div class="mds-group-header">Metabolic</div>
+
+      <div class="mds-question">
+        <div class="mds-question-header">
+          <div>
+            <span class="mds-question-id">I2000.</span>
+            <span class="mds-question-text">Diabetes mellitus (DM)</span>
+          </div>
+          <button class="mds-tools-btn"><div class="mds-tools-icon"></div> Tools ▼</button>
+        </div>
+
+        <div class="mds-response mds-response--locked">
+          <div class="mds-response-header">Response Locked</div>
+          <div class="mds-response-signed">Signed by: <strong>ldenius2</strong> on <strong>Mon Nov 24, 2025 at 01:21:26 PM</strong></div>
+
+          <div class="mds-response-content">
+            <div class="mds-yesno-group">
+              <button class="mds-yesno-btn mds-yesno-btn--yes mds-yesno-btn--selected">Yes</button>
+              <button class="mds-yesno-btn mds-yesno-btn--no">No</button>
+              <button class="mds-yesno-btn">-</button>
+            </div>
+            <span class="super-badge super-badge--match" onclick="showSuperPopover('I2000', this)">+ Super: Yes</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="mds-question">
+        <div class="mds-question-header">
+          <div>
+            <span class="mds-question-id">I2100.</span>
+            <span class="mds-question-text">Thyroid disorder</span>
+          </div>
+          <button class="mds-tools-btn"><div class="mds-tools-icon"></div> Tools ▼</button>
+        </div>
+
+        <div class="mds-response mds-response--locked">
+          <div class="mds-response-header">Response Locked</div>
+          <div class="mds-response-signed">Signed by: <strong>ldenius2</strong> on <strong>Mon Nov 24, 2025 at 01:21:26 PM</strong></div>
+
+          <div class="mds-response-content">
+            <div class="mds-yesno-group">
+              <button class="mds-yesno-btn mds-yesno-btn--yes mds-yesno-btn--selected">Yes</button>
+              <button class="mds-yesno-btn mds-yesno-btn--no">No</button>
+              <button class="mds-yesno-btn">-</button>
+            </div>
+            <span class="super-badge super-badge--match" onclick="showSuperPopover('I2100', this)">+ Super: Yes</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Psychiatric/Mood Disorder Section -->
+      <div class="mds-group-header">Psychiatric/Mood Disorder</div>
+
+      <div class="mds-question">
+        <div class="mds-question-header">
+          <div>
+            <span class="mds-question-id">I5600.</span>
+            <span class="mds-question-text">Depression (other than bipolar)</span>
+          </div>
+          <button class="mds-tools-btn"><div class="mds-tools-icon"></div> Tools ▼</button>
+        </div>
+
+        <div class="mds-response mds-response--locked">
+          <div class="mds-response-header">Response Locked</div>
+          <div class="mds-response-signed">Signed by: <strong>ldenius2</strong> on <strong>Mon Nov 24, 2025 at 01:21:26 PM</strong></div>
+
+          <div class="mds-response-content">
+            <div class="mds-yesno-group">
+              <button class="mds-yesno-btn mds-yesno-btn--yes mds-yesno-btn--selected">Yes</button>
+              <button class="mds-yesno-btn mds-yesno-btn--no">No</button>
+              <button class="mds-yesno-btn">-</button>
+            </div>
+            <span class="super-badge super-badge--match" onclick="showSuperPopover('I5600', this)">+ Super: Yes</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="mds-question">
+        <div class="mds-question-header">
+          <div>
+            <span class="mds-question-id">I5700.</span>
+            <span class="mds-question-text">Schizophrenia</span>
+          </div>
+          <button class="mds-tools-btn"><div class="mds-tools-icon"></div> Tools ▼</button>
+        </div>
+
+        <div class="mds-response mds-response--locked">
+          <div class="mds-response-header">Response Locked</div>
+          <div class="mds-response-signed">Signed by: <strong>ldenius2</strong> on <strong>Mon Nov 24, 2025 at 01:21:26 PM</strong></div>
+
+          <div class="mds-response-content">
+            <div class="mds-yesno-group">
+              <button class="mds-yesno-btn mds-yesno-btn--yes">Yes</button>
+              <button class="mds-yesno-btn mds-yesno-btn--no mds-yesno-btn--selected">No</button>
+              <button class="mds-yesno-btn">-</button>
+            </div>
+            <span class="super-badge super-badge--match" onclick="showSuperPopover('I5700', this)">+ Super: No</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Super FAB -->
+  <div class="super-fab" onclick="togglePanel()">S</div>
+
+  <!-- Super Panel -->
+  <div class="super-panel" id="superPanel">
+    <div class="super-panel-header">
+      <div class="super-panel-title">
+        <div class="super-panel-logo">S</div>
+        Super Review
+      </div>
+      <div class="super-panel-actions">
+        <button class="super-panel-btn" onclick="togglePanel()">-</button>
+        <button class="super-panel-btn" onclick="togglePanel()">x</button>
+      </div>
+    </div>
+
+    <div class="super-panel-summary">
+      <div class="super-panel-counts">
+        <span class="super-panel-count super-panel-count--match">+ 28</span>
+        <span class="super-panel-count super-panel-count--mismatch">X 1</span>
+        <span class="super-panel-count super-panel-count--review">! 3</span>
+      </div>
+      <button class="super-panel-next">Next ></button>
+    </div>
+
+    <div class="super-panel-body">
+      <!-- HIPPS Breakdown -->
+      <div class="super-panel-section">
+        <div class="super-panel-section-title">HIPPS Code Breakdown</div>
+        <div class="super-hipps">
+          <div class="super-hipps-item">
+            <div class="super-hipps-label">PT/OT</div>
+            <div class="super-hipps-value">TK</div>
+          </div>
+          <div class="super-hipps-item">
+            <div class="super-hipps-label">SLP</div>
+            <div class="super-hipps-value">SA</div>
+          </div>
+          <div class="super-hipps-item">
+            <div class="super-hipps-label">Nursing</div>
+            <div class="super-hipps-value">CA1</div>
+          </div>
+          <div class="super-hipps-item">
+            <div class="super-hipps-label">NTA</div>
+            <div class="super-hipps-value">ND</div>
+          </div>
+          <div class="super-hipps-item">
+            <div class="super-hipps-label">HIPPS</div>
+            <div class="super-hipps-value">KAQD</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Compliance Checks -->
+      <div class="super-panel-section">
+        <div class="super-panel-section-title">Compliance Checks</div>
+        <div class="super-compliance-list">
+          <div class="super-compliance-item">
+            <div class="super-compliance-icon super-compliance-icon--pass">+</div>
+            <span>BIMS Assessment Complete</span>
+          </div>
+          <div class="super-compliance-item">
+            <div class="super-compliance-icon super-compliance-icon--pass">+</div>
+            <span>PHQ-9 Screening Complete</span>
+          </div>
+          <div class="super-compliance-item">
+            <div class="super-compliance-icon super-compliance-icon--pass">+</div>
+            <span>GG Assessment Complete</span>
+          </div>
+          <div class="super-compliance-item">
+            <div class="super-compliance-icon super-compliance-icon--review">!</div>
+            <span>Orders Review Pending</span>
+          </div>
+          <div class="super-compliance-item">
+            <div class="super-compliance-icon super-compliance-icon--pass">+</div>
+            <span>Therapy Documentation</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Active Query -->
+      <div class="super-panel-section">
+        <div class="super-panel-section-title">Active Queries</div>
+        <div class="super-query-card" onclick="openModal('queryModal')">
+          <div class="super-query-title">Diagnosis Query - I0400</div>
+          <div class="super-query-desc">CAD diagnosis needs supporting documentation</div>
+        </div>
+      </div>
+
+      <!-- Quick Actions -->
+      <div class="super-panel-section">
+        <div class="super-panel-section-title">Quick Actions</div>
+        <div style="display: flex; gap: 8px;">
+          <button class="super-panel-next" style="flex: 1;" onclick="openModal('marModal')">View MAR</button>
+          <button class="super-panel-next" style="flex: 1;" onclick="openModal('notesModal')">View Notes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Super Popover -->
+  <div class="super-popover" id="superPopover">
+    <div class="super-popover-header">
+      <div>
+        <div class="super-popover-title" id="popoverTitle">I0400 - Coronary artery disease (CAD)</div>
+        <div class="super-popover-subtitle">Heart/Circulation</div>
+      </div>
+      <button class="super-popover-close" onclick="hideSuperPopover()">x</button>
+    </div>
+    <div class="super-popover-body">
+      <div class="super-answer-row">
+        <div>
+          <div class="super-answer-label">Super Answer</div>
+          <div class="super-answer-value super-answer-value--mismatch" id="popoverAnswer">No</div>
+        </div>
+        <div class="super-confidence">
+          <span style="font-size: 11px; color: #666;">Confidence</span>
+          <div class="super-confidence-dots">
+            <div class="super-confidence-dot super-confidence-dot--filled"></div>
+            <div class="super-confidence-dot super-confidence-dot--filled"></div>
+            <div class="super-confidence-dot"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="super-rationale">
+        <div class="super-rationale-label">Rationale</div>
+        <div class="super-rationale-text" id="popoverRationale">
+          No active diagnosis of Coronary Artery Disease found in the clinical record during the look-back period. While the resident has cardiovascular risk factors including hypertension and diabetes, there is no documented CAD diagnosis, cardiac catheterization, or coronary intervention noted.
+        </div>
+      </div>
+
+      <div class="super-evidence-section">
+        <div class="super-evidence-label">Evidence</div>
+        <div class="super-evidence-card">
+          <div class="super-evidence-type super-evidence-type--note">Progress Note</div>
+          <div class="super-evidence-quote">Cardiovascular: Regular rate and rhythm, no murmurs. History of HTN, well controlled on current medications.</div>
+        </div>
+        <div class="super-evidence-card">
+          <div class="super-evidence-type super-evidence-type--order">Active Diagnoses</div>
+          <div class="super-evidence-quote">E11.42 - Type 2 DM with polyneuropathy, I10 - Essential hypertension, E03.9 - Hypothyroidism</div>
+        </div>
+      </div>
+    </div>
+    <div class="super-popover-actions">
+      <button class="super-popover-btn super-popover-btn--agree">+ Agree</button>
+      <button class="super-popover-btn super-popover-btn--disagree">X Disagree</button>
+    </div>
+  </div>
+
+  <!-- Query Modal -->
+  <div class="super-modal" id="queryModal">
+    <div class="super-modal-container" style="width: 500px;">
+      <div class="super-modal-header">
+        <div class="super-modal-title">Diagnosis Query - I0400</div>
+        <button class="super-modal-close" onclick="closeModal('queryModal')">x</button>
+      </div>
+      <div class="super-modal-body">
+        <div style="margin-bottom: 16px;">
+          <div style="font-size: 11px; color: #666; text-transform: uppercase; margin-bottom: 8px;">Question</div>
+          <p style="font-size: 14px; color: #333; margin: 0;">PCC Answer is <strong>Yes</strong> for Coronary Artery Disease, but Super could not find supporting documentation.</p>
+        </div>
+
+        <div style="margin-bottom: 16px;">
+          <div style="font-size: 11px; color: #666; text-transform: uppercase; margin-bottom: 8px;">Action Required</div>
+          <p style="font-size: 13px; color: #444; margin: 0;">Please verify the CAD diagnosis. If present, provide documentation source. If not present, consider changing the answer to "No".</p>
+        </div>
+
+        <div style="background: #f9fafb; padding: 12px; border-radius: 8px; border: 1px solid #e5e7eb;">
+          <div style="font-size: 11px; color: #666; text-transform: uppercase; margin-bottom: 8px;">Options</div>
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+              <input type="radio" name="query" checked>
+              <span style="font-size: 13px;">Change answer to "No" - No CAD documented</span>
+            </label>
+            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+              <input type="radio" name="query">
+              <span style="font-size: 13px;">Keep "Yes" - Found documentation in external records</span>
+            </label>
+            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+              <input type="radio" name="query">
+              <span style="font-size: 13px;">Dismiss query - Will review later</span>
+            </label>
+          </div>
+        </div>
+      </div>
+      <div style="display: flex; justify-content: flex-end; gap: 8px; padding: 16px 20px; background: #f9fafb; border-top: 1px solid #e5e7eb;">
+        <button style="padding: 8px 16px; background: white; border: 1px solid #d1d5db; border-radius: 6px; cursor: pointer;" onclick="closeModal('queryModal')">Cancel</button>
+        <button style="padding: 8px 16px; background: #6366f1; border: none; border-radius: 6px; color: white; cursor: pointer;" onclick="closeModal('queryModal')">Submit</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAR Modal -->
+  <div class="super-modal" id="marModal">
+    <div class="super-modal-container" style="width: 700px;">
+      <div class="super-modal-header">
+        <div class="super-modal-title">Medication Administration Record (MAR)</div>
+        <button class="super-modal-close" onclick="closeModal('marModal')">x</button>
+      </div>
+      <div class="super-modal-body">
+        <div style="margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center;">
+          <div style="font-weight: 600;">Allen, Leonard (23568)</div>
+          <div style="font-size: 12px; color: #666;">Nov 11 - Nov 17, 2025</div>
+        </div>
+
+        <table class="mar-grid">
+          <thead>
+            <tr>
+              <th>Medication</th>
+              <th>Mon</th>
+              <th>Tue</th>
+              <th>Wed</th>
+              <th>Thu</th>
+              <th>Fri</th>
+              <th>Sat</th>
+              <th>Sun</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Metformin 500mg BID</td>
+              <td class="mar-cell--given">+</td>
+              <td class="mar-cell--given">+</td>
+              <td class="mar-cell--given">+</td>
+              <td class="mar-cell--given">+</td>
+              <td class="mar-cell--given">+</td>
+              <td class="mar-cell--given">+</td>
+              <td class="mar-cell--given">+</td>
+            </tr>
+            <tr>
+              <td>Lisinopril 10mg QD</td>
+              <td class="mar-cell--given">+</td>
+              <td class="mar-cell--given">+</td>
+              <td class="mar-cell--hold">HOLD</td>
+              <td class="mar-cell--given">+</td>
+              <td class="mar-cell--given">+</td>
+              <td class="mar-cell--given">+</td>
+              <td class="mar-cell--given">+</td>
+            </tr>
+            <tr>
+              <td>Levothyroxine 50mcg QD</td>
+              <td class="mar-cell--given">+</td>
+              <td class="mar-cell--given">+</td>
+              <td class="mar-cell--given">+</td>
+              <td class="mar-cell--given">+</td>
+              <td class="mar-cell--given">+</td>
+              <td class="mar-cell--given">+</td>
+              <td class="mar-cell--given">+</td>
+            </tr>
+            <tr>
+              <td>Omeprazole 20mg QD</td>
+              <td class="mar-cell--given">+</td>
+              <td class="mar-cell--given">+</td>
+              <td class="mar-cell--given">+</td>
+              <td class="mar-cell--refused">REF</td>
+              <td class="mar-cell--given">+</td>
+              <td class="mar-cell--given">+</td>
+              <td class="mar-cell--given">+</td>
+            </tr>
+            <tr>
+              <td>Sertraline 50mg QD</td>
+              <td class="mar-cell--given">+</td>
+              <td class="mar-cell--given">+</td>
+              <td class="mar-cell--given">+</td>
+              <td class="mar-cell--given">+</td>
+              <td class="mar-cell--given">+</td>
+              <td class="mar-cell--given">+</td>
+              <td class="mar-cell--given">+</td>
+            </tr>
+            <tr>
+              <td>Ferrous Sulfate 325mg QD</td>
+              <td class="mar-cell--given">+</td>
+              <td class="mar-cell--given">+</td>
+              <td class="mar-cell--given">+</td>
+              <td class="mar-cell--given">+</td>
+              <td class="mar-cell--given">+</td>
+              <td class="mar-cell--given">+</td>
+              <td class="mar-cell--given">+</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div style="margin-top: 16px; display: flex; gap: 16px; font-size: 11px;">
+          <span><span style="display: inline-block; width: 12px; height: 12px; background: #d4edda; border: 1px solid #c3e6cb; margin-right: 4px;"></span> Given</span>
+          <span><span style="display: inline-block; width: 12px; height: 12px; background: #fff3cd; border: 1px solid #ffeeba; margin-right: 4px;"></span> Hold</span>
+          <span><span style="display: inline-block; width: 12px; height: 12px; background: #f8d7da; border: 1px solid #f5c6cb; margin-right: 4px;"></span> Refused</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Clinical Notes Modal -->
+  <div class="super-modal" id="notesModal">
+    <div class="super-modal-container" style="width: 650px;">
+      <div class="super-modal-header">
+        <div class="super-modal-title">Clinical Notes</div>
+        <button class="super-modal-close" onclick="closeModal('notesModal')">x</button>
+      </div>
+      <div class="super-modal-body">
+        <div class="clinical-note">
+          <div class="clinical-note-header">
+            <span class="clinical-note-type">Progress Note - Physician</span>
+            <span class="clinical-note-date">Nov 15, 2025 at 10:30 AM</span>
+          </div>
+          <div class="clinical-note-text">
+            Patient is a 78-year-old male with history of <span class="clinical-highlight">Type 2 Diabetes Mellitus with diabetic polyneuropathy</span>, <span class="clinical-highlight">essential hypertension</span>, hypothyroidism, GERD, depression, and anemia. Current admission for skilled nursing care following hospitalization for UTI.<br><br>
+            <strong>Cardiovascular:</strong> Regular rate and rhythm, no murmurs. <span class="clinical-highlight">Hypertension</span> well controlled on current medications. No chest pain or shortness of breath reported.<br><br>
+            <strong>Endocrine:</strong> <span class="clinical-highlight">Diabetes</span> well controlled with current regimen. A1c 7.2% on last check. Continue Metformin 500mg BID.
+          </div>
+        </div>
+
+        <div class="clinical-note">
+          <div class="clinical-note-header">
+            <span class="clinical-note-type">Nursing Note</span>
+            <span class="clinical-note-date">Nov 14, 2025 at 2:15 PM</span>
+          </div>
+          <div class="clinical-note-text">
+            Resident alert and oriented x3. Vital signs stable: BP 128/78, HR 72, RR 18, T 98.2F. Blood glucose before lunch: 142 mg/dL. Resident participated in physical therapy session this morning. Ambulated 50 feet with rolling walker, minimal assist x1. Reports mild neuropathic pain in bilateral feet, rated 3/10. Skin intact, no new concerns noted.
+          </div>
+        </div>
+
+        <div class="clinical-note">
+          <div class="clinical-note-header">
+            <span class="clinical-note-type">Therapy Note - PT</span>
+            <span class="clinical-note-date">Nov 14, 2025 at 11:00 AM</span>
+          </div>
+          <div class="clinical-note-text">
+            Treatment session focused on gait training and balance activities. Patient demonstrates improved endurance, able to ambulate 100 feet with rolling walker before requiring rest break. Balance assessment shows moderate impairment, likely related to <span class="clinical-highlight">diabetic peripheral neuropathy</span>. Continue current POC, progress to increased distance as tolerated.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // View toggle
+    function showView(view) {
+      const summaryView = document.getElementById('summaryView');
+      const sectionView = document.getElementById('sectionView');
+      const sectionNav = document.getElementById('sectionNav');
+      const pageTitle = document.getElementById('pageTitle');
+      const viewBtns = document.querySelectorAll('.pcc-view-btn');
+
+      viewBtns.forEach(btn => btn.classList.remove('pcc-view-btn--active'));
+
+      if (view === 'summary') {
+        summaryView.style.display = 'block';
+        sectionView.style.display = 'none';
+        sectionNav.style.display = 'none';
+        pageTitle.textContent = 'MINIMUM DATA SET (MDS 3.0) SUMMARY';
+        viewBtns[0].classList.add('pcc-view-btn--active');
+      } else {
+        summaryView.style.display = 'none';
+        sectionView.style.display = 'block';
+        sectionNav.style.display = 'flex';
+        pageTitle.textContent = 'MDS 3.0 Section I - Active Diagnoses';
+        viewBtns[1].classList.add('pcc-view-btn--active');
+      }
+    }
+
+    // Section navigation
+    function goToSection(section) {
+      // Update active state
+      document.querySelectorAll('.pcc-section-letter').forEach(el => {
+        el.classList.remove('pcc-section-letter--active');
+      });
+      event.target.classList.add('pcc-section-letter--active');
+
+      // Show section view
+      showView('section');
+
+      // Update title
+      const titles = {
+        'A': 'Identification Information',
+        'B': 'Hearing, Speech, and Vision',
+        'C': 'Cognitive Patterns',
+        'D': 'Mood',
+        'E': 'Behavior',
+        'F': 'Preferences for Routine & Activities',
+        'G': 'Functional Status',
+        'GG': 'Functional Abilities',
+        'H': 'Bladder and Bowel',
+        'I': 'Active Diagnoses',
+        'J': 'Health Conditions',
+        'K': 'Swallowing / Nutritional Status',
+        'L': 'Oral / Dental Status',
+        'M': 'Skin Conditions',
+        'N': 'Medications',
+        'O': 'Special Treatments, Procedures, and Programs',
+        'P': 'Restraints and Alarms',
+        'Q': 'Participation in Assessment and Goal Setting',
+        'V': 'Care Area Assessment (CAA) Summary',
+        'X': 'Correction Request'
+      };
+
+      document.getElementById('pageTitle').textContent = 'MDS 3.0 Section ' + section + ' - ' + (titles[section] || '');
+    }
+
+    // Panel toggle
+    function togglePanel() {
+      const panel = document.getElementById('superPanel');
+      panel.classList.toggle('super-panel--visible');
+    }
+
+    // Popover
+    function showSuperPopover(questionId, element) {
+      const popover = document.getElementById('superPopover');
+      const rect = element.getBoundingClientRect();
+
+      // Position popover
+      popover.style.top = Math.max(10, rect.top - 200) + 'px';
+      popover.style.left = Math.min(window.innerWidth - 400, rect.right + 10) + 'px';
+
+      // Update content based on question
+      const data = {
+        'I0020': {
+          title: 'I0020 - Primary Medical Condition Category',
+          subtitle: 'Medical Condition',
+          answer: '13',
+          match: true,
+          rationale: 'Based on the primary diagnosis of Type 2 Diabetes Mellitus with diabetic polyneuropathy and multiple comorbidities, Medically Complex Conditions (Category 13) is the most appropriate classification.'
+        },
+        'ICD': {
+          title: 'Primary Medical Condition ICD',
+          subtitle: 'ICD-10 Code',
+          answer: 'E11.42',
+          match: true,
+          rationale: 'E11.42 (Type 2 diabetes mellitus with diabetic polyneuropathy) is supported by clinical documentation including nursing assessments, therapy notes, and physician progress notes.'
+        },
+        'I0400': {
+          title: 'I0400 - Coronary artery disease (CAD)',
+          subtitle: 'Heart/Circulation',
+          answer: 'No',
+          match: false,
+          rationale: 'No active diagnosis of Coronary Artery Disease found in the clinical record during the look-back period. While the resident has cardiovascular risk factors including hypertension and diabetes, there is no documented CAD diagnosis.'
+        },
+        'I0900': {
+          title: 'I0900 - Peripheral vascular disease (PVD)',
+          subtitle: 'Heart/Circulation',
+          answer: 'Needs Review',
+          match: null,
+          rationale: 'Diabetic polyneuropathy is documented, which may overlap with PVD symptoms. Recommend clinical review to determine if PVD is a separate active diagnosis.'
+        }
+      };
+
+      const info = data[questionId] || {
+        title: questionId,
+        subtitle: 'Diagnosis',
+        answer: 'Match',
+        match: true,
+        rationale: 'Super\'s answer matches the PCC response based on clinical documentation review.'
+      };
+
+      document.getElementById('popoverTitle').textContent = info.title;
+      document.getElementById('popoverAnswer').textContent = info.answer;
+      document.getElementById('popoverAnswer').className = 'super-answer-value ' +
+        (info.match === true ? 'super-answer-value--match' :
+         info.match === false ? 'super-answer-value--mismatch' : '');
+      document.getElementById('popoverRationale').textContent = info.rationale;
+
+      popover.classList.add('super-popover--visible');
+    }
+
+    function hideSuperPopover() {
+      document.getElementById('superPopover').classList.remove('super-popover--visible');
+    }
+
+    // Modal
+    function openModal(modalId) {
+      document.getElementById(modalId).classList.add('super-modal--visible');
+    }
+
+    function closeModal(modalId) {
+      document.getElementById(modalId).classList.remove('super-modal--visible');
+    }
+
+    // Close popover on outside click
+    document.addEventListener('click', function(e) {
+      const popover = document.getElementById('superPopover');
+      if (!popover.contains(e.target) && !e.target.classList.contains('super-badge')) {
+        hideSuperPopover();
+      }
+    });
+
+    // Close modal on backdrop click
+    document.querySelectorAll('.super-modal').forEach(function(modal) {
+      modal.addEventListener('click', function(e) {
+        if (e.target === this) {
+          this.classList.remove('super-modal--visible');
+        }
+      });
+    });
+  </script>
+</body>
+</html>

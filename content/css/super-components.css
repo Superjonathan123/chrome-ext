@@ -567,3 +567,146 @@
   color: var(--super-gray-600);
 }
 
+/* ============================================
+   EVIDENCE MODAL COMPONENT
+   ============================================ */
+.super-evidence-modal .super-modal__header {
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
+}
+
+.super-evidence {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.super-evidence__loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 20px;
+  gap: 12px;
+  color: var(--super-gray-500);
+  font-size: 13px;
+}
+
+.super-evidence__impact-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.super-evidence__impact-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  background: linear-gradient(135deg, #dcfce7 0%, #d1fae5 100%);
+  border: 1px solid #86efac;
+  border-radius: var(--super-radius);
+}
+
+.super-evidence__impact-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: #166534;
+  text-transform: uppercase;
+}
+
+.super-evidence__impact-change {
+  font-size: 12px;
+  font-weight: 600;
+  color: #15803d;
+  font-family: var(--super-font-mono);
+}
+
+.super-evidence__section {
+  background: var(--super-gray-50);
+  border-radius: var(--super-radius);
+  padding: 16px;
+}
+
+.super-evidence__section-title {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--super-gray-500);
+  margin-bottom: 12px;
+  letter-spacing: 0.05em;
+}
+
+.super-evidence__recommendation {
+  background: white;
+  border-radius: var(--super-radius-sm);
+  padding: 14px;
+  border: 1px solid var(--super-gray-200);
+}
+
+.super-evidence__answer-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.super-evidence__answer-label {
+  font-size: 12px;
+  color: var(--super-gray-500);
+}
+
+.super-evidence__answer-value {
+  font-size: 16px;
+  font-weight: 700;
+  color: #059669;
+  background: #dcfce7;
+  padding: 4px 10px;
+  border-radius: var(--super-radius-sm);
+}
+
+.super-evidence__confidence {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  margin-left: auto;
+}
+
+.super-evidence__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--super-gray-300);
+}
+
+.super-evidence__dot--filled {
+  background: #059669;
+}
+
+.super-evidence__rationale {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--super-gray-200);
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--super-gray-700);
+}
+
+.super-evidence__empty {
+  text-align: center;
+  padding: 20px;
+  color: var(--super-gray-400);
+  font-size: 13px;
+}
+
+/* Evidence modal uses existing evidence card classes from popover.css */
+/* Just ensure proper spacing inside the modal body */
+.super-evidence-modal .super-evidence-section {
+  margin-bottom: 0;
+}
+
+.super-evidence-modal .super-evidence-list {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
