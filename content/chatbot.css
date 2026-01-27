@@ -2779,6 +2779,36 @@
   color: #475569;
 }
 
+.super-mds-card--blue {
+  background: #eff6ff;
+  border-color: #bfdbfe;
+}
+
+.super-mds-card--blue .super-mds-card__header {
+  border-color: #bfdbfe;
+}
+
+.super-mds-card--blue .super-mds-card__icon {
+  color: #2563eb;
+}
+
+.super-mds-card--blue .super-mds-card__title {
+  color: #1e40af;
+}
+
+.super-mds-card__badge {
+  font-size: 10px;
+  font-weight: 500;
+  padding: 2px 8px;
+  border-radius: 10px;
+  margin-left: auto;
+}
+
+.super-mds-card__badge--action {
+  background: #fef3c7;
+  color: #92400e;
+}
+
 /* Collapsible Card Styles */
 .super-mds-card--collapsible .super-mds-card__header--clickable {
   cursor: pointer;
@@ -2985,6 +3015,31 @@
 .super-mds-query-item__status--signed {
   color: #059669;
   background: #d1fae5;
+}
+
+.super-mds-query-item__badges {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.super-mds-query-item__badge {
+  font-size: 9px;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.super-mds-query-item__badge--coding {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.super-mds-query-item--needs-coding {
+  border-left: 3px solid #3b82f6;
 }
 
 .super-mds-query-item__change {
@@ -3296,223 +3351,163 @@
   overflow: hidden;
 }
 
-/* Facility Dashboard - Action Cards Grid */
-.super-facility-cards {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
-  padding: 16px 20px;
-  border-bottom: 1px solid var(--chat-border);
-  flex-shrink: 0;
+/* ============================================
+   Tab-Based Navigation
+   ============================================ */
+
+/* Main Tabs (Queries, MDS, All) */
+.super-tabs {
+  display: flex;
+  gap: 4px;
+  padding: 12px 16px 8px;
   background: var(--chat-bg);
-}
-
-.super-facility-card {
-  background: var(--chat-bg);
-  border-radius: var(--chat-radius-sm);
-  border: 1px solid var(--chat-border-light);
-  transition: var(--chat-transition-fast);
-  overflow: hidden;
-  cursor: pointer;
-}
-
-.super-facility-card:hover {
-  border-color: var(--chat-border);
-  box-shadow: var(--chat-shadow-sm);
-}
-
-.super-facility-card__header {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 12px;
-  position: relative;
-  cursor: pointer;
-}
-
-.super-facility-card__header:hover {
-  background: var(--chat-surface);
-}
-
-.super-facility-card__icon {
-  font-size: 16px;
-  flex-shrink: 0;
-}
-
-.super-facility-card__count {
-  font-size: 22px;
-  font-weight: 700;
-  line-height: 1;
-}
-
-.super-facility-card__label {
-  font-size: 10px;
-  color: var(--chat-text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.3px;
-  font-weight: 500;
-  flex: 1;
-  line-height: 1.2;
-}
-
-.super-facility-card__toggle {
-  font-size: 10px;
-  color: var(--chat-text-muted);
-  position: absolute;
-  right: 8px;
-  top: 8px;
-}
-
-/* Card Color Variants */
-.super-facility-card--yellow {
-  border-left: 3px solid #f59e0b;
-}
-.super-facility-card--yellow .super-facility-card__count { color: #f59e0b; }
-.super-facility-card--yellow .super-facility-card__icon { color: #f59e0b; }
-
-.super-facility-card--orange {
-  border-left: 3px solid #f97316;
-}
-.super-facility-card--orange .super-facility-card__count { color: #f97316; }
-.super-facility-card--orange .super-facility-card__icon { color: #f97316; }
-
-.super-facility-card--green {
-  border-left: 3px solid #10b981;
-}
-.super-facility-card--green .super-facility-card__count { color: #10b981; }
-.super-facility-card--green .super-facility-card__icon { color: #10b981; }
-
-.super-facility-card--red {
-  border-left: 3px solid #ef4444;
-}
-.super-facility-card--red .super-facility-card__count { color: #ef4444; }
-.super-facility-card--red .super-facility-card__icon { color: #ef4444; }
-
-/* Card Expanded State */
-.super-facility-card--expanded {
-  grid-column: 1 / -1;
-}
-
-.super-facility-card__items {
-  border-top: 1px solid var(--chat-border-light);
-  padding: 8px 0;
-  max-height: 200px;
-  overflow-y: auto;
-}
-
-.super-facility-card__item {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  padding: 8px 12px;
-  cursor: pointer;
-  transition: var(--chat-transition-fast);
-}
-
-.super-facility-card__item:hover {
-  background: var(--chat-surface);
-}
-
-.super-facility-card__item-name {
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--chat-text);
-}
-
-.super-facility-card__item-detail {
-  font-size: 11px;
-  color: var(--chat-text-muted);
-}
-
-/* Facility Dashboard - Filter Toggle */
-.super-facility-filter {
-  display: flex;
-  gap: 8px;
-  padding: 12px 20px;
-  background: var(--chat-surface);
   border-bottom: 1px solid var(--chat-border-light);
   flex-shrink: 0;
 }
 
-.super-facility-filter__btn {
+.super-tab {
   flex: 1;
-  padding: 8px 12px;
-  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 12px;
+  font-size: 13px;
   font-weight: 500;
   color: var(--chat-text-secondary);
-  background: var(--chat-bg);
-  border: 1px solid var(--chat-border);
-  border-radius: var(--chat-radius-xs);
+  background: var(--chat-surface);
+  border: 1px solid var(--chat-border-light);
+  border-radius: var(--chat-radius-sm);
   cursor: pointer;
   transition: var(--chat-transition-fast);
 }
 
-.super-facility-filter__btn:hover {
-  background: var(--chat-surface);
-  border-color: var(--chat-text-muted);
+.super-tab:hover {
+  background: var(--chat-bg);
+  border-color: var(--chat-border);
 }
 
-.super-facility-filter__btn--active {
+.super-tab--active {
   background: var(--chat-primary);
   color: white;
   border-color: var(--chat-primary);
 }
 
-.super-facility-filter__btn--active:hover {
+.super-tab--active:hover {
   background: var(--chat-primary-dark);
   border-color: var(--chat-primary-dark);
 }
 
-/* Facility Dashboard - Assessments List */
-.super-facility-assessments {
+.super-tab--muted {
+  opacity: 0.5;
+}
+
+.super-tab--muted:hover {
+  opacity: 0.8;
+}
+
+.super-tab__label {
+  font-weight: 500;
+}
+
+.super-tab__count {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 2px 6px;
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  min-width: 20px;
+  text-align: center;
+}
+
+.super-tab--active .super-tab__count {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Sub-Tabs (To Send, Awaiting, Signed / HIPPS, Compliance) */
+.super-subtabs {
+  display: flex;
+  gap: 0;
+  padding: 0 16px;
+  background: var(--chat-surface);
+  border-bottom: 1px solid var(--chat-border-light);
+  flex-shrink: 0;
+}
+
+.super-subtab {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 8px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--chat-text-muted);
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  transition: var(--chat-transition-fast);
+}
+
+.super-subtab:hover {
+  color: var(--chat-text);
+  background: rgba(0, 0, 0, 0.03);
+}
+
+.super-subtab--active {
+  color: var(--chat-primary);
+  border-bottom-color: var(--chat-primary);
+}
+
+.super-subtab--active:hover {
+  color: var(--chat-primary);
+}
+
+.super-subtab__count {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 1px 5px;
+  background: var(--chat-border-light);
+  border-radius: 8px;
+  color: var(--chat-text-muted);
+}
+
+.super-subtab--active .super-subtab__count {
+  background: rgba(99, 102, 241, 0.15);
+  color: var(--chat-primary);
+}
+
+/* ============================================
+   Content Area
+   ============================================ */
+
+.super-content {
   flex: 1;
   overflow-y: auto;
   background: var(--chat-surface);
 }
 
-.super-facility-assessments::-webkit-scrollbar {
+.super-content::-webkit-scrollbar {
   width: 6px;
 }
 
-.super-facility-assessments::-webkit-scrollbar-track {
+.super-content::-webkit-scrollbar-track {
   background: transparent;
 }
 
-.super-facility-assessments::-webkit-scrollbar-thumb {
+.super-content::-webkit-scrollbar-thumb {
   background: var(--chat-border);
   border-radius: 3px;
 }
 
-.super-facility-assessments__header {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 12px 20px 8px;
-  position: sticky;
-  top: 0;
-  background: var(--chat-surface);
-  z-index: 1;
+.super-content__list {
+  padding: 12px;
 }
 
-.super-facility-assessments__title {
-  font-size: 11px;
-  font-weight: 600;
-  color: var(--chat-text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.super-facility-assessments__count {
-  font-size: 11px;
-  color: var(--chat-text-muted);
-}
-
-.super-facility-assessments__list {
-  padding: 0 12px 12px;
-}
-
-/* Facility Dashboard - Assessment Item */
-.super-facility-assessment {
+/* Content Item */
+.super-content__item {
   display: flex;
   align-items: center;
   gap: 12px;
@@ -3525,21 +3520,21 @@
   transition: var(--chat-transition-fast);
 }
 
-.super-facility-assessment:hover {
+.super-content__item:hover {
   border-color: var(--chat-border);
   box-shadow: var(--chat-shadow-sm);
 }
 
-.super-facility-assessment:last-child {
+.super-content__item:last-child {
   margin-bottom: 0;
 }
 
-.super-facility-assessment__main {
+.super-content__item-main {
   flex: 1;
   min-width: 0;
 }
 
-.super-facility-assessment__name {
+.super-content__item-name {
   font-size: 14px;
   font-weight: 600;
   color: var(--chat-text);
@@ -3548,13 +3543,16 @@
   text-overflow: ellipsis;
 }
 
-.super-facility-assessment__meta {
+.super-content__item-detail {
   font-size: 12px;
   color: var(--chat-text-muted);
   margin-top: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.super-facility-assessment__right {
+.super-content__item-right {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
@@ -3562,7 +3560,7 @@
   flex-shrink: 0;
 }
 
-.super-facility-assessment__hipps {
+.super-content__item-hipps {
   font-size: 13px;
   font-weight: 600;
   font-family: 'SF Mono', 'Monaco', 'Inconsolata', monospace;
@@ -3570,63 +3568,80 @@
   letter-spacing: 0.5px;
 }
 
-.super-facility-assessment__badges {
+.super-content__item-badges {
   display: flex;
   gap: 4px;
   flex-wrap: wrap;
   justify-content: flex-end;
 }
 
-.super-facility-assessment__chevron {
+.super-content__item-chevron {
   font-size: 14px;
   color: var(--chat-text-muted);
   opacity: 0.4;
   flex-shrink: 0;
 }
 
-/* Facility Dashboard - Badges */
-.super-facility-badge {
+/* ============================================
+   Badges
+   ============================================ */
+
+.super-badge {
   font-size: 9px;
   font-weight: 600;
-  padding: 2px 6px;
+  padding: 3px 7px;
   border-radius: 4px;
   text-transform: uppercase;
   letter-spacing: 0.3px;
+  white-space: nowrap;
 }
 
-.super-facility-badge--hipps {
+.super-badge--yellow {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.super-badge--orange {
+  background: #ffedd5;
+  color: #c2410c;
+}
+
+.super-badge--green {
   background: #d1fae5;
   color: #065f46;
 }
 
-.super-facility-badge--query {
+.super-badge--blue {
   background: #dbeafe;
   color: #1e40af;
 }
 
-.super-facility-badge--compliance {
+.super-badge--red {
   background: #fee2e2;
   color: #991b1b;
 }
 
-.super-facility-badge--ok {
+.super-badge--muted {
   background: #f3f4f6;
   color: #6b7280;
 }
 
-/* Facility Dashboard - Empty State */
-.super-facility-empty {
-  padding: 40px 20px;
+/* ============================================
+   Empty State
+   ============================================ */
+
+.super-empty {
+  padding: 60px 20px;
   text-align: center;
 }
 
-.super-facility-empty__icon {
-  font-size: 32px;
-  margin-bottom: 12px;
-  opacity: 0.5;
+.super-empty__icon {
+  font-size: 40px;
+  margin-bottom: 16px;
+  opacity: 0.4;
 }
 
-.super-facility-empty__text {
+.super-empty__text {
   font-size: 14px;
   color: var(--chat-text-muted);
 }

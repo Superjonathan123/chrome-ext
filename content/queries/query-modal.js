@@ -6,11 +6,12 @@ const QueryDetailModal = {
    * Show the query detail modal
    * @param {Object} query - Query object
    * @param {Object} result - MDS result object (optional, for context)
+   * @param {Object} options - Additional options (showPdfButton, pdfUrl, showCodingStatus, mdsItemCoded)
    */
-  show(query, result = null) {
+  show(query, result = null, options = {}) {
     const statusDisplay = QueryState.getStatusDisplay(query.status);
-    const content = this._buildContent(query);
-    const actions = this._buildActions(query, result);
+    const content = this._buildContent(query, options);
+    const actions = this._buildActions(query, result, options);
 
     SuperModal.show({
       title: 'Diagnosis Query',
@@ -26,9 +27,10 @@ const QueryDetailModal = {
   /**
    * Build modal content HTML
    * @param {Object} query - Query object
+   * @param {Object} options - Additional options
    * @returns {string}
    */
-  _buildContent(query) {
+  _buildContent(query, options = {}) {
     const statusDisplay = QueryState.getStatusDisplay(query.status);
 
     // Format dates
@@ -39,6 +41,10 @@ const QueryDetailModal = {
     const icd10Display = query.selectedIcd10Code
       ? `${query.selectedIcd10Code}${query.selectedIcd10Description ? ` - ${query.selectedIcd10Description}` : ''}`
       : null;
+
+    // Check coding status from options or query
+    const showCodingStatus = options.showCodingStatus || query.mdsItemCoded !== undefined;
+    const mdsItemCoded = options.mdsItemCoded !== undefined ? options.mdsItemCoded : query.mdsItemCoded;
 
     return `
       <div class="super-query-detail">
@@ -81,6 +87,17 @@ const QueryDetailModal = {
           </div>
         ` : ''}
 
+        <!-- Coding Status (for signed queries) -->
+        ${query.status === 'signed' && showCodingStatus ? `
+          <div class="super-query-detail__coding-card ${mdsItemCoded ? 'super-query-detail__coding-card--coded' : 'super-query-detail__coding-card--needs-coding'}">
+            <span class="super-query-detail__coding-icon">${mdsItemCoded ? '&#10003;' : '&#9998;'}</span>
+            <div class="super-query-detail__coding-info">
+              <div class="super-query-detail__coding-label">${mdsItemCoded ? 'Added to MDS' : 'Needs to be added to MDS'}</div>
+              <div class="super-query-detail__coding-text">${mdsItemCoded ? 'This diagnosis has been coded on the assessment' : 'Click "Go to Section" to add this diagnosis to the MDS'}</div>
+            </div>
+          </div>
+        ` : ''}
+
         <!-- Sent Info (for pending queries) -->
         ${query.status === 'sent' ? `
           <div class="super-query-detail__sent-card">
@@ -110,9 +127,10 @@ const QueryDetailModal = {
    * Build action buttons based on query status
    * @param {Object} query - Query object
    * @param {Object} result - MDS result (optional)
+   * @param {Object} options - Additional options
    * @returns {Array}
    */
-  _buildActions(query, result) {
+  _buildActions(query, result, options = {}) {
     const actions = [];
 
     switch (query.status) {
@@ -138,12 +156,28 @@ const QueryDetailModal = {
         break;
 
       case 'signed':
-        // Signed - can view PDF
+        // Signed - can view PDF and go to section
         actions.push({
           label: 'View Signed PDF',
           variant: 'primary',
           action: (btn) => this._handleViewPdf(query, btn)
         });
+
+        // If needs coding, add "Go to Section" button
+        const mdsItemCoded = options.mdsItemCoded !== undefined ? options.mdsItemCoded : query.mdsItemCoded;
+        // Get external assessment ID from query (API returns mdsExternalAssessmentId)
+        const externalAssessmentId = query.mdsExternalAssessmentId || query.externalAssessmentId || query.assessmentId;
+        if (mdsItemCoded === false && query.mdsItem && externalAssessmentId) {
+          const sectionCode = query.mdsItem.charAt(0).toUpperCase();
+          actions.push({
+            label: `Go to Section ${sectionCode}`,
+            variant: 'secondary',
+            action: () => {
+              SuperModal.close();
+              this._navigateToSection(externalAssessmentId, sectionCode);
+            }
+          });
+        }
         break;
 
       case 'rejected':
@@ -255,6 +289,49 @@ const QueryDetailModal = {
     const div = document.createElement('div');
     div.textContent = str;
     return div.innerHTML;
+  },
+
+  /**
+   * Navigate to MDS section in PCC
+   * @param {string} assessmentId - External PCC assessment ID
+   * @param {string} sectionCode - MDS section code (e.g., "I")
+   */
+  _navigateToSection(assessmentId, sectionCode) {
+    if (!assessmentId) {
+      console.error('QueryDetailModal: No assessment ID for navigation');
+      if (window.SuperToast) {
+        SuperToast.error('Unable to navigate: missing assessment ID');
+      }
+      return;
+    }
+
+    const currentUrl = new URL(window.location.href);
+    const origin = currentUrl.origin;
+    const sectionUrl = `${origin}/clinical/mds3/section.xhtml?ESOLassessid=${assessmentId}&sectioncode=${sectionCode}`;
+
+    console.log('QueryDetailModal: Navigating to MDS section:', sectionUrl);
+    window.location.href = sectionUrl;
+  },
+
+  /**
+   * Navigate to patient page in PCC
+   * @param {string} patientId - External PCC patient ID
+   */
+  _navigateToPatient(patientId) {
+    if (!patientId) {
+      console.error('QueryDetailModal: No patient ID for navigation');
+      if (window.SuperToast) {
+        SuperToast.error('Unable to navigate: missing patient ID');
+      }
+      return;
+    }
+
+    const currentUrl = new URL(window.location.href);
+    const origin = currentUrl.origin;
+    const patientUrl = `${origin}/admin/client/cp_residentdashboard.jsp?ESOLrow=1&ESOLclientid=${patientId}`;
+
+    console.log('QueryDetailModal: Navigating to patient:', patientUrl);
+    window.location.href = patientUrl;
   }
 };
 

@@ -1,5 +1,5 @@
 // Facility Dashboard View Component for Super Menu
-// Renders the facility-level dashboard UI with action cards and open assessments
+// Tab-based navigation with Queries, MDS, and All Assessments
 
 const FacilityDashboardView = {
   /**
@@ -17,9 +17,9 @@ const FacilityDashboardView = {
 
     return `
       <div class="super-facility-dashboard">
-        ${this._renderCards()}
-        ${this._renderFilter()}
-        ${this._renderAssessmentsList()}
+        ${this._renderMainTabs()}
+        ${this._renderSubTabs()}
+        ${this._renderContent()}
       </div>
     `;
   },
@@ -52,146 +52,102 @@ const FacilityDashboardView = {
   },
 
   /**
-   * Render the 4 action cards in a 2x2 grid
+   * Render main tab bar (Queries, MDS, All)
    * @returns {string} HTML string
    */
-  _renderCards() {
-    const cards = [
-      {
-        key: 'queriesToSend',
-        icon: '&#9993;',  // ✉
-        label: 'Queries to Send',
-        color: 'yellow'
-      },
-      {
-        key: 'awaitingSignatures',
-        icon: '&#9998;',  // ✎
-        label: 'Awaiting Signatures',
-        color: 'orange'
-      },
-      {
-        key: 'hippsOpportunities',
-        icon: '&#9889;',  // ⚡
-        label: 'HIPPS Opportunities',
-        color: 'green'
-      },
-      {
-        key: 'complianceRisks',
-        icon: '&#9888;',  // ⚠
-        label: 'Compliance Risks',
-        color: 'red'
-      }
+  _renderMainTabs() {
+    const currentTab = FacilityDashboardState.selectedTab;
+
+    const tabs = [
+      { key: 'queries', label: 'Queries', icon: '&#9993;' },
+      { key: 'mds', label: 'MDS', icon: '&#9776;' },
+      { key: 'all', label: 'All', icon: '&#9744;' }
     ];
 
-    const cardHtml = cards.map(card => this._renderCard(card)).join('');
+    const tabsHtml = tabs.map(tab => {
+      const count = FacilityDashboardState.getTabCount(tab.key);
+      const isActive = currentTab === tab.key;
+      const isMuted = count === 0 && tab.key !== 'all';
+
+      return `
+        <button class="super-tab ${isActive ? 'super-tab--active' : ''} ${isMuted ? 'super-tab--muted' : ''}"
+                data-tab="${tab.key}">
+          <span class="super-tab__label">${tab.label}</span>
+          <span class="super-tab__count">${count}</span>
+        </button>
+      `;
+    }).join('');
 
     return `
-      <div class="super-facility-cards">
-        ${cardHtml}
+      <div class="super-tabs">
+        ${tabsHtml}
       </div>
     `;
   },
 
   /**
-   * Render a single action card
-   * @param {Object} card - { key, icon, label, color }
+   * Render sub-tabs based on current main tab
    * @returns {string} HTML string
    */
-  _renderCard(card) {
-    const data = FacilityDashboardState.getCard(card.key);
-    const isExpanded = FacilityDashboardState.expandedCard === card.key;
-    const hasItems = data.items && data.items.length > 0;
-    console.log(`Rendering card ${card.key}: count=${data.count}, hasItems=${hasItems}, isExpanded=${isExpanded}, itemsLength=${data.items?.length}`);
+  _renderSubTabs() {
+    const currentTab = FacilityDashboardState.selectedTab;
 
-    return `
-      <div class="super-facility-card super-facility-card--${card.color} ${isExpanded ? 'super-facility-card--expanded' : ''}"
-           data-card="${card.key}">
-        <div class="super-facility-card__header">
-          <span class="super-facility-card__icon">${card.icon}</span>
-          <span class="super-facility-card__count">${data.count}</span>
-          <span class="super-facility-card__label">${card.label}</span>
-          ${hasItems ? `<span class="super-facility-card__toggle">${isExpanded ? '&#9650;' : '&#9660;'}</span>` : ''}
-        </div>
-        ${isExpanded && hasItems ? this._renderCardItems(card.key, data.items) : ''}
-      </div>
-    `;
-  },
-
-  /**
-   * Render expanded card items
-   * @param {string} cardKey
-   * @param {Array} items
-   * @returns {string} HTML string
-   */
-  _renderCardItems(cardKey, items) {
-    const itemsHtml = items.map(item => this._renderCardItem(cardKey, item)).join('');
-
-    return `
-      <div class="super-facility-card__items">
-        ${itemsHtml}
-      </div>
-    `;
-  },
-
-  /**
-   * Render a single card item based on card type
-   * @param {string} cardKey
-   * @param {Object} item
-   * @returns {string} HTML string
-   */
-  _renderCardItem(cardKey, item) {
-    switch (cardKey) {
-      case 'queriesToSend':
-        return `
-          <div class="super-facility-card__item" data-card="${cardKey}" data-query-id="${item.id}" data-patient-id="${item.patientId || ''}">
-            <span class="super-facility-card__item-name">${this._escapeHtml(item.patientName)}</span>
-            <span class="super-facility-card__item-detail">${this._escapeHtml(item.mdsItem)} - ${this._escapeHtml(item.mdsItemName || '')}</span>
-          </div>
-        `;
-
-      case 'awaitingSignatures':
-        return `
-          <div class="super-facility-card__item" data-card="${cardKey}" data-query-id="${item.id}">
-            <span class="super-facility-card__item-name">${this._escapeHtml(item.patientName)}</span>
-            <span class="super-facility-card__item-detail">${this._escapeHtml(item.mdsItem)} - sent ${this._formatTimeAgo(item.sentAt)}</span>
-          </div>
-        `;
-
-      case 'hippsOpportunities':
-        return `
-          <div class="super-facility-card__item" data-card="${cardKey}" data-assessment-id="${item.externalAssessmentId}">
-            <span class="super-facility-card__item-name">${this._escapeHtml(item.patientName)}</span>
-            <span class="super-facility-card__item-detail">${item.currentHipps || '?????'} &#8594; ${item.potentialHipps || '?????'} (${item.hippsChangingCount} items)</span>
-          </div>
-        `;
-
-      case 'complianceRisks':
-        return `
-          <div class="super-facility-card__item" data-card="${cardKey}" data-assessment-id="${item.externalAssessmentId}">
-            <span class="super-facility-card__item-name">${this._escapeHtml(item.patientName)}</span>
-            <span class="super-facility-card__item-detail">${item.complianceIssues?.join(', ') || 'Issues detected'}</span>
-          </div>
-        `;
-
-      default:
-        return '';
+    if (currentTab === 'all') {
+      // Show filter for All tab
+      return this._renderAllFilter();
     }
+
+    const subTabConfigs = {
+      queries: [
+        { key: 'toSend', label: 'To Send', countKey: 'queriesToSend' },
+        { key: 'awaiting', label: 'Awaiting', countKey: 'awaitingSignatures' },
+        { key: 'signed', label: 'Signed', countKey: 'recentlySigned' }
+      ],
+      mds: [
+        { key: 'hipps', label: 'HIPPS', countKey: 'hippsOpportunities' },
+        { key: 'compliance', label: 'Compliance', countKey: 'complianceRisks' }
+      ]
+    };
+
+    const subTabs = subTabConfigs[currentTab];
+    if (!subTabs) return '';
+
+    const currentSubTab = FacilityDashboardState.selectedSubTab[currentTab];
+
+    const subTabsHtml = subTabs.map(sub => {
+      const count = FacilityDashboardState.getCard(sub.countKey).count;
+      const isActive = currentSubTab === sub.key;
+
+      return `
+        <button class="super-subtab ${isActive ? 'super-subtab--active' : ''}"
+                data-maintab="${currentTab}" data-subtab="${sub.key}">
+          ${sub.label}
+          <span class="super-subtab__count">${count}</span>
+        </button>
+      `;
+    }).join('');
+
+    return `
+      <div class="super-subtabs">
+        ${subTabsHtml}
+      </div>
+    `;
   },
 
   /**
-   * Render filter toggle
+   * Render filter for "All" tab
    * @returns {string} HTML string
    */
-  _renderFilter() {
+  _renderAllFilter() {
     const currentFilter = FacilityDashboardState.filter;
 
     return `
-      <div class="super-facility-filter">
-        <button class="super-facility-filter__btn ${currentFilter === 'needs_attention' ? 'super-facility-filter__btn--active' : ''}"
+      <div class="super-subtabs">
+        <button class="super-subtab ${currentFilter === 'needs_attention' ? 'super-subtab--active' : ''}"
                 data-filter="needs_attention">
           Needs Attention
         </button>
-        <button class="super-facility-filter__btn ${currentFilter === 'all' ? 'super-facility-filter__btn--active' : ''}"
+        <button class="super-subtab ${currentFilter === 'all' ? 'super-subtab--active' : ''}"
                 data-filter="all">
           All Open
         </button>
@@ -200,10 +156,176 @@ const FacilityDashboardView = {
   },
 
   /**
-   * Render open assessments list
+   * Render content area based on current tab/subtab
    * @returns {string} HTML string
    */
-  _renderAssessmentsList() {
+  _renderContent() {
+    const currentTab = FacilityDashboardState.selectedTab;
+
+    switch (currentTab) {
+      case 'queries':
+        return this._renderQueriesContent();
+      case 'mds':
+        return this._renderMDSContent();
+      case 'all':
+        return this._renderAllContent();
+      default:
+        return '';
+    }
+  },
+
+  /**
+   * Render queries content based on sub-tab
+   * @returns {string} HTML string
+   */
+  _renderQueriesContent() {
+    const subTab = FacilityDashboardState.selectedSubTab.queries;
+
+    const cardKeyMap = {
+      toSend: 'queriesToSend',
+      awaiting: 'awaitingSignatures',
+      signed: 'recentlySigned'
+    };
+
+    const cardKey = cardKeyMap[subTab];
+    const data = FacilityDashboardState.getCard(cardKey);
+
+    if (!data.items || data.items.length === 0) {
+      return this._renderEmpty(this._getEmptyMessage(subTab));
+    }
+
+    const itemsHtml = data.items.map(item => this._renderQueryItem(subTab, item)).join('');
+
+    return `
+      <div class="super-content">
+        <div class="super-content__list">
+          ${itemsHtml}
+        </div>
+      </div>
+    `;
+  },
+
+  /**
+   * Render a single query item
+   * @param {string} subTab - toSend | awaiting | signed
+   * @param {Object} item
+   * @returns {string} HTML string
+   */
+  _renderQueryItem(subTab, item) {
+    let detail = '';
+    let statusBadge = '';
+
+    switch (subTab) {
+      case 'toSend':
+        detail = `${this._escapeHtml(item.mdsItem)} - ${this._escapeHtml(item.mdsItemName || '')}`;
+        statusBadge = '<span class="super-badge super-badge--yellow">To Send</span>';
+        break;
+      case 'awaiting':
+        detail = `${this._escapeHtml(item.mdsItem)} - sent ${this._formatTimeAgo(item.sentAt)}`;
+        statusBadge = '<span class="super-badge super-badge--orange">Awaiting</span>';
+        break;
+      case 'signed':
+        detail = `${this._escapeHtml(item.mdsItem)} - ${this._escapeHtml(item.mdsItemName || '')}`;
+        const codedStatus = item.mdsItemCoded
+          ? '<span class="super-badge super-badge--green">Coded</span>'
+          : '<span class="super-badge super-badge--blue">Needs Coding</span>';
+        statusBadge = codedStatus;
+        break;
+    }
+
+    return `
+      <div class="super-content__item"
+           data-type="query"
+           data-subtab="${subTab}"
+           data-query-id="${item.id}"
+           data-patient-id="${item.patientExternalId || item.patientId || ''}"
+           data-assessment-id="${item.mdsExternalAssessmentId || item.assessmentId || ''}">
+        <div class="super-content__item-main">
+          <div class="super-content__item-name">${this._escapeHtml(item.patientName)}</div>
+          <div class="super-content__item-detail">${detail}</div>
+        </div>
+        <div class="super-content__item-right">
+          ${statusBadge}
+        </div>
+        <div class="super-content__item-chevron">&#10095;</div>
+      </div>
+    `;
+  },
+
+  /**
+   * Render MDS content based on sub-tab
+   * @returns {string} HTML string
+   */
+  _renderMDSContent() {
+    const subTab = FacilityDashboardState.selectedSubTab.mds;
+
+    const cardKeyMap = {
+      hipps: 'hippsOpportunities',
+      compliance: 'complianceRisks'
+    };
+
+    const cardKey = cardKeyMap[subTab];
+    const data = FacilityDashboardState.getCard(cardKey);
+
+    if (!data.items || data.items.length === 0) {
+      return this._renderEmpty(this._getEmptyMessage(subTab));
+    }
+
+    const itemsHtml = data.items.map(item => this._renderMDSItem(subTab, item)).join('');
+
+    return `
+      <div class="super-content">
+        <div class="super-content__list">
+          ${itemsHtml}
+        </div>
+      </div>
+    `;
+  },
+
+  /**
+   * Render a single MDS item
+   * @param {string} subTab - hipps | compliance
+   * @param {Object} item
+   * @returns {string} HTML string
+   */
+  _renderMDSItem(subTab, item) {
+    let detail = '';
+    let badge = '';
+
+    switch (subTab) {
+      case 'hipps':
+        detail = `${item.currentHipps || '?????'} &#8594; ${item.potentialHipps || '?????'}`;
+        badge = `<span class="super-badge super-badge--green">${item.hippsChangingCount || 0} items</span>`;
+        break;
+      case 'compliance':
+        detail = item.complianceIssues?.join(', ') || 'Issues detected';
+        badge = `<span class="super-badge super-badge--red">${item.complianceIssues?.length || 0} issues</span>`;
+        break;
+    }
+
+    return `
+      <div class="super-content__item"
+           data-type="mds"
+           data-subtab="${subTab}"
+           data-assessment-id="${item.externalAssessmentId}"
+           data-patient-id="${item.patientId || ''}">
+        <div class="super-content__item-main">
+          <div class="super-content__item-name">${this._escapeHtml(item.patientName)}</div>
+          <div class="super-content__item-detail">${detail}</div>
+        </div>
+        <div class="super-content__item-right">
+          ${badge}
+        </div>
+        <div class="super-content__item-chevron">&#10095;</div>
+      </div>
+    `;
+  },
+
+  /**
+   * Render all assessments content
+   * @returns {string} HTML string
+   */
+  _renderAllContent() {
     const assessments = FacilityDashboardState.getFilteredAssessments();
 
     // Sort by ARD date ascending (oldest/soonest due first)
@@ -211,36 +333,18 @@ const FacilityDashboardView = {
       return new Date(a.ardDate) - new Date(b.ardDate);
     });
 
-    const totalCount = sortedAssessments.length;
-
-    if (totalCount === 0) {
-      return `
-        <div class="super-facility-assessments">
-          <div class="super-facility-assessments__header">
-            <span class="super-facility-assessments__title">OPEN ASSESSMENTS</span>
-            <span class="super-facility-assessments__count">(0)</span>
-          </div>
-          <div class="super-facility-empty">
-            <div class="super-facility-empty__icon">&#10024;</div>
-            <div class="super-facility-empty__text">
-              ${FacilityDashboardState.filter === 'needs_attention'
-                ? 'No assessments need attention'
-                : 'No open assessments'}
-            </div>
-          </div>
-        </div>
-      `;
+    if (sortedAssessments.length === 0) {
+      const msg = FacilityDashboardState.filter === 'needs_attention'
+        ? 'No assessments need attention'
+        : 'No open assessments';
+      return this._renderEmpty(msg);
     }
 
     const itemsHtml = sortedAssessments.map(a => this._renderAssessmentItem(a)).join('');
 
     return `
-      <div class="super-facility-assessments">
-        <div class="super-facility-assessments__header">
-          <span class="super-facility-assessments__title">OPEN ASSESSMENTS</span>
-          <span class="super-facility-assessments__count">(${totalCount})</span>
-        </div>
-        <div class="super-facility-assessments__list">
+      <div class="super-content">
+        <div class="super-content__list">
           ${itemsHtml}
         </div>
       </div>
@@ -261,34 +365,69 @@ const FacilityDashboardView = {
     // Build status badges
     const badges = [];
     if (assessment.hippsItemCount > 0) {
-      badges.push(`<span class="super-facility-badge super-facility-badge--hipps">HIPPS</span>`);
+      badges.push(`<span class="super-badge super-badge--green">HIPPS</span>`);
     }
     if (assessment.pendingQueryCount > 0) {
-      badges.push(`<span class="super-facility-badge super-facility-badge--query">${assessment.pendingQueryCount} ${assessment.pendingQueryCount === 1 ? 'query' : 'queries'}</span>`);
+      badges.push(`<span class="super-badge super-badge--orange">${assessment.pendingQueryCount} ${assessment.pendingQueryCount === 1 ? 'query' : 'queries'}</span>`);
     }
     if (assessment.complianceStatus === 'failed' || assessment.complianceStatus === 'warning') {
-      badges.push(`<span class="super-facility-badge super-facility-badge--compliance">${assessment.complianceIssues?.length || ''} issues</span>`);
+      badges.push(`<span class="super-badge super-badge--red">${assessment.complianceIssues?.length || ''} issues</span>`);
     }
 
     const badgesHtml = badges.length > 0
       ? badges.join('')
-      : '<span class="super-facility-badge super-facility-badge--ok">No issues</span>';
+      : '<span class="super-badge super-badge--muted">OK</span>';
 
     return `
-      <div class="super-facility-assessment" data-assessment-id="${assessment.externalAssessmentId}" data-patient-id="${assessment.patientId}">
-        <div class="super-facility-assessment__main">
-          <div class="super-facility-assessment__name">${this._escapeHtml(assessment.patientName)}</div>
-          <div class="super-facility-assessment__meta">
+      <div class="super-content__item"
+           data-type="assessment"
+           data-assessment-id="${assessment.externalAssessmentId}"
+           data-patient-id="${assessment.patientId}">
+        <div class="super-content__item-main">
+          <div class="super-content__item-name">${this._escapeHtml(assessment.patientName)}</div>
+          <div class="super-content__item-detail">
             ${this._escapeHtml(assessment.mdsType)} &middot; ${this._formatDate(assessment.ardDate)}
           </div>
         </div>
-        <div class="super-facility-assessment__right">
-          ${hippsDisplay ? `<div class="super-facility-assessment__hipps">${hippsDisplay}</div>` : ''}
-          <div class="super-facility-assessment__badges">${badgesHtml}</div>
+        <div class="super-content__item-right">
+          ${hippsDisplay ? `<div class="super-content__item-hipps">${hippsDisplay}</div>` : ''}
+          <div class="super-content__item-badges">${badgesHtml}</div>
         </div>
-        <div class="super-facility-assessment__chevron">&#10095;</div>
+        <div class="super-content__item-chevron">&#10095;</div>
       </div>
     `;
+  },
+
+  /**
+   * Render empty state
+   * @param {string} message
+   * @returns {string} HTML string
+   */
+  _renderEmpty(message) {
+    return `
+      <div class="super-content">
+        <div class="super-empty">
+          <div class="super-empty__icon">&#10024;</div>
+          <div class="super-empty__text">${message}</div>
+        </div>
+      </div>
+    `;
+  },
+
+  /**
+   * Get empty message for sub-tab
+   * @param {string} subTab
+   * @returns {string}
+   */
+  _getEmptyMessage(subTab) {
+    const messages = {
+      toSend: 'No queries to send',
+      awaiting: 'No queries awaiting signatures',
+      signed: 'No recently signed queries',
+      hipps: 'No HIPPS opportunities',
+      compliance: 'No compliance issues'
+    };
+    return messages[subTab] || 'Nothing to show';
   },
 
   /**
@@ -350,56 +489,41 @@ const FacilityDashboardView = {
       retryBtn.addEventListener('click', () => this._handleRetry());
     }
 
-    // Card header clicks (toggle expand)
-    const cardHeaders = container.querySelectorAll('.super-facility-card__header');
-    console.log('Setting up card header listeners, found:', cardHeaders.length);
-    cardHeaders.forEach(header => {
-      header.addEventListener('click', (e) => {
-        console.log('Card header clicked');
-        const card = header.closest('.super-facility-card');
-        const cardKey = card?.dataset.card;
-        console.log('Card key:', cardKey);
-        if (cardKey) {
-          this._handleCardToggle(cardKey);
+    // Main tab clicks
+    container.querySelectorAll('.super-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        const tabKey = tab.dataset.tab;
+        if (tabKey) {
+          this._handleTabClick(tabKey);
         }
       });
     });
 
-    // Card item clicks
-    container.querySelectorAll('.super-facility-card__item').forEach(item => {
-      item.addEventListener('click', (e) => {
-        e.stopPropagation();
-        const cardKey = item.dataset.card;
+    // Sub-tab clicks
+    container.querySelectorAll('.super-subtab').forEach(subtab => {
+      subtab.addEventListener('click', () => {
+        const mainTab = subtab.dataset.maintab;
+        const subTabKey = subtab.dataset.subtab;
+        const filter = subtab.dataset.filter;
+
+        if (filter) {
+          this._handleFilterChange(filter);
+        } else if (mainTab && subTabKey) {
+          this._handleSubTabClick(mainTab, subTabKey);
+        }
+      });
+    });
+
+    // Content item clicks
+    container.querySelectorAll('.super-content__item').forEach(item => {
+      item.addEventListener('click', () => {
+        const type = item.dataset.type;
+        const subTab = item.dataset.subtab;
         const queryId = item.dataset.queryId;
         const assessmentId = item.dataset.assessmentId;
         const patientId = item.dataset.patientId;
 
-        this._handleCardItemClick(cardKey, { queryId, assessmentId, patientId });
-      });
-    });
-
-    // Filter buttons
-    container.querySelectorAll('.super-facility-filter__btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const filter = btn.dataset.filter;
-        if (filter) {
-          this._handleFilterChange(filter);
-        }
-      });
-    });
-
-    // Assessment row clicks
-    const assessmentRows = container.querySelectorAll('.super-facility-assessment');
-    console.log('Setting up assessment row listeners, found:', assessmentRows.length);
-    assessmentRows.forEach(row => {
-      row.addEventListener('click', () => {
-        console.log('Assessment row clicked');
-        const assessmentId = row.dataset.assessmentId;
-        const patientId = row.dataset.patientId;
-        console.log('Row data:', { assessmentId, patientId });
-        if (assessmentId) {
-          this._handleAssessmentClick(assessmentId, patientId);
-        }
+        this._handleItemClick(type, { subTab, queryId, assessmentId, patientId });
       });
     });
   },
@@ -414,84 +538,31 @@ const FacilityDashboardView = {
   },
 
   /**
-   * Handle card toggle (expand/collapse)
-   * @param {string} cardKey
+   * Handle main tab click
+   * @param {string} tabKey
    */
-  _handleCardToggle(cardKey) {
-    console.log('Card toggle clicked:', cardKey);
-    FacilityDashboardState.toggleExpandedCard(cardKey);
-    console.log('Expanded card is now:', FacilityDashboardState.expandedCard);
-    // Re-render to show expanded state - call render directly to avoid async issues
-    const container = document.getElementById('super-menu-content');
-    if (container) {
-      container.innerHTML = this.render();
-      this.setupListeners(container);
-    }
+  _handleTabClick(tabKey) {
+    FacilityDashboardState.setTab(tabKey);
+    this._rerender();
   },
 
   /**
-   * Handle card item click
-   * @param {string} cardKey
-   * @param {Object} data - { queryId, assessmentId, patientId }
+   * Handle sub-tab click
+   * @param {string} mainTab
+   * @param {string} subTabKey
    */
-  _handleCardItemClick(cardKey, data) {
-    switch (cardKey) {
-      case 'queriesToSend':
-        // Navigate to PCC patient page
-        // Note: queriesToSend items may not have patientId from API
-        // Fall back to showing query detail modal if no patientId
-        if (data.patientId) {
-          this._navigateToPatient(data.patientId);
-        } else if (data.queryId && window.QueryDetailModal) {
-          // Show query detail as fallback
-          const card = FacilityDashboardState.getCard('queriesToSend');
-          const query = card.items?.find(q => q.id === data.queryId);
-          if (query) {
-            const result = {
-              recommendation: query.aiGeneratedNote || query.nurseEditedNote || '',
-              icd10Code: query.selectedIcd10Code,
-              icd10Description: query.selectedIcd10Description
-            };
-            window.QueryDetailModal.show(query, result);
-          }
-        }
-        break;
-
-      case 'awaitingSignatures':
-        // Show query detail modal
-        if (data.queryId && window.QueryDetailModal) {
-          // Find query in card items
-          const card = FacilityDashboardState.getCard('awaitingSignatures');
-          const query = card.items?.find(q => q.id === data.queryId);
-          if (query) {
-            const result = {
-              recommendation: query.aiGeneratedNote || query.nurseEditedNote || '',
-              icd10Code: query.selectedIcd10Code,
-              icd10Description: query.selectedIcd10Description
-            };
-            window.QueryDetailModal.show(query, result);
-          }
-        }
-        break;
-
-      case 'hippsOpportunities':
-      case 'complianceRisks':
-        // Navigate to PCC MDS page
-        if (data.assessmentId) {
-          this._navigateToMDS(data.assessmentId);
-        }
-        break;
-    }
+  _handleSubTabClick(mainTab, subTabKey) {
+    FacilityDashboardState.setSubTab(mainTab, subTabKey);
+    this._rerender();
   },
 
   /**
-   * Handle filter change
+   * Handle filter change (for "All" tab)
    * @param {string} filter
    */
   async _handleFilterChange(filter) {
     if (FacilityDashboardState.filter === filter) return;
 
-    // Show loading state
     const container = document.getElementById('super-menu-content');
     if (container) {
       container.innerHTML = this._renderLoading();
@@ -499,25 +570,95 @@ const FacilityDashboardView = {
 
     await FacilityDashboardState.setFilter(filter);
 
-    // Re-render
     if (window.SuperMenu) {
       window.SuperMenu.renderFacilityDashboard();
     }
   },
 
   /**
-   * Handle assessment row click - drill down to MDS detail in panel
+   * Handle content item click
+   * @param {string} type - query | mds | assessment
+   * @param {Object} data
+   */
+  _handleItemClick(type, data) {
+    switch (type) {
+      case 'query':
+        this._handleQueryClick(data);
+        break;
+      case 'mds':
+        this._handleMDSClick(data);
+        break;
+      case 'assessment':
+        this._handleAssessmentClick(data.assessmentId, data.patientId);
+        break;
+    }
+  },
+
+  /**
+   * Handle query item click
+   * @param {Object} data
+   */
+  async _handleQueryClick(data) {
+    const { subTab, queryId, patientId, assessmentId } = data;
+
+    // For to-send queries, navigate to patient page
+    if (subTab === 'toSend' && patientId) {
+      this._navigateToPatient(patientId);
+      return;
+    }
+
+    // For all other queries (awaiting and signed), show the query modal
+    if (queryId && window.QueryDetailModal) {
+      const cardKeyMap = {
+        toSend: 'queriesToSend',
+        awaiting: 'awaitingSignatures',
+        signed: 'recentlySigned'
+      };
+      const cardKey = cardKeyMap[subTab];
+      const card = FacilityDashboardState.getCard(cardKey);
+      let query = card.items?.find(q => q.id === queryId);
+
+      // If query data is incomplete (e.g., from recentlySigned), fetch full details
+      if (query && (!query.facilityName || !query.status)) {
+        try {
+          const fullQuery = await window.QueryAPI.getQuery(queryId);
+          query = { ...query, ...fullQuery };
+        } catch (err) {
+          console.warn('Failed to fetch full query details:', err);
+        }
+      }
+
+      if (query) {
+        const result = {
+          recommendation: query.aiGeneratedNote || query.nurseEditedNote || '',
+          icd10Code: query.selectedIcd10Code,
+          icd10Description: query.selectedIcd10Description
+        };
+        window.QueryDetailModal.show(query, result, { fromDashboard: true });
+      }
+    }
+  },
+
+  /**
+   * Handle MDS item click
+   * @param {Object} data
+   */
+  _handleMDSClick(data) {
+    if (data.assessmentId) {
+      this._handleAssessmentClick(data.assessmentId, data.patientId);
+    }
+  },
+
+  /**
+   * Handle assessment click - drill down to MDS detail
    * @param {string} assessmentId
    * @param {string} patientId
    */
   _handleAssessmentClick(assessmentId, patientId) {
     console.log('Assessment clicked:', { assessmentId, patientId });
 
-    // Get assessment data for patient name
     const assessment = FacilityDashboardState.getAssessmentById(assessmentId);
-    console.log('Found assessment:', assessment);
 
-    // Set up MDS view context for drill-down
     if (typeof MDSViewState !== 'undefined') {
       MDSViewState.manualContext = {
         scope: 'mds',
@@ -528,20 +669,12 @@ const FacilityDashboardView = {
       MDSViewState.context = MDSViewState.manualContext;
       MDSViewState.data = null;
       MDSViewState.cameFromDashboard = true;
-      console.log('Set MDSViewState:', MDSViewState.manualContext);
-    } else {
-      console.error('MDSViewState is not defined!');
     }
 
-    // Switch to MDS view
     if (typeof switchView === 'function') {
-      console.log('Calling switchView("mds")');
       switchView('mds');
     } else if (window.SuperMenu?.switchView) {
-      console.log('Calling window.SuperMenu.switchView("mds")');
       window.SuperMenu.switchView('mds');
-    } else {
-      console.error('switchView function not available!');
     }
   },
 
@@ -554,23 +687,20 @@ const FacilityDashboardView = {
 
     const currentUrl = new URL(window.location.href);
     const origin = currentUrl.origin;
-    const patientUrl = `${origin}/admin/patient.xhtml?ESOLclientid=${patientId}`;
+    const patientUrl = `${origin}/admin/client/cp_residentdashboard.jsp?ESOLrow=1&ESOLclientid=${patientId}`;
 
     window.location.href = patientUrl;
   },
 
   /**
-   * Navigate to PCC MDS section page
-   * @param {string} assessmentId - External assessment ID
+   * Re-render the dashboard
    */
-  _navigateToMDS(assessmentId) {
-    if (!assessmentId) return;
-
-    const currentUrl = new URL(window.location.href);
-    const origin = currentUrl.origin;
-    const mdsUrl = `${origin}/clinical/mds3/sectionlisting.xhtml?ESOLassessid=${assessmentId}`;
-
-    window.location.href = mdsUrl;
+  _rerender() {
+    const container = document.getElementById('super-menu-content');
+    if (container) {
+      container.innerHTML = this.render();
+      this.setupListeners(container);
+    }
   }
 };
 

@@ -9,6 +9,13 @@ const FacilityDashboardState = {
   filter: 'needs_attention',     // 'needs_attention' | 'all'
   expandedCard: null,            // Which card is expanded (null = none)
 
+  // Tab navigation state
+  selectedTab: 'queries',        // 'queries' | 'mds' | 'all'
+  selectedSubTab: {
+    queries: 'toSend',           // 'toSend' | 'awaiting' | 'signed'
+    mds: 'hipps'                 // 'hipps' | 'compliance'
+  },
+
   // Cache duration in milliseconds (5 minutes)
   CACHE_DURATION: 5 * 60 * 1000,
 
@@ -62,11 +69,16 @@ const FacilityDashboardState = {
         cards: responseData.cards || {
           queriesToSend: { count: 0, items: [] },
           awaitingSignatures: { count: 0, items: [] },
+          recentlySigned: { count: 0, items: [] },
           hippsOpportunities: { count: 0, items: [] },
           complianceRisks: { count: 0, items: [] }
         },
         openAssessments: responseData.openAssessments || []
       };
+      // Ensure recentlySigned exists even if API doesn't return it yet
+      if (!this.data.cards.recentlySigned) {
+        this.data.cards.recentlySigned = { count: 0, items: [] };
+      }
       this.lastFetched = Date.now();
       this.error = null;
 
@@ -118,6 +130,48 @@ const FacilityDashboardState = {
       this.expandedCard = null;
     } else {
       this.expandedCard = cardKey;
+    }
+  },
+
+  /**
+   * Set active main tab
+   * @param {string} tab - 'queries' | 'mds' | 'all'
+   */
+  setTab(tab) {
+    this.selectedTab = tab;
+  },
+
+  /**
+   * Set active sub-tab for a main tab
+   * @param {string} mainTab - 'queries' | 'mds'
+   * @param {string} subTab - Sub-tab key
+   */
+  setSubTab(mainTab, subTab) {
+    if (this.selectedSubTab[mainTab] !== undefined) {
+      this.selectedSubTab[mainTab] = subTab;
+    }
+  },
+
+  /**
+   * Get count for a main tab
+   * @param {string} tab - 'queries' | 'mds' | 'all'
+   * @returns {number}
+   */
+  getTabCount(tab) {
+    if (!this.data) return 0;
+
+    switch (tab) {
+      case 'queries':
+        return (this.data.cards?.queriesToSend?.count || 0) +
+               (this.data.cards?.awaitingSignatures?.count || 0) +
+               (this.data.cards?.recentlySigned?.count || 0);
+      case 'mds':
+        return (this.data.cards?.hippsOpportunities?.count || 0) +
+               (this.data.cards?.complianceRisks?.count || 0);
+      case 'all':
+        return this.data.openAssessments?.length || 0;
+      default:
+        return 0;
     }
   },
 
@@ -183,6 +237,11 @@ const FacilityDashboardState = {
     this.lastFetched = null;
     this.filter = 'needs_attention';
     this.expandedCard = null;
+    this.selectedTab = 'queries';
+    this.selectedSubTab = {
+      queries: 'toSend',
+      mds: 'hipps'
+    };
   }
 };
 

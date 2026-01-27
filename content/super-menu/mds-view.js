@@ -269,7 +269,7 @@ function renderMDSContent(data, context) {
         };
         MDSViewState.manualContext = {
           scope: 'mds',
-          assessmentId: latestOpen.id || latestOpen.externalAssessmentId,
+          assessmentId: latestOpen.externalAssessmentId || latestOpen.id,
           patientId: context.patientId,
           patientName: data.patientName
         };
@@ -330,10 +330,11 @@ function renderMDSBreadcrumb(data, context) {
   }
 
   if (context.scope === 'mds') {
-    const patientId = context.patientId || data?.assessment?.patientId;
+    // Prefer external IDs from API data over context (context might have internal IDs)
+    const patientId = data?.assessment?.externalPatientId || data?.assessment?.patientId || context.patientId;
     const patientName = data?.patientName || context.patientName || 'Patient';
     const mdsLabel = data?.assessment ? `${data.assessment.description || 'MDS'}` : 'MDS';
-    const assessmentId = context.assessmentId || data?.assessment?.externalAssessmentId;
+    const assessmentId = data?.assessment?.externalAssessmentId || context.assessmentId;
 
     // Determine back button destination
     let backButton;
@@ -626,21 +627,20 @@ function renderPendingQueriesCard(data) {
 }
 
 // ============================================================================
-// RECENT QUERIES CARD (Gray) - Uses data.signedQueries/completedQueries
+// RECENTLY SIGNED QUERIES CARD (Blue) - Uses data.recentlySigned from API
 // ============================================================================
 
 function renderRecentQueriesCard(data) {
-  // Check for signed/completed queries in various possible fields
-  const signedQueries = data.signedQueries || data.completedQueries || data.recentQueries || [];
+  // Primary source: recentlySigned from API (last 24h signed queries)
+  // Fallback to other fields for backwards compatibility
+  const recentlySigned = data.recentlySigned || data.signedQueries || data.completedQueries || data.recentQueries || [];
 
-  // Also check outstandingQueries for any that are signed (shouldn't be there but just in case)
-  const allQueries = [...signedQueries, ...(data.outstandingQueries || [])];
-
-  // Get completed/signed queries
-  const recentQueries = allQueries.filter(q =>
+  // Filter for signed status (in case array contains mixed statuses)
+  const recentQueries = recentlySigned.filter(q =>
     q.status === 'signed' ||
     q.status === 'completed' ||
-    q.status === 'resolved'
+    q.status === 'resolved' ||
+    q.signedAt // If it has signedAt, it's signed
   );
 
   if (recentQueries.length === 0) {
@@ -649,27 +649,40 @@ function renderRecentQueriesCard(data) {
 
   const items = recentQueries.map(q => {
     const signedDate = q.signedAt || q.completedAt;
+    const needsCoding = q.mdsItemCoded === false;
 
     return `
-      <div class="super-mds-query-item super-mds-query-item--signed" data-item="${q.mdsItem}" data-query-id="${q.id || ''}">
+      <div class="super-mds-query-item super-mds-query-item--signed ${needsCoding ? 'super-mds-query-item--needs-coding' : ''}"
+           data-item="${q.mdsItem}"
+           data-query-id="${q.id || ''}"
+           data-has-pdf="${q.pdfUrl ? 'true' : 'false'}">
         <span class="super-mds-query-item__code">${escapeHtml(q.mdsItem)}</span>
         <span class="super-mds-query-item__name">${escapeHtml(q.mdsItemName || '')}</span>
-        <span class="super-mds-query-item__status super-mds-query-item__status--signed">&#10003; signed</span>
-        ${signedDate ? `<span class="super-mds-query-item__date">${formatDate(signedDate)}</span>` : ''}
+        <div class="super-mds-query-item__badges">
+          <span class="super-mds-query-item__status super-mds-query-item__status--signed">&#10003; signed</span>
+          ${needsCoding ? '<span class="super-mds-query-item__badge super-mds-query-item__badge--coding">Needs Coding</span>' : ''}
+        </div>
+        ${signedDate ? `<span class="super-mds-query-item__date">${formatRelativeDate(signedDate)}</span>` : ''}
         <span class="super-mds-query-item__arrow">&#10095;</span>
       </div>
     `;
   }).join('');
 
+  // Count how many need coding
+  const needsCodingCount = recentQueries.filter(q => q.mdsItemCoded === false).length;
+  const badgeText = needsCodingCount > 0 ? `${needsCodingCount} need coding` : '';
+
   return `
-    <div class="super-mds-card super-mds-card--gray super-mds-card--collapsible super-mds-card--collapsed" data-section="recent-queries">
+    <div class="super-mds-card super-mds-card--blue super-mds-card--collapsible" data-section="recent-queries">
       <div class="super-mds-card__header super-mds-card__header--clickable">
         <span class="super-mds-card__toggle">&#9662;</span>
         <span class="super-mds-card__icon">&#10003;</span>
-        <span class="super-mds-card__title">Recent Queries (${recentQueries.length})</span>
+        <span class="super-mds-card__title">Recently Signed (${recentQueries.length})</span>
+        ${badgeText ? `<span class="super-mds-card__badge super-mds-card__badge--action">${badgeText}</span>` : ''}
       </div>
       <div class="super-mds-card__content">
         ${items}
+        <div class="super-mds-card__hint">Click to view query details and PDF</div>
       </div>
     </div>
   `;
@@ -766,7 +779,7 @@ function renderPatientMDSList(data) {
     const hasChange = a.potentialHipps && a.potentialHipps !== a.currentHipps;
 
     return `
-      <div class="super-patient-mds ${statusClass}" data-assessment-id="${a.id}">
+      <div class="super-patient-mds ${statusClass}" data-assessment-id="${a.externalAssessmentId || a.id}">
         <div class="super-patient-mds__main">
           <div class="super-patient-mds__type">${escapeHtml(a.type || 'MDS')}</div>
           <div class="super-patient-mds__meta">
@@ -822,7 +835,7 @@ function renderMDSList(assessments, scope) {
       : a.currentHipps || '';
 
     return `
-      <div class="super-mds-list-card" data-assessment-id="${a.id}">
+      <div class="super-mds-list-card" data-assessment-id="${a.externalAssessmentId || a.id}">
         <div class="super-mds-list-card__header">
           <span class="super-mds-list-card__patient">${escapeHtml(a.patientName || 'Unknown')}</span>
           <span class="super-mds-list-card__type">${escapeHtml(a.description || 'MDS')} (${formatDate(a.ardDate)})</span>
@@ -993,7 +1006,7 @@ function setupMDSListeners(container) {
       const origin = currentUrl.origin;
 
       if (action === 'open-patient' && patientId) {
-        window.location.href = `${origin}/admin/patient.xhtml?ESOLclientid=${patientId}`;
+        window.location.href = `${origin}/admin/client/cp_residentdashboard.jsp?ESOLrow=1&ESOLclientid=${patientId}`;
       } else if (action === 'open-mds' && assessmentId) {
         window.location.href = `${origin}/clinical/mds3/sectionlisting.xhtml?ESOLassessid=${assessmentId}`;
       }
@@ -1170,17 +1183,64 @@ async function fetchMDSItem(itemCode) {
   return result.data || result;
 }
 
-function handleQueryClick(queryId, mdsItem) {
+async function handleQueryClick(queryId, mdsItem) {
   console.log('Query clicked:', queryId, mdsItem);
 
-  // Find the query in the data
+  // Find the query in the data - check all possible locations including recentlySigned
   const allQueries = [
     ...(MDSViewState.data?.outstandingQueries || []),
+    ...(MDSViewState.data?.recentlySigned || []),
     ...(MDSViewState.data?.signedQueries || []),
     ...(MDSViewState.data?.completedQueries || [])
   ];
 
-  const query = allQueries.find(q => q.id === queryId);
+  let query = allQueries.find(q => q.id === queryId);
+
+  // If query is missing key fields (like status or locationName), fetch full details
+  if (query && (!query.status || !query.locationName)) {
+    console.log('Super Menu: Query has incomplete data, fetching full details...');
+
+    // Show loading modal
+    if (window.SuperModal) {
+      SuperModal.show({
+        title: 'Loading Query...',
+        icon: '&#9201;',
+        content: `
+          <div class="super-modal__loading">
+            <div class="super-modal__spinner"></div>
+            <span>Loading query details...</span>
+          </div>
+        `,
+        actions: [],
+        size: 'small'
+      });
+    }
+
+    try {
+      // Fetch full query from API
+      if (window.QueryAPI?.getQuery) {
+        const fullQuery = await QueryAPI.getQuery(queryId);
+        // Merge with existing data (preserve mdsItemCoded from recentlySigned)
+        query = { ...query, ...fullQuery };
+        console.log('Super Menu: Fetched full query:', query);
+      }
+    } catch (error) {
+      console.error('Super Menu: Failed to fetch query details:', error);
+      if (window.SuperModal) {
+        SuperModal.close();
+      }
+      if (window.SuperToast) {
+        SuperToast.error('Failed to load query details');
+      }
+      return;
+    }
+
+    // Close loading modal
+    if (window.SuperModal) {
+      SuperModal.close(false);
+    }
+  }
+
   if (!query) {
     console.error('Super Menu: Query not found:', queryId);
     return;
@@ -1194,7 +1254,16 @@ function handleQueryClick(queryId, mdsItem) {
       icd10Code: query.selectedIcd10Code || query.recommendedIcd10?.[0]?.code,
       icd10Description: query.selectedIcd10Description || query.recommendedIcd10?.[0]?.description
     };
-    window.QueryDetailModal.show(query, result);
+
+    // Pass additional context for signed queries
+    const options = {
+      showPdfButton: !!query.pdfUrl || query.status === 'signed',
+      pdfUrl: query.pdfUrl,
+      showCodingStatus: query.mdsItemCoded !== undefined,
+      mdsItemCoded: query.mdsItemCoded
+    };
+
+    window.QueryDetailModal.show(query, result, options);
   } else {
     console.warn('Super Menu: QueryDetailModal not available');
   }

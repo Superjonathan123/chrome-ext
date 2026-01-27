@@ -213,6 +213,26 @@ const QueryAPI = {
     }
 
     return response.data?.practitioners || [];
+  },
+
+  /**
+   * Fetch a single query by ID
+   * @param {string} queryId - Query UUID
+   * @returns {Promise<Object>} Full query object
+   */
+  async getQuery(queryId) {
+    const endpoint = `/api/extension/diagnosis-queries/${queryId}`;
+
+    const response = await chrome.runtime.sendMessage({
+      type: 'API_REQUEST',
+      endpoint
+    });
+
+    if (!response.success) {
+      throw new Error(response.error || 'Failed to fetch query');
+    }
+
+    return response.data?.query || response.data;
   }
 };
 
