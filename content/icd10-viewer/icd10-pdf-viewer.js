@@ -36,6 +36,14 @@ const ICD10PDFViewer = {
     console.log('[ICD10PDFViewer] Word blocks:', wordBlocks?.length, wordBlocks);
     console.log('[ICD10PDFViewer] Target page:', targetPage, 'Search text:', searchText?.substring(0, 50));
 
+    // In demo mode, show placeholder instead of trying to load PDF
+    const isDemo = window.location.hostname === 'localhost' || window.location.protocol === 'file:';
+    if (isDemo) {
+      console.log('[ICD10PDFViewer] Demo mode - showing placeholder');
+      this._renderDemoPlaceholder(document, targetPage);
+      return;
+    }
+
     if (!document || !document.signedUrl) {
       console.error('[ICD10PDFViewer] No document URL available');
       this._renderError('No document URL available');
@@ -61,8 +69,16 @@ const ICD10PDFViewer = {
     try {
       // Configure PDF.js worker
       if (typeof pdfjsLib !== 'undefined') {
-        const workerSrc = chrome.runtime.getURL('lib/pdf.worker.min.js');
-        pdfjsLib.GlobalWorkerOptions.workerSrc = workerSrc;
+        // Only set workerSrc if not already configured (e.g., via CDN in demo)
+        if (!pdfjsLib.GlobalWorkerOptions.workerSrc) {
+          // Check if running in Chrome extension context
+          if (typeof chrome !== 'undefined' && chrome.runtime && chrome.runtime.getURL) {
+            const workerSrc = chrome.runtime.getURL('lib/pdf.worker.min.js');
+            pdfjsLib.GlobalWorkerOptions.workerSrc = workerSrc;
+          } else {
+            console.warn('[ICD10PDFViewer] No Chrome runtime available, PDF worker should be set externally');
+          }
+        }
       } else {
         throw new Error('PDF.js library not loaded');
       }
@@ -95,6 +111,121 @@ const ICD10PDFViewer = {
       const page = targetPage || (wordBlocks.length > 0 ? wordBlocks[0].p : this.currentPage);
       await this._renderPage(page);
     }
+  },
+
+  /**
+   * Render demo placeholder with actual document content (for localhost/demo mode)
+   * @param {Object} document - Document info
+   * @param {number} page - Page number to show
+   */
+  _renderDemoPlaceholder(document, page = 1) {
+    if (!this.container) return;
+
+    const docId = document?.id;
+    const docContent = window.ICD10MockData?.documentContent?.[docId];
+    const docName = docContent?.title || document?.title || document?.name || 'Clinical Document';
+
+    // Get total pages
+    const totalPages = docContent?.pages?.length || document?.pageCount || 1;
+    const currentPage = Math.min(page, totalPages);
+
+    // Get page content
+    const pageData = docContent?.pages?.find(p => p.pageNum === currentPage) || docContent?.pages?.[0];
+
+    // Build content HTML
+    let contentHtml = '';
+    if (pageData?.content) {
+      contentHtml = pageData.content.map(line => {
+        if (!line.text) {
+          return '<div class="icd10-pdf-viewer__doc-line icd10-pdf-viewer__doc-line--spacer">&nbsp;</div>';
+        }
+
+        let className = 'icd10-pdf-viewer__doc-line';
+        if (line.style === 'title') className += ' icd10-pdf-viewer__doc-line--title';
+        if (line.style === 'section') className += ' icd10-pdf-viewer__doc-line--section';
+        if (line.style === 'bold') className += ' icd10-pdf-viewer__doc-line--bold';
+        if (line.highlight) className += ' icd10-pdf-viewer__doc-line--highlight';
+
+        return `<div class="${className}">${this._escapeHtml(line.text)}</div>`;
+      }).join('');
+    } else {
+      // Fallback to placeholder lines
+      contentHtml = `
+        <div class="icd10-pdf-viewer__demo-line icd10-pdf-viewer__demo-line--title"></div>
+        <div class="icd10-pdf-viewer__demo-line"></div>
+        <div class="icd10-pdf-viewer__demo-line"></div>
+        <div class="icd10-pdf-viewer__demo-spacer"></div>
+        <div class="icd10-pdf-viewer__demo-highlight">
+          <span>Relevant clinical evidence would be highlighted here</span>
+        </div>
+        <div class="icd10-pdf-viewer__demo-spacer"></div>
+        <div class="icd10-pdf-viewer__demo-line"></div>
+        <div class="icd10-pdf-viewer__demo-line icd10-pdf-viewer__demo-line--short"></div>
+      `;
+    }
+
+    this.container.innerHTML = `
+      <div class="icd10-pdf-viewer__demo-document">
+        <div class="icd10-pdf-viewer__demo-toolbar">
+          <div class="icd10-pdf-viewer__demo-nav">
+            <button class="icd10-pdf-viewer__demo-nav-btn" data-action="prev-page" ${currentPage <= 1 ? 'disabled' : ''}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="15 18 9 12 15 6"></polyline>
+              </svg>
+            </button>
+            <span class="icd10-pdf-viewer__demo-page-info">Page ${currentPage} of ${totalPages}</span>
+            <button class="icd10-pdf-viewer__demo-nav-btn" data-action="next-page" ${currentPage >= totalPages ? 'disabled' : ''}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="9 18 15 12 9 6"></polyline>
+              </svg>
+            </button>
+          </div>
+          <div class="icd10-pdf-viewer__demo-zoom">
+            <button class="icd10-pdf-viewer__demo-zoom-btn" data-action="zoom-out">−</button>
+            <span class="icd10-pdf-viewer__demo-zoom-level">100%</span>
+            <button class="icd10-pdf-viewer__demo-zoom-btn" data-action="zoom-in">+</button>
+          </div>
+        </div>
+        <div class="icd10-pdf-viewer__demo-paper-container">
+          <div class="icd10-pdf-viewer__demo-paper">
+            <div class="icd10-pdf-viewer__demo-paper-header">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+              </svg>
+              <span>${this._escapeHtml(docName)}</span>
+            </div>
+            <div class="icd10-pdf-viewer__demo-paper-content">
+              ${contentHtml}
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+
+    // Store current state for navigation
+    this._demoState = { document, currentPage, totalPages, docId };
+
+    // Attach navigation listeners
+    this._attachDemoNavListeners();
+  },
+
+  /**
+   * Attach event listeners for demo navigation
+   */
+  _attachDemoNavListeners() {
+    if (!this.container) return;
+
+    this.container.querySelectorAll('[data-action]').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const action = btn.dataset.action;
+        if (action === 'prev-page' && this._demoState?.currentPage > 1) {
+          this._renderDemoPlaceholder(this._demoState.document, this._demoState.currentPage - 1);
+        } else if (action === 'next-page' && this._demoState?.currentPage < this._demoState?.totalPages) {
+          this._renderDemoPlaceholder(this._demoState.document, this._demoState.currentPage + 1);
+        }
+      });
+    });
   },
 
   /**
@@ -134,23 +265,66 @@ const ICD10PDFViewer = {
   },
 
   /**
-   * Render error state
+   * Render error state (or demo placeholder)
    * @param {string} message - Error message
    */
   _renderError(message) {
     if (!this.container) return;
-    this.container.innerHTML = `
-      <div class="icd10-pdf-viewer__error">
-        <div class="icd10-pdf-viewer__error-icon">
-          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-            <circle cx="12" cy="12" r="10"></circle>
-            <line x1="12" y1="8" x2="12" y2="12"></line>
-            <line x1="12" y1="16" x2="12.01" y2="16"></line>
-          </svg>
+
+    // In demo/localhost mode, show a nice document placeholder instead of error
+    const isDemo = window.location.hostname === 'localhost' || window.location.protocol === 'file:';
+
+    if (isDemo) {
+      this.container.innerHTML = `
+        <div class="icd10-pdf-viewer__demo-placeholder">
+          <div class="icd10-pdf-viewer__demo-header">
+            <div class="icd10-pdf-viewer__demo-logo">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+              </svg>
+            </div>
+            <div class="icd10-pdf-viewer__demo-title">Clinical Document</div>
+            <div class="icd10-pdf-viewer__demo-badge">DEMO</div>
+          </div>
+          <div class="icd10-pdf-viewer__demo-content">
+            <div class="icd10-pdf-viewer__demo-line icd10-pdf-viewer__demo-line--title"></div>
+            <div class="icd10-pdf-viewer__demo-line"></div>
+            <div class="icd10-pdf-viewer__demo-line"></div>
+            <div class="icd10-pdf-viewer__demo-line icd10-pdf-viewer__demo-line--short"></div>
+            <div class="icd10-pdf-viewer__demo-spacer"></div>
+            <div class="icd10-pdf-viewer__demo-highlight">
+              <div class="icd10-pdf-viewer__demo-highlight-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+              </div>
+              <span>Relevant text would be highlighted here</span>
+            </div>
+            <div class="icd10-pdf-viewer__demo-spacer"></div>
+            <div class="icd10-pdf-viewer__demo-line"></div>
+            <div class="icd10-pdf-viewer__demo-line"></div>
+            <div class="icd10-pdf-viewer__demo-line icd10-pdf-viewer__demo-line--medium"></div>
+          </div>
+          <div class="icd10-pdf-viewer__demo-footer">
+            <span>Document preview unavailable in demo mode</span>
+          </div>
         </div>
-        <p class="icd10-pdf-viewer__error-text">${this._escapeHtml(message)}</p>
-      </div>
-    `;
+      `;
+    } else {
+      this.container.innerHTML = `
+        <div class="icd10-pdf-viewer__error">
+          <div class="icd10-pdf-viewer__error-icon">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="8" x2="12" y2="12"></line>
+              <line x1="12" y1="16" x2="12.01" y2="16"></line>
+            </svg>
+          </div>
+          <p class="icd10-pdf-viewer__error-text">${this._escapeHtml(message)}</p>
+        </div>
+      `;
+    }
   },
 
   /**

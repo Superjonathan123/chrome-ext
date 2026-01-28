@@ -7,9 +7,9 @@ const ICD10MockData = {
   // Sample patient info
   patient: {
     id: 'patient-123',
-    name: 'Smith, John',
-    mrn: '12345678',
-    dob: '1945-03-15'
+    name: 'Doe, Jane',
+    mrn: '00000000',
+    dob: '1945-01-01'
   },
 
   // Sample approved diagnoses (already coded in PCC)
@@ -222,6 +222,245 @@ const ICD10MockData = {
       ]
     }
   ],
+
+  // Fake document content for demo mode (with highlighted text)
+  documentContent: {
+    'doc-001': {
+      title: 'Speech-Language Pathology Evaluation',
+      pages: [
+        {
+          pageNum: 1,
+          content: [
+            { text: 'SPEECH-LANGUAGE PATHOLOGY EVALUATION', style: 'title' },
+            { text: '' },
+            { text: 'Patient: Doe, Jane', style: 'bold' },
+            { text: 'DOB: 01/01/1945   MRN: 00000000' },
+            { text: 'Date of Service: 01/20/2025' },
+            { text: 'Therapist: Demo Therapist, MS, CCC-SLP' },
+            { text: '' },
+            { text: 'REASON FOR REFERRAL:', style: 'section' },
+            { text: 'Patient referred for speech-language evaluation following acute CVA on 12/15/2024.' },
+            { text: '' },
+            { text: 'MEDICAL HISTORY:', style: 'section' },
+            { text: 'HTN, Type 2 DM, hyperlipidemia, CVA (12/15/2024)' },
+          ]
+        },
+        {
+          pageNum: 2,
+          content: [
+            { text: 'SPEECH-LANGUAGE ASSESSMENT', style: 'title' },
+            { text: '' },
+            { text: 'ORAL-MOTOR EXAMINATION:', style: 'section' },
+            { text: 'Facial symmetry: Mild left-sided weakness noted at rest' },
+            { text: 'Lip closure: Adequate for speech, reduced strength' },
+            { text: 'Tongue ROM: WFL, mild weakness on lateral protrusion' },
+            { text: '' },
+            { text: 'LANGUAGE ASSESSMENT:', style: 'section' },
+            { text: 'Patient demonstrates significant word-finding difficulties and reduced verbal fluency consistent with expressive aphasia following stroke on 12/15/2024.', highlight: true },
+            { text: '' },
+            { text: 'Auditory comprehension: Intact for simple commands, breaks down with complex multi-step instructions' },
+            { text: 'Verbal expression: Limited to 2-3 word phrases with significant pauses' },
+            { text: 'Repetition: Impaired for sentences > 4 words' },
+          ]
+        },
+        {
+          pageNum: 3,
+          content: [
+            { text: 'SPEECH ASSESSMENT (continued)', style: 'title' },
+            { text: '' },
+            { text: 'MOTOR SPEECH:', style: 'section' },
+            { text: 'Speech characterized by imprecise consonants, monopitch, and reduced loudness. Consistent with hypokinetic dysarthria secondary to CVA.', highlight: true },
+            { text: '' },
+            { text: 'Articulation: Mild imprecision, intelligibility 85% in known context' },
+            { text: 'Rate: Reduced, approximately 100 wpm' },
+            { text: 'Prosody: Flat affect, limited pitch variation' },
+          ]
+        },
+        {
+          pageNum: 4,
+          content: [
+            { text: 'SWALLOWING EVALUATION', style: 'title' },
+            { text: '' },
+            { text: 'CLINICAL SWALLOW EVALUATION:', style: 'section' },
+            { text: 'Patient failed bedside swallow evaluation. Demonstrates delayed oral transit time and reduced laryngeal elevation. NPO recommended pending MBSS.', highlight: true },
+            { text: '' },
+            { text: 'Thin liquids: Coughing noted, delayed swallow initiation' },
+            { text: 'Nectar thick: Mild throat clear, improved swallow' },
+            { text: 'Pudding: No overt signs/symptoms of aspiration' },
+            { text: '' },
+            { text: 'RECOMMENDATION: Modified barium swallow study (MBSS) recommended' },
+          ]
+        },
+        {
+          pageNum: 5,
+          content: [
+            { text: 'TREATMENT PLAN', style: 'title' },
+            { text: '' },
+            { text: 'GOALS:', style: 'section' },
+            { text: '1. Patient will follow 2-step commands with 90% accuracy' },
+            { text: '2. Patient will produce 5-word sentences with minimal cueing' },
+            { text: '3. Patient will safely swallow modified diet per MBSS results' },
+            { text: '' },
+            { text: 'FREQUENCY: 5x/week for 4 weeks, then reassess' },
+            { text: '' },
+            { text: '_________________________________' },
+            { text: 'Demo Therapist, MS, CCC-SLP' },
+            { text: 'Date: 01/20/2025' },
+          ]
+        }
+      ]
+    },
+    'doc-002': {
+      title: 'Physical Therapy Progress Note',
+      pages: [
+        {
+          pageNum: 1,
+          content: [
+            { text: 'PHYSICAL THERAPY PROGRESS NOTE', style: 'title' },
+            { text: '' },
+            { text: 'Patient: Doe, Jane', style: 'bold' },
+            { text: 'Date of Service: 01/18/2025' },
+            { text: 'Therapist: Demo PT, PT, DPT' },
+            { text: '' },
+            { text: 'DIAGNOSIS: CVA with left hemiparesis' },
+            { text: '' },
+            { text: 'SUBJECTIVE:', style: 'section' },
+            { text: 'Patient reports feeling weak on left side. Motivated for therapy.' },
+            { text: '' },
+            { text: 'OBJECTIVE:', style: 'section' },
+            { text: 'Left-sided weakness noted with 3/5 strength in upper extremity and 2/5 in lower extremity. Patient requires max assist for transfers.', highlight: true },
+            { text: '' },
+            { text: 'MMT - Left UE: Shoulder 3/5, Elbow 3/5, Wrist 2+/5' },
+            { text: 'MMT - Left LE: Hip 2/5, Knee 2/5, Ankle 2/5' },
+            { text: '' },
+            { text: 'PLAN: Continue PT 5x/week. Focus on weight bearing and transfer training.' },
+          ]
+        }
+      ]
+    },
+    'doc-003': {
+      title: 'MD Progress Note',
+      pages: [
+        {
+          pageNum: 1,
+          content: [
+            { text: 'PHYSICIAN PROGRESS NOTE', style: 'title' },
+            { text: '' },
+            { text: 'Patient: Doe, Jane', style: 'bold' },
+            { text: 'Date: 01/22/2025' },
+            { text: 'Provider: Dr. Demo Provider, MD' },
+            { text: '' },
+            { text: 'CC: Follow-up post-CVA, pain management' },
+            { text: '' },
+            { text: 'HPI:', style: 'section' },
+            { text: 'Patient is 79 y/o male s/p CVA on 12/15/2024 currently in SNF for rehabilitation.' },
+            { text: '' },
+            { text: 'Patient reports chronic low back pain, worse with activity. Pain level 6/10. Taking Tylenol PRN with partial relief.', highlight: true },
+          ]
+        },
+        {
+          pageNum: 2,
+          content: [
+            { text: 'PHYSICIAN PROGRESS NOTE (continued)', style: 'title' },
+            { text: '' },
+            { text: 'MEDICATIONS:', style: 'section' },
+            { text: 'Aspirin 81mg daily, Atorvastatin 40mg daily, Lisinopril 10mg daily' },
+            { text: 'Metformin 500mg BID, Omeprazole 20mg daily' },
+            { text: '' },
+            { text: 'GI:', style: 'section' },
+            { text: 'Taking omeprazole 20mg daily for GERD. Reports occasional heartburn controlled with medication.', highlight: true },
+          ]
+        },
+        {
+          pageNum: 3,
+          content: [
+            { text: 'COGNITIVE ASSESSMENT', style: 'title' },
+            { text: '' },
+            { text: 'MENTAL STATUS:', style: 'section' },
+            { text: 'Documented progressive cognitive decline with impaired short-term memory, disorientation to time and place, consistent with dementia. Family reports diagnosis of Alzheimers.', highlight: true },
+            { text: '' },
+            { text: 'A&O x 2 (person, place). BIMS score: 8/15' },
+            { text: 'Long-term memory: Intact for remote events' },
+            { text: 'Short-term memory: Impaired, cannot recall 3 objects after 5 minutes' },
+          ]
+        }
+      ]
+    },
+    'doc-006': {
+      title: 'Laboratory Results',
+      pages: [
+        {
+          pageNum: 1,
+          content: [
+            { text: 'LABORATORY RESULTS', style: 'title' },
+            { text: '' },
+            { text: 'Patient: Doe, Jane', style: 'bold' },
+            { text: 'Date Collected: 01/18/2025' },
+            { text: 'Ordering Physician: Dr. Demo Provider' },
+            { text: '' },
+            { text: 'RENAL PANEL:', style: 'section' },
+            { text: 'Labs from 1/18: GFR 42, Creatinine 1.8. Patient has known CKD Stage 3.', highlight: true },
+            { text: '' },
+            { text: 'BUN: 28 mg/dL (H)    [7-20]' },
+            { text: 'Creatinine: 1.8 mg/dL (H)    [0.7-1.3]' },
+            { text: 'eGFR: 42 mL/min/1.73m² (L)    [>60]' },
+            { text: '' },
+            { text: 'LIPID PANEL:', style: 'section' },
+            { text: 'Lipid panel: Total cholesterol 245, LDL 165, HDL 38, Triglycerides 210. Continue statin therapy.', highlight: true },
+            { text: '' },
+            { text: 'Total Cholesterol: 245 mg/dL (H)    [<200]' },
+            { text: 'LDL: 165 mg/dL (H)    [<100]' },
+            { text: 'HDL: 38 mg/dL (L)    [>40]' },
+            { text: 'Triglycerides: 210 mg/dL (H)    [<150]' },
+          ]
+        }
+      ]
+    },
+    'doc-007': {
+      title: 'History & Physical - Admission',
+      pages: [
+        {
+          pageNum: 1,
+          content: [
+            { text: 'HISTORY AND PHYSICAL', style: 'title' },
+            { text: '' },
+            { text: 'Patient: Doe, Jane', style: 'bold' },
+            { text: 'Admission Date: 01/10/2025' },
+            { text: 'Attending: Dr. Demo Provider, MD' },
+            { text: '' },
+            { text: 'CHIEF COMPLAINT:', style: 'section' },
+            { text: 'Transfer from acute care for SNF rehabilitation following CVA' },
+          ]
+        },
+        {
+          pageNum: 2,
+          content: [
+            { text: 'PAST MEDICAL HISTORY', style: 'title' },
+            { text: '' },
+            { text: 'PMH includes: HTN, DM2, COPD, h/o peptic ulcer disease (2018)', highlight: true },
+            { text: '' },
+            { text: '- Hypertension x 20 years, controlled' },
+            { text: '- Type 2 Diabetes x 15 years, on oral agents' },
+            { text: '- COPD, uses home O2 PRN' },
+            { text: '- Peptic ulcer disease, resolved 2018' },
+            { text: '- CVA 12/15/2024' },
+          ]
+        },
+        {
+          pageNum: 3,
+          content: [
+            { text: 'SLEEP/RESPIRATORY', style: 'title' },
+            { text: '' },
+            { text: 'Patient uses CPAP nightly for diagnosed OSA. Compliance per family is good.', highlight: true },
+            { text: '' },
+            { text: 'Settings: CPAP 10 cm H2O' },
+            { text: 'Mask: Full face' },
+            { text: 'Usage: 7+ hours/night per family report' },
+          ]
+        }
+      ]
+    }
+  },
 
   // Sample documents with presigned URLs
   documents: {

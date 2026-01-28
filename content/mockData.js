@@ -3010,7 +3010,7 @@ const MOCK_MDS_DATA = {
             {
               sourceType: "mar",
               sourceId: "mar-iv-001",
-              quote: "Vancomycin 1g IV administered at 08:00 on 08/07/2025 by RN Smith"
+              quote: "Vancomycin 1g IV administered at 08:00 on 08/07/2025 by RN Demo"
             }
           ],
           firstAdministered: "08/07/25",

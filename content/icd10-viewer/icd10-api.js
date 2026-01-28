@@ -251,6 +251,7 @@ const ICD10API = {
     // or if there's a flag set
     return typeof ICD10MockData !== 'undefined' &&
            (window.location.hostname === 'localhost' ||
+            window.location.protocol === 'file:' ||
             window.ICD10_USE_MOCK_DATA === true);
   },
 

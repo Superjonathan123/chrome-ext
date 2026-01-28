@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PointClickCare - Medical Diagnosis</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>P</text></svg>">
+  <style>
+    /* ============================================
+       PCC Base Styles - Exact Match
+       ============================================ */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 12px;
+      color: #333;
+      background: #fff;
+      line-height: 1.4;
+    }
+
+    a {
+      color: #0066cc;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    /* ============================================
+       PCC Header
+       ============================================ */
+    .pcc-header {
+      background: #f5f5f5;
+      border-bottom: 1px solid #ccc;
+      padding: 8px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .pcc-logo {
+      font-family: Arial, sans-serif;
+      font-size: 18px;
+      font-weight: bold;
+      color: #333;
+      font-style: italic;
+    }
+
+    .pcc-header-center {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .pcc-facility {
+      font-size: 14px;
+      font-weight: bold;
+      color: #333;
+    }
+
+    .pcc-alert-dot {
+      width: 10px;
+      height: 10px;
+      background: #dc3545;
+      border-radius: 50%;
+    }
+
+    .pcc-header-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .pcc-user-btn {
+      background: #333;
+      color: white;
+      border: none;
+      border-radius: 20px;
+      padding: 6px 16px;
+      font-size: 12px;
+      cursor: pointer;
+    }
+
+    /* ============================================
+       PCC Navigation
+       ============================================ */
+    .pcc-nav {
+      background: #e8e8e8;
+      border-bottom: 1px solid #ccc;
+      padding: 0 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .pcc-nav-menu {
+      display: flex;
+      align-items: center;
+      gap: 0;
+    }
+
+    .pcc-nav-item {
+      padding: 8px 16px;
+      font-size: 13px;
+      color: #333;
+      cursor: pointer;
+      border: none;
+      background: transparent;
+    }
+
+    .pcc-nav-item:hover {
+      background: #d8d8d8;
+    }
+
+    .pcc-nav-item--active {
+      background: #69923a;
+      color: white;
+    }
+
+    .pcc-nav-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .pcc-search-input {
+      padding: 4px 8px;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+      font-size: 12px;
+      width: 200px;
+    }
+
+    .pcc-search-btn {
+      padding: 4px 12px;
+      background: #f0f0f0;
+      border: 1px solid #999;
+      border-radius: 3px;
+      font-size: 12px;
+      cursor: pointer;
+    }
+
+    /* ============================================
+       Patient Banner
+       ============================================ */
+    .pcc-patient-banner {
+      display: flex;
+      align-items: flex-start;
+      padding: 10px 16px;
+      background: #fff;
+      border-bottom: 2px solid #999;
+    }
+
+    .pcc-patient-photo {
+      width: 80px;
+      height: 100px;
+      background: #ddd;
+      border: 1px solid #999;
+      margin-right: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #999;
+      font-size: 40px;
+    }
+
+    .pcc-patient-info {
+      flex: 1;
+    }
+
+    .pcc-patient-header {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      margin-bottom: 8px;
+    }
+
+    .pcc-patient-name {
+      font-size: 16px;
+      font-weight: bold;
+    }
+
+    .pcc-patient-nav {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+    }
+
+    .pcc-patient-details {
+      display: flex;
+      gap: 40px;
+    }
+
+    .pcc-detail-col {
+      font-size: 11px;
+      line-height: 1.6;
+    }
+
+    .pcc-vitals-section {
+      background: #f9f9f9;
+      border: 1px solid #ddd;
+      padding: 8px;
+      margin-left: 20px;
+    }
+
+    .pcc-vitals-title {
+      font-weight: bold;
+      font-size: 11px;
+      margin-bottom: 4px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .pcc-vitals-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 4px 12px;
+      font-size: 10px;
+    }
+
+    .pcc-vital-item {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .pcc-vital-value {
+      font-weight: bold;
+    }
+
+    .pcc-vital-value--alert {
+      color: #dc3545;
+    }
+
+    .pcc-vital-date {
+      color: #666;
+      font-size: 9px;
+    }
+
+    /* ============================================
+       Allergy/Code Status Bar
+       ============================================ */
+    .pcc-status-bar {
+      display: flex;
+      padding: 6px 16px;
+      background: #f5f5f5;
+      border-bottom: 1px solid #ddd;
+      font-size: 11px;
+      gap: 40px;
+    }
+
+    .pcc-status-item {
+      display: flex;
+      gap: 4px;
+    }
+
+    .pcc-status-label {
+      font-weight: bold;
+    }
+
+    /* ============================================
+       Patient Tab Nav
+       ============================================ */
+    .pcc-patient-tabs {
+      display: flex;
+      background: #69923a;
+      padding: 0 16px;
+      gap: 0;
+    }
+
+    .pcc-patient-tab {
+      padding: 8px 14px;
+      color: white;
+      font-size: 12px;
+      cursor: pointer;
+      border: none;
+      background: transparent;
+    }
+
+    .pcc-patient-tab:hover {
+      background: rgba(255,255,255,0.1);
+    }
+
+    .pcc-patient-tab--active {
+      background: rgba(255,255,255,0.2);
+      font-weight: bold;
+    }
+
+    /* ============================================
+       Page Content
+       ============================================ */
+    .pcc-page-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 16px;
+      background: #f0f0f0;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .pcc-page-title {
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    .pcc-page-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .pcc-btn {
+      padding: 6px 12px;
+      font-size: 12px;
+      border: 1px solid #999;
+      border-radius: 3px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .pcc-btn--primary {
+      background: #69923a;
+      color: white;
+      border-color: #69923a;
+    }
+
+    .pcc-btn--secondary {
+      background: #fff;
+      color: #333;
+    }
+
+    /* ============================================
+       Diagnosis Table
+       ============================================ */
+    .pcc-table-container {
+      padding: 16px;
+    }
+
+    .pcc-filter-bar {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 12px;
+      padding: 8px 12px;
+      background: #f9f9f9;
+      border: 1px solid #ddd;
+    }
+
+    .pcc-filter-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      cursor: pointer;
+    }
+
+    .pcc-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 11px;
+    }
+
+    .pcc-table th {
+      background: #e8e8e8;
+      border: 1px solid #ccc;
+      padding: 6px 8px;
+      text-align: left;
+      font-weight: bold;
+    }
+
+    .pcc-table td {
+      border: 1px solid #ddd;
+      padding: 6px 8px;
+      vertical-align: top;
+    }
+
+    .pcc-table tr:hover {
+      background: #f5f5f5;
+    }
+
+    .pcc-table .view-link {
+      color: #0066cc;
+      cursor: pointer;
+    }
+
+    .pcc-code-cell {
+      font-weight: bold;
+      white-space: nowrap;
+    }
+
+    .pcc-pdpm-badge {
+      background: #d4edda;
+      color: #155724;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-size: 10px;
+    }
+
+    /* ============================================
+       Notifications Section
+       ============================================ */
+    .pcc-section {
+      margin: 16px;
+      border: 1px solid #ddd;
+    }
+
+    .pcc-section-header {
+      background: #e8e8e8;
+      padding: 8px 12px;
+      font-weight: bold;
+      font-size: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .pcc-section-content {
+      padding: 12px;
+    }
+
+    /* ============================================
+       Footer
+       ============================================ */
+    .pcc-footer {
+      margin-top: 40px;
+      padding: 20px 16px;
+      background: #f5f5f5;
+      border-top: 1px solid #ddd;
+      display: flex;
+      justify-content: space-between;
+      font-size: 10px;
+      color: #666;
+    }
+
+    .pcc-footer-col {
+      line-height: 1.6;
+    }
+
+    /* Demo indicator */
+    .demo-indicator {
+      position: fixed;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #ff6b35;
+      color: white;
+      padding: 4px 16px;
+      font-size: 11px;
+      font-weight: bold;
+      border-radius: 0 0 6px 6px;
+      z-index: 10000;
+    }
+  </style>
+</head>
+<body>
+  <div class="demo-indicator">DEMO MODE - Super LTC</div>
+
+  <!-- PCC Header -->
+  <header class="pcc-header">
+    <div class="pcc-logo">PointClickCare</div>
+    <div class="pcc-header-center">
+      <span class="pcc-facility" id="facilityName">SUNNY MEADOWS DEMO FACILITY</span>
+      <span class="pcc-alert-dot"></span>
+    </div>
+    <div class="pcc-header-right">
+      <button class="pcc-user-btn">Demo User</button>
+    </div>
+  </header>
+
+  <!-- Main Navigation -->
+  <nav class="pcc-nav">
+    <div class="pcc-nav-menu">
+      <button class="pcc-nav-item">Home</button>
+      <button class="pcc-nav-item">Admin</button>
+      <button class="pcc-nav-item pcc-nav-item--active">Clinical</button>
+      <button class="pcc-nav-item">Reports</button>
+    </div>
+    <div class="pcc-nav-right">
+      <select style="padding: 4px; font-size: 11px; border: 1px solid #ccc; border-radius: 3px;">
+        <option>This Facility</option>
+      </select>
+      <input type="text" class="pcc-search-input" placeholder="Search resident, room #, ID #...">
+      <button class="pcc-search-btn">Search</button>
+    </div>
+  </nav>
+
+  <!-- Patient Banner -->
+  <div class="pcc-patient-banner">
+    <div class="pcc-patient-photo" id="patientPhoto">
+      <span>&#128100;</span>
+    </div>
+    <div class="pcc-patient-info">
+      <div class="pcc-patient-header">
+        <span class="pcc-patient-name" id="patientName">Doe, Jane (00001)</span>
+        <div class="pcc-patient-nav">
+          <span>4 of 91</span>
+          <button class="pcc-btn pcc-btn--secondary" style="padding: 2px 8px;">Prev</button>
+          <button class="pcc-btn pcc-btn--secondary" style="padding: 2px 8px;">Next</button>
+        </div>
+      </div>
+      <div class="pcc-patient-details">
+        <div class="pcc-detail-col">
+          <div><strong>Status:</strong> <span id="patientStatus">Current</span></div>
+          <div><strong>Location:</strong> <span id="patientLocation">Unit 3 308-B</span></div>
+          <div><strong>Gender:</strong> <span id="patientGender">Female</span></div>
+          <div><strong>DOB:</strong> <span id="patientDob">4/12/1953</span></div>
+          <div><strong>Age:</strong> <span id="patientAge">72</span></div>
+        </div>
+        <div class="pcc-detail-col">
+          <div><strong>Physician:</strong> <span id="patientPhysician">Dr. Demo Provider</span></div>
+          <div style="margin-top: 8px;">
+            <a href="#">Edit</a> &nbsp; <a href="#">Print</a>
+          </div>
+        </div>
+        <div class="pcc-vitals-section">
+          <div class="pcc-vitals-title">
+            <span>Current Vitals</span>
+            <span style="cursor:pointer;">&#9660;</span>
+          </div>
+          <div class="pcc-vitals-grid" id="vitalsGrid">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Allergy/Code Status -->
+  <div class="pcc-status-bar">
+    <div class="pcc-status-item">
+      <span class="pcc-status-label">Allergies:</span>
+      <span id="allergies">No Known Allergies</span>
+    </div>
+    <div class="pcc-status-item">
+      <span class="pcc-status-label">Code Status:</span>
+      <span>(<a href="#">Advance Directives</a>) <span id="codeStatus">DNR</span></span>
+    </div>
+  </div>
+
+  <!-- Patient Tabs -->
+  <div class="pcc-patient-tabs">
+    <button class="pcc-patient-tab" data-page="dashboard">Dash</button>
+    <button class="pcc-patient-tab" data-page="profile">Profile</button>
+    <button class="pcc-patient-tab" data-page="census">Census</button>
+    <button class="pcc-patient-tab pcc-patient-tab--active" data-page="meddiag">Med Diag</button>
+    <button class="pcc-patient-tab" data-page="problems">Problems</button>
+    <button class="pcc-patient-tab" data-page="allergy">Allergy</button>
+    <button class="pcc-patient-tab" data-page="immun">Immun</button>
+    <button class="pcc-patient-tab" data-page="orders">Orders</button>
+    <button class="pcc-patient-tab" data-page="vitals">Wts/Vitals</button>
+    <button class="pcc-patient-tab" data-page="results">Results</button>
+    <button class="pcc-patient-tab" data-page="mds">MDS</button>
+    <button class="pcc-patient-tab" data-page="evaluations">Evaluations</button>
+    <button class="pcc-patient-tab" data-page="prognote">Prog Note</button>
+    <button class="pcc-patient-tab" data-page="careplan">Care Plan</button>
+    <button class="pcc-patient-tab" data-page="tasks">Tasks</button>
+    <button class="pcc-patient-tab" data-page="misc">Misc</button>
+  </div>
+
+  <!-- Page Content Area -->
+  <div id="pageContent">
+    <!-- Medical Diagnosis Page (default) -->
+    <div class="pcc-page-header">
+      <span class="pcc-page-title">Medical Diagnosis</span>
+      <div class="pcc-page-actions">
+        <button class="pcc-btn pcc-btn--primary" id="aiCodePatientBtn">
+          <span style="font-size: 16px;">&#9881;</span>
+          AI Code Patient
+        </button>
+        <button class="pcc-btn pcc-btn--secondary">Reports &#9660;</button>
+      </div>
+    </div>
+
+    <div class="pcc-table-container">
+      <div class="pcc-filter-bar">
+        <span class="pcc-filter-item">
+          <span style="cursor:pointer;">&#9660;</span>
+          Display Filters
+        </span>
+        <span class="pcc-filter-item">
+          <span style="cursor:pointer;">&#9660;</span>
+          Additional Information
+        </span>
+      </div>
+
+      <table class="pcc-table" id="diagnosisTable">
+        <thead>
+          <tr>
+            <th style="width:50px;"></th>
+            <th>Code</th>
+            <th>Description</th>
+            <th>PDPM Comorbidities (NTA Points)</th>
+            <th>Clinical Category</th>
+            <th>Date</th>
+            <th>Rank</th>
+            <th>Classification</th>
+          </tr>
+        </thead>
+        <tbody id="diagnosisTableBody">
+          <!-- Populated by JS -->
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Notifications Section -->
+    <div class="pcc-section">
+      <div class="pcc-section-header">
+        <span>Notifications</span>
+        <label style="font-weight:normal;font-size:11px;">
+          <input type="checkbox"> Show Cleared Notifications
+        </label>
+      </div>
+      <div class="pcc-section-content">
+        <table class="pcc-table" style="width:100%;">
+          <thead>
+            <tr>
+              <th style="width:30px;"><input type="checkbox"></th>
+              <th>Notification Date</th>
+              <th>Effective Date</th>
+              <th>Description</th>
+              <th>Created By</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><input type="checkbox"></td>
+              <td>7/9/2020</td>
+              <td>6/12/2020</td>
+              <td>Diagnosis Sheet Completed - Review Required</td>
+              <td>pfriedman</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Diagnosis Sheets Section -->
+    <div class="pcc-section">
+      <div class="pcc-section-header">
+        <span>Diagnosis Sheets</span>
+      </div>
+      <div class="pcc-section-content">
+        <table class="pcc-table" style="width:100%;">
+          <thead>
+            <tr>
+              <th style="width:30px;"><input type="checkbox"></th>
+              <th>Effective Date</th>
+              <th>Principal</th>
+              <th>Admission</th>
+              <th>Other</th>
+              <th>Type</th>
+              <th>Created By</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><input type="checkbox"></td>
+              <td>7/1/2024</td>
+              <td>J44.9</td>
+              <td>J44.9</td>
+              <td></td>
+              <td>T</td>
+              <td>ldenius2</td>
+            </tr>
+            <tr>
+              <td><input type="checkbox"></td>
+              <td>7/1/2024</td>
+              <td>J44.9</td>
+              <td>J44.9</td>
+              <td>[J43.1][E66.01][F10.239][I10][G47.33][E11.9][I82.513][G47.00]</td>
+              <td>P</td>
+              <td>ldenius2</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="pcc-footer">
+    <div class="pcc-footer-col">
+      <div>SUNNY MEADOWS DEMO FACILITY</div>
+      <div>123 Demo Street</div>
+      <div>Anytown, ST 00000</div>
+      <div>Phone: (555) 000-0000</div>
+      <div>PCC Facility ID: 3</div>
+    </div>
+    <div class="pcc-footer-col">
+      <div>PointClickCare</div>
+      <div>5570 Explorer Drive</div>
+      <div>Mississauga, Ontario L4W 0C4</div>
+    </div>
+    <div class="pcc-footer-col">
+      <div><a href="#">Privacy Policy</a></div>
+      <div>Version 4.4.48.5 (Demo)</div>
+      <div>Copyright 2000-2026 PointClickCare Technologies Inc.</div>
+    </div>
+  </footer>
+
+  <!-- Super LTC Demo: CSS Variables and Component Styles -->
+<link rel="stylesheet" href="../content/css/variables.css?v=4">
+<link rel="stylesheet" href="../content/css/icd10-viewer.css?v=5">
+<link rel="stylesheet" href="../content/css/therapy-modal.css?v=4">
+
+<!-- PDF.js from CDN for ICD-10 document viewing -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script>
+  if (typeof pdfjsLib !== 'undefined') {
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+  }
+</script>
+
+<!-- ICD-10 Viewer Components -->
+<script src="../content/icd10-viewer/icd10-mock-data.js?v=5"></script>
+<script src="../content/icd10-viewer/icd10-api.js?v=4"></script>
+<script src="../content/icd10-viewer/icd10-sidebar.js?v=4"></script>
+<script src="../content/icd10-viewer/icd10-evidence-panel.js?v=4"></script>
+<script src="../content/icd10-viewer/icd10-pdf-viewer.js?v=5"></script>
+<script src="../content/icd10-viewer/icd10-viewer.js?v=4"></script>
+
+<!-- Load demo data and initialize -->
+<script src="demo-data.js?v=4"></script>
+<script src="demo-super-menu.js?v=4"></script>
+<script src="demo-init.js?v=4"></script>
+</body>
+</html>

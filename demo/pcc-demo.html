@@ -1362,7 +1362,7 @@
   <div class="pcc-header">
     <div class="pcc-logo">PointClickCare</div>
     <div class="pcc-header-right">
-      <div class="pcc-facility">BURLINGTON HEALTH AND REHABILITATION CENTER ▼</div>
+      <div class="pcc-facility">SUNNY MEADOWS DEMO FACILITY ▼</div>
       <div class="pcc-header-icons">
         <div class="pcc-header-icon">?</div>
         <div class="pcc-header-icon">*</div>
@@ -2574,5 +2574,30 @@
       });
     });
   </script>
+
+<!-- Super LTC Demo: CSS Variables and Component Styles -->
+<link rel="stylesheet" href="../content/css/variables.css?v=4">
+<link rel="stylesheet" href="../content/css/icd10-viewer.css?v=5">
+<link rel="stylesheet" href="../content/css/therapy-modal.css?v=4">
+
+<!-- PDF.js from CDN for ICD-10 document viewing -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script>
+  if (typeof pdfjsLib !== 'undefined') {
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+  }
+</script>
+
+<!-- ICD-10 Viewer Components -->
+<script src="../content/icd10-viewer/icd10-mock-data.js?v=5"></script>
+<script src="../content/icd10-viewer/icd10-api.js?v=4"></script>
+<script src="../content/icd10-viewer/icd10-sidebar.js?v=4"></script>
+<script src="../content/icd10-viewer/icd10-evidence-panel.js?v=4"></script>
+<script src="../content/icd10-viewer/icd10-pdf-viewer.js?v=5"></script>
+<script src="../content/icd10-viewer/icd10-viewer.js?v=4"></script>
+
+<!-- Demo Scripts -->
+<script src="./demo-data.js?v=4"></script>
+<script src="./demo-super-menu.js?v=4"></script>
 </body>
 </html>
