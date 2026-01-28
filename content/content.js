@@ -2525,5 +2525,135 @@ new MutationObserver(() => {
     lastUrl = window.location.href;
     SuperOverlay.initialized = false;
     setTimeout(initSuperOverlay, 500);
+    // Also check for Medical Diagnosis page
+    setTimeout(initMedDiagPage, 500);
   }
 }).observe(document.body, { childList: true, subtree: true });
+
+// ============================================
+// Medical Diagnosis Page - ICD-10 Smart Code
+// ============================================
+
+/**
+ * Check if we're on the Medical Diagnosis page
+ */
+function isMedDiagPage() {
+  return window.location.href.includes('medDiagChart.xhtml') ||
+         window.location.href.includes('medicalDiagnosis');
+}
+
+/**
+ * Initialize the Medical Diagnosis page features
+ */
+async function initMedDiagPage() {
+  if (!isMedDiagPage()) return;
+
+  console.log('Super LTC: Medical Diagnosis page detected');
+
+  // Check auth first
+  const authState = await chrome.runtime.sendMessage({ type: 'GET_AUTH_STATE' });
+  if (!authState.authenticated) {
+    console.log('Super LTC: Not authenticated, skipping ICD-10 button');
+    return;
+  }
+
+  // Inject the Smart Code button
+  injectSmartCodeButton();
+}
+
+/**
+ * Inject the AI Code Patient button into the Medical Diagnosis page header
+ */
+function injectSmartCodeButton() {
+  // Don't inject if already exists
+  if (document.querySelector('.super-smart-code-btn')) {
+    console.log('Super LTC: Smart Code button already exists');
+    return;
+  }
+
+  // Try to find the header/toolbar area
+  // PCC Medical Diagnosis page has various possible header locations
+  const possibleHeaders = [
+    // Module header (common pattern)
+    document.querySelector('.pccModuleHeader'),
+    // Form header
+    document.querySelector('.formHeader'),
+    // Toolbar area
+    document.querySelector('.toolbar, .pageToolbar, [class*="toolbar"]'),
+    // Title area
+    document.querySelector('.pageTitle, .page-title'),
+    // Look for any header containing "Diagnosis" or "Medical"
+    document.querySelector('[class*="header"]'),
+    // Table header area
+    document.querySelector('table.list thead, .listHeader')
+  ];
+
+  let targetContainer = null;
+  for (const header of possibleHeaders) {
+    if (header) {
+      targetContainer = header;
+      break;
+    }
+  }
+
+  // If no header found, try to find "Add" or "Reports" buttons and insert nearby
+  if (!targetContainer) {
+    const addBtn = document.querySelector('[value="Add"], [title="Add"], button[name*="add"]');
+    const reportsBtn = document.querySelector('[value="Reports"], [title="Reports"]');
+    targetContainer = (addBtn || reportsBtn)?.closest('td, div, form');
+  }
+
+  if (!targetContainer) {
+    console.log('Super LTC: Could not find suitable location for Smart Code button');
+    // Fallback: create a floating button container
+    targetContainer = document.createElement('div');
+    targetContainer.style.cssText = 'position: fixed; top: 60px; right: 20px; z-index: 10000;';
+    document.body.appendChild(targetContainer);
+  }
+
+  // Create the button
+  const btn = document.createElement('button');
+  btn.type = 'button';
+  btn.className = 'super-smart-code-btn';
+  btn.innerHTML = `
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+      <path d="M2 17l10 5 10-5"/>
+      <path d="M2 12l10 5 10-5"/>
+    </svg>
+    AI Code Patient
+  `;
+
+  btn.addEventListener('click', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    console.log('Super LTC: Opening ICD-10 Viewer');
+
+    // Open the ICD-10 viewer
+    if (typeof ICD10Viewer !== 'undefined') {
+      ICD10Viewer.open();
+    } else {
+      console.error('Super LTC: ICD10Viewer not loaded');
+    }
+  });
+
+  // Insert the button
+  // Try to insert after existing buttons if we found them
+  const existingButtons = targetContainer.querySelectorAll('button, input[type="button"], input[type="submit"]');
+  if (existingButtons.length > 0) {
+    const lastBtn = existingButtons[existingButtons.length - 1];
+    lastBtn.parentNode.insertBefore(btn, lastBtn.nextSibling);
+  } else {
+    // Append to container
+    targetContainer.appendChild(btn);
+  }
+
+  console.log('Super LTC: Smart Code button injected');
+}
+
+// Initialize Medical Diagnosis page on load
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initMedDiagPage);
+} else {
+  setTimeout(initMedDiagPage, 500);
+}

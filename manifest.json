@@ -43,6 +43,12 @@
         "content/queries/query-panel.js",
         "content/queries/query-modal.js",
         "content/queries/query-send-modal.js",
+        "content/icd10-viewer/icd10-mock-data.js",
+        "content/icd10-viewer/icd10-api.js",
+        "content/icd10-viewer/icd10-sidebar.js",
+        "content/icd10-viewer/icd10-evidence-panel.js",
+        "content/icd10-viewer/icd10-pdf-viewer.js",
+        "content/icd10-viewer/icd10-viewer.js",
         "content/super-menu/state.js",
         "content/super-menu/utils.js",
         "content/super-menu/context.js",
@@ -74,6 +80,7 @@
         "content/css/diagnosis-query-modal.css",
         "content/css/super-components.css",
         "content/css/query.css",
+        "content/css/icd10-viewer.css",
         "content/chatbot.css"
       ],
       "run_at": "document_idle"
