@@ -253,6 +253,13 @@
   // ============================================
 
   function setupSuperMenuMock() {
+    // Remove any existing FABs (including extension FAB on left side)
+    const existingFabs = document.querySelectorAll('.super-chat-fab, #super-chat-button, #super-menu-fab');
+    existingFabs.forEach(fab => {
+      console.log('[Demo Init] Removing existing FAB:', fab.id || fab.className);
+      fab.remove();
+    });
+
     // Create FAB
     const fab = document.createElement('button');
     fab.id = 'super-menu-fab';
@@ -380,11 +387,12 @@
     }
 
     return queries.map(q => `
-      <div style="padding:12px;border:1px solid #eee;border-radius:8px;margin-bottom:8px;cursor:pointer;transition:background 0.15s;" onmouseover="this.style.background='#f9f9f9'" onmouseout="this.style.background='white'">
+      <div class="demo-query-card" data-query-id="${q.id}" data-query-type="${type}" ${type === 'signed' && q.pdfPath ? `data-pdf-path="${q.pdfPath}"` : ''} style="padding:12px;border:1px solid #eee;border-radius:8px;margin-bottom:8px;cursor:pointer;transition:background 0.15s;" onmouseover="this.style.background='#f9f9f9'" onmouseout="this.style.background='white'">
         <div style="display:flex;justify-content:space-between;align-items:flex-start;">
           <div>
             <div style="font-weight:600;color:#333;">${q.patientName}</div>
             <div style="font-size:11px;color:#666;margin-top:2px;">${q.mdsItem} - ${q.mdsItemName}</div>
+            ${type === 'signed' && q.pdfPath ? '<div style="font-size:10px;color:#0066cc;margin-top:4px;">📄 Click to view signed PDF</div>' : ''}
           </div>
           <div style="display:flex;align-items:center;gap:8px;">
             ${type === 'toSend' ? '<span style="background:#ffeaa7;color:#856404;padding:2px 8px;border-radius:4px;font-size:10px;">To Send</span>' : ''}
@@ -467,7 +475,93 @@
         } else {
           content.innerHTML = renderQueriesList(dashboard.queriesToSend, 'toSend');
         }
+        
+        // Reattach click listeners after updating content
+        setupQueryCardListeners();
       });
+    });
+    
+    // Initial setup of query card listeners
+    setupQueryCardListeners();
+  }
+  
+  function setupQueryCardListeners() {
+    // Add click listeners to all query cards
+    document.querySelectorAll('.demo-query-card').forEach(card => {
+      card.addEventListener('click', function() {
+        const queryType = this.dataset.queryType;
+        const pdfPath = this.dataset.pdfPath;
+        const queryId = this.dataset.queryId;
+        
+        if (queryType === 'signed' && pdfPath) {
+          openPDFViewer(pdfPath, queryId);
+        }
+      });
+    });
+  }
+  
+  function openPDFViewer(pdfPath, queryId) {
+    // Create modal overlay
+    const modal = document.createElement('div');
+    modal.id = 'pdf-viewer-modal';
+    modal.style.cssText = `
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.8);
+      z-index: 100000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    `;
+    
+    // Get query info
+    const dashboard = DemoData.facilityDashboard;
+    const query = dashboard.recentlySigned.find(q => q.id === queryId);
+    const queryInfo = query ? `${query.patientName} - ${query.mdsItem} (${query.mdsItemName})` : 'Signed Query Document';
+    
+    modal.innerHTML = `
+      <div style="background:white;width:100%;max-width:1200px;height:90vh;border-radius:12px;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.3);">
+        <!-- Header -->
+        <div style="padding:16px 20px;border-bottom:1px solid #e0e0e0;display:flex;justify-content:space-between;align-items:center;background:#f8f9fa;">
+          <div>
+            <h3 style="margin:0;font-size:16px;font-weight:600;color:#333;">Signed Query Document</h3>
+            <p style="margin:4px 0 0 0;font-size:13px;color:#666;">${queryInfo}</p>
+          </div>
+          <button id="close-pdf-viewer" style="background:transparent;border:none;font-size:24px;cursor:pointer;color:#666;padding:0;width:32px;height:32px;border-radius:4px;display:flex;align-items:center;justify-content:center;" onmouseover="this.style.background='#e0e0e0'" onmouseout="this.style.background='transparent'">
+            ×
+          </button>
+        </div>
+        
+        <!-- PDF Content -->
+        <div style="flex:1;overflow:hidden;background:#525252;display:flex;align-items:center;justify-content:center;">
+          <embed src="file://${pdfPath}" type="application/pdf" width="100%" height="100%" style="border:none;" />
+        </div>
+        
+        <!-- Footer -->
+        <div style="padding:12px 20px;border-top:1px solid #e0e0e0;background:#f8f9fa;display:flex;justify-content:space-between;align-items:center;">
+          <div style="font-size:12px;color:#666;">
+            <strong>File:</strong> ${pdfPath.split('/').pop()}
+          </div>
+          <div style="display:flex;gap:8px;">
+            <button style="padding:8px 16px;background:#fff;border:1px solid #ddd;border-radius:6px;cursor:pointer;font-size:13px;" onclick="window.open('file://${pdfPath}', '_blank')">
+              Open in New Tab
+            </button>
+            <button id="close-pdf-btn" style="padding:8px 16px;background:#667eea;color:white;border:none;border-radius:6px;cursor:pointer;font-size:13px;">
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    `;
+    
+    document.body.appendChild(modal);
+    
+    // Close handlers
+    document.getElementById('close-pdf-viewer').addEventListener('click', () => modal.remove());
+    document.getElementById('close-pdf-btn').addEventListener('click', () => modal.remove());
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) modal.remove();
     });
   }
 

@@ -102,7 +102,7 @@
         aiAnswer: 1,
         confidence: 'high',
         status: 'mismatch',
-        wouldChangeHipps: true,
+        wouldChangeHipps: false,
         impact: {
           nta: { currentLevel: 'A', newLevel: 'B', wouldChangeLevel: true }
         },
@@ -131,7 +131,7 @@
         aiAnswer: 1,
         confidence: 'high',
         status: 'mismatch',
-        wouldChangeHipps: true,
+        wouldChangeHipps: false,
         impact: {
           nta: { currentLevel: 'B', newLevel: 'C', wouldChangeLevel: true }
         },
@@ -199,7 +199,7 @@
         aiAnswer: 1,
         confidence: 'high',
         status: 'mismatch',
-        wouldChangeHipps: true,
+        wouldChangeHipps: false,
         impact: {
           nta: { currentLevel: 'B', newLevel: 'C', wouldChangeLevel: true }
         },
@@ -332,7 +332,7 @@
         aiAnswer: 1,
         confidence: 'medium',
         status: 'review',
-        wouldChangeHipps: true,
+        wouldChangeHipps: false,
         impact: {
           slp: { currentGroup: 'SF', newGroup: 'SI', wouldChangeGroup: true }
         },
@@ -560,7 +560,7 @@
         aiAnswer: 1,
         confidence: 'high',
         status: 'mismatch',
-        wouldChangeHipps: true,
+        wouldChangeHipps: false,
         impact: {
           nta: { currentLevel: 'C', newLevel: 'D', wouldChangeLevel: true }
         },
@@ -650,7 +650,7 @@
         aiAnswer: 1,
         confidence: 'medium',
         status: 'review',
-        wouldChangeHipps: true,
+        wouldChangeHipps: false,
         impact: {
           nta: { currentLevel: 'C', newLevel: 'D', wouldChangeLevel: true }
         },
@@ -707,7 +707,7 @@
         impact: {
           nta: { currentLevel: 'C', newLevel: 'D', wouldChangeLevel: true }
         },
-        rationale: 'Patient has documented malnutrition indicators including PO intake <50%, low albumin, and fortified diet order.',
+        rationale: 'Patient has documented malnutrition with significant weight loss (12.6% in 3 months), low albumin/prealbumin labs, PO intake <50%, dysphagia requiring modified diet, and nutritional supplementation orders.',
         evidence: [
           {
             type: 'progress-note',
@@ -811,7 +811,23 @@
             date: '01/22/2026',
             documentId: 'doc-nutr-003',
             evidenceType: 'contextual',
-            description: 'Physician order for fortified cereal (6 oz QD) is a nutrition intervention intended to increase calorie/protein intake.'
+            description: 'Physician order for fortified cereal (6 oz QD) is a nutrition intervention intended to increase calorie/protein intake.',
+            marData: {
+              medication: 'Fortified Cereal 6 OZ',
+              route: 'ORAL',
+              instructions: 'Give 6 oz fortified cereal by mouth once daily to increase caloric and protein intake for malnutrition',
+              frequency: 'Daily with breakfast',
+              dateRange: { start: '2026-01-22', end: '2026-01-28' },
+              administrations: [
+                { date: '2026-01-22', time: 'Breakfast', status: 'given' },
+                { date: '2026-01-23', time: 'Breakfast', status: 'given' },
+                { date: '2026-01-24', time: 'Breakfast', status: 'given' },
+                { date: '2026-01-25', time: 'Breakfast', status: 'refused' },
+                { date: '2026-01-26', time: 'Breakfast', status: 'given' },
+                { date: '2026-01-27', time: 'Breakfast', status: 'given' },
+                { date: '2026-01-28', time: 'Breakfast', status: 'given' }
+              ]
+            }
           },
           {
             type: 'order',
@@ -820,7 +836,110 @@
             date: '01/22/2026',
             documentId: 'doc-nutr-004',
             evidenceType: 'contextual',
-            description: 'Oral nutrition supplement order supports malnutrition diagnosis.'
+            description: 'Oral nutrition supplement order supports malnutrition diagnosis.',
+            marData: {
+              medication: 'Ensure Plus 8 OZ Oral Liquid',
+              route: 'ORAL',
+              instructions: 'Give 8 oz Ensure Plus by mouth twice daily with lunch and dinner for nutritional supplementation and malnutrition treatment',
+              frequency: 'BID with meals',
+              dateRange: { start: '2026-01-22', end: '2026-01-28' },
+              administrations: [
+                { date: '2026-01-22', time: 'Lunch', status: 'given' },
+                { date: '2026-01-22', time: 'Dinner', status: 'given' },
+                { date: '2026-01-23', time: 'Lunch', status: 'given' },
+                { date: '2026-01-23', time: 'Dinner', status: 'refused' },
+                { date: '2026-01-24', time: 'Lunch', status: 'given' },
+                { date: '2026-01-24', time: 'Dinner', status: 'given' },
+                { date: '2026-01-25', time: 'Lunch', status: 'given' },
+                { date: '2026-01-25', time: 'Dinner', status: 'given' },
+                { date: '2026-01-26', time: 'Lunch', status: 'given' },
+                { date: '2026-01-26', time: 'Dinner', status: 'refused' },
+                { date: '2026-01-27', time: 'Lunch', status: 'given' },
+                { date: '2026-01-27', time: 'Dinner', status: 'given' },
+                { date: '2026-01-28', time: 'Lunch', status: 'given' },
+                { date: '2026-01-28', time: 'Dinner', status: 'given' }
+              ]
+            }
+          },
+          {
+            type: 'st-eval',
+            title: 'Speech Therapy Dysphagia Evaluation',
+            quote: 'Moderate oropharyngeal dysphagia. Recommend pureed diet with nectar thick liquids.',
+            date: '01/18/2026',
+            documentId: 'doc-nutr-005',
+            evidenceType: 'keyword',
+            description: 'Speech therapy evaluation documents dysphagia contributing to poor oral intake and malnutrition risk.',
+            pdfData: {
+              filename: 'ST_EVAL_01_18_38001923.PDF',
+              title: 'Speech Therapy Dysphagia Evaluation',
+              pages: 3,
+              currentPage: 1,
+              content: [
+                { text: 'SPEECH THERAPY EVALUATION - SWALLOWING', highlight: false },
+                { text: 'Patient: Doe, Jane', highlight: false },
+                { text: 'Date: 01/18/2026', highlight: false },
+                { text: 'SLP: Rachel Anderson, MS, CCC-SLP', highlight: false },
+                { text: '', highlight: false },
+                { text: 'REASON FOR REFERRAL:', highlight: false },
+                { text: 'Evaluate swallowing function due to reported coughing with meals', highlight: false },
+                { text: 'and decreased oral intake.', highlight: false },
+                { text: '', highlight: false },
+                { text: 'CLINICAL SWALLOW EVALUATION:', highlight: false },
+                { text: 'Moderate oropharyngeal dysphagia observed', highlight: 'keyword' },
+                { text: 'Oral phase: Prolonged oral transit, decreased bolus control', highlight: false },
+                { text: 'Pharyngeal phase: Delayed swallow initiation, coughing with thin liquids', highlight: 'keyword' },
+                { text: '', highlight: false },
+                { text: 'ASPIRATION RISK: Moderate - Silent aspiration suspected', highlight: 'keyword' },
+                { text: '', highlight: false },
+                { text: 'DIET RECOMMENDATIONS:', highlight: false },
+                { text: '- Pureed diet consistency', highlight: 'keyword' },
+                { text: '- Nectar thick liquids', highlight: 'keyword' },
+                { text: '- Small bites, slow pace', highlight: false },
+                { text: '- Upright positioning during and 30 min after meals', highlight: false },
+                { text: '', highlight: false },
+                { text: 'IMPACT: Dysphagia is significantly limiting oral intake', highlight: 'contextual' },
+                { text: 'and contributing to weight loss and malnutrition risk.', highlight: 'contextual' }
+              ]
+            }
+          },
+          {
+            type: 'nursing-note',
+            title: 'Weekly Weight Monitoring',
+            quote: 'Weight trend: 135 lbs (3 months ago) → 128 lbs (1 month ago) → 118 lbs (current). Total loss: 17 lbs (12.6%)',
+            date: '01/22/2026',
+            documentId: 'doc-nutr-006',
+            evidenceType: 'keyword',
+            description: 'Nursing documentation shows significant progressive weight loss over 3 months, meeting criteria for malnutrition.',
+            pdfData: {
+              filename: 'NURSING_WEIGHTS_01_22_38001945.PDF',
+              title: 'Weight Monitoring Flow Sheet',
+              pages: 1,
+              content: [
+                { text: 'WEIGHT MONITORING - 3 MONTH TREND', highlight: false },
+                { text: 'Patient: Doe, Jane', highlight: false },
+                { text: 'Date: 01/22/2026', highlight: false },
+                { text: '', highlight: false },
+                { text: 'WEIGHT HISTORY:', highlight: false },
+                { text: '10/22/2025: 135.0 lbs (Usual body weight)', highlight: false },
+                { text: '11/15/2025: 132.5 lbs (-2.5 lbs)', highlight: false },
+                { text: '12/20/2025: 128.0 lbs (-7.0 lbs from usual)', highlight: 'keyword' },
+                { text: '01/15/2026: 120.5 lbs (-14.5 lbs from usual)', highlight: 'keyword' },
+                { text: '01/22/2026: 118.0 lbs (-17.0 lbs from usual)', highlight: 'keyword' },
+                { text: '', highlight: false },
+                { text: 'WEIGHT LOSS PERCENTAGE:', highlight: false },
+                { text: 'Total Loss: 17 lbs over 3 months', highlight: 'keyword' },
+                { text: 'Percentage: 12.6% of usual body weight', highlight: 'keyword' },
+                { text: '', highlight: false },
+                { text: 'SIGNIFICANCE:', highlight: false },
+                { text: '>10% weight loss in 3 months = SEVERE weight loss', highlight: 'keyword' },
+                { text: 'Meets criteria for malnutrition diagnosis', highlight: 'keyword' },
+                { text: '', highlight: false },
+                { text: 'INTERVENTIONS INITIATED:', highlight: false },
+                { text: '- Dietary consult completed', highlight: false },
+                { text: '- Nutritional supplements ordered', highlight: false },
+                { text: '- Weekly weight monitoring ongoing', highlight: false }
+              ]
+            }
           }
         ]
       },
@@ -1008,23 +1127,24 @@
       pending: [
         {
           id: 'q-001',
-          mdsItem: 'I5350',
-          mdsItemName: 'Stroke/CVA',
+          mdsItem: 'I0800',
+          mdsItemName: 'Immune Disorder',
           status: 'sent',
-          sentAt: '2026-01-25T10:30:00Z',
+          sentAt: '2026-01-26T09:15:00Z',
           practitioner: 'Dr. Demo Provider',
-          wouldChangeHipps: true
+          wouldChangeHipps: false
         }
       ],
       signed: [
         {
           id: 'q-002',
-          mdsItem: 'I2900',
-          mdsItemName: 'Drug/Medication Toxicity',
+          mdsItem: 'I0500',
+          mdsItemName: 'COPD or Chronic Lung Disease',
           status: 'signed',
-          signedAt: '2026-01-24T14:20:00Z',
+          signedAt: '2026-01-27T11:45:00Z',
           signedBy: 'Dr. Demo Provider',
-          mdsItemCoded: false
+          mdsItemCoded: true,
+          pdfPath: '/Users/andrewburns/Downloads/query_jutxlrwthshb_45_NTA (3).pdf'
         }
       ]
     }
@@ -1189,9 +1309,8 @@
       card.addEventListener('click', () => {
         const evidenceIdx = parseInt(card.dataset.evidenceIdx);
         const evidence = itemData.evidence[evidenceIdx];
-        closePopover();
 
-        // Open appropriate viewer based on evidence type
+        // Open appropriate viewer based on evidence type (keep popover open)
         if (evidence.marData) {
           showMARViewer(evidence, itemData);
         } else if (evidence.pdfData) {
@@ -1229,7 +1348,6 @@
           <div class="super-evidence-card__badges">
             <span class="super-evidence-card__type super-evidence-card__type--${ev.type}">${formatEvidenceType(ev.type)}</span>
             ${ev.pdfData ? `<span class="super-evidence-card__filename">${ev.pdfData.filename || ev.title}</span>` : ''}
-            ${getEvidenceTypeBadge(ev)}
           </div>
           <span class="super-evidence-card__date">${ev.date}</span>
         </div>
@@ -1353,6 +1471,22 @@
           showToast('success', `${itemData.code} marked for coding`);
         }
       });
+    });
+
+    // Add click handlers to evidence cards to open document viewer
+    modal.querySelectorAll('.super-evidence-card').forEach((card, index) => {
+      const evidence = itemData.evidence[index];
+      if (evidence && (evidence.pdfData || evidence.marData)) {
+        card.style.cursor = 'pointer';
+        card.addEventListener('click', () => {
+          // Keep modal open when opening document viewer
+          if (evidence.marData) {
+            showMARViewer(evidence, itemData);
+          } else if (evidence.pdfData) {
+            showDocumentViewer(evidence, itemData);
+          }
+        });
+      }
     });
   }
 
@@ -2126,9 +2260,9 @@ Please clarify if this diagnosis should be coded as active for this assessment p
         </div>
         <div class="super-card__content">
           ${data.queries.signed.map(q => `
-            <div class="super-card__item">
+            <div class="super-card__item super-card__item--clickable" data-query-id="${q.id}" data-pdf-path="${q.pdfPath || ''}" style="cursor: pointer; transition: all 0.2s;" onmouseover="this.style.background='#eff6ff'; this.style.transform='translateX(2px)'" onmouseout="this.style.background=''; this.style.transform=''">
               <span class="super-card__item-code">${q.mdsItem}</span>
-              <span class="super-card__item-name">${q.mdsItemName}</span>
+              <span class="super-card__item-name">${q.mdsItemName}${q.pdfPath ? ' <span style="color: #3b82f6; font-size: 10px; margin-left: 4px;">📄 Click to view PDF</span>' : ''}</span>
               <span class="super-card__item-status super-card__item-status--signed">\u2713 signed</span>
               ${!q.mdsItemCoded ? '<span class="super-card__item-badge">Needs Coding</span>' : ''}
             </div>
@@ -2171,6 +2305,47 @@ Please clarify if this diagnosis should be coded as active for this assessment p
         }
       });
     });
+    
+    // Handle recently signed queries with PDFs
+    container.querySelectorAll('.super-card__item--clickable[data-pdf-path]').forEach(item => {
+      item.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const pdfPath = item.dataset.pdfPath;
+        const queryId = item.dataset.queryId;
+        console.log('[PDF Viewer] Click detected:', { queryId, pdfPath });
+        if (pdfPath && pdfPath !== '') {
+          // Show modal with option to open PDF
+          showSignedQueryPDF(pdfPath, queryId);
+        } else {
+          console.warn('[PDF Viewer] No PDF path found for query:', queryId);
+        }
+      });
+    });
+  }
+  
+  function showSignedQueryPDF(pdfPath, queryId) {
+    console.log('[PDF Viewer] Opening PDF:', { pdfPath, queryId });
+    
+    // Get query info from MOCK_MDS_DATA
+    const signedQuery = MOCK_MDS_DATA.queries.signed.find(q => q.id === queryId);
+    const queryInfo = signedQuery ? `${signedQuery.mdsItem} - ${signedQuery.mdsItemName}` : 'Signed Query Document';
+    
+    console.log('[PDF Viewer] Query info:', { signedQuery, queryInfo });
+    
+    // Simply open the PDF in a new tab/window - this is the most reliable method for local files
+    const pdfUrl = `file://${pdfPath}`;
+    console.log('[PDF Viewer] Opening URL:', pdfUrl);
+    
+    const newWindow = window.open(pdfUrl, '_blank');
+    
+    if (!newWindow) {
+      console.error('[PDF Viewer] Popup blocked or failed to open');
+      // Show a fallback message
+      alert(`Please allow popups to view the signed query PDF.\n\nFile: ${pdfPath.split('/').pop()}\nQuery: ${queryInfo}`);
+    } else {
+      console.log('[PDF Viewer] PDF opened in new window');
+      showToast('success', `Opened signed query: ${queryInfo}`);
+    }
   }
 
   // ============================================

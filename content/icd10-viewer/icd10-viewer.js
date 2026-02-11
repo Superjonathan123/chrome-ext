@@ -420,11 +420,13 @@ const ICD10Viewer = {
       );
 
       // Add to approved diagnoses locally
-      this.approvedDiagnoses.push({
+      const approvedDx = {
         icd10Code: item.icd10Code,
         description: item.description,
-        onsetDate: new Date().toISOString().split('T')[0]
-      });
+        onsetDate: new Date().toISOString().split('T')[0],
+        category: item.category
+      };
+      this.approvedDiagnoses.push(approvedDx);
 
       // Remove from annotations (move to approved)
       const index = this.annotations.findIndex(a => a.id === item.id);
@@ -441,12 +443,81 @@ const ICD10Viewer = {
       // Mark as approved in evidence panel
       ICD10EvidencePanel.markApproved(item.id);
 
+      // Add to demo page table if it exists
+      this._addToPageTable(approvedDx);
+
       console.log('ICD10Viewer: Approved diagnosis:', item.icd10Code);
 
     } catch (error) {
       console.error('ICD10Viewer: Failed to approve:', error);
       throw error; // Re-throw so evidence panel shows error state
     }
+  },
+
+  /**
+   * Add approved diagnosis to the page table (for demo page)
+   * @param {Object} diagnosis - Approved diagnosis object
+   */
+  _addToPageTable(diagnosis) {
+    // Look for the medical diagnosis listing table
+    const table = document.querySelector('#meddiaglisting tbody');
+    if (!table) {
+      console.log('ICD10Viewer: Medical diagnosis table not found, skipping page update');
+      return;
+    }
+
+    // Format the date
+    const date = new Date(diagnosis.onsetDate);
+    const formattedDate = `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
+    const currentDate = new Date();
+    const createdDate = `${currentDate.getMonth() + 1}/${currentDate.getDate()}/${currentDate.getFullYear()}`;
+
+    // Get category display name and NTA points if applicable
+    let categoryDisplay = '';
+    let ntaPoints = '';
+    if (diagnosis.category === 'nta') {
+      categoryDisplay = 'Pulmonary'; // Default, could be more sophisticated
+      ntaPoints = 'NTA (2 pts)';
+    } else if (diagnosis.category === 'slp') {
+      categoryDisplay = 'Speech/Language';
+    } else {
+      categoryDisplay = 'Medical Management';
+    }
+
+    // Create the new row
+    const newRow = document.createElement('tr');
+    newRow.className = 'primaryDiagRank';
+    newRow.style.backgroundColor = '#e8f5e9'; // Light green to highlight new addition
+    newRow.setAttribute('valign', 'top');
+    newRow.innerHTML = `
+      <td>
+        <a href="javascript:void(0)">view</a>
+      </td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td>${this._escapeHtml(diagnosis.icd10Code)}</td>
+      <td></td>
+      <td>${this._escapeHtml(diagnosis.description)}</td>
+      <td>${this._escapeHtml(ntaPoints)}</td>
+      <td>${this._escapeHtml(categoryDisplay)}</td>
+      <td>${formattedDate}</td>
+      <td>Diagnosis A</td>
+      <td>Admission</td>
+      <td>${createdDate}</td>
+      <td>super-ai</td>
+    `;
+
+    // Insert at the beginning of the table
+    table.insertBefore(newRow, table.firstChild);
+
+    // Fade out the highlight after a delay
+    setTimeout(() => {
+      newRow.style.transition = 'background-color 1s ease-in-out';
+      newRow.style.backgroundColor = '';
+    }, 2000);
+
+    console.log('ICD10Viewer: Added diagnosis to page table:', diagnosis.icd10Code);
   },
 
   /**

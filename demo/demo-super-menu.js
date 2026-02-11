@@ -61,11 +61,11 @@
     nav.className = 'demo-nav-bar';
 
     const pages = [
-      { url: 'medical-diagnosis.html', label: 'Medical Diagnosis', icon: '🏥' },
-      { url: 'mds-summary.html', label: 'MDS Summary', icon: '📋' },
-      { url: 'mds-section-i.html', label: 'MDS Section I', icon: '📝' },
-      { url: 'index.html', label: 'Simple Demo', icon: '📄' },
-      { url: 'pcc-demo.html', label: 'PCC Demo', icon: '🖥️' }
+      { url: 'medical-diagnosis.html', label: 'Medical Diagnosis', icon: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>' },
+      { url: 'mds-summary.html', label: 'MDS Summary', icon: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg>' },
+      { url: 'mds-section-i.html', label: 'MDS Section I', icon: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>' },
+      { url: 'index.html', label: 'Simple Demo', icon: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>' },
+      { url: 'pcc-demo.html', label: 'PCC Demo', icon: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>' }
     ];
 
     const currentPage = window.location.pathname.split('/').pop() || 'index.html';
@@ -126,6 +126,13 @@
   }
 
   function createSuperMenu() {
+    // Remove any existing FABs (including extension FAB on left side)
+    const existingFabs = document.querySelectorAll('.super-chat-fab, #super-chat-button, #super-menu-fab');
+    existingFabs.forEach(fab => {
+      console.log('[Demo] Removing existing FAB:', fab.id || fab.className);
+      fab.remove();
+    });
+
     // Create FAB button
     const fab = document.createElement('button');
     fab.id = 'super-chat-button';
@@ -197,6 +204,23 @@
     // Add to document
     document.body.appendChild(fab);
     document.body.appendChild(panel);
+
+    // Watch for any new FABs being added (e.g., from Chrome extension) and remove them
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        mutation.addedNodes.forEach((node) => {
+          if (node.nodeType === 1) { // Element node
+            // Check if it's a FAB button (but not our demo FAB)
+            if ((node.classList && node.classList.contains('super-chat-fab') && node.id !== 'super-chat-button') ||
+                (node.id === 'super-menu-fab' && node.id !== fab.id)) {
+              console.log('[Demo] Removing duplicate FAB:', node.id || node.className);
+              node.remove();
+            }
+          }
+        });
+      });
+    });
+    observer.observe(document.body, { childList: true, subtree: true });
 
     // Set initial content
     const content = panel.querySelector('.super-menu-content');
@@ -327,110 +351,210 @@
     const data = window.DemoData?.facilityDashboard || {};
     const queries = data.queriesToSend || [];
     const awaiting = data.awaitingSignatures || [];
+    const recentlySigned = data.recentlySigned || [];
     const hipps = data.hippsOpportunities || [];
+    const allAssessments = data.allAssessments || [];
 
     const totalQueries = queries.length + awaiting.length;
+    const totalActionableItems = hipps.reduce((sum, h) => sum + h.hippsChangingCount, 0);
 
-    // Build queries HTML
-    let queriesHTML = '';
-    queries.forEach((q, i) => {
-      queriesHTML += `
-        <div class="demo-query-item" data-query-id="${q.id}">
-          <div class="demo-query-code">${q.mdsItem}</div>
-          <div class="demo-query-info">
-            <div class="demo-query-desc">${q.mdsItemName}</div>
-            <div class="demo-query-patient">${q.patientName}</div>
+    // Build stats cards
+    const statsHTML = `
+      <div class="demo-stats-grid">
+        <div class="demo-stat-card demo-stat-card--warning">
+          <div class="demo-stat-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/>
+              <rect x="9" y="3" width="6" height="4" rx="1"/>
+            </svg>
           </div>
-          <div class="demo-query-status demo-query-status--pending">Draft</div>
-        </div>`;
-    });
-    awaiting.forEach((q, i) => {
-      const daysAgo = Math.floor((Date.now() - new Date(q.sentAt)) / (1000*60*60*24));
-      queriesHTML += `
-        <div class="demo-query-item" data-query-id="${q.id}">
-          <div class="demo-query-code">${q.mdsItem}</div>
-          <div class="demo-query-info">
-            <div class="demo-query-desc">${q.mdsItemName}</div>
-            <div class="demo-query-patient">${q.patientName}</div>
-          </div>
-          <div class="demo-query-status demo-query-status--sent">Sent ${daysAgo}d ago</div>
-        </div>`;
-    });
-
-    // Build HIPPS opportunities HTML
-    let hippsHTML = '';
-    hipps.forEach(h => {
-      hippsHTML += `
-        <div class="demo-opportunity-card" data-assessment-id="${h.externalAssessmentId}">
-          <div class="demo-opportunity-header">
-            <span>Current: ${h.currentHipps}</span>
-            <span class="demo-arrow">&rarr;</span>
-            <span class="demo-opportunity-new">Potential: ${h.potentialHipps}</span>
-          </div>
-          <div class="demo-opportunity-detail">
-            ${h.patientName} - ${h.hippsChangingCount} actionable items
-          </div>
-          <button class="demo-icd10-btn">Open ICD-10 Viewer</button>
-        </div>`;
-    });
-
-    return `
-      <div class="demo-dashboard">
-        <div class="demo-section">
-          <div class="demo-section-header">
-            <span class="demo-section-title">Queries</span>
-            <span class="demo-badge">${totalQueries}</span>
-          </div>
-          <div class="demo-query-list">
-            ${queriesHTML || '<div class="demo-empty">No pending queries</div>'}
+          <div class="demo-stat-content">
+            <div class="demo-stat-value">${queries.length}</div>
+            <div class="demo-stat-label">Draft Queries</div>
           </div>
         </div>
 
-        <div class="demo-section">
-          <div class="demo-section-header">
-            <span class="demo-section-title">HIPPS Opportunities</span>
-            <span class="demo-badge demo-badge--success">${hipps.length} MDS</span>
+        <div class="demo-stat-card demo-stat-card--info">
+          <div class="demo-stat-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/>
+              <polyline points="12 6 12 12 16 14"/>
+            </svg>
           </div>
-          ${hippsHTML || '<div class="demo-empty">No opportunities found</div>'}
+          <div class="demo-stat-content">
+            <div class="demo-stat-value">${awaiting.length}</div>
+            <div class="demo-stat-label">Awaiting Signature</div>
+          </div>
         </div>
 
-        <div class="demo-section">
-          <div class="demo-section-header">
-            <span class="demo-section-title">Quick Actions</span>
+        <div class="demo-stat-card demo-stat-card--success">
+          <div class="demo-stat-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+              <polyline points="22 4 12 14.01 9 11.01"/>
+            </svg>
           </div>
-          <div class="demo-quick-actions">
-            <button class="demo-action-btn demo-icd10-btn">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="12" cy="12" r="10"/>
-                <path d="M12 6v6l4 2"/>
-              </svg>
-              ICD-10 Viewer
-            </button>
-            <button class="demo-action-btn demo-mar-btn">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/>
-                <path d="M12 8v8m-4-4h8"/>
-              </svg>
-              MAR
-            </button>
-            <button class="demo-action-btn demo-tar-btn">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/>
-                <rect x="9" y="3" width="6" height="4" rx="1"/>
-              </svg>
-              TAR
-            </button>
-            <button class="demo-action-btn demo-therapy-btn">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                <polyline points="14 2 14 8 20 8"/>
-              </svg>
-              Therapy Docs
-            </button>
+          <div class="demo-stat-content">
+            <div class="demo-stat-value">${hipps.length}</div>
+            <div class="demo-stat-label">HIPPS Opportunities</div>
+          </div>
+        </div>
+
+        <div class="demo-stat-card demo-stat-card--primary">
+          <div class="demo-stat-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <polyline points="7 10 12 15 17 10"/>
+              <line x1="12" y1="15" x2="12" y2="3"/>
+            </svg>
+          </div>
+          <div class="demo-stat-content">
+            <div class="demo-stat-value">${totalActionableItems}</div>
+            <div class="demo-stat-label">Action Items</div>
           </div>
         </div>
       </div>
     `;
+
+    // Build outstanding queries section (all queries)
+    let outstandingQueriesHTML = '';
+    const allQueries = [...queries, ...awaiting];
+    if (allQueries.length > 0) {
+      allQueries.forEach((q, i) => {
+        const isAwait = q.status === 'sent';
+        const daysAgo = isAwait ? Math.floor((Date.now() - new Date(q.sentAt)) / (1000*60*60*24)) : null;
+        outstandingQueriesHTML += `
+          <div class="demo-query-row ${isAwait ? 'demo-query-row--sent' : 'demo-query-row--draft'}" data-query-id="${q.id}">
+            <div class="demo-query-row__left">
+              <div class="demo-query-row__code">${q.mdsItem}</div>
+              <div class="demo-query-row__info">
+                <div class="demo-query-row__desc">${q.mdsItemName}</div>
+                <div class="demo-query-row__patient">${q.patientName}</div>
+              </div>
+            </div>
+            <div class="demo-query-row__right">
+              <div class="demo-query-row__status ${isAwait ? 'demo-query-row__status--sent' : 'demo-query-row__status--draft'}">
+                ${isAwait ? `Sent ${daysAgo}d ago` : 'Draft'}
+              </div>
+            </div>
+          </div>`;
+      });
+    } else {
+      outstandingQueriesHTML = '<div class="demo-empty-state">No outstanding queries</div>';
+    }
+
+    // Build all HIPPS opportunities section
+    let allHippsHTML = '';
+    if (hipps.length > 0) {
+      hipps.forEach(h => {
+        const revenueIncrease = calculateRevenueIncrease(h.currentHipps, h.potentialHipps);
+        allHippsHTML += `
+          <div class="demo-hipps-card" data-assessment-id="${h.externalAssessmentId}">
+            <div class="demo-hipps-card__header">
+              <div class="demo-hipps-card__patient">
+                <div class="demo-hipps-card__patient-icon">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                    <circle cx="12" cy="7" r="4"/>
+                  </svg>
+                </div>
+                <div>
+                  <div class="demo-hipps-card__patient-name">${h.patientName}</div>
+                  <div class="demo-hipps-card__meta">${h.hippsChangingCount} actionable items</div>
+                </div>
+              </div>
+            </div>
+            <div class="demo-hipps-card__body">
+              <div class="demo-hipps-comparison">
+                <div class="demo-hipps-current">
+                  <div class="demo-hipps-label">Current</div>
+                  <div class="demo-hipps-code">${h.currentHipps}</div>
+                </div>
+                <div class="demo-hipps-arrow">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="5" y1="12" x2="19" y2="12"/>
+                    <polyline points="12 5 19 12 12 19"/>
+                  </svg>
+                </div>
+                <div class="demo-hipps-potential">
+                  <div class="demo-hipps-label">Potential</div>
+                  <div class="demo-hipps-code demo-hipps-code--highlight">${h.potentialHipps}</div>
+                </div>
+              </div>
+              <div class="demo-hipps-revenue">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="12" y1="5" x2="12" y2="19"/>
+                  <polyline points="19 12 12 5 5 12"/>
+                </svg>
+                <span>${revenueIncrease}/day potential increase</span>
+              </div>
+            </div>
+            <div class="demo-hipps-card__footer">
+              <button class="demo-hipps-action-btn demo-icd10-btn">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"/>
+                  <path d="M12 6v6l4 2"/>
+                </svg>
+                Open ICD-10 Viewer
+              </button>
+            </div>
+          </div>`;
+      });
+    } else {
+      allHippsHTML = '<div class="demo-empty-state">No HIPPS opportunities found</div>';
+    }
+
+    return `
+      <div class="demo-dashboard">
+        ${statsHTML}
+
+        <div class="demo-section">
+          <div class="demo-section-header">
+            <div class="demo-section-title-group">
+              <svg class="demo-section-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/>
+                <rect x="9" y="3" width="6" height="4" rx="1"/>
+              </svg>
+              <span class="demo-section-title">Outstanding Queries</span>
+            </div>
+            <span class="demo-badge">${totalQueries}</span>
+          </div>
+          <div class="demo-query-list-new">
+            ${outstandingQueriesHTML}
+          </div>
+        </div>
+
+        <div class="demo-section">
+          <div class="demo-section-header">
+            <div class="demo-section-title-group">
+              <svg class="demo-section-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+              </svg>
+              <span class="demo-section-title">HIPPS Opportunities</span>
+            </div>
+            <span class="demo-badge demo-badge--success">${hipps.length} MDS</span>
+          </div>
+          <div class="demo-hipps-grid">
+            ${allHippsHTML}
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  // Helper function to calculate revenue increase
+  function calculateRevenueIncrease(currentHipps, potentialHipps) {
+    // Simplified calculation - in reality this would lookup actual HIPPS rates
+    const hippsRates = {
+      'KAQD': 567.32,
+      'KBQE': 609.18,
+      'CBQJ': 625.45,
+      'CBQL': 678.90
+    };
+    const current = hippsRates[currentHipps] || 567;
+    const potential = hippsRates[potentialHipps] || 609;
+    const diff = potential - current;
+    return diff > 0 ? `+$${diff.toFixed(2)}` : '$0.00';
   }
 
   function getMDSAnalysisHTML() {
@@ -1358,7 +1482,14 @@
     }
 
     .demo-nav-bar__link-icon {
-      font-size: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .demo-nav-bar__link-icon svg {
+      width: 14px;
+      height: 14px;
     }
 
     .demo-nav-bar__link-label {
@@ -1524,8 +1655,8 @@
       position: fixed;
       bottom: 92px;
       right: 24px;
-      width: 380px;
-      height: 520px;
+      width: 440px;
+      height: 620px;
       background: white;
       border-radius: 16px;
       box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
@@ -1656,42 +1787,418 @@
 
     /* ===== Demo Dashboard Styles ===== */
     .demo-dashboard, .demo-mds-analysis, .demo-chat {
-      padding: 16px;
+      padding: 14px;
       height: 100%;
       overflow-y: auto;
+      background: #fafbfc;
+    }
+
+    /* Stats Grid */
+    .demo-stats-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .demo-stat-card {
+      background: white;
+      border-radius: 10px;
+      padding: 12px;
+      display: flex;
+      gap: 10px;
+      border: 1px solid #e8eaed;
+      transition: all 0.15s;
+    }
+
+    .demo-stat-card:hover {
+      border-color: #d0d3d9;
+    }
+
+    .demo-stat-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .demo-stat-card--warning .demo-stat-icon {
+      background: #fef7ed;
+      color: #ea8600;
+    }
+
+    .demo-stat-card--info .demo-stat-icon {
+      background: #eff6ff;
+      color: #4b91f1;
+    }
+
+    .demo-stat-card--success .demo-stat-icon {
+      background: #f0fdf4;
+      color: #16a34a;
+    }
+
+    .demo-stat-card--primary .demo-stat-icon {
+      background: #f4f3ff;
+      color: #6366f1;
+    }
+
+    .demo-stat-icon svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    .demo-stat-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .demo-stat-value {
+      font-size: 20px;
+      font-weight: 600;
+      color: #1f2937;
+      line-height: 1;
+      margin-bottom: 3px;
+    }
+
+    .demo-stat-label {
+      font-size: 11px;
+      color: #6b7280;
+      font-weight: 500;
     }
 
     .demo-section {
-      margin-bottom: 20px;
+      margin-bottom: 16px;
     }
 
     .demo-section-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 12px;
-      padding-bottom: 8px;
-      border-bottom: 1px solid #e0e0e0;
+      margin-bottom: 10px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid #e8eaed;
+    }
+
+    .demo-section-title-group {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .demo-section-icon {
+      color: #9ca3af;
+      width: 16px;
+      height: 16px;
     }
 
     .demo-section-title {
       font-weight: 600;
-      color: #333;
+      color: #374151;
+      font-size: 13px;
     }
 
     .demo-badge {
-      background: #1976d2;
-      color: white;
-      padding: 2px 8px;
-      border-radius: 12px;
-      font-size: 12px;
-      font-weight: 500;
+      background: #f3f4f6;
+      color: #4b5563;
+      padding: 3px 8px;
+      border-radius: 10px;
+      font-size: 10px;
+      font-weight: 600;
     }
 
     .demo-badge--success {
-      background: #2e7d32;
+      background: #f0fdf4;
+      color: #15803d;
     }
 
+    /* Query List - New Design */
+    .demo-query-list-new {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .demo-query-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px;
+      background: white;
+      border: 1px solid #e8eaed;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .demo-query-row:hover {
+      border-color: #cbd5e1;
+      background: #fafbfc;
+    }
+
+    .demo-query-row--draft {
+      border-left: 2px solid #f59e0b;
+    }
+
+    .demo-query-row--sent {
+      border-left: 2px solid #6b7280;
+    }
+
+    .demo-query-row__left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .demo-query-row__code {
+      font-family: 'SF Mono', 'Courier New', monospace;
+      font-weight: 600;
+      color: #4b5563;
+      background: #f3f4f6;
+      padding: 4px 8px;
+      border-radius: 5px;
+      font-size: 11px;
+      flex-shrink: 0;
+    }
+
+    .demo-query-row__info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .demo-query-row__desc {
+      font-weight: 500;
+      color: #1f2937;
+      font-size: 12px;
+      margin-bottom: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .demo-query-row__patient {
+      font-size: 11px;
+      color: #6b7280;
+    }
+
+    .demo-query-row__status {
+      font-size: 10px;
+      padding: 3px 8px;
+      border-radius: 10px;
+      font-weight: 600;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .demo-query-row__status--draft {
+      background: #fef7ed;
+      color: #ea8600;
+    }
+
+    .demo-query-row__status--sent {
+      background: #f3f4f6;
+      color: #4b5563;
+    }
+
+    /* HIPPS Cards Grid */
+    .demo-hipps-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .demo-hipps-card {
+      background: white;
+      border: 1px solid #d1fae5;
+      border-radius: 10px;
+      overflow: hidden;
+      transition: all 0.15s;
+    }
+
+    .demo-hipps-card:hover {
+      border-color: #a7f3d0;
+      background: #fafffe;
+    }
+
+    .demo-hipps-card__header {
+      padding: 10px;
+      border-bottom: 1px solid #e8f5f0;
+      background: #f7fefa;
+    }
+
+    .demo-hipps-card__patient {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .demo-hipps-card__patient-icon {
+      width: 28px;
+      height: 28px;
+      background: #d1fae5;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #16a34a;
+    }
+
+    .demo-hipps-card__patient-icon svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    .demo-hipps-card__patient-name {
+      font-weight: 600;
+      color: #374151;
+      font-size: 12px;
+    }
+
+    .demo-hipps-card__meta {
+      font-size: 10px;
+      color: #6b7280;
+    }
+
+    .demo-hipps-card__body {
+      padding: 12px 10px;
+    }
+
+    .demo-hipps-comparison {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .demo-hipps-current,
+    .demo-hipps-potential {
+      text-align: center;
+    }
+
+    .demo-hipps-label {
+      font-size: 9px;
+      color: #6b7280;
+      font-weight: 600;
+      margin-bottom: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+
+    .demo-hipps-code {
+      font-family: 'SF Mono', 'Courier New', monospace;
+      font-size: 16px;
+      font-weight: 600;
+      color: #374151;
+      background: #f9fafb;
+      padding: 5px 10px;
+      border-radius: 6px;
+      display: inline-block;
+      border: 1px solid #e5e7eb;
+    }
+
+    .demo-hipps-code--highlight {
+      color: #15803d;
+      background: #f0fdf4;
+      border-color: #86efac;
+    }
+
+    .demo-hipps-arrow {
+      color: #9ca3af;
+      display: flex;
+      align-items: center;
+    }
+
+    .demo-hipps-arrow svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    .demo-hipps-revenue {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      background: #f0fdf4;
+      border-radius: 6px;
+      padding: 6px 10px;
+      color: #15803d;
+      font-weight: 600;
+      font-size: 11px;
+      border: 1px solid #d1fae5;
+    }
+
+    .demo-hipps-revenue svg {
+      width: 12px;
+      height: 12px;
+      color: #15803d;
+    }
+
+    .demo-hipps-card__footer {
+      padding: 10px;
+      border-top: 1px solid #e8f5f0;
+      background: #fafffe;
+    }
+
+    .demo-hipps-action-btn {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 7px 12px;
+      background: #16a34a;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 11px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .demo-hipps-action-btn:hover {
+      background: #15803d;
+    }
+
+    .demo-hipps-action-btn svg {
+      width: 12px;
+      height: 12px;
+    }
+
+    /* Empty State */
+    .demo-empty-state {
+      text-align: center;
+      padding: 24px 16px;
+      color: #9ca3af;
+      font-size: 12px;
+    }
+
+    /* Scrollbar styling */
+    .demo-dashboard::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .demo-dashboard::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .demo-dashboard::-webkit-scrollbar-thumb {
+      background: #d1d5db;
+      border-radius: 3px;
+    }
+
+    .demo-dashboard::-webkit-scrollbar-thumb:hover {
+      background: #9ca3af;
+    }
+
+    /* Old query list styles (kept for compatibility) */
     .demo-query-list {
       display: flex;
       flex-direction: column;
@@ -1747,6 +2254,11 @@
       color: #e65100;
     }
 
+    .demo-query-status--sent {
+      background: #e3f2fd;
+      color: #1565c0;
+    }
+
     .demo-opportunity-card {
       background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
       padding: 16px;
@@ -1786,6 +2298,9 @@
       cursor: pointer;
       font-weight: 500;
       transition: background 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
     }
 
     .demo-icd10-btn:hover {
@@ -1910,11 +2425,6 @@
       color: #888;
       padding: 16px;
       font-style: italic;
-    }
-
-    .demo-query-status--sent {
-      background: #e3f2fd;
-      color: #1565c0;
     }
 
     /* ===== Therapy Progress Styles ===== */

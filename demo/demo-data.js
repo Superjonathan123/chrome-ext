@@ -233,7 +233,8 @@ const DemoData = {
         mdsExternalAssessmentId: '4860265',
         status: 'signed',
         signedAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
-        mdsItemCoded: false
+        mdsItemCoded: false,
+        pdfPath: '/Users/andrewburns/Downloads/query_jutxlrwthshb_45_NTA (3).pdf'
       }
     ],
 
