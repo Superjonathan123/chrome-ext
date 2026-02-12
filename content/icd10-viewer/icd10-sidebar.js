@@ -492,6 +492,9 @@ const ICD10Sidebar = {
         category: 'topRanked',
         groupId: groupId,
         baseCode: group.groupCode,
+        groupName: group.groupName,
+        evidenceStrength: group.evidenceStrength,
+        rationale: group.rationale,
         items: items
       });
     }

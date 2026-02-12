@@ -325,8 +325,15 @@ const ICD10Viewer = {
    */
   _handleSidebarSelection(selection) {
     console.log('[ICD10Viewer] _handleSidebarSelection:', selection.category, selection.baseCode || selection.groupId, selection.items?.length, 'items');
-    // Update evidence panel with selected items
-    ICD10EvidencePanel.updateItems(selection.items, true);
+
+    // Pass group context along with items
+    const groupContext = {
+      groupCode: selection.baseCode,
+      groupName: selection.groupName || null,
+      evidenceStrength: selection.evidenceStrength || null,
+      rationale: selection.rationale || null
+    };
+    ICD10EvidencePanel.updateItems(selection.items, true, groupContext);
 
     // Fire-and-forget summary fetch for the selected base code
     const baseCode = selection.baseCode || selection.groupCode;

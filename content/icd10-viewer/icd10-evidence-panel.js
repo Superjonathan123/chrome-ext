@@ -1,15 +1,19 @@
 /**
  * ICD-10 Evidence Panel Component
- * Middle panel showing evidence cards for selected diagnoses
+ * Middle panel showing document-grouped evidence for selected diagnoses
  */
 
 const ICD10EvidencePanel = {
   // State
-  selectedCardId: null,
+  selectedItemId: null,
   items: [],
-  approveLoadingIds: new Set(),
-  approvedIds: new Set(),
-  expandedOptions: new Set(),
+  groupContext: null,
+  expandedDocuments: new Set(),
+  approveLoading: false,
+  isApproved: false,
+  selectedCode: null,
+  selectedDescription: null,
+  codeDropdownOpen: false,
   summaryText: null,
   summaryLoading: false,
   summaryError: false,
@@ -17,7 +21,7 @@ const ICD10EvidencePanel = {
   /**
    * Initialize the evidence panel
    * @param {HTMLElement} container - The panel container element
-   * @param {Function} onCardSelect - Callback when a card is selected
+   * @param {Function} onCardSelect - Callback when an evidence item is selected
    * @param {Function} onApprove - Callback when approve is clicked
    */
   init(container, onCardSelect, onApprove) {
@@ -26,11 +30,15 @@ const ICD10EvidencePanel = {
     this.onCardSelect = onCardSelect;
     this.onApprove = onApprove;
     // Reset all state from any previous opening
-    this.selectedCardId = null;
+    this.selectedItemId = null;
     this.items = [];
-    this.approveLoadingIds.clear();
-    this.approvedIds.clear();
-    this.expandedOptions.clear();
+    this.groupContext = null;
+    this.expandedDocuments.clear();
+    this.approveLoading = false;
+    this.isApproved = false;
+    this.selectedCode = null;
+    this.selectedDescription = null;
+    this.codeDropdownOpen = false;
     this.render();
   },
 
@@ -38,22 +46,44 @@ const ICD10EvidencePanel = {
    * Update items to display
    * @param {Array} items - Array of annotation items to display
    * @param {boolean} autoSelect - Whether to auto-select the first item
+   * @param {Object} groupContext - Diagnosis-level info (groupCode, groupName, evidenceStrength, rationale)
    */
-  updateItems(items, autoSelect = true) {
+  updateItems(items, autoSelect = true, groupContext = null) {
     console.log('[ICD10EvidencePanel] updateItems called with', items?.length, 'items, autoSelect:', autoSelect);
     // Normalize items to have consistent field names, then deduplicate
     const normalized = this._sortItems(items).map(item => this._normalizeItem(item));
     this.items = this._deduplicateItems(normalized);
-    this.expandedOptions.clear();
+    this.groupContext = groupContext;
+    this.expandedDocuments.clear();
+    this.approveLoading = false;
+    this.isApproved = false;
+    this.codeDropdownOpen = false;
     this.clearSummary();
+
+    // Set initial selected code from groupContext or first item
+    if (groupContext && groupContext.groupCode) {
+      this.selectedCode = groupContext.groupCode;
+      this.selectedDescription = groupContext.groupName || this._getDescriptionForCode(groupContext.groupCode);
+    } else if (this.items.length > 0) {
+      this.selectedCode = this.items[0].icd10Code;
+      this.selectedDescription = this.items[0].description;
+    } else {
+      this.selectedCode = null;
+      this.selectedDescription = null;
+    }
+
+    // Auto-expand first document group
+    const docGroups = this._groupByDocument(this.items);
+    if (docGroups.length > 0) {
+      this.expandedDocuments.add(docGroups[0].documentId);
+    }
+
     this.render();
 
     // Auto-select first item if requested and items exist
     if (autoSelect && this.items.length > 0) {
       console.log('[ICD10EvidencePanel] Auto-selecting first item:', this.items[0].id);
-      this._selectCard(this.items[0].id);
-    } else {
-      console.log('[ICD10EvidencePanel] Not auto-selecting: autoSelect=', autoSelect, 'items.length=', this.items.length);
+      this._selectItem(this.items[0].id);
     }
   },
 
@@ -84,7 +114,9 @@ const ICD10EvidencePanel = {
       // Preserve options array as-is
       options: item.options || [],
       // Preserve evidenceStrength as-is
-      evidenceStrength: item.evidenceStrength || null
+      evidenceStrength: item.evidenceStrength || null,
+      // Normalize document date
+      documentDate: item.documentDate || item.date || item.createdAt || ''
     };
     console.log('[ICD10EvidencePanel] Normalized item:', normalized.id, 'wordBlockIndices:', normalized.wordBlockIndices?.length, 'wordBlocks:', normalized.wordBlocks?.length);
     return normalized;
@@ -127,6 +159,86 @@ const ICD10EvidencePanel = {
   },
 
   /**
+   * Group items by document
+   * @param {Array} items - Normalized items
+   * @returns {Array} - Array of { documentId, documentName, documentDate, items }
+   */
+  _groupByDocument(items) {
+    const docMap = new Map();
+
+    items.forEach(item => {
+      const docId = item.documentId || 'unknown';
+      if (!docMap.has(docId)) {
+        docMap.set(docId, {
+          documentId: docId,
+          documentName: this._formatDocumentName(item.documentName),
+          documentDate: item.documentDate || '',
+          items: []
+        });
+      }
+      docMap.get(docId).items.push(item);
+    });
+
+    // Sort groups by number of items (most evidence first)
+    return Array.from(docMap.values()).sort((a, b) => b.items.length - a.items.length);
+  },
+
+  /**
+   * Get all unique codes from items' options arrays
+   * @returns {Array} - Array of { code, description }
+   */
+  _getAvailableCodes() {
+    const codeMap = new Map();
+
+    // Add the primary code first
+    if (this.groupContext?.groupCode) {
+      codeMap.set(this.groupContext.groupCode, {
+        code: this.groupContext.groupCode,
+        description: this.groupContext.groupName || this._getDescriptionForCode(this.groupContext.groupCode)
+      });
+    }
+
+    // Collect unique codes from all items' options
+    this.items.forEach(item => {
+      if (item.options && item.options.length > 0) {
+        item.options.forEach(opt => {
+          if (!codeMap.has(opt.code)) {
+            codeMap.set(opt.code, {
+              code: opt.code,
+              description: opt.description || ''
+            });
+          }
+        });
+      }
+      // Also add the item's own code
+      if (item.icd10Code && !codeMap.has(item.icd10Code)) {
+        codeMap.set(item.icd10Code, {
+          code: item.icd10Code,
+          description: item.description || ''
+        });
+      }
+    });
+
+    return Array.from(codeMap.values());
+  },
+
+  /**
+   * Get description for a code from items
+   * @param {string} code - ICD-10 code
+   * @returns {string}
+   */
+  _getDescriptionForCode(code) {
+    for (const item of this.items) {
+      if (item.icd10Code === code) return item.description || '';
+      if (item.options) {
+        const opt = item.options.find(o => o.code === code);
+        if (opt) return opt.description || '';
+      }
+    }
+    return '';
+  },
+
+  /**
    * Render the evidence panel
    */
   render() {
@@ -150,14 +262,17 @@ const ICD10EvidencePanel = {
     }
 
     const summaryHtml = this._buildSummaryHtml() || '';
+    const docGroups = this._groupByDocument(this.items);
+    const uniqueDocCount = docGroups.length;
 
     const html = `
-      <div class="icd10-evidence-panel__header">
-        <span class="icd10-evidence-panel__count">${this.items.length} suggestion${this.items.length !== 1 ? 's' : ''}</span>
-      </div>
+      ${this._renderDiagnosisHeader()}
       ${summaryHtml}
+      <div class="icd10-evidence-panel__doc-count">
+        ${this.items.length} mention${this.items.length !== 1 ? 's' : ''} across ${uniqueDocCount} document${uniqueDocCount !== 1 ? 's' : ''}
+      </div>
       <div class="icd10-evidence-panel__list">
-        ${this.items.map(item => this._renderCard(item)).join('')}
+        ${docGroups.map(docGroup => this._renderDocumentGroup(docGroup)).join('')}
       </div>
     `;
 
@@ -166,138 +281,142 @@ const ICD10EvidencePanel = {
   },
 
   /**
-   * Render a single evidence card
-   * @param {Object} item - Annotation item (already normalized)
+   * Render the diagnosis header with code selector and approve button
    * @returns {string} - HTML string
    */
-  _renderCard(item) {
-    const isSelected = this.selectedCardId === item.id;
-    const isLoading = this.approveLoadingIds.has(item.id);
-    const isApproved = this.approvedIds.has(item.id) || item.isApproved;
+  _renderDiagnosisHeader() {
+    const code = this.selectedCode || '';
+    const description = this.selectedDescription || '';
+    const availableCodes = this._getAvailableCodes();
+    const hasMultipleCodes = availableCodes.length > 1;
 
-    // Truncate description if too long
-    const maxDescLength = 60;
-    const description = item.description || '';
-    const truncatedDesc = description.length > maxDescLength
-      ? description.substring(0, maxDescLength) + '...'
-      : description;
-
-    // Truncate quote if too long (already normalized)
-    const quote = item.quoteText || '';
-    const maxQuoteLength = 150;
-    const truncatedQuote = quote.length > maxQuoteLength
-      ? quote.substring(0, maxQuoteLength) + '...'
-      : quote;
-
-    // Format document name (already normalized)
-    const docName = this._formatDocumentName(item.documentName);
-    const pageNum = item.pageNumber;
-
-    // Format document date if available
-    const docDate = item.documentDate || item.date || item.createdAt || '';
-    const formattedDate = docDate ? this._formatDate(docDate) : '';
-
-    // Only show quote section if there's actual quote text
-    const quoteHtml = truncatedQuote
-      ? `<div class="icd10-evidence-card__quote">"${this._escapeHtml(truncatedQuote)}"</div>`
-      : '';
-
-    // Build source line: "DC Summary.pdf · Page 4 · Dec 1"
-    const sourceParts = [this._escapeHtml(docName)];
-    if (pageNum) sourceParts.push(`Page ${pageNum}`);
-    if (formattedDate) sourceParts.push(formattedDate);
-    const sourceText = sourceParts.join(' &middot; ');
-
-    const hasAltCodes = item.options && item.options.length > 1;
-
-    return `
-      <div class="icd10-evidence-card ${isSelected ? 'icd10-evidence-card--selected' : ''} ${isApproved ? 'icd10-evidence-card--approved' : ''}"
-           data-card-id="${item.id}">
-        <div class="icd10-evidence-card__header">
-          <span class="icd10-evidence-card__code">${item.icd10Code}</span>
-          <span class="icd10-evidence-card__description">${this._escapeHtml(truncatedDesc)}</span>
-        </div>
-        ${quoteHtml}
-        <div class="icd10-evidence-card__source">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;opacity:0.4">
-            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-            <polyline points="14 2 14 8 20 8"></polyline>
-          </svg>
-          <span>${sourceText}</span>
-        </div>
-        <div class="icd10-evidence-card__actions">
-          ${this._renderApproveButton(item, isLoading, isApproved, hasAltCodes)}
-        </div>
-      </div>
-    `;
-  },
-
-
-  /**
-   * Render the approve button in appropriate state
-   * @param {Object} item - Annotation item
-   * @param {boolean} isLoading - Whether approval is in progress
-   * @param {boolean} isApproved - Whether already approved
-   * @returns {string} - HTML string
-   */
-  _renderApproveButton(item, isLoading, isApproved, hasAltCodes) {
-    if (isApproved) {
-      return `
-        <button class="icd10-evidence-card__approve icd10-evidence-card__approve--approved" disabled>
+    let approveHtml = '';
+    if (this.isApproved) {
+      approveHtml = `
+        <button class="icd10-evidence-panel__approve icd10-evidence-panel__approve--approved" disabled>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <polyline points="20 6 9 17 4 12"></polyline>
           </svg>
           Approved
         </button>
       `;
-    }
-
-    if (isLoading) {
-      return `
-        <button class="icd10-evidence-card__approve icd10-evidence-card__approve--loading" disabled>
-          <span class="icd10-evidence-card__spinner"></span>
+    } else if (this.approveLoading) {
+      approveHtml = `
+        <button class="icd10-evidence-panel__approve icd10-evidence-panel__approve--loading" disabled>
+          <span class="icd10-evidence-panel__approve-spinner"></span>
           Approving...
         </button>
       `;
-    }
-
-    const isDropdownOpen = this.expandedOptions.has(item.id);
-
-    return `
-      <div class="icd10-evidence-card__approve-group">
-        <button class="icd10-evidence-card__approve" data-approve-id="${item.id}">
+    } else {
+      approveHtml = `
+        <button class="icd10-evidence-panel__approve" data-action="approve">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <polyline points="20 6 9 17 4 12"></polyline>
           </svg>
           Approve
         </button>
-        ${hasAltCodes ? `
-          <button class="icd10-evidence-card__approve-dropdown ${isDropdownOpen ? 'icd10-evidence-card__approve-dropdown--open' : ''}"
-                  data-options-toggle="${item.id}" title="Alternative codes">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-              <polyline points="6 9 12 15 18 9"></polyline>
-            </svg>
-          </button>
-        ` : ''}
-      </div>
-      ${hasAltCodes && isDropdownOpen ? `
-        <div class="icd10-evidence-card__alt-codes">
-          ${item.options.slice(1).map(opt => `
-            <div class="icd10-evidence-card__alt-code" data-alt-approve="${item.id}" data-alt-code="${opt.code}" data-alt-desc="${this._escapeHtml(opt.description)}">
-              <span class="icd10-evidence-card__alt-code-value">${opt.code}</span>
-              <span class="icd10-evidence-card__alt-code-desc">${this._escapeHtml(opt.description || '')}</span>
+      `;
+    }
+
+    return `
+      <div class="icd10-evidence-panel__header">
+        <div class="icd10-evidence-panel__diagnosis-header">
+          <div class="icd10-evidence-panel__diagnosis-top">
+            <div class="icd10-evidence-panel__code-selector ${hasMultipleCodes ? 'icd10-evidence-panel__code-selector--has-options' : ''}" data-action="toggle-codes">
+              <span class="icd10-evidence-panel__diagnosis-code">${this._escapeHtml(code)}</span>
+              ${hasMultipleCodes ? `
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="icd10-evidence-panel__code-chevron ${this.codeDropdownOpen ? 'icd10-evidence-panel__code-chevron--open' : ''}">
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              ` : ''}
             </div>
-          `).join('')}
+            <span class="icd10-evidence-panel__diagnosis-desc">${this._escapeHtml(description)}</span>
+          </div>
+          ${this.codeDropdownOpen ? `
+            <div class="icd10-evidence-panel__code-dropdown">
+              ${availableCodes.map(opt => `
+                <div class="icd10-evidence-panel__code-option ${opt.code === this.selectedCode ? 'icd10-evidence-panel__code-option--selected' : ''}"
+                     data-select-code="${this._escapeHtml(opt.code)}" data-select-desc="${this._escapeHtml(opt.description)}">
+                  <span class="icd10-evidence-panel__code-option-value">${this._escapeHtml(opt.code)}</span>
+                  <span class="icd10-evidence-panel__code-option-desc">${this._escapeHtml(opt.description)}</span>
+                </div>
+              `).join('')}
+            </div>
+          ` : ''}
+          <div class="icd10-evidence-panel__diagnosis-actions">
+            ${approveHtml}
+          </div>
         </div>
-      ` : ''}
+      </div>
     `;
   },
 
   /**
-   * Get confidence class based on value
-   * @param {number} confidence - Confidence value (0-1)
-   * @returns {string} - CSS class
+   * Render a document group section
+   * @param {Object} docGroup - { documentId, documentName, documentDate, items }
+   * @returns {string} - HTML string
    */
+  _renderDocumentGroup(docGroup) {
+    const isExpanded = this.expandedDocuments.has(docGroup.documentId);
+    const formattedDate = docGroup.documentDate ? this._formatDate(docGroup.documentDate) : '';
+    const headerParts = [this._escapeHtml(docGroup.documentName)];
+    if (formattedDate) headerParts.push(formattedDate);
+
+    return `
+      <div class="icd10-evidence-panel__doc-group ${isExpanded ? 'icd10-evidence-panel__doc-group--expanded' : ''}"
+           data-doc-id="${docGroup.documentId}">
+        <div class="icd10-evidence-panel__doc-header" data-doc-toggle="${docGroup.documentId}">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="icd10-evidence-panel__doc-icon">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+          </svg>
+          <span class="icd10-evidence-panel__doc-name">${headerParts.join(' - ')}</span>
+          <span class="icd10-evidence-panel__doc-item-count">${docGroup.items.length}</span>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+               class="icd10-evidence-panel__doc-chevron ${isExpanded ? 'icd10-evidence-panel__doc-chevron--expanded' : ''}">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </div>
+        ${isExpanded ? `
+          <div class="icd10-evidence-panel__doc-items">
+            ${docGroup.items.map((item, index) => this._renderEvidenceItem(item, index + 1)).join('')}
+          </div>
+        ` : ''}
+      </div>
+    `;
+  },
+
+  /**
+   * Render a single evidence item within a document group
+   * @param {Object} item - Normalized annotation item
+   * @param {number} index - 1-based index within the document
+   * @returns {string} - HTML string
+   */
+  _renderEvidenceItem(item, index) {
+    const isSelected = this.selectedItemId === item.id;
+    const quote = item.quoteText || '';
+    const maxQuoteLength = 120;
+    const truncatedQuote = quote.length > maxQuoteLength
+      ? quote.substring(0, maxQuoteLength) + '...'
+      : quote;
+
+    const showCodeInline = this.selectedCode && item.icd10Code !== this.selectedCode;
+
+    return `
+      <div class="icd10-evidence-panel__evidence-item ${isSelected ? 'icd10-evidence-panel__evidence-item--selected' : ''}"
+           data-item-id="${item.id}">
+        <span class="icd10-evidence-panel__evidence-num">${index}</span>
+        <div class="icd10-evidence-panel__evidence-content">
+          ${showCodeInline ? `<span class="icd10-evidence-panel__evidence-inline-code">${this._escapeHtml(item.icd10Code)}</span>` : ''}
+          ${truncatedQuote
+            ? `<div class="icd10-evidence-panel__evidence-quote">"${this._escapeHtml(truncatedQuote)}"</div>`
+            : `<div class="icd10-evidence-panel__evidence-quote icd10-evidence-panel__evidence-quote--fallback">Evidence on page ${item.pageNumber}</div>`
+          }
+          <div class="icd10-evidence-panel__evidence-page">Page ${item.pageNumber}</div>
+        </div>
+      </div>
+    `;
+  },
 
   /**
    * Format document name for display
@@ -311,7 +430,7 @@ const ICD10EvidencePanel = {
   },
 
   /**
-   * Format a date string for display (e.g. "Dec 1, 2025")
+   * Format a date string for display (e.g. "Feb 06, 2026")
    * @param {string} dateStr - ISO date string or date-like string
    * @returns {string}
    */
@@ -320,7 +439,7 @@ const ICD10EvidencePanel = {
       const d = new Date(dateStr);
       if (isNaN(d.getTime())) return '';
       const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-      return `${months[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`;
+      return `${months[d.getMonth()]} ${String(d.getDate()).padStart(2, '0')}, ${d.getFullYear()}`;
     } catch { return ''; }
   },
 
@@ -343,77 +462,94 @@ const ICD10EvidencePanel = {
    * Attach event listeners
    */
   _attachEventListeners() {
-    // Card selection
-    this.container.querySelectorAll('.icd10-evidence-card').forEach(card => {
-      card.addEventListener('click', (e) => {
-        // Don't select if clicking approve area or dropdown
-        if (e.target.closest('.icd10-evidence-card__approve-group')) return;
-        if (e.target.closest('.icd10-evidence-card__approve')) return;
-
-        const cardId = card.dataset.cardId;
-        this._selectCard(cardId);
+    // Evidence item click -> select and navigate PDF
+    this.container.querySelectorAll('.icd10-evidence-panel__evidence-item').forEach(el => {
+      el.addEventListener('click', () => {
+        const itemId = el.dataset.itemId;
+        this._selectItem(itemId);
       });
     });
 
-    // Approve button clicks
-    this.container.querySelectorAll('[data-approve-id]').forEach(btn => {
-      btn.addEventListener('click', (e) => {
+    // Document header click -> toggle expand/collapse
+    this.container.querySelectorAll('[data-doc-toggle]').forEach(el => {
+      el.addEventListener('click', () => {
+        const docId = el.dataset.docToggle;
+        this._toggleDocument(docId);
+      });
+    });
+
+    // Code selector click -> toggle dropdown
+    const codeSelector = this.container.querySelector('[data-action="toggle-codes"]');
+    if (codeSelector) {
+      codeSelector.addEventListener('click', (e) => {
         e.stopPropagation();
-        const itemId = btn.dataset.approveId;
-        this._handleApprove(itemId);
+        this._toggleCodeDropdown();
       });
-    });
+    }
 
-    // Options dropdown toggle clicks
-    this.container.querySelectorAll('[data-options-toggle]').forEach(toggle => {
-      toggle.addEventListener('click', (e) => {
-        e.stopPropagation();
-        const itemId = toggle.dataset.optionsToggle;
-        this._toggleOptions(itemId);
-      });
-    });
-
-    // Alternative code selection clicks
-    this.container.querySelectorAll('[data-alt-approve]').forEach(el => {
+    // Code option selection
+    this.container.querySelectorAll('[data-select-code]').forEach(el => {
       el.addEventListener('click', (e) => {
         e.stopPropagation();
-        const itemId = el.dataset.altApprove;
-        const altCode = el.dataset.altCode;
-        const altDesc = el.dataset.altDesc;
-        this._handleApproveAlt(itemId, altCode, altDesc);
+        const code = el.dataset.selectCode;
+        const desc = el.dataset.selectDesc;
+        this._selectCode(code, desc);
       });
+    });
+
+    // Approve button click
+    const approveBtn = this.container.querySelector('[data-action="approve"]');
+    if (approveBtn) {
+      approveBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        this._handleApprove();
+      });
+    }
+
+    // Close code dropdown when clicking outside
+    this.container.addEventListener('click', (e) => {
+      if (this.codeDropdownOpen && !e.target.closest('[data-action="toggle-codes"]') && !e.target.closest('.icd10-evidence-panel__code-dropdown')) {
+        this.codeDropdownOpen = false;
+        this.render();
+      }
     });
   },
 
   /**
-   * Toggle options expansion for a card
-   * @param {string} itemId - Item ID
+   * Toggle document group expand/collapse
+   * @param {string} docId - Document ID
    */
-  _toggleOptions(itemId) {
-    if (this.expandedOptions.has(itemId)) {
-      this.expandedOptions.delete(itemId);
+  _toggleDocument(docId) {
+    if (this.expandedDocuments.has(docId)) {
+      this.expandedDocuments.delete(docId);
     } else {
-      this.expandedOptions.add(itemId);
+      this.expandedDocuments.add(docId);
     }
     this.render();
   },
 
   /**
-   * Select a card
-   * @param {string} cardId - Card ID to select
+   * Select an evidence item
+   * @param {string} itemId - Item ID to select
    */
-  _selectCard(cardId) {
-    console.log('[ICD10EvidencePanel] _selectCard called:', cardId, 'current:', this.selectedCardId);
-    if (this.selectedCardId === cardId) {
-      console.log('[ICD10EvidencePanel] Card already selected, skipping');
+  _selectItem(itemId) {
+    console.log('[ICD10EvidencePanel] _selectItem called:', itemId, 'current:', this.selectedItemId);
+    if (this.selectedItemId === itemId) {
+      console.log('[ICD10EvidencePanel] Item already selected, skipping');
       return;
     }
 
-    this.selectedCardId = cardId;
+    this.selectedItemId = itemId;
+
+    // Make sure the document containing this item is expanded
+    const item = this.items.find(i => i.id === itemId);
+    if (item && item.documentId) {
+      this.expandedDocuments.add(item.documentId);
+    }
+
     this.render();
 
-    // Find the item and notify
-    const item = this.items.find(i => i.id === cardId);
+    // Notify to load PDF
     console.log('[ICD10EvidencePanel] Found item:', item?.id, 'has callback:', !!this.onCardSelect);
     if (item && this.onCardSelect) {
       console.log('[ICD10EvidencePanel] Calling onCardSelect for item:', item.id);
@@ -422,54 +558,53 @@ const ICD10EvidencePanel = {
   },
 
   /**
-   * Handle approve button click
-   * @param {string} itemId - Item ID to approve
+   * Toggle the code selector dropdown
    */
-  async _handleApprove(itemId) {
-    if (this.approveLoadingIds.has(itemId)) return;
+  _toggleCodeDropdown() {
+    const availableCodes = this._getAvailableCodes();
+    if (availableCodes.length <= 1) return;
+    this.codeDropdownOpen = !this.codeDropdownOpen;
+    this.render();
+  },
 
-    this.approveLoadingIds.add(itemId);
+  /**
+   * Select a code from the dropdown (UI only, doesn't save)
+   * @param {string} code - ICD-10 code
+   * @param {string} description - Code description
+   */
+  _selectCode(code, description) {
+    this.selectedCode = code;
+    this.selectedDescription = description;
+    this.codeDropdownOpen = false;
+    this.render();
+  },
+
+  /**
+   * Handle approve button click - approves whatever code is currently shown
+   */
+  async _handleApprove() {
+    if (this.approveLoading || this.isApproved) return;
+
+    this.approveLoading = true;
     this.render();
 
     try {
-      const item = this.items.find(i => i.id === itemId);
-      if (item && this.onApprove) {
-        await this.onApprove(item);
-        this.approvedIds.add(itemId);
+      // Construct an item with the selected code
+      const baseItem = this.items[0] || {};
+      const approveItem = {
+        ...baseItem,
+        icd10Code: this.selectedCode,
+        description: this.selectedDescription
+      };
+
+      if (this.onApprove) {
+        await this.onApprove(approveItem);
+        this.isApproved = true;
       }
     } catch (error) {
       console.error('ICD10EvidencePanel: Approve failed:', error);
     } finally {
-      this.approveLoadingIds.delete(itemId);
-      this.render();
-    }
-  },
-
-  /**
-   * Handle approving an alternative code
-   * @param {string} itemId - Original item ID
-   * @param {string} altCode - Alternative ICD-10 code
-   * @param {string} altDesc - Alternative code description
-   */
-  async _handleApproveAlt(itemId, altCode, altDesc) {
-    if (this.approveLoadingIds.has(itemId)) return;
-
-    this.approveLoadingIds.add(itemId);
-    this.expandedOptions.delete(itemId);
-    this.render();
-
-    try {
-      const item = this.items.find(i => i.id === itemId);
-      if (item && this.onApprove) {
-        // Override the code and description with the alt code
-        const altItem = { ...item, icd10Code: altCode, description: altDesc };
-        await this.onApprove(altItem);
-        this.approvedIds.add(itemId);
-      }
-    } catch (error) {
-      console.error('ICD10EvidencePanel: Alt approve failed:', error);
-    } finally {
-      this.approveLoadingIds.delete(itemId);
+      this.approveLoading = false;
       this.render();
     }
   },
@@ -479,7 +614,7 @@ const ICD10EvidencePanel = {
    * @param {string} itemId - Item ID that was approved
    */
   markApproved(itemId) {
-    this.approvedIds.add(itemId);
+    this.isApproved = true;
     this.render();
   },
 
@@ -488,8 +623,8 @@ const ICD10EvidencePanel = {
    * @returns {Object|null}
    */
   getSelectedItem() {
-    if (!this.selectedCardId) return null;
-    return this.items.find(i => i.id === this.selectedCardId) || null;
+    if (!this.selectedItemId) return null;
+    return this.items.find(i => i.id === this.selectedItemId) || null;
   },
 
   /**
@@ -538,7 +673,7 @@ const ICD10EvidencePanel = {
         existing.outerHTML = newHtml;
       }
     } else if (newHtml) {
-      // Insert after header, before list
+      // Insert after header, before doc-count
       const header = this.container.querySelector('.icd10-evidence-panel__header');
       if (header) {
         header.insertAdjacentHTML('afterend', newHtml);
@@ -573,10 +708,15 @@ const ICD10EvidencePanel = {
    * Clear selection and items
    */
   clear() {
-    this.selectedCardId = null;
+    this.selectedItemId = null;
     this.items = [];
-    this.approveLoadingIds.clear();
-    this.expandedOptions.clear();
+    this.groupContext = null;
+    this.expandedDocuments.clear();
+    this.approveLoading = false;
+    this.isApproved = false;
+    this.selectedCode = null;
+    this.selectedDescription = null;
+    this.codeDropdownOpen = false;
     this.clearSummary();
     this.render();
   }
