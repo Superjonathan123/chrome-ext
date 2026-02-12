@@ -11,6 +11,8 @@ const ICD10Viewer = {
   facilityName: null,
   orgSlug: null,
   annotations: [],
+  topRanked: [],
+  counts: {},
   approvedDiagnoses: [],
 
   // DOM elements
@@ -63,8 +65,9 @@ const ICD10Viewer = {
       document.body.style.overflow = '';
 
       // Clear component state
-      ICD10Sidebar.selectedCategory = 'nta';
+      ICD10Sidebar.selectedCategory = 'topRanked';
       ICD10Sidebar.selectedBaseCode = null;
+      ICD10Sidebar.selectedGroupId = null;
       ICD10EvidencePanel.clear();
       ICD10PDFViewer.clear();
     }, 200);
@@ -132,24 +135,17 @@ const ICD10Viewer = {
       }
     }
 
-    // Get facility and org from API params helper
-    let facilityName = null;
+    // Get facility name from PCC page
+    const facLink = document.getElementById('pccFacLink');
+    let facilityName = facLink?.title || facLink?.textContent?.trim() || null;
+
+    // Get org slug from PCC cookie via background script (same pattern as mds-view, streaming, etc.)
     let orgSlug = null;
-
-    if (typeof window.getCurrentParams === 'function') {
-      try {
-        const params = await window.getCurrentParams();
-        facilityName = params.facilityName;
-        orgSlug = params.orgSlug;
-      } catch (e) {
-        console.warn('ICD10Viewer: Could not get API params:', e);
-      }
-    }
-
-    // Fallback facility detection
-    if (!facilityName) {
-      const facLink = document.getElementById('pccFacLink');
-      facilityName = facLink?.title || facLink?.textContent?.trim();
+    try {
+      const orgResponse = await chrome.runtime.sendMessage({ type: 'GET_ORG' });
+      orgSlug = orgResponse?.org || null;
+    } catch (e) {
+      console.warn('ICD10Viewer: Could not get org slug:', e);
     }
 
     return {
@@ -182,9 +178,6 @@ const ICD10Viewer = {
             <span class="icd10-viewer__patient-info">${this._escapeHtml(this.patientName)}</span>
           </div>
           <div class="icd10-viewer__header-actions">
-            <span class="icd10-viewer__annotation-count">
-              <span class="icd10-viewer__annotation-count-num">0</span> annotations
-            </span>
             <button class="icd10-viewer__close-btn" title="Close">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -273,19 +266,15 @@ const ICD10Viewer = {
   async _loadData() {
     try {
       // Fetch data in parallel
-      const [annotations, approvedDiagnoses] = await Promise.all([
+      const [annotationData, approvedDiagnoses] = await Promise.all([
         ICD10API.getAnnotations(this.patientId, this.facilityName, this.orgSlug),
         ICD10API.getApprovedDiagnoses(this.patientId, this.facilityName, this.orgSlug)
       ]);
 
-      this.annotations = annotations || [];
+      this.topRanked = annotationData.topRanked || [];
+      this.annotations = annotationData.flatAnnotations || [];
+      this.counts = annotationData.counts || {};
       this.approvedDiagnoses = approvedDiagnoses || [];
-
-      // Update annotation count
-      const countEl = this.modal.querySelector('.icd10-viewer__annotation-count-num');
-      if (countEl) {
-        countEl.textContent = this.annotations.length;
-      }
 
       // Initialize components
       this._initializeComponents();
@@ -300,7 +289,7 @@ const ICD10Viewer = {
    * Initialize the three panel components
    */
   _initializeComponents() {
-    console.log('[ICD10Viewer] _initializeComponents: annotations=', this.annotations?.length, 'approved=', this.approvedDiagnoses?.length);
+    console.log('[ICD10Viewer] _initializeComponents: topRanked=', this.topRanked?.length, 'annotations=', this.annotations?.length, 'approved=', this.approvedDiagnoses?.length);
 
     // Initialize evidence panel FIRST so callback is ready when sidebar auto-selects
     console.log('[ICD10Viewer] Initializing evidence panel...');
@@ -319,8 +308,10 @@ const ICD10Viewer = {
     ICD10Sidebar.init(
       this.sidebar,
       {
+        topRanked: this.topRanked,
         annotations: this.annotations,
-        approvedDiagnoses: this.approvedDiagnoses
+        approvedDiagnoses: this.approvedDiagnoses,
+        counts: this.counts
       },
       (selection) => this._handleSidebarSelection(selection)
     );
@@ -333,9 +324,18 @@ const ICD10Viewer = {
    * @param {Object} selection - { category, baseCode, items }
    */
   _handleSidebarSelection(selection) {
-    console.log('[ICD10Viewer] _handleSidebarSelection:', selection.category, selection.baseCode, selection.items?.length, 'items');
+    console.log('[ICD10Viewer] _handleSidebarSelection:', selection.category, selection.baseCode || selection.groupId, selection.items?.length, 'items');
     // Update evidence panel with selected items
     ICD10EvidencePanel.updateItems(selection.items, true);
+
+    // Fire-and-forget summary fetch for the selected base code
+    const baseCode = selection.baseCode || selection.groupCode;
+    if (baseCode) {
+      ICD10EvidencePanel.showSummaryLoading();
+      ICD10API.getEvidenceSummary(this.patientId, baseCode, this.facilityName, this.orgSlug)
+        .then(data => ICD10EvidencePanel.showSummary(data.summary))
+        .catch(() => ICD10EvidencePanel.clearSummary());
+    }
   },
 
   /**
@@ -428,14 +428,25 @@ const ICD10Viewer = {
       };
       this.approvedDiagnoses.push(approvedDx);
 
-      // Remove from annotations (move to approved)
+      // Remove from flat annotations
       const index = this.annotations.findIndex(a => a.id === item.id);
       if (index > -1) {
         this.annotations.splice(index, 1);
       }
 
+      // Also remove from topRanked groups
+      for (const group of this.topRanked) {
+        const annIdx = group.annotations.findIndex(a => a.id === item.id);
+        if (annIdx > -1) {
+          group.annotations.splice(annIdx, 1);
+          group.annotationCount = group.annotations.length;
+          break;
+        }
+      }
+
       // Update sidebar with new data
       ICD10Sidebar.updateData({
+        topRanked: this.topRanked,
         annotations: this.annotations,
         approvedDiagnoses: this.approvedDiagnoses
       });

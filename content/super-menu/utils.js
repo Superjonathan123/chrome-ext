@@ -95,3 +95,11 @@ function getToolSummary(toolName, input) {
       return '';
   }
 }
+
+// Make available globally for cross-file access
+window.escapeHtml = escapeHtml;
+window.formatMarkdown = formatMarkdown;
+window.formatDate = formatDate;
+window.formatToolName = formatToolName;
+window.getToolIcon = getToolIcon;
+window.getToolSummary = getToolSummary;

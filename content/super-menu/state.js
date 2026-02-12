@@ -31,3 +31,9 @@ const MDSViewState = {
 
 // FAB position storage key
 const FAB_POSITION_KEY = 'super-menu-fab-position';
+
+// Make available globally for cross-file access
+window.SuperMenu = SuperMenu;
+window.SuperChat = SuperChat;
+window.MDSViewState = MDSViewState;
+window.FAB_POSITION_KEY = FAB_POSITION_KEY;

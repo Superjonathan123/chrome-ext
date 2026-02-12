@@ -66,3 +66,8 @@ function clearChatSession() {
   renderChatMessages();
   updateInputState();
 }
+
+// Make available globally for cross-file access
+window.saveChatSession = saveChatSession;
+window.loadChatSession = loadChatSession;
+window.clearChatSession = clearChatSession;

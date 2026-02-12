@@ -1,8 +1,13 @@
 // Background service worker for Super LTC Chrome Extension
 // Handles cookie access, cross-origin requests, and authentication
 
-// Import config
-importScripts('../config.js');
+// CONFIG is inlined here since service workers use ES modules and can't use importScripts
+const CONFIG = {
+  DEV_MODE: false,
+  get API_BASE() {
+    return 'http://localhost:3000';
+  }
+};
 
 // Helper: Make authenticated API requests
 async function apiRequest(endpoint, options = {}) {
@@ -182,6 +187,9 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     })();
     return true;
   }
+
+  // Unhandled message type - don't hold the channel open
+  return false;
 });
 
 // ============================================

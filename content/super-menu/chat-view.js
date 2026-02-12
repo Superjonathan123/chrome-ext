@@ -257,3 +257,10 @@ function showChatError(errorMessage) {
   container.appendChild(errorDiv);
   scrollToBottom();
 }
+
+// Make available globally for cross-file access
+window.renderChatMessages = renderChatMessages;
+window.updateStreamingMessage = updateStreamingMessage;
+window.updateInputState = updateInputState;
+window.scrollToBottom = scrollToBottom;
+window.showChatError = showChatError;

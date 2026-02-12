@@ -108,3 +108,37 @@ function getChatFacilityInfo() {
   }
   return null;
 }
+
+// Handle messages from popup/background
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (message.type === 'GET_FACILITY') {
+    const facility = getChatFacilityInfo();
+    sendResponse({ facility });
+    return false;
+  }
+});
+
+// Shared helper: get orgSlug + facilityName for API calls
+// Used by evidence-viewers.js, icd10-viewer.js, etc.
+async function getCurrentParams() {
+  const facLink = document.getElementById('pccFacLink');
+  const facilityName = facLink?.title || facLink?.textContent?.trim() || '';
+
+  let orgSlug = '';
+  try {
+    const orgResponse = await chrome.runtime.sendMessage({ type: 'GET_ORG' });
+    orgSlug = orgResponse?.org || '';
+  } catch (e) {
+    console.warn('getCurrentParams: Could not get org slug:', e);
+  }
+
+  return { facilityName, orgSlug };
+}
+
+// Make available globally for cross-file access
+window.getChatPatientId = getChatPatientId;
+window.getPatientNameFromPage = getPatientNameFromPage;
+window.getMDSContext = getMDSContext;
+window.setCachedPatientName = setCachedPatientName;
+window.getChatFacilityInfo = getChatFacilityInfo;
+window.getCurrentParams = getCurrentParams;

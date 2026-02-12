@@ -7,6 +7,9 @@ const ICD10API = {
   // Cache for word blocks (keyed by document ID)
   wordBlocksCache: new Map(),
 
+  // Cache for evidence summaries (keyed by base code)
+  summaryCache: new Map(),
+
   // Cache for presigned URLs with expiry tracking
   urlCache: new Map(),
 
@@ -18,13 +21,13 @@ const ICD10API = {
    * @param {string} patientId - Patient ID
    * @param {string} facilityName - Facility name
    * @param {string} orgSlug - Organization slug
-   * @returns {Promise<Array>} - Array of annotation objects
+   * @returns {Promise<Object>} - { topRanked, flatAnnotations, counts }
    */
   async getAnnotations(patientId, facilityName, orgSlug) {
     // Use mock data in development
     if (this._useMockData()) {
       await this._simulateDelay();
-      return ICD10MockData.annotations;
+      return this._processAnnotationResponse(ICD10MockData.apiResponse);
     }
 
     const endpoint = `/api/extension/icd10-annotations?` +
@@ -41,23 +44,50 @@ const ICD10API = {
       throw new Error(response.error || 'Failed to fetch annotations');
     }
 
-    // API returns grouped annotations: { nta: [...], slp: [...], other: [...] }
-    // Flatten into a single array with category attached
     const data = response.data || response;
+    return this._processAnnotationResponse(data);
+  },
+
+  /**
+   * Process the API annotation response into the shape the viewer expects
+   * @param {Object} data - Raw API response
+   * @returns {Object} - { topRanked, flatAnnotations, counts }
+   */
+  _processAnnotationResponse(data) {
     const annotations = data.annotations || {};
+    const rawTopRanked = annotations.topRanked || [];
+
+    // Normalize topRanked field names: API uses group/displayName, sidebar expects groupCode/groupName
+    const topRanked = rawTopRanked.map(g => ({
+      ...g,
+      groupId: g.groupId || g.group || g.id,
+      groupCode: g.groupCode || g.group,
+      groupName: g.groupName || g.displayName,
+      annotationCount: g.annotationCount ?? g.annotations?.length ?? 0,
+      documentCount: g.documentCount ?? 0,
+    }));
+
+    // Build flat annotations from nta, slp, other, speculative categories
     const flatAnnotations = [];
 
     if (annotations.nta) {
-      annotations.nta.forEach(ann => flatAnnotations.push({ ...ann, category: 'nta' }));
+      annotations.nta.forEach(ann => flatAnnotations.push({ ...ann, category: ann.category || 'nta' }));
     }
     if (annotations.slp) {
-      annotations.slp.forEach(ann => flatAnnotations.push({ ...ann, category: 'slp' }));
+      annotations.slp.forEach(ann => flatAnnotations.push({ ...ann, category: ann.category || 'slp' }));
     }
     if (annotations.other) {
-      annotations.other.forEach(ann => flatAnnotations.push({ ...ann, category: 'other' }));
+      annotations.other.forEach(ann => flatAnnotations.push({ ...ann, category: ann.category || 'other' }));
+    }
+    if (annotations.speculative) {
+      annotations.speculative.forEach(ann => flatAnnotations.push({ ...ann, category: ann.category || 'speculative' }));
     }
 
-    return flatAnnotations;
+    return {
+      topRanked,
+      flatAnnotations,
+      counts: data.counts || {}
+    };
   },
 
   /**
@@ -168,8 +198,9 @@ const ICD10API = {
     // Use mock data in development
     if (this._useMockData()) {
       await this._simulateDelay(100);
-      // Word blocks come from annotations
-      const annotation = ICD10MockData.annotations.find(a => a.documentId === documentId);
+      // Search through topRanked groups and flat categories for matching annotations
+      const allAnnotations = this._getAllMockAnnotations();
+      const annotation = allAnnotations.find(a => a.documentId === documentId);
       const wordBlocks = annotation?.wordBlocks || [];
       this.wordBlocksCache.set(documentId, wordBlocks);
       return wordBlocks;
@@ -194,6 +225,33 @@ const ICD10API = {
   },
 
   /**
+   * Get all annotations from mock data (searches topRanked groups + flat categories)
+   * @returns {Array}
+   */
+  _getAllMockAnnotations() {
+    const annotations = ICD10MockData.apiResponse?.annotations || {};
+    const all = [];
+
+    // Collect from topRanked groups
+    if (annotations.topRanked) {
+      annotations.topRanked.forEach(group => {
+        if (group.annotations) {
+          all.push(...group.annotations);
+        }
+      });
+    }
+
+    // Collect from flat categories
+    ['nta', 'slp', 'other', 'speculative'].forEach(cat => {
+      if (annotations[cat]) {
+        all.push(...annotations[cat]);
+      }
+    });
+
+    return all;
+  },
+
+  /**
    * Approve a diagnosis (add to PCC chart)
    * @param {string} patientId - Patient ID
    * @param {Object} annotation - The annotation to approve
@@ -213,13 +271,15 @@ const ICD10API = {
     const response = await chrome.runtime.sendMessage({
       type: 'API_REQUEST',
       endpoint,
-      method: 'POST',
-      body: {
-        icd10Code: annotation.icd10Code,
-        description: annotation.description,
-        annotationId: annotation.id,
-        facilityName,
-        orgSlug
+      options: {
+        method: 'POST',
+        body: JSON.stringify({
+          icd10Code: annotation.icd10Code,
+          description: annotation.description,
+          annotationId: annotation.id,
+          facilityName,
+          orgSlug
+        })
       }
     });
 
@@ -264,11 +324,66 @@ const ICD10API = {
   },
 
   /**
+   * Get evidence summary for a base code
+   * @param {string} patientId - Patient ID
+   * @param {string} baseCode - Base ICD-10 code
+   * @param {string} facilityName - Facility name
+   * @param {string} orgSlug - Organization slug
+   * @param {string} [mdsAssessmentId] - Optional MDS assessment ID
+   * @returns {Promise<Object>} - { summary }
+   */
+  async getEvidenceSummary(patientId, baseCode, facilityName, orgSlug, mdsAssessmentId) {
+    // Check cache first
+    if (this.summaryCache.has(baseCode)) {
+      return this.summaryCache.get(baseCode);
+    }
+
+    // Use mock data in development
+    if (this._useMockData()) {
+      await this._simulateDelay(600);
+      const result = { summary: `Evidence for ${baseCode} includes multiple clinical documents supporting this diagnosis. Documentation strength is moderate with consistent findings across assessments.` };
+      this.summaryCache.set(baseCode, result);
+      return result;
+    }
+
+    const endpoint = `/api/extension/icd10-annotations/summary`;
+
+    const body = {
+      patientId,
+      baseCode,
+      facilityName,
+      orgSlug
+    };
+    if (mdsAssessmentId) {
+      body.mdsAssessmentId = mdsAssessmentId;
+    }
+
+    const response = await chrome.runtime.sendMessage({
+      type: 'API_REQUEST',
+      endpoint,
+      options: {
+        method: 'POST',
+        body: JSON.stringify(body)
+      }
+    });
+
+    if (!response.success) {
+      throw new Error(response.error || 'Failed to fetch evidence summary');
+    }
+
+    const data = response.data || response;
+    const result = { summary: data.summary || '' };
+    this.summaryCache.set(baseCode, result);
+    return result;
+  },
+
+  /**
    * Clear all caches
    */
   clearCaches() {
     this.wordBlocksCache.clear();
     this.urlCache.clear();
+    this.summaryCache.clear();
   }
 };
 

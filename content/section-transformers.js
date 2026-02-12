@@ -1308,3 +1308,5 @@ function transformAPIResponse(apiResponse, section) {
       return { items: [] };
   }
 }
+
+window.transformAPIResponse = transformAPIResponse;

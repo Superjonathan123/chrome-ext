@@ -1323,3 +1323,11 @@ function formatRelativeDate(dateStr) {
   if (diffDays < 30) return `${Math.floor(diffDays / 7)}w ago`;
   return formatDate(dateStr);
 }
+
+// Make available globally for cross-file access
+window.renderMDSView = renderMDSView;
+window.renderMDSContent = renderMDSContent;
+window.setupMDSListeners = setupMDSListeners;
+window.loadMDSData = loadMDSData;
+window.formatRelativeDate = formatRelativeDate;
+window.navigateToMDSItem = navigateToMDSItem;

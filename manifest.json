@@ -12,7 +12,7 @@
   "host_permissions": [
     "*://*.pointclickcare.com/*",
     "https://superltc.com/*",
-    "http://localhost:5432/*"
+    "http://localhost:3000/*"
   ],
   "background": {
     "service_worker": "background/background.js"
@@ -28,44 +28,7 @@
   "content_scripts": [
     {
       "matches": ["*://*.pointclickcare.com/*"],
-      "js": [
-        "config.js",
-        "lib/pdf.min.js",
-        "content/mockData.js",
-        "content/evidence-viewers.js",
-        "content/section-transformers.js",
-        "content/components/modal.js",
-        "content/components/dropdown.js",
-        "content/components/toast.js",
-        "content/queries/query-api.js",
-        "content/queries/query-state.js",
-        "content/queries/query-badges.js",
-        "content/queries/query-panel.js",
-        "content/queries/query-modal.js",
-        "content/queries/query-send-modal.js",
-        "content/icd10-viewer/icd10-mock-data.js",
-        "content/icd10-viewer/icd10-api.js",
-        "content/icd10-viewer/icd10-sidebar.js",
-        "content/icd10-viewer/icd10-evidence-panel.js",
-        "content/icd10-viewer/icd10-pdf-viewer.js",
-        "content/icd10-viewer/icd10-viewer.js",
-        "content/super-menu/state.js",
-        "content/super-menu/utils.js",
-        "content/super-menu/context.js",
-        "content/super-menu/session.js",
-        "content/super-menu/fab.js",
-        "content/super-menu/panel.js",
-        "content/super-menu/navigation.js",
-        "content/super-menu/dashboard-state.js",
-        "content/super-menu/dashboard-view.js",
-        "content/super-menu/facility-dashboard-state.js",
-        "content/super-menu/facility-dashboard-view.js",
-        "content/super-menu/mds-view.js",
-        "content/super-menu/chat-view.js",
-        "content/super-menu/streaming.js",
-        "content/super-menu/init.js",
-        "content/content.js"
-      ],
+      "js": ["content/content.js"],
       "css": [
         "content/css/variables.css",
         "content/css/base.css",
@@ -81,7 +44,8 @@
         "content/css/super-components.css",
         "content/css/query.css",
         "content/css/icd10-viewer.css",
-        "content/chatbot.css"
+        "content/chatbot.css",
+        "content/styles.css"
       ],
       "run_at": "document_idle"
     }
@@ -93,7 +57,7 @@
   },
   "web_accessible_resources": [
     {
-      "resources": ["callback.html", "lib/pdf.worker.min.js"],
+      "resources": ["callback.html", "lib/pdf.min.js", "lib/pdf.worker.min.js"],
       "matches": ["<all_urls>"]
     }
   ]

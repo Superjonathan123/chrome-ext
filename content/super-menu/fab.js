@@ -167,3 +167,6 @@ function setupFABDraggable(button) {
     }
   });
 }
+
+// Make available globally for cross-file access
+window.createChatButton = createChatButton;

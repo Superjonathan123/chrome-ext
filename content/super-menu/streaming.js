@@ -271,3 +271,6 @@ function processStreamEvent(event, message) {
       break;
   }
 }
+
+// Make available globally for cross-file access
+window.sendChatMessage = sendChatMessage;

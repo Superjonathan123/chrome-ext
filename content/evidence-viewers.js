@@ -1580,3 +1580,8 @@ function scrollToFirstHighlight(container, wordBlock, pageWidth, pageHeight) {
     behavior: 'smooth'
   });
 }
+
+window.showClinicalNoteModal = showClinicalNoteModal;
+window.showTherapyDocModal = showTherapyDocModal;
+window.showDocumentModal = showDocumentModal;
+window.parseEvidenceForViewer = parseEvidenceForViewer;

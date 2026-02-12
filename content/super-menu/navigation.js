@@ -183,12 +183,9 @@ async function updateMenuBadge() {
   }
 }
 
-// Expose functions for external access
-window.SuperMenu = {
-  renderFacilityDashboard,
-  renderMDSView,
-  updateMenuBadge,
-  switchView,
-  getMDSContext,
-  autoSwitchViewByContext
-};
+// Make available globally for cross-file access
+window.switchView = switchView;
+window.setupNavListeners = setupNavListeners;
+window.autoSwitchViewByContext = autoSwitchViewByContext;
+window.renderFacilityDashboard = renderFacilityDashboard;
+window.updateMenuBadge = updateMenuBadge;

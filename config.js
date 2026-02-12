@@ -6,6 +6,8 @@ const CONFIG = {
 
   get API_BASE() {
     // return this.DEV_MODE ? 'http://localhost:5432' : 'https://superltc.com';
-    return 'http://localhost:5432';
+    return 'http://localhost:3000';
   }
 };
+
+window.CONFIG = CONFIG;

@@ -198,3 +198,7 @@ function positionPanelNearFAB(panel, button) {
   panel.style.bottom = 'auto';
   panel.style.right = 'auto';
 }
+
+// Make available globally for cross-file access
+window.createChatPanel = createChatPanel;
+window.toggleChatPanel = toggleChatPanel;
