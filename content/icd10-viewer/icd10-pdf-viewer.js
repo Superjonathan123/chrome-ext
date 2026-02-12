@@ -1,6 +1,8 @@
 /**
  * ICD-10 PDF Viewer Component
  * Right panel for viewing PDFs with highlight overlays
+ * Single-page view with prev/next navigation
+ * Auto-corrects sideways pages + manual rotate button
  */
 
 const ICD10PDFViewer = {
@@ -8,88 +10,69 @@ const ICD10PDFViewer = {
   pdfDoc: null,
   currentPage: 1,
   totalPages: 1,
-  currentZoom: 100,
+  currentZoom: 150,
   currentDocumentId: null,
   highlights: [],
   searchTerms: [],
-  zoomLevels: [50, 75, 100, 125, 150, 200],
+  zoomLevels: [75, 100, 125, 150, 200, 250],
+  manualRotation: 0, // user-applied rotation (0, 90, 180, 270)
+  pageRotations: {},  // cached per-page inherent rotations
+  currentDocName: '', // display name of current document
 
-  /**
-   * Initialize the PDF viewer
-   * @param {HTMLElement} container - The viewer container element
-   */
   init(container) {
     this.container = container;
     this.render();
   },
 
-  /**
-   * Load and display a document
-   * @param {Object} document - Document object with signedUrl
-   * @param {Array} wordBlocks - Word blocks for highlighting (optional)
-   * @param {number} targetPage - Page to display (optional)
-   * @param {string} searchText - Text to search and highlight (optional)
-   */
   async loadDocument(document, wordBlocks = [], targetPage = 1, searchText = '') {
-    console.log('[ICD10PDFViewer] loadDocument called');
-    console.log('[ICD10PDFViewer] Document:', document?.id, 'URL:', document?.signedUrl?.substring(0, 50) + '...');
-    console.log('[ICD10PDFViewer] Word blocks:', wordBlocks?.length, wordBlocks);
-    console.log('[ICD10PDFViewer] Target page:', targetPage, 'Search text:', searchText?.substring(0, 50));
-
-    // In demo mode, show placeholder instead of trying to load PDF
     const isDemo = window.location.hostname === 'localhost' || window.location.protocol === 'file:';
     if (isDemo) {
-      console.log('[ICD10PDFViewer] Demo mode - showing placeholder');
       this._renderDemoPlaceholder(document, targetPage);
       return;
     }
 
     if (!document || !document.signedUrl) {
-      console.error('[ICD10PDFViewer] No document URL available');
       this._renderError('No document URL available');
       return;
     }
 
-    // Parse search text into terms for text-based highlighting
     this.searchTerms = this._parseSearchTerms(searchText);
-    console.log('[ICD10PDFViewer] Parsed search terms:', this.searchTerms);
 
-    // If same document, just update highlights and page
+    // Same document — just update highlights and page
     if (this.currentDocumentId === document.id && this.pdfDoc) {
-      console.log('[ICD10PDFViewer] Same document, just updating highlights');
       this.highlights = wordBlocks;
+      this.currentDocName = document.title || document.name || this.currentDocName;
+      this.searchTerms = this._parseSearchTerms(searchText);
+      if (!this.container.querySelector('.icd10-pdf-viewer__canvas-container')) {
+        this._renderPDFContainer();
+      }
       await this._renderPage(targetPage);
       return;
     }
 
     this.currentDocumentId = document.id;
+    this.currentDocName = document.title || document.name || '';
     this.highlights = wordBlocks;
+    this.manualRotation = 0;
+    this.pageRotations = {};
+    this._contentRotationCache = {};
     this._renderLoading();
 
     try {
-      // Configure PDF.js worker
-      if (typeof pdfjsLib !== 'undefined') {
-        // Only set workerSrc if not already configured (e.g., via CDN in demo)
-        if (!pdfjsLib.GlobalWorkerOptions.workerSrc) {
-          // Check if running in Chrome extension context
-          if (typeof chrome !== 'undefined' && chrome.runtime && chrome.runtime.getURL) {
-            const workerSrc = chrome.runtime.getURL('lib/pdf.worker.min.js');
-            pdfjsLib.GlobalWorkerOptions.workerSrc = workerSrc;
-          } else {
-            console.warn('[ICD10PDFViewer] No Chrome runtime available, PDF worker should be set externally');
-          }
-        }
-      } else {
+      if (typeof pdfjsLib === 'undefined') {
         throw new Error('PDF.js library not loaded');
       }
+      if (!pdfjsLib.GlobalWorkerOptions.workerSrc) {
+        if (typeof chrome !== 'undefined' && chrome.runtime && chrome.runtime.getURL) {
+          pdfjsLib.GlobalWorkerOptions.workerSrc = chrome.runtime.getURL('lib/pdf.worker.min.js');
+        }
+      }
 
-      // Load PDF document
       const loadingTask = pdfjsLib.getDocument(document.signedUrl);
       this.pdfDoc = await loadingTask.promise;
       this.totalPages = this.pdfDoc.numPages;
       this.currentPage = Math.min(targetPage, this.totalPages);
 
-      // Render the PDF
       this._renderPDFContainer();
       await this._renderPage(this.currentPage);
 
@@ -99,260 +82,20 @@ const ICD10PDFViewer = {
     }
   },
 
-  /**
-   * Update highlights on current document
-   * @param {Array} wordBlocks - New word blocks to highlight
-   * @param {number} targetPage - Page to navigate to
-   */
   async updateHighlights(wordBlocks, targetPage = null) {
     this.highlights = wordBlocks || [];
-
     if (this.pdfDoc) {
       const page = targetPage || (wordBlocks.length > 0 ? wordBlocks[0].p : this.currentPage);
       await this._renderPage(page);
     }
   },
 
-  /**
-   * Render demo placeholder with actual document content (for localhost/demo mode)
-   * @param {Object} document - Document info
-   * @param {number} page - Page number to show
-   */
-  _renderDemoPlaceholder(document, page = 1) {
-    if (!this.container) return;
+  // ---- Rendering ----
 
-    const docId = document?.id;
-    const docContent = window.ICD10MockData?.documentContent?.[docId];
-    const docName = docContent?.title || document?.title || document?.name || 'Clinical Document';
-
-    // Get total pages
-    const totalPages = docContent?.pages?.length || document?.pageCount || 1;
-    const currentPage = Math.min(page, totalPages);
-
-    // Get page content
-    const pageData = docContent?.pages?.find(p => p.pageNum === currentPage) || docContent?.pages?.[0];
-
-    // Build content HTML
-    let contentHtml = '';
-    if (pageData?.content) {
-      contentHtml = pageData.content.map(line => {
-        if (!line.text) {
-          return '<div class="icd10-pdf-viewer__doc-line icd10-pdf-viewer__doc-line--spacer">&nbsp;</div>';
-        }
-
-        let className = 'icd10-pdf-viewer__doc-line';
-        if (line.style === 'title') className += ' icd10-pdf-viewer__doc-line--title';
-        if (line.style === 'section') className += ' icd10-pdf-viewer__doc-line--section';
-        if (line.style === 'bold') className += ' icd10-pdf-viewer__doc-line--bold';
-        if (line.highlight) className += ' icd10-pdf-viewer__doc-line--highlight';
-
-        return `<div class="${className}">${this._escapeHtml(line.text)}</div>`;
-      }).join('');
-    } else {
-      // Fallback to placeholder lines
-      contentHtml = `
-        <div class="icd10-pdf-viewer__demo-line icd10-pdf-viewer__demo-line--title"></div>
-        <div class="icd10-pdf-viewer__demo-line"></div>
-        <div class="icd10-pdf-viewer__demo-line"></div>
-        <div class="icd10-pdf-viewer__demo-spacer"></div>
-        <div class="icd10-pdf-viewer__demo-highlight">
-          <span>Relevant clinical evidence would be highlighted here</span>
-        </div>
-        <div class="icd10-pdf-viewer__demo-spacer"></div>
-        <div class="icd10-pdf-viewer__demo-line"></div>
-        <div class="icd10-pdf-viewer__demo-line icd10-pdf-viewer__demo-line--short"></div>
-      `;
-    }
-
-    this.container.innerHTML = `
-      <div class="icd10-pdf-viewer__demo-document">
-        <div class="icd10-pdf-viewer__demo-toolbar">
-          <div class="icd10-pdf-viewer__demo-nav">
-            <button class="icd10-pdf-viewer__demo-nav-btn" data-action="prev-page" ${currentPage <= 1 ? 'disabled' : ''}>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <polyline points="15 18 9 12 15 6"></polyline>
-              </svg>
-            </button>
-            <span class="icd10-pdf-viewer__demo-page-info">Page ${currentPage} of ${totalPages}</span>
-            <button class="icd10-pdf-viewer__demo-nav-btn" data-action="next-page" ${currentPage >= totalPages ? 'disabled' : ''}>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <polyline points="9 18 15 12 9 6"></polyline>
-              </svg>
-            </button>
-          </div>
-          <div class="icd10-pdf-viewer__demo-zoom">
-            <button class="icd10-pdf-viewer__demo-zoom-btn" data-action="zoom-out">−</button>
-            <span class="icd10-pdf-viewer__demo-zoom-level">100%</span>
-            <button class="icd10-pdf-viewer__demo-zoom-btn" data-action="zoom-in">+</button>
-          </div>
-        </div>
-        <div class="icd10-pdf-viewer__demo-paper-container">
-          <div class="icd10-pdf-viewer__demo-paper">
-            <div class="icd10-pdf-viewer__demo-paper-header">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                <polyline points="14 2 14 8 20 8"></polyline>
-              </svg>
-              <span>${this._escapeHtml(docName)}</span>
-            </div>
-            <div class="icd10-pdf-viewer__demo-paper-content">
-              ${contentHtml}
-            </div>
-          </div>
-        </div>
-      </div>
-    `;
-
-    // Store current state for navigation
-    this._demoState = { document, currentPage, totalPages, docId };
-
-    // Attach navigation listeners
-    this._attachDemoNavListeners();
-  },
-
-  /**
-   * Attach event listeners for demo navigation
-   */
-  _attachDemoNavListeners() {
-    if (!this.container) return;
-
-    this.container.querySelectorAll('[data-action]').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        const action = btn.dataset.action;
-        if (action === 'prev-page' && this._demoState?.currentPage > 1) {
-          this._renderDemoPlaceholder(this._demoState.document, this._demoState.currentPage - 1);
-        } else if (action === 'next-page' && this._demoState?.currentPage < this._demoState?.totalPages) {
-          this._renderDemoPlaceholder(this._demoState.document, this._demoState.currentPage + 1);
-        }
-      });
-    });
-  },
-
-  /**
-   * Render loading state with skeleton
-   */
-  _renderLoading() {
-    if (!this.container) return;
-    this.container.innerHTML = `
-      <div class="icd10-pdf-viewer__loading">
-        <div class="icd10-pdf-viewer__loading-controls">
-          <div style="display: flex; align-items: center; gap: 12px;">
-            <div style="width: 32px; height: 32px; background: var(--super-gray-200); border-radius: 6px;"></div>
-            <div style="width: 60px; height: 20px; background: var(--super-gray-200); border-radius: 4px;"></div>
-            <div style="width: 32px; height: 32px; background: var(--super-gray-200); border-radius: 6px;"></div>
-          </div>
-          <div style="display: flex; align-items: center; gap: 8px;">
-            <div style="width: 32px; height: 32px; background: var(--super-gray-200); border-radius: 6px;"></div>
-            <div style="width: 50px; height: 20px; background: var(--super-gray-200); border-radius: 4px;"></div>
-            <div style="width: 32px; height: 32px; background: var(--super-gray-200); border-radius: 6px;"></div>
-          </div>
-        </div>
-        <div class="icd10-pdf-viewer__loading-skeleton">
-          <div class="icd10-pdf-viewer__skeleton-shimmer"></div>
-          <div class="icd10-pdf-viewer__skeleton-lines">
-            <div class="icd10-pdf-viewer__skeleton-line"></div>
-            <div class="icd10-pdf-viewer__skeleton-line"></div>
-            <div class="icd10-pdf-viewer__skeleton-line"></div>
-            <div class="icd10-pdf-viewer__skeleton-line"></div>
-            <div class="icd10-pdf-viewer__skeleton-line"></div>
-            <div class="icd10-pdf-viewer__skeleton-line"></div>
-            <div class="icd10-pdf-viewer__skeleton-line"></div>
-            <div class="icd10-pdf-viewer__skeleton-line"></div>
-          </div>
-        </div>
-      </div>
-    `;
-  },
-
-  /**
-   * Render error state (or demo placeholder)
-   * @param {string} message - Error message
-   */
-  _renderError(message) {
-    if (!this.container) return;
-
-    // In demo/localhost mode, show a nice document placeholder instead of error
-    const isDemo = window.location.hostname === 'localhost' || window.location.protocol === 'file:';
-
-    if (isDemo) {
-      this.container.innerHTML = `
-        <div class="icd10-pdf-viewer__demo-placeholder">
-          <div class="icd10-pdf-viewer__demo-header">
-            <div class="icd10-pdf-viewer__demo-logo">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                <polyline points="14 2 14 8 20 8"></polyline>
-              </svg>
-            </div>
-            <div class="icd10-pdf-viewer__demo-title">Clinical Document</div>
-            <div class="icd10-pdf-viewer__demo-badge">DEMO</div>
-          </div>
-          <div class="icd10-pdf-viewer__demo-content">
-            <div class="icd10-pdf-viewer__demo-line icd10-pdf-viewer__demo-line--title"></div>
-            <div class="icd10-pdf-viewer__demo-line"></div>
-            <div class="icd10-pdf-viewer__demo-line"></div>
-            <div class="icd10-pdf-viewer__demo-line icd10-pdf-viewer__demo-line--short"></div>
-            <div class="icd10-pdf-viewer__demo-spacer"></div>
-            <div class="icd10-pdf-viewer__demo-highlight">
-              <div class="icd10-pdf-viewer__demo-highlight-icon">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <polyline points="20 6 9 17 4 12"></polyline>
-                </svg>
-              </div>
-              <span>Relevant text would be highlighted here</span>
-            </div>
-            <div class="icd10-pdf-viewer__demo-spacer"></div>
-            <div class="icd10-pdf-viewer__demo-line"></div>
-            <div class="icd10-pdf-viewer__demo-line"></div>
-            <div class="icd10-pdf-viewer__demo-line icd10-pdf-viewer__demo-line--medium"></div>
-          </div>
-          <div class="icd10-pdf-viewer__demo-footer">
-            <span>Document preview unavailable in demo mode</span>
-          </div>
-        </div>
-      `;
-    } else {
-      this.container.innerHTML = `
-        <div class="icd10-pdf-viewer__error">
-          <div class="icd10-pdf-viewer__error-icon">
-            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-              <circle cx="12" cy="12" r="10"></circle>
-              <line x1="12" y1="8" x2="12" y2="12"></line>
-              <line x1="12" y1="16" x2="12.01" y2="16"></line>
-            </svg>
-          </div>
-          <p class="icd10-pdf-viewer__error-text">${this._escapeHtml(message)}</p>
-        </div>
-      `;
-    }
-  },
-
-  /**
-   * Render empty state
-   */
-  render() {
-    if (!this.container) return;
-    this.container.innerHTML = `
-      <div class="icd10-pdf-viewer__empty">
-        <div class="icd10-pdf-viewer__empty-icon">
-          <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
-            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-            <polyline points="14 2 14 8 20 8"></polyline>
-            <line x1="16" y1="13" x2="8" y2="13"></line>
-            <line x1="16" y1="17" x2="8" y2="17"></line>
-          </svg>
-        </div>
-        <p class="icd10-pdf-viewer__empty-text">Select an evidence card to view the source document</p>
-      </div>
-    `;
-  },
-
-  /**
-   * Render PDF container with controls
-   */
   _renderPDFContainer() {
     if (!this.container) return;
 
+    const docName = this._escapeHtml(this.currentDocName);
     this.container.innerHTML = `
       <div class="icd10-pdf-viewer__controls">
         <div class="icd10-pdf-viewer__page-nav">
@@ -372,7 +115,20 @@ const ICD10PDFViewer = {
             </svg>
           </button>
         </div>
+        ${docName ? `<div class="icd10-pdf-viewer__doc-name" title="${docName}">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="flex-shrink:0;opacity:0.5">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+          </svg>
+          <span>${docName}</span>
+        </div>` : ''}
         <div class="icd10-pdf-viewer__zoom">
+          <button class="icd10-pdf-viewer__nav-btn" data-action="rotate" title="Rotate 90°">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="1 4 1 10 7 10"></polyline>
+              <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
+            </svg>
+          </button>
           <button class="icd10-pdf-viewer__zoom-btn" data-action="zoom-out" title="Zoom out">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <circle cx="11" cy="11" r="8"></circle>
@@ -403,27 +159,135 @@ const ICD10PDFViewer = {
   },
 
   /**
-   * Render a specific page
-   * @param {number} pageNum - Page number to render
+   * Detect page rotation using multiple strategies:
+   * 1. Text transform analysis — detects sideways content on portrait pages
+   * 2. Landscape raw dimensions — detects un-normalized landscape scans
+   * 3. Manual rotate button for edge cases
+   * Results cached per page.
    */
-  async _renderPage(pageNum) {
-    console.log('[ICD10PDFViewer] _renderPage called for page:', pageNum);
-    if (!this.pdfDoc) {
-      console.warn('[ICD10PDFViewer] No pdfDoc loaded');
-      return;
+  async _getPageRotation(page) {
+    const pageNum = this.currentPage;
+    if (this._contentRotationCache && this._contentRotationCache[pageNum] !== undefined) {
+      return (this._contentRotationCache[pageNum] + this.manualRotation) % 360;
     }
+    if (!this._contentRotationCache) this._contentRotationCache = {};
+
+    const inherent = page.rotate || 0;
+    const rawView = page.view;
+    const rawW = rawView[2] - rawView[0];
+    const rawH = rawView[3] - rawView[1];
+
+    console.log(`[PDFViewer] Page ${pageNum}: rotate=${inherent}, raw=${rawW.toFixed(0)}x${rawH.toFixed(0)}`);
+
+    let autoFix = 0;
+    let textItemCount = 0;
+
+    // Strategy 1: Analyze text transforms to detect sideways content
+    try {
+      const textContent = await page.getTextContent();
+      const items = textContent.items.filter(i => i.str && i.str.trim().length > 0);
+      textItemCount = items.length;
+      console.log(`[PDFViewer] Page ${pageNum}: ${items.length} text items`);
+
+      if (items.length >= 3) {
+        const counts = { 0: 0, 90: 0, 180: 0, 270: 0 };
+
+        // Log first 5 text items for debugging
+        items.slice(0, 5).forEach((item, i) => {
+          const [a, b, c, d, e, f] = item.transform;
+          console.log(`[PDFViewer] Page ${pageNum} text[${i}]: "${item.str.substring(0, 20)}" transform=[${a.toFixed(1)},${b.toFixed(1)},${c.toFixed(1)},${d.toFixed(1)}]`);
+        });
+
+        for (const item of items) {
+          const [a, b] = item.transform;
+          const absA = Math.abs(a);
+          const absB = Math.abs(b);
+
+          if (absA < 0.01 && absB < 0.01) continue; // skip zero-size items
+
+          if (absA > absB) {
+            counts[a > 0 ? 0 : 180]++;
+          } else {
+            counts[b > 0 ? 90 : 270]++;
+          }
+        }
+
+        // Find dominant orientation
+        let maxCount = 0;
+        let dominant = 0;
+        for (const [angle, count] of Object.entries(counts)) {
+          if (count > maxCount) {
+            maxCount = count;
+            dominant = parseInt(angle);
+          }
+        }
+
+        console.log(`[PDFViewer] Page ${pageNum}: text orientations=${JSON.stringify(counts)}, dominant=${dominant}`);
+
+        if (dominant !== 0) {
+          autoFix = dominant;
+        }
+      }
+    } catch (e) {
+      console.warn('[PDFViewer] Text analysis failed:', e);
+    }
+
+    // Strategy 2: Image transform analysis (for scanned docs with no text layer)
+    if (autoFix === 0 && textItemCount < 3) {
+      try {
+        const ops = await page.getOperatorList();
+        // Look for image paint operations and preceding transforms
+        // OPS: transform=12, paintImageXObject=85, paintJpegXObject=82
+        let lastTransform = [1, 0, 0, 1, 0, 0]; // identity
+        for (let i = 0; i < ops.fnArray.length; i++) {
+          if (ops.fnArray[i] === 12) { // transform
+            lastTransform = ops.argsArray[i];
+          }
+          if (ops.fnArray[i] === 85 || ops.fnArray[i] === 82) { // paintImage
+            const [a, b, c, d] = lastTransform;
+            console.log(`[PDFViewer] Page ${pageNum}: image transform=[${a.toFixed(1)},${b.toFixed(1)},${c.toFixed(1)},${d.toFixed(1)}]`);
+            // Check if the image is rotated:
+            // Normal placement: a>0, d>0 (or d<0 for PDF y-flip), b≈0, c≈0
+            // 90° CCW: a≈0, b>0, c>0, d≈0 (or similar with signs)
+            // 90° CW:  a≈0, b<0, c<0, d≈0
+            const absA = Math.abs(a), absB = Math.abs(b);
+            const absC = Math.abs(c), absD = Math.abs(d);
+            if (absB > absA * 5 && absC > absD * 5) {
+              // Off-diagonal dominant = rotated image
+              // Determine direction: b>0 means 90° CCW in PDF coords
+              autoFix = b > 0 ? 270 : 90;
+              console.log(`[PDFViewer] Page ${pageNum}: image rotation detected → autoFix=${autoFix}`);
+            }
+            break; // only check first major image
+          }
+        }
+      } catch (e) {
+        console.warn('[PDFViewer] Image analysis failed:', e);
+      }
+    }
+
+    // Strategy 3: Landscape detection fallback
+    if (autoFix === 0 && rawW > rawH * 1.05) {
+      autoFix = 90;
+      console.log(`[PDFViewer] Page ${pageNum}: landscape fallback → autoFix=90`);
+    }
+
+    this._contentRotationCache[pageNum] = autoFix;
+    const total = (autoFix + this.manualRotation) % 360;
+    console.log(`[PDFViewer] Page ${pageNum}: FINAL rotation=${total} (auto=${autoFix}, manual=${this.manualRotation})`);
+    return total;
+  },
+
+  async _renderPage(pageNum) {
+    if (!this.pdfDoc) return;
 
     const validPageNum = Math.max(1, Math.min(pageNum, this.totalPages));
     this.currentPage = validPageNum;
-    console.log('[ICD10PDFViewer] Rendering page:', validPageNum, 'of', this.totalPages);
 
     // Update page indicator
     const pageCurrentEl = this.container.querySelector('.icd10-pdf-viewer__page-current');
-    if (pageCurrentEl) {
-      pageCurrentEl.textContent = this.currentPage;
-    }
+    if (pageCurrentEl) pageCurrentEl.textContent = this.currentPage;
 
-    // Update nav button states
     const prevBtn = this.container.querySelector('[data-action="prev"]');
     const nextBtn = this.container.querySelector('[data-action="next"]');
     if (prevBtn) prevBtn.disabled = this.currentPage === 1;
@@ -431,54 +295,48 @@ const ICD10PDFViewer = {
 
     try {
       const page = await this.pdfDoc.getPage(this.currentPage);
+      const rotation = await this._getPageRotation(page);
 
-      // Calculate viewport
       const container = this.container.querySelector('.icd10-pdf-viewer__canvas-container');
-      const containerWidth = container.clientWidth - 40; // padding
-      const baseViewport = page.getViewport({ scale: 1 });
+      if (!container) return;
+      const containerWidth = container.clientWidth - 40;
+
+      // Get viewport with rotation applied so dimensions account for rotation
+      const baseViewport = page.getViewport({ scale: 1, rotation });
       const baseScale = containerWidth / baseViewport.width;
       const scale = baseScale * (this.currentZoom / 100);
-      const viewport = page.getViewport({ scale });
+      const viewport = page.getViewport({ scale, rotation });
 
-      // Get canvases
       const canvas = this.container.querySelector('.icd10-pdf-viewer__canvas');
       const highlightCanvas = this.container.querySelector('.icd10-pdf-viewer__highlight-canvas');
-
       if (!canvas || !highlightCanvas) return;
 
       const ctx = canvas.getContext('2d');
       const highlightCtx = highlightCanvas.getContext('2d');
 
-      // Set canvas dimensions
       canvas.width = viewport.width;
       canvas.height = viewport.height;
       highlightCanvas.width = viewport.width;
       highlightCanvas.height = viewport.height;
 
-      // Clear canvases
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       highlightCtx.clearRect(0, 0, highlightCanvas.width, highlightCanvas.height);
 
-      // Render PDF page
-      await page.render({
-        canvasContext: ctx,
-        viewport: viewport
-      }).promise;
+      await page.render({ canvasContext: ctx, viewport }).promise;
 
-      // Draw highlights - either from word blocks or text search
+      // Draw highlights
       let highlightRects = [];
+      const pageHighlights = this.highlights.filter(h => h.p === this.currentPage);
 
-      if (this.highlights.length > 0) {
-        // Use provided word blocks
-        highlightRects = this._drawHighlights(highlightCtx, viewport.width, viewport.height);
+      if (pageHighlights.length > 0) {
+        highlightRects = this._drawHighlights(highlightCtx, pageHighlights, viewport, rotation, page);
       } else if (this.searchTerms && this.searchTerms.length > 0) {
-        // Search for text in PDF and highlight matches
         highlightRects = await this._highlightTextMatches(page, highlightCtx, viewport);
       }
 
-      // Auto-scroll to first highlight
+      // Auto-scroll to first highlight (and auto-fit zoom if needed)
       if (highlightRects.length > 0) {
-        this._scrollToRect(highlightRects[0]);
+        this._scrollToHighlights(highlightRects, container, viewport);
       }
 
     } catch (error) {
@@ -487,55 +345,67 @@ const ICD10PDFViewer = {
   },
 
   /**
-   * Draw highlight rectangles
-   * @param {CanvasRenderingContext2D} ctx - Canvas context
-   * @param {number} width - Canvas width
-   * @param {number} height - Canvas height
-   * @returns {Array} - Array of highlight rectangles with pixel coordinates
+   * Draw highlight overlays, transforming coordinates for rotation.
+   * The highlight coords (x, y, w, h) are normalized 0-1 relative to the
+   * ORIGINAL unrotated page. We need to map them into the rotated viewport.
    */
-  _drawHighlights(ctx, width, height) {
-    console.log('[ICD10PDFViewer] _drawHighlights called. Canvas:', width, 'x', height, 'Page:', this.currentPage);
-    console.log('[ICD10PDFViewer] All highlights:', this.highlights);
-
-    // Filter highlights for current page
-    const pageHighlights = this.highlights.filter(h => h.p === this.currentPage);
-    console.log('[ICD10PDFViewer] Highlights for page', this.currentPage, ':', pageHighlights.length);
-
-    if (pageHighlights.length === 0) return [];
-
+  _drawHighlights(ctx, pageHighlights, viewport, rotation, page) {
     const rects = [];
+    // Get the unrotated page dimensions to interpret highlight coords
+    const unrotatedViewport = page.getViewport({ scale: 1, rotation: 0 });
+    const origW = unrotatedViewport.width;
+    const origH = unrotatedViewport.height;
+
+    // Scale factor from original unrotated coords to our rendered viewport
+    const vw = viewport.width;
+    const vh = viewport.height;
 
     pageHighlights.forEach((highlight, index) => {
-      console.log('[ICD10PDFViewer] Drawing highlight', index, ':', highlight);
-
-      // First highlight is "active" (selected evidence)
       const isActive = index === 0;
 
-      // Set colors
       if (isActive) {
-        ctx.fillStyle = 'rgba(59, 130, 246, 0.35)'; // Blue for active
+        ctx.fillStyle = 'rgba(59, 130, 246, 0.35)';
         ctx.strokeStyle = 'rgba(59, 130, 246, 0.8)';
       } else {
-        ctx.fillStyle = 'rgba(254, 240, 138, 0.4)'; // Yellow for others
+        ctx.fillStyle = 'rgba(254, 240, 138, 0.4)';
         ctx.strokeStyle = 'rgba(234, 179, 8, 0.6)';
       }
       ctx.lineWidth = 2;
 
-      // Calculate pixel coordinates from normalized (0-1) values
-      const x = highlight.x * width;
-      const y = highlight.y * height;
-      const w = highlight.w * width;
-      const h = highlight.h * height;
+      // Original coords in unrotated page space (0-1 normalized)
+      const ox = highlight.x;
+      const oy = highlight.y;
+      const ow = highlight.w;
+      const oh = highlight.h;
 
-      console.log('[ICD10PDFViewer] Pixel coords: x=', x, 'y=', y, 'w=', w, 'h=', h);
+      // Transform to rotated viewport coordinates
+      let x, y, w, h;
+      const r = rotation % 360;
 
-      // Draw filled rectangle
+      if (r === 0) {
+        x = ox * vw;
+        y = oy * vh;
+        w = ow * vw;
+        h = oh * vh;
+      } else if (r === 90) {
+        x = (1 - oy - oh) * vw;
+        y = ox * vh;
+        w = oh * vw;
+        h = ow * vh;
+      } else if (r === 180) {
+        x = (1 - ox - ow) * vw;
+        y = (1 - oy - oh) * vh;
+        w = ow * vw;
+        h = oh * vh;
+      } else if (r === 270) {
+        x = oy * vw;
+        y = (1 - ox - ow) * vh;
+        w = oh * vw;
+        h = ow * vh;
+      }
+
       ctx.fillRect(x, y, w, h);
-
-      // Draw border
       ctx.strokeRect(x, y, w, h);
-
-      // Store rect for scrolling
       rects.push({ x, y, w, h, isActive });
     });
 
@@ -543,261 +413,308 @@ const ICD10PDFViewer = {
   },
 
   /**
-   * Scroll container to show a highlight
-   * @param {Object} highlight - Highlight object with x, y, w, h
-   * @param {number} canvasWidth - Canvas width
-   * @param {number} canvasHeight - Canvas height
+   * Scroll to center the active highlight in the viewport.
+   * Uses the canvas wrapper's actual DOM offset to compute correct
+   * scroll positions — accounts for flex centering, padding, etc.
    */
-  _scrollToHighlight(highlight, canvasWidth, canvasHeight) {
-    const container = this.container.querySelector('.icd10-pdf-viewer__canvas-container');
-    if (!container) return;
+  _scrollToHighlights(rects, container) {
+    if (!rects.length || !container) return;
 
-    // Calculate highlight position in pixels
-    const highlightY = highlight.y * canvasHeight;
+    const active = rects.find(r => r.isActive) || rects[0];
+    const centerX = active.x + active.w / 2;
+    const centerY = active.y + active.h / 2;
 
-    // Scroll to center the highlight
-    const scrollTop = highlightY - (container.clientHeight / 3);
+    const wrapper = container.querySelector('.icd10-pdf-viewer__canvas-wrapper');
+    if (!wrapper) return;
 
-    container.scrollTo({
-      top: Math.max(0, scrollTop),
-      behavior: 'smooth'
+    requestAnimationFrame(() => {
+      const containerRect = container.getBoundingClientRect();
+      const wrapperRect = wrapper.getBoundingClientRect();
+
+      // Wrapper's position in scroll-space (visual offset + current scroll)
+      const wrapperScrollX = wrapperRect.left - containerRect.left + container.scrollLeft;
+      const wrapperScrollY = wrapperRect.top - containerRect.top + container.scrollTop;
+
+      const containerW = container.clientWidth;
+      const containerH = container.clientHeight;
+
+      const scrollLeft = wrapperScrollX + centerX - containerW / 2;
+      const scrollTop = wrapperScrollY + centerY - containerH / 2;
+
+      console.log('[PDFViewer] scrollToHighlights:', {
+        activeRect: { x: active.x, y: active.y, w: active.w, h: active.h },
+        center: { centerX, centerY },
+        wrapperScroll: { wrapperScrollX, wrapperScrollY },
+        containerSize: { containerW, containerH },
+        canvasSize: { w: wrapper.offsetWidth, h: wrapper.offsetHeight },
+        computed: { scrollLeft, scrollTop },
+        clamped: { left: Math.max(0, scrollLeft), top: Math.max(0, scrollTop) },
+        maxScroll: { left: container.scrollWidth - containerW, top: container.scrollHeight - containerH }
+      });
+
+      container.scrollTo({
+        left: Math.max(0, scrollLeft),
+        top: Math.max(0, scrollTop),
+        behavior: 'smooth'
+      });
     });
   },
 
-  /**
-   * Attach control event listeners
-   */
   _attachControlListeners() {
-    // Page navigation
     this.container.querySelector('[data-action="prev"]')?.addEventListener('click', () => {
-      if (this.currentPage > 1) {
-        this._renderPage(this.currentPage - 1);
-      }
+      if (this.currentPage > 1) this._renderPage(this.currentPage - 1);
     });
-
     this.container.querySelector('[data-action="next"]')?.addEventListener('click', () => {
-      if (this.currentPage < this.totalPages) {
-        this._renderPage(this.currentPage + 1);
-      }
+      if (this.currentPage < this.totalPages) this._renderPage(this.currentPage + 1);
     });
-
-    // Zoom controls
     this.container.querySelector('[data-action="zoom-out"]')?.addEventListener('click', () => {
       this._changeZoom(-1);
     });
-
     this.container.querySelector('[data-action="zoom-in"]')?.addEventListener('click', () => {
       this._changeZoom(1);
     });
+    this.container.querySelector('[data-action="rotate"]')?.addEventListener('click', () => {
+      this.manualRotation = (this.manualRotation + 90) % 360;
+      this._renderPage(this.currentPage);
+    });
   },
 
-  /**
-   * Change zoom level
-   * @param {number} direction - 1 for zoom in, -1 for zoom out
-   */
   _changeZoom(direction) {
     const currentIndex = this.zoomLevels.indexOf(this.currentZoom);
-    let newIndex = currentIndex + direction;
-
-    // Clamp to valid range
-    newIndex = Math.max(0, Math.min(newIndex, this.zoomLevels.length - 1));
-
+    let newIndex = Math.max(0, Math.min(currentIndex + direction, this.zoomLevels.length - 1));
     if (newIndex === currentIndex) return;
 
     this.currentZoom = this.zoomLevels[newIndex];
-
-    // Update zoom display
     const zoomLevel = this.container.querySelector('.icd10-pdf-viewer__zoom-level');
-    if (zoomLevel) {
-      zoomLevel.textContent = `${this.currentZoom}%`;
-    }
+    if (zoomLevel) zoomLevel.textContent = `${this.currentZoom}%`;
 
-    // Re-render current page with new zoom
     this._renderPage(this.currentPage);
   },
 
-  /**
-   * Navigate to a specific page
-   * @param {number} pageNum - Page number
-   */
   goToPage(pageNum) {
     if (this.pdfDoc && pageNum >= 1 && pageNum <= this.totalPages) {
       this._renderPage(pageNum);
     }
   },
 
-  /**
-   * Escape HTML
-   * @param {string} str - String to escape
-   * @returns {string}
-   */
-  _escapeHtml(str) {
-    if (!str) return '';
-    return String(str)
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;')
-      .replace(/'/g, '&#039;');
-  },
+  // ---- Text search highlighting ----
 
-  /**
-   * Parse search text into terms for highlighting
-   * @param {string} searchText - Raw text to search for
-   * @returns {Array} - Array of search terms
-   */
   _parseSearchTerms(searchText) {
     if (!searchText || typeof searchText !== 'string') return [];
-
-    // Clean up the text
-    const cleaned = searchText
-      .replace(/[""]/g, '"')  // Normalize quotes
-      .replace(/['']/g, "'")
-      .trim();
-
+    const cleaned = searchText.replace(/["\u201C\u201D]/g, '"').replace(/['\u2018\u2019]/g, "'").trim();
     if (cleaned.length < 3) return [];
 
-    // Extract meaningful phrases/words (at least 4 chars)
     const terms = [];
-
-    // First, try the whole phrase if it's reasonable length
     if (cleaned.length >= 5 && cleaned.length <= 100) {
       terms.push(cleaned.toLowerCase());
     }
 
-    // Also extract significant words (longer than 4 chars, not common words)
     const stopWords = new Set(['the', 'and', 'for', 'are', 'but', 'not', 'you', 'all', 'can', 'was', 'her', 'has', 'his', 'have', 'been', 'this', 'that', 'with', 'from', 'were', 'they', 'will', 'would', 'could', 'should', 'which', 'their', 'there', 'about']);
-
-    const words = cleaned.toLowerCase().split(/\s+/);
-    words.forEach(word => {
-      // Clean punctuation from word
+    cleaned.toLowerCase().split(/\s+/).forEach(word => {
       const cleanWord = word.replace(/[.,;:!?'"()[\]{}]/g, '');
-      if (cleanWord.length >= 4 && !stopWords.has(cleanWord)) {
-        if (!terms.includes(cleanWord)) {
-          terms.push(cleanWord);
-        }
+      if (cleanWord.length >= 4 && !stopWords.has(cleanWord) && !terms.includes(cleanWord)) {
+        terms.push(cleanWord);
       }
     });
 
     return terms;
   },
 
-  /**
-   * Highlight text matches on PDF page using PDF.js text content
-   * @param {Object} page - PDF.js page object
-   * @param {CanvasRenderingContext2D} ctx - Highlight canvas context
-   * @param {Object} viewport - PDF.js viewport
-   * @returns {Array} - Array of highlight rectangles
-   */
   async _highlightTextMatches(page, ctx, viewport) {
-    console.log('[ICD10PDFViewer] _highlightTextMatches called, searchTerms:', this.searchTerms);
     if (!this.searchTerms || this.searchTerms.length === 0) return [];
 
     try {
-      // Get text content from page
       const textContent = await page.getTextContent();
       const textItems = textContent.items;
-      console.log('[ICD10PDFViewer] Text items on page:', textItems?.length);
-
       if (!textItems || textItems.length === 0) return [];
 
       const rects = [];
       const pageText = textItems.map(item => item.str).join(' ').toLowerCase();
-
-      // Check if any search term exists on this page
       const matchingTerms = this.searchTerms.filter(term => pageText.includes(term));
-      console.log('[ICD10PDFViewer] Matching terms found:', matchingTerms.length);
       if (matchingTerms.length === 0) return [];
 
-      // Process each text item to find matches
-      textItems.forEach((item, itemIndex) => {
+      textItems.forEach(item => {
         const text = item.str.toLowerCase();
         const transform = item.transform;
-
-        // Get text position from transform matrix
-        // transform = [scaleX, skewY, skewX, scaleY, translateX, translateY]
         const x = transform[4];
         const y = transform[5];
         const fontSize = Math.sqrt(transform[0] * transform[0] + transform[1] * transform[1]);
-
-        // Approximate width based on text length and font size
         const width = item.width || (text.length * fontSize * 0.5);
         const height = item.height || fontSize * 1.2;
 
-        // Check for matches in this text item
         matchingTerms.forEach((term, termIndex) => {
           if (text.includes(term)) {
-            // Convert PDF coordinates to canvas coordinates
             const [canvasX, canvasY] = viewport.convertToViewportPoint(x, y);
-
-            // Adjust coordinates - PDF y is from bottom, canvas y is from top
             const rect = {
               x: canvasX,
               y: canvasY - (height * viewport.scale),
               w: width * viewport.scale,
               h: height * viewport.scale,
-              isActive: termIndex === 0 && rects.length === 0 // First match is active
+              isActive: termIndex === 0 && rects.length === 0
             };
 
-            console.log('[ICD10PDFViewer] Text match found:', term, 'in', item.str);
-            console.log('[ICD10PDFViewer] PDF coords: x=', x, 'y=', y, 'fontSize=', fontSize);
-            console.log('[ICD10PDFViewer] Canvas coords: x=', rect.x, 'y=', rect.y, 'w=', rect.w, 'h=', rect.h);
-
-            // Draw highlight
-            if (rect.isActive) {
-              ctx.fillStyle = 'rgba(59, 130, 246, 0.35)'; // Blue for active
-              ctx.strokeStyle = 'rgba(59, 130, 246, 0.8)';
-            } else {
-              ctx.fillStyle = 'rgba(254, 240, 138, 0.4)'; // Yellow for others
-              ctx.strokeStyle = 'rgba(234, 179, 8, 0.6)';
-            }
+            ctx.fillStyle = rect.isActive ? 'rgba(59, 130, 246, 0.35)' : 'rgba(254, 240, 138, 0.4)';
+            ctx.strokeStyle = rect.isActive ? 'rgba(59, 130, 246, 0.8)' : 'rgba(234, 179, 8, 0.6)';
             ctx.lineWidth = 2;
-
-            // Draw filled rectangle with some padding
-            const padding = 2;
-            ctx.fillRect(rect.x - padding, rect.y - padding, rect.w + padding * 2, rect.h + padding * 2);
-            ctx.strokeRect(rect.x - padding, rect.y - padding, rect.w + padding * 2, rect.h + padding * 2);
-
+            const p = 2;
+            ctx.fillRect(rect.x - p, rect.y - p, rect.w + p * 2, rect.h + p * 2);
+            ctx.strokeRect(rect.x - p, rect.y - p, rect.w + p * 2, rect.h + p * 2);
             rects.push(rect);
           }
         });
       });
 
-      console.log('[ICD10PDFViewer] Total text highlights drawn:', rects.length);
       return rects;
-
     } catch (error) {
       console.error('[ICD10PDFViewer] Text highlight error:', error);
       return [];
     }
   },
 
-  /**
-   * Scroll to a specific rectangle
-   * @param {Object} rect - Rectangle with x, y, w, h in pixel coordinates
-   */
-  _scrollToRect(rect) {
-    if (!rect) return;
+  // ---- Loading / Error / Empty states ----
 
-    const container = this.container.querySelector('.icd10-pdf-viewer__canvas-container');
-    if (!container) return;
+  _renderLoading() {
+    if (!this.container) return;
+    this.container.innerHTML = `
+      <div class="icd10-pdf-viewer__loading">
+        <div class="icd10-pdf-viewer__loading-controls">
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <div style="width: 32px; height: 32px; background: var(--super-gray-200); border-radius: 6px;"></div>
+            <div style="width: 60px; height: 20px; background: var(--super-gray-200); border-radius: 4px;"></div>
+            <div style="width: 32px; height: 32px; background: var(--super-gray-200); border-radius: 6px;"></div>
+          </div>
+        </div>
+        <div class="icd10-pdf-viewer__loading-skeleton">
+          <div class="icd10-pdf-viewer__skeleton-shimmer"></div>
+          <div class="icd10-pdf-viewer__skeleton-lines">
+            <div class="icd10-pdf-viewer__skeleton-line"></div>
+            <div class="icd10-pdf-viewer__skeleton-line"></div>
+            <div class="icd10-pdf-viewer__skeleton-line"></div>
+            <div class="icd10-pdf-viewer__skeleton-line"></div>
+          </div>
+        </div>
+      </div>
+    `;
+  },
 
-    // Account for container padding (20px) when calculating scroll position
-    const paddingTop = 20;
-    // Scroll to position the highlight in the upper third of the view
-    const scrollTop = rect.y + paddingTop - (container.clientHeight / 3);
+  _renderError(message) {
+    if (!this.container) return;
+    this.container.innerHTML = `
+      <div class="icd10-pdf-viewer__error">
+        <div class="icd10-pdf-viewer__error-icon">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="8" x2="12" y2="12"></line>
+            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+          </svg>
+        </div>
+        <p class="icd10-pdf-viewer__error-text">${this._escapeHtml(message)}</p>
+      </div>
+    `;
+  },
 
-    console.log('[ICD10PDFViewer] Scrolling to rect:', rect.y, 'calculated scrollTop:', scrollTop);
+  render() {
+    if (!this.container) return;
+    this.container.innerHTML = `
+      <div class="icd10-pdf-viewer__empty">
+        <div class="icd10-pdf-viewer__empty-icon">
+          <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="16" y1="13" x2="8" y2="13"></line>
+            <line x1="16" y1="17" x2="8" y2="17"></line>
+          </svg>
+        </div>
+        <p class="icd10-pdf-viewer__empty-text">Select an evidence card to view the source document</p>
+      </div>
+    `;
+  },
 
-    container.scrollTo({
-      top: Math.max(0, scrollTop),
-      behavior: 'smooth'
+  // ---- Demo placeholder ----
+
+  _renderDemoPlaceholder(document, page = 1) {
+    if (!this.container) return;
+    const docId = document?.id;
+    const docContent = window.ICD10MockData?.documentContent?.[docId];
+    const docName = docContent?.title || document?.title || document?.name || 'Clinical Document';
+    const totalPages = docContent?.pages?.length || document?.pageCount || 1;
+    const currentPage = Math.min(page, totalPages);
+    const pageData = docContent?.pages?.find(p => p.pageNum === currentPage) || docContent?.pages?.[0];
+
+    let contentHtml = '';
+    if (pageData?.content) {
+      contentHtml = pageData.content.map(line => {
+        if (!line.text) return '<div class="icd10-pdf-viewer__doc-line icd10-pdf-viewer__doc-line--spacer">&nbsp;</div>';
+        let className = 'icd10-pdf-viewer__doc-line';
+        if (line.style === 'title') className += ' icd10-pdf-viewer__doc-line--title';
+        if (line.style === 'section') className += ' icd10-pdf-viewer__doc-line--section';
+        if (line.style === 'bold') className += ' icd10-pdf-viewer__doc-line--bold';
+        if (line.highlight) className += ' icd10-pdf-viewer__doc-line--highlight';
+        return `<div class="${className}">${this._escapeHtml(line.text)}</div>`;
+      }).join('');
+    } else {
+      contentHtml = `
+        <div class="icd10-pdf-viewer__demo-line icd10-pdf-viewer__demo-line--title"></div>
+        <div class="icd10-pdf-viewer__demo-line"></div>
+        <div class="icd10-pdf-viewer__demo-spacer"></div>
+        <div class="icd10-pdf-viewer__demo-highlight"><span>Relevant text would be highlighted here</span></div>
+        <div class="icd10-pdf-viewer__demo-spacer"></div>
+        <div class="icd10-pdf-viewer__demo-line"></div>
+      `;
+    }
+
+    this.container.innerHTML = `
+      <div class="icd10-pdf-viewer__demo-document">
+        <div class="icd10-pdf-viewer__demo-toolbar">
+          <div class="icd10-pdf-viewer__demo-nav">
+            <button class="icd10-pdf-viewer__demo-nav-btn" data-action="prev-page" ${currentPage <= 1 ? 'disabled' : ''}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
+            </button>
+            <span class="icd10-pdf-viewer__demo-page-info">Page ${currentPage} of ${totalPages}</span>
+            <button class="icd10-pdf-viewer__demo-nav-btn" data-action="next-page" ${currentPage >= totalPages ? 'disabled' : ''}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+            </button>
+          </div>
+        </div>
+        <div class="icd10-pdf-viewer__demo-paper-container">
+          <div class="icd10-pdf-viewer__demo-paper">
+            <div class="icd10-pdf-viewer__demo-paper-header">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+              </svg>
+              <span>${this._escapeHtml(docName)}</span>
+            </div>
+            <div class="icd10-pdf-viewer__demo-paper-content">${contentHtml}</div>
+          </div>
+        </div>
+      </div>
+    `;
+    this._demoState = { document, currentPage, totalPages, docId };
+    this._attachDemoNavListeners();
+  },
+
+  _attachDemoNavListeners() {
+    if (!this.container) return;
+    this.container.querySelectorAll('[data-action]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const action = btn.dataset.action;
+        if (action === 'prev-page' && this._demoState?.currentPage > 1) {
+          this._renderDemoPlaceholder(this._demoState.document, this._demoState.currentPage - 1);
+        } else if (action === 'next-page' && this._demoState?.currentPage < this._demoState?.totalPages) {
+          this._renderDemoPlaceholder(this._demoState.document, this._demoState.currentPage + 1);
+        }
+      });
     });
   },
 
-  /**
-   * Clear the viewer
-   */
+  // ---- Utilities ----
+
+  _escapeHtml(str) {
+    if (!str) return '';
+    return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+  },
+
   clear() {
     this.pdfDoc = null;
     this.currentDocumentId = null;
@@ -805,6 +722,10 @@ const ICD10PDFViewer = {
     this.searchTerms = [];
     this.currentPage = 1;
     this.totalPages = 1;
+    this.manualRotation = 0;
+    this.pageRotations = {};
+    this._contentRotationCache = {};
+    this.currentDocName = '';
     this.render();
   }
 };
