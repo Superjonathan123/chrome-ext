@@ -1,0 +1,246 @@
+import { useState, useCallback, useRef } from 'preact/hooks';
+
+/**
+ * Batch query state machine hook
+ * States: idle → generating → reviewing → sending → complete
+ *
+ * Flow:
+ *   generate()  — only calls generateNote, collects AI-written notes
+ *   (review)    — user edits notes, picks practitioner
+ *   sendAll()   — creates queries via createQuery, then sends via sendQuery
+ *
+ * @param {Object} params
+ * @param {string} params.patientId
+ * @param {string} params.facilityName
+ * @param {string} params.orgSlug
+ * @param {string} params.assessmentId
+ * @param {Function} params.onComplete - Called after all queries sent successfully
+ */
+export function useBatchQuery({ patientId, facilityName, orgSlug, assessmentId, onComplete }) {
+  const [state, setState] = useState('idle'); // idle, generating, reviewing, sending, complete
+  const [generatedQueries, setGeneratedQueries] = useState([]);
+  const [practitioners, setPractitioners] = useState([]);
+  const [selectedPractitionerId, setSelectedPractitionerId] = useState(null);
+  const [progress, setProgress] = useState({ current: 0, total: 0 });
+  const [error, setError] = useState(null);
+  const abortRef = useRef(false);
+
+  /**
+   * Generate AI notes for selected items (no queries created yet)
+   * @param {Array} selectedItems - Items to generate notes for
+   */
+  const generate = useCallback(async (selectedItems) => {
+    if (selectedItems.length === 0) return;
+
+    setState('generating');
+    setError(null);
+    setProgress({ current: 0, total: selectedItems.length });
+    abortRef.current = false;
+
+    const results = [];
+
+    try {
+      // Fetch practitioners in parallel with note generation
+      const practitionersPromise = window.QueryAPI.fetchPractitioners(facilityName, orgSlug);
+
+      // Generate notes sequentially to avoid rate limiting
+      for (let i = 0; i < selectedItems.length; i++) {
+        if (abortRef.current) break;
+
+        const item = selectedItems[i];
+        const itemName = item.pdpmCategoryName || item.mdsItemName || item.mdsItem;
+        setProgress({ current: i, total: selectedItems.length, currentItemName: itemName });
+
+        try {
+          // Generate AI note only — no query creation yet
+          const noteData = await window.QueryAPI.generateNote(
+            item.mdsItem,
+            item
+          );
+
+          results.push({
+            item,
+            noteText: noteData.note,
+            preferredIcd10: noteData.preferredIcd10,
+            icd10Options: noteData.icd10Options
+          });
+        } catch (err) {
+          console.error(`[BatchQuery] Failed to generate note for ${item.mdsItem}:`, err);
+          results.push({
+            item,
+            noteText: '',
+            error: err.message
+          });
+        }
+      }
+
+      setProgress({ current: selectedItems.length, total: selectedItems.length });
+
+      // Wait for practitioners
+      try {
+        const practList = await practitionersPromise;
+        setPractitioners(practList);
+      } catch (err) {
+        console.error('[BatchQuery] Failed to fetch practitioners:', err);
+        setPractitioners([]);
+      }
+
+      // Filter out items that failed note generation entirely
+      const successfulResults = results.filter(r => r.noteText);
+      setGeneratedQueries(successfulResults);
+
+      if (successfulResults.length === 0) {
+        setError('Failed to generate any notes. Please try again.');
+        setState('idle');
+      } else {
+        setState('reviewing');
+      }
+    } catch (err) {
+      console.error('[BatchQuery] Generation failed:', err);
+      setError(err.message);
+      setState('idle');
+    }
+  }, [patientId, facilityName, orgSlug, assessmentId]);
+
+  /**
+   * Update the note text for a specific item (by mdsItem code)
+   */
+  const updateNote = useCallback((mdsItem, newNote) => {
+    setGeneratedQueries(prev =>
+      prev.map(gq =>
+        gq.item.mdsItem === mdsItem ? { ...gq, noteText: newNote } : gq
+      )
+    );
+  }, []);
+
+  /**
+   * Update the selected ICD-10 code for a specific item
+   */
+  const updateIcd10 = useCallback((mdsItem, icd10Code) => {
+    setGeneratedQueries(prev =>
+      prev.map(gq =>
+        gq.item.mdsItem === mdsItem ? { ...gq, selectedIcd10: icd10Code } : gq
+      )
+    );
+  }, []);
+
+  /**
+   * Create and send all queries to the selected practitioner
+   */
+  const sendAll = useCallback(async () => {
+    if (!selectedPractitionerId || generatedQueries.length === 0) return;
+
+    setState('sending');
+    setError(null);
+    setProgress({ current: 0, total: generatedQueries.length });
+    abortRef.current = false;
+
+    const sentQueries = [];
+
+    try {
+      for (let i = 0; i < generatedQueries.length; i++) {
+        if (abortRef.current) break;
+
+        const { item, noteText, selectedIcd10, preferredIcd10 } = generatedQueries[i];
+        setProgress({ current: i, total: generatedQueries.length });
+
+        // Use user-selected ICD-10 if set, else AI preferred, else item defaults
+        const icd10Code = selectedIcd10 || preferredIcd10?.code || null;
+        const recommendedIcd10 = icd10Code
+          ? [{ code: icd10Code }]
+          : (item.recommendedIcd10 || []);
+
+        try {
+          // Step 1: Create the query
+          const { query } = await window.QueryAPI.createQuery({
+            patientId,
+            facilityName,
+            orgSlug,
+            mdsAssessmentId: assessmentId,
+            mdsItem: item.mdsItem,
+            mdsItemName: item.pdpmCategoryName || item.mdsItemName || item.mdsItem,
+            queryReason: item.rationale || '',
+            keyFindings: item.keyFindings || [],
+            queryEvidence: item.queryEvidence || item.evidence || [],
+            recommendedIcd10,
+            aiGeneratedNote: noteText
+          });
+
+          // Step 2: Send to practitioner
+          await window.QueryAPI.sendQuery(
+            query.id,
+            [selectedPractitionerId],
+            noteText
+          );
+
+          sentQueries.push({ ...query, mdsItem: item.mdsItem });
+        } catch (err) {
+          console.error(`[BatchQuery] Failed to create/send query for ${item.mdsItem}:`, err);
+        }
+      }
+
+      setProgress({ current: generatedQueries.length, total: generatedQueries.length });
+      setState('complete');
+
+      if (onComplete) {
+        const practitioner = practitioners.find(p => p.id === selectedPractitionerId);
+        const practitionerName = practitioner
+          ? (practitioner.firstName && practitioner.lastName
+            ? `${practitioner.firstName} ${practitioner.lastName}${practitioner.title ? `, ${practitioner.title}` : ''}`
+            : practitioner.name || 'Provider')
+          : 'Provider';
+        onComplete(sentQueries, practitionerName);
+      }
+    } catch (err) {
+      console.error('[BatchQuery] Send failed:', err);
+      setError(err.message);
+      setState('reviewing');
+    }
+  }, [patientId, facilityName, orgSlug, assessmentId, generatedQueries, selectedPractitionerId, practitioners, onComplete]);
+
+  /**
+   * Go back from reviewing to idle
+   */
+  const backToSelection = useCallback(() => {
+    setState('idle');
+    setGeneratedQueries([]);
+    setProgress({ current: 0, total: 0 });
+  }, []);
+
+  /**
+   * Reset everything
+   */
+  const reset = useCallback(() => {
+    setState('idle');
+    setGeneratedQueries([]);
+    setPractitioners([]);
+    setSelectedPractitionerId(null);
+    setProgress({ current: 0, total: 0 });
+    setError(null);
+    abortRef.current = false;
+  }, []);
+
+  /**
+   * Abort current operation
+   */
+  const abort = useCallback(() => {
+    abortRef.current = true;
+  }, []);
+
+  return {
+    state,
+    generatedQueries,
+    practitioners,
+    selectedPractitionerId,
+    setSelectedPractitionerId,
+    progress,
+    error,
+    generate,
+    updateNote,
+    updateIcd10,
+    sendAll,
+    backToSelection,
+    reset,
+    abort
+  };
+}

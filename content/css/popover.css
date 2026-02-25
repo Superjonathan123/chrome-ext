@@ -174,12 +174,35 @@
   text-transform: uppercase;
   letter-spacing: 0.5px;
   margin-bottom: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  user-select: none;
+}
+
+.super-rationale__label:hover {
+  color: var(--super-gray-700);
+}
+
+.super-rationale__chevron {
+  font-size: 9px;
+  transition: transform 0.2s ease;
+}
+
+.super-rationale--collapsed .super-rationale__chevron {
+  transform: rotate(-90deg);
 }
 
 .super-rationale__text {
   font-size: 13px;
   line-height: 1.5;
   color: var(--super-gray-700);
+  transition: max-height 0.2s ease, opacity 0.2s ease;
+}
+
+.super-rationale--collapsed .super-rationale__text {
+  display: none;
 }
 
 /* Evidence Cards */

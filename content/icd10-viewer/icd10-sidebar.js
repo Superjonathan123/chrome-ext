@@ -29,9 +29,10 @@ const ICD10Sidebar = {
    * @param {Function} onSelectionChange - Callback when selection changes
    */
   init(container, data, onSelectionChange) {
-    console.log('[ICD10Sidebar] init called, topRanked:', data.topRanked?.length, 'annotations:', data.annotations?.length, 'approved:', data.approvedDiagnoses?.length);
+    console.log('[ICD10Sidebar] init called, topRanked:', data.topRanked?.length, 'approved:', data.approved?.length, 'annotations:', data.annotations?.length, 'approvedDiagnoses:', data.approvedDiagnoses?.length);
     this.container = container;
     this.topRanked = data.topRanked || [];
+    this.approved = data.approved || [];
     this.annotations = data.annotations || [];
     this.approvedDiagnoses = data.approvedDiagnoses || [];
     this.counts = data.counts || {};
@@ -62,7 +63,7 @@ const ICD10Sidebar = {
   _groupAnnotations() {
     const grouped = {
       topRanked: { total: 0, groups: this.topRanked },
-      approved: { total: 0, baseCodes: {} },
+      approved: { total: 0, groups: this.approved },
       nta: { total: 0, baseCodes: {} },
       slp: { total: 0, baseCodes: {} },
       other: { total: 0, baseCodes: {} },
@@ -72,24 +73,13 @@ const ICD10Sidebar = {
     // Calculate topRanked total from group annotation counts
     grouped.topRanked.total = this.topRanked.reduce((sum, g) => sum + (g.annotationCount || g.annotations?.length || 0), 0);
 
-    // Group approved diagnoses
-    this.approvedDiagnoses.forEach(dx => {
-      const baseCode = dx.icd10Code.substring(0, 3);
-      if (!grouped.approved.baseCodes[baseCode]) {
-        grouped.approved.baseCodes[baseCode] = {
-          baseCode,
-          items: [],
-          count: 0,
-          description: this._getBaseCodeDescription(baseCode, dx.description)
-        };
-      }
-      grouped.approved.baseCodes[baseCode].items.push({
-        ...dx,
-        isApproved: true
-      });
-      grouped.approved.baseCodes[baseCode].count++;
-      grouped.approved.total++;
-    });
+    // Calculate approved total from group annotation counts
+    grouped.approved.total = this.approved.reduce((sum, g) => sum + (g.annotationCount || g.annotations?.length || 0), 0);
+
+    // Build set of approved base codes for cross-referencing
+    const approvedBaseCodes = new Set();
+    this.approvedDiagnoses.forEach(dx => approvedBaseCodes.add(dx.icd10Code.substring(0, 3)));
+    this.approved.forEach(g => approvedBaseCodes.add(g.groupCode));
 
     // Group annotations by their category
     this.annotations.forEach(ann => {
@@ -109,9 +99,7 @@ const ICD10Sidebar = {
       }
 
       // Check if this base code is in approved diagnoses
-      const isApproved = this.approvedDiagnoses.some(
-        dx => dx.icd10Code.substring(0, 3) === baseCode
-      );
+      const isApproved = approvedBaseCodes.has(baseCode);
 
       grouped[category].baseCodes[baseCode].items.push({
         ...ann,
@@ -205,7 +193,7 @@ const ICD10Sidebar = {
   _renderCategory(category) {
     const data = this.groupedData[category.id];
     // Show number of code groups, not total annotations
-    const count = category.id === 'topRanked'
+    const count = (category.id === 'topRanked' || category.id === 'approved')
       ? (data?.groups?.length || 0)
       : Object.keys(data?.baseCodes || {}).length;
     const isExpanded = this.expandedCategories.has(category.id);
@@ -241,7 +229,10 @@ const ICD10Sidebar = {
    */
   _renderCategoryContent(categoryId) {
     if (categoryId === 'topRanked') {
-      return this._renderTopRankedGroups();
+      return this._renderGroupList(this.topRanked, 'topRanked');
+    }
+    if (categoryId === 'approved') {
+      return this._renderGroupList(this.approved, 'approved');
     }
 
     // Standard base-code rendering for all other categories
@@ -257,52 +248,45 @@ const ICD10Sidebar = {
   },
 
   /**
-   * Render the topRanked groups
+   * Render a list of groups (used for both topRanked and approved)
+   * @param {Array} groups - Array of group objects
+   * @param {string} categoryId - 'topRanked' or 'approved'
    * @returns {string} - HTML string
    */
-  _renderTopRankedGroups() {
-    const groups = this.topRanked;
+  _renderGroupList(groups, categoryId) {
     if (!groups || groups.length === 0) return '';
 
     return `
       <div class="icd10-sidebar__groups">
-        ${groups.map(group => this._renderTopRankedGroup(group)).join('')}
+        ${groups.map(group => this._renderGroup(group, categoryId)).join('')}
       </div>
     `;
   },
 
   /**
-   * Render a single topRanked group card
-   * @param {Object} group - TopRanked group object
+   * Render a single group card (topRanked or approved)
+   * @param {Object} group - Group object
+   * @param {string} categoryId - 'topRanked' or 'approved'
    * @returns {string} - HTML string
    */
-  _renderTopRankedGroup(group) {
-    const isSelected = this.selectedCategory === 'topRanked' && this.selectedGroupId === group.groupId;
+  _renderGroup(group, categoryId) {
+    const isSelected = this.selectedCategory === categoryId && this.selectedGroupId === group.groupId;
     const isExpanded = this.expandedGroups.has(group.groupId);
     const isTopFive = group.isTopFive;
-    const strengthClass = group.evidenceStrength ? `icd10-sidebar__evidence-badge--${group.evidenceStrength}` : '';
-
+    const showRank = categoryId === 'topRanked' && group.rank;
+    const annotationCount = group.annotationCount || group.annotations?.length || 0;
     return `
       <div class="icd10-sidebar__group ${isSelected ? 'icd10-sidebar__group--selected' : ''} ${isTopFive ? 'icd10-sidebar__group--top-five' : ''}"
-           data-group-id="${group.groupId}">
-        <div class="icd10-sidebar__group-header" data-group-select="${group.groupId}">
-          <div class="icd10-sidebar__group-rank">#${group.rank}</div>
+           data-group-id="${group.groupId}" data-group-category="${categoryId}">
+        <div class="icd10-sidebar__group-header" data-group-select="${group.groupId}" data-group-category="${categoryId}">
+          ${showRank ? `<div class="icd10-sidebar__group-rank">#${group.rank}</div>` : ''}
           <div class="icd10-sidebar__group-info">
             <div class="icd10-sidebar__group-title">
               <span class="icd10-sidebar__group-code">${group.groupCode}</span>
               <span class="icd10-sidebar__group-name">${group.groupName}</span>
             </div>
-            ${group.evidenceStrength ? `
-              <span class="icd10-sidebar__evidence-badge ${strengthClass}">${group.evidenceStrength}</span>
-            ` : ''}
-            ${group.rationale ? `
-              <div class="icd10-sidebar__group-rationale">${group.rationale}</div>
-            ` : ''}
-            <div class="icd10-sidebar__group-meta">
-              <span>${group.annotationCount} annotation${group.annotationCount !== 1 ? 's' : ''} across ${group.documentCount} doc${group.documentCount !== 1 ? 's' : ''}</span>
-              ${group.pdpmCategory ? `<span class="icd10-sidebar__pdpm-tag">${group.pdpmCategory}</span>` : ''}
-            </div>
           </div>
+          ${categoryId === 'approved' ? `<span class="icd10-sidebar__group-evidence-count">${annotationCount}</span>` : ''}
           <span class="icd10-sidebar__group-chevron ${isExpanded ? 'icd10-sidebar__group-chevron--expanded' : ''}" data-group-toggle="${group.groupId}">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <polyline points="6 9 12 15 18 9"></polyline>
@@ -406,13 +390,14 @@ const ICD10Sidebar = {
       });
     });
 
-    // TopRanked group select (click on header)
+    // Group select (click on header) - works for both topRanked and approved
     this.container.querySelectorAll('[data-group-select]').forEach(el => {
       el.addEventListener('click', (e) => {
         // Don't trigger if clicking the chevron toggle directly
         if (e.target.closest('[data-group-toggle]')) return;
         const groupId = e.currentTarget.dataset.groupSelect;
-        this._selectGroup(groupId);
+        const categoryId = e.currentTarget.dataset.groupCategory;
+        this._selectGroup(groupId, categoryId);
       });
     });
 
@@ -470,17 +455,36 @@ const ICD10Sidebar = {
    * Select a topRanked group
    * @param {string} groupId - Group ID
    */
-  _selectGroup(groupId) {
-    console.log('[ICD10Sidebar] _selectGroup:', groupId);
-    const group = this.topRanked.find(g => g.groupId === groupId);
+  _selectGroup(groupId, categoryId) {
+    console.log('[ICD10Sidebar] _selectGroup:', groupId, 'category:', categoryId);
+
+    // Search in the appropriate list, or both if category not specified
+    let group = null;
+    let resolvedCategory = categoryId;
+
+    if (categoryId === 'approved') {
+      group = this.approved.find(g => g.groupId === groupId);
+    } else if (categoryId === 'topRanked') {
+      group = this.topRanked.find(g => g.groupId === groupId);
+    } else {
+      // Search both
+      group = this.topRanked.find(g => g.groupId === groupId);
+      if (group) {
+        resolvedCategory = 'topRanked';
+      } else {
+        group = this.approved.find(g => g.groupId === groupId);
+        if (group) resolvedCategory = 'approved';
+      }
+    }
+
     if (!group) return;
 
-    this.selectedCategory = 'topRanked';
+    this.selectedCategory = resolvedCategory;
     this.selectedBaseCode = null;
     this.selectedGroupId = groupId;
 
-    // Ensure topRanked category is expanded
-    this.expandedCategories.add('topRanked');
+    // Ensure category is expanded
+    this.expandedCategories.add(resolvedCategory);
 
     const items = group.annotations || [];
     console.log('[ICD10Sidebar] Group items:', items.length, 'has callback:', !!this.onSelectionChange);
@@ -489,7 +493,7 @@ const ICD10Sidebar = {
 
     if (this.onSelectionChange) {
       this.onSelectionChange({
-        category: 'topRanked',
+        category: resolvedCategory,
         groupId: groupId,
         baseCode: group.groupCode,
         groupName: group.groupName,
@@ -506,13 +510,19 @@ const ICD10Sidebar = {
    * @param {string} annotationId - Annotation ID
    */
   _selectGroupAnnotation(groupId, annotationId) {
-    const group = this.topRanked.find(g => g.groupId === groupId);
+    // Search both topRanked and approved
+    let group = this.topRanked.find(g => g.groupId === groupId);
+    let category = 'topRanked';
+    if (!group) {
+      group = this.approved.find(g => g.groupId === groupId);
+      category = 'approved';
+    }
     if (!group) return;
 
     const annotation = group.annotations.find(a => a.id === annotationId);
     if (!annotation) return;
 
-    this.selectedCategory = 'topRanked';
+    this.selectedCategory = category;
     this.selectedGroupId = groupId;
     this.selectedBaseCode = null;
 
@@ -520,7 +530,7 @@ const ICD10Sidebar = {
 
     if (this.onSelectionChange) {
       this.onSelectionChange({
-        category: 'topRanked',
+        category: category,
         groupId: groupId,
         baseCode: group.groupCode,
         items: [annotation]
@@ -572,11 +582,12 @@ const ICD10Sidebar = {
       const data = this.groupedData[catId];
       console.log('[ICD10Sidebar] Checking category:', catId, 'total:', data?.total);
       if (data && data.total > 0) {
-        if (catId === 'topRanked') {
+        if (catId === 'topRanked' || catId === 'approved') {
           // Select first group
-          if (this.topRanked.length > 0) {
-            console.log('[ICD10Sidebar] Auto-selecting topRanked group:', this.topRanked[0].groupId);
-            this._selectGroup(this.topRanked[0].groupId);
+          const groups = data.groups || [];
+          if (groups.length > 0) {
+            console.log('[ICD10Sidebar] Auto-selecting', catId, 'group:', groups[0].groupId);
+            this._selectGroup(groups[0].groupId, catId);
             return;
           }
         } else {
@@ -599,6 +610,7 @@ const ICD10Sidebar = {
    */
   updateData(data) {
     if (data.topRanked !== undefined) this.topRanked = data.topRanked;
+    if (data.approved !== undefined) this.approved = data.approved;
     this.annotations = data.annotations || [];
     this.approvedDiagnoses = data.approvedDiagnoses || [];
     this.groupedData = this._groupAnnotations();
@@ -625,7 +637,7 @@ const ICD10Sidebar = {
   getAnnotationsForBaseCode(baseCode) {
     const results = [];
     for (const [categoryId, categoryData] of Object.entries(this.groupedData)) {
-      if (categoryId === 'topRanked') {
+      if (categoryId === 'topRanked' || categoryId === 'approved') {
         // Search through groups
         for (const group of (categoryData.groups || [])) {
           if (group.groupCode === baseCode) {

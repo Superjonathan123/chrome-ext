@@ -529,9 +529,14 @@ function renderWouldChangeHippsCard(data) {
     }
     const impactStr = impactParts.join(', ');
 
+    const isI8000 = d.mdsItem === 'I8000' || d.mdsItem.startsWith('I8000:');
+    const categoryKey = d.mdsColumn || d.i8000CategoryKey || (d.mdsItem.startsWith('I8000:') ? d.mdsItem.replace('I8000:', '') : '');
+    const displayCode = isI8000 ? 'I8000' : d.mdsItem;
+    const categoryKeyAttr = isI8000 && categoryKey ? ` data-category-key="${escapeHtml(categoryKey)}"` : '';
+
     return `
-      <div class="super-mds-impact-item" data-item="${d.mdsItem}">
-        <span class="super-mds-impact-item__code">${escapeHtml(d.mdsItem)}</span>
+      <div class="super-mds-impact-item" data-item="${d.mdsItem}"${categoryKeyAttr}>
+        <span class="super-mds-impact-item__code">${escapeHtml(displayCode)}</span>
         <span class="super-mds-impact-item__name">${escapeHtml(d.itemName || '')}</span>
         <span class="super-mds-impact-item__change">${impactStr}</span>
       </div>
@@ -709,9 +714,13 @@ function renderNoHippsChangeSection(data) {
   }
 
   const items = noChangeItems.map(d => {
+    const isI8000 = d.mdsItem === 'I8000' || d.mdsItem.startsWith('I8000:');
+    const displayCode = isI8000 ? 'I8000' : d.mdsItem;
+    const catKey = d.mdsColumn || (d.mdsItem.startsWith('I8000:') ? d.mdsItem.replace('I8000:', '') : '');
+    const catKeyAttr = isI8000 && catKey ? ` data-category-key="${escapeHtml(catKey)}"` : '';
     return `
-      <div class="super-mds-detection-item" data-item="${d.mdsItem}">
-        <span class="super-mds-detection-item__code">${escapeHtml(d.mdsItem)}</span>
+      <div class="super-mds-detection-item" data-item="${d.mdsItem}"${catKeyAttr}>
+        <span class="super-mds-detection-item__code">${escapeHtml(displayCode)}</span>
         <span class="super-mds-detection-item__name">${escapeHtml(d.itemName || '')}</span>
         <span class="super-mds-detection-item__section">Section ${escapeHtml(d.section || '?')}</span>
       </div>
@@ -890,8 +899,10 @@ function setupMDSListeners(container) {
   container.querySelectorAll('.super-mds-impact-item').forEach(item => {
     item.addEventListener('click', () => {
       const mdsItem = item.dataset.item;
+      const categoryKey = item.dataset.categoryKey || null;
+      console.log('Super Menu: Impact item clicked, dataset:', JSON.stringify(item.dataset), 'mdsItem:', mdsItem, 'categoryKey:', categoryKey);
       if (mdsItem) {
-        handleImpactItemClick(mdsItem);
+        handleImpactItemClick(mdsItem, categoryKey);
       }
     });
   });
@@ -1092,12 +1103,15 @@ function handleComplianceAction(action) {
   // TODO: Implement view unsigned orders/therapy docs
 }
 
-async function handleImpactItemClick(mdsItem) {
-  console.log('Impact item clicked:', mdsItem);
+async function handleImpactItemClick(mdsItem, categoryKey) {
+  console.log('Impact item clicked:', mdsItem, categoryKey ? `(categoryKey: ${categoryKey})` : '');
+
+  // For display, use clean code (not composite key like "I8000:NTA:18")
+  const displayTitle = categoryKey ? 'I8000' : mdsItem;
 
   // Show loading modal
   SuperModal.show({
-    title: mdsItem,
+    title: displayTitle,
     icon: '&#9889;',
     content: `
       <div class="super-evidence__loading">
@@ -1112,7 +1126,7 @@ async function handleImpactItemClick(mdsItem) {
 
   try {
     // Fetch item data from API
-    const itemData = await fetchMDSItem(mdsItem);
+    const itemData = await fetchMDSItem(mdsItem, categoryKey);
 
     if (!itemData.success) {
       throw new Error(itemData.error || 'Failed to load item data');
@@ -1142,10 +1156,11 @@ async function handleImpactItemClick(mdsItem) {
 
 /**
  * Fetch MDS item details from the API
- * @param {string} itemCode - MDS item code (e.g., "I5600")
+ * @param {string} itemCode - MDS item code (e.g., "I5600") or composite key (e.g., "I8000:NTA:18")
+ * @param {string|null} categoryKey - For I8000 items, the category key (e.g., "NTA:18")
  * @returns {Promise<Object>}
  */
-async function fetchMDSItem(itemCode) {
+async function fetchMDSItem(itemCode, categoryKey) {
   const authState = await chrome.runtime.sendMessage({ type: 'GET_AUTH_STATE' });
   if (!authState.authenticated) {
     throw new Error('Please log in to view item details');
@@ -1170,9 +1185,18 @@ async function fetchMDSItem(itemCode) {
     orgSlug
   });
 
+  // For I8000 items, use base code + categoryKey param
+  // categoryKey can be passed explicitly, or parsed from composite key like "I8000:NTA:18"
+  const resolvedCategoryKey = categoryKey || (itemCode.startsWith('I8000:') ? itemCode.replace('I8000:', '') : null);
+  const apiItemCode = resolvedCategoryKey ? 'I8000' : itemCode;
+  if (resolvedCategoryKey) {
+    params.set('categoryKey', resolvedCategoryKey);
+  }
+  console.log('Super Menu: fetchMDSItem itemCode:', itemCode, 'categoryKey:', categoryKey, 'resolvedCategoryKey:', resolvedCategoryKey, 'apiItemCode:', apiItemCode, 'url:', `/api/extension/mds/items/${apiItemCode}?${params}`);
+
   const result = await chrome.runtime.sendMessage({
     type: 'API_REQUEST',
-    endpoint: `/api/extension/mds/items/${itemCode}?${params}`,
+    endpoint: `/api/extension/mds/items/${apiItemCode}?${params}`,
     options: { method: 'GET' }
   });
 

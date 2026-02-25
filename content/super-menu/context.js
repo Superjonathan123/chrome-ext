@@ -121,8 +121,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 // Shared helper: get orgSlug + facilityName for API calls
 // Used by evidence-viewers.js, icd10-viewer.js, etc.
 async function getCurrentParams() {
-  const facLink = document.getElementById('pccFacLink');
-  const facilityName = facLink?.title || facLink?.textContent?.trim() || '';
+  const facilityName = getChatFacilityInfo() || '';
 
   let orgSlug = '';
   try {

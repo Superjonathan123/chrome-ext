@@ -44,6 +44,7 @@
         "content/css/super-components.css",
         "content/css/query.css",
         "content/css/icd10-viewer.css",
+        "content/css/query-items.css",
         "content/chatbot.css",
         "content/styles.css"
       ],

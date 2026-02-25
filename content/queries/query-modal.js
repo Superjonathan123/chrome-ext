@@ -354,6 +354,9 @@ const EvidenceModal = {
     // Get item name from multiple possible sources
     const itemName = item?.name || item?.kbCategory?.categoryName || itemData.itemName || '';
 
+    // For display, use clean code (I8000 items have composite keys like "I8000:NTA:18")
+    const displayCode = itemCode?.startsWith('I8000:') ? 'I8000' : itemCode;
+
     // Build HIPPS impact string
     const hippsImpact = this._buildHippsImpact(itemData);
 
@@ -361,7 +364,7 @@ const EvidenceModal = {
     const actions = this._buildActions(itemData, assessmentContext);
 
     SuperModal.show({
-      title: `${itemCode}${itemName ? ` - ${itemName}` : ''}`,
+      title: `${displayCode}${itemName ? ` - ${itemName}` : ''}`,
       icon: '&#9889;',
       badge: hippsImpact || `Section ${section || itemCode?.charAt(0) || '?'}`,
       content,
@@ -457,15 +460,20 @@ const EvidenceModal = {
     // AI recommendation section
     const aiSection = this._buildAISection(item);
 
-    // Evidence section
-    const evidenceSection = this._buildEvidenceSection(item?.evidence || itemData.evidence || []);
+    // Evidence section — read correct field based on status
+    const evidence = this._getEvidence(item) || itemData.evidence || [];
+    const evidenceSection = this._buildEvidenceSection(evidence);
 
     // HIPPS impact details
     const impactSection = this._buildImpactSection(itemData);
 
+    // Step summary section (Dx/Tx)
+    const stepSummarySection = this._buildStepSummarySection(item);
+
     return `
       <div class="super-evidence">
         ${impactSection}
+        ${stepSummarySection}
         ${aiSection}
         ${evidenceSection}
       </div>
@@ -550,8 +558,8 @@ const EvidenceModal = {
 
     const cards = evidence.map(ev => {
       // Handle multiple evidence formats - same as content.js renderEvidence()
-      const quote = ev.quoteText || ev.orderDescription || ev.quote || ev.findingText || '';
-      const sourceType = ev.sourceType || this._inferSourceType(ev.displayName, ev.evidenceId);
+      const quote = ev.quoteText || ev.orderDescription || ev.quote || ev.findingText || ev.text || '';
+      const sourceType = ev.sourceType || ev.type || this._inferSourceType(ev.displayName, ev.evidenceId);
       const typeClass = `super-evidence-card__type--${sourceType}`;
       const typeLabel = ev.displayName || this._formatSourceType(sourceType);
 
@@ -719,6 +727,90 @@ const EvidenceModal = {
   },
 
   /**
+   * Build step summary section (Dx/Tx one-liners)
+   * @param {Object} item
+   * @returns {string}
+   */
+  _buildStepSummarySection(item) {
+    if (!item) return '';
+    const dxSummary = item.diagnosisSummary;
+    const txSummary = item.treatmentSummary;
+
+    // If we have Dx/Tx summaries, show step cards
+    if (dxSummary || txSummary) {
+      // diagnosisPassed / activeStatusPassed can be top-level or nested under validation
+      const dxPassed = item.diagnosisPassed ?? item.validation?.diagnosisPassed ?? false;
+      const txPassed = item.activeStatusPassed ?? item.validation?.activeStatusPassed ?? false;
+
+      const dxCard = dxSummary ? `
+        <div class="super-evidence__step-card super-evidence__step-card--${dxPassed ? 'pass' : 'fail'}">
+          <span class="super-evidence__step-icon">${dxPassed ? '&#10003;' : '&#10007;'}</span>
+          <div class="super-evidence__step-content">
+            <div class="super-evidence__step-title">Step 1: Diagnosis</div>
+            <div class="super-evidence__step-text">${this._escapeHTML(dxSummary)}</div>
+          </div>
+        </div>
+      ` : '';
+
+      const txCard = txSummary ? `
+        <div class="super-evidence__step-card super-evidence__step-card--${txPassed ? 'pass' : 'fail'}">
+          <span class="super-evidence__step-icon">${txPassed ? '&#10003;' : '&#10007;'}</span>
+          <div class="super-evidence__step-content">
+            <div class="super-evidence__step-title">Step 2: Active Treatment</div>
+            <div class="super-evidence__step-text">${this._escapeHTML(txSummary)}</div>
+          </div>
+        </div>
+      ` : '';
+
+      return `
+        <div class="super-evidence__step-section">
+          ${dxCard}
+          ${txCard}
+        </div>
+      `;
+    }
+
+    // Fallback: show keyFindings for query items
+    if (item.keyFindings && item.keyFindings.length > 0) {
+      const findings = item.keyFindings.map(f =>
+        `<li>${this._escapeHTML(f)}</li>`
+      ).join('');
+
+      return `
+        <div class="super-evidence__step-section">
+          <div class="super-evidence__step-card">
+            <div class="super-evidence__step-content">
+              <div class="super-evidence__step-title">Key Findings</div>
+              <ul class="super-evidence__findings-list">${findings}</ul>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    return '';
+  },
+
+  /**
+   * Get the correct evidence array based on item status
+   * @param {Object} item
+   * @returns {Array}
+   */
+  _getEvidence(item) {
+    if (!item) return [];
+    const status = item.status || item.solverStatus || '';
+    switch (status) {
+      case 'needs_physician_query':
+      case 'query_recommended':
+        return item.queryEvidence || item.evidence || [];
+      case 'needs_review':
+        return item.treatmentEvidence || item.evidence || [];
+      default:
+        return item.evidence || [];
+    }
+  },
+
+  /**
    * Build action buttons
    * @param {Object} itemData
    * @param {Object} assessmentContext
@@ -783,9 +875,12 @@ const EvidenceModal = {
       'mar': 'MAR',
       'lab-result': 'Lab',
       'progress-note': 'Progress Note',
+      'clinical_note': 'Clinical Note',
+      'clinical-note': 'Clinical Note',
       'nursing-note': 'Nursing Note',
       'vital-signs': 'Vital Signs',
       'therapy-doc': 'Therapy Doc',
+      'therapy_document': 'Therapy Doc',
       'document': 'Document'
     };
     return labels[type] || 'Document';

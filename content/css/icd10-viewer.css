@@ -599,6 +599,29 @@
   gap: 6px;
 }
 
+/* ---- Show More/Less Items Button (within a document group) ---- */
+
+.icd10-evidence-panel__show-more-items {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 8px 12px;
+  background: transparent;
+  border: none;
+  border-top: 1px solid var(--super-gray-100);
+  color: var(--super-primary);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+  font-family: var(--super-font);
+}
+
+.icd10-evidence-panel__show-more-items:hover {
+  background: var(--super-gray-50);
+}
+
 /* ============================================
    Document Group Styles
    ============================================ */
@@ -1445,6 +1468,16 @@
 
 .icd10-sidebar__group-chevron--expanded {
   transform: rotate(180deg);
+}
+
+.icd10-sidebar__group-evidence-count {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--super-gray-500);
+  background: var(--super-gray-100, #f3f4f6);
+  padding: 1px 6px;
+  border-radius: 8px;
+  flex-shrink: 0;
 }
 
 /* Evidence Strength Badges */

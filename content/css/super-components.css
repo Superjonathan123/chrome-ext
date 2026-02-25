@@ -707,7 +707,7 @@
 }
 
 .super-evidence-modal .super-evidence-list {
-  max-height: 300px;
-  overflow-y: auto;
+  max-height: none;
+  overflow-y: visible;
 }
 

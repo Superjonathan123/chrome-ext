@@ -300,7 +300,12 @@ function transformSectionI(results) {
           keyFindings: data.keyFindings || [],
           queryEvidence: data.queryEvidence || [],
           recommendedIcd10: data.recommendedIcd10 || data.suggestedIcd10 || [],
-          aiGeneratedNote: data.aiGeneratedNote || ''
+          aiGeneratedNote: data.aiGeneratedNote || '',
+          // Step summaries (one-liner Dx/Tx for quick scanning)
+          diagnosisSummary: data.diagnosisSummary || null,
+          treatmentSummary: data.treatmentSummary || null,
+          diagnosisPassed: data.validation?.diagnosisPassed ?? data.diagnosisPassed ?? null,
+          activeStatusPassed: data.validation?.activeStatusPassed ?? data.activeStatusPassed ?? null
         }
       }
     });

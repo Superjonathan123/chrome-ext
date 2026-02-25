@@ -23,6 +23,9 @@ import './queries/query-panel.js';
 import './queries/query-modal.js';
 import './queries/query-send-modal.js';
 
+// 4.5. Import MDS overlay (depends on queries, evidence-viewers, section-transformers)
+import './mds-overlay.js';
+
 // 5. Import ICD-10 viewer
 import './icd10-viewer/icd10-mock-data.js';
 import './icd10-viewer/icd10-api.js';

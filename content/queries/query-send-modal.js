@@ -409,24 +409,28 @@ const QuerySendModal = {
   async _getQueryContext() {
     // Use the same approach as content.js getQueryContext() for consistency
     const url = new URL(window.location.href);
+    const mdsState = window.MDSViewState || {};
     const assessmentId = url.searchParams.get('ESOLassessid') ||
+                         mdsState.manualContext?.assessmentId || mdsState.context?.assessmentId ||
                          window.SuperOverlay?.assessmentId || '';
 
     // Use stored patientId from API response (preferred), fallback to URL param
     const patientId = window.SuperOverlay?.patientId ||
+                      mdsState.context?.patientId ||
                       url.searchParams.get('ESOLclientid') || '';
 
     // Get org from cookie via background script
     const orgResponse = await chrome.runtime.sendMessage({ type: 'GET_ORG' });
     const orgSlug = orgResponse?.org || '';
 
-    // Get facility from DOM using getFacilityInfo (defined in content.js)
+    // Get facility from DOM — try multiple sources
     const facilityInfo = typeof getFacilityInfo === 'function' ? getFacilityInfo() : null;
-    const facilityName = facilityInfo?.facility || window.SuperOverlay?.facilityName || '';
+    const chatFacility = typeof getChatFacilityInfo === 'function' ? getChatFacilityInfo() : null;
+    const facilityName = facilityInfo?.facility || chatFacility || window.SuperOverlay?.facilityName || '';
 
-    // Get patient name from DOM
+    // Get patient name from DOM or MDS data
     const patientNameEl = document.querySelector('.patient-name, #patientName, .patientName, [class*="patient-name"]');
-    const patientName = patientNameEl?.textContent?.trim() || 'Patient';
+    const patientName = patientNameEl?.textContent?.trim() || mdsState.data?.patientName || 'Patient';
 
     const dobEl = document.querySelector('.patient-dob, #patientDOB, [class*="patient-dob"]');
     const patientDOB = dobEl?.textContent?.trim() || '';

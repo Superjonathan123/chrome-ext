@@ -30,8 +30,29 @@ function copyStaticAssets() {
   };
 }
 
-export default defineConfig({
+// Plugin to strip mock data files from production builds
+function stripMocksInProduction(mode) {
+  const mockFiles = ['mockData.js', 'icd10-mock-data.js'];
+  const isProduction = mode === 'production';
+  return {
+    name: 'strip-mocks',
+    enforce: 'pre',
+    resolveId(source) {
+      if (isProduction && mockFiles.some(f => source.endsWith(f))) {
+        return '\0empty-mock';
+      }
+    },
+    load(id) {
+      if (id === '\0empty-mock') {
+        return '// Mock data stripped from production build';
+      }
+    }
+  };
+}
+
+export default defineConfig(({ mode }) => ({
   plugins: [
+    stripMocksInProduction(mode),
     preact(),
     crx({ manifest }),
     copyStaticAssets()
@@ -51,4 +72,4 @@ export default defineConfig({
       'react-dom': 'preact/compat'
     }
   }
-});
+}));

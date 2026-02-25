@@ -9,6 +9,7 @@ const ICD10EvidencePanel = {
   items: [],
   groupContext: null,
   expandedDocuments: new Set(),
+  expandedDocItems: new Set(),
   approveLoading: false,
   isApproved: false,
   selectedCode: null,
@@ -55,6 +56,7 @@ const ICD10EvidencePanel = {
     this.items = this._deduplicateItems(normalized);
     this.groupContext = groupContext;
     this.expandedDocuments.clear();
+    this.expandedDocItems.clear();
     this.approveLoading = false;
     this.isApproved = false;
     this.codeDropdownOpen = false;
@@ -72,11 +74,9 @@ const ICD10EvidencePanel = {
       this.selectedDescription = null;
     }
 
-    // Auto-expand first document group
+    // Auto-expand all document groups
     const docGroups = this._groupByDocument(this.items);
-    if (docGroups.length > 0) {
-      this.expandedDocuments.add(docGroups[0].documentId);
-    }
+    docGroups.forEach(dg => this.expandedDocuments.add(dg.documentId));
 
     this.render();
 
@@ -377,11 +377,27 @@ const ICD10EvidencePanel = {
             <polyline points="6 9 12 15 18 9"></polyline>
           </svg>
         </div>
-        ${isExpanded ? `
-          <div class="icd10-evidence-panel__doc-items">
-            ${docGroup.items.map((item, index) => this._renderEvidenceItem(item, index + 1)).join('')}
-          </div>
-        ` : ''}
+        ${isExpanded ? (() => {
+          const maxItems = 3;
+          const showAll = this.expandedDocItems.has(docGroup.documentId);
+          const visibleItems = showAll ? docGroup.items : docGroup.items.slice(0, maxItems);
+          const hiddenCount = docGroup.items.length - maxItems;
+          return `
+            <div class="icd10-evidence-panel__doc-items">
+              ${visibleItems.map((item, index) => this._renderEvidenceItem(item, index + 1)).join('')}
+              ${!showAll && hiddenCount > 0 ? `
+                <button class="icd10-evidence-panel__show-more-items" data-action="show-more-items" data-doc-id="${docGroup.documentId}">
+                  + ${hiddenCount} more
+                </button>
+              ` : ''}
+              ${showAll && hiddenCount > 0 ? `
+                <button class="icd10-evidence-panel__show-more-items" data-action="show-fewer-items" data-doc-id="${docGroup.documentId}">
+                  Show less
+                </button>
+              ` : ''}
+            </div>
+          `;
+        })() : ''}
       </div>
     `;
   },
@@ -505,6 +521,20 @@ const ICD10EvidencePanel = {
         this._handleApprove();
       });
     }
+
+    // Show more/fewer items within a document
+    this.container.querySelectorAll('[data-action="show-more-items"]').forEach(el => {
+      el.addEventListener('click', () => {
+        this.expandedDocItems.add(el.dataset.docId);
+        this.render();
+      });
+    });
+    this.container.querySelectorAll('[data-action="show-fewer-items"]').forEach(el => {
+      el.addEventListener('click', () => {
+        this.expandedDocItems.delete(el.dataset.docId);
+        this.render();
+      });
+    });
 
     // Close code dropdown when clicking outside
     this.container.addEventListener('click', (e) => {
@@ -712,6 +742,7 @@ const ICD10EvidencePanel = {
     this.items = [];
     this.groupContext = null;
     this.expandedDocuments.clear();
+    this.expandedDocItems.clear();
     this.approveLoading = false;
     this.isApproved = false;
     this.selectedCode = null;

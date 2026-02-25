@@ -18,7 +18,10 @@
  * 2. evidenceId prefix: "pcc-prognote-xxx", "therapy-doc-xxx", etc.
  */
 function parseEvidenceForViewer(ev) {
-  const { sourceType, sourceId, evidenceId } = ev;
+  const { sourceType, evidenceId } = ev;
+  // Some API formats use "id" instead of "sourceId"
+  const sourceId = ev.sourceId || ev.id || '';
+  const evType = ev.type; // queryEvidence uses "type" field (e.g., "clinical_note")
 
   // Pattern 1: Direct sourceType (from some API responses)
   if (sourceType === 'progress-note' && sourceId) {
@@ -27,25 +30,60 @@ function parseEvidenceForViewer(ev) {
   if (sourceType === 'therapy-doc' && sourceId) {
     return { viewerType: 'therapy-document', id: sourceId };
   }
+  if (sourceType === 'document' && sourceId) {
+    return { viewerType: 'document', id: sourceId };
+  }
+
+  // Pattern 1b: queryEvidence format uses "type" + "sourceId"
+  // sourceId may have prefixes like "pcc-prognote-xxx" — strip them
+  if (evType === 'clinical_note' && sourceId) {
+    const noteId = sourceId.replace(/^pcc-prognote-/, '').replace(/^patient-practnote-/, '');
+    return { viewerType: 'clinical-note', id: noteId };
+  }
+  if (evType === 'therapy_document' && sourceId) {
+    const docId = sourceId.replace(/^therapy-doc-/, '');
+    return { viewerType: 'therapy-document', id: docId };
+  }
+  if (evType === 'document' && sourceId) {
+    return { viewerType: 'document', id: sourceId };
+  }
 
   // Pattern 2: evidenceId prefixes
-  if (evidenceId) {
-    if (evidenceId.startsWith('therapy-doc-')) {
-      return { viewerType: 'therapy-document', id: evidenceId.replace('therapy-doc-', '') };
+  const eid = evidenceId || sourceId;
+  if (eid) {
+    if (eid.startsWith('therapy-doc-')) {
+      return { viewerType: 'therapy-document', id: eid.replace('therapy-doc-', '') };
     }
-    if (evidenceId.startsWith('pcc-prognote-')) {
-      return { viewerType: 'clinical-note', id: evidenceId.replace('pcc-prognote-', '') };
+    if (eid.startsWith('pcc-prognote-')) {
+      return { viewerType: 'clinical-note', id: eid.replace('pcc-prognote-', '') };
     }
-    if (evidenceId.startsWith('patient-practnote-')) {
-      return { viewerType: 'clinical-note', id: evidenceId.replace('patient-practnote-', '') };
+    if (eid.startsWith('patient-practnote-')) {
+      return { viewerType: 'clinical-note', id: eid.replace('patient-practnote-', '') };
     }
-    if (evidenceId.includes('-chunk-')) {
+    if (eid.includes('-chunk-')) {
       // Document chunks: "abc123-chunk-1" -> "abc123"
-      return { viewerType: 'document', id: evidenceId.split('-chunk-')[0] };
+      return { viewerType: 'document', id: eid.split('-chunk-')[0] };
     }
   }
 
   return { viewerType: null, id: null };
+}
+
+// =============================================================================
+// MODAL MOUNT POINT
+// =============================================================================
+
+/**
+ * If the ICD10 viewer (or another top-level modal) is open, append evidence
+ * modals inside its container so they share the same stacking context and
+ * appear on top. Otherwise fall back to document.body.
+ */
+function getModalMountPoint() {
+  // Check for open ICD10 viewer container first
+  const icd10Container = document.querySelector('.icd10-viewer-modal__container');
+  if (icd10Container) return icd10Container;
+
+  return document.body;
 }
 
 // =============================================================================
@@ -249,12 +287,13 @@ function formatSignatureDateTime(dateString) {
 }
 
 function setupModalCloseHandlers(modal, modalClass) {
-  // Prevent body scroll when modal is open
-  document.body.style.overflow = 'hidden';
+  // Only manage body overflow if we're mounted directly on body
+  const isOnBody = !document.querySelector('.icd10-viewer-modal__container');
+  if (isOnBody) document.body.style.overflow = 'hidden';
 
   // Restore body scroll when modal closes
   const closeModal = () => {
-    document.body.style.overflow = '';
+    if (isOnBody) document.body.style.overflow = '';
     modal.remove();
   };
 
@@ -293,7 +332,7 @@ async function showClinicalNoteModal(noteId) {
   const params = await window.getCurrentParams();
 
   const modal = createNoteModalShell();
-  document.body.appendChild(modal);
+  getModalMountPoint().appendChild(modal);
 
   try {
     const data = await fetchClinicalNote(noteId, params);
@@ -373,7 +412,7 @@ async function showTherapyDocModal(therapyDocId, highlightQuote = null) {
   const params = await window.getCurrentParams();
 
   const modal = createTherapyModalShell();
-  document.body.appendChild(modal);
+  getModalMountPoint().appendChild(modal);
 
   try {
     const data = await fetchTherapyDocument(therapyDocId, params);
@@ -1279,7 +1318,7 @@ async function showDocumentModal(documentId, wordBlocks = null) {
   const params = await window.getCurrentParams();
 
   const modal = createPdfModalShell();
-  document.body.appendChild(modal);
+  getModalMountPoint().appendChild(modal);
 
   try {
     const data = await fetchDocument(documentId, params);

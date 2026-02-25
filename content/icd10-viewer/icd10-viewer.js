@@ -12,8 +12,12 @@ const ICD10Viewer = {
   orgSlug: null,
   annotations: [],
   topRanked: [],
+  approved: [],
   counts: {},
   approvedDiagnoses: [],
+  _currentView: 'icd10', // 'icd10' or 'queryItems'
+  _preactUnmount: null,  // cleanup function for Preact component
+  _assessmentId: null,   // external assessment ID for query items
 
   // DOM elements
   modal: null,
@@ -39,6 +43,8 @@ const ICD10Viewer = {
     this.patientName = context.patientName;
     this.facilityName = context.facilityName;
     this.orgSlug = context.orgSlug;
+    this._assessmentId = context.assessmentId || null;
+    this._currentView = 'icd10';
 
     // Create and show modal
     this._createModal();
@@ -54,6 +60,19 @@ const ICD10Viewer = {
   close() {
     if (!this.isOpen || !this.modal) return;
 
+    // Clean up Preact if query items view is showing
+    if (this._preactUnmount) {
+      this._preactUnmount();
+      this._preactUnmount = null;
+    }
+    this._currentView = 'icd10';
+
+    // Remove escape handler
+    if (this._escapeHandler) {
+      document.removeEventListener('keydown', this._escapeHandler);
+      this._escapeHandler = null;
+    }
+
     // Animate out
     this.modal.classList.remove('icd10-viewer-modal--visible');
     this.modal.classList.add('icd10-viewer-modal--closing');
@@ -62,6 +81,7 @@ const ICD10Viewer = {
       this.modal.remove();
       this.modal = null;
       this.isOpen = false;
+      this._assessmentId = null;
       document.body.style.overflow = '';
 
       // Clear component state
@@ -148,11 +168,16 @@ const ICD10Viewer = {
       console.warn('ICD10Viewer: Could not get org slug:', e);
     }
 
+    // Get assessment ID from URL if available
+    const assessmentId = urlParams.get('ESOLassessid') ||
+                         window.SuperOverlay?.assessmentId || null;
+
     return {
       patientId,
       patientName,
       facilityName,
-      orgSlug
+      orgSlug,
+      assessmentId
     };
   },
 
@@ -178,6 +203,13 @@ const ICD10Viewer = {
             <span class="icd10-viewer__patient-info">${this._escapeHtml(this.patientName)}</span>
           </div>
           <div class="icd10-viewer__header-actions">
+            <button class="icd10-viewer__next-btn" title="Review Query Items">
+              Next
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+            </button>
             <button class="icd10-viewer__close-btn" title="Close">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -224,9 +256,18 @@ const ICD10Viewer = {
       this.close();
     });
 
-    // Back button
+    // Back button - context-aware
     this.modal.querySelector('.icd10-viewer__back-btn').addEventListener('click', () => {
-      this.close();
+      if (this._currentView === 'queryItems') {
+        this.showICD10View();
+      } else {
+        this.close();
+      }
+    });
+
+    // Next button - go to Query Items
+    this.modal.querySelector('.icd10-viewer__next-btn').addEventListener('click', () => {
+      this.showQueryItems();
     });
 
     // Backdrop click
@@ -234,11 +275,18 @@ const ICD10Viewer = {
       this.close();
     });
 
-    // Escape key
+    // Escape key - context-aware
     this._escapeHandler = (e) => {
       if (e.key === 'Escape' && this.isOpen) {
-        this.close();
-        document.removeEventListener('keydown', this._escapeHandler);
+        // Don't handle Escape if a nested modal (e.g., BatchReviewModal) is open —
+        // let the nested modal's own handler close it first
+        if (document.querySelector('.super-modal--visible')) return;
+
+        if (this._currentView === 'queryItems') {
+          this.showICD10View();
+        } else {
+          this.close();
+        }
       }
     };
     document.addEventListener('keydown', this._escapeHandler);
@@ -272,6 +320,7 @@ const ICD10Viewer = {
       ]);
 
       this.topRanked = annotationData.topRanked || [];
+      this.approved = annotationData.approved || [];
       this.annotations = annotationData.flatAnnotations || [];
       this.counts = annotationData.counts || {};
       this.approvedDiagnoses = approvedDiagnoses || [];
@@ -289,7 +338,7 @@ const ICD10Viewer = {
    * Initialize the three panel components
    */
   _initializeComponents() {
-    console.log('[ICD10Viewer] _initializeComponents: topRanked=', this.topRanked?.length, 'annotations=', this.annotations?.length, 'approved=', this.approvedDiagnoses?.length);
+    console.log('[ICD10Viewer] _initializeComponents: topRanked=', this.topRanked?.length, 'approved=', this.approved?.length, 'annotations=', this.annotations?.length, 'approvedDiagnoses=', this.approvedDiagnoses?.length);
 
     // Initialize evidence panel FIRST so callback is ready when sidebar auto-selects
     console.log('[ICD10Viewer] Initializing evidence panel...');
@@ -309,6 +358,7 @@ const ICD10Viewer = {
       this.sidebar,
       {
         topRanked: this.topRanked,
+        approved: this.approved,
         annotations: this.annotations,
         approvedDiagnoses: this.approvedDiagnoses,
         counts: this.counts
@@ -454,6 +504,7 @@ const ICD10Viewer = {
       // Update sidebar with new data
       ICD10Sidebar.updateData({
         topRanked: this.topRanked,
+        approved: this.approved,
         annotations: this.annotations,
         approvedDiagnoses: this.approvedDiagnoses
       });
@@ -536,6 +587,116 @@ const ICD10Viewer = {
     }, 2000);
 
     console.log('ICD10Viewer: Added diagnosis to page table:', diagnosis.icd10Code);
+  },
+
+  /**
+   * Switch to Query Items view
+   * Dynamically imports Preact + QueryItemsPage and replaces the body content
+   */
+  async showQueryItems() {
+    if (this._currentView === 'queryItems') return;
+    this._currentView = 'queryItems';
+
+    // Update header
+    const titleText = this.modal.querySelector('.icd10-viewer__title-text');
+    if (titleText) titleText.textContent = 'Query Items';
+
+    // Hide Next button, it's not needed in query view
+    const nextBtn = this.modal.querySelector('.icd10-viewer__next-btn');
+    if (nextBtn) nextBtn.style.display = 'none';
+
+    // Get the body element and switch to single-panel layout
+    const body = this.modal.querySelector('.icd10-viewer__body');
+    body.classList.add('icd10-viewer__body--single-panel');
+    body.innerHTML = '<div class="query-items-mount"></div>';
+    const mountEl = body.querySelector('.query-items-mount');
+
+    // Try to get assessment ID from URL (PCC pattern)
+    if (!this._assessmentId) {
+      const urlParams = new URLSearchParams(window.location.search);
+      this._assessmentId = urlParams.get('ESOLassessid') ||
+                           window.SuperOverlay?.assessmentId || null;
+    }
+
+    try {
+      // Dynamic imports — Vite handles code-splitting
+      const [{ render, h }, { QueryItemsPage }] = await Promise.all([
+        import('preact'),
+        import('../modules/query-items/QueryItemsPage.jsx')
+      ]);
+
+      // Render the Preact component
+      render(
+        h(QueryItemsPage, {
+          patientId: this.patientId,
+          patientName: this.patientName,
+          facilityName: this.facilityName,
+          orgSlug: this.orgSlug,
+          assessmentId: this._assessmentId,
+          onBack: () => this.showICD10View(),
+          onClose: () => this.close()
+        }),
+        mountEl
+      );
+
+      // Store unmount function
+      this._preactUnmount = () => {
+        render(null, mountEl);
+      };
+    } catch (err) {
+      console.error('[ICD10Viewer] Failed to load Query Items:', err);
+      mountEl.innerHTML = `
+        <div class="icd10-viewer__error">
+          <p class="icd10-viewer__error-text">Failed to load Query Items: ${this._escapeHtml(err.message)}</p>
+          <button class="icd10-viewer__error-retry" onclick="ICD10Viewer.showICD10View()">Go Back</button>
+        </div>
+      `;
+    }
+  },
+
+  /**
+   * Switch back to ICD-10 view from Query Items
+   * Unmounts Preact and restores the 3-panel layout
+   */
+  showICD10View() {
+    if (this._currentView === 'icd10') return;
+
+    // Unmount Preact
+    if (this._preactUnmount) {
+      this._preactUnmount();
+      this._preactUnmount = null;
+    }
+    this._currentView = 'icd10';
+
+    // Restore header
+    const titleText = this.modal.querySelector('.icd10-viewer__title-text');
+    if (titleText) titleText.textContent = 'ICD-10 Viewer';
+
+    // Show Next button again
+    const nextBtn = this.modal.querySelector('.icd10-viewer__next-btn');
+    if (nextBtn) nextBtn.style.display = '';
+
+    // Restore 3-panel body structure
+    const body = this.modal.querySelector('.icd10-viewer__body');
+    body.classList.remove('icd10-viewer__body--single-panel');
+    body.innerHTML = `
+      <div class="icd10-viewer__sidebar"></div>
+      <div class="icd10-viewer__evidence-panel"></div>
+      <div class="icd10-viewer__pdf-viewer"></div>
+    `;
+
+    // Re-store panel references
+    this.sidebar = body.querySelector('.icd10-viewer__sidebar');
+    this.evidencePanel = body.querySelector('.icd10-viewer__evidence-panel');
+    this.pdfViewer = body.querySelector('.icd10-viewer__pdf-viewer');
+
+    // Re-initialize components with cached data
+    if (this.topRanked.length > 0 || this.annotations.length > 0) {
+      this._initializeComponents();
+    } else {
+      this._showLoading();
+      this._loadData();
+    }
   },
 
   /**

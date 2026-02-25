@@ -51,21 +51,25 @@ const ICD10API = {
   /**
    * Process the API annotation response into the shape the viewer expects
    * @param {Object} data - Raw API response
-   * @returns {Object} - { topRanked, flatAnnotations, counts }
+   * @returns {Object} - { topRanked, approved, flatAnnotations, counts }
    */
   _processAnnotationResponse(data) {
     const annotations = data.annotations || {};
     const rawTopRanked = annotations.topRanked || [];
+    const rawApproved = annotations.approved || [];
 
-    // Normalize topRanked field names: API uses group/displayName, sidebar expects groupCode/groupName
-    const topRanked = rawTopRanked.map(g => ({
+    // Normalize group field names: API uses group/displayName, sidebar expects groupCode/groupName
+    const normalizeGroup = (g) => ({
       ...g,
       groupId: g.groupId || g.group || g.id,
       groupCode: g.groupCode || g.group,
       groupName: g.groupName || g.displayName,
       annotationCount: g.annotationCount ?? g.annotations?.length ?? 0,
       documentCount: g.documentCount ?? 0,
-    }));
+    });
+
+    const topRanked = rawTopRanked.map(normalizeGroup);
+    const approved = rawApproved.map(normalizeGroup);
 
     // Build flat annotations from nta, slp, other, speculative categories
     const flatAnnotations = [];
@@ -85,6 +89,7 @@ const ICD10API = {
 
     return {
       topRanked,
+      approved,
       flatAnnotations,
       counts: data.counts || {}
     };
