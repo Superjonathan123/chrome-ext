@@ -4,6 +4,7 @@
 
 // 1. Import global config
 import '../config.js';
+import './css/mds-command-center.css';
 
 // 2. Import vanilla utilities (order matters - matches current manifest.json order)
 import './mockData.js';

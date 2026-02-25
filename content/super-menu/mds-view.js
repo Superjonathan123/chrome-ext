@@ -298,6 +298,17 @@ function renderMDSContent(data, context) {
   } else {
     return `
       ${breadcrumb}
+      <div class="super-mds-global-actions">
+        <button class="mds-cc__launch-btn" id="mds-command-center-btn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="7" height="7"/>
+            <rect x="14" y="3" width="7" height="7"/>
+            <rect x="14" y="14" width="7" height="7"/>
+            <rect x="3" y="14" width="7" height="7"/>
+          </svg>
+          MDS Command Center
+        </button>
+      </div>
       ${renderMDSList(data.assessments || [], 'global')}
     `;
   }
@@ -1092,6 +1103,14 @@ function setupMDSListeners(container) {
       }
     });
   });
+
+  // MDS Command Center launch button
+  const cmdCenterBtn = container.querySelector('#mds-command-center-btn');
+  if (cmdCenterBtn) {
+    cmdCenterBtn.addEventListener('click', () => {
+      MDSCommandCenterLauncher.open();
+    });
+  }
 }
 
 // ============================================================================
@@ -1348,6 +1367,80 @@ function formatRelativeDate(dateStr) {
   return formatDate(dateStr);
 }
 
+// ============================================================================
+// MDS COMMAND CENTER LAUNCHER
+// Follows the same dynamic import pattern as ICD10Viewer / showQueryItems()
+// ============================================================================
+
+const MDSCommandCenterLauncher = {
+  _overlayEl: null,
+  _preactUnmount: null,
+
+  async open() {
+    if (this._overlayEl) return; // Already open
+
+    // Get org slug and facility name (same pattern as loadMDSData)
+    let facilityName, orgSlug;
+    try {
+      const orgResponse = await chrome.runtime.sendMessage({ type: 'GET_ORG' });
+      orgSlug = orgResponse?.org;
+      facilityName = getChatFacilityInfo();
+    } catch (e) {
+      console.error('[MDSCommandCenter] Could not get org/facility:', e);
+    }
+
+    // Create overlay mount point
+    const overlayEl = document.createElement('div');
+    overlayEl.id = 'mds-command-center-overlay';
+    document.body.appendChild(overlayEl);
+    this._overlayEl = overlayEl;
+
+    // Escape key to close
+    this._escapeHandler = (e) => {
+      if (e.key === 'Escape') this.close();
+    };
+    document.addEventListener('keydown', this._escapeHandler);
+
+    try {
+      // Dynamic import — Vite code-splits this chunk automatically
+      const [{ render, h }, { MDSCommandCenter }] = await Promise.all([
+        import('preact'),
+        import('../modules/mds-command-center/MDSCommandCenter.jsx')
+      ]);
+
+      render(
+        h(MDSCommandCenter, {
+          facilityName: facilityName || '',
+          orgSlug: orgSlug || '',
+          onClose: () => this.close()
+        }),
+        overlayEl
+      );
+
+      this._preactUnmount = () => render(null, overlayEl);
+    } catch (err) {
+      console.error('[MDSCommandCenter] Failed to load module:', err);
+      overlayEl.remove();
+      this._overlayEl = null;
+    }
+  },
+
+  close() {
+    if (this._escapeHandler) {
+      document.removeEventListener('keydown', this._escapeHandler);
+      this._escapeHandler = null;
+    }
+    if (this._preactUnmount) {
+      this._preactUnmount();
+      this._preactUnmount = null;
+    }
+    if (this._overlayEl) {
+      this._overlayEl.remove();
+      this._overlayEl = null;
+    }
+  }
+};
+
 // Make available globally for cross-file access
 window.renderMDSView = renderMDSView;
 window.renderMDSContent = renderMDSContent;
@@ -1355,3 +1448,4 @@ window.setupMDSListeners = setupMDSListeners;
 window.loadMDSData = loadMDSData;
 window.formatRelativeDate = formatRelativeDate;
 window.navigateToMDSItem = navigateToMDSItem;
+window.MDSCommandCenterLauncher = MDSCommandCenterLauncher;
