@@ -3,10 +3,10 @@
 
 // CONFIG is inlined here since service workers use ES modules and can't use importScripts
 const CONFIG = {
-  DEV_MODE: false,
+  DEV_MODE: true,
   get API_BASE() {
-    return 'http://localhost:3000';
-  }
+    return this.DEV_MODE ? 'http://localhost:3000' : 'https://superltc.com';
+  },
 };
 
 // Helper: Make authenticated API requests
