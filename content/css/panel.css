@@ -261,3 +261,70 @@
   color: var(--super-gray-500);
 }
 
+/* ============================================
+   Dual Bubble Launcher (replaces single FAB)
+   ============================================ */
+#super-bubbles-container {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 99998;
+}
+
+.super-bubble {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  font-family: var(--super-font, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif);
+}
+
+.super-bubble--mds {
+  background: #6366f1;
+  color: #fff;
+}
+
+.super-bubble--chat {
+  background: #fff;
+  color: #6366f1;
+  border: 1.5px solid #e5e7eb;
+}
+
+.super-bubble:hover {
+  transform: scale(1.08);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+}
+
+.super-bubble:active {
+  transform: scale(0.96);
+}
+
+.super-bubble__badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 4px;
+  background: #ef4444;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  border-radius: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #fff;
+  line-height: 1;
+}
+

@@ -92,14 +92,20 @@ function QueryIconBadge({ querySummary }) {
 }
 
 function ComplianceIconBadge({ compliance }) {
+  // Show ⚠ only when status is explicitly non-ok AND there are actual issues
   if (!compliance || compliance.status === 'ok') return null;
-  const count = compliance.issues?.length ?? 0;
+  const count = (compliance.issues ?? []).length;
   if (count === 0) return null;
   return (
     <span class="mds-cc__icon-badge mds-cc__icon-badge--compliance" aria-label={`${count} compliance ${count === 1 ? 'issue' : 'issues'}`}>
       ⚠
     </span>
   );
+}
+
+function cleanAssessmentType(type) {
+  if (!type) return '—';
+  return type.replace(/\s*\/\s*$/, '').replace(/\s{2,}/g, ' ').trim();
 }
 
 function formatDate(dateStr) {
@@ -135,7 +141,7 @@ export function AssessmentRow({ assessment, isExpanded, onToggle }) {
 
         <div class="mds-cc__row-info">
           <span class="mds-cc__patient-name">{patientName || 'Unknown'}</span>
-          <span class="mds-cc__assessment-type">{assessmentType || '—'}</span>
+          <span class="mds-cc__assessment-type">{cleanAssessmentType(assessmentType)}</span>
           <span class="mds-cc__ard-date">ARD {formatDate(ardDate)}</span>
         </div>
 

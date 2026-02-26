@@ -143,7 +143,7 @@ function ActionButtons({ assessment }) {
     const id = externalAssessmentId || assessmentId;
     if (id) {
       const base = window.location.origin;
-      window.open(`${base}/pcc-ui/#!/facility/mds/assessment/${id}`, '_blank');
+      window.open(`${base}/clinical/mds3/section.xhtml?ESOLassessid=${id}`, '_blank');
     }
   }
 

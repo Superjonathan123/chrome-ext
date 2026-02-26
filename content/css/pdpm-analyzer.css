@@ -1,0 +1,455 @@
+/* ============================================
+   PDPM Analyzer Overlay
+   ============================================ */
+
+.pdpm-an__overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: 999990;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  animation: pdpm-fade-in 0.15s ease-out;
+}
+
+@keyframes pdpm-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.pdpm-an__modal {
+  width: 700px;
+  max-width: calc(100vw - 40px);
+  max-height: calc(100vh - 60px);
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: pdpm-slide-in 0.2s ease-out;
+}
+
+@keyframes pdpm-slide-in {
+  from { transform: translateY(16px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+
+/* Header */
+.pdpm-an__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 20px;
+  border-bottom: 1px solid #e5e7eb;
+  background: #f9fafb;
+  flex-shrink: 0;
+  gap: 12px;
+}
+
+.pdpm-an__header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  flex: 1;
+}
+
+.pdpm-an__header-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.pdpm-an__back-btn {
+  background: none;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  padding: 4px 10px;
+  font-size: 12px;
+  color: #6366f1;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.12s, border-color 0.12s;
+}
+
+.pdpm-an__back-btn:hover {
+  background: #eef2ff;
+  border-color: #6366f1;
+}
+
+.pdpm-an__patient-info {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  min-width: 0;
+}
+
+.pdpm-an__patient-name {
+  font-size: 15px;
+  font-weight: 600;
+  color: #111827;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pdpm-an__assessment-label {
+  font-size: 12px;
+  color: #6b7280;
+  white-space: nowrap;
+}
+
+.pdpm-an__ard-date {
+  font-size: 12px;
+  color: #9ca3af;
+  white-space: nowrap;
+}
+
+.pdpm-an__assessment-select {
+  font-size: 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  padding: 4px 8px;
+  color: #374151;
+  background: #fff;
+  cursor: pointer;
+  max-width: 200px;
+}
+
+.pdpm-an__close-btn {
+  background: none;
+  border: none;
+  font-size: 18px;
+  color: #9ca3af;
+  cursor: pointer;
+  padding: 4px 6px;
+  border-radius: 4px;
+  line-height: 1;
+  transition: color 0.1s, background 0.1s;
+}
+
+.pdpm-an__close-btn:hover {
+  color: #374151;
+  background: #f3f4f6;
+}
+
+/* Body */
+.pdpm-an__body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.pdpm-an__body::-webkit-scrollbar { width: 6px; }
+.pdpm-an__body::-webkit-scrollbar-track { background: #f3f4f6; }
+.pdpm-an__body::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 3px; }
+
+/* Content wrapper */
+.pdpm-an__content {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* HIPPS display */
+.pdpm-an__hipps {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 16px 20px;
+}
+
+.pdpm-an__hipps-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.pdpm-an__hipps-block {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.pdpm-an__hipps-label {
+  font-size: 11px;
+  font-weight: 500;
+  color: #9ca3af;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.pdpm-an__hipps-code {
+  font-size: 28px;
+  font-weight: 700;
+  color: #1e293b;
+  letter-spacing: 0.05em;
+  font-variant-numeric: tabular-nums;
+}
+
+.pdpm-an__hipps-code--potential {
+  color: #059669;
+}
+
+.pdpm-an__hipps-arrow {
+  font-size: 24px;
+  color: #94a3b8;
+  margin-top: 18px;
+}
+
+/* Payment card */
+.pdpm-an__payment-card {
+  background: linear-gradient(135deg, #ecfdf5 0%, #f0fdf4 100%);
+  border: 1px solid #a7f3d0;
+  border-radius: 10px;
+  padding: 16px 20px;
+}
+
+.pdpm-an__payment-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: #059669;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 8px;
+}
+
+.pdpm-an__payment-row {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.pdpm-an__payment-current,
+.pdpm-an__payment-potential {
+  font-size: 20px;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.pdpm-an__payment-arrow {
+  font-size: 16px;
+  color: #6b7280;
+}
+
+.pdpm-an__payment-delta {
+  font-size: 20px;
+  font-weight: 700;
+  color: #059669;
+  background: #d1fae5;
+  padding: 2px 10px;
+  border-radius: 20px;
+}
+
+/* Generic card */
+.pdpm-an__card {
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.pdpm-an__card--success {
+  border-color: #a7f3d0;
+  background: #f0fdf4;
+}
+
+.pdpm-an__card--warning {
+  border-color: #fde68a;
+  background: #fffbeb;
+}
+
+.pdpm-an__card-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background: rgba(0, 0, 0, 0.03);
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.pdpm-an__card-icon {
+  font-size: 14px;
+}
+
+.pdpm-an__card-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #374151;
+  flex: 1;
+}
+
+.pdpm-an__card-badge {
+  font-size: 12px;
+  font-weight: 600;
+  color: #6b7280;
+  background: #f3f4f6;
+  padding: 2px 8px;
+  border-radius: 10px;
+}
+
+/* Would change HIPPS */
+.pdpm-an__driver-list {
+  list-style: none;
+  margin: 0;
+  padding: 8px 0;
+}
+
+.pdpm-an__driver-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 7px 16px;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.pdpm-an__driver-item:last-child {
+  border-bottom: none;
+}
+
+.pdpm-an__driver-section {
+  font-size: 11px;
+  font-weight: 600;
+  color: #6366f1;
+  background: #eef2ff;
+  padding: 2px 6px;
+  border-radius: 4px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.pdpm-an__driver-text {
+  font-size: 12px;
+  color: #374151;
+  line-height: 1.4;
+}
+
+/* Pending queries */
+.pdpm-an__query-list {
+  list-style: none;
+  margin: 0;
+  padding: 8px 0;
+}
+
+.pdpm-an__query-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 7px 16px;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.pdpm-an__query-item:last-child {
+  border-bottom: none;
+}
+
+.pdpm-an__query-code {
+  font-size: 11px;
+  font-weight: 600;
+  color: #d97706;
+  background: #fef3c7;
+  padding: 2px 6px;
+  border-radius: 4px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.pdpm-an__query-text {
+  font-size: 12px;
+  color: #374151;
+  line-height: 1.4;
+}
+
+/* Compliance */
+.pdpm-an__compliance-list {
+  padding: 8px 0;
+}
+
+.pdpm-an__compliance-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 16px;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.pdpm-an__compliance-item:last-child {
+  border-bottom: none;
+}
+
+.pdpm-an__compliance-icon {
+  font-size: 13px;
+  font-weight: 700;
+  flex-shrink: 0;
+  width: 16px;
+  text-align: center;
+}
+
+.pdpm-an__compliance-item--pass .pdpm-an__compliance-icon { color: #059669; }
+.pdpm-an__compliance-item--fail .pdpm-an__compliance-icon { color: #ef4444; }
+
+.pdpm-an__compliance-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #374151;
+  width: 64px;
+  flex-shrink: 0;
+}
+
+.pdpm-an__compliance-msg {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+/* States */
+.pdpm-an__state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 24px;
+  text-align: center;
+  gap: 12px;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.pdpm-an__state-icon {
+  font-size: 32px;
+}
+
+.pdpm-an__spinner {
+  width: 28px;
+  height: 28px;
+  border: 3px solid #e5e7eb;
+  border-top-color: #6366f1;
+  border-radius: 50%;
+  animation: pdpm-spin 0.7s linear infinite;
+}
+
+@keyframes pdpm-spin {
+  to { transform: rotate(360deg); }
+}
+
+.pdpm-an__retry-btn {
+  background: #6366f1;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 7px 18px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.pdpm-an__retry-btn:hover {
+  background: #4f46e5;
+}

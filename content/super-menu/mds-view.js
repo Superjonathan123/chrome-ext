@@ -1528,6 +1528,64 @@ const MDSCommandCenterLauncher = {
   }
 };
 
+// ============================================================================
+// PDPM ANALYZER LAUNCHER
+// ============================================================================
+
+const PDPMAnalyzerLauncher = {
+  _overlayEl: null,
+  _preactUnmount: null,
+
+  open(context) {
+    if (this._overlayEl) {
+      this.close(); // Close any existing instance
+    }
+
+    const overlayEl = document.createElement('div');
+    overlayEl.id = 'pdpm-analyzer-overlay';
+    document.body.appendChild(overlayEl);
+    this._overlayEl = overlayEl;
+
+    this._escapeHandler = (e) => {
+      if (e.key === 'Escape') this.close();
+    };
+    document.addEventListener('keydown', this._escapeHandler);
+
+    Promise.all([
+      import('preact'),
+      import('../modules/pdpm-analyzer/PDPMAnalyzer.jsx')
+    ]).then(([{ render, h }, { PDPMAnalyzer }]) => {
+      render(
+        h(PDPMAnalyzer, {
+          context: context,
+          onClose: () => this.close()
+        }),
+        overlayEl
+      );
+      this._preactUnmount = () => render(null, overlayEl);
+    }).catch(err => {
+      console.error('[PDPMAnalyzer] Failed to load module:', err);
+      overlayEl.remove();
+      this._overlayEl = null;
+    });
+  },
+
+  close() {
+    if (this._escapeHandler) {
+      document.removeEventListener('keydown', this._escapeHandler);
+      this._escapeHandler = null;
+    }
+    if (this._preactUnmount) {
+      this._preactUnmount();
+      this._preactUnmount = null;
+    }
+    if (this._overlayEl) {
+      this._overlayEl.remove();
+      this._overlayEl = null;
+    }
+  }
+};
+
 // Make available globally for cross-file access
 window.renderMDSView = renderMDSView;
 window.renderMDSContent = renderMDSContent;
@@ -1536,3 +1594,4 @@ window.loadMDSData = loadMDSData;
 window.formatRelativeDate = formatRelativeDate;
 window.navigateToMDSItem = navigateToMDSItem;
 window.MDSCommandCenterLauncher = MDSCommandCenterLauncher;
+window.PDPMAnalyzerLauncher = PDPMAnalyzerLauncher;

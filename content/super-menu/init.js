@@ -216,9 +216,8 @@ function initSuperChat() {
     loadChatSession();
   }
 
-  // Create UI (always - dashboard is global)
-  createChatButton();
-  createChatPanel();
+  // Create dual bubble launcher (MDS + Chat)
+  createBubbles();
 
   // Inject AI Code button on Med Diag pages
   injectAICodeButton();
@@ -247,24 +246,18 @@ const chatUrlObserver = new MutationObserver(() => {
 
     // Get old and new context
     const oldPatientId = new URL(oldUrl).searchParams.get('ESOLclientid');
-    const oldAssessmentId = new URL(oldUrl).searchParams.get('ESOLassessid');
     const newPatientId = getChatPatientId();
     const newContext = getMDSContext();
 
     // Check if patient context changed
     if (oldPatientId !== newPatientId) {
       console.log('Super Menu: Patient context changed, updating chat session');
-      // Clear old chat session and load new one
       if (newPatientId) {
         loadChatSession();
       }
-      // Re-render chat if it's the active view
-      if (SuperMenu.activeView === 'chat') {
-        renderChatMessages();
-      }
     }
 
-    // Check if scope/context changed - auto-switch view
+    // Track context changes and clear MDS cache on navigation
     const scopeChanged = !lastContext ||
                          lastContext.scope !== newContext.scope ||
                          lastContext.patientId !== newContext.patientId ||
@@ -274,16 +267,10 @@ const chatUrlObserver = new MutationObserver(() => {
       console.log('Super Menu: Context changed from', lastContext?.scope, 'to', newContext.scope);
       lastContext = newContext;
 
-      // Clear MDS data cache and manual context on URL change
       if (typeof MDSViewState !== 'undefined') {
         MDSViewState.data = null;
         MDSViewState.context = newContext;
-        MDSViewState.manualContext = null; // Clear manual nav - sync to URL
-      }
-
-      // Auto-switch view if panel is open
-      if (SuperMenu.isOpen && typeof autoSwitchViewByContext === 'function') {
-        autoSwitchViewByContext();
+        MDSViewState.manualContext = null;
       }
     }
 
