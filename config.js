@@ -5,8 +5,7 @@ const CONFIG = {
   DEV_MODE: false,
 
   get API_BASE() {
-    // return this.DEV_MODE ? 'http://localhost:5432' : 'https://superltc.com';
-    return 'http://localhost:3000';
+    return this.DEV_MODE ? 'http://localhost:3000' : 'https://superltc.com';
   }
 };
 

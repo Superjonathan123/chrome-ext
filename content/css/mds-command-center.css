@@ -113,6 +113,14 @@
 .mds-cc__stat--highlight strong {
   color: var(--super-primary, #6366f1);
 }
+.mds-cc__stat--revenue strong {
+  color: #15803d;
+  font-size: 13px;
+}
+.mds-cc__stat-sub {
+  color: var(--super-gray-500, #6b7280);
+  font-weight: 400;
+}
 
 .mds-cc__stats-sep {
   color: var(--super-gray-300, #d1d5db);
@@ -294,7 +302,7 @@
 .mds-cc__pill--completed { background: var(--super-gray-100, #f3f4f6); color: var(--super-gray-600, #4b5563); }
 .mds-cc__pill--default  { background: var(--super-gray-100, #f3f4f6); color: var(--super-gray-600, #4b5563); }
 
-/* Badge pills (HIPPS, queries, compliance) */
+/* Badge pills */
 .mds-cc__badge {
   font-size: 11px;
   font-weight: 600;
@@ -303,9 +311,33 @@
   font-family: var(--super-font, sans-serif);
   white-space: nowrap;
 }
-.mds-cc__badge--hipps      { background: #dcfce7; color: #15803d; }
-.mds-cc__badge--query      { background: #fef9c3; color: #854d0e; }
-.mds-cc__badge--compliance { background: #fee2e2; color: #b91c1c; }
+
+/* Payment delta badge — more prominent green pill */
+.mds-cc__badge--payment {
+  background: #dcfce7;
+  color: #15803d;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 2px 10px;
+}
+
+/* Thin fallback badge when improvements exist but payment not applicable */
+.mds-cc__badge--hipps-fallback {
+  background: var(--super-gray-100, #f3f4f6);
+  color: var(--super-gray-600, #4b5563);
+  font-size: 11px;
+  padding: 2px 7px;
+}
+
+/* Icon-only badges — no pill box, just colored character(s) */
+.mds-cc__icon-badge {
+  font-size: 13px;
+  font-family: var(--super-font, sans-serif);
+  white-space: nowrap;
+  line-height: 1;
+}
+.mds-cc__icon-badge--query      { color: #92400e; }
+.mds-cc__icon-badge--compliance { color: #d97706; }
 
 /* Chevron */
 .mds-cc__chevron {
@@ -577,4 +609,54 @@
 }
 .mds-cc__launch-btn svg {
   flex-shrink: 0;
+}
+
+/* ============================================================
+   Payment Hero Card (in super-menu mds-view)
+   ============================================================ */
+.super-mds-payment-block {
+  border-left: 4px solid #15803d;
+  background: #f0fdf4;
+  border-radius: 0 var(--super-radius, 6px) var(--super-radius, 6px) 0;
+  padding: 12px 16px;
+  margin: 0 0 12px 0;
+}
+
+.super-mds-payment-block__label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #15803d;
+  font-family: var(--super-font, sans-serif);
+  margin-bottom: 8px;
+}
+
+.super-mds-payment-rates {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+
+.super-mds-payment-rate {
+  font-size: 13px;
+  font-family: var(--super-font, sans-serif);
+  font-weight: 500;
+}
+.super-mds-payment-rate--current  { color: var(--super-gray-600, #4b5563); }
+.super-mds-payment-rate--potential { color: #15803d; font-weight: 600; }
+
+.super-mds-payment-arrow {
+  color: var(--super-gray-400, #9ca3af);
+  font-size: 14px;
+}
+
+.super-mds-payment-delta {
+  font-size: 16px;
+  font-weight: 700;
+  color: #15803d;
+  font-family: var(--super-font, sans-serif);
+  line-height: 1.2;
 }

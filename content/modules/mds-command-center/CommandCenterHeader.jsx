@@ -11,7 +11,7 @@
 const FILTER_TABS = [
   { id: 'all', label: 'All' },
   { id: 'urgent', label: 'Urgent' },
-  { id: 'hipps', label: 'HIPPS ↑' },
+  { id: 'hipps', label: 'Revenue ↑' },
   { id: 'queries', label: 'Has Queries' },
 ];
 
@@ -42,6 +42,7 @@ export function CommandCenterHeader({
   const urgentCount = summary?.urgent ?? 0;
   const hippsCount = summary?.hippsImprovements ?? summary?.withHippsImprovements ?? 0;
   const queryCount = summary?.pendingQueries ?? summary?.pendingQueriesCount ?? 0;
+  const revenuePerDay = summary?.totalRevenueOpportunityPerDay ?? 0;
 
   return (
     <div class="mds-cc__header">
@@ -66,8 +67,15 @@ export function CommandCenterHeader({
         <StatPill value={total} label="assessments" />
         <span class="mds-cc__stats-sep">|</span>
         <StatPill value={urgentCount} label="urgent" highlight={urgentCount > 0} />
-        <span class="mds-cc__stats-sep">|</span>
-        <StatPill value={hippsCount} label="HIPPS improvements" highlight={hippsCount > 0} />
+        {revenuePerDay > 0 && (
+          <>
+            <span class="mds-cc__stats-sep">|</span>
+            <span class="mds-cc__stat mds-cc__stat--revenue">
+              <strong>${Math.round(revenuePerDay)}/day available</strong>
+              {hippsCount > 0 && <span class="mds-cc__stat-sub"> across {hippsCount} improvements</span>}
+            </span>
+          </>
+        )}
         <span class="mds-cc__stats-sep">|</span>
         <StatPill value={queryCount} label="pending queries" highlight={queryCount > 0} />
       </div>

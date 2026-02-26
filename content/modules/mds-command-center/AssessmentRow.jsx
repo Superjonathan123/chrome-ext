@@ -5,7 +5,9 @@
  *   • Urgency dot (color-coded)
  *   • Patient name, assessment type, ARD date
  *   • Urgency pill (days remaining / overdue / done)
- *   • Badge pills: HIPPS improvement, pending queries, compliance issues
+ *   • Payment delta badge (+$47/day) — replaces HIPPS text badge
+ *   • Fallback ↑ badge when improvements exist but payment not applicable
+ *   • Icon-only badges: ✉ N for queries, ⚠ for compliance issues
  *   • Expand/collapse chevron
  */
 
@@ -47,33 +49,55 @@ function UrgencyPill({ deadline }) {
   return <span class={cls}>{text}</span>;
 }
 
-function HippsBadge({ pdpm }) {
-  if (!pdpm?.hasImprovements) return null;
-  const code = pdpm.improvedHipps || '';
-  return (
-    <span class="mds-cc__badge mds-cc__badge--hipps">
-      ↑ {code}
-    </span>
-  );
+function getPaymentDelta(payment) {
+  if (!payment?.isApplicable) return null;
+  if (payment.ppd?.delta > 0)          return `+$${Math.round(payment.ppd.delta)}/day`;
+  if (payment.texasPdpm?.delta > 0)    return `+$${Math.round(payment.texasPdpm.delta)}/day`;
+  if (payment.cmi?.delta > 0)          return `+${payment.cmi.delta.toFixed(2)} CMI`;
+  return null;
 }
 
-function QueryBadge({ querySummary }) {
+function PaymentDeltaBadge({ pdpm }) {
+  const payment = pdpm?.payment;
+  const delta = getPaymentDelta(payment);
+
+  if (delta) {
+    return (
+      <span class="mds-cc__badge mds-cc__badge--payment">
+        {delta}
+      </span>
+    );
+  }
+
+  // Fallback: show thin ↑ badge if improvements exist but payment not applicable
+  if (pdpm?.hasImprovements) {
+    return (
+      <span class="mds-cc__badge mds-cc__badge--hipps-fallback">
+        ↑
+      </span>
+    );
+  }
+
+  return null;
+}
+
+function QueryIconBadge({ querySummary }) {
   const pending = querySummary?.pending ?? 0;
   if (pending === 0) return null;
   return (
-    <span class="mds-cc__badge mds-cc__badge--query">
-      {pending} {pending === 1 ? 'query' : 'queries'}
+    <span class="mds-cc__icon-badge mds-cc__icon-badge--query" aria-label={`${pending} pending ${pending === 1 ? 'query' : 'queries'}`}>
+      ✉ {pending}
     </span>
   );
 }
 
-function ComplianceBadge({ compliance }) {
+function ComplianceIconBadge({ compliance }) {
   if (!compliance || compliance.status === 'ok') return null;
   const count = compliance.issues?.length ?? 0;
   if (count === 0) return null;
   return (
-    <span class="mds-cc__badge mds-cc__badge--compliance">
-      {count} {count === 1 ? 'issue' : 'issues'}
+    <span class="mds-cc__icon-badge mds-cc__icon-badge--compliance" aria-label={`${count} compliance ${count === 1 ? 'issue' : 'issues'}`}>
+      ⚠
     </span>
   );
 }
@@ -117,9 +141,9 @@ export function AssessmentRow({ assessment, isExpanded, onToggle }) {
 
         <div class="mds-cc__row-badges">
           <UrgencyPill deadline={deadline} />
-          <HippsBadge pdpm={pdpm} />
-          <QueryBadge querySummary={querySummary} />
-          <ComplianceBadge compliance={compliance} />
+          <PaymentDeltaBadge pdpm={pdpm} />
+          <QueryIconBadge querySummary={querySummary} />
+          <ComplianceIconBadge compliance={compliance} />
         </div>
 
         <span class={`mds-cc__chevron${isExpanded ? ' mds-cc__chevron--open' : ''}`}>

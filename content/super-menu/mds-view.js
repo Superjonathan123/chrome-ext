@@ -227,6 +227,7 @@ function renderMDSContent(data, context) {
         <div class="super-mds-dashboard">
           ${breadcrumb}
           ${renderHippsDisplay(data)}
+          ${renderPaymentBlock(data)}
           ${renderWouldChangeHippsCard(data)}
           ${renderPendingQueriesCard(data)}
           ${renderRecentQueriesCard(data)}
@@ -504,6 +505,92 @@ function renderComplianceCard(data) {
       </div>
     </div>
   `;
+}
+
+// ============================================================================
+// PAYMENT BLOCK (Hero Card — Revenue Opportunity)
+// ============================================================================
+
+function renderPaymentBlock(data) {
+  const payment = data.payment;
+  if (!payment?.isApplicable) return '';
+
+  const ppd = payment.ppd;
+  const tex = payment.texasPdpm;
+  const cmi = payment.cmi;
+
+  // PPD (Medicare) — Detail endpoint uses ppd.current.total / ppd.potential.total
+  if (ppd && ppd.delta > 0) {
+    const currentTotal  = ppd.current?.total  ?? ppd.currentTotal  ?? null;
+    const potentialTotal = ppd.potential?.total ?? ppd.potentialTotal ?? null;
+    const delta = Math.round(ppd.delta);
+
+    const rateRow = (currentTotal != null && potentialTotal != null) ? `
+      <div class="super-mds-payment-rates">
+        <span class="super-mds-payment-rate super-mds-payment-rate--current">$${Math.round(currentTotal)}/day</span>
+        <span class="super-mds-payment-arrow">&#10140;</span>
+        <span class="super-mds-payment-rate super-mds-payment-rate--potential">$${Math.round(potentialTotal)}/day</span>
+      </div>
+    ` : '';
+
+    return `
+      <div class="super-mds-payment-block">
+        <div class="super-mds-payment-block__label">Revenue Opportunity · Medicare</div>
+        ${rateRow}
+        <div class="super-mds-payment-delta">+$${delta}/day</div>
+      </div>
+    `;
+  }
+
+  // Texas PDPM
+  if (tex && tex.delta > 0) {
+    const currentGroup   = tex.current?.groupCode  ?? '';
+    const potentialGroup = tex.potential?.groupCode ?? '';
+    const currentRate    = tex.current?.rate        ?? null;
+    const potentialRate  = tex.potential?.rate      ?? null;
+    const delta = Math.round(tex.delta);
+
+    const rateRow = (currentRate != null && potentialRate != null) ? `
+      <div class="super-mds-payment-rates">
+        <span class="super-mds-payment-rate super-mds-payment-rate--current">${currentGroup} · $${Math.round(currentRate)}/day</span>
+        <span class="super-mds-payment-arrow">&#10140;</span>
+        <span class="super-mds-payment-rate super-mds-payment-rate--potential">${potentialGroup} · $${Math.round(potentialRate)}/day</span>
+      </div>
+    ` : '';
+
+    return `
+      <div class="super-mds-payment-block">
+        <div class="super-mds-payment-block__label">Revenue Opportunity · Texas PDPM</div>
+        ${rateRow}
+        <div class="super-mds-payment-delta">+$${delta}/day</div>
+      </div>
+    `;
+  }
+
+  // CMI (Medicaid)
+  if (cmi && cmi.delta > 0) {
+    const currentCmi  = cmi.current  ?? null;
+    const potentialCmi = cmi.potential ?? null;
+    const deltaStr = cmi.delta.toFixed(3);
+
+    const rateRow = (currentCmi != null && potentialCmi != null) ? `
+      <div class="super-mds-payment-rates">
+        <span class="super-mds-payment-rate super-mds-payment-rate--current">${currentCmi.toFixed(3)} CMI</span>
+        <span class="super-mds-payment-arrow">&#10140;</span>
+        <span class="super-mds-payment-rate super-mds-payment-rate--potential">${potentialCmi.toFixed(3)} CMI</span>
+      </div>
+    ` : '';
+
+    return `
+      <div class="super-mds-payment-block">
+        <div class="super-mds-payment-block__label">Revenue Opportunity · CMI</div>
+        ${rateRow}
+        <div class="super-mds-payment-delta">+${deltaStr} CMI</div>
+      </div>
+    `;
+  }
+
+  return '';
 }
 
 // ============================================================================
