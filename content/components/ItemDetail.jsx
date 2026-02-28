@@ -1,0 +1,290 @@
+/**
+ * ItemDetail — unified body content for item detail views.
+ *
+ * Used by both ItemPopover (variant="compact") and ItemDetailView (variant="full").
+ * Displays: verdict badge, validation steps or rationale, HIPPS impacts,
+ * evidence cards, key findings, and sticky action buttons.
+ */
+import { useState } from 'preact/hooks';
+import { inferSourceType, SOURCE_LABELS, openEvidence, getActionText } from '../utils/evidence-helpers.js';
+
+/* ── SVG icons ── */
+
+const CheckIcon = () => (
+  <svg class="sid__step-icon sid__step-icon--pass" viewBox="0 0 20 20" fill="currentColor" width="18" height="18">
+    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clip-rule="evenodd" />
+  </svg>
+);
+
+const XIcon = () => (
+  <svg class="sid__step-icon sid__step-icon--fail" viewBox="0 0 20 20" fill="currentColor" width="18" height="18">
+    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z" clip-rule="evenodd" />
+  </svg>
+);
+
+const ArrowIcon = () => (
+  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+);
+
+/* ── Sub-components ── */
+
+function EvidenceCard({ ev }) {
+  const quote = ev.quoteText || ev.orderDescription || ev.quote || ev.snippet || ev.text || '';
+  if (!quote) return null;
+
+  const sourceType = ev.sourceType || inferSourceType(ev.displayName, ev.evidenceId);
+  const typeLabel = ev.displayName || SOURCE_LABELS[sourceType] || sourceType;
+  const actionText = getActionText(ev);
+  const isClickable = !!actionText;
+
+  return (
+    <div
+      class={`sid__ev-card${isClickable ? ' sid__ev-card--clickable' : ''}`}
+      onClick={isClickable ? () => openEvidence(ev) : undefined}
+      role={isClickable ? 'button' : undefined}
+    >
+      <div class="sid__ev-header">
+        <span class={`sid__ev-type sid__ev-type--${sourceType}`}>{typeLabel}</span>
+      </div>
+      <div class="sid__ev-quote">{quote}</div>
+      {ev.rationale && <div class="sid__ev-rationale">{ev.rationale}</div>}
+      {isClickable && (
+        <div class="sid__ev-action">
+          <span>{actionText}</span>
+          <ArrowIcon />
+        </div>
+      )}
+    </div>
+  );
+}
+
+function ImpactChip({ label, impact }) {
+  if (!impact) return null;
+  if (!impact.wouldChangeGroup && !impact.wouldChangeLevel) return null;
+  const from = impact.currentGroup || impact.currentLevel || impact.currentPaymentGroup;
+  const to = impact.newGroup || impact.newLevel || impact.newPaymentGroup;
+  return (
+    <span class="sid__impact">
+      {label} <span class="sid__impact-from">{from}</span> → <span class="sid__impact-to">{to}</span>
+    </span>
+  );
+}
+
+function ValidationSteps({ diagnosisSummary, treatmentSummary, validation }) {
+  const diagPassed = validation?.diagnosisCheck?.passed ?? validation?.diagnosisPassed;
+  const treatPassed = validation?.treatmentCheck?.passed ?? validation?.activeStatusPassed;
+
+  return (
+    <div class="sid__steps">
+      <div class={`sid__step ${diagPassed ? 'sid__step--pass' : 'sid__step--fail'}`}>
+        {diagPassed ? <CheckIcon /> : <XIcon />}
+        <div class="sid__step-content">
+          <div class="sid__step-label">Diagnosis</div>
+          {diagnosisSummary && <div class="sid__step-summary">{diagnosisSummary}</div>}
+        </div>
+      </div>
+      <div class={`sid__step ${treatPassed ? 'sid__step--pass' : 'sid__step--fail'}`}>
+        {treatPassed ? <CheckIcon /> : <XIcon />}
+        <div class="sid__step-content">
+          <div class="sid__step-label">Treatment</div>
+          {treatmentSummary && <div class="sid__step-summary">{treatmentSummary}</div>}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function RationaleBlock({ rationale }) {
+  if (!rationale) return null;
+  return (
+    <div class="sid__rationale">
+      <div class="sid__rationale-label">Rationale</div>
+      {rationale}
+    </div>
+  );
+}
+
+/* ── Main component ── */
+
+/**
+ * @param {Object}  props
+ * @param {"compact"|"full"} props.variant — "compact" = coding modal, "full" = PDPM detail
+ * @param {Object}  props.data — API response from useItemDetail ({ item, diagnosisSummary, treatmentSummary })
+ * @param {Object}  props.detectionItem — detection item from parent (has .impact, .mdsItem, .itemName)
+ * @param {string}  props.mdsItem — MDS item code (e.g. "I0600")
+ */
+export function ItemDetail({ variant = 'compact', data, detectionItem, mdsItem }) {
+  const isFull = variant === 'full';
+  const apiItem = data?.item;
+  const isColumnBased = !!apiItem?.columns;
+  const isDiag = apiItem && !isColumnBased;
+  const hasSectionISteps = !!(data?.diagnosisSummary || data?.treatmentSummary);
+
+  // Verdict
+  const status = apiItem?.status;
+  const needsQuery = status === 'needs_physician_query';
+  const shouldCode = status === 'code' || status === 'recommend_coding';
+  const verdictDotClass = needsQuery ? 'sid__verdict-dot--query' : shouldCode ? 'sid__verdict-dot--code' : 'sid__verdict-dot--no-code';
+  const verdictLabel = needsQuery ? 'Needs Query' : shouldCode ? 'Recommend Coding' : (status?.replace(/_/g, ' ') || 'Don\'t Code');
+
+  // Evidence
+  const diagEvidence = apiItem?.queryEvidence || [];
+  const colEvidence = [];
+  if (isColumnBased) {
+    const seen = new Set();
+    for (const col of Object.values(apiItem.columns || {})) {
+      if (col?.evidence) col.evidence.forEach(ev => {
+        const k = ev.sourceId || ev.quote || JSON.stringify(ev);
+        if (!seen.has(k)) { seen.add(k); colEvidence.push(ev); }
+      });
+    }
+  }
+  const evidence = isDiag ? diagEvidence : colEvidence;
+
+  const [showAllEv, setShowAllEv] = useState(false);
+  const visibleEvidence = showAllEv ? evidence : evidence.slice(0, 4);
+
+  // Key findings
+  const keyFindings = apiItem?.keyFindings || [];
+  const [findingsOpen, setFindingsOpen] = useState(isFull);
+
+  // HIPPS impact
+  const impact = detectionItem?.impact;
+  const hasImpact = impact && (impact.slp || impact.nta || impact.nursing || impact.ptot);
+
+  // Column-based state
+  const columns = apiItem?.columns || {};
+  const colKeys = Object.keys(columns);
+  const [activeCol, setActiveCol] = useState(colKeys[0] || 'A');
+  const activeColData = columns[activeCol];
+  const subItems = apiItem?.subItems || [];
+
+  const displayCode = mdsItem?.startsWith('I8000:') ? 'I8000' : mdsItem;
+
+  return (
+    <>
+      {/* ── Verdict ── */}
+      <div class="sid__verdict">
+        <span class={`sid__verdict-dot ${verdictDotClass}`} />
+        <span class="sid__verdict-text">{verdictLabel}</span>
+      </div>
+
+      {/* ── Validation steps (Section I) or Rationale (others) ── */}
+      {hasSectionISteps && (
+        <ValidationSteps
+          diagnosisSummary={data.diagnosisSummary}
+          treatmentSummary={data.treatmentSummary}
+          validation={apiItem?.validation}
+        />
+      )}
+
+      {!hasSectionISteps && isColumnBased && activeColData && (
+        <div class="sid__rationale">
+          <div class="sid__col-answer">
+            <span class="sid__col-label">Column {activeCol}:</span>
+            <span class={`sid__col-badge ${activeColData.answer?.toLowerCase() === 'yes' ? 'sid__col-badge--yes' : 'sid__col-badge--no'}`}>
+              {activeColData.answer?.toUpperCase()}
+            </span>
+            {(activeColData.firstAdministered || activeColData.lastAdministered) && (
+              <span class="sid__col-dates">
+                {activeColData.firstAdministered}{activeColData.firstAdministered && activeColData.lastAdministered && ' – '}{activeColData.lastAdministered}
+              </span>
+            )}
+          </div>
+          {activeColData.rationale && <div>{activeColData.rationale}</div>}
+        </div>
+      )}
+
+      {!hasSectionISteps && !isColumnBased && (
+        <RationaleBlock rationale={apiItem?.rationale} />
+      )}
+
+      {/* ── Column tabs (Section O, if multiple columns) ── */}
+      {isColumnBased && colKeys.length > 1 && (
+        <div class="sid__coltabs">
+          {colKeys.map(k => {
+            const c = columns[k];
+            const yes = c?.answer?.toLowerCase() === 'yes';
+            return (
+              <button key={k} type="button"
+                class={`sid__coltab ${activeCol === k ? 'sid__coltab--on' : ''}`}
+                onClick={() => setActiveCol(k)}>
+                Col {k}
+                <span class={`sid__coltab-dot ${yes ? 'sid__coltab-dot--yes' : ''}`} />
+              </button>
+            );
+          })}
+        </div>
+      )}
+
+      {/* ── Sub-items (Section O) ── */}
+      {subItems.length > 0 && (
+        <div class="sid__subs">
+          {subItems.map((sub, i) => {
+            const a = sub.columns?.A;
+            if (!a) return null;
+            const yes = a.answer?.toLowerCase() === 'yes';
+            return (
+              <div key={sub.mdsItem || i} class={`sid__sub ${yes ? 'sid__sub--on' : ''}`}>
+                <span class={`sid__sub-dot ${yes ? 'sid__sub-dot--yes' : ''}`}>{yes ? '\u2713' : '\u2013'}</span>
+                <span class="sid__sub-name">{sub.description}</span>
+              </div>
+            );
+          })}
+        </div>
+      )}
+
+      {/* ── HIPPS Impact (full variant only) ── */}
+      {isFull && hasImpact && (
+        <div class="sid__impacts">
+          <ImpactChip label="NTA" impact={impact.nta} />
+          <ImpactChip label="Nursing" impact={impact.nursing} />
+          <ImpactChip label="SLP" impact={impact.slp} />
+          <ImpactChip label="PT/OT" impact={impact.ptot} />
+        </div>
+      )}
+
+      {/* ── Evidence ── */}
+      {evidence.length > 0 && (
+        <div class="sid__evidence">
+          <div class="sid__ev-label">Evidence ({evidence.length})</div>
+          <div class="sid__ev-list">
+            {visibleEvidence.map((ev, i) => <EvidenceCard key={i} ev={ev} />)}
+          </div>
+          {evidence.length > 4 && !showAllEv && (
+            <button class="sid__ev-show-more" type="button" onClick={() => setShowAllEv(true)}>
+              Show all {evidence.length} &darr;
+            </button>
+          )}
+        </div>
+      )}
+
+      {/* ── Key Findings (collapsible) ── */}
+      {keyFindings.length > 0 && (
+        <>
+          <button class="sid__findings-toggle" type="button" onClick={() => setFindingsOpen(!findingsOpen)}>
+            <span class={`sid__findings-arrow ${findingsOpen ? 'sid__findings-arrow--open' : ''}`}>&#9654;</span>
+            Key Findings ({keyFindings.length})
+          </button>
+          {findingsOpen && (
+            <ul class="sid__findings">
+              {keyFindings.map((f, i) => <li key={i}>{f}</li>)}
+            </ul>
+          )}
+        </>
+      )}
+
+      {/* ── Actions (sticky) ── */}
+      <div class="sid__actions">
+        <button class="sid__btn sid__btn--primary" onClick={() => window.QuerySendModal?.show(apiItem || data)} type="button">
+          ? Query Physician
+        </button>
+        {mdsItem && (
+          <button class="sid__btn sid__btn--secondary" onClick={() => window.navigateToMDSItem?.(mdsItem)} type="button">
+            Go to {displayCode} &#x2197;
+          </button>
+        )}
+      </div>
+    </>
+  );
+}
