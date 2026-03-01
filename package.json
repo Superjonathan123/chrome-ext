@@ -10,7 +10,9 @@
     "dev": "vite build --watch",
     "build": "vite build",
     "preview": "vite preview",
-    "zip": "npm run build && cd dist && zip -r ../super-ltc-extension.zip . && cd .. && echo 'Created super-ltc-extension.zip'"
+    "zip": "npm run build && cd dist && zip -r ../super-ltc-extension.zip . && cd .. && echo 'Created super-ltc-extension.zip'",
+    "demo": "vite --config vite.demo.config.js --open /demo/index.html",
+    "demo:build": "vite build --config vite.demo.config.js"
   },
   "repository": {
     "type": "git",
