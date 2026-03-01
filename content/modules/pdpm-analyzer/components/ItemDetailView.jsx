@@ -24,9 +24,10 @@ function getOrderId(ev) {
   return id.replace(/^order-/, '');
 }
 
-/** Evidence is viewable inline if it's a PDF document or an order */
+/** Evidence is viewable inline if it has a recognized viewer type or is an order */
 function isViewableEvidence(ev) {
-  return parseViewer(ev).viewerType === 'document' || isOrderEvidence(ev);
+  const vt = parseViewer(ev).viewerType;
+  return vt === 'document' || vt === 'clinical-note' || vt === 'therapy-document' || isOrderEvidence(ev);
 }
 
 export function ItemDetailView({ item, context, onBack, onSplitChange, onDismiss: onDismissComplete }) {
@@ -106,15 +107,23 @@ export function ItemDetailView({ item, context, onBack, onSplitChange, onDismiss
 
   const isSplit = viewingSource !== null;
   const viewingOrder = viewingSource && isOrderEvidence(viewingSource.ev);
-  const viewingDoc = viewingSource && !viewingOrder;
+  const viewingViewerType = viewingSource ? parseViewer(viewingSource.ev).viewerType : null;
+  const viewingNote = viewingViewerType === 'clinical-note';
+  const viewingTherapy = viewingViewerType === 'therapy-document';
+  const viewingDoc = viewingSource && !viewingOrder && !viewingNote && !viewingTherapy;
+  const noteContainerRef = useRef(null);
 
   // Notify parent when split mode changes so it can expand
   useEffect(() => {
     onSplitChange?.(isSplit);
   }, [isSplit]);
 
-  // Prefetch all PDF documents when evidence loads
-  const docEvidence = viewableEvidence.filter(ev => !isOrderEvidence(ev));
+  // Prefetch all PDF documents when evidence loads (skip notes, therapy, orders)
+  const docEvidence = viewableEvidence.filter(ev => {
+    if (isOrderEvidence(ev)) return false;
+    const vt = parseViewer(ev).viewerType;
+    return vt === 'document';
+  });
   useEffect(() => {
     if (!data || docEvidence.length === 0) return;
 
@@ -144,9 +153,9 @@ export function ItemDetailView({ item, context, onBack, onSplitChange, onDismiss
     prefetch();
   }, [data]);
 
-  // Load document when viewing a PDF source
+  // Load document when viewing a PDF source (skip notes, therapy, orders)
   useEffect(() => {
-    if (!viewingSource || viewingOrder) {
+    if (!viewingSource || viewingOrder || viewingNote || viewingTherapy) {
       setCurrentDoc(null);
       setDocLoading(false);
       return;
@@ -197,7 +206,15 @@ export function ItemDetailView({ item, context, onBack, onSplitChange, onDismiss
     el.innerHTML = '<div class="idv__viewer-loading" style="position:static;padding:40px 0"><div class="pdpm-an__spinner"></div><span>Loading administrations...</span></div>';
 
     if (window.renderSplitAdministrations) {
-      window.renderSplitAdministrations(el, orderId).catch(err => {
+      // Build params from context so we don't rely on URL params (may not be on MDS page)
+      const resolveAndRender = async () => {
+        const orgResponse = await chrome.runtime.sendMessage({ type: 'GET_ORG' });
+        const orgSlug = orgResponse?.org;
+        const facilityName = window.getChatFacilityInfo?.() || '';
+        const params = { assessmentId: context?.assessmentId, orgSlug, facilityName };
+        await window.renderSplitAdministrations(el, orderId, undefined, params);
+      };
+      resolveAndRender().catch(err => {
         console.error('[ItemDetailView] Failed to load administrations:', err);
         el.innerHTML = '<div class="idv__viewer-loading" style="position:static;padding:40px 0"><span>Failed to load administrations</span></div>';
       });
@@ -205,6 +222,37 @@ export function ItemDetailView({ item, context, onBack, onSplitChange, onDismiss
       el.innerHTML = '<div class="idv__viewer-loading" style="position:static;padding:40px 0"><span>Administration viewer not available</span></div>';
     }
   }, [viewingSource, viewingOrder]);
+
+  // Render clinical note or therapy document via overlay renderers
+  useEffect(() => {
+    if ((!viewingNote && !viewingTherapy) || !noteContainerRef.current) return;
+
+    const el = noteContainerRef.current;
+    const viewer = parseViewer(viewingSource.ev);
+    const quote = viewingSource.ev.quoteText || viewingSource.ev.quote || viewingSource.ev.snippet || '';
+
+    el.innerHTML = '<div class="idv__viewer-loading" style="position:static;padding:40px 0"><div class="pdpm-an__spinner"></div><span>Loading...</span></div>';
+
+    const resolveAndRender = async () => {
+      const orgResponse = await chrome.runtime.sendMessage({ type: 'GET_ORG' });
+      const orgSlug = orgResponse?.org;
+      const facilityName = window.getChatFacilityInfo?.() || '';
+      const params = { assessmentId: context?.assessmentId, orgSlug, facilityName };
+
+      if (viewingNote && window.renderSplitNote) {
+        await window.renderSplitNote(el, viewer.id, params);
+      } else if (viewingTherapy && window.renderSplitTherapy) {
+        await window.renderSplitTherapy(el, viewer.id, quote, params);
+      } else {
+        el.innerHTML = '<div class="idv__viewer-loading" style="position:static;padding:40px 0"><span>Viewer not available</span></div>';
+      }
+    };
+
+    resolveAndRender().catch(err => {
+      console.error('[ItemDetailView] Failed to load source:', err);
+      el.innerHTML = '<div class="idv__viewer-loading" style="position:static;padding:40px 0"><span>Failed to load</span></div>';
+    });
+  }, [viewingSource, viewingNote, viewingTherapy]);
 
   const handleViewSource = useCallback((ev, index) => {
     setViewingSource({ ev, index });
@@ -240,6 +288,7 @@ export function ItemDetailView({ item, context, onBack, onSplitChange, onDismiss
             onViewSource={handleViewSource}
             onDismiss={canDismiss ? handleDismiss : undefined}
             dismissing={dismissing}
+            assessmentId={context?.assessmentId}
           />
         </div>
       )}
@@ -303,6 +352,11 @@ export function ItemDetailView({ item, context, onBack, onSplitChange, onDismiss
             {/* Order/admin viewer — rendered by vanilla renderSplitAdministrations */}
             {viewingOrder && (
               <div ref={adminContainerRef} class="idv__admin-viewer" />
+            )}
+
+            {/* Clinical note / therapy doc viewer — rendered by vanilla renderers */}
+            {(viewingNote || viewingTherapy) && (
+              <div ref={noteContainerRef} class="idv__note-viewer" />
             )}
           </div>
         </div>

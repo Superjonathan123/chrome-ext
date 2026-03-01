@@ -1395,7 +1395,7 @@ async function handleQueryClick(queryId, mdsItem) {
  * Navigate to the MDS section page in PCC for a given item code
  * @param {string} itemCode - MDS item code (e.g., "I5600" → Section I)
  */
-function navigateToMDSItem(itemCode) {
+function navigateToMDSItem(itemCode, overrideAssessmentId) {
   console.log('Navigate to MDS item:', itemCode);
 
   if (!itemCode) {
@@ -1405,7 +1405,7 @@ function navigateToMDSItem(itemCode) {
 
   // Extract section letter from item code (e.g., "I5600" → "I")
   const section = itemCode.charAt(0).toUpperCase();
-  const assessmentId = MDSViewState.manualContext?.assessmentId || MDSViewState.context?.assessmentId;
+  const assessmentId = overrideAssessmentId || MDSViewState.manualContext?.assessmentId || MDSViewState.context?.assessmentId;
 
   if (!assessmentId) {
     console.error('Super Menu: No assessment ID available for navigation');

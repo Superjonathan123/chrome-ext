@@ -38,11 +38,12 @@ function EvidenceCard({ ev, index, onViewSource }) {
   const isClickable = !!actionText;
 
   const handleClick = isClickable ? () => {
-    // If onViewSource provided, use inline viewer for documents and orders
+    // If onViewSource provided, use inline viewer for supported types
     if (onViewSource) {
       const viewer = parseViewer(ev);
       const isOrder = ev.sourceType === 'order' || (ev.evidenceId || '').startsWith('order-');
-      if (viewer.viewerType === 'document' || isOrder) {
+      const vt = viewer.viewerType;
+      if (vt === 'document' || vt === 'clinical-note' || vt === 'therapy-document' || isOrder) {
         onViewSource(ev, index);
         return;
       }
@@ -126,7 +127,7 @@ function RationaleBlock({ rationale }) {
  * @param {Object}  props.detectionItem — detection item from parent (has .impact, .mdsItem, .itemName)
  * @param {string}  props.mdsItem — MDS item code (e.g. "I0600")
  */
-export function ItemDetail({ variant = 'compact', data, detectionItem, mdsItem, onViewSource, onDismiss, dismissing }) {
+export function ItemDetail({ variant = 'compact', data, detectionItem, mdsItem, onViewSource, onDismiss, dismissing, assessmentId }) {
   const isFull = variant === 'full';
   const apiItem = data?.item;
   const isColumnBased = !!apiItem?.columns;
@@ -336,7 +337,7 @@ export function ItemDetail({ variant = 'compact', data, detectionItem, mdsItem, 
               Query Physician
             </button>
             {mdsItem && (
-              <button class="sid__btn sid__btn--secondary" onClick={() => window.navigateToMDSItem?.(mdsItem)} type="button">
+              <button class="sid__btn sid__btn--secondary" onClick={() => window.navigateToMDSItem?.(mdsItem, assessmentId)} type="button">
                 Go to {displayCode} &#x2197;
               </button>
             )}

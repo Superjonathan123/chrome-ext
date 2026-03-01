@@ -52,6 +52,8 @@ async function fetchItemEvidence(section, itemCode) {
 // Expose on window for other content scripts (query-send-modal.js, etc.)
 window.SuperOverlay = SuperOverlay;
 window.renderSplitAdministrations = renderSplitAdministrations;
+window.renderSplitNote = renderSplitNote;
+window.renderSplitTherapy = renderSplitTherapy;
 
 // ============================================
 // Message Listener (existing functionality)
@@ -1463,8 +1465,8 @@ async function renderSplitPDF(popover, viewerEl, documentId, wordBlocks) {
 }
 
 /** Render clinical note inline in split viewer */
-async function renderSplitNote(viewerEl, noteId) {
-  const params = await window.getCurrentParams();
+async function renderSplitNote(viewerEl, noteId, overrideParams) {
+  const params = overrideParams || await window.getCurrentParams();
   const data = await fetchClinicalNote(noteId, params);
   const note = data.note;
 
@@ -1489,8 +1491,8 @@ async function renderSplitNote(viewerEl, noteId) {
 }
 
 /** Render therapy document inline in split viewer */
-async function renderSplitTherapy(viewerEl, therapyDocId, highlightQuote) {
-  const params = await window.getCurrentParams();
+async function renderSplitTherapy(viewerEl, therapyDocId, highlightQuote, overrideParams) {
+  const params = overrideParams || await window.getCurrentParams();
   const data = await fetchTherapyDocument(therapyDocId, params);
   const doc = data.therapyDocument;
 
@@ -1545,8 +1547,8 @@ async function renderSplitTherapy(viewerEl, therapyDocId, highlightQuote) {
 }
 
 /** Render administration (MAR/TAR) records inline in split viewer */
-async function renderSplitAdministrations(viewerEl, orderId, customDateRange) {
-  const params = await getAPIParams();
+async function renderSplitAdministrations(viewerEl, orderId, customDateRange, overrideParams) {
+  const params = overrideParams || await getAPIParams();
   const data = await fetchAdministrations(orderId, params, customDateRange || {});
   const { order, dateRange, adminRecords } = data;
 
@@ -1614,7 +1616,7 @@ async function renderSplitAdministrations(viewerEl, orderId, customDateRange) {
       const newRange = shiftDateRange(dateRange, dir === 'next' ? 7 : -7);
       viewerEl.innerHTML = `<div class="super-split__viewer-loading"><div class="super-split__spinner"></div><span>Loading...</span></div>`;
       try {
-        await renderSplitAdministrations(viewerEl, orderId, newRange);
+        await renderSplitAdministrations(viewerEl, orderId, newRange, params);
       } catch (err) {
         viewerEl.innerHTML = `<div class="super-split__viewer-loading"><span>Failed to load: ${escapeHTML(err.message)}</span></div>`;
       }
