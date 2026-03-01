@@ -4,6 +4,7 @@
 const SuperModal = {
   activeModal: null,
   previousActiveElement: null,
+  _loweredOverlays: null,
 
   /**
    * Create and show a modal
@@ -24,6 +25,16 @@ const SuperModal = {
     // Close any existing modal
     if (this.activeModal) {
       this.close(false);
+    }
+
+    // Temporarily lower z-index of overlays so modal always appears on top
+    // (PCC host page CSS can create unexpected stacking contexts)
+    this._loweredOverlays = [];
+    for (const sel of ['.pdpm-an__overlay', '.pdpm-an__panel', '.pdpm-an__panel-backdrop', '.mds-cc__overlay']) {
+      document.querySelectorAll(sel).forEach(el => {
+        this._loweredOverlays.push({ el, original: el.style.zIndex });
+        el.style.zIndex = '1';
+      });
     }
 
     const modal = this._createModal(options);
@@ -62,6 +73,14 @@ const SuperModal = {
       modal.remove();
       document.body.style.overflow = '';
       this.activeModal = null;
+
+      // Restore lowered overlay z-indices
+      if (this._loweredOverlays) {
+        for (const { el, original } of this._loweredOverlays) {
+          el.style.zIndex = original;
+        }
+        this._loweredOverlays = null;
+      }
 
       // Restore focus
       if (this.previousActiveElement) {

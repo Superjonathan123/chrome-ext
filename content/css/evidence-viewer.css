@@ -22,6 +22,10 @@
   margin-bottom: 12px;
 }
 
+@keyframes superSpinner {
+  to { transform: rotate(360deg); }
+}
+
 .super-viewer-error {
   display: flex;
   flex-direction: column;

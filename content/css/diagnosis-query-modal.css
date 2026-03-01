@@ -9,10 +9,17 @@
   border-color: #fcd34d !important;
   margin-left: 8px;
   cursor: pointer;
+  padding: 4px 6px !important;
+  gap: 0 !important;
 }
 
 .super-badge--query:hover {
   background: #fde68a !important;
+}
+
+.super-badge--query .super-badge__svg {
+  display: block;
+  flex-shrink: 0;
 }
 
 /* Query Button in Popover */
@@ -31,14 +38,14 @@
 .super-query-modal {
   position: fixed;
   inset: 0;
-  z-index: 100002;
+  z-index: 9999998;
 }
 
 .super-query-modal__backdrop {
   position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.5);
-  z-index: 100002;
+  z-index: 9999998;
 }
 
 .super-query-modal__container {
@@ -52,7 +59,7 @@
   background: white;
   border-radius: 12px;
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-  z-index: 100003;
+  z-index: 9999999;
   display: flex;
   flex-direction: column;
   overflow: hidden;

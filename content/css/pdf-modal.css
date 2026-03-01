@@ -22,7 +22,8 @@
   transform: translate(-50%, -50%);
   width: 900px;
   max-width: calc(100vw - 32px);
-  max-height: 700px;
+  height: calc(100vh - 64px);
+  max-height: 800px;
   background: white;
   border-radius: 12px;
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
@@ -34,9 +35,10 @@
 }
 
 .super-pdf-modal__header {
-  padding: 16px 20px 12px;
+  padding: 10px 16px;
   background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
   color: white;
+  flex-shrink: 0;
 }
 
 .super-pdf-modal__title-row {
@@ -105,9 +107,10 @@
 
 .super-pdf-modal__body {
   flex: 1;
-  overflow: auto;
+  overflow: hidden;
   background: var(--super-gray-100);
   position: relative;
+  min-height: 0;
 }
 
 .super-pdf-modal__iframe {

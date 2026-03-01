@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Super LTC for Point Click Care",
   "version": "1.0.0",
-  "description": "Super LTC overlay for Point Click Care",
+  "description": "Super LTC enhances PointClickCare for LTC facilities with AI-assisted clinical documentation, ICD-10 code lookup, MDS analysis, and evidence-based query tools.",
   "permissions": [
     "cookies",
     "storage",
@@ -42,6 +42,7 @@
         "content/css/pdf-modal.css",
         "content/css/diagnosis-query-modal.css",
         "content/css/super-components.css",
+        "content/css/selector.css",
         "content/css/query.css",
         "content/css/icd10-viewer.css",
         "content/css/query-items.css",
@@ -54,7 +55,8 @@
   "icons": {
     "16": "icons/icon-16.png",
     "48": "icons/icon-48.png",
-    "128": "icons/icon-128.png"
+    "128": "icons/icon-128.png",
+    "512": "icons/icon-512.png"
   },
   "web_accessible_resources": [
     {

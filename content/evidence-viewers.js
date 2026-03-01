@@ -7,6 +7,9 @@
  * - PDF Documents
  */
 
+import { render, h } from 'preact';
+import { PDFViewer } from './components/PDFViewer.jsx';
+
 // =============================================================================
 // EVIDENCE DETECTION
 // =============================================================================
@@ -90,7 +93,7 @@ function getModalMountPoint() {
 // API FETCH FUNCTIONS
 // =============================================================================
 
-async function fetchClinicalNote(noteId, params) {
+export async function fetchClinicalNote(noteId, params) {
   const endpoint = `/api/extension/clinical-notes/${noteId}?` +
     `facilityName=${encodeURIComponent(params.facilityName)}` +
     `&orgSlug=${params.orgSlug}`;
@@ -103,7 +106,7 @@ async function fetchClinicalNote(noteId, params) {
   return response.data;
 }
 
-async function fetchTherapyDocument(therapyDocId, params) {
+export async function fetchTherapyDocument(therapyDocId, params) {
   const endpoint = `/api/extension/therapy-documents/${therapyDocId}?` +
     `facilityName=${encodeURIComponent(params.facilityName)}` +
     `&orgSlug=${params.orgSlug}`;
@@ -116,7 +119,7 @@ async function fetchTherapyDocument(therapyDocId, params) {
   return response.data;
 }
 
-async function fetchDocument(documentId, params) {
+export async function fetchDocument(documentId, params) {
   const endpoint = `/api/extension/documents/${documentId}?` +
     `facilityName=${encodeURIComponent(params.facilityName)}` +
     `&orgSlug=${params.orgSlug}`;
@@ -143,7 +146,7 @@ function escapeHTMLViewer(str) {
     .replace(/'/g, '&#039;');
 }
 
-function formatDateDisplay(dateStr) {
+export function formatDateDisplay(dateStr) {
   if (!dateStr) return '';
   try {
     const date = new Date(dateStr);
@@ -157,7 +160,7 @@ function formatDateDisplay(dateStr) {
   }
 }
 
-function formatDateTimeDisplay(dateStr) {
+export function formatDateTimeDisplay(dateStr) {
   if (!dateStr) return '';
   try {
     const date = new Date(dateStr);
@@ -1356,15 +1359,13 @@ function createPdfModalShell() {
 function renderPdfModalContent(modal, doc, wordBlocks = null) {
   const container = modal.querySelector('.super-pdf-modal__container');
 
-  // Format file size
-  let fileSizeStr = '';
-  if (doc.fileSize) {
-    const kb = doc.fileSize / 1024;
-    fileSizeStr = kb > 1024 ? `${(kb / 1024).toFixed(1)} MB` : `${kb.toFixed(0)} KB`;
-  }
-
-  // Determine target page from wordBlocks
   const targetPage = wordBlocks && wordBlocks.length > 0 && wordBlocks[0].p ? wordBlocks[0].p : 1;
+
+  // Close handler removes modal and restores body scroll
+  const onClose = () => {
+    document.body.style.overflow = '';
+    modal.remove();
+  };
 
   container.innerHTML = `
     <div class="super-pdf-modal__header">
@@ -1376,251 +1377,51 @@ function renderPdfModalContent(modal, doc, wordBlocks = null) {
         </div>
         <button class="super-pdf-modal__close">&times;</button>
       </div>
-      <div class="super-pdf-modal__meta">
-        ${doc.effectiveDate ? `<span>${formatDateDisplay(doc.effectiveDate)}</span>` : ''}
-        ${fileSizeStr ? `<span>${fileSizeStr}</span>` : ''}
-      </div>
     </div>
-
-    <div class="super-pdf-modal__body">
-      ${doc.signedUrl ? `
-        <div class="super-pdf-canvas-container">
-          <canvas class="super-pdf-canvas"></canvas>
-          <canvas class="super-pdf-highlight-overlay"></canvas>
-        </div>
-        <div class="super-pdf-page-controls">
-          <button class="super-pdf-page-btn super-pdf-page-btn--prev">← Previous</button>
-          <span class="super-pdf-page-info">
-            <span class="super-pdf-page-current">1</span> / <span class="super-pdf-page-total">1</span>
-          </span>
-          <button class="super-pdf-page-btn super-pdf-page-btn--next">Next →</button>
-        </div>
-      ` : `
-        <div class="super-viewer-error">
-          <div class="super-viewer-error__icon">⚠️</div>
-          <div class="super-viewer-error__message">No document URL available</div>
-        </div>
-      `}
-    </div>
-
-    <div class="super-pdf-modal__footer">
-      <span class="super-pdf-modal__expiry-warning">⏱️ Link expires in 15 minutes</span>
-      ${doc.signedUrl ? `
-        <a href="${escapeHTMLViewer(doc.signedUrl)}" target="_blank" class="super-pdf-modal__open-btn">Open in New Tab ↗</a>
-      ` : ''}
-    </div>
+    <div class="super-pdf-modal__body"></div>
   `;
 
   setupModalCloseHandlers(modal, 'super-pdf-modal');
 
-  // Render PDF with PDF.js if URL is available
-  if (doc.signedUrl) {
-    renderPdfWithHighlights(modal, doc.signedUrl, wordBlocks, targetPage);
-  }
+  // Mount Preact PDFViewer into the modal body
+  const body = modal.querySelector('.super-pdf-modal__body');
+  render(
+    h(PDFViewer, {
+      url: doc.signedUrl || null,
+      wordBlocks: wordBlocks || [],
+      targetPage,
+      title: doc.title || 'Document',
+      documentType: doc.documentType,
+      effectiveDate: doc.effectiveDate,
+      fileSize: doc.fileSize,
+      onClose,
+      expiresAt: true,
+      openInNewTabUrl: doc.signedUrl || null,
+    }),
+    body
+  );
 }
 
-// =============================================================================
-// PDF.JS RENDERING WITH HIGHLIGHTS
-// =============================================================================
-
-/**
- * Render PDF using PDF.js with optional wordBlock highlights
- * @param {HTMLElement} modal - The modal element
- * @param {string} pdfUrl - URL to the PDF document
- * @param {Array} wordBlocks - Array of wordBlock objects with x, y, w, h, p properties
- * @param {number} targetPage - Initial page to display
- */
-async function renderPdfWithHighlights(modal, pdfUrl, wordBlocks, targetPage = 1) {
-  // Configure PDF.js worker
-  if (typeof pdfjsLib !== 'undefined') {
-    const workerSrc = chrome.runtime.getURL('lib/pdf.worker.min.js');
-    pdfjsLib.GlobalWorkerOptions.workerSrc = workerSrc;
-  } else {
-    console.error('Super LTC: PDF.js library not loaded');
-    return;
-  }
-
-  const canvas = modal.querySelector('.super-pdf-canvas');
-  const highlightCanvas = modal.querySelector('.super-pdf-highlight-overlay');
-  const pageCurrentEl = modal.querySelector('.super-pdf-page-current');
-  const pageTotalEl = modal.querySelector('.super-pdf-page-total');
-  const prevBtn = modal.querySelector('.super-pdf-page-btn--prev');
-  const nextBtn = modal.querySelector('.super-pdf-page-btn--next');
-
-  if (!canvas || !highlightCanvas) {
-    console.error('Super LTC: Canvas elements not found');
-    return;
-  }
-
-  const ctx = canvas.getContext('2d');
-  const highlightCtx = highlightCanvas.getContext('2d');
-
-  let pdfDoc = null;
-  let currentPageNum = targetPage;
-
-  try {
-    // Load the PDF document
-    const loadingTask = pdfjsLib.getDocument(pdfUrl);
-    pdfDoc = await loadingTask.promise;
-
-    // Update total pages
-    pageTotalEl.textContent = pdfDoc.numPages;
-
-    // Function to render a specific page
-    const renderPage = async (pageNum) => {
-      if (pageNum < 1 || pageNum > pdfDoc.numPages) return;
-
-      currentPageNum = pageNum;
-      pageCurrentEl.textContent = pageNum;
-
-      // Update button states
-      prevBtn.disabled = pageNum === 1;
-      nextBtn.disabled = pageNum === pdfDoc.numPages;
-
-      // Get page
-      const page = await pdfDoc.getPage(pageNum);
-
-      // Calculate scale to fit in container
-      const container = modal.querySelector('.super-pdf-canvas-container');
-      const containerWidth = container.clientWidth;
-      const viewport = page.getViewport({ scale: 1 });
-      const scale = Math.min(containerWidth / viewport.width, 1.5);
-      const scaledViewport = page.getViewport({ scale });
-
-      // Set canvas dimensions
-      canvas.width = scaledViewport.width;
-      canvas.height = scaledViewport.height;
-      highlightCanvas.width = scaledViewport.width;
-      highlightCanvas.height = scaledViewport.height;
-
-      // Clear previous content
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      highlightCtx.clearRect(0, 0, highlightCanvas.width, highlightCanvas.height);
-
-      // Render PDF page
-      const renderContext = {
-        canvasContext: ctx,
-        viewport: scaledViewport
-      };
-      await page.render(renderContext).promise;
-
-      // Draw highlights if wordBlocks exist for this page
-      if (wordBlocks && Array.isArray(wordBlocks)) {
-        const pageBlocks = drawHighlights(highlightCtx, wordBlocks, pageNum, scaledViewport.width, scaledViewport.height);
-        
-        // Auto-scroll to first highlight on initial page load
-        if (pageNum === targetPage && pageBlocks.length > 0) {
-          setTimeout(() => {
-            scrollToFirstHighlight(container, pageBlocks[0], scaledViewport.width, scaledViewport.height);
-          }, 100);
-        }
-      }
-    };
-
-    // Set up navigation buttons
-    prevBtn.addEventListener('click', () => {
-      if (currentPageNum > 1) {
-        renderPage(currentPageNum - 1);
-      }
-    });
-
-    nextBtn.addEventListener('click', () => {
-      if (currentPageNum < pdfDoc.numPages) {
-        renderPage(currentPageNum + 1);
-      }
-    });
-
-    // Render initial page
-    await renderPage(targetPage);
-
-  } catch (error) {
-    console.error('Super LTC: Error rendering PDF:', error);
-    const body = modal.querySelector('.super-pdf-modal__body');
-    body.innerHTML = `
-      <div class="super-viewer-error">
-        <div class="super-viewer-error__icon">⚠️</div>
-        <div class="super-viewer-error__message">Failed to load PDF: ${escapeHTMLViewer(error.message)}</div>
-      </div>
-    `;
-  }
-}
-
-/**
- * Draw highlight rectangles for wordBlocks on a specific page
- * @param {CanvasRenderingContext2D} ctx - Canvas context for drawing
- * @param {Array} wordBlocks - Array of wordBlock objects
- * @param {number} pageNum - Current page number
- * @param {number} pageWidth - Rendered page width in pixels
- * @param {number} pageHeight - Rendered page height in pixels
- * @returns {Array} - Array of wordBlocks for this page
- */
-function drawHighlights(ctx, wordBlocks, pageNum, pageWidth, pageHeight) {
-  // Filter wordBlocks for current page
-  const pageBlocks = wordBlocks.filter(wb => wb.p === pageNum);
-
-  if (pageBlocks.length === 0) return [];
-
-  // Set highlight style
-  ctx.fillStyle = 'rgba(255, 235, 59, 0.4)'; // Yellow with transparency
-  ctx.strokeStyle = 'rgba(255, 193, 7, 0.6)';
-  ctx.lineWidth = 1;
-
-  // Draw each word block
-  pageBlocks.forEach(wb => {
-    const rect = normalizeWordBlockCoords(wb, pageWidth, pageHeight);
-    
-    // Draw filled rectangle
-    ctx.fillRect(rect.x, rect.y, rect.width, rect.height);
-    
-    // Draw border
-    ctx.strokeRect(rect.x, rect.y, rect.width, rect.height);
-  });
-
-  return pageBlocks;
-}
-
-/**
- * Convert relative wordBlock coordinates (0-1) to pixel coordinates
- * @param {Object} wordBlock - WordBlock with x, y, w, h properties (0-1 relative)
- * @param {number} pageWidth - Page width in pixels
- * @param {number} pageHeight - Page height in pixels
- * @returns {Object} - Pixel coordinates {x, y, width, height}
- */
-function normalizeWordBlockCoords(wordBlock, pageWidth, pageHeight) {
-  return {
-    x: wordBlock.x * pageWidth,
-    y: wordBlock.y * pageHeight,
-    width: wordBlock.w * pageWidth,
-    height: wordBlock.h * pageHeight
-  };
-}
-
-/**
- * Scroll the container to show the first highlight
- * @param {HTMLElement} container - The scrollable container
- * @param {Object} wordBlock - The first wordBlock to scroll to
- * @param {number} pageWidth - Page width in pixels
- * @param {number} pageHeight - Page height in pixels
- */
-function scrollToFirstHighlight(container, wordBlock, pageWidth, pageHeight) {
-  // Find the modal body which is the actual scrollable container
-  const modalBody = container.closest('.super-pdf-modal__body');
-  if (!modalBody) return;
-
-  const rect = normalizeWordBlockCoords(wordBlock, pageWidth, pageHeight);
-  
-  // Calculate scroll position to center the highlight vertically
-  // Account for the 20px padding at the top
-  const scrollTop = rect.y + 20 - (modalBody.clientHeight / 3);
-  
-  // Smooth scroll to the highlight
-  modalBody.scrollTo({
-    top: Math.max(0, scrollTop),
-    behavior: 'smooth'
-  });
-}
+// Old vanilla PDF rendering functions removed — now handled by Preact PDFViewer component
 
 window.showClinicalNoteModal = showClinicalNoteModal;
 window.showTherapyDocModal = showTherapyDocModal;
 window.showDocumentModal = showDocumentModal;
 window.parseEvidenceForViewer = parseEvidenceForViewer;
+
+window.SuperDocViewer = {
+  open(evidence) {
+    if (!evidence) return;
+    const type = evidence.sourceType || evidence.type || '';
+    if (type === 'clinical_note' || type === 'progress_note' || type === 'practitioner_note') {
+      const id = evidence.viewerId || evidence.sourceId || evidence.id;
+      window.showClinicalNoteModal(id);
+    } else if (type === 'therapy_doc' || type === 'therapy') {
+      const id = evidence.viewerId || evidence.sourceId || evidence.id;
+      window.showTherapyDocModal(id, evidence.quote);
+    } else if (type === 'pdf' || type === 'document') {
+      const id = evidence.viewerId || evidence.sourceId || evidence.id;
+      window.showDocumentModal(id, evidence.wordBlocks || []);
+    }
+  }
+};

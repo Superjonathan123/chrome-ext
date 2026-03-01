@@ -1,4 +1,5 @@
 // Super Menu MDS View - Dashboard Style v2
+import { isPaymentApplicable, getPaymentModeLabel } from '../utils/payment.js';
 
 // ============================================================================
 // MAIN VIEW FUNCTIONS
@@ -513,84 +514,75 @@ function renderComplianceCard(data) {
 
 function renderPaymentBlock(data) {
   const payment = data.payment;
-  if (!payment?.isApplicable) return '';
+  if (!isPaymentApplicable(payment)) return '';
+  if (!(payment.delta > 0)) return '';
 
-  const ppd = payment.ppd;
-  const tex = payment.texasPdpm;
-  const cmi = payment.cmi;
+  const label = getPaymentModeLabel(payment);
+  const estBadge = payment.isEstimated ? ' <span class="pdpm-an__est-badge">est.</span>' : '';
 
-  // PPD (Medicare) — Detail endpoint uses ppd.current.total / ppd.potential.total
-  if (ppd && ppd.delta > 0) {
-    const currentTotal  = ppd.current?.total  ?? ppd.currentTotal  ?? null;
-    const potentialTotal = ppd.potential?.total ?? ppd.potentialTotal ?? null;
-    const delta = Math.round(ppd.delta);
-
-    const rateRow = (currentTotal != null && potentialTotal != null) ? `
-      <div class="super-mds-payment-rates">
-        <span class="super-mds-payment-rate super-mds-payment-rate--current">$${Math.round(currentTotal)}/day</span>
-        <span class="super-mds-payment-arrow">&#10140;</span>
-        <span class="super-mds-payment-rate super-mds-payment-rate--potential">$${Math.round(potentialTotal)}/day</span>
-      </div>
-    ` : '';
-
-    return `
-      <div class="super-mds-payment-block">
-        <div class="super-mds-payment-block__label">Revenue Opportunity · Medicare</div>
-        ${rateRow}
-        <div class="super-mds-payment-delta">+$${delta}/day</div>
-      </div>
-    `;
+  switch (payment.mode) {
+    case 'medicare': {
+      const cur = payment.current?.total;
+      const pot = payment.potential?.total;
+      const delta = Math.round(payment.delta);
+      const rateRow = (cur != null && pot != null) ? `
+        <div class="super-mds-payment-rates">
+          <span class="super-mds-payment-rate super-mds-payment-rate--current">$${Math.round(cur)}/day</span>
+          <span class="super-mds-payment-arrow">&#10140;</span>
+          <span class="super-mds-payment-rate super-mds-payment-rate--potential">$${Math.round(pot)}/day</span>
+        </div>
+      ` : '';
+      return `
+        <div class="super-mds-payment-block">
+          <div class="super-mds-payment-block__label">Revenue Opportunity · ${label}${estBadge}</div>
+          ${rateRow}
+          <div class="super-mds-payment-delta">+$${delta}/day</div>
+        </div>
+      `;
+    }
+    case 'state_rate': {
+      const cur = payment.current?.rate;
+      const pot = payment.potential?.rate;
+      const curGroup = (payment.current?.groupCode || '').replace(/_/g, '');
+      const potGroup = (payment.potential?.groupCode || '').replace(/_/g, '');
+      const delta = Math.round(payment.delta);
+      const rateRow = (cur != null && pot != null) ? `
+        <div class="super-mds-payment-rates">
+          <span class="super-mds-payment-rate super-mds-payment-rate--current">${curGroup}${curGroup ? ' · ' : ''}$${Math.round(cur)}/day</span>
+          <span class="super-mds-payment-arrow">&#10140;</span>
+          <span class="super-mds-payment-rate super-mds-payment-rate--potential">${potGroup}${potGroup ? ' · ' : ''}$${Math.round(pot)}/day</span>
+        </div>
+      ` : '';
+      return `
+        <div class="super-mds-payment-block">
+          <div class="super-mds-payment-block__label">Revenue Opportunity · ${label}${estBadge}</div>
+          ${rateRow}
+          <div class="super-mds-payment-delta">+$${delta}/day</div>
+        </div>
+      `;
+    }
+    case 'cmi': {
+      const cur = payment.current?.total;
+      const pot = payment.potential?.total;
+      const deltaStr = payment.delta.toFixed(3);
+      const rateRow = (cur != null && pot != null) ? `
+        <div class="super-mds-payment-rates">
+          <span class="super-mds-payment-rate super-mds-payment-rate--current">${cur.toFixed(3)} CMI</span>
+          <span class="super-mds-payment-arrow">&#10140;</span>
+          <span class="super-mds-payment-rate super-mds-payment-rate--potential">${pot.toFixed(3)} CMI</span>
+        </div>
+      ` : '';
+      return `
+        <div class="super-mds-payment-block">
+          <div class="super-mds-payment-block__label">Revenue Opportunity · ${label}</div>
+          ${rateRow}
+          <div class="super-mds-payment-delta">+${deltaStr} CMI</div>
+        </div>
+      `;
+    }
+    default:
+      return '';
   }
-
-  // Texas PDPM
-  if (tex && tex.delta > 0) {
-    const currentGroup   = tex.current?.groupCode  ?? '';
-    const potentialGroup = tex.potential?.groupCode ?? '';
-    const currentRate    = tex.current?.rate        ?? null;
-    const potentialRate  = tex.potential?.rate      ?? null;
-    const delta = Math.round(tex.delta);
-
-    const rateRow = (currentRate != null && potentialRate != null) ? `
-      <div class="super-mds-payment-rates">
-        <span class="super-mds-payment-rate super-mds-payment-rate--current">${currentGroup} · $${Math.round(currentRate)}/day</span>
-        <span class="super-mds-payment-arrow">&#10140;</span>
-        <span class="super-mds-payment-rate super-mds-payment-rate--potential">${potentialGroup} · $${Math.round(potentialRate)}/day</span>
-      </div>
-    ` : '';
-
-    return `
-      <div class="super-mds-payment-block">
-        <div class="super-mds-payment-block__label">Revenue Opportunity · Texas PDPM</div>
-        ${rateRow}
-        <div class="super-mds-payment-delta">+$${delta}/day</div>
-      </div>
-    `;
-  }
-
-  // CMI (Medicaid)
-  if (cmi && cmi.delta > 0) {
-    const currentCmi  = cmi.current  ?? null;
-    const potentialCmi = cmi.potential ?? null;
-    const deltaStr = cmi.delta.toFixed(3);
-
-    const rateRow = (currentCmi != null && potentialCmi != null) ? `
-      <div class="super-mds-payment-rates">
-        <span class="super-mds-payment-rate super-mds-payment-rate--current">${currentCmi.toFixed(3)} CMI</span>
-        <span class="super-mds-payment-arrow">&#10140;</span>
-        <span class="super-mds-payment-rate super-mds-payment-rate--potential">${potentialCmi.toFixed(3)} CMI</span>
-      </div>
-    ` : '';
-
-    return `
-      <div class="super-mds-payment-block">
-        <div class="super-mds-payment-block__label">Revenue Opportunity · CMI</div>
-        ${rateRow}
-        <div class="super-mds-payment-delta">+${deltaStr} CMI</div>
-      </div>
-    `;
-  }
-
-  return '';
 }
 
 // ============================================================================
@@ -1462,9 +1454,25 @@ function formatRelativeDate(dateStr) {
 const MDSCommandCenterLauncher = {
   _overlayEl: null,
   _preactUnmount: null,
+  _hidden: false,
 
-  async open() {
+  async open(opts) {
+    // If hidden (user went to analyzer), just show it again
+    if (this._overlayEl && this._hidden) {
+      this._overlayEl.style.display = '';
+      this._hidden = false;
+      // Re-attach escape handler
+      this._escapeHandler = (e) => {
+        if (e.key === 'Escape') this.close();
+      };
+      document.addEventListener('keydown', this._escapeHandler);
+      return;
+    }
+
     if (this._overlayEl) return; // Already open
+
+    // Check for restore state from page navigation
+    let initialExpandedId = opts?.initialExpandedId || null;
 
     // Get org slug and facility name (same pattern as loadMDSData)
     let facilityName, orgSlug;
@@ -1499,7 +1507,14 @@ const MDSCommandCenterLauncher = {
         h(MDSCommandCenter, {
           facilityName: facilityName || '',
           orgSlug: orgSlug || '',
-          onClose: () => this.close()
+          initialExpandedId,
+          onClose: (closeOpts) => {
+            if (closeOpts?.hide) {
+              this.hide();
+            } else {
+              this.close();
+            }
+          }
         }),
         overlayEl
       );
@@ -1512,7 +1527,20 @@ const MDSCommandCenterLauncher = {
     }
   },
 
+  /** Hide the command center (preserves state) */
+  hide() {
+    if (this._escapeHandler) {
+      document.removeEventListener('keydown', this._escapeHandler);
+      this._escapeHandler = null;
+    }
+    if (this._overlayEl) {
+      this._overlayEl.style.display = 'none';
+      this._hidden = true;
+    }
+  },
+
   close() {
+    this._hidden = false;
     if (this._escapeHandler) {
       document.removeEventListener('keydown', this._escapeHandler);
       this._escapeHandler = null;
@@ -1535,11 +1563,19 @@ const MDSCommandCenterLauncher = {
 const PDPMAnalyzerLauncher = {
   _overlayEl: null,
   _preactUnmount: null,
+  _context: null,
+  _edgeTab: null,
 
-  open(context) {
+  open(context, opts) {
     if (this._overlayEl) {
-      this.close(); // Close any existing instance
+      this.close(false); // Close existing without marking as dismissed
     }
+
+    this._context = context;
+    const initialMode = opts?.mode || 'modal';
+
+    // Remove edge tab if it exists (panel is opening)
+    this._removeEdgeTab();
 
     const overlayEl = document.createElement('div');
     overlayEl.id = 'pdpm-analyzer-overlay';
@@ -1558,7 +1594,8 @@ const PDPMAnalyzerLauncher = {
       render(
         h(PDPMAnalyzer, {
           context: context,
-          onClose: () => this.close()
+          onClose: () => this.close(),
+          initialMode: initialMode
         }),
         overlayEl
       );
@@ -1570,7 +1607,16 @@ const PDPMAnalyzerLauncher = {
     });
   },
 
-  close() {
+  close(userDismissed = true) {
+    const context = this._context;
+
+    // Track user dismissal so auto-open doesn't re-open for this assessment
+    if (userDismissed && context?.assessmentId) {
+      try {
+        sessionStorage.setItem('super_analyzer_dismissed', context.assessmentId);
+      } catch (_) {}
+    }
+
     if (this._escapeHandler) {
       document.removeEventListener('keydown', this._escapeHandler);
       this._escapeHandler = null;
@@ -1583,6 +1629,44 @@ const PDPMAnalyzerLauncher = {
       this._overlayEl.remove();
       this._overlayEl = null;
     }
+    this._context = null;
+
+    // Show edge tab on MDS pages so user can quickly re-open
+    if (userDismissed && context?.scope === 'mds' && context.assessmentId) {
+      this._showEdgeTab(context);
+    }
+
+    // Restore Command Center if it was hidden
+    if (MDSCommandCenterLauncher._hidden) {
+      MDSCommandCenterLauncher.open();
+    }
+  },
+
+  _showEdgeTab(context) {
+    this._removeEdgeTab();
+    const tab = document.createElement('button');
+    tab.id = 'pdpm-analyzer-edge-tab';
+    tab.className = 'pdpm-an__edge-tab';
+    tab.innerHTML = '<span class="pdpm-an__edge-tab-icon">\u276E</span><span class="pdpm-an__edge-tab-label">PDPM</span>';
+    tab.title = 'Reopen PDPM Analyzer';
+    tab.addEventListener('click', () => {
+      // Clear dismissal and reopen
+      try { sessionStorage.removeItem('super_analyzer_dismissed'); } catch (_) {}
+      this.open(context, { mode: 'panel' });
+    });
+    document.body.appendChild(tab);
+    this._edgeTab = tab;
+  },
+
+  _removeEdgeTab() {
+    if (this._edgeTab) {
+      this._edgeTab.remove();
+      this._edgeTab = null;
+    }
+  },
+
+  isOpen() {
+    return !!this._overlayEl;
   }
 };
 

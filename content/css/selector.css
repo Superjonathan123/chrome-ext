@@ -1,0 +1,209 @@
+/* ============================================
+   Shared Selector Component  (ss__ prefix)
+   ============================================ */
+
+/* ── Root ── */
+.ss__root {
+  position: relative;
+  display: inline-flex;
+}
+
+/* ── Trigger ── */
+.ss__trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #374151;
+  background: #f9fafb;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  padding: 6px 10px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.12s, border-color 0.12s, box-shadow 0.12s;
+  font-family: inherit;
+  line-height: 1.35;
+}
+.ss__trigger:hover {
+  background: #f3f4f6;
+  border-color: #9ca3af;
+}
+.ss__trigger--open {
+  background: #fff;
+  border-color: #6366f1;
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.15);
+}
+
+.ss__placeholder {
+  color: #9ca3af;
+}
+
+.ss__chevron {
+  color: #9ca3af;
+  flex-shrink: 0;
+  transition: transform 0.15s;
+}
+.ss__chevron--open {
+  transform: rotate(180deg);
+}
+
+/* ── Compact variant ── */
+.ss__root--compact .ss__trigger {
+  font-size: 12px;
+  font-weight: 500;
+  padding: 4px 8px;
+  border-radius: 6px;
+  gap: 4px;
+}
+.ss__root--compact .ss__dropdown {
+  min-width: 160px;
+}
+.ss__root--compact .ss__option {
+  padding: 6px 8px;
+  font-size: 12px;
+}
+
+/* ── Dropdown ── */
+.ss__dropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  min-width: 220px;
+  max-height: 320px;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.06);
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: ss-dropdown-in 0.12s ease-out;
+}
+.ss__dropdown--right {
+  left: auto;
+  right: 0;
+}
+
+@keyframes ss-dropdown-in {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Search ── */
+.ss__search-wrap {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 10px;
+  border-bottom: 1px solid #f3f4f6;
+}
+.ss__search-icon {
+  color: #9ca3af;
+  flex-shrink: 0;
+}
+.ss__search {
+  flex: 1;
+  border: none;
+  outline: none;
+  font-size: 12.5px;
+  font-family: inherit;
+  color: #374151;
+  background: transparent;
+  padding: 0;
+}
+.ss__search::placeholder {
+  color: #c0c4cc;
+}
+
+/* ── Options list ── */
+.ss__list {
+  overflow-y: auto;
+  padding: 4px;
+  overscroll-behavior: contain;
+}
+
+.ss__option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 8px 10px;
+  border: none;
+  background: none;
+  border-radius: 7px;
+  cursor: pointer;
+  text-align: left;
+  font-size: 13px;
+  font-family: inherit;
+  color: #374151;
+  transition: background 0.08s;
+  line-height: 1.35;
+}
+.ss__option:hover,
+.ss__option--hl {
+  background: #f3f4f6;
+}
+.ss__option--active {
+  background: #eef2ff;
+  color: #4338ca;
+}
+.ss__option--active:hover,
+.ss__option--active.ss__option--hl {
+  background: #e0e7ff;
+}
+
+.ss__option-body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.ss__option-label {
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.ss__option-sub {
+  font-size: 11px;
+  color: #6b7280;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.ss__option--active .ss__option-sub {
+  color: #6366f1;
+  opacity: 0.7;
+}
+
+.ss__option-badge {
+  font-family: 'SF Mono', SFMono-Regular, Menlo, monospace;
+  font-size: 11px;
+  font-weight: 600;
+  color: #6b7280;
+  background: #f3f4f6;
+  padding: 2px 6px;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+.ss__option--active .ss__option-badge {
+  color: #4338ca;
+  background: #e0e7ff;
+}
+
+.ss__check {
+  color: #6366f1;
+  flex-shrink: 0;
+}
+
+.ss__empty {
+  padding: 16px 10px;
+  text-align: center;
+  font-size: 12px;
+  color: #9ca3af;
+}

@@ -9,17 +9,39 @@ function transformSectionO(results) {
 
   console.log('Super LTC: transformSectionO called with keys:', Object.keys(results || {}));
 
-  // Transform sectionO items (O0110 special treatments)
+  // New flat format: results.items[] with columns as object keyed by column letter
+  if (results.items && Array.isArray(results.items)) {
+    console.log('Super LTC: Found results.items:', results.items.length);
+    results.items.forEach(item => {
+      if (item.columns) {
+        Object.entries(item.columns).forEach(([column, columnData]) => {
+          console.log(`Super LTC: >> Adding ${item.mdsItem} col ${column}`);
+          items.push({
+            mdsItem: item.mdsItem,
+            description: item.description || getSectionODescription(item.mdsItem),
+            columns: {
+              [column]: {
+                answer: columnData.answer,
+                confidence: columnData.confidence,
+                rationale: columnData.rationale,
+                evidenceCount: columnData.evidenceCount || 0,
+                userDecision: columnData.userDecision || null
+              }
+            }
+          });
+        });
+      }
+    });
+  }
+
+  // Legacy format: sectionO.items with comparisons
   if (results.sectionO?.items) {
     console.log('Super LTC: Found sectionO.items:', results.sectionO.items.length);
     results.sectionO.items.forEach(item => {
       if (item.comparisons) {
         item.comparisons.forEach(comparison => {
           const columnData = item.columns?.[comparison.column];
-          console.log(`Super LTC: ${item.mdsItem} col ${comparison.column}: status=${comparison.status}`);
-          // Include ALL items (matches and non-matches) - processQuestion will determine display status
           if (columnData) {
-            console.log(`Super LTC: >> Adding ${item.mdsItem} col ${comparison.column}`);
             items.push({
               mdsItem: item.mdsItem,
               description: item.description || getSectionODescription(item.mdsItem),
@@ -28,7 +50,8 @@ function transformSectionO(results) {
                   answer: columnData.answer,
                   confidence: columnData.confidence,
                   rationale: columnData.rationale,
-                  evidence: columnData.evidence || []
+                  evidenceCount: columnData.evidenceCount || 0,
+                  userDecision: columnData.userDecision || null
                 }
               }
             });
@@ -36,17 +59,12 @@ function transformSectionO(results) {
         });
       }
     });
-  } else {
-    console.log('Super LTC: No sectionO.items found');
   }
 
-  // Transform immunization items (O0250, O0300, O0350)
+  // Legacy format: immunization items (O0250, O0300, O0350)
   if (results.sectionOImmunizations?.comparisons) {
     console.log('Super LTC: Found immunization comparisons:', results.sectionOImmunizations.comparisons.length);
     results.sectionOImmunizations.comparisons.forEach(comparison => {
-      console.log(`Super LTC: Immunization ${comparison.questionCode}: status=${comparison.status}`);
-      // Include ALL items (matches and non-matches)
-      console.log(`Super LTC: >> Adding immunization ${comparison.questionCode}`);
       items.push({
         mdsItem: comparison.questionCode,
         description: comparison.questionLabel || getSectionODescription(comparison.questionCode),
@@ -55,13 +73,12 @@ function transformSectionO(results) {
             answer: comparison.solvedAnswer,
             confidence: comparison.confidence,
             rationale: comparison.rationale,
-            evidence: comparison.evidence || []
+            evidenceCount: comparison.evidenceCount || 0,
+            userDecision: comparison.userDecision || null
           }
         }
       });
     });
-  } else {
-    console.log('Super LTC: No sectionOImmunizations.comparisons found');
   }
 
   console.log('Super LTC: transformSectionO returning', items.length, 'items');
@@ -117,7 +134,8 @@ function transformSectionK(results) {
             answer: data.answer,
             confidence: data.confidence,
             rationale: data.rationale,
-            evidence: data.evidence || []
+            evidenceCount: data.evidenceCount || 0,
+            userDecision: data.userDecision || null
           }
         }
       });
@@ -206,7 +224,7 @@ function transformSectionK(results) {
           answer: colData.answer,
           confidence: colData.confidence,
           rationale: colData.rationale,
-          evidence: colData.evidence || []
+          evidenceCount: colData.evidenceCount || 0
         };
       });
 
@@ -231,7 +249,7 @@ function transformSectionK(results) {
               answer: String(colData.A.percent),
               confidence: colData.A.confidence,
               rationale: colData.A.rationale,
-              evidence: []
+              evidenceCount: 0
             }
           }
         });
@@ -271,9 +289,10 @@ function getK0520Description(itemKey) {
  * Section I - Active Diagnoses
  * Path: run.results.sectionI.items
  */
-function transformSectionI(results) {
+function transformSectionI(results, itemSummaries) {
   const items = [];
-  const sectionIData = results.sectionI?.items || {};
+  const sectionIData = results.sectionI?.items || results.items || {};
+  const summaries = itemSummaries || {};
 
   Object.entries(sectionIData).forEach(([mdsItem, data]) => {
     // Skip items with no recommendation (dont_code with no evidence)
@@ -281,6 +300,9 @@ function transformSectionI(results) {
     if (data.status === 'dont_code' && data.confidence !== 'low') {
       // Still include dont_code items so we can show mismatches
     }
+
+    // Merge per-item summaries from itemSummaries (Dx/Tx live there, not on each item)
+    const itemSummary = summaries[mdsItem] || {};
 
     items.push({
       mdsItem: mdsItem,
@@ -290,7 +312,7 @@ function transformSectionI(results) {
           answer: data.answer,
           confidence: data.confidence || 'medium',
           rationale: data.rationale || '',
-          evidence: data.evidence || [],
+          evidenceCount: data.evidenceCount || 0,
           status: data.status, // code, needs_physician_query, dont_code
           triggers: data.triggers, // for needs_physician_query items
           suggestedIcd10: data.suggestedIcd10,
@@ -298,14 +320,16 @@ function transformSectionI(results) {
           mdsItemName: data.kbCategory?.categoryName || getSectionIDescription(mdsItem),
           queryReason: data.queryReason || '',
           keyFindings: data.keyFindings || [],
-          queryEvidence: data.queryEvidence || [],
+          queryEvidenceCount: data.queryEvidenceCount || 0,
           recommendedIcd10: data.recommendedIcd10 || data.suggestedIcd10 || [],
           aiGeneratedNote: data.aiGeneratedNote || '',
-          // Step summaries (one-liner Dx/Tx for quick scanning)
-          diagnosisSummary: data.diagnosisSummary || null,
-          treatmentSummary: data.treatmentSummary || null,
-          diagnosisPassed: data.validation?.diagnosisPassed ?? data.diagnosisPassed ?? null,
-          activeStatusPassed: data.validation?.activeStatusPassed ?? data.activeStatusPassed ?? null
+          // Step summaries — check item-level first, then itemSummaries lookup
+          diagnosisSummary: data.diagnosisSummary || itemSummary.diagnosisSummary || null,
+          treatmentSummary: data.treatmentSummary || itemSummary.treatmentSummary || null,
+          diagnosisPassed: data.validation?.diagnosisPassed ?? data.diagnosisPassed ?? itemSummary.diagnosisPassed ?? null,
+          activeStatusPassed: data.validation?.activeStatusPassed ?? data.activeStatusPassed ?? data.treatmentPassed ?? itemSummary.activeStatusPassed ?? itemSummary.treatmentPassed ?? null,
+          // User decision (agree/disagree) from server
+          userDecision: data.userDecision || null
         }
       }
     });
@@ -334,7 +358,7 @@ function transformSectionE(results) {
             answer: data.answer,
             confidence: data.confidence,
             rationale: data.rationale,
-            evidence: data.evidence || []
+            evidenceCount: data.evidenceCount || 0
           }
         }
       });
@@ -352,7 +376,7 @@ function transformSectionE(results) {
             answer: String(data.frequencyCode),
             confidence: data.confidence,
             rationale: data.rationale,
-            evidence: data.evidence || [],
+            evidenceCount: data.evidenceCount || 0,
             distinctDates: data.distinctDates
           }
         }
@@ -370,7 +394,7 @@ function transformSectionE(results) {
           answer: String(sectionData.e0300.answer),
           confidence: 'high',
           rationale: sectionData.e0300.rationale,
-          evidence: []
+          evidenceCount: 0
         }
       }
     });
@@ -386,7 +410,7 @@ function transformSectionE(results) {
           answer: sectionData.e0500.answer,
           confidence: sectionData.e0500.confidence,
           rationale: sectionData.e0500.rationale,
-          evidence: sectionData.e0500.evidence || []
+          evidenceCount: sectionData.e0500.evidenceCount || 0
         }
       }
     });
@@ -402,7 +426,7 @@ function transformSectionE(results) {
           answer: sectionData.e0600.answer,
           confidence: sectionData.e0600.confidence,
           rationale: sectionData.e0600.rationale,
-          evidence: sectionData.e0600.evidence || []
+          evidenceCount: sectionData.e0600.evidenceCount || 0
         }
       }
     });
@@ -418,7 +442,7 @@ function transformSectionE(results) {
           answer: String(sectionData.e0800.frequencyCode),
           confidence: sectionData.e0800.confidence,
           rationale: sectionData.e0800.rationale,
-          evidence: sectionData.e0800.evidence || [],
+          evidenceCount: sectionData.e0800.evidenceCount || 0,
           distinctDates: sectionData.e0800.distinctDates
         }
       }
@@ -435,7 +459,7 @@ function transformSectionE(results) {
           answer: String(sectionData.e0900.frequencyCode),
           confidence: sectionData.e0900.confidence,
           rationale: sectionData.e0900.rationale,
-          evidence: sectionData.e0900.evidence || [],
+          evidenceCount: sectionData.e0900.evidenceCount || 0,
           distinctDates: sectionData.e0900.distinctDates
         }
       }
@@ -453,7 +477,7 @@ function transformSectionE(results) {
             answer: data.answer,
             confidence: data.confidence,
             rationale: data.rationale,
-            evidence: data.evidence || []
+            evidenceCount: data.evidenceCount || 0
           }
         }
       });
@@ -470,7 +494,7 @@ function transformSectionE(results) {
           answer: String(sectionData.e1100.changeCode),
           confidence: sectionData.e1100.confidence,
           rationale: sectionData.e1100.rationale,
-          evidence: sectionData.e1100.evidence || []
+          evidenceCount: sectionData.e1100.evidenceCount || 0
         }
       }
     });
@@ -535,8 +559,9 @@ function transformSectionM(results) {
           answer: comparison.solvedValue,
           confidence: comparison.status === 'match' ? 'high' : 'medium',
           rationale: `AI recommends: ${comparison.solvedValue}, Currently coded: ${comparison.codedValue || 'not coded'}`,
-          evidence: [],
-          comparisonStatus: comparison.status // match, mismatch, not_coded, needs_review
+          evidenceCount: 0,
+          comparisonStatus: comparison.status, // match, mismatch, not_coded, needs_review
+          userDecision: comparison.userDecision || null
         }
       }
     });
@@ -585,7 +610,7 @@ function transformSectionN(results) {
           answer: String(sectionData.n0300.answer),
           confidence: sectionData.n0300.confidence,
           rationale: sectionData.n0300.rationale,
-          evidence: sectionData.n0300.evidence || [],
+          evidenceCount: sectionData.n0300.evidenceCount || 0,
           distinctDays: sectionData.n0300.distinctDays,
           injections: sectionData.n0300.injections,
           isNumeric: true
@@ -604,7 +629,7 @@ function transformSectionN(results) {
           answer: String(sectionData.n0350a.answer),
           confidence: sectionData.n0350a.confidence,
           rationale: sectionData.n0350a.rationale,
-          evidence: sectionData.n0350a.evidence || [],
+          evidenceCount: sectionData.n0350a.evidenceCount || 0,
           distinctDays: sectionData.n0350a.distinctDays,
           insulinInjections: sectionData.n0350a.insulinInjections,
           isNumeric: true
@@ -623,7 +648,7 @@ function transformSectionN(results) {
           answer: String(sectionData.n0350b.answer),
           confidence: sectionData.n0350b.confidence,
           rationale: sectionData.n0350b.rationale,
-          evidence: sectionData.n0350b.evidence || [],
+          evidenceCount: sectionData.n0350b.evidenceCount || 0,
           distinctDays: sectionData.n0350b.distinctDays,
           orderChanges: sectionData.n0350b.orderChanges,
           isNumeric: true
@@ -650,7 +675,7 @@ function transformSectionN(results) {
               answer: col1.answer,
               confidence: col1.confidence,
               rationale: col1.rationale,
-              evidence: [],
+              evidenceCount: 0,
               medicationsTaken: col1.medicationsTaken
             }
           }
@@ -667,7 +692,7 @@ function transformSectionN(results) {
               answer: col2.answer,
               confidence: col2.confidence,
               rationale: col2.rationale,
-              evidence: [],
+              evidenceCount: 0,
               medicationsWithIndication: col2.medicationsWithIndication
             }
           }
@@ -688,7 +713,7 @@ function transformSectionN(results) {
             answer: String(sectionData.n0450.n0450a.answer),
             confidence: sectionData.n0450.n0450a.confidence,
             rationale: sectionData.n0450.n0450a.rationale,
-            evidence: sectionData.n0450.n0450a.evidence || [],
+            evidenceCount: sectionData.n0450.n0450a.evidenceCount || 0,
             routineMedications: sectionData.n0450.n0450a.routineMedications,
             prnMedications: sectionData.n0450.n0450a.prnMedications
           }
@@ -706,7 +731,7 @@ function transformSectionN(results) {
             answer: String(sectionData.n0450.n0450b.answer),
             confidence: sectionData.n0450.n0450b.confidence,
             rationale: sectionData.n0450.n0450b.rationale,
-            evidence: sectionData.n0450.n0450b.evidence || [],
+            evidenceCount: sectionData.n0450.n0450b.evidenceCount || 0,
             gdrDate: sectionData.n0450.n0450b.gdrDate
           }
         }
@@ -723,7 +748,7 @@ function transformSectionN(results) {
             answer: sectionData.n0450.n0450c,
             confidence: 'high',
             rationale: `Last GDR attempt: ${sectionData.n0450.n0450c}`,
-            evidence: []
+            evidenceCount: 0
           }
         }
       });
@@ -740,7 +765,7 @@ function transformSectionN(results) {
           answer: String(sectionData.n2001.answer),
           confidence: sectionData.n2001.confidence,
           rationale: sectionData.n2001.rationale,
-          evidence: sectionData.n2001.evidence || [],
+          evidenceCount: sectionData.n2001.evidenceCount || 0,
           issuesFound: sectionData.n2001.issuesFound
         }
       }
@@ -757,7 +782,7 @@ function transformSectionN(results) {
           answer: String(sectionData.n2003.answer),
           confidence: sectionData.n2003.confidence,
           rationale: sectionData.n2003.rationale,
-          evidence: sectionData.n2003.evidence || [],
+          evidenceCount: sectionData.n2003.evidenceCount || 0,
           physicianContacted: sectionData.n2003.physicianContacted,
           contactDate: sectionData.n2003.contactDate
         }
@@ -775,7 +800,7 @@ function transformSectionN(results) {
           answer: String(sectionData.n2005.answer),
           confidence: sectionData.n2005.confidence,
           rationale: sectionData.n2005.rationale,
-          evidence: sectionData.n2005.evidence || [],
+          evidenceCount: sectionData.n2005.evidenceCount || 0,
           issueEvents: sectionData.n2005.issueEvents
         }
       }
@@ -833,7 +858,7 @@ function transformSectionJ(results) {
             answer: String(data.answer),
             confidence: data.confidence,
             rationale: data.rationale,
-            evidence: data.evidence || [],
+            evidenceCount: data.evidenceCount || 0,
             lookbackWindow: sectionData.j0100.lookbackWindow
           }
         }
@@ -859,7 +884,7 @@ function transformSectionJ(results) {
             answer: data.answer,
             confidence: data.confidence,
             rationale: data.rationale,
-            evidence: data.evidence || [],
+            evidenceCount: data.evidenceCount || 0,
             lookbackWindow: sectionData.j1100.lookbackWindow
           }
         }
@@ -877,7 +902,7 @@ function transformSectionJ(results) {
           answer: String(sectionData.j1300.answer),
           confidence: sectionData.j1300.confidence,
           rationale: sectionData.j1300.rationale,
-          evidence: sectionData.j1300.evidence || []
+          evidenceCount: sectionData.j1300.evidenceCount || 0
         }
       }
     });
@@ -893,7 +918,7 @@ function transformSectionJ(results) {
           answer: String(sectionData.j1400.answer),
           confidence: sectionData.j1400.confidence,
           rationale: sectionData.j1400.rationale,
-          evidence: sectionData.j1400.evidence || [],
+          evidenceCount: sectionData.j1400.evidenceCount || 0,
           isHospiceEnrolled: sectionData.j1400.isHospiceEnrolled,
           prognosisDocumented: sectionData.j1400.prognosisDocumented
         }
@@ -911,7 +936,7 @@ function transformSectionJ(results) {
           answer: String(sectionData.j1700.answer),
           confidence: sectionData.j1700.confidence,
           rationale: sectionData.j1700.rationale,
-          evidence: sectionData.j1700.evidence || []
+          evidenceCount: sectionData.j1700.evidenceCount || 0
         }
       }
     });
@@ -927,7 +952,7 @@ function transformSectionJ(results) {
           answer: String(sectionData.j1800.answer),
           confidence: sectionData.j1800.confidence,
           rationale: sectionData.j1800.rationale,
-          evidence: [],
+          evidenceCount: 0,
           fallCount: sectionData.j1800.fallCount,
           falls: sectionData.j1800.falls,
           lookbackWindow: sectionData.j1800.lookbackWindow
@@ -947,7 +972,7 @@ function transformSectionJ(results) {
             answer: String(data.countCode),
             confidence: data.confidence,
             rationale: data.rationale,
-            evidence: [],
+            evidenceCount: 0,
             actualCount: data.actualCount,
             falls: data.falls
           }
@@ -966,7 +991,7 @@ function transformSectionJ(results) {
           answer: String(sectionData.j2000.answer),
           confidence: sectionData.j2000.confidence,
           rationale: sectionData.j2000.rationale,
-          evidence: sectionData.j2000.evidence || []
+          evidenceCount: sectionData.j2000.evidenceCount || 0
         }
       }
     });
@@ -1017,7 +1042,7 @@ function transformSectionL(results) {
             answer: data.answer,
             confidence: data.confidence,
             rationale: data.rationale,
-            evidence: data.evidence || [],
+            evidenceCount: data.evidenceCount || 0,
             lookbackWindow: sectionData.l0200.lookbackWindow
           }
         }
@@ -1063,7 +1088,7 @@ function transformSectionH(results) {
             answer: data.answer,
             confidence: data.confidence,
             rationale: data.rationale,
-            evidence: data.evidence || [],
+            evidenceCount: data.evidenceCount || 0,
             ostomyType: data.ostomyType // For H0100C
           }
         }
@@ -1083,7 +1108,7 @@ function transformSectionH(results) {
             answer: sectionData.h0200.a.answer,
             confidence: sectionData.h0200.a.confidence,
             rationale: sectionData.h0200.a.rationale,
-            evidence: sectionData.h0200.a.evidence || []
+            evidenceCount: sectionData.h0200.a.evidenceCount || 0
           }
         }
       });
@@ -1098,7 +1123,7 @@ function transformSectionH(results) {
             answer: sectionData.h0200.b.answer,
             confidence: sectionData.h0200.b.confidence,
             rationale: sectionData.h0200.b.rationale,
-            evidence: sectionData.h0200.b.evidence || []
+            evidenceCount: sectionData.h0200.b.evidenceCount || 0
           }
         }
       });
@@ -1113,7 +1138,7 @@ function transformSectionH(results) {
             answer: sectionData.h0200.c.answer,
             confidence: sectionData.h0200.c.confidence,
             rationale: sectionData.h0200.c.rationale,
-            evidence: sectionData.h0200.c.evidence || []
+            evidenceCount: sectionData.h0200.c.evidenceCount || 0
           }
         }
       });
@@ -1130,7 +1155,7 @@ function transformSectionH(results) {
           answer: String(sectionData.h0300.code),
           confidence: sectionData.h0300.confidence,
           rationale: sectionData.h0300.rationale,
-          evidence: sectionData.h0300.evidence || [],
+          evidenceCount: sectionData.h0300.evidenceCount || 0,
           incontinenceEpisodeDates: sectionData.h0300.incontinenceEpisodeDates,
           lookbackWindow: sectionData.h0300.lookbackWindow
         }
@@ -1148,7 +1173,7 @@ function transformSectionH(results) {
           answer: String(sectionData.h0400.code),
           confidence: sectionData.h0400.confidence,
           rationale: sectionData.h0400.rationale,
-          evidence: sectionData.h0400.evidence || [],
+          evidenceCount: sectionData.h0400.evidenceCount || 0,
           incontinenceEpisodeDates: sectionData.h0400.incontinenceEpisodeDates,
           lookbackWindow: sectionData.h0400.lookbackWindow
         }
@@ -1166,7 +1191,7 @@ function transformSectionH(results) {
           answer: sectionData.h0500.answer,
           confidence: sectionData.h0500.confidence,
           rationale: sectionData.h0500.rationale,
-          evidence: sectionData.h0500.evidence || []
+          evidenceCount: sectionData.h0500.evidenceCount || 0
         }
       }
     });
@@ -1182,7 +1207,7 @@ function transformSectionH(results) {
           answer: sectionData.h0600.answer,
           confidence: sectionData.h0600.confidence,
           rationale: sectionData.h0600.rationale,
-          evidence: sectionData.h0600.evidence || []
+          evidenceCount: sectionData.h0600.evidenceCount || 0
         }
       }
     });
@@ -1230,7 +1255,7 @@ function transformSectionP(results) {
             answer: String(data.frequencyCode),
             confidence: data.confidence,
             rationale: data.rationale,
-            evidence: data.evidence || [],
+            evidenceCount: data.evidenceCount || 0,
             distinctDates: data.distinctDates
           }
         }
@@ -1249,7 +1274,7 @@ function transformSectionP(results) {
             answer: String(data.frequencyCode),
             confidence: data.confidence,
             rationale: data.rationale,
-            evidence: data.evidence || [],
+            evidenceCount: data.evidenceCount || 0,
             distinctDates: data.distinctDates
           }
         }
@@ -1285,6 +1310,7 @@ function getSectionPDescription(mdsItem) {
 function transformAPIResponse(apiResponse, section) {
   const { run } = apiResponse;
   const results = run.results;
+  const itemSummaries = apiResponse.itemSummaries || {};
 
   // Section-specific transformers
   switch (section) {
@@ -1293,7 +1319,7 @@ function transformAPIResponse(apiResponse, section) {
     case 'H':
       return transformSectionH(results);
     case 'I':
-      return transformSectionI(results);
+      return transformSectionI(results, itemSummaries);
     case 'J':
       return transformSectionJ(results);
     case 'K':

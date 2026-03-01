@@ -2,6 +2,10 @@
 // Detects MDS pages, injects badges on questions, shows popovers with AI rationale/evidence
 // Extracted from original content.js (commit 05cb4a0)
 
+import { render, h } from 'preact';
+import { PDFViewer } from './components/PDFViewer.jsx';
+import { fetchDocument, fetchClinicalNote, fetchTherapyDocument, formatDateDisplay, formatDateTimeDisplay } from './evidence-viewers.js';
+
 // ============================================
 // State Management
 // ============================================
@@ -9,13 +13,45 @@ const SuperOverlay = {
   results: [],
   currentMismatchIndex: -1,
   dismissedItems: new Set(),
+  serverDecisions: {},  // Keyed by mdsItem+mdsColumn (e.g. "O0250B", "I2000")
   panelExpanded: false,
   initialized: false,
   patientId: null  // Stored from API response for diagnosis queries
 };
 
+// Evidence cache — keyed by "section:itemCode", stores fetched evidence data
+const EvidenceCache = new Map();
+
+/**
+ * Fetch evidence for a specific MDS item on demand.
+ * Returns cached data if previously fetched.
+ */
+async function fetchItemEvidence(section, itemCode) {
+  const cacheKey = `${section}:${itemCode}`;
+  if (EvidenceCache.has(cacheKey)) return EvidenceCache.get(cacheKey);
+
+  const endpoint = `/api/extension/mds/sections/${section}/items/${encodeURIComponent(itemCode)}/evidence` +
+    `?externalAssessmentId=${SuperOverlay.assessmentId}` +
+    `&facilityName=${encodeURIComponent(SuperOverlay.facilityName)}` +
+    `&orgSlug=${SuperOverlay.orgSlug}`;
+
+  const response = await chrome.runtime.sendMessage({ type: 'API_REQUEST', endpoint });
+  if (!response.success) throw new Error(response.error || 'Failed to fetch evidence');
+
+  const item = response.data?.item || {};
+  const result = {
+    evidence: item.evidence || [],
+    queryEvidence: item.queryEvidence || [],
+    validation: item.validation || {},
+    columns: item.columns || null
+  };
+  EvidenceCache.set(cacheKey, result);
+  return result;
+}
+
 // Expose on window for other content scripts (query-send-modal.js, etc.)
 window.SuperOverlay = SuperOverlay;
+window.renderSplitAdministrations = renderSplitAdministrations;
 
 // ============================================
 // Message Listener (existing functionality)
@@ -99,6 +135,26 @@ async function fetchSectionData(params) {
   return response.data;
 }
 
+/**
+ * Fetch all decisions for this assessment from the server.
+ * Returns a map keyed by mdsItem+mdsColumn (e.g. "O0250B", "I2000").
+ */
+async function fetchDecisions(params) {
+  const { assessmentId, orgSlug, facilityName } = params;
+
+  const endpoint = `/api/extension/mds/decisions?` +
+    `externalAssessmentId=${assessmentId}` +
+    `&facilityName=${encodeURIComponent(facilityName)}` +
+    `&orgSlug=${orgSlug}`;
+
+  const response = await chrome.runtime.sendMessage({ type: 'API_REQUEST', endpoint });
+  if (!response.success) {
+    console.log('Super LTC: Could not fetch decisions', response.error);
+    return {};
+  }
+  return response.data?.decisions || {};
+}
+
 // ============================================
 // Initialization
 // ============================================
@@ -136,10 +192,14 @@ async function initSuperOverlay() {
       return;
     }
 
-    // Fetch from API
-    console.log('Super LTC: Fetching section data from API...');
-    const apiResponse = await fetchSectionData(params);
+    // Fetch section data and decisions in parallel
+    console.log('Super LTC: Fetching section data and decisions from API...');
+    const [apiResponse, decisions] = await Promise.all([
+      fetchSectionData(params),
+      fetchDecisions(params)
+    ]);
     console.log('Super LTC: API response:', apiResponse);
+    console.log('Super LTC: Decisions:', decisions);
 
     // Store patientId from assessment for diagnosis queries
     if (apiResponse.assessment?.patientId) {
@@ -155,12 +215,14 @@ async function initSuperOverlay() {
       return;
     }
 
-    // Store context for query features
+    // Store context for query features and lazy evidence loading
     SuperOverlay.assessmentId = params.assessmentId;
     SuperOverlay.facilityName = params.facilityName;
     SuperOverlay.orgSlug = params.orgSlug;
+    SuperOverlay.section = params.section;
 
-    // Load dismissed items and process
+    // Store server decisions so processQuestion can look up prior decisions
+    SuperOverlay.serverDecisions = decisions;
     await loadDismissedItems();
     processItems(data.items);
     createSummaryPanel();
@@ -247,6 +309,28 @@ function processQuestion(questionEl, item, column, aiAnswer) {
     pccAnswer: pccAnswer,
     status: status
   };
+
+  // Check server-side decisions — first from decisions endpoint, then from section data
+  const decisionKey = column ? `${item.mdsItem}${column}` : item.mdsItem;
+  const serverDecision = SuperOverlay.serverDecisions[decisionKey];
+  if (serverDecision) {
+    const dismissKey = `${item.mdsItem}-${column}`;
+    result.userDecision = serverDecision;
+    if (serverDecision.decision === 'disagree') {
+      SuperOverlay.dismissedItems.add(dismissKey);
+      result.status = 'dismissed';
+    } else if (serverDecision.decision === 'agree') {
+      SuperOverlay.dismissedItems.add(dismissKey);
+      result.status = 'dismissed';
+    }
+  } else if (aiAnswer.userDecision?.decision === 'disagree') {
+    const dismissKey = `${item.mdsItem}-${column}`;
+    SuperOverlay.dismissedItems.add(dismissKey);
+    result.status = 'dismissed';
+    result.userDecision = aiAnswer.userDecision;
+  } else if (aiAnswer.userDecision?.decision === 'agree') {
+    result.userDecision = aiAnswer.userDecision;
+  }
 
   SuperOverlay.results.push(result);
 
@@ -417,8 +501,13 @@ function injectBadge(questionEl, result) {
       badge.innerHTML = `<span class="super-badge__icon">&#9888;</span> Super: ${answerText}?`;
       break;
     case 'dismissed':
-      badge.classList.add('super-badge--match', 'super-badge--dismissed');
-      badge.innerHTML = `<span class="super-badge__icon">&#10003;</span> Super: ${answerText}`;
+      if (result.userDecision?.decision === 'disagree') {
+        badge.classList.add('super-badge--mismatch', 'super-badge--dismissed', 'super-badge--disagreed');
+        badge.innerHTML = `<span class="super-badge__icon">&#10007;</span> Dismissed`;
+      } else {
+        badge.classList.add('super-badge--match', 'super-badge--dismissed');
+        badge.innerHTML = `<span class="super-badge__icon">&#10003;</span> Super: ${answerText}`;
+      }
       break;
   }
 
@@ -484,18 +573,29 @@ function showPopover(anchorEl, result) {
   popover.className = 'super-popover';
   popover.innerHTML = buildPopoverHTML(result);
 
+  // Store evidence data for split-view access (populated lazily)
+  popover._evidence = [];
+  popover._result = result;
+  popover._docCache = new Map();
+  popover._anchorEl = anchorEl;
+  popover._section = SuperOverlay.section;
+
   // Position popover
   document.body.appendChild(popover);
   positionPopover(popover, anchorEl);
 
   // Setup event listeners
   setupPopoverListeners(popover, result);
+
+  // Prefetch all PDF documents
+  prefetchDocuments(popover);
 }
 
 function buildPopoverHTML(result) {
   const ai = result.aiAnswer;
   const confidenceDots = renderConfidenceDots(ai.confidence);
-  const evidenceHTML = renderEvidence(ai.evidence || []);
+  const totalEvidenceCount = (ai.evidenceCount || 0) + (ai.queryEvidenceCount || 0);
+  const evidenceHTML = renderEvidencePlaceholder(totalEvidenceCount);
   const datesHTML = renderDates(ai);
   const triggersHTML = renderTriggers(ai.triggers);
   const icd10HTML = renderIcd10Suggestions(ai.suggestedIcd10);
@@ -658,81 +758,89 @@ function renderConfidenceDots(confidence) {
   return dots;
 }
 
+function renderEvidenceCard(ev, evIdx) {
+  // Handle multiple evidence formats:
+  // - Section I documents: quoteText, displayName, rationale
+  // - Section I orders/admins: orderDescription, displayName, rationale (quoteText may be null)
+  // - Other sections: quote, sourceType
+  const quote = ev.quoteText || ev.orderDescription || ev.quote || '';
+  const sourceType = ev.sourceType || inferSourceType(ev.displayName, ev.evidenceId);
+  const typeClass = `super-evidence-card__type--${sourceType}`;
+  const typeLabel = ev.displayName || formatSourceType(sourceType);
+
+  // Use rationale as display text for admin/order evidence that has no quote
+  const displayText = quote || ev.rationale || '';
+
+  // Skip if nothing to display at all
+  if (!displayText) return '';
+
+  // Check if this is an order evidence that can show administrations
+  const isOrder = sourceType === 'order';
+  const orderId = ev.sourceId || ev.evidenceId || '';
+
+  // Check if this evidence has a viewable type (clinical note, therapy doc, PDF)
+  const { viewerType, id: viewerId } = typeof parseEvidenceForViewer === 'function'
+    ? parseEvidenceForViewer(ev)
+    : { viewerType: null, id: null };
+
+  const isViewable = isOrder || viewerType;
+  const clickableClass = isViewable ? 'super-evidence-card--clickable' : '';
+
+  // Data attributes for click handling
+  let dataAttrs = '';
+  if (isOrder) {
+    dataAttrs = `data-order-id="${orderId}"`;
+  } else if (viewerType) {
+    dataAttrs = `data-viewer-type="${viewerType}" data-viewer-id="${viewerId}"`;
+    // Add quote text for highlighting in therapy documents
+    if (quote) {
+      const escapedQuote = quote.replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      dataAttrs += ` data-quote="${escapedQuote}"`;
+    }
+    // Add wordBlocks data if available (for PDF documents)
+    if (ev.wordBlocks && Array.isArray(ev.wordBlocks) && ev.wordBlocks.length > 0) {
+      const wordBlocksJson = JSON.stringify(ev.wordBlocks).replace(/"/g, '&quot;');
+      dataAttrs += ` data-word-blocks="${wordBlocksJson}"`;
+    }
+  }
+
+  // Action text based on type
+  let actionText = '';
+  if (isOrder) actionText = 'View Administrations';
+  else if (viewerType === 'therapy-document') actionText = 'View Document';
+  else if (viewerType === 'clinical-note') actionText = 'View Note';
+  else if (viewerType === 'document') actionText = 'View PDF';
+
+  const actionHTML = isViewable ? `
+    <div class="super-evidence-card__action">
+      <span>${actionText}</span>
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M5 12h14M12 5l7 7-7 7"/>
+      </svg>
+    </div>
+  ` : '';
+
+  // Don't repeat rationale if it's already the display text
+  const showRationale = ev.rationale && quote;
+
+  return `
+    <div class="super-evidence-card ${clickableClass}" ${dataAttrs} data-ev-idx="${evIdx}">
+      <div class="super-evidence-card__header">
+        <span class="super-evidence-card__type ${typeClass}">${typeLabel}</span>
+      </div>
+      <div class="super-evidence-card__quote">${displayText}</div>
+      ${showRationale ? `<div class="super-evidence-card__rationale">${ev.rationale}</div>` : ''}
+      ${actionHTML}
+    </div>
+  `;
+}
+
 function renderEvidence(evidence) {
   if (!evidence || evidence.length === 0) {
     return '';
   }
 
-  const cards = evidence.map(ev => {
-    // Handle multiple evidence formats:
-    // - Section I documents: quoteText, displayName, rationale
-    // - Section I orders: orderDescription, displayName
-    // - Other sections: quote, sourceType
-    const quote = ev.quoteText || ev.orderDescription || ev.quote || '';
-    const sourceType = ev.sourceType || inferSourceType(ev.displayName, ev.evidenceId);
-    const typeClass = `super-evidence-card__type--${sourceType}`;
-    const typeLabel = ev.displayName || formatSourceType(sourceType);
-
-    // Skip if no quote text at all
-    if (!quote) return '';
-
-    // Check if this is an order evidence that can show administrations
-    const isOrder = sourceType === 'order';
-    const orderId = ev.sourceId || ev.evidenceId || '';
-
-    // Check if this evidence has a viewable type (clinical note, therapy doc, PDF)
-    const { viewerType, id: viewerId } = typeof parseEvidenceForViewer === 'function'
-      ? parseEvidenceForViewer(ev)
-      : { viewerType: null, id: null };
-
-    const isViewable = isOrder || viewerType;
-    const clickableClass = isViewable ? 'super-evidence-card--clickable' : '';
-
-    // Data attributes for click handling
-    let dataAttrs = '';
-    if (isOrder) {
-      dataAttrs = `data-order-id="${orderId}"`;
-    } else if (viewerType) {
-      dataAttrs = `data-viewer-type="${viewerType}" data-viewer-id="${viewerId}"`;
-      // Add quote text for highlighting in therapy documents
-      if (quote) {
-        const escapedQuote = quote.replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-        dataAttrs += ` data-quote="${escapedQuote}"`;
-      }
-      // Add wordBlocks data if available (for PDF documents)
-      if (ev.wordBlocks && Array.isArray(ev.wordBlocks) && ev.wordBlocks.length > 0) {
-        const wordBlocksJson = JSON.stringify(ev.wordBlocks).replace(/"/g, '&quot;');
-        dataAttrs += ` data-word-blocks="${wordBlocksJson}"`;
-      }
-    }
-
-    // Action text based on type
-    let actionText = '';
-    if (isOrder) actionText = 'View Administrations';
-    else if (viewerType === 'therapy-document') actionText = 'View Document';
-    else if (viewerType === 'clinical-note') actionText = 'View Note';
-    else if (viewerType === 'document') actionText = 'View PDF';
-
-    const actionHTML = isViewable ? `
-      <div class="super-evidence-card__action">
-        <span>${actionText}</span>
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M5 12h14M12 5l7 7-7 7"/>
-        </svg>
-      </div>
-    ` : '';
-
-    return `
-      <div class="super-evidence-card ${clickableClass}" ${dataAttrs}>
-        <div class="super-evidence-card__header">
-          <span class="super-evidence-card__type ${typeClass}">${typeLabel}</span>
-        </div>
-        <div class="super-evidence-card__quote">${quote}</div>
-        ${ev.rationale ? `<div class="super-evidence-card__rationale">${ev.rationale}</div>` : ''}
-        ${actionHTML}
-      </div>
-    `;
-  }).filter(card => card).join('');
+  const cards = evidence.map((ev, evIdx) => renderEvidenceCard(ev, evIdx)).filter(c => c).join('');
 
   if (!cards) return '';
 
@@ -744,11 +852,24 @@ function renderEvidence(evidence) {
   `;
 }
 
+function renderEvidencePlaceholder(count) {
+  if (!count) return '';
+  return `
+    <div class="super-evidence-section" data-evidence-section>
+      <div class="super-evidence-section__label">Evidence (${count})</div>
+      <div class="super-evidence-list" data-evidence-container>
+        <div class="super-evidence-loading"><div class="super-viewer-loading__spinner"></div><span>Loading evidence...</span></div>
+      </div>
+    </div>
+  `;
+}
+
 // Helper: Infer source type from filename/evidenceId for Section I evidence
 function inferSourceType(displayName, evidenceId) {
-  // Check evidenceId first (e.g., "order-jc9js716uh70")
+  // Check evidenceId first (e.g., "order-jc9js716uh70", "admin-zm8ur6f0uhs7")
   if (evidenceId) {
     if (evidenceId.startsWith('order-')) return 'order';
+    if (evidenceId.startsWith('admin-')) return 'order';
     if (evidenceId.startsWith('mar-')) return 'mar';
     if (evidenceId.startsWith('lab-')) return 'lab-result';
   }
@@ -1003,12 +1124,44 @@ function setupPopoverListeners(popover, result) {
   if (queryBtn) {
     queryBtn.addEventListener('click', () => {
       closePopover();
-      showQueryModal(result);
+      window.QuerySendModal?.show(result);
     });
   }
 
   // Order evidence click handlers for viewing administrations
   setupAdministrationViewers(popover);
+
+  // Auto-load evidence when popover opens
+  const evidenceContainer = popover.querySelector('[data-evidence-container]');
+  if (evidenceContainer) {
+    const totalCount = (result.aiAnswer.evidenceCount || 0) + (result.aiAnswer.queryEvidenceCount || 0);
+    if (totalCount > 0) {
+      fetchItemEvidence(SuperOverlay.section, result.mdsItem).then(data => {
+        const allEvidence = [...(data.evidence || []), ...(data.queryEvidence || [])];
+        popover._evidence = allEvidence;
+
+        // Backfill onto aiAnswer for query modal
+        result.aiAnswer.evidence = data.evidence || [];
+        result.aiAnswer.queryEvidence = data.queryEvidence || [];
+        if (data.validation) result.aiAnswer.validation = data.validation;
+
+        // Render cards
+        const cards = allEvidence.map((ev, i) => renderEvidenceCard(ev, i)).filter(c => c).join('');
+        evidenceContainer.innerHTML = cards || '<div class="super-evidence-empty">No evidence available</div>';
+
+        // Update evidence count label
+        const label = popover.querySelector('.super-evidence-section__label');
+        if (label) label.textContent = `Evidence (${allEvidence.length})`;
+
+        // Re-attach viewers + prefetch PDFs
+        setupAdministrationViewers(popover);
+        prefetchDocuments(popover);
+      }).catch(err => {
+        console.error('[Super LTC] Failed to load evidence:', err);
+        evidenceContainer.innerHTML = '<div class="super-evidence-error">Failed to load evidence</div>';
+      });
+    }
+  }
 }
 
 function setupAdministrationViewers(popover) {
@@ -1017,39 +1170,30 @@ function setupAdministrationViewers(popover) {
     card.addEventListener('click', async (e) => {
       e.stopPropagation();
 
-      // Check for order first (existing functionality)
+      // Determine viewer type and ID
       const orderId = card.dataset.orderId;
-      if (orderId) {
-        await showAdministrationModal(orderId);
-        return;
-      }
-
-      // Check for other viewer types (from evidence-viewers.js)
       const viewerType = card.dataset.viewerType;
       const viewerId = card.dataset.viewerId;
+      const evIdx = card.dataset.evIdx != null ? parseInt(card.dataset.evIdx, 10) : -1;
 
-      if (viewerType && viewerId) {
-        // Extract wordBlocks if available (for PDF documents)
-        let wordBlocks = null;
+      let splitType = null;
+      let splitId = null;
+      let extra = { _idx: evIdx };
+
+      if (orderId) {
+        splitType = 'order';
+        splitId = orderId;
+      } else if (viewerType && viewerId) {
+        splitType = viewerType;
+        splitId = viewerId;
         if (card.dataset.wordBlocks) {
-          try {
-            wordBlocks = JSON.parse(card.dataset.wordBlocks);
-          } catch (err) {
-            console.error('Super LTC: Failed to parse wordBlocks:', err);
-          }
+          try { extra.wordBlocks = JSON.parse(card.dataset.wordBlocks); } catch {}
         }
+        if (card.dataset.quote) extra.quote = card.dataset.quote;
+      }
 
-        if (viewerType === 'therapy-document' && typeof showTherapyDocModal === 'function') {
-          // Pass quote text for highlighting in the therapy document
-          const highlightQuote = card.dataset.quote || null;
-          await showTherapyDocModal(viewerId, highlightQuote);
-        } else if (viewerType === 'clinical-note' && typeof showClinicalNoteModal === 'function') {
-          await showClinicalNoteModal(viewerId);
-        } else if (viewerType === 'document' && typeof showDocumentModal === 'function') {
-          await showDocumentModal(viewerId, wordBlocks);
-        } else {
-          console.error('Super LTC: Unknown viewer type or function not available:', viewerType);
-        }
+      if (splitType && splitId) {
+        enterSplitView(popover, splitType, splitId, extra);
         return;
       }
 
@@ -1071,8 +1215,468 @@ function setupAdministrationViewers(popover) {
   });
 }
 
+// ============================================
+// Split-View: Inline Evidence Viewer
+// ============================================
+
+/**
+ * Prefetch all viewable evidence sources.
+ * PDF documents are prefetched eagerly; other types are fetched on demand.
+ */
+async function prefetchDocuments(popover) {
+  const evidence = popover._evidence || [];
+  const cache = popover._docCache;
+  if (!evidence.length) return;
+
+  let params;
+  try {
+    params = await window.getCurrentParams();
+  } catch { return; }
+
+  for (const ev of evidence) {
+    const parsed = typeof parseEvidenceForViewer === 'function' ? parseEvidenceForViewer(ev) : { viewerType: null, id: null };
+    if (parsed.viewerType !== 'document' || !parsed.id || cache.has(parsed.id)) continue;
+
+    const cacheKey = `document:${parsed.id}`;
+    const promise = fetchDocument(parsed.id, params)
+      .then(result => {
+        const entry = cache.get(cacheKey);
+        if (entry) entry.data = result.document;
+        return result.document;
+      })
+      .catch(err => {
+        console.warn('[SuperOverlay] Prefetch failed for', parsed.id, err);
+        return null;
+      });
+
+    cache.set(cacheKey, { data: null, promise });
+  }
+}
+
+/**
+ * Collect all viewable evidence items (documents, notes, therapy docs, orders).
+ */
+function getViewableEvidence(popover) {
+  const evidence = popover._evidence || [];
+  return evidence.filter(ev => {
+    const sourceType = ev.sourceType || '';
+    const orderId = ev.sourceId || ev.evidenceId || '';
+    const isOrder = sourceType === 'order' || orderId.startsWith('order-');
+    if (isOrder) return true;
+
+    const parsed = typeof parseEvidenceForViewer === 'function' ? parseEvidenceForViewer(ev) : { viewerType: null };
+    return parsed.viewerType !== null;
+  }).map(ev => {
+    // Annotate each evidence item with its resolved viewer info
+    const sourceType = ev.sourceType || '';
+    const orderId = ev.sourceId || ev.evidenceId || '';
+    const isOrder = sourceType === 'order' || orderId.startsWith('order-');
+
+    if (isOrder) {
+      return { ...ev, _viewerType: 'order', _viewerId: orderId.replace(/^order-/, '') };
+    }
+    const parsed = typeof parseEvidenceForViewer === 'function' ? parseEvidenceForViewer(ev) : { viewerType: null, id: null };
+    return { ...ev, _viewerType: parsed.viewerType, _viewerId: parsed.id };
+  });
+}
+
+/** Get a short action label for the viewer type */
+function getViewerLabel(viewerType) {
+  switch (viewerType) {
+    case 'document': return 'PDF';
+    case 'clinical-note': return 'Note';
+    case 'therapy-document': return 'Therapy';
+    case 'order': return 'Orders';
+    default: return 'Source';
+  }
+}
+
+/**
+ * Transform the popover into split-view mode showing evidence inline.
+ * Supports: document (PDF), clinical-note, therapy-document, order.
+ */
+async function enterSplitView(popover, viewerType, viewerId, extra = {}) {
+  // Save original body & actions for "back"
+  if (!popover._savedBody) {
+    popover._savedBody = popover.querySelector('.super-popover-body')?.innerHTML;
+    popover._savedActions = popover.querySelector('.super-popover-actions')?.innerHTML;
+  }
+
+  // Add split class (widens the popover)
+  popover.classList.add('super-popover--split');
+
+  // Store active source index for highlighting (each evidence is distinct)
+  const activeIdx = extra._idx != null ? extra._idx : -1;
+  popover._activeSourceIdx = activeIdx;
+
+  // Build split layout
+  const body = popover.querySelector('.super-popover-body');
+  body.className = 'super-popover-body super-popover-body--split';
+  body.style.maxHeight = 'none';
+
+  const viewableEvidence = getViewableEvidence(popover);
+
+  // Build source sidebar cards — each evidence item is distinct (even same doc)
+  const sourceCards = viewableEvidence.map((ev, idx) => {
+    const isActive = idx === activeIdx;
+    const displayName = ev.displayName || formatSourceType(ev.sourceType || inferSourceType(ev.displayName, ev.evidenceId));
+    const snippet = ev.quoteText || ev.orderDescription || ev.quote || '';
+    const truncated = snippet.length > 80 ? snippet.slice(0, 80) + '...' : snippet;
+    const page = ev.wordBlocks?.[0]?.p;
+    const typeLabel = getViewerLabel(ev._viewerType);
+
+    let extraAttrs = '';
+    if (ev.wordBlocks && Array.isArray(ev.wordBlocks) && ev.wordBlocks.length > 0) {
+      extraAttrs += ` data-word-blocks="${JSON.stringify(ev.wordBlocks).replace(/"/g, '&quot;')}"`;
+    }
+    if (ev.quoteText || ev.quote) {
+      const q = (ev.quoteText || ev.quote || '').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      extraAttrs += ` data-quote="${q}"`;
+    }
+
+    return `
+      <div class="super-split__source-card${isActive ? ' super-split__source-card--active' : ''}"
+           data-idx="${idx}" data-viewer-type="${ev._viewerType}" data-viewer-id="${ev._viewerId}"${extraAttrs} role="button">
+        <div class="super-split__source-badge-row">
+          <span class="super-split__source-type">${escapeHTML(typeLabel)}</span>
+          <span class="super-split__source-badge">${escapeHTML(displayName)}</span>
+        </div>
+        ${truncated ? `<div class="super-split__source-snippet">${escapeHTML(truncated)}</div>` : ''}
+        ${page ? `<div class="super-split__source-page">Page ${page}</div>` : ''}
+      </div>
+    `;
+  }).join('');
+
+  body.innerHTML = `
+    <div class="super-split__sidebar">
+      <div class="super-split__sidebar-label">Sources (${viewableEvidence.length})</div>
+      ${sourceCards}
+    </div>
+    <div class="super-split__viewer" id="super-split-viewer">
+      <div class="super-split__viewer-loading">
+        <div class="super-viewer-loading__spinner"></div>
+        <span>Loading...</span>
+      </div>
+    </div>
+  `;
+
+  // Add back button to header
+  const header = popover.querySelector('.super-popover-header');
+  if (header && !header.querySelector('.super-split__back-btn')) {
+    const backBtn = document.createElement('button');
+    backBtn.className = 'super-split__back-btn';
+    backBtn.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg> Back`;
+    backBtn.addEventListener('click', () => exitSplitView(popover));
+    header.insertBefore(backBtn, header.firstChild);
+  }
+
+  // Source card click handlers — switch active source by index
+  body.querySelectorAll('.super-split__source-card').forEach(card => {
+    card.addEventListener('click', () => {
+      const idx = parseInt(card.dataset.idx, 10);
+      if (isNaN(idx) || idx === popover._activeSourceIdx) return;
+
+      const type = card.dataset.viewerType;
+      const id = card.dataset.viewerId;
+      const cardExtra = { _idx: idx };
+      if (card.dataset.wordBlocks) {
+        try { cardExtra.wordBlocks = JSON.parse(card.dataset.wordBlocks); } catch {}
+      }
+      if (card.dataset.quote) cardExtra.quote = card.dataset.quote;
+      enterSplitView(popover, type, id, cardExtra);
+    });
+  });
+
+  // Reposition popover to center at wider size
+  const popW = Math.min(960, window.innerWidth - 32);
+  const popH = Math.min(window.innerHeight - 32, 700);
+  popover.style.left = `${Math.max(16, (window.innerWidth - popW) / 2)}px`;
+  popover.style.top = `${Math.max(16, (window.innerHeight - popH) / 2)}px`;
+  popover.style.width = `${popW}px`;
+  popover.style.height = `${popH}px`;
+
+  // Render the appropriate viewer content
+  const viewerEl = body.querySelector('#super-split-viewer');
+  await renderSplitContent(popover, viewerEl, viewerType, viewerId, extra);
+}
+
+/**
+ * Render the right-pane content based on viewer type.
+ */
+async function renderSplitContent(popover, viewerEl, viewerType, viewerId, extra) {
+  viewerEl.innerHTML = `<div class="super-split__viewer-loading"><div class="super-viewer-loading__spinner"></div><span>Loading...</span></div>`;
+
+  try {
+    if (viewerType === 'document') {
+      await renderSplitPDF(popover, viewerEl, viewerId, extra.wordBlocks);
+    } else if (viewerType === 'clinical-note') {
+      await renderSplitNote(viewerEl, viewerId);
+    } else if (viewerType === 'therapy-document') {
+      await renderSplitTherapy(viewerEl, viewerId, extra.quote);
+    } else if (viewerType === 'order') {
+      await renderSplitAdministrations(viewerEl, viewerId);
+    } else {
+      viewerEl.innerHTML = `<div class="super-split__viewer-loading"><span>Unknown source type</span></div>`;
+    }
+  } catch (err) {
+    console.error('[SuperOverlay] Split view load failed:', err);
+    viewerEl.innerHTML = `<div class="super-split__viewer-loading"><span>Failed to load: ${escapeHTML(err.message)}</span></div>`;
+  }
+}
+
+/** Render PDF document in split viewer using Preact PDFViewer */
+async function renderSplitPDF(popover, viewerEl, documentId, wordBlocks) {
+  const cache = popover._docCache;
+  const cacheKey = `document:${documentId}`;
+  let doc;
+
+  const cached = cache.get(cacheKey);
+  if (cached?.data) {
+    doc = cached.data;
+  } else if (cached?.promise) {
+    doc = await cached.promise;
+  } else {
+    const params = await window.getCurrentParams();
+    const result = await fetchDocument(documentId, params);
+    doc = result.document;
+    cache.set(cacheKey, { data: doc, promise: Promise.resolve(doc) });
+  }
+
+  if (!doc) throw new Error('Document not found');
+
+  const targetPage = wordBlocks?.[0]?.p || 1;
+  viewerEl.innerHTML = '';
+  render(
+    h(PDFViewer, {
+      url: doc.signedUrl || null,
+      wordBlocks: wordBlocks || [],
+      targetPage,
+      title: doc.title || 'Document',
+      documentType: doc.documentType,
+      effectiveDate: doc.effectiveDate,
+      fileSize: doc.fileSize,
+      expiresAt: true,
+      openInNewTabUrl: doc.signedUrl || null,
+    }),
+    viewerEl
+  );
+}
+
+/** Render clinical note inline in split viewer */
+async function renderSplitNote(viewerEl, noteId) {
+  const params = await window.getCurrentParams();
+  const data = await fetchClinicalNote(noteId, params);
+  const note = data.note;
+
+  const noteTypeLabel = note.noteType === 'practitioner' ? 'Practitioner Note' : 'Progress Note';
+  viewerEl.innerHTML = `
+    <div class="super-split__content">
+      <div class="super-split__content-header">
+        <h3 class="super-split__content-title">${escapeHTML(note.department || noteTypeLabel)}</h3>
+        <span class="super-split__content-badge">${noteTypeLabel}</span>
+      </div>
+      ${note.provider ? `<div class="super-split__content-meta">${escapeHTML(note.provider)}</div>` : ''}
+      <div class="super-split__content-meta">
+        ${note.effectiveDate ? formatDateDisplay(note.effectiveDate) : ''}
+        ${note.visitType ? ` &middot; ${escapeHTML(note.visitType)}` : ''}
+      </div>
+      <div class="super-split__content-body">
+        <pre class="super-split__note-text">${escapeHTML(note.noteText || 'No note content available.')}</pre>
+      </div>
+      ${note.signedDate ? `<div class="super-split__content-footer">Signed: ${formatDateTimeDisplay(note.signedDate)}</div>` : ''}
+    </div>
+  `;
+}
+
+/** Render therapy document inline in split viewer */
+async function renderSplitTherapy(viewerEl, therapyDocId, highlightQuote) {
+  const params = await window.getCurrentParams();
+  const data = await fetchTherapyDocument(therapyDocId, params);
+  const doc = data.therapyDocument;
+
+  const title = doc.title || `${doc.therapyType || ''} ${doc.documentType || 'Document'}`.trim();
+  let bodyHTML = '';
+
+  // Build structured content from therapy doc fields
+  if (doc.patientInfo) {
+    bodyHTML += `<div class="super-split__therapy-section"><strong>Patient:</strong> ${escapeHTML(doc.patientInfo.name || '')}</div>`;
+  }
+  if (doc.treatmentDiagnosis) {
+    bodyHTML += `<div class="super-split__therapy-section"><strong>Treatment Diagnosis:</strong> ${escapeHTML(doc.treatmentDiagnosis)}</div>`;
+  }
+  if (doc.goals && doc.goals.length > 0) {
+    bodyHTML += `<div class="super-split__therapy-section"><strong>Goals:</strong><ul>${doc.goals.map(g => `<li>${escapeHTML(typeof g === 'string' ? g : g.description || JSON.stringify(g))}</li>`).join('')}</ul></div>`;
+  }
+  if (doc.content || doc.rawContent) {
+    const text = doc.content || (typeof doc.rawContent === 'string' ? doc.rawContent : JSON.stringify(doc.rawContent, null, 2));
+    bodyHTML += `<pre class="super-split__note-text">${escapeHTML(text)}</pre>`;
+  }
+  if (!bodyHTML) {
+    bodyHTML = `<pre class="super-split__note-text">${escapeHTML(JSON.stringify(doc, null, 2))}</pre>`;
+  }
+
+  viewerEl.innerHTML = `
+    <div class="super-split__content">
+      <div class="super-split__content-header">
+        <h3 class="super-split__content-title">${escapeHTML(title)}</h3>
+        ${doc.documentType ? `<span class="super-split__content-badge">${escapeHTML(doc.documentType)}</span>` : ''}
+      </div>
+      ${doc.therapyType ? `<div class="super-split__content-meta">${escapeHTML(doc.therapyType)}</div>` : ''}
+      ${doc.effectiveDate ? `<div class="super-split__content-meta">${formatDateDisplay(doc.effectiveDate)}</div>` : ''}
+      <div class="super-split__content-body">${bodyHTML}</div>
+    </div>
+  `;
+
+  // Highlight quoted text if provided
+  if (highlightQuote && highlightQuote.length > 10) {
+    const textEl = viewerEl.querySelector('.super-split__note-text');
+    if (textEl) {
+      const html = textEl.innerHTML;
+      const escaped = escapeHTML(highlightQuote);
+      const idx = html.indexOf(escaped);
+      if (idx !== -1) {
+        textEl.innerHTML = html.slice(0, idx) +
+          `<mark class="super-split__highlight">${escaped}</mark>` +
+          html.slice(idx + escaped.length);
+        textEl.querySelector('.super-split__highlight')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }
+  }
+}
+
+/** Render administration (MAR/TAR) records inline in split viewer */
+async function renderSplitAdministrations(viewerEl, orderId, customDateRange) {
+  const params = await getAPIParams();
+  const data = await fetchAdministrations(orderId, params, customDateRange || {});
+  const { order, dateRange, adminRecords } = data;
+
+  const firstRecord = adminRecords?.[0];
+  const reportType = firstRecord?.type === 'treatment' ? 'tar' : 'mar';
+  const isMar = reportType === 'mar' || order.category === 'Medication';
+  const typeIcon = isMar ? '💊' : '⚡';
+  const typeBadge = isMar ? 'MAR' : 'TAR';
+  const typeBadgeClass = isMar ? 'super-admin-badge--mar' : 'super-admin-badge--tar';
+  const gridData = buildAdminGridData(adminRecords || []);
+  const eventCount = countEvents(gridData);
+  const formattedDateRange = formatDateRangeDisplay(dateRange.startDate, dateRange.endDate);
+
+  viewerEl.innerHTML = `
+    <div class="super-split__admin">
+      <div class="super-admin-modal__header">
+        <div class="super-admin-modal__title-row">
+          <span class="super-admin-modal__icon">${typeIcon}</span>
+          <div class="super-admin-modal__title">
+            <span class="super-admin-modal__order-name">${escapeHTML(order.name || 'Order')}</span>
+            <span class="super-admin-badge ${typeBadgeClass}">${typeBadge}</span>
+          </div>
+        </div>
+        ${order.directions ? `<div class="super-admin-modal__directions">${escapeHTML(order.directions)}</div>` : ''}
+        <div class="super-admin-modal__meta">
+          ${gridData.times.length} time slot${gridData.times.length !== 1 ? 's' : ''}
+          ${order.startDate || order.endDate ? `<span class="super-admin-modal__dates">
+            ${order.startDate ? `Start: ${formatOrderDate(order.startDate)}` : ''}
+            ${order.startDate && order.endDate ? ' · ' : ''}
+            ${order.endDate ? `Stop: ${formatOrderDate(order.endDate)}` : ''}
+          </span>` : ''}
+        </div>
+      </div>
+      <div class="super-admin-modal__date-bar">
+        <button class="super-admin-modal__nav-btn" data-dir="prev" title="Previous week">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+        <span class="super-admin-modal__date-range">📅 ${formattedDateRange}</span>
+        <button class="super-admin-modal__nav-btn" data-dir="next" title="Next week">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+        </button>
+      </div>
+      <div class="super-admin-modal__body">
+        ${adminRecords && adminRecords.length > 0
+          ? renderAdminGrid(gridData)
+          : '<div class="super-admin-empty">No events found in this date range</div>'
+        }
+      </div>
+      <div class="super-admin-modal__footer">
+        <span class="super-admin-modal__event-count">${eventCount} event${eventCount !== 1 ? 's' : ''}</span>
+        <div class="super-admin-legend">
+          <span class="super-admin-legend__item super-admin-legend__item--given">✓ Given</span>
+          <span class="super-admin-legend__item super-admin-legend__item--refused">2 Refused</span>
+          <span class="super-admin-legend__item super-admin-legend__item--loa">3 LOA</span>
+          <span class="super-admin-legend__item super-admin-legend__item--hold">5 Hold</span>
+        </div>
+      </div>
+    </div>
+  `;
+
+  // Wire up date navigation — pass the shifted range to avoid re-fetching defaults
+  viewerEl.querySelectorAll('.super-admin-modal__nav-btn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const dir = btn.dataset.dir;
+      const newRange = shiftDateRange(dateRange, dir === 'next' ? 7 : -7);
+      viewerEl.innerHTML = `<div class="super-split__viewer-loading"><div class="super-split__spinner"></div><span>Loading...</span></div>`;
+      try {
+        await renderSplitAdministrations(viewerEl, orderId, newRange);
+      } catch (err) {
+        viewerEl.innerHTML = `<div class="super-split__viewer-loading"><span>Failed to load: ${escapeHTML(err.message)}</span></div>`;
+      }
+    });
+  });
+}
+
+/**
+ * Return popover from split-view to summary mode.
+ */
+function exitSplitView(popover) {
+  popover.classList.remove('super-popover--split');
+  popover._activeSourceIdx = null;
+
+  // Unmount Preact PDFViewer if present
+  const viewerEl = popover.querySelector('#super-split-viewer');
+  if (viewerEl) render(null, viewerEl);
+
+  // Restore body
+  const body = popover.querySelector('.super-popover-body');
+  body.className = 'super-popover-body';
+  body.style.maxHeight = '';
+  if (popover._savedBody) body.innerHTML = popover._savedBody;
+
+  // Re-render loaded evidence into the restored body
+  if (popover._evidence && popover._evidence.length > 0) {
+    const container = body.querySelector('[data-evidence-container]');
+    if (container) {
+      container.innerHTML = popover._evidence.map((ev, i) => renderEvidenceCard(ev, i)).filter(c => c).join('');
+    }
+  }
+
+  // Restore actions
+  const actions = popover.querySelector('.super-popover-actions');
+  if (actions && popover._savedActions) actions.innerHTML = popover._savedActions;
+
+  // Remove back button
+  const backBtn = popover.querySelector('.super-split__back-btn');
+  if (backBtn) backBtn.remove();
+
+  // Reset size & reposition
+  popover.style.width = '';
+  popover.style.height = '';
+  if (popover._anchorEl) {
+    positionPopover(popover, popover._anchorEl);
+  } else {
+    popover.style.left = `${Math.max(16, (window.innerWidth - 380) / 2)}px`;
+    popover.style.top = `${Math.max(16, (window.innerHeight - 500) / 2)}px`;
+  }
+
+  // Re-attach evidence card click listeners
+  setupAdministrationViewers(popover);
+}
+
 function closePopover() {
-  document.querySelector('.super-popover')?.remove();
+  const popover = document.querySelector('.super-popover');
+  // Unmount any Preact PDFViewer before removing
+  if (popover) {
+    const viewerEl = popover.querySelector('#super-split-viewer');
+    if (viewerEl) render(null, viewerEl);
+  }
+  popover?.remove();
   document.querySelector('.super-backdrop')?.remove();
 }
 
@@ -1173,7 +1777,14 @@ function buildAdminModalHTML(order, dateRange, adminRecords, reportType) {
         <button class="super-admin-modal__close">&times;</button>
       </div>
       ${order.directions ? `<div class="super-admin-modal__directions">${escapeHTML(order.directions)}</div>` : ''}
-      <div class="super-admin-modal__meta">${gridData.times.length} time slot${gridData.times.length !== 1 ? 's' : ''}</div>
+      <div class="super-admin-modal__meta">
+        ${gridData.times.length} time slot${gridData.times.length !== 1 ? 's' : ''}
+        ${order.startDate || order.endDate ? `<span class="super-admin-modal__dates">
+          ${order.startDate ? `Start: ${formatOrderDate(order.startDate)}` : ''}
+          ${order.startDate && order.endDate ? ' · ' : ''}
+          ${order.endDate ? `Stop: ${formatOrderDate(order.endDate)}` : ''}
+        </span>` : ''}
+      </div>
     </div>
 
     <div class="super-admin-modal__date-bar">
@@ -1335,14 +1946,10 @@ function renderGridCell(cell) {
   let cellClass = 'super-admin-grid__cell';
   let content = '';
 
-  // Chart codes have special display
-  if (chartCode) {
-    cellClass += ` super-admin-grid__cell--code-${chartCode}`;
-    content = `<span class="super-admin-grid__code">${chartCode}</span>`;
-    if (staffInitials) {
-      content += `<span class="super-admin-grid__initials">${escapeHTML(staffInitials)}</span>`;
-    }
-  } else if (status === 'given' || status === 'measured') {
+  // Chart code "0" means "given" — treat it like given status
+  const isGiven = status === 'given' || status === 'measured' || chartCode === '0' || chartCode === 0;
+
+  if (isGiven) {
     cellClass += ' super-admin-grid__cell--given';
     content = '<span class="super-admin-grid__check">✓</span>';
     if (staffInitials) {
@@ -1350,6 +1957,13 @@ function renderGridCell(cell) {
     }
     if (value) {
       content += `<span class="super-admin-grid__value">${escapeHTML(value)}</span>`;
+    }
+  } else if (chartCode) {
+    // Other non-zero chart codes get special display
+    cellClass += ` super-admin-grid__cell--code-${chartCode}`;
+    content = `<span class="super-admin-grid__code">${chartCode}</span>`;
+    if (staffInitials) {
+      content += `<span class="super-admin-grid__initials">${escapeHTML(staffInitials)}</span>`;
     }
   } else {
     cellClass += ' super-admin-grid__cell--empty';
@@ -1368,6 +1982,11 @@ function escapeHTML(str) {
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#039;');
+}
+
+function formatOrderDate(dateStr) {
+  const date = parseDate(dateStr);
+  return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 }
 
 function formatDateRangeDisplay(startDate, endDate) {
@@ -1776,9 +2395,15 @@ function renderQueryModalContent(modal, result, context, practitioners) {
     `<li class="super-query-finding">${escapeHTML(f)}</li>`
   ).join('') || '<li class="super-query-finding--empty">No key findings provided</li>';
 
-  // Build evidence accordion HTML
-  const evidenceData = ai.queryEvidence?.length > 0 ? ai.queryEvidence : ai.evidence || [];
-  const evidenceHTML = buildQueryEvidenceHTML(evidenceData);
+  // Build evidence accordion HTML — evidence may already be loaded (backfilled by popover)
+  const alreadyLoaded = Array.isArray(ai.evidence) && ai.evidence.length > 0;
+  const evidenceData = alreadyLoaded
+    ? (ai.queryEvidence?.length > 0 ? ai.queryEvidence : ai.evidence)
+    : [];
+  const totalCount = alreadyLoaded ? evidenceData.length : ((ai.evidenceCount || 0) + (ai.queryEvidenceCount || 0));
+  const evidenceHTML = alreadyLoaded
+    ? buildQueryEvidenceHTML(evidenceData)
+    : (totalCount > 0 ? '<div class="super-evidence-loading"><div class="super-viewer-loading__spinner"></div><span>Loading evidence...</span></div>' : '<div class="super-query-evidence-empty">No evidence available</div>');
 
   // Build practitioners dropdown HTML
   const practitionerOptionsHTML = practitioners.map(p => {
@@ -1843,7 +2468,7 @@ function renderQueryModalContent(modal, result, context, practitioners) {
       <div class="super-query-section">
         <details class="super-query-evidence-accordion">
           <summary class="super-query-evidence-toggle">
-            Evidence Preview (${evidenceData.length})
+            Evidence Preview (${totalCount})
           </summary>
           <div class="super-query-evidence-content">${evidenceHTML}</div>
         </details>
@@ -1866,6 +2491,26 @@ function renderQueryModalContent(modal, result, context, practitioners) {
   `;
 
   setupQueryModalListeners(modal, result, context);
+
+  // Lazy-load evidence if not already loaded
+  if (!alreadyLoaded && totalCount > 0) {
+    fetchItemEvidence(SuperOverlay.section, result.mdsItem).then(data => {
+      result.aiAnswer.evidence = data.evidence || [];
+      result.aiAnswer.queryEvidence = data.queryEvidence || [];
+      const evidenceContainer = modal.querySelector('.super-query-evidence-content');
+      if (evidenceContainer) {
+        const merged = (data.queryEvidence?.length > 0 ? data.queryEvidence : data.evidence) || [];
+        evidenceContainer.innerHTML = buildQueryEvidenceHTML(merged);
+        // Update count in accordion summary
+        const toggle = modal.querySelector('.super-query-evidence-toggle');
+        if (toggle) toggle.textContent = `Evidence Preview (${merged.length})`;
+      }
+    }).catch(err => {
+      console.error('[Super LTC] Failed to load evidence for query modal:', err);
+      const evidenceContainer = modal.querySelector('.super-query-evidence-content');
+      if (evidenceContainer) evidenceContainer.innerHTML = '<div class="super-query-evidence-empty">Failed to load evidence</div>';
+    });
+  }
 
   // Fetch AI-generated note asynchronously
   fetchAndPopulateNote(modal, result);
@@ -1969,6 +2614,13 @@ function setupQueryModalListeners(modal, result, context) {
 
     if (!practitionerId) {
       alert('Please select a practitioner');
+      return;
+    }
+
+    // Guard: evidence may still be loading
+    const ai_ = result.aiAnswer;
+    if (!Array.isArray(ai_.evidence) && !Array.isArray(ai_.queryEvidence)) {
+      alert('Evidence is still loading. Please wait a moment.');
       return;
     }
 
@@ -2200,27 +2852,222 @@ function navigateToItem(elementId) {
 // ============================================
 // Action Handlers
 // ============================================
-function handleAction(action, result) {
+
+/**
+ * POST a user decision (agree/disagree) for an MDS item to the API.
+ */
+async function postItemDecision(result, decision, note) {
+  const mdsColumn = result.column || '';
+  const body = {
+    externalAssessmentId: SuperOverlay.assessmentId,
+    facilityName: SuperOverlay.facilityName,
+    orgSlug: SuperOverlay.orgSlug,
+    decision,
+    note: note || '',
+    mdsColumn,
+  };
+  const response = await chrome.runtime.sendMessage({
+    type: 'API_REQUEST',
+    endpoint: `/api/extension/mds/items/${encodeURIComponent(result.mdsItem)}/decision`,
+    options: { method: 'POST', body: JSON.stringify(body) },
+  });
+  if (!response.success) throw new Error(response.error || 'Failed to save decision');
+  return response.data;
+}
+
+async function handleAction(action, result) {
   const key = `${result.mdsItem}-${result.column}`;
 
-  if (action === 'agree' || action === 'disagree') {
-    // Mark as dismissed
+  if (action === 'agree') {
+    const popover = document.querySelector('.super-popover');
+    const btns = popover ? popover.querySelectorAll('.super-popover-actions .super-btn') : [];
+    const agreeBtn = popover?.querySelector('[data-action="agree"]');
+
+    // Disable buttons, show spinner on agree
+    btns.forEach(b => b.disabled = true);
+    if (agreeBtn) agreeBtn.innerHTML = '<span class="super-btn__spinner"></span> Agree';
+
+    try {
+      await postItemDecision(result, 'agree', '');
+
+      // Click the PCC response that matches the solver's answer
+      selectPCCAnswer(result);
+
+      // Mark as dismissed
+      SuperOverlay.dismissedItems.add(key);
+      saveDismissedItems();
+      result.status = 'dismissed';
+      result.userDecision = { decision: 'agree' };
+      injectBadge(result.element, result);
+      createSummaryPanel();
+      closePopover();
+
+      // Notify PDPM Analyzer to re-fetch
+      window.dispatchEvent(new CustomEvent('super:item-decision', {
+        detail: { mdsItem: result.mdsItem, column: result.column, decision: 'agree' }
+      }));
+
+      console.log(`Super LTC: User agreed with ${result.mdsItem} Column ${result.column}, selected solver answer`);
+    } catch (err) {
+      console.error('Super LTC: Failed to save agree decision:', err);
+      showPopoverError(popover, err.message || 'Failed to save decision');
+      btns.forEach(b => b.disabled = false);
+      if (agreeBtn) agreeBtn.innerHTML = '&#10003; Agree';
+    }
+  } else if (action === 'disagree') {
+    showDisagreeForm(result);
+  }
+}
+
+/**
+ * Click the PCC page response link that matches the solver's answer.
+ * PCC uses toggleSelection(anchor, jqSelector, value) on click,
+ * so just clicking the right <a> triggers their handler.
+ */
+function selectPCCAnswer(result) {
+  const solverAnswer = normalizeAnswer(result.aiAnswer?.answer);
+  if (!solverAnswer) {
+    console.log('Super LTC: No solver answer to select');
+    return;
+  }
+
+  const responseLinks = result.element.querySelectorAll('.responses a');
+  const targetLink = Array.from(responseLinks).find(
+    a => a.getAttribute('data-value') === solverAnswer
+  );
+
+  if (targetLink) {
+    // Don't click if already selected — toggleSelection would deselect it
+    if (!targetLink.classList.contains('selected')) {
+      targetLink.click();
+      console.log(`Super LTC: Selected PCC answer "${solverAnswer}" for ${result.mdsItem}`);
+    } else {
+      console.log(`Super LTC: PCC already has "${solverAnswer}" selected for ${result.mdsItem}, skipping`);
+    }
+  } else {
+    console.log(`Super LTC: Could not find PCC response for value "${solverAnswer}" on ${result.mdsItem}`);
+  }
+}
+
+/**
+ * Replace action buttons with a "why?" textarea form.
+ */
+function showDisagreeForm(result) {
+  const popover = document.querySelector('.super-popover');
+  if (!popover) return;
+
+  const actionsEl = popover.querySelector('.super-popover-actions');
+  if (!actionsEl) return;
+
+  actionsEl.innerHTML = `
+    <div class="super-disagree-form">
+      <label class="super-disagree-form__label">Why do you disagree?</label>
+      <textarea class="super-disagree-form__input" placeholder="Describe your reasoning..." rows="3"></textarea>
+      <div class="super-disagree-form__buttons">
+        <button class="super-btn super-btn--cancel" data-action="cancel-disagree">Cancel</button>
+        <button class="super-btn super-btn--primary" data-action="submit-disagree">Submit</button>
+      </div>
+    </div>
+  `;
+
+  const textarea = actionsEl.querySelector('.super-disagree-form__input');
+  textarea?.focus();
+
+  actionsEl.querySelector('[data-action="cancel-disagree"]').addEventListener('click', () => {
+    restorePopoverActions(popover, result);
+  });
+
+  actionsEl.querySelector('[data-action="submit-disagree"]').addEventListener('click', () => {
+    submitDisagreeFeedback(result, textarea.value.trim());
+  });
+
+  // Ctrl/Cmd+Enter to submit
+  textarea.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
+      submitDisagreeFeedback(result, textarea.value.trim());
+    }
+  });
+}
+
+/**
+ * Restore the original Agree / Disagree / Query buttons after cancelling disagree.
+ */
+function restorePopoverActions(popover, result) {
+  const actionsEl = popover.querySelector('.super-popover-actions');
+  if (!actionsEl) return;
+
+  actionsEl.innerHTML = `
+    <button class="super-btn super-btn--agree" data-action="agree">&#10003; Agree</button>
+    <button class="super-btn super-btn--disagree" data-action="disagree">&#10007; Disagree</button>
+    ${result.mdsItem && result.mdsItem.startsWith('I') ? `
+      <button class="super-btn super-btn--query" data-action="query">? Query Physician</button>
+    ` : ''}
+  `;
+
+  actionsEl.querySelector('[data-action="agree"]').addEventListener('click', () => handleAction('agree', result));
+  actionsEl.querySelector('[data-action="disagree"]').addEventListener('click', () => handleAction('disagree', result));
+  const queryBtn = actionsEl.querySelector('[data-action="query"]');
+  if (queryBtn) {
+    queryBtn.addEventListener('click', () => {
+      closePopover();
+      window.QuerySendModal?.show(result);
+    });
+  }
+}
+
+/**
+ * Show an inline error message in the popover above the actions area.
+ */
+function showPopoverError(popover, message) {
+  if (!popover) return;
+  // Remove any existing error
+  popover.querySelector('.super-popover-error')?.remove();
+  const errDiv = document.createElement('div');
+  errDiv.className = 'super-popover-error';
+  errDiv.textContent = message;
+  const actions = popover.querySelector('.super-popover-actions');
+  if (actions) {
+    actions.parentNode.insertBefore(errDiv, actions);
+  } else {
+    popover.appendChild(errDiv);
+  }
+}
+
+/**
+ * Submit disagree feedback and dismiss the item.
+ */
+async function submitDisagreeFeedback(result, reason) {
+  const key = `${result.mdsItem}-${result.column}`;
+  const popover = document.querySelector('.super-popover');
+  const btns = popover ? popover.querySelectorAll('.super-disagree-form__buttons .super-btn') : [];
+  const submitBtn = popover?.querySelector('[data-action="submit-disagree"]');
+
+  // Disable buttons, show spinner on submit
+  btns.forEach(b => b.disabled = true);
+  if (submitBtn) submitBtn.innerHTML = '<span class="super-btn__spinner"></span> Submit';
+
+  try {
+    await postItemDecision(result, 'disagree', reason);
+
     SuperOverlay.dismissedItems.add(key);
     saveDismissedItems();
-
-    // Update result status
     result.status = 'dismissed';
-
-    // Update badge
+    result.userDecision = { decision: 'disagree', note: reason };
     injectBadge(result.element, result);
-
-    // Update panel
     createSummaryPanel();
-
-    // Close popover
     closePopover();
 
-    console.log(`Super LTC: User ${action}d with ${result.mdsItem} Column ${result.column}`);
+    // Notify PDPM Analyzer to re-fetch
+    window.dispatchEvent(new CustomEvent('super:item-decision', {
+      detail: { mdsItem: result.mdsItem, column: result.column, decision: 'disagree' }
+    }));
+
+    console.log(`Super LTC: User disagreed with ${result.mdsItem} Column ${result.column}`, { reason });
+  } catch (err) {
+    console.error('Super LTC: Failed to save disagree decision:', err);
+    showPopoverError(popover, err.message || 'Failed to save decision');
+    btns.forEach(b => b.disabled = false);
+    if (submitBtn) submitBtn.innerHTML = 'Submit';
   }
 }
 

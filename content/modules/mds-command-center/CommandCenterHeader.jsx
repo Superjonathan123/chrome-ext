@@ -1,24 +1,21 @@
 /**
  * CommandCenterHeader — sticky top bar for the MDS Command Center overlay.
  *
- * Contains:
- *   • Title + close button
- *   • Summary stats strip (total, urgent, HIPPS improvements, pending queries)
- *   • Filter tabs (All / Urgent / HIPPS ↑ / Has Queries)
- *   • Sort control (ARD Date / Urgency / Patient Name)
+ * Layout:
+ *   - Title + close button
+ *   - Summary stats strip
+ *   - View switcher (Overview | Assessments | Queries)
+ *   - [Assessments only] Filter row: class + payer dropdowns
+ *   - [Assessments only] Urgency filter pills
  */
+import { Selector } from '../../components/Selector.jsx';
 
-const FILTER_TABS = [
-  { id: 'all', label: 'All' },
-  { id: 'urgent', label: 'Urgent' },
-  { id: 'hipps', label: 'Revenue ↑' },
-  { id: 'queries', label: 'Has Queries' },
-];
-
-const SORT_OPTIONS = [
-  { id: 'ard', label: 'ARD Date' },
-  { id: 'urgency', label: 'Urgency' },
-  { id: 'name', label: 'Patient Name' },
+const URGENCY_PILLS = [
+  { value: 'all',         label: 'All',         color: null },
+  { value: 'overdue',     label: 'Overdue',     color: '#ef4444' },
+  { value: 'urgent',      label: 'Urgent',      color: '#f97316' },
+  { value: 'approaching', label: 'Approaching', color: '#eab308' },
+  { value: 'on_track',    label: 'On Track',    color: '#22c55e' },
 ];
 
 function StatPill({ value, label, highlight }) {
@@ -31,38 +28,45 @@ function StatPill({ value, label, highlight }) {
 
 export function CommandCenterHeader({
   summary,
-  activeFilter,
-  sortBy,
-  onFilterChange,
-  onSortChange,
+  facilityName,
   onClose,
-  facilityName
+  activeView,
+  onViewChange,
+  queryCount,
+  docRiskCount,
+  payerFilter,
+  onPayerFilterChange,
+  classFilter,
+  onClassFilterChange,
+  focusFilter,
+  onFocusFilterChange,
+  urgencyFilter,
+  onUrgencyFilterChange,
 }) {
-  const total = summary?.total ?? 0;
-  const urgentCount = summary?.urgent ?? 0;
-  const hippsCount = summary?.hippsImprovements ?? summary?.withHippsImprovements ?? 0;
-  const queryCount = summary?.pendingQueries ?? summary?.pendingQueriesCount ?? 0;
-  const revenuePerDay = summary?.totalRevenueOpportunityPerDay ?? 0;
+  const total             = summary?.total ?? 0;
+  const urgentCount       = summary?.urgent ?? 0;
+  const hippsCount        = summary?.hippsImprovements ?? summary?.withHippsImprovements ?? 0;
+  const pendingQueryCount = summary?.pendingQueries ?? summary?.pendingQueriesCount ?? 0;
+  const revenuePerDay     = summary?.totalRevenueOpportunityPerDay ?? 0;
 
   return (
     <div class="mds-cc__header">
-      {/* Title row */}
+
+      {/* ── Title row ── */}
       <div class="mds-cc__title-row">
         <div class="mds-cc__title-group">
           <span class="mds-cc__title">MDS Command Center</span>
-          {facilityName && (
-            <span class="mds-cc__facility-name">{facilityName}</span>
-          )}
+          {facilityName && <span class="mds-cc__facility-name">{facilityName}</span>}
         </div>
         <button class="mds-cc__close-btn" onClick={onClose} aria-label="Close">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <line x1="18" y1="6" x2="6" y2="18" />
-            <line x1="6" y1="6" x2="18" y2="18" />
+            <line x1="6"  y1="6" x2="18" y2="18" />
           </svg>
         </button>
       </div>
 
-      {/* Stats strip */}
+      {/* ── Stats strip ── */}
       <div class="mds-cc__stats-strip">
         <StatPill value={total} label="assessments" />
         <span class="mds-cc__stats-sep">|</span>
@@ -77,39 +81,120 @@ export function CommandCenterHeader({
           </>
         )}
         <span class="mds-cc__stats-sep">|</span>
-        <StatPill value={queryCount} label="pending queries" highlight={queryCount > 0} />
+        <StatPill value={pendingQueryCount} label="pending queries" highlight={pendingQueryCount > 0} />
+        {docRiskCount > 0 && (
+          <>
+            <span class="mds-cc__stats-sep">|</span>
+            <span class="mds-cc__stat mds-cc__stat--amber">
+              {'\u26A0'} <strong>{docRiskCount}</strong> doc risk{docRiskCount !== 1 ? 's' : ''}
+            </span>
+          </>
+        )}
       </div>
 
-      {/* Filter tabs + sort */}
-      <div class="mds-cc__controls-row">
-        <div class="mds-cc__filter-tabs" role="tablist">
-          {FILTER_TABS.map(tab => (
-            <button
-              key={tab.id}
-              class={`mds-cc__tab${activeFilter === tab.id ? ' mds-cc__tab--active' : ''}`}
-              role="tab"
-              aria-selected={activeFilter === tab.id}
-              onClick={() => onFilterChange(tab.id)}
-            >
-              {tab.label}
-            </button>
-          ))}
-        </div>
-
-        <div class="mds-cc__sort-group">
-          <label class="mds-cc__sort-label" htmlFor="mds-cc-sort">Sort:</label>
-          <select
-            id="mds-cc-sort"
-            class="mds-cc__sort-select"
-            value={sortBy}
-            onChange={(e) => onSortChange(e.target.value)}
+      {/* ── View switcher — 3 tabs ── */}
+      <div class="mds-cc__view-switcher">
+        <button
+          class={`mds-cc__view-tab${activeView === 'overview' ? ' mds-cc__view-tab--active' : ''}`}
+          onClick={() => onViewChange('overview')}
+        >
+          Overview
+        </button>
+        <button
+          class={`mds-cc__view-tab${activeView === 'assessments' ? ' mds-cc__view-tab--active' : ''}`}
+          onClick={() => onViewChange('assessments')}
+        >
+          Assessments
+        </button>
+        <button
+          class={`mds-cc__view-tab${activeView === 'queries' ? ' mds-cc__view-tab--active' : ''}`}
+          onClick={() => onViewChange('queries')}
+        >
+          Queries
+          {queryCount > 0 && <span class="mds-cc__view-tab-badge">{queryCount}</span>}
+        </button>
+        {docRiskCount > 0 && (
+          <button
+            class={`mds-cc__view-tab${activeView === 'docRisks' ? ' mds-cc__view-tab--active' : ''}`}
+            onClick={() => onViewChange('docRisks')}
           >
-            {SORT_OPTIONS.map(opt => (
-              <option key={opt.id} value={opt.id}>{opt.label}</option>
-            ))}
-          </select>
-        </div>
+            Doc Risks
+            <span class="mds-cc__view-tab-badge mds-cc__view-tab-badge--amber">{docRiskCount}</span>
+          </button>
+        )}
       </div>
+
+      {/* ── Assessments filter row ── */}
+      {activeView === 'assessments' && (
+        <div class="mds-cc__filter-row">
+          <Selector
+            size="compact"
+            options={[
+              { value: 'all', label: 'All Classes' },
+              { value: 'pps_payment', label: 'PPS / Payment' },
+              { value: 'obra_cmi', label: 'OBRA / CMI' },
+              { value: 'end_of_stay', label: 'End of Stay' },
+            ]}
+            value={classFilter}
+            onChange={onClassFilterChange}
+            ariaLabel="Assessment class filter"
+          />
+          <Selector
+            size="compact"
+            options={[
+              { value: 'all', label: 'All Payers' },
+              { value: 'medicare_a', label: 'Medicare A' },
+              { value: 'medicaid', label: 'Medicaid' },
+              { value: 'managed_care', label: 'Managed Care' },
+            ]}
+            value={payerFilter}
+            onChange={onPayerFilterChange}
+            ariaLabel="Payer filter"
+          />
+          <Selector
+            size="compact"
+            options={[
+              { value: 'all', label: 'All Assessments' },
+              { value: 'revenue', label: 'Revenue Opportunities' },
+              { value: 'issues', label: 'Has Issues' },
+            ]}
+            value={focusFilter}
+            onChange={onFocusFilterChange}
+            ariaLabel="Focus filter"
+          />
+        </div>
+      )}
+
+      {/* ── Urgency filter pills (assessments tab only) ── */}
+      {activeView === 'assessments' && onUrgencyFilterChange && (
+        <div class="mds-cc__urgency-pills">
+          {URGENCY_PILLS.map(pill => {
+            const isActive = urgencyFilter === pill.value;
+            return (
+              <button
+                key={pill.value}
+                class={`mds-cc__urgency-pill${isActive ? ' mds-cc__urgency-pill--active' : ''}`}
+                style={isActive && pill.color ? { background: pill.color, borderColor: pill.color, color: '#fff' } : undefined}
+                onClick={() => onUrgencyFilterChange(pill.value)}
+              >
+                {pill.color && <span class="mds-cc__urgency-pill-dot" style={{ background: isActive ? '#fff' : pill.color }} />}
+                {pill.label}
+              </button>
+            );
+          })}
+          {/* Revenue quick-filter toggle */}
+          {onFocusFilterChange && (
+            <button
+              class={`mds-cc__urgency-pill mds-cc__revenue-pill${focusFilter === 'revenue' ? ' mds-cc__revenue-pill--active' : ''}`}
+              onClick={() => onFocusFilterChange(focusFilter === 'revenue' ? 'all' : 'revenue')}
+              title="Show only assessments with revenue opportunities"
+            >
+              <span class="mds-cc__revenue-pill-icon">$</span>
+              Revenue
+            </button>
+          )}
+        </div>
+      )}
     </div>
   );
 }

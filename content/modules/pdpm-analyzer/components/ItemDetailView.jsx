@@ -1,11 +1,35 @@
 /**
  * ItemDetailView — detail sub-view in PDPM Analyzer.
  * Delegates body content to shared <ItemDetail variant="full" />.
+ *
+ * Split-view mode: clicking "View PDF" or "View Administrations" on an
+ * evidence card transitions to a sources sidebar + inline viewer,
+ * mirroring ItemPopover behavior.
  */
+import { useState, useEffect, useRef, useCallback } from 'preact/hooks';
 import { useItemDetail } from '../hooks/useItemDetail.js';
 import { ItemDetail } from '../../../components/ItemDetail.jsx';
+import { PDFViewer } from '../../../components/PDFViewer.jsx';
+import { parseViewer, inferSourceType, SOURCE_LABELS } from '../../../utils/evidence-helpers.js';
+import { fetchDocument } from '../../../evidence-viewers.js';
 
-export function ItemDetailView({ item, context, onBack }) {
+/** Check if evidence is an order/admin type */
+function isOrderEvidence(ev) {
+  return ev.sourceType === 'order' || (ev.evidenceId || '').startsWith('order-');
+}
+
+/** Get the order ID from evidence */
+function getOrderId(ev) {
+  const id = ev.sourceId || ev.evidenceId || '';
+  return id.replace(/^order-/, '');
+}
+
+/** Evidence is viewable inline if it's a PDF document or an order */
+function isViewableEvidence(ev) {
+  return parseViewer(ev).viewerType === 'document' || isOrderEvidence(ev);
+}
+
+export function ItemDetailView({ item, context, onBack, onSplitChange, onDismiss: onDismissComplete }) {
   const mdsItem = item?.mdsItem;
   const categoryKey = item?.categoryKey;
   const { data, loading, error } = useItemDetail(mdsItem, categoryKey, context);
@@ -14,11 +38,187 @@ export function ItemDetailView({ item, context, onBack }) {
   const apiItem = data?.item;
   const needsQuery = apiItem?.status === 'needs_physician_query';
 
+  // Dismiss state
+  const [dismissing, setDismissing] = useState(false);
+
+  const userDecision = apiItem?.userDecision?.decision;
+  const canDismiss = userDecision !== 'disagree' && userDecision !== 'agree';
+
+  const handleDismiss = useCallback(async (reason) => {
+    setDismissing(true);
+    try {
+      const orgResponse = await chrome.runtime.sendMessage({ type: 'GET_ORG' });
+      const orgSlug = orgResponse?.org;
+      const facilityName = window.getChatFacilityInfo?.() || '';
+
+      const apiCode = mdsItem?.includes(':') ? mdsItem.split(':')[0] : mdsItem;
+      const mdsColumn = item?.column || '';
+
+      const response = await chrome.runtime.sendMessage({
+        type: 'API_REQUEST',
+        endpoint: `/api/extension/mds/items/${encodeURIComponent(apiCode)}/decision`,
+        options: {
+          method: 'POST',
+          body: JSON.stringify({
+            externalAssessmentId: context?.assessmentId,
+            facilityName,
+            orgSlug,
+            decision: 'disagree',
+            note: reason || '',
+            mdsColumn,
+          }),
+        },
+      });
+
+      if (!response?.success) throw new Error(response?.error || 'Failed to save decision');
+
+      // Update overlay dismissed state
+      const key = `${apiCode}-${mdsColumn}`;
+      if (window.SuperOverlay?.dismissedItems) {
+        window.SuperOverlay.dismissedItems.add(key);
+        chrome.storage.local.set({ superDismissedItems: Array.from(window.SuperOverlay.dismissedItems) });
+      }
+
+      // Notify all views to re-fetch
+      window.dispatchEvent(new CustomEvent('super:item-decision', {
+        detail: { mdsItem: apiCode, column: mdsColumn, decision: 'disagree' },
+      }));
+
+      window.SuperToast?.success?.('Item dismissed');
+      onDismissComplete?.();
+    } catch (err) {
+      console.error('[ItemDetailView] Dismiss failed:', err);
+      window.SuperToast?.error?.(err.message || 'Failed to dismiss');
+      setDismissing(false);
+    }
+  }, [mdsItem, item, context, onDismissComplete]);
+
+  // Split-view state
+  const [viewingSource, setViewingSource] = useState(null);
+  const docCacheRef = useRef(new Map());
+  const [currentDoc, setCurrentDoc] = useState(null);
+  const [docLoading, setDocLoading] = useState(false);
+  const adminContainerRef = useRef(null);
+
+  // Collect all evidence — include both documents and orders in sidebar
+  const allEvidence = getEvidence(data);
+  const viewableEvidence = allEvidence.filter(isViewableEvidence);
+
+  const isSplit = viewingSource !== null;
+  const viewingOrder = viewingSource && isOrderEvidence(viewingSource.ev);
+  const viewingDoc = viewingSource && !viewingOrder;
+
+  // Notify parent when split mode changes so it can expand
+  useEffect(() => {
+    onSplitChange?.(isSplit);
+  }, [isSplit]);
+
+  // Prefetch all PDF documents when evidence loads
+  const docEvidence = viewableEvidence.filter(ev => !isOrderEvidence(ev));
+  useEffect(() => {
+    if (!data || docEvidence.length === 0) return;
+
+    const prefetch = async () => {
+      let params;
+      try { params = await window.getCurrentParams(); } catch { return; }
+
+      for (const ev of docEvidence) {
+        const viewer = parseViewer(ev);
+        if (!viewer.id || docCacheRef.current.has(viewer.id)) continue;
+
+        const promise = fetchDocument(viewer.id, params)
+          .then(result => {
+            const entry = docCacheRef.current.get(viewer.id);
+            if (entry) entry.document = result.document;
+            return result.document;
+          })
+          .catch(err => {
+            console.warn('[ItemDetailView] Prefetch failed for', viewer.id, err);
+            return null;
+          });
+
+        docCacheRef.current.set(viewer.id, { document: null, promise });
+      }
+    };
+
+    prefetch();
+  }, [data]);
+
+  // Load document when viewing a PDF source
+  useEffect(() => {
+    if (!viewingSource || viewingOrder) {
+      setCurrentDoc(null);
+      setDocLoading(false);
+      return;
+    }
+
+    const viewer = parseViewer(viewingSource.ev);
+    if (!viewer.id) return;
+
+    const cached = docCacheRef.current.get(viewer.id);
+    if (cached?.document) {
+      setCurrentDoc(cached.document);
+      setDocLoading(false);
+      return;
+    }
+
+    setDocLoading(true);
+    const loadDoc = async () => {
+      try {
+        let doc;
+        if (cached?.promise) {
+          doc = await cached.promise;
+        } else {
+          const params = await window.getCurrentParams();
+          const result = await fetchDocument(viewer.id, params);
+          doc = result.document;
+          docCacheRef.current.set(viewer.id, { document: doc, promise: Promise.resolve(doc) });
+        }
+        setCurrentDoc(doc);
+      } catch (err) {
+        console.error('[ItemDetailView] Failed to load document:', err);
+        setCurrentDoc(null);
+      } finally {
+        setDocLoading(false);
+      }
+    };
+
+    loadDoc();
+  }, [viewingSource, viewingOrder]);
+
+  // Render admin (MAR/TAR) grid when viewing an order source
+  useEffect(() => {
+    if (!viewingOrder || !adminContainerRef.current) return;
+
+    const el = adminContainerRef.current;
+    const orderId = getOrderId(viewingSource.ev);
+
+    // Show loading state
+    el.innerHTML = '<div class="idv__viewer-loading" style="position:static;padding:40px 0"><div class="pdpm-an__spinner"></div><span>Loading administrations...</span></div>';
+
+    if (window.renderSplitAdministrations) {
+      window.renderSplitAdministrations(el, orderId).catch(err => {
+        console.error('[ItemDetailView] Failed to load administrations:', err);
+        el.innerHTML = '<div class="idv__viewer-loading" style="position:static;padding:40px 0"><span>Failed to load administrations</span></div>';
+      });
+    } else {
+      el.innerHTML = '<div class="idv__viewer-loading" style="position:static;padding:40px 0"><span>Administration viewer not available</span></div>';
+    }
+  }, [viewingSource, viewingOrder]);
+
+  const handleViewSource = useCallback((ev, index) => {
+    setViewingSource({ ev, index });
+  }, []);
+
+  const handleBackFromSplit = useCallback(() => {
+    setViewingSource(null);
+  }, []);
+
   return (
-    <div class="idv">
+    <div class={`idv${isSplit ? ' idv--split' : ''}`}>
       {/* Header with back button */}
       <div class="idv__head">
-        <button class="idv__back" onClick={onBack} type="button">
+        <button class="idv__back" onClick={isSplit ? handleBackFromSplit : onBack} type="button">
           <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 11L5 7l4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
           Back
         </button>
@@ -30,16 +230,102 @@ export function ItemDetailView({ item, context, onBack }) {
       {loading && <div class="pdpm-an__state"><div class="pdpm-an__spinner" /><p>Loading...</p></div>}
       {error && <div class="pdpm-an__state"><p>{error}</p></div>}
 
-      {!loading && !error && data && (
+      {!loading && !error && data && !isSplit && (
         <div class="idv__body">
           <ItemDetail
             variant="full"
             data={data}
             detectionItem={item}
             mdsItem={mdsItem}
+            onViewSource={handleViewSource}
+            onDismiss={canDismiss ? handleDismiss : undefined}
+            dismissing={dismissing}
           />
+        </div>
+      )}
+
+      {!loading && !error && data && isSplit && (
+        <div class="idv__split-body">
+          {/* Left pane: condensed source list */}
+          <div class="idv__sources">
+            <div class="idv__sources-label">Sources ({viewableEvidence.length})</div>
+            {viewableEvidence.map((ev, i) => {
+              const isOrder = isOrderEvidence(ev);
+              const sourceType = ev.sourceType || inferSourceType(ev.displayName, ev.evidenceId);
+              const typeLabel = ev.displayName || SOURCE_LABELS[sourceType] || (isOrder ? 'Orders' : 'Document');
+              const snippet = ev.quoteText || ev.orderDescription || ev.quote || ev.snippet || ev.text || '';
+              const page = ev.wordBlocks?.[0]?.p;
+              const isActive = viewingSource.ev === ev;
+
+              return (
+                <div
+                  key={i}
+                  class={`idv__source-card${isActive ? ' idv__source-card--active' : ''}`}
+                  onClick={() => setViewingSource({ ev, index: i })}
+                  role="button"
+                >
+                  <div class={`idv__source-badge${isOrder ? ' idv__source-badge--order' : ''}`}>{typeLabel}</div>
+                  {snippet && <div class="idv__source-snippet">{snippet}</div>}
+                  {!isOrder && page && <div class="idv__source-page">Page {page}</div>}
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Right pane: viewer */}
+          <div class="idv__viewer">
+            {/* PDF document viewer */}
+            {viewingDoc && docLoading && (
+              <div class="idv__viewer-loading">
+                <div class="pdpm-an__spinner" />
+                <span>Loading document...</span>
+              </div>
+            )}
+            {viewingDoc && !docLoading && currentDoc && (
+              <PDFViewer
+                url={currentDoc.signedUrl || null}
+                wordBlocks={viewingSource.ev.wordBlocks || []}
+                targetPage={viewingSource.ev.wordBlocks?.[0]?.p || 1}
+                title={currentDoc.title || 'Document'}
+                documentType={currentDoc.documentType}
+                effectiveDate={currentDoc.effectiveDate}
+                fileSize={currentDoc.fileSize}
+                expiresAt={true}
+                openInNewTabUrl={currentDoc.signedUrl || null}
+              />
+            )}
+            {viewingDoc && !docLoading && !currentDoc && (
+              <div class="idv__viewer-loading">
+                <span>Failed to load document</span>
+              </div>
+            )}
+
+            {/* Order/admin viewer — rendered by vanilla renderSplitAdministrations */}
+            {viewingOrder && (
+              <div ref={adminContainerRef} class="idv__admin-viewer" />
+            )}
+          </div>
         </div>
       )}
     </div>
   );
+}
+
+/** Extract all evidence items from data */
+function getEvidence(data) {
+  const apiItem = data?.item;
+  if (!apiItem) return [];
+
+  const isColumnBased = !!apiItem.columns;
+  if (!isColumnBased) return apiItem.evidence || apiItem.queryEvidence || [];
+
+  const colEvidence = [];
+  const seen = new Set();
+  for (const col of Object.values(apiItem.columns || {})) {
+    if (col?.evidence) col.evidence.forEach(ev => {
+      const k = ev.sourceId || ev.quote || JSON.stringify(ev);
+      if (!seen.has(k)) { seen.add(k); colEvidence.push(ev); }
+    });
+  }
+  return colEvidence;
 }

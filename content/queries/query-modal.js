@@ -56,13 +56,13 @@ const QueryDetailModal = {
           ${query.status === 'sent' && sentAt ? `<span class="super-query-detail__status-date">${sentAt}</span>` : ''}
         </div>
 
-        <!-- Patient Info -->
+        <!-- Patient Info (only if available) -->
+        ${query.patientName ? `
         <div class="super-query-detail__patient">
-          <div class="super-query-detail__patient-name">${this._escapeHTML(query.patientName || 'Unknown Patient')}</div>
-          <div class="super-query-detail__patient-meta">
-            <span>${this._escapeHTML(query.locationName || 'Unknown Facility')}</span>
-          </div>
+          <div class="super-query-detail__patient-name">${this._escapeHTML(query.patientName)}</div>
+          ${query.locationName ? `<div class="super-query-detail__patient-meta"><span>${this._escapeHTML(query.locationName)}</span></div>` : ''}
         </div>
+        ` : ''}
 
         <!-- Diagnosis & ICD-10 Combined -->
         <div class="super-query-detail__diagnosis-card">

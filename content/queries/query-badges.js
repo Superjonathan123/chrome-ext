@@ -58,9 +58,9 @@ const QueryBadges = {
     badge.setAttribute('data-mds-item', mdsItem);
 
     badge.innerHTML = `
-      <span class="super-badge__icon">?</span>
-      <span class="super-badge__text">Query</span>
+      <svg class="super-badge__svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="5" r="3"/><path d="M3 21v-2a6 6 0 0 1 6-6 6 6 0 0 1 3 .8"/><rect x="15" y="11" width="7" height="10" rx="1.5"/><path d="M17.5 11V9.5a1 1 0 0 1 1-1h0a1 1 0 0 1 1 1V11"/><line x1="17" y1="14.5" x2="20" y2="14.5"/><line x1="17" y1="16.5" x2="20" y2="16.5"/><line x1="17" y1="18.5" x2="19" y2="18.5"/></svg>
     `;
+    badge.title = 'Send Query';
 
     // Click handler - open send modal (step 1)
     badge.addEventListener('click', (e) => {

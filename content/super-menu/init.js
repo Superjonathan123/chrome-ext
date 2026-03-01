@@ -222,6 +222,45 @@ function initSuperChat() {
   // Inject AI Code button on Med Diag pages
   injectAICodeButton();
 
+  // Restore Command Center or auto-open PDPM Analyzer on MDS pages
+  try {
+    const restore = sessionStorage.getItem('super_cc_restore');
+    if (restore) {
+      sessionStorage.removeItem('super_cc_restore');
+      const state = JSON.parse(restore);
+      // Only restore if saved within last 30 seconds
+      if (state.timestamp && (Date.now() - state.timestamp) < 30000) {
+        setTimeout(() => {
+          if (state.openAnalyzer) {
+            const context = getMDSContext();
+            if (context.assessmentId) {
+              // Clear any prior dismissal — user explicitly navigated here from Command Center
+              sessionStorage.removeItem('super_analyzer_dismissed');
+              PDPMAnalyzerLauncher.open(context, { mode: state.analyzerMode || 'panel' });
+            }
+          } else {
+            MDSCommandCenterLauncher.open({ initialExpandedId: state.expandedId });
+          }
+        }, 800);
+      }
+    } else {
+      // Auto-open PDPM Analyzer panel on MDS section pages
+      setTimeout(() => {
+        const context = getMDSContext();
+        if (context.scope === 'mds' && context.assessmentId) {
+          const dismissed = sessionStorage.getItem('super_analyzer_dismissed');
+          if (dismissed !== context.assessmentId) {
+            // Not dismissed — auto-open
+            PDPMAnalyzerLauncher.open(context, { mode: 'panel' });
+          } else {
+            // Was dismissed — show the edge tab so user can easily reopen
+            PDPMAnalyzerLauncher._showEdgeTab(context);
+          }
+        }
+      }, 800);
+    }
+  } catch (_) {}
+
   SuperMenu.initialized = true;
   console.log('Super Menu: Initialization complete');
 }
@@ -277,6 +316,11 @@ const chatUrlObserver = new MutationObserver(() => {
     // Invalidate dashboard cache on navigation (data might have changed)
     if (window.DashboardState) {
       DashboardState.invalidateCache();
+    }
+
+    // Update FAB patient button visibility based on context
+    if (typeof updateBubblesContext === 'function') {
+      updateBubblesContext();
     }
 
     // Re-inject AI Code button if navigated to Med Diag page

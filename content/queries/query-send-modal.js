@@ -20,6 +20,15 @@ const QuerySendModal = {
    * @param {Object} existingQuery - Existing query to send (optional, for drafts)
    */
   async show(result, existingQuery = null) {
+    // Normalize: if result is a flat API item (no aiAnswer), wrap it
+    if (result && !result.aiAnswer && (result.keyFindings || result.evidence || result.rationale || result.status)) {
+      result = {
+        mdsItem: result.mdsItem,
+        description: result.description,
+        aiAnswer: result
+      };
+    }
+
     // Reset state
     this._state = {
       step: 1,

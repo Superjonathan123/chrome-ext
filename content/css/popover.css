@@ -402,3 +402,418 @@
   border-color: var(--super-primary-dark);
 }
 
+.super-btn--cancel {
+  background: white;
+  border-color: var(--super-gray-300);
+  color: var(--super-gray-600);
+}
+
+.super-btn--cancel:hover {
+  background: var(--super-gray-100);
+}
+
+.super-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.super-btn__spinner {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border: 2px solid currentColor;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: superBtnSpin 0.6s linear infinite;
+  vertical-align: middle;
+}
+
+@keyframes superBtnSpin {
+  to { transform: rotate(360deg); }
+}
+
+.super-popover-error {
+  padding: 8px 16px;
+  font-size: 12px;
+  font-family: var(--super-font);
+  color: #991b1b;
+  background: #fef2f2;
+  border-top: 1px solid #fecaca;
+}
+
+/* Disagree Form */
+.super-disagree-form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+}
+
+.super-disagree-form__label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--super-gray-700);
+}
+
+.super-disagree-form__input {
+  width: 100%;
+  padding: 8px 10px;
+  font-family: var(--super-font);
+  font-size: 12px;
+  line-height: 1.4;
+  border: 1px solid var(--super-gray-300);
+  border-radius: var(--super-radius);
+  resize: vertical;
+  min-height: 60px;
+  color: var(--super-gray-700);
+  background: white;
+  box-sizing: border-box;
+}
+
+.super-disagree-form__input:focus {
+  outline: none;
+  border-color: var(--super-primary);
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.1);
+}
+
+.super-disagree-form__input::placeholder {
+  color: var(--super-gray-400);
+}
+
+.super-disagree-form__buttons {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.super-disagree-form__buttons .super-btn {
+  flex: none;
+  padding: 6px 16px;
+}
+
+/* ============================================
+   Split-View Mode (Inline PDF)
+   ============================================ */
+.super-popover--split {
+  display: flex;
+  flex-direction: column;
+  transition: width 0.25s ease, height 0.25s ease;
+}
+
+.super-popover-body--split {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  padding: 0;
+}
+
+/* Back button in header */
+.super-split__back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(255, 255, 255, 0.15);
+  border: none;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 12px;
+  font-family: var(--super-font);
+  font-weight: 500;
+  padding: 3px 10px 3px 6px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.15s;
+  margin-right: 8px;
+  flex-shrink: 0;
+}
+.super-split__back-btn:hover { background: rgba(255, 255, 255, 0.25); }
+
+/* Source sidebar */
+.super-split__sidebar {
+  width: 220px;
+  flex-shrink: 0;
+  overflow-y: auto;
+  border-right: 1px solid var(--super-gray-200);
+  padding: 8px;
+  background: var(--super-gray-50);
+}
+.super-split__sidebar::-webkit-scrollbar { width: 4px; }
+.super-split__sidebar::-webkit-scrollbar-track { background: transparent; }
+.super-split__sidebar::-webkit-scrollbar-thumb { background: var(--super-gray-300); border-radius: 999px; }
+
+.super-split__sidebar-label {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--super-gray-400);
+  padding: 4px 8px 6px;
+  font-family: var(--super-font);
+}
+
+.super-split__source-card {
+  padding: 8px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  border: 1px solid transparent;
+  margin-bottom: 4px;
+  transition: background 0.12s, border-color 0.12s;
+  font-family: var(--super-font);
+}
+.super-split__source-card:hover {
+  background: #fff;
+  border-color: var(--super-gray-200);
+}
+
+.super-split__source-card--active {
+  background: #fff;
+  border-color: var(--super-primary);
+  box-shadow: 0 0 0 1px var(--super-primary), 0 1px 3px rgba(99, 102, 241, 0.12);
+}
+
+.super-split__source-badge {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--super-primary);
+  background: rgba(99, 102, 241, 0.08);
+  padding: 1px 6px;
+  border-radius: 4px;
+  margin-bottom: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.super-split__source-snippet {
+  font-size: 11px;
+  color: var(--super-gray-600);
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.super-split__source-page {
+  font-size: 10px;
+  color: var(--super-gray-400);
+  margin-top: 3px;
+}
+
+/* Viewer pane */
+.super-split__viewer {
+  flex: 1;
+  position: relative;
+  min-width: 0;
+  background: var(--super-gray-100);
+}
+
+.super-split__viewer-loading {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--super-gray-500);
+  font-family: var(--super-font);
+}
+
+.super-split__spinner,
+.super-viewer-loading__spinner {
+  width: 24px;
+  height: 24px;
+  border: 2px solid var(--super-gray-200, #e5e7eb);
+  border-top-color: #8b5cf6;
+  border-radius: 50%;
+  animation: superSplitSpin 0.8s linear infinite;
+}
+
+@keyframes superSplitSpin {
+  to { transform: rotate(360deg); }
+}
+
+/* Evidence card clickable styling */
+.super-evidence-card--clickable {
+  cursor: pointer;
+}
+
+.super-evidence-card__action {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--super-primary);
+  cursor: pointer;
+}
+
+.super-evidence-card__action:hover {
+  color: var(--super-primary-dark);
+}
+
+/* Source badge row (type + name) */
+.super-split__source-badge-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 4px;
+}
+
+.super-split__source-type {
+  font-size: 9px;
+  font-weight: 700;
+  color: #fff;
+  background: var(--super-gray-400);
+  padding: 1px 5px;
+  border-radius: 3px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  flex-shrink: 0;
+}
+
+/* Inline content viewer (notes, therapy, admin) */
+.super-split__content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  font-family: var(--super-font);
+}
+
+.super-split__content-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px 8px;
+  flex-shrink: 0;
+}
+
+.super-split__content-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--super-gray-800);
+  margin: 0;
+}
+
+.super-split__content-badge {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--super-primary);
+  background: rgba(99, 102, 241, 0.1);
+  padding: 2px 8px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  flex-shrink: 0;
+}
+
+.super-split__content-meta {
+  font-size: 12px;
+  color: var(--super-gray-500);
+  padding: 0 16px 4px;
+}
+
+.super-split__content-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px 16px 16px;
+}
+.super-split__content-body::-webkit-scrollbar { width: 5px; }
+.super-split__content-body::-webkit-scrollbar-track { background: transparent; }
+.super-split__content-body::-webkit-scrollbar-thumb { background: var(--super-gray-300); border-radius: 999px; }
+
+.super-split__content-body--admin {
+  overflow-x: auto;
+}
+
+.super-split__content-footer {
+  font-size: 11px;
+  color: var(--super-gray-400);
+  padding: 8px 16px;
+  border-top: 1px solid var(--super-gray-200);
+  flex-shrink: 0;
+}
+
+.super-split__note-text {
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--super-gray-700);
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  font-family: var(--super-font);
+  margin: 0;
+}
+
+.super-split__therapy-section {
+  margin-bottom: 12px;
+  font-size: 13px;
+  color: var(--super-gray-700);
+  line-height: 1.5;
+}
+.super-split__therapy-section ul {
+  margin: 4px 0;
+  padding-left: 20px;
+}
+
+.super-split__highlight {
+  background: rgba(254, 240, 138, 0.6);
+  padding: 1px 2px;
+  border-radius: 2px;
+}
+
+/* Lazy evidence loading */
+.super-evidence-loading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 16px;
+  justify-content: center;
+  color: var(--super-gray-400, #9ca3af);
+  font-size: 12px;
+}
+.super-evidence-empty,
+.super-evidence-error {
+  padding: 12px;
+  text-align: center;
+  font-size: 12px;
+  font-style: italic;
+}
+.super-evidence-empty { color: var(--super-gray-400, #9ca3af); }
+.super-evidence-error { color: var(--super-mismatch, #ef4444); }
+
+/* Admin (MAR/TAR) inside split viewer — reuse all super-admin-modal__* styles */
+.super-split__admin {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+.super-split__admin .super-admin-modal__header {
+  position: static;
+  flex-shrink: 0;
+}
+.super-split__admin .super-admin-modal__body {
+  flex: 1;
+  overflow: auto;
+}
+.super-split__admin .super-admin-modal__footer {
+  flex-shrink: 0;
+}
+.super-split__admin .super-admin-modal__date-bar {
+  flex-shrink: 0;
+}
+/* Remove fixed positioning from container when nested in split viewer */
+.super-split__admin .super-admin-modal__container {
+  position: static;
+  transform: none;
+  width: 100%;
+  max-width: none;
+  max-height: none;
+  box-shadow: none;
+  border-radius: 0;
+}
+

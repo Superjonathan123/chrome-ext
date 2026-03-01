@@ -6,7 +6,7 @@
  * evidence cards, key findings, and sticky action buttons.
  */
 import { useState } from 'preact/hooks';
-import { inferSourceType, SOURCE_LABELS, openEvidence, getActionText } from '../utils/evidence-helpers.js';
+import { inferSourceType, SOURCE_LABELS, openEvidence, getActionText, parseViewer } from '../utils/evidence-helpers.js';
 
 /* ── SVG icons ── */
 
@@ -28,25 +28,38 @@ const ArrowIcon = () => (
 
 /* ── Sub-components ── */
 
-function EvidenceCard({ ev }) {
+function EvidenceCard({ ev, index, onViewSource }) {
   const quote = ev.quoteText || ev.orderDescription || ev.quote || ev.snippet || ev.text || '';
-  if (!quote) return null;
+  if (!quote && !ev.rationale) return null;
 
   const sourceType = ev.sourceType || inferSourceType(ev.displayName, ev.evidenceId);
   const typeLabel = ev.displayName || SOURCE_LABELS[sourceType] || sourceType;
   const actionText = getActionText(ev);
   const isClickable = !!actionText;
 
+  const handleClick = isClickable ? () => {
+    // If onViewSource provided, use inline viewer for documents and orders
+    if (onViewSource) {
+      const viewer = parseViewer(ev);
+      const isOrder = ev.sourceType === 'order' || (ev.evidenceId || '').startsWith('order-');
+      if (viewer.viewerType === 'document' || isOrder) {
+        onViewSource(ev, index);
+        return;
+      }
+    }
+    openEvidence(ev);
+  } : undefined;
+
   return (
     <div
       class={`sid__ev-card${isClickable ? ' sid__ev-card--clickable' : ''}`}
-      onClick={isClickable ? () => openEvidence(ev) : undefined}
+      onClick={handleClick}
       role={isClickable ? 'button' : undefined}
     >
       <div class="sid__ev-header">
         <span class={`sid__ev-type sid__ev-type--${sourceType}`}>{typeLabel}</span>
       </div>
-      <div class="sid__ev-quote">{quote}</div>
+      {quote && <div class="sid__ev-quote">{quote}</div>}
       {ev.rationale && <div class="sid__ev-rationale">{ev.rationale}</div>}
       {isClickable && (
         <div class="sid__ev-action">
@@ -113,7 +126,7 @@ function RationaleBlock({ rationale }) {
  * @param {Object}  props.detectionItem — detection item from parent (has .impact, .mdsItem, .itemName)
  * @param {string}  props.mdsItem — MDS item code (e.g. "I0600")
  */
-export function ItemDetail({ variant = 'compact', data, detectionItem, mdsItem }) {
+export function ItemDetail({ variant = 'compact', data, detectionItem, mdsItem, onViewSource, onDismiss, dismissing }) {
   const isFull = variant === 'full';
   const apiItem = data?.item;
   const isColumnBased = !!apiItem?.columns;
@@ -121,14 +134,19 @@ export function ItemDetail({ variant = 'compact', data, detectionItem, mdsItem }
   const hasSectionISteps = !!(data?.diagnosisSummary || data?.treatmentSummary);
 
   // Verdict
-  const status = apiItem?.status;
+  let status = apiItem?.status;
+  // Column-based items (Section O) have no top-level status — derive from column answers
+  if (!status && isColumnBased) {
+    const hasYes = Object.values(apiItem.columns || {}).some(c => c?.answer?.toLowerCase() === 'yes');
+    status = hasYes ? 'code' : 'dont_code';
+  }
   const needsQuery = status === 'needs_physician_query';
   const shouldCode = status === 'code' || status === 'recommend_coding';
   const verdictDotClass = needsQuery ? 'sid__verdict-dot--query' : shouldCode ? 'sid__verdict-dot--code' : 'sid__verdict-dot--no-code';
   const verdictLabel = needsQuery ? 'Needs Query' : shouldCode ? 'Recommend Coding' : (status?.replace(/_/g, ' ') || 'Don\'t Code');
 
   // Evidence
-  const diagEvidence = apiItem?.queryEvidence || [];
+  const diagEvidence = apiItem?.evidence || apiItem?.queryEvidence || [];
   const colEvidence = [];
   if (isColumnBased) {
     const seen = new Set();
@@ -158,6 +176,10 @@ export function ItemDetail({ variant = 'compact', data, detectionItem, mdsItem }
   const [activeCol, setActiveCol] = useState(colKeys[0] || 'A');
   const activeColData = columns[activeCol];
   const subItems = apiItem?.subItems || [];
+
+  // Dismiss form state
+  const [dismissMode, setDismissMode] = useState(false);
+  const [dismissReason, setDismissReason] = useState('');
 
   const displayCode = mdsItem?.startsWith('I8000:') ? 'I8000' : mdsItem;
 
@@ -249,7 +271,7 @@ export function ItemDetail({ variant = 'compact', data, detectionItem, mdsItem }
         <div class="sid__evidence">
           <div class="sid__ev-label">Evidence ({evidence.length})</div>
           <div class="sid__ev-list">
-            {visibleEvidence.map((ev, i) => <EvidenceCard key={i} ev={ev} />)}
+            {visibleEvidence.map((ev, i) => <EvidenceCard key={i} ev={ev} index={i} onViewSource={onViewSource} />)}
           </div>
           {evidence.length > 4 && !showAllEv && (
             <button class="sid__ev-show-more" type="button" onClick={() => setShowAllEv(true)}>
@@ -275,16 +297,52 @@ export function ItemDetail({ variant = 'compact', data, detectionItem, mdsItem }
       )}
 
       {/* ── Actions (sticky) ── */}
-      <div class="sid__actions">
-        <button class="sid__btn sid__btn--primary" onClick={() => window.QuerySendModal?.show(apiItem || data)} type="button">
-          ? Query Physician
-        </button>
-        {mdsItem && (
-          <button class="sid__btn sid__btn--secondary" onClick={() => window.navigateToMDSItem?.(mdsItem)} type="button">
-            Go to {displayCode} &#x2197;
-          </button>
-        )}
-      </div>
+      {dismissMode && onDismiss ? (
+        <div class="sid__dismiss-form">
+          <label>Why do you disagree? (optional)</label>
+          <textarea
+            value={dismissReason}
+            onInput={(e) => setDismissReason(e.target.value)}
+            placeholder="Enter reason..."
+            disabled={dismissing}
+          />
+          <div class="sid__dismiss-form-btns">
+            <button class="sid__btn sid__btn--secondary" type="button" disabled={dismissing}
+              onClick={() => { setDismissMode(false); setDismissReason(''); }}>
+              Cancel
+            </button>
+            <button class="sid__btn sid__btn--primary" type="button" disabled={dismissing}
+              onClick={() => onDismiss(dismissReason)}>
+              {dismissing ? 'Submitting...' : 'Submit'}
+            </button>
+          </div>
+        </div>
+      ) : (
+        <div class="sid__actions">
+          {onDismiss && (
+            <button class="sid__btn sid__btn--dismiss" type="button" onClick={() => setDismissMode(true)}>
+              Dismiss
+            </button>
+          )}
+          <div class="sid__actions-right">
+            <button class="sid__btn sid__btn--primary" onClick={() => {
+              const queryData = {
+                mdsItem: apiItem?.mdsItem || mdsItem,
+                description: apiItem?.description || detectionItem?.itemName,
+                aiAnswer: apiItem
+              };
+              window.QuerySendModal?.show(queryData);
+            }} type="button">
+              Query Physician
+            </button>
+            {mdsItem && (
+              <button class="sid__btn sid__btn--secondary" onClick={() => window.navigateToMDSItem?.(mdsItem)} type="button">
+                Go to {displayCode} &#x2197;
+              </button>
+            )}
+          </div>
+        </div>
+      )}
     </>
   );
 }

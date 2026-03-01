@@ -8,6 +8,7 @@ import './css/selector.css';
 import './css/mds-command-center.css';
 import './css/pdpm-analyzer.css';
 import './css/item-detail.css';
+import './css/pdf-viewer.css';
 
 // 2. Import vanilla utilities (order matters - matches current manifest.json order)
 import './mockData.js';
