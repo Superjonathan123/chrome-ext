@@ -113,17 +113,70 @@ function updateBubblesContext() {
 // (set by setupBubblesDraggable via closure; exposed here for mainBtn access)
 let hasDragged = false;
 
-function openChatOverlay() {
-  // If the chat panel still exists (legacy), toggle it; otherwise open overlay
-  const panel = document.getElementById('super-chat-panel');
-  if (panel) {
-    if (typeof toggleChatPanel === 'function') {
-      toggleChatPanel();
+// AI Chat Overlay Launcher — dynamic import pattern (same as MDSCommandCenterLauncher)
+const ChatOverlayLauncher = {
+  _overlayEl: null,
+  _preactUnmount: null,
+
+  async open() {
+    if (this._overlayEl) return; // Already open
+
+    const patientId = getChatPatientId();
+    if (!patientId) {
+      console.warn('[AI Chat] No patient context — chat requires a patient page');
+      return;
     }
-    return;
+
+    // Create overlay mount point
+    const overlayEl = document.createElement('div');
+    overlayEl.id = 'ai-chat-overlay';
+    document.body.appendChild(overlayEl);
+    this._overlayEl = overlayEl;
+
+    try {
+      const [{ render, h }, { AIChatOverlay }] = await Promise.all([
+        import('preact'),
+        import('../modules/ai-chat/AIChatOverlay.jsx')
+      ]);
+
+      render(
+        h(AIChatOverlay, {
+          patientId,
+          onClose: () => this.close()
+        }),
+        overlayEl
+      );
+
+      this._preactUnmount = () => render(null, overlayEl);
+    } catch (err) {
+      console.error('[AI Chat] Failed to load module:', err);
+      overlayEl.remove();
+      this._overlayEl = null;
+    }
+  },
+
+  close() {
+    if (this._preactUnmount) {
+      this._preactUnmount();
+      this._preactUnmount = null;
+    }
+    if (this._overlayEl) {
+      this._overlayEl.remove();
+      this._overlayEl = null;
+    }
+  },
+
+  isOpen() {
+    return !!this._overlayEl;
   }
-  // Future: ChatOverlayLauncher.open()
-  console.log('[Super] Chat overlay not yet implemented');
+};
+
+function openChatOverlay() {
+  if (ChatOverlayLauncher.isOpen()) {
+    ChatOverlayLauncher.close();
+  } else {
+    ChatOverlayLauncher.open();
+  }
 }
 
 function loadBubblesPosition(container) {
@@ -293,3 +346,4 @@ window.createChatButton = createChatButton;
 window.updateMDSBadge = updateMDSBadge;
 window.updateMenuBadge = updateMenuBadge;
 window.updateBubblesContext = updateBubblesContext;
+window.ChatOverlayLauncher = ChatOverlayLauncher;
