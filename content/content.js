@@ -9,6 +9,7 @@ import './css/mds-command-center.css';
 import './css/pdpm-analyzer.css';
 import './css/item-detail.css';
 import './css/pdf-viewer.css';
+import './css/ai-chat.css';
 import './css/certifications.css';
 
 // 2. Import vanilla utilities (order matters - matches current manifest.json order)
