@@ -2,9 +2,8 @@
   "manifest_version": 3,
   "name": "Super LTC for Point Click Care",
   "version": "1.0.0",
-  "description": "Super LTC enhances PointClickCare for LTC facilities with AI-assisted clinical documentation, ICD-10 code lookup, MDS analysis, and evidence-based query tools.",
+  "description": "AI-powered clinical tools for PointClickCare: MDS analysis, ICD-10 lookup, documentation, and query tools.",
   "permissions": [
-    "cookies",
     "storage",
     "activeTab",
     "tabs"
@@ -21,6 +20,7 @@
     "default_popup": "popup/popup.html",
     "default_icon": {
       "16": "icons/icon-16.png",
+      "32": "icons/icon-32.png",
       "48": "icons/icon-48.png",
       "128": "icons/icon-128.png"
     }
@@ -54,14 +54,22 @@
   ],
   "icons": {
     "16": "icons/icon-16.png",
+    "32": "icons/icon-32.png",
     "48": "icons/icon-48.png",
     "128": "icons/icon-128.png",
     "512": "icons/icon-512.png"
   },
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self';"
+  },
   "web_accessible_resources": [
     {
-      "resources": ["callback.html", "lib/pdf.min.js", "lib/pdf.worker.min.js"],
-      "matches": ["<all_urls>"]
+      "resources": ["lib/pdf.min.js", "lib/pdf.worker.min.js"],
+      "matches": ["*://*.pointclickcare.com/*"]
+    },
+    {
+      "resources": ["callback.html"],
+      "matches": ["https://superltc.com/*", "http://localhost:3000/*"]
     }
   ]
 }

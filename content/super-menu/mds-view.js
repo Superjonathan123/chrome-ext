@@ -100,7 +100,7 @@ async function loadMDSData(context, forceRefresh = false) {
     throw new Error('Please log in to view MDS data');
   }
 
-  const orgResponse = await chrome.runtime.sendMessage({ type: 'GET_ORG' });
+  const orgResponse = getOrg();
   const orgSlug = orgResponse?.org;
   const facilityName = getChatFacilityInfo();
 
@@ -1264,7 +1264,7 @@ async function fetchMDSItem(itemCode, categoryKey) {
     throw new Error('Please log in to view item details');
   }
 
-  const orgResponse = await chrome.runtime.sendMessage({ type: 'GET_ORG' });
+  const orgResponse = getOrg();
   const orgSlug = orgResponse?.org;
   const facilityName = getChatFacilityInfo();
   const assessmentId = MDSViewState.manualContext?.assessmentId || MDSViewState.context?.assessmentId;
@@ -1477,7 +1477,7 @@ const MDSCommandCenterLauncher = {
     // Get org slug and facility name (same pattern as loadMDSData)
     let facilityName, orgSlug;
     try {
-      const orgResponse = await chrome.runtime.sendMessage({ type: 'GET_ORG' });
+      const orgResponse = getOrg();
       orgSlug = orgResponse?.org;
       facilityName = getChatFacilityInfo();
     } catch (e) {

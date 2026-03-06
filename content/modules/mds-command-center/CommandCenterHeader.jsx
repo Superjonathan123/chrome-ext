@@ -33,6 +33,8 @@ export function CommandCenterHeader({
   activeView,
   onViewChange,
   queryCount,
+  certCount,
+  certsEnabled,
   docRiskCount,
   payerFilter,
   onPayerFilterChange,
@@ -113,6 +115,15 @@ export function CommandCenterHeader({
           Queries
           {queryCount > 0 && <span class="mds-cc__view-tab-badge">{queryCount}</span>}
         </button>
+        {certsEnabled && (
+          <button
+            class={`mds-cc__view-tab${activeView === 'certs' ? ' mds-cc__view-tab--active' : ''}`}
+            onClick={() => onViewChange('certs')}
+          >
+            Certs
+            {certCount > 0 && <span class="mds-cc__view-tab-badge">{certCount}</span>}
+          </button>
+        )}
         {docRiskCount > 0 && (
           <button
             class={`mds-cc__view-tab${activeView === 'docRisks' ? ' mds-cc__view-tab--active' : ''}`}

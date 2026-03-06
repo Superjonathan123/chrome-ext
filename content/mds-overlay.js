@@ -100,7 +100,7 @@ async function getAPIParams() {
   const { assessmentId, section } = getMDSPageParams();
 
   // Get org from background (cookie)
-  const orgResponse = await chrome.runtime.sendMessage({ type: 'GET_ORG' });
+  const orgResponse = getOrg();
   const orgSlug = orgResponse?.org;
 
   // Get facility from DOM — try multiple sources
@@ -2170,7 +2170,7 @@ async function getQueryContext() {
   const patientId = SuperOverlay.patientId || url.searchParams.get('ESOLclientid');
 
   // Get org from cookie
-  const orgResponse = await chrome.runtime.sendMessage({ type: 'GET_ORG' });
+  const orgResponse = getOrg();
   const orgSlug = orgResponse?.org;
 
   // Get facility from DOM

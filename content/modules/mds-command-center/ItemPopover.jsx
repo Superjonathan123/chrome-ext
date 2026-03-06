@@ -2,9 +2,10 @@
  * ItemPopover — backdrop wrapper for item detail in MDS Command Center.
  * Delegates body content to shared <ItemDetail variant="compact" />.
  *
- * Split-view mode: when a coder clicks "View PDF" on a document evidence card,
+ * Split-view mode: when a coder clicks "View Source" on an evidence card,
  * the popover widens into a split layout — condensed source sidebar on the left,
- * inline PDFViewer on the right. "Back" returns to the summary.
+ * inline viewer on the right (PDF, administrations, notes, therapy docs).
+ * "Back" returns to the summary.
  */
 import { useState, useEffect, useRef, useCallback } from 'preact/hooks';
 import { useItemDetail } from '../pdpm-analyzer/hooks/useItemDetail.js';
@@ -12,6 +13,23 @@ import { ItemDetail } from '../../components/ItemDetail.jsx';
 import { PDFViewer } from '../../components/PDFViewer.jsx';
 import { parseViewer, inferSourceType, SOURCE_LABELS } from '../../utils/evidence-helpers.js';
 import { fetchDocument } from '../../evidence-viewers.js';
+
+/** Check if evidence is an order/administration type */
+function isOrderEvidence(ev) {
+  return ev.sourceType === 'order' || (ev.evidenceId || '').startsWith('order-');
+}
+
+/** Extract order ID from evidence object */
+function getOrderId(ev) {
+  const id = ev.sourceId || ev.evidenceId || '';
+  return id.replace(/^order-/, '');
+}
+
+/** Evidence is viewable inline if it has a recognized viewer type or is an order */
+function isViewableEvidence(ev) {
+  const vt = parseViewer(ev).viewerType;
+  return vt === 'document' || vt === 'clinical-note' || vt === 'therapy-document' || isOrderEvidence(ev);
+}
 
 export function ItemPopover({ item, context, onClose }) {
   const mdsItem = item?.mdsItem;
@@ -25,11 +43,27 @@ export function ItemPopover({ item, context, onClose }) {
   // Cache for prefetched documents: Map<documentId, { document, promise }>
   const docCacheRef = useRef(new Map());
 
-  // Collect all document-type evidence items
-  const allEvidence = getEvidence(data);
-  const docEvidence = allEvidence.filter(ev => parseViewer(ev).viewerType === 'document');
+  // Refs for vanilla-rendered viewers (orders, notes, therapy)
+  const adminContainerRef = useRef(null);
+  const noteContainerRef = useRef(null);
 
-  // Prefetch all PDF documents when evidence loads
+  // Collect all viewable evidence items (documents, orders, notes, therapy)
+  const allEvidence = getEvidence(data);
+  const viewableEvidence = allEvidence.filter(isViewableEvidence);
+
+  // Determine what type of source we're viewing
+  const viewingOrder = viewingSource && isOrderEvidence(viewingSource.ev);
+  const viewingViewerType = viewingSource ? parseViewer(viewingSource.ev).viewerType : null;
+  const viewingNote = viewingViewerType === 'clinical-note';
+  const viewingTherapy = viewingViewerType === 'therapy-document';
+  const viewingDoc = viewingSource && !viewingOrder && !viewingNote && !viewingTherapy;
+
+  // Prefetch PDF documents only (skip orders, notes, therapy)
+  const docEvidence = viewableEvidence.filter(ev => {
+    if (isOrderEvidence(ev)) return false;
+    return parseViewer(ev).viewerType === 'document';
+  });
+
   useEffect(() => {
     if (!data || docEvidence.length === 0) return;
 
@@ -61,12 +95,12 @@ export function ItemPopover({ item, context, onClose }) {
     prefetch();
   }, [data]);
 
-  // Get cached document data for current source
+  // Get cached document data for current source (PDF only)
   const [currentDoc, setCurrentDoc] = useState(null);
   const [docLoading, setDocLoading] = useState(false);
 
   useEffect(() => {
-    if (!viewingSource) {
+    if (!viewingSource || viewingOrder || viewingNote || viewingTherapy) {
       setCurrentDoc(null);
       setDocLoading(false);
       return;
@@ -105,7 +139,64 @@ export function ItemPopover({ item, context, onClose }) {
     };
 
     loadDoc();
-  }, [viewingSource]);
+  }, [viewingSource, viewingOrder, viewingNote, viewingTherapy]);
+
+  // Render admin (MAR/TAR) grid when viewing an order source
+  useEffect(() => {
+    if (!viewingOrder || !adminContainerRef.current) return;
+
+    const el = adminContainerRef.current;
+    const orderId = getOrderId(viewingSource.ev);
+
+    el.innerHTML = '<div class="cc-pop__viewer-loading"><div class="mds-cc__spinner mds-cc__spinner--sm"></div><span>Loading administrations...</span></div>';
+
+    if (window.renderSplitAdministrations) {
+      const resolveAndRender = async () => {
+        const orgResponse = getOrg();
+        const orgSlug = orgResponse?.org;
+        const facilityName = window.getChatFacilityInfo?.() || '';
+        const params = { assessmentId: context?.assessmentId, orgSlug, facilityName };
+        await window.renderSplitAdministrations(el, orderId, undefined, params);
+      };
+      resolveAndRender().catch(err => {
+        console.error('[ItemPopover] Failed to load administrations:', err);
+        el.innerHTML = '<div class="cc-pop__viewer-loading"><span>Failed to load administrations</span></div>';
+      });
+    } else {
+      el.innerHTML = '<div class="cc-pop__viewer-loading"><span>Administration viewer not available</span></div>';
+    }
+  }, [viewingSource, viewingOrder]);
+
+  // Render clinical note or therapy document via vanilla renderers
+  useEffect(() => {
+    if ((!viewingNote && !viewingTherapy) || !noteContainerRef.current) return;
+
+    const el = noteContainerRef.current;
+    const viewer = parseViewer(viewingSource.ev);
+    const quote = viewingSource.ev.quoteText || viewingSource.ev.quote || viewingSource.ev.snippet || '';
+
+    el.innerHTML = '<div class="cc-pop__viewer-loading"><div class="mds-cc__spinner mds-cc__spinner--sm"></div><span>Loading...</span></div>';
+
+    const resolveAndRender = async () => {
+      const orgResponse = getOrg();
+      const orgSlug = orgResponse?.org;
+      const facilityName = window.getChatFacilityInfo?.() || '';
+      const params = { assessmentId: context?.assessmentId, orgSlug, facilityName };
+
+      if (viewingNote && window.renderSplitNote) {
+        await window.renderSplitNote(el, viewer.id, params);
+      } else if (viewingTherapy && window.renderSplitTherapy) {
+        await window.renderSplitTherapy(el, viewer.id, quote, params);
+      } else {
+        el.innerHTML = '<div class="cc-pop__viewer-loading"><span>Viewer not available</span></div>';
+      }
+    };
+
+    resolveAndRender().catch(err => {
+      console.error('[ItemPopover] Failed to load source:', err);
+      el.innerHTML = '<div class="cc-pop__viewer-loading"><span>Failed to load</span></div>';
+    });
+  }, [viewingSource, viewingNote, viewingTherapy]);
 
   const handleViewSource = useCallback((ev, index) => {
     setViewingSource({ ev, index });
@@ -161,11 +252,12 @@ export function ItemPopover({ item, context, onClose }) {
           <div class="cc-pop__split-body">
             {/* Left pane: condensed source list */}
             <div class="cc-pop__sources">
-              <div class="cc-pop__sources-label">Sources ({docEvidence.length})</div>
-              {docEvidence.map((ev, i) => {
+              <div class="cc-pop__sources-label">Sources ({viewableEvidence.length})</div>
+              {viewableEvidence.map((ev, i) => {
+                const isOrder = isOrderEvidence(ev);
                 const sourceType = ev.sourceType || inferSourceType(ev.displayName, ev.evidenceId);
-                const typeLabel = ev.displayName || SOURCE_LABELS[sourceType] || 'Document';
-                const snippet = ev.quoteText || ev.quote || ev.snippet || ev.text || '';
+                const typeLabel = ev.displayName || SOURCE_LABELS[sourceType] || (isOrder ? 'Orders' : 'Document');
+                const snippet = ev.quoteText || ev.orderDescription || ev.quote || ev.snippet || ev.text || '';
                 const page = ev.wordBlocks?.[0]?.p;
                 const isActive = viewingSource.ev === ev;
 
@@ -176,23 +268,24 @@ export function ItemPopover({ item, context, onClose }) {
                     onClick={() => setViewingSource({ ev, index: i })}
                     role="button"
                   >
-                    <div class="cc-pop__source-badge">{typeLabel}</div>
+                    <div class={`cc-pop__source-badge${isOrder ? ' cc-pop__source-badge--order' : ''}`}>{typeLabel}</div>
                     {snippet && <div class="cc-pop__source-snippet">{snippet}</div>}
-                    {page && <div class="cc-pop__source-page">Page {page}</div>}
+                    {!isOrder && page && <div class="cc-pop__source-page">Page {page}</div>}
                   </div>
                 );
               })}
             </div>
 
-            {/* Right pane: PDF viewer */}
+            {/* Right pane: viewer (PDF, orders, notes, therapy) */}
             <div class="cc-pop__viewer">
-              {docLoading && (
+              {/* PDF document viewer */}
+              {viewingDoc && docLoading && (
                 <div class="cc-pop__viewer-loading">
                   <div class="mds-cc__spinner mds-cc__spinner--sm" />
                   <span>Loading document...</span>
                 </div>
               )}
-              {!docLoading && currentDoc && (
+              {viewingDoc && !docLoading && currentDoc && (
                 <PDFViewer
                   url={currentDoc.signedUrl || null}
                   wordBlocks={viewingSource.ev.wordBlocks || []}
@@ -205,10 +298,20 @@ export function ItemPopover({ item, context, onClose }) {
                   openInNewTabUrl={currentDoc.signedUrl || null}
                 />
               )}
-              {!docLoading && !currentDoc && (
+              {viewingDoc && !docLoading && !currentDoc && (
                 <div class="cc-pop__viewer-loading">
                   <span>Failed to load document</span>
                 </div>
+              )}
+
+              {/* Order/administration viewer — rendered by vanilla renderSplitAdministrations */}
+              {viewingOrder && (
+                <div ref={adminContainerRef} class="cc-pop__admin-viewer" />
+              )}
+
+              {/* Clinical note / therapy doc viewer — rendered by vanilla renderers */}
+              {(viewingNote || viewingTherapy) && (
+                <div ref={noteContainerRef} class="cc-pop__note-viewer" />
               )}
             </div>
           </div>

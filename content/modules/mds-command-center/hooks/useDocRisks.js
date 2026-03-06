@@ -29,7 +29,7 @@ export function useDocRisks({ facilityName, orgSlug, windowDays = 30, enabled = 
           throw new Error('Please log in to view documentation risks');
         }
 
-        const orgResponse = await chrome.runtime.sendMessage({ type: 'GET_ORG' });
+        const orgResponse = getOrg();
         const resolvedOrg = orgSlug || orgResponse?.org;
 
         const params = new URLSearchParams({

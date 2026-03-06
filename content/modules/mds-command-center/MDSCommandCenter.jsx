@@ -9,7 +9,9 @@
 import { useState, useMemo, useEffect, useRef, useCallback } from 'preact/hooks';
 import { useCommandCenter } from './hooks/useCommandCenter.js';
 import { useDocRisks } from './hooks/useDocRisks.js';
+import { useCertDashboard } from '../certifications/hooks/useCertDashboard.js';
 import { CommandCenterHeader } from './CommandCenterHeader.jsx';
+import { CertsView } from '../certifications/CertsView.jsx';
 import { AssessmentRow, cleanAssessmentType } from './AssessmentRow.jsx';
 import { AssessmentPreview } from './AssessmentPreview.jsx';
 import { ItemPopover } from './ItemPopover.jsx';
@@ -704,6 +706,15 @@ export function MDSCommandCenter({ facilityName, orgSlug, onClose, initialExpand
 
   const { data, loading, error, retry } = useCommandCenter({ facilityName, orgSlug });
 
+  // Certification dashboard (returns null when module disabled)
+  const { data: certDashboard } = useCertDashboard({ facilityName, orgSlug, enabled: true });
+  const certsEnabled = certDashboard !== null;
+  const certCount = certsEnabled ? (certDashboard?.pending || 0) + (certDashboard?.overdue || 0) : 0;
+
+  // Patient context for cert auto-filtering
+  const patientId = typeof window.getChatPatientId === 'function' ? window.getChatPatientId() : null;
+  const patientName = typeof window.getPatientNameFromPage === 'function' ? window.getPatientNameFromPage() : null;
+
   const assessments = data?.assessments || [];
   const summary = data?.summary || {};
 
@@ -868,6 +879,8 @@ export function MDSCommandCenter({ facilityName, orgSlug, onClose, initialExpand
           activeView={activeView}
           onViewChange={setActiveView}
           queryCount={(data?.outstandingQueries || []).length}
+          certCount={certCount}
+          certsEnabled={certsEnabled}
           docRiskCount={docRiskCount}
           payerFilter={payerFilter}
           onPayerFilterChange={setPayerFilter}
@@ -933,6 +946,16 @@ export function MDSCommandCenter({ facilityName, orgSlug, onClose, initialExpand
           {/* Doc Risks */}
           {!loading && !error && activeView === 'docRisks' && (
             <DocRisksView facilityName={facilityName} orgSlug={orgSlug} />
+          )}
+
+          {/* Certifications */}
+          {activeView === 'certs' && (
+            <CertsView
+              facilityName={facilityName}
+              orgSlug={orgSlug}
+              patientId={patientId}
+              patientName={patientName}
+            />
           )}
         </div>
       </div>

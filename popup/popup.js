@@ -78,6 +78,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     logoutBtn.textContent = 'Logout';
   });
 
+  // Privacy policy link
+  document.getElementById('privacy-link').addEventListener('click', (e) => {
+    e.preventDefault();
+    chrome.tabs.create({ url: chrome.runtime.getURL('privacy-policy.html') });
+  });
+
   // Check if we're on a PCC page
   const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
   const isPCCPage = tab?.url?.includes('pointclickcare.com');
@@ -92,9 +98,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     return;
   }
 
-  // Get organization from cookies (via background script)
+  // Get organization from content script (reads PCC's localStorage)
   try {
-    const orgResponse = await chrome.runtime.sendMessage({ type: 'GET_ORG' });
+    const orgResponse = await chrome.tabs.sendMessage(tab.id, { type: 'GET_ORG' });
     if (orgResponse?.org) {
       orgEl.textContent = orgResponse.org.toUpperCase();
       orgEl.classList.remove('loading');

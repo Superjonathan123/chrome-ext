@@ -62,10 +62,9 @@ function routeApiRequest(endpoint) {
     return {
       success: true,
       data: {
-        item: { mdsItem: code, itemName: code, description: `MDS Item ${code}` },
+        item: { mdsItem: code, itemName: code, description: `MDS Item ${code}`, status: 'dont_code', evidence: [] },
         diagnosisSummary: null,
-        treatmentSummary: null,
-        evidence: []
+        treatmentSummary: null
       }
     };
   }
@@ -83,6 +82,73 @@ function routeApiRequest(endpoint) {
   // /api/extension/practitioners
   if (path === '/api/extension/practitioners') {
     return { success: true, data: DEMO_API_RESPONSES.practitioners };
+  }
+
+  // ── Certification routes ──
+
+  // /api/extension/certifications/dashboard
+  if (path === '/api/extension/certifications/dashboard') {
+    return { success: true, data: DEMO_API_RESPONSES.certDashboard };
+  }
+
+  // /api/extension/certifications/practitioners
+  if (path === '/api/extension/certifications/practitioners') {
+    return { success: true, data: DEMO_API_RESPONSES.practitioners };
+  }
+
+  // /api/extension/certifications/by-patient
+  if (path === '/api/extension/certifications/by-patient') {
+    const patientId = params.get('patientId');
+    const all = DEMO_API_RESPONSES.certifications || [];
+    const filtered = patientId ? all.filter(c => c.patientId === patientId) : all;
+    return { success: true, data: { certifications: filtered } };
+  }
+
+  // /api/extension/certifications/:id/sends
+  const certSendsMatch = path.match(/\/api\/extension\/certifications\/([^/]+)\/sends/);
+  if (certSendsMatch) {
+    return {
+      success: true,
+      data: [{
+        id: 'send-1',
+        certId: certSendsMatch[1],
+        sentAt: new Date(Date.now() - 3 * 86400000).toISOString(),
+        practitioner: { name: 'Dr. Demo Provider' },
+        method: 'fax'
+      }]
+    };
+  }
+
+  // /api/extension/certifications/:id/(send|skip|delay|edit-reason|unskip)
+  const certActionMatch = path.match(/\/api\/extension\/certifications\/([^/]+)\/(send|skip|delay|edit-reason|unskip)/);
+  if (certActionMatch) {
+    return { success: true, data: { certId: certActionMatch[1], action: certActionMatch[2] } };
+  }
+
+  // /api/extension/certifications (list)
+  if (path === '/api/extension/certifications') {
+    const status = params.get('status');
+    const all = DEMO_API_RESPONSES.certifications || [];
+    const filtered = status ? all.filter(c => c.status === status) : all;
+    return { success: true, data: { certifications: filtered } };
+  }
+
+  // /api/extension/documents/:id (PDF prefetch for ItemPopover)
+  const docMatch = path.match(/\/api\/extension\/documents\/([^/]+)/);
+  if (docMatch) {
+    return {
+      success: true,
+      data: {
+        document: {
+          id: docMatch[1],
+          title: 'Clinical Document',
+          documentType: 'Progress Note',
+          effectiveDate: '2026-01-22',
+          fileSize: 245760,
+          signedUrl: null // No real PDF in demo — viewer will show empty state
+        }
+      }
+    };
   }
 
   console.warn('[DemoMock] Unhandled API endpoint:', path);

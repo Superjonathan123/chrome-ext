@@ -39,7 +39,7 @@ const FacilityDashboardState = {
         throw new Error('Please log in to view dashboard');
       }
 
-      const orgResponse = await chrome.runtime.sendMessage({ type: 'GET_ORG' });
+      const orgResponse = getOrg();
       const orgSlug = orgResponse?.org;
       const facilityName = getChatFacilityInfo();
 

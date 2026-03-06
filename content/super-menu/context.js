@@ -109,6 +109,13 @@ function getChatFacilityInfo() {
   return null;
 }
 
+// Read org code from PCC's localStorage (set by PCC's own init script)
+// Returns { org: 'hcg', allCookies: [] } to match the old cookie-based shape
+function getOrg() {
+  const org = localStorage.getItem('CORE.org_code') || null;
+  return { org };
+}
+
 // Handle messages from popup/background
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.type === 'GET_FACILITY') {
@@ -116,21 +123,17 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     sendResponse({ facility });
     return false;
   }
+  if (message.type === 'GET_ORG') {
+    sendResponse(getOrg());
+    return false;
+  }
 });
 
 // Shared helper: get orgSlug + facilityName for API calls
 // Used by evidence-viewers.js, icd10-viewer.js, etc.
-async function getCurrentParams() {
+function getCurrentParams() {
   const facilityName = getChatFacilityInfo() || '';
-
-  let orgSlug = '';
-  try {
-    const orgResponse = await chrome.runtime.sendMessage({ type: 'GET_ORG' });
-    orgSlug = orgResponse?.org || '';
-  } catch (e) {
-    console.warn('getCurrentParams: Could not get org slug:', e);
-  }
-
+  const orgSlug = getOrg()?.org || '';
   return { facilityName, orgSlug };
 }
 
@@ -140,4 +143,5 @@ window.getPatientNameFromPage = getPatientNameFromPage;
 window.getMDSContext = getMDSContext;
 window.setCachedPatientName = setCachedPatientName;
 window.getChatFacilityInfo = getChatFacilityInfo;
+window.getOrg = getOrg;
 window.getCurrentParams = getCurrentParams;

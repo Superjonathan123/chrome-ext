@@ -15,7 +15,7 @@ export function useItemDetail(mdsItem, categoryKey, context) {
     async function fetchDetail() {
       try {
         // Resolve facilityName and orgSlug the same way usePDPMAnalyzer does
-        const orgResponse = await chrome.runtime.sendMessage({ type: 'GET_ORG' });
+        const orgResponse = getOrg();
         const orgSlug = orgResponse?.org;
         const facilityName = window.getChatFacilityInfo?.() || '';
 

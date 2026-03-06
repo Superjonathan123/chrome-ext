@@ -1,0 +1,54 @@
+/**
+ * PCC Demo entry point — variant of demo-entry.jsx for pcc-demo.html.
+ *
+ * Mounts PCCDemoApp (with real Preact overlays) instead of the generic DemoApp.
+ */
+
+// ── Step 1: Install mocks SYNCHRONOUSLY before anything else ──
+import { createMockChrome } from './demo-mock-chrome.js';
+import { installGlobalMocks } from './demo-mock-globals.js';
+
+createMockChrome();
+installGlobalMocks();
+
+// ── Step 2: Import CSS (Vite will bundle these) ──
+import '../content/css/variables.css';
+import '../content/css/base.css';
+import '../content/css/super-components.css';
+import '../content/css/panel.css';
+import '../content/css/mds-command-center.css';
+import '../content/css/pdpm-analyzer.css';
+import '../content/css/item-detail.css';
+import '../content/css/query-items.css';
+import '../content/css/query.css';
+import '../content/css/selector.css';
+import '../content/css/popover.css';
+import '../content/css/evidence-viewer.css';
+import '../content/css/pdf-viewer.css';
+import '../content/css/pdf-modal.css';
+import '../content/css/sections.css';
+import '../content/css/certifications.css';
+import '../content/css/admin-modal.css';
+import './pcc-demo-overrides.css';
+
+// ── Step 3: Mount PCCDemoApp ──
+import { render } from 'preact';
+import { PCCDemoApp } from './components/PCCDemoApp.jsx';
+
+function boot() {
+  let root = document.getElementById('super-demo-root');
+  if (!root) {
+    root = document.createElement('div');
+    root.id = 'super-demo-root';
+    document.body.appendChild(root);
+  }
+
+  render(<PCCDemoApp />, root);
+  console.log('[PCC Demo] PCCDemoApp mounted');
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', boot);
+} else {
+  boot();
+}

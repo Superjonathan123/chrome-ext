@@ -431,7 +431,7 @@ export const DEMO_API_RESPONSES = {
           confidence: 0.92,
           rationale: 'SLP evaluation documents significant word-finding difficulties and reduced verbal fluency consistent with expressive aphasia.',
           evidence: [
-            { sourceType: 'clinical_note', quote: 'Patient demonstrates significant word-finding difficulties and reduced verbal fluency consistent with expressive aphasia.', documentName: 'SLP Evaluation' }
+            { sourceType: 'progress-note', sourceId: 'doc-080', quote: 'Patient demonstrates significant word-finding difficulties and reduced verbal fluency consistent with expressive aphasia.', documentName: 'SLP Evaluation' }
           ],
           impact: {
             slp: { wouldChangeGroup: true, currentGroup: 'SA', newGroup: 'SB' }
@@ -446,8 +446,8 @@ export const DEMO_API_RESPONSES = {
           confidence: 0.85,
           rationale: 'Lab results show elevated HbA1c and medication list includes diabetic medications. Progress note documents PVD symptoms.',
           evidence: [
-            { sourceType: 'lab_result', quote: 'HbA1c: 8.2%, GFR 42, Creatinine 1.8', documentName: 'Lab Results 1/18' },
-            { sourceType: 'clinical_note', quote: 'Bilateral lower extremity edema with diminished pedal pulses noted.', documentName: 'MD Progress Note' }
+            { sourceType: 'lab_result', sourceId: 'doc-081', quote: 'HbA1c: 8.2%, GFR 42, Creatinine 1.8', documentName: 'Lab Results 1/18' },
+            { sourceType: 'progress-note', sourceId: 'doc-082', quote: 'Bilateral lower extremity edema with diminished pedal pulses noted.', documentName: 'MD Progress Note' }
           ],
           impact: {
             nta: { wouldChangeLevel: true, currentLevel: 'ND', newLevel: 'NE' }
@@ -462,7 +462,7 @@ export const DEMO_API_RESPONSES = {
           confidence: 0.95,
           rationale: 'MAR shows active IV antibiotic course (Vancomycin) during lookback period.',
           evidence: [
-            { sourceType: 'mar', quote: 'Vancomycin 1g IV Q12H - administered 1/12, 1/13', documentName: 'MAR' }
+            { sourceType: 'order', sourceId: 'order-080', quote: 'Vancomycin 1g IV Q12H - administered 1/12, 1/13', documentName: 'MAR' }
           ],
           impact: {
             nursing: { wouldChangeGroup: true, currentPaymentGroup: 'CA1', newPaymentGroup: 'CB1' }
@@ -477,7 +477,7 @@ export const DEMO_API_RESPONSES = {
           confidence: 0.72,
           rationale: 'PHQ-9 assessment missing. Multiple medications on profile associated with depressive side effects.',
           evidence: [
-            { sourceType: 'clinical_note', quote: 'Patient reports feeling down and having little interest in activities.', documentName: 'Nursing Assessment' }
+            { sourceType: 'progress-note', sourceId: 'doc-083', quote: 'Patient reports feeling down and having little interest in activities.', documentName: 'Nursing Assessment' }
           ]
         }
       ],
@@ -552,7 +552,7 @@ export const DEMO_API_RESPONSES = {
           confidence: 0.96,
           rationale: 'Post-CVA left hemiparesis well documented in PT/OT evaluations.',
           evidence: [
-            { sourceType: 'clinical_note', quote: 'Left-sided hemiparesis with 2/5 strength in left upper and lower extremities.', documentName: 'PT Evaluation' }
+            { sourceType: 'progress-note', sourceId: 'doc-084', quote: 'Left-sided hemiparesis with 2/5 strength in left upper and lower extremities.', documentName: 'PT Evaluation' }
           ],
           impact: {
             ptot: { wouldChangeGroup: true, currentGroup: 'TL', newGroup: 'TM' }
@@ -567,7 +567,7 @@ export const DEMO_API_RESPONSES = {
           confidence: 0.88,
           rationale: 'IV fluids administered during lookback period per MAR records.',
           evidence: [
-            { sourceType: 'mar', quote: 'D5 1/2NS 1000ml IV at 75ml/hr - running', documentName: 'MAR' }
+            { sourceType: 'order', sourceId: 'order-081', quote: 'D5 1/2NS 1000ml IV at 75ml/hr - running', documentName: 'MAR' }
           ],
           impact: {
             nta: { wouldChangeLevel: true, currentLevel: 'NF', newLevel: 'NG' }
@@ -645,48 +645,443 @@ export const DEMO_API_RESPONSES = {
   },
 
   // ════════════════════════════════════════════
+  // CERTIFICATION DASHBOARD (useCertDashboard)
+  // ════════════════════════════════════════════
+  certDashboard: {
+    pending: 4,
+    overdue: 1,
+    dueSoon: 2,
+    signedLast7Days: 3
+  },
+
+  // ════════════════════════════════════════════
+  // CERTIFICATIONS LIST (useCertifications)
+  // ════════════════════════════════════════════
+  certifications: [
+    // ── Stay 001: Doe, Jane (Medicare Part A) ──
+    {
+      id: 'cert-001',
+      patientId: '2657226',
+      patientName: 'Doe, Jane',
+      status: 'pending',
+      type: 'initial',
+      sequenceNumber: 0,
+      payerType: 'medicare',
+      partAStayId: 'stay-001',
+      partAStartDate: '2025-12-20',
+      currentMedicareDay: 45,
+      admitDate: '2025-12-20',
+      certPeriodStart: '2025-12-20',
+      certPeriodEnd: '2026-01-19',
+      dueDate: new Date(Date.now() + 2 * 86400000).toISOString().split('T')[0],
+      clinicalReason: 'Requires skilled nursing for IV antibiotic therapy and wound management following surgical debridement of sacral pressure ulcer. Patient also requires daily PT/OT for functional mobility restoration.',
+      estimatedDays: 30,
+      planForDischarge: 'home_with_services',
+      assignedPractitioner: { id: 'pract-001', name: 'Dr. Demo Provider', title: 'MD' },
+      sends: [],
+      certChain: [
+        { type: 'initial', status: 'pending', dueDate: new Date(Date.now() + 2 * 86400000).toISOString().split('T')[0] }
+      ]
+    },
+    {
+      id: 'cert-004',
+      patientId: '2657226',
+      patientName: 'Doe, Jane',
+      status: 'signed',
+      type: 'day_14_recert',
+      sequenceNumber: 1,
+      payerType: 'medicare',
+      partAStayId: 'stay-001',
+      partAStartDate: '2025-12-20',
+      currentMedicareDay: 45,
+      admitDate: '2025-12-20',
+      certPeriodStart: '2025-12-20',
+      certPeriodEnd: '2026-01-19',
+      dueDate: '2026-01-10',
+      clinicalReason: 'Continued skilled nursing for wound care and IV medications. Wound showing slow but steady improvement with granulation tissue forming.',
+      estimatedDays: 30,
+      planForDischarge: 'home_with_services',
+      signedAt: new Date(Date.now() - 4 * 86400000).toISOString(),
+      signedByName: 'Dr. Demo Provider',
+      signedByTitle: 'MD',
+      signedByPractitionerId: 'pract-001',
+      sends: [
+        { sentAt: new Date(Date.now() - 6 * 86400000).toISOString(), practitionerName: 'Dr. Demo Provider', practitionerTitle: 'MD', smsStatus: 'delivered' }
+      ],
+      certChain: [
+        { type: 'initial', status: 'signed', dueDate: '2025-12-30' },
+        { type: 'day_14_recert', status: 'signed', dueDate: '2026-01-10' }
+      ]
+    },
+
+    // ── Stay 002: Smith, Robert (Medicare Part A) ──
+    {
+      id: 'cert-006',
+      patientId: '2657300',
+      patientName: 'Smith, Robert',
+      status: 'pending',
+      type: 'initial',
+      sequenceNumber: 0,
+      payerType: 'medicare',
+      partAStayId: 'stay-002',
+      partAStartDate: '2025-11-15',
+      currentMedicareDay: 78,
+      admitDate: '2025-11-15',
+      certPeriodStart: '2025-11-15',
+      certPeriodEnd: '2025-12-15',
+      dueDate: new Date(Date.now() + 4 * 86400000).toISOString().split('T')[0],
+      clinicalReason: '',
+      estimatedDays: null,
+      planForDischarge: null,
+      assignedPractitioner: null,
+      sends: [],
+      certChain: [
+        { type: 'initial', status: 'pending', dueDate: new Date(Date.now() + 4 * 86400000).toISOString().split('T')[0] },
+        { type: 'day_14_recert', status: 'pending', dueDate: new Date(Date.now() - 1 * 86400000).toISOString().split('T')[0] }
+      ]
+    },
+    {
+      id: 'cert-002',
+      patientId: '2657300',
+      patientName: 'Smith, Robert',
+      status: 'pending',
+      type: 'day_14_recert',
+      sequenceNumber: 1,
+      payerType: 'medicare',
+      partAStayId: 'stay-002',
+      partAStartDate: '2025-11-15',
+      currentMedicareDay: 78,
+      admitDate: '2025-11-15',
+      certPeriodStart: '2026-01-15',
+      certPeriodEnd: '2026-02-14',
+      dueDate: new Date(Date.now() - 1 * 86400000).toISOString().split('T')[0],
+      clinicalReason: 'Post-CVA rehabilitation requiring daily PT/OT/SLP. Patient demonstrating slow but measurable functional gains. Left hemiparesis persists — requires max assist for transfers.',
+      estimatedDays: 30,
+      planForDischarge: 'home_with_services',
+      assignedPractitioner: { id: 'pract-002', name: 'Dr. Sample Doctor', title: 'DO' },
+      sends: [],
+      certChain: [
+        { type: 'initial', status: 'signed', dueDate: '2025-12-15' },
+        { type: 'day_14_recert', status: 'pending', dueDate: new Date(Date.now() - 1 * 86400000).toISOString().split('T')[0] }
+      ]
+    },
+
+    // ── Johnson, Mary (Managed Care) ──
+    {
+      id: 'cert-003',
+      patientId: '2657450',
+      patientName: 'Johnson, Mary',
+      status: 'sent',
+      type: 'initial',
+      sequenceNumber: 0,
+      payerType: 'managed_care',
+      partAStayId: null,
+      partAStartDate: null,
+      currentMedicareDay: null,
+      admitDate: '2026-01-05',
+      certPeriodStart: '2026-01-05',
+      certPeriodEnd: '2026-02-04',
+      dueDate: new Date(Date.now() + 5 * 86400000).toISOString().split('T')[0],
+      clinicalReason: 'Skilled nursing for medication management and fall prevention program. Patient with complex polypharmacy requiring daily nursing assessment.',
+      estimatedDays: 30,
+      planForDischarge: 'long_term_care',
+      assignedPractitioner: { id: 'pract-001', name: 'Dr. Demo Provider', title: 'MD' },
+      sends: [
+        { sentAt: new Date(Date.now() - 2 * 86400000).toISOString(), practitionerName: 'Dr. Demo Provider', practitionerTitle: 'MD', smsStatus: 'delivered' }
+      ],
+      certChain: [
+        { type: 'initial', status: 'sent', dueDate: new Date(Date.now() + 5 * 86400000).toISOString().split('T')[0] }
+      ]
+    },
+
+    // ── Wilson, James (Managed Care — Skipped) ──
+    {
+      id: 'cert-005',
+      patientId: '2657501',
+      patientName: 'Wilson, James',
+      status: 'skipped',
+      type: 'initial',
+      sequenceNumber: 0,
+      payerType: 'managed_care',
+      partAStayId: null,
+      partAStartDate: null,
+      currentMedicareDay: null,
+      admitDate: '2026-01-02',
+      certPeriodStart: '2026-01-02',
+      certPeriodEnd: '2026-02-01',
+      dueDate: '2026-01-12',
+      skipReason: 'Payer does not require certification for this stay type.',
+      sends: [],
+      certChain: [
+        { type: 'initial', status: 'skipped', dueDate: '2026-01-12' }
+      ]
+    },
+
+    // ── Anderson, Patricia (Medicare Part A — Day 30 recert delayed) ──
+    {
+      id: 'cert-007',
+      patientId: '2657600',
+      patientName: 'Anderson, Patricia',
+      status: 'pending',
+      type: 'day_30_recert',
+      sequenceNumber: 2,
+      isDelayed: true,
+      payerType: 'medicare',
+      partAStayId: 'stay-003',
+      partAStartDate: '2025-11-01',
+      currentMedicareDay: 92,
+      admitDate: '2025-11-01',
+      certPeriodStart: '2026-01-01',
+      certPeriodEnd: '2026-01-31',
+      dueDate: new Date(Date.now() + 1 * 86400000).toISOString().split('T')[0],
+      clinicalReason: 'Continued skilled nursing for tracheostomy care, ventilator weaning protocol, and respiratory therapy. Patient on gradual weaning schedule.',
+      estimatedDays: 30,
+      planForDischarge: 'long_term_care',
+      assignedPractitioner: { id: 'pract-003', name: 'Jane Specialist, NP', title: 'NP' },
+      sends: [],
+      certChain: [
+        { type: 'initial', status: 'signed', dueDate: '2025-11-20' },
+        { type: 'day_14_recert', status: 'signed', dueDate: '2025-12-15' },
+        { type: 'day_30_recert', status: 'pending', dueDate: new Date(Date.now() + 1 * 86400000).toISOString().split('T')[0] }
+      ]
+    }
+  ],
+
+  // ════════════════════════════════════════════
   // ITEM DETAIL (useItemDetail - keyed by MDS code)
   // ════════════════════════════════════════════
   itemDetail: {
+    'I0400': {
+      item: {
+        mdsItem: 'I0400',
+        itemName: 'Coronary Artery Disease (CAD)',
+        section: 'I',
+        description: 'I0400 — Has the resident been diagnosed with coronary artery disease (CAD)?',
+        status: 'needs_physician_query',
+        validation: {
+          diagnosisCheck: { passed: false },
+          treatmentCheck: { passed: true }
+        },
+        evidence: [
+          {
+            sourceType: 'progress-note',
+            sourceId: 'doc-020',
+            documentName: 'Cardiology Consult',
+            displayName: 'Cardiology Consult — 12/18/2025',
+            effectiveDate: '2025-12-18',
+            quote: 'History of coronary artery disease s/p PCI with drug-eluting stent to LAD in 2022. Chronic stable angina well controlled on current regimen.',
+            rationale: 'Specialist documentation of established CAD diagnosis with interventional history.',
+            pageNumber: 1
+          },
+          {
+            sourceType: 'progress-note',
+            sourceId: 'doc-021',
+            documentName: 'H&P — Admission',
+            displayName: 'H&P — Admission — 12/20/2025',
+            effectiveDate: '2025-12-20',
+            quote: 'PMH: CAD s/p stent, HTN, DM type 2, CKD stage 3. Continue home medications.',
+            rationale: 'Admission history documenting CAD as part of past medical history.',
+            pageNumber: 1
+          },
+          {
+            sourceType: 'order',
+            sourceId: 'mar-010',
+            documentName: 'MAR',
+            displayName: 'MAR — 01/27/2026',
+            effectiveDate: '2026-01-27',
+            quote: 'Aspirin 81mg PO daily — administered 0800. Atorvastatin 40mg PO QHS — administered 2100. Metoprolol succinate 25mg PO BID — administered 0800, 2000.',
+            rationale: 'Active medications consistent with CAD treatment regimen.'
+          }
+        ],
+        keyFindings: [
+          'Cardiology consult documents CAD s/p PCI with DES to LAD (2022)',
+          'No ICD-10 code for CAD on current problem list',
+          'Active CAD medications: aspirin, atorvastatin, metoprolol'
+        ]
+      },
+      diagnosisSummary: 'PCC response is "No" but clinical documentation suggests possible CAD. Cardiology consult from 12/2025 references chronic stable angina and coronary stenting history. No ICD-10 code for CAD on current problem list.',
+      treatmentSummary: 'Patient on aspirin 81mg daily, atorvastatin 40mg daily, and metoprolol 25mg BID — consistent with CAD management.'
+    },
+
+    'I0700': {
+      item: {
+        mdsItem: 'I0700',
+        itemName: 'Hypertension (HTN)',
+        section: 'I',
+        description: 'I0700 — Has the resident been diagnosed with hypertension?',
+        status: 'code',
+        validation: {
+          diagnosisCheck: { passed: true },
+          treatmentCheck: { passed: true }
+        },
+        evidence: [
+          {
+            sourceType: 'progress-note',
+            sourceId: 'doc-025',
+            documentName: 'MD Progress Note',
+            displayName: 'MD Progress Note — 01/22/2026',
+            effectiveDate: '2026-01-22',
+            quote: 'HTN stable on current regimen. BP today 138/82. Continue lisinopril and amlodipine. Recheck BP in 2 weeks.',
+            rationale: 'Physician documentation confirming active hypertension management.',
+            pageNumber: 1
+          },
+          {
+            sourceType: 'order',
+            sourceId: 'mar-012',
+            documentName: 'MAR',
+            displayName: 'MAR — 01/27/2026',
+            effectiveDate: '2026-01-27',
+            quote: 'Lisinopril 20mg PO daily — administered 0800. Amlodipine 5mg PO daily — administered 0800.',
+            rationale: 'Active antihypertensive medications on MAR.'
+          }
+        ],
+        keyFindings: [
+          'Active ICD-10 code I10 on problem list',
+          'BP 138/82 on latest vitals — within target range',
+          'Lisinopril 20mg + amlodipine 5mg daily regimen'
+        ]
+      },
+      diagnosisSummary: 'Hypertension well documented with active ICD-10 code I10 on problem list. Vital signs and medication regimen confirm active management.',
+      treatmentSummary: 'Lisinopril 20mg daily, amlodipine 5mg daily. BP monitoring per protocol with parameters documented.'
+    },
+
+    'I0900': {
+      item: {
+        mdsItem: 'I0900',
+        itemName: 'Peripheral Vascular Disease (PVD) or Peripheral Arterial Disease (PAD)',
+        section: 'I',
+        description: 'I0900 — Has the resident been diagnosed with peripheral vascular disease (PVD) or peripheral arterial disease (PAD)?',
+        status: 'needs_physician_query',
+        validation: {
+          diagnosisCheck: { passed: false },
+          treatmentCheck: { passed: true }
+        },
+        evidence: [
+          {
+            sourceType: 'progress-note',
+            sourceId: 'doc-003',
+            documentName: 'MD Progress Note',
+            displayName: 'MD Progress Note — 01/22/2026',
+            effectiveDate: '2026-01-22',
+            quote: 'Bilateral lower extremity edema with diminished pedal pulses noted. Continue compression stockings. Monitor for skin breakdown.',
+            rationale: 'Physical findings consistent with PVD but not definitively diagnosed.',
+            pageNumber: 1
+          },
+          {
+            sourceType: 'progress-note',
+            sourceId: 'doc-030',
+            documentName: 'Nursing Assessment',
+            displayName: 'Nursing Assessment — 01/25/2026',
+            effectiveDate: '2026-01-25',
+            quote: 'Bilateral pedal edema 2+, feet cool to touch, diminished DP pulses bilaterally. Skin intact, no ulcerations. Compression stockings applied.',
+            rationale: 'Nursing assessment documenting vascular symptoms needing clinical correlation.',
+            pageNumber: 1
+          }
+        ],
+        keyFindings: [
+          'Bilateral LE edema with diminished pedal pulses',
+          'Symptoms overlap with diabetic neuropathy — clarification needed',
+          'No PVD/PAD ICD-10 code on problem list',
+          'Compression stockings ordered but no specific PVD treatment plan'
+        ]
+      },
+      diagnosisSummary: 'Documentation is ambiguous. Progress notes describe bilateral lower extremity edema and diminished pedal pulses, but these symptoms could also indicate diabetic neuropathy or venous insufficiency. No definitive PVD/PAD diagnosis on problem list.',
+      treatmentSummary: 'Compression stockings ordered. Diabetic foot care protocol in place. Vascular checks BID — but no specific PVD treatment plan.'
+    },
+
+    'I2000': {
+      item: {
+        mdsItem: 'I2000',
+        itemName: 'Diabetes Mellitus (DM)',
+        section: 'I',
+        description: 'I2000 — Has the resident been diagnosed with diabetes mellitus (DM)?',
+        status: 'code',
+        validation: {
+          diagnosisCheck: { passed: true },
+          treatmentCheck: { passed: true }
+        },
+        evidence: [
+          {
+            sourceType: 'lab_result',
+            sourceId: 'doc-006',
+            documentName: 'Lab Results',
+            displayName: 'Lab Results — 01/18/2026',
+            effectiveDate: '2026-01-18',
+            quote: 'HbA1c: 8.2%, Fasting glucose: 186 mg/dL. Diabetes management suboptimal — consider medication adjustment.',
+            rationale: 'Lab values confirming active diabetes with suboptimal control.'
+          },
+          {
+            sourceType: 'order',
+            sourceId: 'mar-001',
+            documentName: 'MAR',
+            displayName: 'MAR — 01/27/2026',
+            effectiveDate: '2026-01-27',
+            quote: 'Metformin 500mg PO BID — administered 0800, 1800. Blood glucose AC: 0730=168, 1130=142, 1730=195. HS: 2100=156.',
+            rationale: 'Active diabetic medication and glucose monitoring.'
+          },
+          {
+            sourceType: 'progress-note',
+            sourceId: 'doc-025',
+            documentName: 'MD Progress Note',
+            displayName: 'MD Progress Note — 01/22/2026',
+            effectiveDate: '2026-01-22',
+            quote: 'DM type 2 — HbA1c elevated at 8.2%. Will increase metformin and add sliding scale insulin for glucose >200.',
+            rationale: 'Physician management of diabetes with medication adjustment.',
+            pageNumber: 1
+          }
+        ],
+        keyFindings: [
+          'ICD-10 E11.9 on active problem list',
+          'HbA1c 8.2% — suboptimal glycemic control',
+          'Metformin 500mg BID + glucose monitoring AC & HS',
+          'Physician adjusting regimen — adding sliding scale insulin'
+        ]
+      },
+      diagnosisSummary: 'Type 2 diabetes well documented. ICD-10 E11.9 on active problem list. Lab monitoring and multiple diabetic medications confirm active diagnosis.',
+      treatmentSummary: 'Metformin 500mg BID, blood glucose monitoring AC & HS, diabetic diet, podiatry consult Q3 months.'
+    },
+
     'I5600': {
       item: {
         mdsItem: 'I5600',
         itemName: 'Aphasia',
         section: 'I',
-        description: 'Aphasia — impairment of language, spoken or written, including inability to produce or comprehend speech.'
-      },
-      diagnosisSummary: {
-        hasDocumentation: true,
-        summary: 'SLP evaluation from 1/20 documents word-finding difficulties and reduced verbal fluency consistent with expressive aphasia. No aphasia ICD-10 code on active problem list.',
-        recommendedIcd10: [
-          { code: 'I69.320', description: 'Aphasia following cerebral infarction' },
-          { code: 'R47.01', description: 'Aphasia' }
+        description: 'Aphasia — impairment of language, spoken or written, including inability to produce or comprehend speech.',
+        status: 'recommend_coding',
+        validation: {
+          diagnosisCheck: { passed: true },
+          treatmentCheck: { passed: true }
+        },
+        evidence: [
+          {
+            sourceType: 'progress-note',
+            sourceId: 'doc-001',
+            documentName: 'SLP Evaluation',
+            displayName: 'SLP Evaluation — 01/20/2026',
+            effectiveDate: '2026-01-20',
+            quote: 'Patient demonstrates significant word-finding difficulties and reduced verbal fluency consistent with expressive aphasia. Recommend continued language therapy.',
+            rationale: 'Direct clinical assessment documenting aphasia symptoms.',
+            pageNumber: 2
+          },
+          {
+            sourceType: 'progress-note',
+            sourceId: 'doc-003',
+            documentName: 'MD Progress Note',
+            displayName: 'MD Progress Note — 01/22/2026',
+            effectiveDate: '2026-01-22',
+            quote: 'Progressive cognitive decline with communication difficulties. Speech therapy addressing expressive language deficits.',
+            rationale: 'Physician documentation corroborating communication impairment.',
+            pageNumber: 1
+          }
+        ],
+        keyFindings: [
+          'SLP evaluation documents expressive aphasia symptoms',
+          'No aphasia ICD-10 code on active problem list',
+          'SLP therapy 3x/week targeting verbal expression'
         ]
       },
-      treatmentSummary: {
-        hasActiveTreatment: true,
-        summary: 'Patient receiving SLP therapy 3x/week targeting verbal expression and word-finding strategies.'
-      },
-      evidence: [
-        {
-          sourceType: 'clinical_note',
-          sourceId: 'doc-001',
-          documentName: 'SLP Evaluation',
-          effectiveDate: '2026-01-20',
-          quote: 'Patient demonstrates significant word-finding difficulties and reduced verbal fluency consistent with expressive aphasia. Recommend continued language therapy.',
-          rationale: 'Direct clinical assessment documenting aphasia symptoms.',
-          pageNumber: 2
-        },
-        {
-          sourceType: 'clinical_note',
-          sourceId: 'doc-003',
-          documentName: 'MD Progress Note',
-          effectiveDate: '2026-01-22',
-          quote: 'Progressive cognitive decline with communication difficulties. Speech therapy addressing expressive language deficits.',
-          rationale: 'Physician documentation corroborating communication impairment.',
-          pageNumber: 1
-        }
-      ]
+      diagnosisSummary: 'SLP evaluation from 1/20 documents word-finding difficulties and reduced verbal fluency consistent with expressive aphasia. No aphasia ICD-10 code on active problem list.',
+      treatmentSummary: 'Patient receiving SLP therapy 3x/week targeting verbal expression and word-finding strategies.'
     },
 
     'I4300': {
@@ -694,46 +1089,50 @@ export const DEMO_API_RESPONSES = {
         mdsItem: 'I4300',
         itemName: 'Diabetes Mellitus with Peripheral Vascular Disease',
         section: 'I',
-        description: 'Active diagnosis of Diabetes Mellitus combined with Peripheral Vascular Disease.'
-      },
-      diagnosisSummary: {
-        hasDocumentation: true,
-        summary: 'Diabetes well documented with medications and lab monitoring. PVD symptoms noted in progress notes but no specific ICD-10 code on problem list.',
-        recommendedIcd10: [
-          { code: 'E11.51', description: 'Type 2 diabetes mellitus with diabetic peripheral angiopathy without gangrene' },
-          { code: 'I73.9', description: 'Peripheral vascular disease, unspecified' }
+        description: 'Active diagnosis of Diabetes Mellitus combined with Peripheral Vascular Disease.',
+        status: 'needs_physician_query',
+        validation: {
+          diagnosisCheck: { passed: true },
+          treatmentCheck: { passed: true }
+        },
+        evidence: [
+          {
+            sourceType: 'lab_result',
+            sourceId: 'doc-006',
+            documentName: 'Lab Results',
+            displayName: 'Lab Results — 01/18/2026',
+            effectiveDate: '2026-01-18',
+            quote: 'HbA1c: 8.2%, Fasting glucose: 186 mg/dL, GFR: 42, Creatinine: 1.8',
+            rationale: 'Lab values confirming uncontrolled diabetes with renal involvement.'
+          },
+          {
+            sourceType: 'progress-note',
+            sourceId: 'doc-003',
+            documentName: 'MD Progress Note',
+            displayName: 'MD Progress Note — 01/22/2026',
+            effectiveDate: '2026-01-22',
+            quote: 'Bilateral lower extremity edema with diminished pedal pulses noted. Continue diabetic foot care protocol. Compression stockings ordered.',
+            rationale: 'Physician documentation of peripheral vascular disease symptoms.',
+            pageNumber: 1
+          },
+          {
+            sourceType: 'order',
+            sourceId: 'mar-001',
+            documentName: 'MAR',
+            displayName: 'MAR — 01/27/2026',
+            effectiveDate: '2026-01-27',
+            quote: 'Metformin 500mg PO BID — administered 0800, 1800',
+            rationale: 'Active diabetes medication administration.'
+          }
+        ],
+        keyFindings: [
+          'DM well documented with HbA1c 8.2%',
+          'PVD symptoms noted but no specific ICD-10 on problem list',
+          'Metformin 500mg BID + vascular checks per protocol'
         ]
       },
-      treatmentSummary: {
-        hasActiveTreatment: true,
-        summary: 'Metformin 500mg BID, blood glucose monitoring AC & HS, vascular checks per protocol.'
-      },
-      evidence: [
-        {
-          sourceType: 'lab_result',
-          sourceId: 'doc-006',
-          documentName: 'Lab Results',
-          effectiveDate: '2026-01-18',
-          quote: 'HbA1c: 8.2%, Fasting glucose: 186 mg/dL, GFR: 42, Creatinine: 1.8',
-          rationale: 'Lab values confirming uncontrolled diabetes with renal involvement.'
-        },
-        {
-          sourceType: 'clinical_note',
-          sourceId: 'doc-003',
-          documentName: 'MD Progress Note',
-          effectiveDate: '2026-01-22',
-          quote: 'Bilateral lower extremity edema with diminished pedal pulses noted. Continue diabetic foot care protocol. Compression stockings ordered.',
-          rationale: 'Physician documentation of peripheral vascular disease symptoms.'
-        },
-        {
-          sourceType: 'mar',
-          sourceId: 'mar-001',
-          documentName: 'MAR',
-          effectiveDate: '2026-01-27',
-          quote: 'Metformin 500mg PO BID — administered 0800, 1800',
-          rationale: 'Active diabetes medication administration.'
-        }
-      ]
+      diagnosisSummary: 'Diabetes well documented with medications and lab monitoring. PVD symptoms noted in progress notes but no specific ICD-10 code on problem list.',
+      treatmentSummary: 'Metformin 500mg BID, blood glucose monitoring AC & HS, vascular checks per protocol.'
     },
 
     'O0400A3': {
@@ -741,31 +1140,33 @@ export const DEMO_API_RESPONSES = {
         mdsItem: 'O0400A3',
         itemName: 'IV Medications',
         section: 'O',
-        description: 'IV Medications — received any type of IV medications during the lookback period.'
+        description: 'IV Medications — received any type of IV medications during the lookback period.',
+        status: 'code',
+        rationale: 'Vancomycin 1g IV Q12H administered during lookback period for suspected cellulitis.',
+        evidence: [
+          {
+            sourceType: 'order',
+            sourceId: 'mar-002',
+            documentName: 'MAR',
+            displayName: 'MAR — 01/13/2026',
+            effectiveDate: '2026-01-13',
+            quote: 'Vancomycin 1g IV Q12H — administered 1/12 2200, 1/13 1000, 1/13 2200',
+            rationale: 'IV medication administration documented in MAR during lookback period.'
+          },
+          {
+            sourceType: 'progress-note',
+            sourceId: 'doc-003',
+            documentName: 'MD Progress Note',
+            displayName: 'MD Progress Note — 01/12/2026',
+            effectiveDate: '2026-01-12',
+            quote: 'Started Vancomycin IV for suspected cellulitis. Monitor labs and clinical response.',
+            rationale: 'Physician order for IV antibiotic corroborating MAR records.',
+            pageNumber: 1
+          }
+        ]
       },
       diagnosisSummary: null,
-      treatmentSummary: {
-        hasActiveTreatment: true,
-        summary: 'Vancomycin 1g IV Q12H administered during lookback period for suspected infection.'
-      },
-      evidence: [
-        {
-          sourceType: 'mar',
-          sourceId: 'mar-002',
-          documentName: 'MAR',
-          effectiveDate: '2026-01-13',
-          quote: 'Vancomycin 1g IV Q12H — administered 1/12 2200, 1/13 1000, 1/13 2200',
-          rationale: 'IV medication administration documented in MAR during lookback period.'
-        },
-        {
-          sourceType: 'clinical_note',
-          sourceId: 'doc-003',
-          documentName: 'MD Progress Note',
-          effectiveDate: '2026-01-12',
-          quote: 'Started Vancomycin IV for suspected cellulitis. Monitor labs and clinical response.',
-          rationale: 'Physician order for IV antibiotic corroborating MAR records.'
-        }
-      ]
+      treatmentSummary: 'Vancomycin 1g IV Q12H administered during lookback period for suspected infection.'
     },
 
     'I2900': {
@@ -773,29 +1174,32 @@ export const DEMO_API_RESPONSES = {
         mdsItem: 'I2900',
         itemName: 'Drug/Medication Induced Depression',
         section: 'I',
-        description: 'Drug or medication-induced depression — depression caused by or associated with medication side effects.'
-      },
-      diagnosisSummary: {
-        hasDocumentation: false,
-        summary: 'PHQ-9 not completed during lookback period. Multiple medications on profile (beta-blockers, opioids) associated with depressive side effects. Nursing notes mention low mood.',
-        recommendedIcd10: [
-          { code: 'F32.9', description: 'Major depressive disorder, single episode, unspecified' }
+        description: 'Drug or medication-induced depression — depression caused by or associated with medication side effects.',
+        status: 'dont_code',
+        validation: {
+          diagnosisCheck: { passed: false },
+          treatmentCheck: { passed: false }
+        },
+        evidence: [
+          {
+            sourceType: 'progress-note',
+            sourceId: 'doc-007',
+            documentName: 'Nursing Assessment',
+            displayName: 'Nursing Assessment — 01/25/2026',
+            effectiveDate: '2026-01-25',
+            quote: 'Patient reports feeling down and having little interest in activities. Declined recreational therapy today. States she "just wants to rest."',
+            rationale: 'Nursing documentation of depressive symptoms.',
+            pageNumber: 1
+          }
+        ],
+        keyFindings: [
+          'PHQ-9 not completed during lookback period',
+          'Beta-blockers and opioids on profile — depressive side effects possible',
+          'Nursing notes mention low mood and decreased activity'
         ]
       },
-      treatmentSummary: {
-        hasActiveTreatment: false,
-        summary: 'No active antidepressant therapy. No mental health referral on file.'
-      },
-      evidence: [
-        {
-          sourceType: 'clinical_note',
-          sourceId: 'doc-007',
-          documentName: 'Nursing Assessment',
-          effectiveDate: '2026-01-25',
-          quote: 'Patient reports feeling down and having little interest in activities. Declined recreational therapy today. States she "just wants to rest."',
-          rationale: 'Nursing documentation of depressive symptoms.'
-        }
-      ]
+      diagnosisSummary: 'PHQ-9 not completed during lookback period. Multiple medications on profile (beta-blockers, opioids) associated with depressive side effects. Nursing notes mention low mood.',
+      treatmentSummary: 'No active antidepressant therapy. No mental health referral on file.'
     },
 
     'I5100': {
@@ -803,29 +1207,32 @@ export const DEMO_API_RESPONSES = {
         mdsItem: 'I5100',
         itemName: 'Hemiplegia/Hemiparesis',
         section: 'I',
-        description: 'Hemiplegia or hemiparesis — paralysis or weakness affecting one side of the body.'
-      },
-      diagnosisSummary: {
-        hasDocumentation: true,
-        summary: 'Left hemiparesis following CVA well documented across PT, OT, and physician notes.',
-        recommendedIcd10: [
-          { code: 'I69.354', description: 'Hemiplegia and hemiparesis following cerebral infarction affecting left non-dominant side' }
+        description: 'Hemiplegia or hemiparesis — paralysis or weakness affecting one side of the body.',
+        status: 'code',
+        validation: {
+          diagnosisCheck: { passed: true },
+          treatmentCheck: { passed: true }
+        },
+        evidence: [
+          {
+            sourceType: 'progress-note',
+            sourceId: 'doc-010',
+            documentName: 'PT Evaluation',
+            displayName: 'PT Evaluation — 01/06/2026',
+            effectiveDate: '2026-01-06',
+            quote: 'Left-sided hemiparesis with 2/5 strength in left upper and lower extremities. Requires max assist for transfers and ambulation.',
+            rationale: 'PT evaluation documenting hemiparesis severity and functional impact.',
+            pageNumber: 1
+          }
+        ],
+        keyFindings: [
+          'Left hemiparesis following CVA — well documented',
+          '2/5 strength left UE and LE',
+          'PT 5x/week + OT 5x/week for functional mobility'
         ]
       },
-      treatmentSummary: {
-        hasActiveTreatment: true,
-        summary: 'Receiving PT 5x/week and OT 5x/week for functional mobility and ADL training.'
-      },
-      evidence: [
-        {
-          sourceType: 'clinical_note',
-          sourceId: 'doc-010',
-          documentName: 'PT Evaluation',
-          effectiveDate: '2026-01-06',
-          quote: 'Left-sided hemiparesis with 2/5 strength in left upper and lower extremities. Requires max assist for transfers and ambulation.',
-          rationale: 'PT evaluation documenting hemiparesis severity and functional impact.'
-        }
-      ]
+      diagnosisSummary: 'Left hemiparesis following CVA well documented across PT, OT, and physician notes.',
+      treatmentSummary: 'Receiving PT 5x/week and OT 5x/week for functional mobility and ADL training.'
     },
 
     'K0510A': {
@@ -833,23 +1240,554 @@ export const DEMO_API_RESPONSES = {
         mdsItem: 'K0510A',
         itemName: 'Parenteral/IV Feeding',
         section: 'K',
-        description: 'Parenteral or IV feeding received during the lookback period.'
+        description: 'Parenteral or IV feeding received during the lookback period.',
+        status: 'code',
+        rationale: 'IV fluids (D5 1/2NS) administered during lookback period for hydration management.',
+        evidence: [
+          {
+            sourceType: 'order',
+            sourceId: 'mar-003',
+            documentName: 'MAR',
+            displayName: 'MAR — 01/08/2026',
+            effectiveDate: '2026-01-08',
+            quote: 'D5 1/2NS 1000ml IV at 75ml/hr — running continuously',
+            rationale: 'Active IV fluid administration documented in MAR.'
+          }
+        ]
       },
       diagnosisSummary: null,
-      treatmentSummary: {
-        hasActiveTreatment: true,
-        summary: 'IV fluids (D5 1/2NS) administered during lookback period for hydration management.'
+      treatmentSummary: 'IV fluids (D5 1/2NS) administered during lookback period for hydration management.'
+    },
+
+    // ── Section I items with no existing detail (populated for demo) ──
+
+    'I0100': {
+      item: {
+        mdsItem: 'I0100', itemName: 'Cancer', section: 'I',
+        description: 'I0100 — Does the resident have a current or active diagnosis of cancer?',
+        status: 'dont_code',
+        validation: { diagnosisCheck: { passed: true }, treatmentCheck: { passed: true } },
+        evidence: [
+          { sourceType: 'progress-note', sourceId: 'doc-040', documentName: 'MD Progress Note', displayName: 'MD Progress Note — 01/22/2026', effectiveDate: '2026-01-22',
+            quote: 'No active cancer diagnosis. History of basal cell carcinoma excised 2019, no recurrence. Last dermatology follow-up 6/2025 — clear.',
+            rationale: 'Physician documentation confirming no active cancer.', pageNumber: 1 }
+        ],
+        keyFindings: ['History of BCC excised 2019 — no recurrence', 'Dermatology follow-up clear 06/2025']
       },
-      evidence: [
-        {
-          sourceType: 'mar',
-          sourceId: 'mar-003',
-          documentName: 'MAR',
-          effectiveDate: '2026-01-08',
-          quote: 'D5 1/2NS 1000ml IV at 75ml/hr — running continuously',
-          rationale: 'Active IV fluid administration documented in MAR.'
-        }
-      ]
+      diagnosisSummary: 'No active cancer diagnosis found. History of basal cell carcinoma excised in 2019 with no recurrence documented.',
+      treatmentSummary: 'No active cancer treatment. Routine dermatology follow-up only.'
+    },
+
+    'I0200': {
+      item: {
+        mdsItem: 'I0200', itemName: 'Anemia', section: 'I',
+        description: 'I0200 — Does the resident have a current diagnosis of anemia (e.g., iron deficiency, B12, folate)?',
+        status: 'code',
+        validation: { diagnosisCheck: { passed: true }, treatmentCheck: { passed: true } },
+        evidence: [
+          { sourceType: 'lab_result', sourceId: 'doc-041', documentName: 'Lab Results', displayName: 'Lab Results — 01/15/2026', effectiveDate: '2026-01-15',
+            quote: 'Hemoglobin: 9.8 g/dL (L), Hematocrit: 29.4% (L), MCV: 76 fL (L), Ferritin: 12 ng/mL (L). Iron deficiency anemia.',
+            rationale: 'Lab values consistent with iron deficiency anemia.' },
+          { sourceType: 'order', sourceId: 'mar-041', documentName: 'MAR', displayName: 'MAR — 01/27/2026', effectiveDate: '2026-01-27',
+            quote: 'Ferrous sulfate 325mg PO TID — administered 0800, 1200, 1800.',
+            rationale: 'Active iron supplementation for anemia treatment.' }
+        ],
+        keyFindings: ['Hgb 9.8, Hct 29.4%, Ferritin 12 — iron deficiency anemia', 'Ferrous sulfate 325mg TID active on MAR']
+      },
+      diagnosisSummary: 'Iron deficiency anemia documented with ICD-10 D50.9. Lab values confirm: Hgb 9.8, Ferritin 12.',
+      treatmentSummary: 'Ferrous sulfate 325mg TID. Follow-up labs ordered in 4 weeks.'
+    },
+
+    'I0300': {
+      item: {
+        mdsItem: 'I0300', itemName: 'Atrial Fibrillation or Other Dysrhythmias', section: 'I',
+        description: 'I0300 — Does the resident have atrial fibrillation or other dysrhythmias?',
+        status: 'dont_code',
+        validation: { diagnosisCheck: { passed: true }, treatmentCheck: { passed: true } },
+        evidence: [
+          { sourceType: 'progress-note', sourceId: 'doc-042', documentName: 'Cardiology Consult', displayName: 'Cardiology Consult — 12/18/2025', effectiveDate: '2025-12-18',
+            quote: 'Normal sinus rhythm on 12-lead ECG. No history of atrial fibrillation or other dysrhythmias. Holter monitor 2025 showed no significant arrhythmias.',
+            rationale: 'Cardiology documentation confirming no dysrhythmia.', pageNumber: 1 }
+        ],
+        keyFindings: ['Normal sinus rhythm on ECG', 'Holter monitor 2025 — no arrhythmias']
+      },
+      diagnosisSummary: 'No atrial fibrillation or dysrhythmia documented. ECG shows normal sinus rhythm. Holter monitor negative.',
+      treatmentSummary: 'No antiarrhythmic therapy required.'
+    },
+
+    'I0500': {
+      item: {
+        mdsItem: 'I0500', itemName: 'Deep Venous Thrombosis (DVT)', section: 'I',
+        description: 'I0500 — Does the resident have a current diagnosis of deep venous thrombosis (DVT)?',
+        status: 'dont_code',
+        validation: { diagnosisCheck: { passed: true }, treatmentCheck: { passed: true } },
+        evidence: [
+          { sourceType: 'progress-note', sourceId: 'doc-043', documentName: 'MD Progress Note', displayName: 'MD Progress Note — 01/22/2026', effectiveDate: '2026-01-22',
+            quote: 'No history of DVT or PE. Lower extremity edema attributed to venous insufficiency, not thrombotic. Duplex ultrasound 11/2025 negative for DVT.',
+            rationale: 'Physician documentation ruling out DVT.', pageNumber: 1 }
+        ],
+        keyFindings: ['Duplex US 11/2025 negative for DVT', 'LE edema attributed to venous insufficiency']
+      },
+      diagnosisSummary: 'No DVT documented. Duplex ultrasound 11/2025 negative. Lower extremity edema from venous insufficiency.',
+      treatmentSummary: 'No anticoagulation for DVT. Compression stockings for venous insufficiency only.'
+    },
+
+    'I0600': {
+      item: {
+        mdsItem: 'I0600', itemName: 'Heart Failure', section: 'I',
+        description: 'I0600 — Does the resident have heart failure (e.g., CHF, pulmonary edema)?',
+        status: 'dont_code',
+        validation: { diagnosisCheck: { passed: true }, treatmentCheck: { passed: true } },
+        evidence: [
+          { sourceType: 'progress-note', sourceId: 'doc-044', documentName: 'Cardiology Consult', displayName: 'Cardiology Consult — 12/18/2025', effectiveDate: '2025-12-18',
+            quote: 'Echocardiogram 12/2025: LVEF 58%, no wall motion abnormalities, no valvular disease. No clinical evidence of heart failure.',
+            rationale: 'Cardiology evaluation ruling out heart failure.', pageNumber: 2 },
+          { sourceType: 'progress-note', sourceId: 'doc-045', documentName: 'MD Progress Note', displayName: 'MD Progress Note — 01/22/2026', effectiveDate: '2026-01-22',
+            quote: 'No signs of fluid overload. Lungs clear bilaterally. No peripheral edema concerning for CHF. BNP 45 pg/mL (normal).',
+            rationale: 'Physical exam and labs ruling out heart failure.', pageNumber: 1 }
+        ],
+        keyFindings: ['Echo LVEF 58% — normal', 'BNP 45 pg/mL — normal', 'No signs of fluid overload']
+      },
+      diagnosisSummary: 'No heart failure documented. Echo shows preserved EF at 58%. BNP within normal limits.',
+      treatmentSummary: 'No heart failure therapy. Current cardiac medications for HTN/CAD only.'
+    },
+
+    'I0800': {
+      item: {
+        mdsItem: 'I0800', itemName: 'Orthostatic Hypotension', section: 'I',
+        description: 'I0800 — Does the resident have orthostatic hypotension?',
+        status: 'dont_code',
+        validation: { diagnosisCheck: { passed: true }, treatmentCheck: { passed: true } },
+        evidence: [
+          { sourceType: 'progress-note', sourceId: 'doc-046', documentName: 'Nursing Assessment', displayName: 'Nursing Assessment — 01/25/2026', effectiveDate: '2026-01-25',
+            quote: 'Orthostatic vitals: Supine 134/80, Standing 128/76 (1 min), 130/78 (3 min). No dizziness or lightheadedness reported. Negative orthostatic screen.',
+            rationale: 'Nursing assessment with negative orthostatic vitals.', pageNumber: 1 }
+        ],
+        keyFindings: ['Orthostatic vitals negative — no significant BP drop', 'No symptoms of dizziness on standing']
+      },
+      diagnosisSummary: 'No orthostatic hypotension documented. Orthostatic vital signs within normal parameters.',
+      treatmentSummary: 'No specific orthostatic hypotension treatment. Fall precautions in place for general safety.'
+    },
+
+    'I1100': {
+      item: {
+        mdsItem: 'I1100', itemName: 'Cirrhosis', section: 'I',
+        description: 'I1100 — Does the resident have cirrhosis?',
+        status: 'dont_code',
+        validation: { diagnosisCheck: { passed: true }, treatmentCheck: { passed: true } },
+        evidence: [
+          { sourceType: 'lab_result', sourceId: 'doc-047', documentName: 'Lab Results', displayName: 'Lab Results — 01/15/2026', effectiveDate: '2026-01-15',
+            quote: 'LFTs: AST 28 U/L (normal), ALT 22 U/L (normal), Albumin 3.8 g/dL (normal), Total bilirubin 0.9 mg/dL (normal). No evidence of hepatic dysfunction.',
+            rationale: 'Normal liver function tests ruling out cirrhosis.' }
+        ],
+        keyFindings: ['LFTs all within normal limits', 'No hepatic dysfunction documented']
+      },
+      diagnosisSummary: 'No cirrhosis documented. Liver function tests all within normal range.',
+      treatmentSummary: 'No hepatic disease management required.'
+    },
+
+    'I1200': {
+      item: {
+        mdsItem: 'I1200', itemName: 'GERD', section: 'I',
+        description: 'I1200 — Does the resident have gastroesophageal reflux disease (GERD)?',
+        status: 'code',
+        validation: { diagnosisCheck: { passed: true }, treatmentCheck: { passed: true } },
+        evidence: [
+          { sourceType: 'progress-note', sourceId: 'doc-048', documentName: 'MD Progress Note', displayName: 'MD Progress Note — 01/22/2026', effectiveDate: '2026-01-22',
+            quote: 'GERD well controlled on current PPI. No breakthrough symptoms. Continue omeprazole 20mg daily.',
+            rationale: 'Physician documentation of active GERD with treatment.', pageNumber: 1 },
+          { sourceType: 'order', sourceId: 'mar-048', documentName: 'MAR', displayName: 'MAR — 01/27/2026', effectiveDate: '2026-01-27',
+            quote: 'Omeprazole 20mg PO daily — administered 0730 (30 min before breakfast).',
+            rationale: 'Active PPI therapy for GERD.' }
+        ],
+        keyFindings: ['GERD on active problem list with ICD-10 K21.0', 'Omeprazole 20mg daily — well controlled']
+      },
+      diagnosisSummary: 'GERD well documented on problem list. Active PPI therapy with good symptom control.',
+      treatmentSummary: 'Omeprazole 20mg daily. Dietary modifications — elevated HOB, no late meals.'
+    },
+
+    'I2100': {
+      item: {
+        mdsItem: 'I2100', itemName: 'Thyroid Disorder', section: 'I',
+        description: 'I2100 — Does the resident have a thyroid disorder (e.g., hypothyroidism, hyperthyroidism)?',
+        status: 'code',
+        validation: { diagnosisCheck: { passed: true }, treatmentCheck: { passed: true } },
+        evidence: [
+          { sourceType: 'lab_result', sourceId: 'doc-049', documentName: 'Lab Results', displayName: 'Lab Results — 01/15/2026', effectiveDate: '2026-01-15',
+            quote: 'TSH: 6.8 mIU/L (H), Free T4: 0.7 ng/dL (L-normal). Subclinical hypothyroidism on levothyroxine therapy.',
+            rationale: 'Lab values confirming hypothyroidism under treatment.' },
+          { sourceType: 'order', sourceId: 'mar-049', documentName: 'MAR', displayName: 'MAR — 01/27/2026', effectiveDate: '2026-01-27',
+            quote: 'Levothyroxine 75mcg PO daily — administered 0630 (on empty stomach, 30 min before food).',
+            rationale: 'Active thyroid replacement therapy.' }
+        ],
+        keyFindings: ['TSH 6.8 — suboptimally controlled hypothyroidism', 'Levothyroxine 75mcg daily active on MAR']
+      },
+      diagnosisSummary: 'Hypothyroidism documented with ICD-10 E03.9. TSH 6.8 on latest labs — dose adjustment may be needed.',
+      treatmentSummary: 'Levothyroxine 75mcg daily. TSH recheck ordered in 6 weeks.'
+    },
+
+    'I2300': {
+      item: {
+        mdsItem: 'I2300', itemName: 'Hyperglycemia', section: 'I',
+        description: 'I2300 — Does the resident have hyperglycemia?',
+        status: 'dont_code',
+        validation: { diagnosisCheck: { passed: true }, treatmentCheck: { passed: true } },
+        evidence: [
+          { sourceType: 'progress-note', sourceId: 'doc-050', documentName: 'MD Progress Note', displayName: 'MD Progress Note — 01/22/2026', effectiveDate: '2026-01-22',
+            quote: 'Blood glucose elevations are attributed to known diabetes mellitus (I2000), not a separate hyperglycemia diagnosis. Covered under DM management plan.',
+            rationale: 'Glucose elevations accounted for under DM diagnosis.', pageNumber: 1 }
+        ],
+        keyFindings: ['Glucose elevations managed under DM (I2000)', 'No separate hyperglycemia diagnosis']
+      },
+      diagnosisSummary: 'No separate hyperglycemia diagnosis. Blood glucose elevations managed under diabetes mellitus (I2000).',
+      treatmentSummary: 'Glucose management covered under DM treatment plan — metformin, sliding scale, monitoring.'
+    },
+
+    'I4200': {
+      item: {
+        mdsItem: 'I4200', itemName: 'Multi-Drug Resistant Organism (MDRO)', section: 'I',
+        description: 'I4200 — Does the resident have an infection with a multi-drug resistant organism (MDRO)?',
+        status: 'code',
+        validation: { diagnosisCheck: { passed: true }, treatmentCheck: { passed: true } },
+        evidence: [
+          { sourceType: 'lab_result', sourceId: 'doc-051', documentName: 'Microbiology Report', displayName: 'Microbiology Report — 01/10/2026', effectiveDate: '2026-01-10',
+            quote: 'Urine culture: E. coli >100,000 CFU/mL. ESBL-producing. Resistant to ampicillin, ciprofloxacin, TMP-SMX. Sensitive to meropenem, nitrofurantoin.',
+            rationale: 'Culture confirming ESBL-producing E. coli — qualifies as MDRO.' },
+          { sourceType: 'order', sourceId: 'mar-051', documentName: 'MAR', displayName: 'MAR — 01/12/2026', effectiveDate: '2026-01-12',
+            quote: 'Nitrofurantoin 100mg PO BID x 7 days — started 01/12. Contact precautions initiated per infection control protocol.',
+            rationale: 'Active antibiotic treatment for MDRO infection.' }
+        ],
+        keyFindings: ['ESBL-producing E. coli in urine culture', 'Contact precautions initiated', 'Treated with nitrofurantoin 100mg BID']
+      },
+      diagnosisSummary: 'MDRO infection documented: ESBL-producing E. coli UTI confirmed by culture 01/10/2026.',
+      treatmentSummary: 'Nitrofurantoin 100mg BID x 7 days. Contact precautions per infection control protocol.'
+    },
+
+    'I4400': {
+      item: {
+        mdsItem: 'I4400', itemName: 'Pneumonia', section: 'I',
+        description: 'I4400 — Does the resident have pneumonia?',
+        status: 'dont_code',
+        validation: { diagnosisCheck: { passed: true }, treatmentCheck: { passed: true } },
+        evidence: [
+          { sourceType: 'progress-note', sourceId: 'doc-052', documentName: 'MD Progress Note', displayName: 'MD Progress Note — 01/22/2026', effectiveDate: '2026-01-22',
+            quote: 'Lungs clear to auscultation bilaterally. No cough, fever, or respiratory distress. Chest X-ray 01/05 — no infiltrates. No active pneumonia.',
+            rationale: 'Clinical exam and imaging ruling out pneumonia.', pageNumber: 1 }
+        ],
+        keyFindings: ['Lungs CTA bilaterally', 'CXR 01/05 — no infiltrates', 'No respiratory symptoms']
+      },
+      diagnosisSummary: 'No pneumonia documented. Chest X-ray clear, lungs clear on exam, no respiratory symptoms.',
+      treatmentSummary: 'No pneumonia treatment. Pneumococcal and influenza vaccines up to date.'
+    },
+
+    'I4500': {
+      item: {
+        mdsItem: 'I4500', itemName: 'Septicemia', section: 'I',
+        description: 'I4500 — Does the resident have septicemia?',
+        status: 'dont_code',
+        validation: { diagnosisCheck: { passed: true }, treatmentCheck: { passed: true } },
+        evidence: [
+          { sourceType: 'lab_result', sourceId: 'doc-053', documentName: 'Lab Results', displayName: 'Lab Results — 01/15/2026', effectiveDate: '2026-01-15',
+            quote: 'WBC: 7.2 (normal), Lactate: 1.1 mmol/L (normal), Procalcitonin: 0.04 ng/mL (normal). Blood cultures 01/10 — no growth at 5 days.',
+            rationale: 'Labs and cultures ruling out septicemia.' }
+        ],
+        keyFindings: ['Blood cultures negative at 5 days', 'WBC, lactate, procalcitonin all normal']
+      },
+      diagnosisSummary: 'No septicemia documented. Blood cultures negative, inflammatory markers normal.',
+      treatmentSummary: 'No sepsis treatment. UTI treated with targeted antibiotics only.'
+    },
+
+    'I4900': {
+      item: {
+        mdsItem: 'I4900', itemName: 'Schizophrenia', section: 'I',
+        description: 'I4900 — Does the resident have schizophrenia?',
+        status: 'dont_code',
+        validation: { diagnosisCheck: { passed: true }, treatmentCheck: { passed: true } },
+        evidence: [
+          { sourceType: 'progress-note', sourceId: 'doc-054', documentName: 'Psychiatric Evaluation', displayName: 'Psychiatric Evaluation — 12/15/2025', effectiveDate: '2025-12-15',
+            quote: 'No history of schizophrenia or psychotic disorders. Psychiatric review of systems negative for hallucinations, delusions, or disorganized thinking.',
+            rationale: 'Psychiatric evaluation confirming no schizophrenia.', pageNumber: 1 }
+        ],
+        keyFindings: ['Psychiatric evaluation negative for psychotic disorders', 'No antipsychotic medications on profile']
+      },
+      diagnosisSummary: 'No schizophrenia documented. Psychiatric evaluation negative for psychotic symptoms.',
+      treatmentSummary: 'No antipsychotic medications prescribed.'
+    },
+
+    'I5200': {
+      item: {
+        mdsItem: 'I5200', itemName: 'Paraplegia', section: 'I',
+        description: 'I5200 — Does the resident have paraplegia?',
+        status: 'dont_code',
+        validation: { diagnosisCheck: { passed: true }, treatmentCheck: { passed: true } },
+        evidence: [
+          { sourceType: 'progress-note', sourceId: 'doc-055', documentName: 'PT Evaluation', displayName: 'PT Evaluation — 01/06/2026', effectiveDate: '2026-01-06',
+            quote: 'Left hemiparesis noted (see I5100) but bilateral lower extremity function preserved. Patient ambulates with rolling walker and min assist. No paraplegia.',
+            rationale: 'PT evaluation confirming no paraplegia.', pageNumber: 1 }
+        ],
+        keyFindings: ['Bilateral LE function preserved', 'Ambulates with walker and min assist']
+      },
+      diagnosisSummary: 'No paraplegia documented. Left hemiparesis (I5100) but both lower extremities functional.',
+      treatmentSummary: 'PT 5x/week for mobility. No paraplegia-specific treatment needed.'
+    },
+
+    'I5250': {
+      item: {
+        mdsItem: 'I5250', itemName: 'Quadriplegia', section: 'I',
+        description: 'I5250 — Does the resident have quadriplegia?',
+        status: 'dont_code',
+        validation: { diagnosisCheck: { passed: true }, treatmentCheck: { passed: true } },
+        evidence: [
+          { sourceType: 'progress-note', sourceId: 'doc-056', documentName: 'PT Evaluation', displayName: 'PT Evaluation — 01/06/2026', effectiveDate: '2026-01-06',
+            quote: 'Right upper and lower extremities with full strength 5/5. Left-sided weakness 2-3/5 from CVA. No quadriplegia — functional use of right side.',
+            rationale: 'PT documentation ruling out quadriplegia.', pageNumber: 1 }
+        ],
+        keyFindings: ['Right side full strength 5/5', 'Left side weakness from CVA only — not quadriplegia']
+      },
+      diagnosisSummary: 'No quadriplegia documented. Right-sided extremities with full strength. Left hemiparesis only.',
+      treatmentSummary: 'No quadriplegia-specific interventions. PT/OT for left-sided weakness.'
+    },
+
+    'I5300': {
+      item: {
+        mdsItem: 'I5300', itemName: 'Aphasia (duplicate check)', section: 'I',
+        description: 'I5300 — Does the resident have aphasia?',
+        status: 'dont_code',
+        validation: { diagnosisCheck: { passed: true }, treatmentCheck: { passed: true } },
+        evidence: [
+          { sourceType: 'progress-note', sourceId: 'doc-057', documentName: 'SLP Evaluation', displayName: 'SLP Evaluation — 01/20/2026', effectiveDate: '2026-01-20',
+            quote: 'See I5600 for aphasia coding. Speech-language deficits addressed under that item. I5300 not applicable per Section I coding rules.',
+            rationale: 'Aphasia addressed under I5600.', pageNumber: 1 }
+        ],
+        keyFindings: ['Aphasia coded under I5600', 'I5300 not applicable per coding rules']
+      },
+      diagnosisSummary: 'No separate aphasia coding needed here. Addressed under I5600.',
+      treatmentSummary: 'SLP therapy documented under I5600.'
+    },
+
+    'I5350': {
+      item: {
+        mdsItem: 'I5350', itemName: 'Non-Alzheimer Dementia', section: 'I',
+        description: 'I5350 — Does the resident have non-Alzheimer dementia (e.g., vascular, Lewy body)?',
+        status: 'dont_code',
+        validation: { diagnosisCheck: { passed: true }, treatmentCheck: { passed: true } },
+        evidence: [
+          { sourceType: 'progress-note', sourceId: 'doc-058', documentName: 'Neurology Consult', displayName: 'Neurology Consult — 12/20/2025', effectiveDate: '2025-12-20',
+            quote: 'MMSE 22/30 — mild cognitive impairment likely related to CVA sequelae. Does not meet criteria for dementia diagnosis at this time. Monitor and reassess in 3 months.',
+            rationale: 'Neurology evaluation — cognitive impairment from CVA but not dementia.', pageNumber: 2 }
+        ],
+        keyFindings: ['MMSE 22/30 — mild cognitive impairment', 'CVA-related, not dementia per neurology', 'Reassess in 3 months']
+      },
+      diagnosisSummary: 'No non-Alzheimer dementia documented. Mild cognitive impairment from CVA — does not meet dementia criteria per neurology.',
+      treatmentSummary: 'Cognitive stimulation activities. Neurology follow-up in 3 months for reassessment.'
+    },
+
+    'I5400': {
+      item: {
+        mdsItem: 'I5400', itemName: 'Alzheimer Disease', section: 'I',
+        description: 'I5400 — Does the resident have Alzheimer disease?',
+        status: 'dont_code',
+        validation: { diagnosisCheck: { passed: true }, treatmentCheck: { passed: true } },
+        evidence: [
+          { sourceType: 'progress-note', sourceId: 'doc-059', documentName: 'Neurology Consult', displayName: 'Neurology Consult — 12/20/2025', effectiveDate: '2025-12-20',
+            quote: 'No clinical features suggestive of Alzheimer disease. Cognitive changes are acute post-CVA, not progressive degenerative pattern. No cholinesterase inhibitors indicated.',
+            rationale: 'Neurology ruling out Alzheimer disease.', pageNumber: 2 }
+        ],
+        keyFindings: ['Cognitive changes acute post-CVA, not progressive', 'No Alzheimer features per neurology']
+      },
+      diagnosisSummary: 'No Alzheimer disease documented. Cognitive impairment attributed to CVA, not neurodegenerative disease.',
+      treatmentSummary: 'No Alzheimer-specific medications. No cholinesterase inhibitors or memantine.'
+    },
+
+    'I5500': {
+      item: {
+        mdsItem: 'I5500', itemName: 'Multiple Sclerosis', section: 'I',
+        description: 'I5500 — Does the resident have multiple sclerosis (MS)?',
+        status: 'dont_code',
+        validation: { diagnosisCheck: { passed: true }, treatmentCheck: { passed: true } },
+        evidence: [
+          { sourceType: 'progress-note', sourceId: 'doc-060', documentName: 'Neurology Consult', displayName: 'Neurology Consult — 12/20/2025', effectiveDate: '2025-12-20',
+            quote: 'No history of multiple sclerosis. Left-sided weakness is consistent with ischemic stroke, not demyelinating disease. MRI brain shows old infarct, no white matter lesions.',
+            rationale: 'Neurology ruling out MS — findings consistent with stroke.', pageNumber: 3 }
+        ],
+        keyFindings: ['MRI — old infarct, no MS-type white matter lesions', 'Weakness from stroke, not demyelination']
+      },
+      diagnosisSummary: 'No multiple sclerosis documented. MRI shows old infarct only, no demyelinating lesions.',
+      treatmentSummary: 'No MS disease-modifying therapy. Neurological deficits managed as CVA sequelae.'
+    },
+
+    'I5700': {
+      item: {
+        mdsItem: 'I5700', itemName: 'Schizophrenia (Section I)', section: 'I',
+        description: 'I5700 — Does the resident have schizophrenia?',
+        status: 'dont_code',
+        validation: { diagnosisCheck: { passed: true }, treatmentCheck: { passed: true } },
+        evidence: [
+          { sourceType: 'progress-note', sourceId: 'doc-061', documentName: 'Psychiatric Evaluation', displayName: 'Psychiatric Evaluation — 12/15/2025', effectiveDate: '2025-12-15',
+            quote: 'No history or symptoms of schizophrenia. See I4900 evaluation. Mental status exam: oriented x3, no psychotic features, thought process linear and goal-directed.',
+            rationale: 'Psychiatric evaluation negative for schizophrenia.', pageNumber: 1 }
+        ],
+        keyFindings: ['No psychotic features on mental status exam', 'Thought process linear and goal-directed']
+      },
+      diagnosisSummary: 'No schizophrenia. Psychiatric evaluation negative — no psychotic symptoms.',
+      treatmentSummary: 'No antipsychotic medications. No psychiatric treatment for psychosis.'
+    },
+
+    'I5800': {
+      item: {
+        mdsItem: 'I5800', itemName: 'Anxiety Disorder', section: 'I',
+        description: 'I5800 — Does the resident have an anxiety disorder?',
+        status: 'dont_code',
+        validation: { diagnosisCheck: { passed: true }, treatmentCheck: { passed: true } },
+        evidence: [
+          { sourceType: 'progress-note', sourceId: 'doc-062', documentName: 'Psychiatric Evaluation', displayName: 'Psychiatric Evaluation — 12/15/2025', effectiveDate: '2025-12-15',
+            quote: 'GAD-7 score: 4 (minimal anxiety). Patient reports occasional worry about health but no panic attacks, avoidance behaviors, or functional impairment from anxiety.',
+            rationale: 'Psychiatric screening negative for anxiety disorder.', pageNumber: 1 }
+        ],
+        keyFindings: ['GAD-7 score 4 — minimal anxiety', 'No panic attacks or avoidance behaviors']
+      },
+      diagnosisSummary: 'No anxiety disorder documented. GAD-7 score 4 — minimal, subclinical anxiety only.',
+      treatmentSummary: 'No anxiolytic medications. Supportive counseling available PRN.'
+    },
+
+    'I5900': {
+      item: {
+        mdsItem: 'I5900', itemName: 'PTSD', section: 'I',
+        description: 'I5900 — Does the resident have post-traumatic stress disorder (PTSD)?',
+        status: 'dont_code',
+        validation: { diagnosisCheck: { passed: true }, treatmentCheck: { passed: true } },
+        evidence: [
+          { sourceType: 'progress-note', sourceId: 'doc-063', documentName: 'Psychiatric Evaluation', displayName: 'Psychiatric Evaluation — 12/15/2025', effectiveDate: '2025-12-15',
+            quote: 'No history of PTSD. Patient denies traumatic experiences, nightmares, flashbacks, or hypervigilance. PC-PTSD-5 screen negative.',
+            rationale: 'PTSD screening negative.', pageNumber: 2 }
+        ],
+        keyFindings: ['PC-PTSD-5 screen negative', 'No trauma history, nightmares, or flashbacks']
+      },
+      diagnosisSummary: 'No PTSD documented. Screening negative — no traumatic stress symptoms.',
+      treatmentSummary: 'No PTSD-specific treatment or trauma-focused therapy.'
+    },
+
+    'I5950': {
+      item: {
+        mdsItem: 'I5950', itemName: 'Psychotic Disorder', section: 'I',
+        description: 'I5950 — Does the resident have a psychotic disorder (other than schizophrenia)?',
+        status: 'dont_code',
+        validation: { diagnosisCheck: { passed: true }, treatmentCheck: { passed: true } },
+        evidence: [
+          { sourceType: 'progress-note', sourceId: 'doc-064', documentName: 'Psychiatric Evaluation', displayName: 'Psychiatric Evaluation — 12/15/2025', effectiveDate: '2025-12-15',
+            quote: 'No psychotic features identified. No hallucinations (auditory or visual), no delusions, no disorganized speech. Reality testing intact.',
+            rationale: 'Psychiatric evaluation ruling out psychotic disorder.', pageNumber: 1 }
+        ],
+        keyFindings: ['No hallucinations or delusions', 'Reality testing intact']
+      },
+      diagnosisSummary: 'No psychotic disorder documented. Psychiatric evaluation — no hallucinations, delusions, or disorganized thinking.',
+      treatmentSummary: 'No antipsychotic medications. No psychosis treatment.'
+    },
+
+    'I6000': {
+      item: {
+        mdsItem: 'I6000', itemName: 'Asthma / COPD / Chronic Lung Disease', section: 'I',
+        description: 'I6000 — Does the resident have asthma, COPD, or chronic lung disease?',
+        status: 'dont_code',
+        validation: { diagnosisCheck: { passed: true }, treatmentCheck: { passed: true } },
+        evidence: [
+          { sourceType: 'progress-note', sourceId: 'doc-065', documentName: 'MD Progress Note', displayName: 'MD Progress Note — 01/22/2026', effectiveDate: '2026-01-22',
+            quote: 'Lungs clear to auscultation bilaterally. No wheezing, rhonchi, or prolonged expiratory phase. No history of asthma, COPD, or chronic lung disease. SpO2 97% on room air.',
+            rationale: 'Clinical exam negative for chronic lung disease.', pageNumber: 1 },
+          { sourceType: 'progress-note', sourceId: 'doc-066', documentName: 'Chest X-Ray Report', displayName: 'Chest X-Ray — 01/05/2026', effectiveDate: '2026-01-05',
+            quote: 'Lungs clear bilaterally. No hyperinflation. Normal cardiac silhouette. No pleural effusion.',
+            rationale: 'Chest imaging with no evidence of chronic lung disease.' }
+        ],
+        keyFindings: ['Lungs CTA — no wheezing or rhonchi', 'SpO2 97% on room air', 'CXR — no hyperinflation or chronic changes']
+      },
+      diagnosisSummary: 'No asthma, COPD, or chronic lung disease documented. Lungs clear, SpO2 97%, imaging normal.',
+      treatmentSummary: 'No bronchodilators or inhaled corticosteroids. No supplemental oxygen.'
+    },
+
+    'I6100': {
+      item: {
+        mdsItem: 'I6100', itemName: 'Respiratory Failure', section: 'I',
+        description: 'I6100 — Does the resident have respiratory failure?',
+        status: 'dont_code',
+        validation: { diagnosisCheck: { passed: true }, treatmentCheck: { passed: true } },
+        evidence: [
+          { sourceType: 'progress-note', sourceId: 'doc-067', documentName: 'MD Progress Note', displayName: 'MD Progress Note — 01/22/2026', effectiveDate: '2026-01-22',
+            quote: 'Respiratory status stable. SpO2 97% on room air. No supplemental oxygen required. ABG not indicated — no clinical concern for respiratory failure.',
+            rationale: 'Clinical assessment ruling out respiratory failure.', pageNumber: 1 }
+        ],
+        keyFindings: ['SpO2 97% on room air — no supplemental O2', 'No respiratory distress or failure']
+      },
+      diagnosisSummary: 'No respiratory failure documented. Oxygenation adequate on room air.',
+      treatmentSummary: 'No supplemental oxygen. No respiratory support devices.'
+    },
+
+    'I6200': {
+      item: {
+        mdsItem: 'I6200', itemName: 'None of the Above (Respiratory)', section: 'I',
+        description: 'I6200 — None of the above respiratory conditions.',
+        status: 'dont_code',
+        evidence: [],
+        rationale: 'No respiratory conditions identified in I6000-I6100. This is a confirmation item.'
+      },
+      diagnosisSummary: null,
+      treatmentSummary: null
+    },
+
+    'I6300': {
+      item: {
+        mdsItem: 'I6300', itemName: 'None of the Above (Additional)', section: 'I',
+        description: 'I6300 — None of the above additional conditions.',
+        status: 'dont_code',
+        evidence: [],
+        rationale: 'Confirmation item — no additional conditions in this category.'
+      },
+      diagnosisSummary: null,
+      treatmentSummary: null
+    },
+
+    'I6500': {
+      item: {
+        mdsItem: 'I6500', itemName: 'Seizure Disorder / Epilepsy', section: 'I',
+        description: 'I6500 — Does the resident have a seizure disorder or epilepsy?',
+        status: 'dont_code',
+        validation: { diagnosisCheck: { passed: true }, treatmentCheck: { passed: true } },
+        evidence: [
+          { sourceType: 'progress-note', sourceId: 'doc-068', documentName: 'Neurology Consult', displayName: 'Neurology Consult — 12/20/2025', effectiveDate: '2025-12-20',
+            quote: 'No seizure history. Post-CVA prophylactic seizure medication not indicated per current guidelines. EEG not required. No witnessed seizure activity.',
+            rationale: 'Neurology evaluation confirming no seizure disorder.', pageNumber: 3 }
+        ],
+        keyFindings: ['No seizure history', 'No prophylactic anticonvulsants indicated post-CVA', 'No witnessed seizure activity']
+      },
+      diagnosisSummary: 'No seizure disorder or epilepsy documented. Neurology evaluation negative.',
+      treatmentSummary: 'No anticonvulsant medications. No seizure precautions beyond standard post-CVA monitoring.'
+    },
+
+    'I7900': {
+      item: {
+        mdsItem: 'I7900', itemName: 'None of the Above (Neurological)', section: 'I',
+        description: 'I7900 — None of the above neurological conditions (besides those already coded).',
+        status: 'dont_code',
+        evidence: [],
+        rationale: 'Hemiparesis (I5100) and Aphasia (I5600) are coded. No additional neurological conditions apply.'
+      },
+      diagnosisSummary: null,
+      treatmentSummary: null
+    },
+
+    'I8000': {
+      item: {
+        mdsItem: 'I8000', itemName: 'Additional Active Diagnoses', section: 'I',
+        description: 'I8000 — Does the resident have additional active diagnoses not captured above?',
+        status: 'dont_code',
+        evidence: [
+          { sourceType: 'progress-note', sourceId: 'doc-069', documentName: 'MD Progress Note', displayName: 'MD Progress Note — 01/22/2026', effectiveDate: '2026-01-22',
+            quote: 'Active problem list reviewed. All active diagnoses captured in Sections I0100-I7900. CKD Stage 3, Obesity, and Chronic pain documented in problem list but not MDS-reportable in Section I.',
+            rationale: 'Physician review confirming all Section I diagnoses captured.', pageNumber: 1 }
+        ],
+        keyFindings: ['All Section I diagnoses captured above', 'CKD Stage 3, Obesity, Chronic pain on problem list — not Section I items']
+      },
+      diagnosisSummary: 'No additional Section I diagnoses to capture. Other active conditions (CKD, obesity, chronic pain) not reportable here.',
+      treatmentSummary: 'All active treatments documented under their respective Section I items.'
     }
   },
 
@@ -886,10 +1824,10 @@ export const DEMO_API_RESPONSES = {
           'No aphasia diagnosis on active problem list'
         ],
         evidence: [
-          { sourceType: 'clinical_note', quote: 'Patient demonstrates significant word-finding difficulties and reduced verbal fluency.', documentName: 'SLP Evaluation' }
+          { sourceType: 'progress-note', sourceId: 'doc-080', quote: 'Patient demonstrates significant word-finding difficulties and reduced verbal fluency.', documentName: 'SLP Evaluation' }
         ],
         queryEvidence: [
-          { sourceType: 'clinical_note', quote: 'Patient demonstrates significant word-finding difficulties and reduced verbal fluency consistent with expressive aphasia.', documentName: 'SLP Evaluation', effectiveDate: '2026-01-20' }
+          { sourceType: 'progress-note', sourceId: 'doc-080', quote: 'Patient demonstrates significant word-finding difficulties and reduced verbal fluency consistent with expressive aphasia.', documentName: 'SLP Evaluation', effectiveDate: '2026-01-20' }
         ],
         recommendedIcd10: [
           { code: 'I69.320', description: 'Aphasia following cerebral infarction' },
@@ -911,12 +1849,12 @@ export const DEMO_API_RESPONSES = {
           'No PVD diagnosis on problem list'
         ],
         evidence: [
-          { sourceType: 'lab_result', quote: 'HbA1c: 8.2%, GFR: 42', documentName: 'Lab Results' },
-          { sourceType: 'clinical_note', quote: 'Bilateral lower extremity edema with diminished pedal pulses.', documentName: 'MD Progress Note' }
+          { sourceType: 'lab_result', sourceId: 'doc-081', quote: 'HbA1c: 8.2%, GFR: 42', documentName: 'Lab Results' },
+          { sourceType: 'progress-note', sourceId: 'doc-082', quote: 'Bilateral lower extremity edema with diminished pedal pulses.', documentName: 'MD Progress Note' }
         ],
         queryEvidence: [
-          { sourceType: 'lab_result', quote: 'HbA1c: 8.2%, Fasting glucose: 186 mg/dL', documentName: 'Lab Results', effectiveDate: '2026-01-18' },
-          { sourceType: 'clinical_note', quote: 'Bilateral lower extremity edema with diminished pedal pulses noted.', documentName: 'MD Progress Note', effectiveDate: '2026-01-22' }
+          { sourceType: 'lab_result', sourceId: 'doc-081', quote: 'HbA1c: 8.2%, Fasting glucose: 186 mg/dL', documentName: 'Lab Results', effectiveDate: '2026-01-18' },
+          { sourceType: 'progress-note', sourceId: 'doc-082', quote: 'Bilateral lower extremity edema with diminished pedal pulses noted.', documentName: 'MD Progress Note', effectiveDate: '2026-01-22' }
         ],
         recommendedIcd10: [
           { code: 'E11.51', description: 'Type 2 DM with diabetic peripheral angiopathy' }
@@ -937,10 +1875,10 @@ export const DEMO_API_RESPONSES = {
           'Multiple medications with depression side effects'
         ],
         evidence: [
-          { sourceType: 'clinical_note', quote: 'Patient reports feeling down and having little interest in activities.', documentName: 'Nursing Assessment' }
+          { sourceType: 'progress-note', sourceId: 'doc-083', quote: 'Patient reports feeling down and having little interest in activities.', documentName: 'Nursing Assessment' }
         ],
         queryEvidence: [
-          { sourceType: 'clinical_note', quote: 'Patient reports feeling down and having little interest in activities. Declined recreational therapy.', documentName: 'Nursing Assessment', effectiveDate: '2026-01-25' }
+          { sourceType: 'progress-note', sourceId: 'doc-083', quote: 'Patient reports feeling down and having little interest in activities. Declined recreational therapy.', documentName: 'Nursing Assessment', effectiveDate: '2026-01-25' }
         ],
         recommendedIcd10: [
           { code: 'F32.9', description: 'Major depressive disorder, single episode, unspecified' }
@@ -961,7 +1899,7 @@ export const DEMO_API_RESPONSES = {
           'Can be coded without query'
         ],
         evidence: [
-          { sourceType: 'mar', quote: 'Vancomycin 1g IV Q12H — administered 1/12, 1/13', documentName: 'MAR' }
+          { sourceType: 'order', sourceId: 'order-080', quote: 'Vancomycin 1g IV Q12H — administered 1/12, 1/13', documentName: 'MAR' }
         ],
         queryEvidence: [],
         recommendedIcd10: [],

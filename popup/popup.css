@@ -181,6 +181,23 @@ body {
   cursor: not-allowed;
 }
 
+/* Footer Links */
+.footer-links {
+  margin-top: 12px;
+  text-align: center;
+}
+
+.footer-links a {
+  font-size: 12px;
+  color: #6b7280;
+  text-decoration: none;
+}
+
+.footer-links a:hover {
+  color: #4f46e5;
+  text-decoration: underline;
+}
+
 /* Animations */
 @keyframes pulse {
   0%, 100% { opacity: 1; }

@@ -26,6 +26,8 @@ function copyStaticAssets() {
       mkdirSync('dist/lib', { recursive: true });
       copyFileSync('lib/pdf.min.js', 'dist/lib/pdf.min.js');
       copyFileSync('lib/pdf.worker.min.js', 'dist/lib/pdf.worker.min.js');
+      // Copy privacy policy (accessible from popup)
+      copyFileSync('privacy-policy.html', 'dist/privacy-policy.html');
     }
   };
 }
@@ -50,26 +52,43 @@ function stripMocksInProduction(mode) {
   };
 }
 
-export default defineConfig(({ mode }) => ({
-  plugins: [
-    stripMocksInProduction(mode),
-    preact(),
-    crx({ manifest }),
-    copyStaticAssets()
-  ],
-  build: {
-    outDir: 'dist',
-    rollupOptions: {
-      input: {
-        background: 'background/background.js',
-        popup: 'popup/popup.html'
+export default defineConfig(({ mode }) => {
+  const isDev = mode === 'development';
+
+  // For production builds, strip localhost from host_permissions
+  const buildManifest = JSON.parse(JSON.stringify(manifest));
+  if (!isDev) {
+    buildManifest.host_permissions = buildManifest.host_permissions.filter(
+      p => !p.includes('localhost')
+    );
+  }
+
+  return {
+    plugins: [
+      stripMocksInProduction(mode),
+      preact(),
+      crx({ manifest: buildManifest }),
+      copyStaticAssets()
+    ],
+    define: {
+      // Replaced at build time in background.js
+      // dev → true (localhost), prod → false (superltc.com)
+      __DEV_MODE__: isDev,
+    },
+    build: {
+      outDir: 'dist',
+      rollupOptions: {
+        input: {
+          background: 'background/background.js',
+          popup: 'popup/popup.html'
+        }
+      }
+    },
+    resolve: {
+      alias: {
+        'react': 'preact/compat',
+        'react-dom': 'preact/compat'
       }
     }
-  },
-  resolve: {
-    alias: {
-      'react': 'preact/compat',
-      'react-dom': 'preact/compat'
-    }
-  }
-}));
+  };
+});

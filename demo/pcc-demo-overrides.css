@@ -1,0 +1,482 @@
+/**
+ * PCC Demo overrides — hides vanilla Super elements and polishes Preact overlays.
+ */
+
+/* ── Hide vanilla Super side panel, popover, modals, and FAB ── */
+#superPanel,
+#superPopover,
+#superModal,
+.super-side-panel,
+.super-popover-panel,
+.super-modal-overlay,
+#super-fab-old,
+#super-chat-button,
+.super-chat-fab,
+#super-chat-panel,
+.super-chat-panel,
+#notesModal,
+.super-modal {
+  display: none !important;
+}
+
+/* ── Demo root z-index stacking ── */
+#super-demo-root {
+  position: fixed;
+  inset: 0;
+  z-index: 99990;
+  pointer-events: none;
+}
+
+/* Allow clicks on children (FAB, overlays) */
+#super-demo-root > * {
+  pointer-events: auto;
+}
+
+/* Fix popover backdrop to fill viewport (normally inside CC modal) */
+#super-demo-root .cc-pop__backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 100001;
+}
+
+/* ── FAB hover polish ── */
+.super-demo-fab:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 20px rgba(99,102,241,0.5) !important;
+}
+
+/* ── Badge hover transitions ── */
+.super-badge {
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.super-badge:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+}
+
+/* ── Toast animation ── */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ============================================
+   Demo Query Modal (DemoQueryModal.jsx)
+   ============================================ */
+
+.dqm__backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 200000;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeInUp 0.15s ease;
+}
+
+.dqm__modal {
+  background: white;
+  border-radius: 12px;
+  width: 480px;
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  overflow: hidden;
+}
+
+.dqm__modal--success {
+  width: 300px;
+  max-height: none;
+}
+
+/* Header */
+.dqm__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  border-bottom: 1px solid #e5e7eb;
+  background: #f9fafb;
+  flex-shrink: 0;
+}
+
+.dqm__header-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dqm__header-icon {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #6366f1;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.dqm__header-title {
+  font-weight: 600;
+  font-size: 14px;
+  color: #111827;
+}
+
+.dqm__header-badge {
+  background: #ede9fe;
+  color: #6366f1;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.dqm__close {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: #9ca3af;
+  padding: 0 4px;
+  line-height: 1;
+}
+
+.dqm__close:hover { color: #374151; }
+
+/* Progress */
+.dqm__progress {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  padding: 14px 16px 10px;
+  flex-shrink: 0;
+}
+
+.dqm__step {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.dqm__step-num {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 600;
+  background: #e5e7eb;
+  color: #6b7280;
+  transition: all 0.2s;
+}
+
+.dqm__step--active .dqm__step-num {
+  background: #6366f1;
+  color: white;
+}
+
+.dqm__step--done .dqm__step-num {
+  background: #22c55e;
+  color: white;
+}
+
+.dqm__step-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: #9ca3af;
+}
+
+.dqm__step--active .dqm__step-label { color: #111827; }
+.dqm__step--done .dqm__step-label { color: #22c55e; }
+
+.dqm__step-line {
+  width: 48px;
+  height: 2px;
+  background: #e5e7eb;
+  margin: 0 12px;
+  transition: background 0.2s;
+}
+
+.dqm__step-line--active { background: #22c55e; }
+
+/* Body */
+.dqm__body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0 16px 16px;
+}
+
+.dqm__loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 40px 0;
+  color: #6b7280;
+  font-size: 13px;
+}
+
+.dqm__step-content {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* Info card */
+.dqm__info-card {
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 12px;
+}
+
+.dqm__info-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+
+.dqm__patient-name {
+  font-weight: 600;
+  font-size: 14px;
+  color: #111827;
+}
+
+.dqm__facility {
+  font-size: 11px;
+  color: #6b7280;
+}
+
+.dqm__diagnosis-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dqm__diag-code {
+  background: #ede9fe;
+  color: #6366f1;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.dqm__diag-name {
+  font-size: 13px;
+  color: #374151;
+}
+
+/* Fields */
+.dqm__field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.dqm__label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #374151;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.dqm__select,
+.dqm__search {
+  padding: 8px 10px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 13px;
+  background: white;
+  color: #111827;
+  outline: none;
+}
+
+.dqm__select:focus,
+.dqm__search:focus {
+  border-color: #6366f1;
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.15);
+}
+
+.dqm__textarea {
+  padding: 10px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 13px;
+  font-family: inherit;
+  line-height: 1.5;
+  color: #111827;
+  resize: vertical;
+  outline: none;
+}
+
+.dqm__textarea:focus {
+  border-color: #6366f1;
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.15);
+}
+
+/* Practitioner list */
+.dqm__pract-list {
+  max-height: 200px;
+  overflow-y: auto;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  background: white;
+}
+
+.dqm__pract-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  cursor: pointer;
+  transition: background 0.1s;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.dqm__pract-item:last-child { border-bottom: none; }
+.dqm__pract-item:hover { background: #f9fafb; }
+
+.dqm__pract-item--selected {
+  background: #ede9fe !important;
+}
+
+.dqm__pract-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #e0e7ff;
+  color: #4f46e5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 13px;
+  flex-shrink: 0;
+}
+
+.dqm__pract-info { flex: 1; }
+
+.dqm__pract-name {
+  font-size: 13px;
+  font-weight: 500;
+  color: #111827;
+}
+
+.dqm__pract-title {
+  font-size: 11px;
+  color: #6b7280;
+}
+
+.dqm__pract-check {
+  color: #6366f1;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.dqm__hint {
+  font-size: 11px;
+  color: #9ca3af;
+}
+
+/* Footer */
+.dqm__footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 12px 16px;
+  border-top: 1px solid #e5e7eb;
+  background: #f9fafb;
+  flex-shrink: 0;
+}
+
+.dqm__btn {
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all 0.15s;
+  font-family: inherit;
+}
+
+.dqm__btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.dqm__btn--primary {
+  background: #6366f1;
+  color: white;
+  border-color: #6366f1;
+}
+
+.dqm__btn--primary:hover:not(:disabled) {
+  background: #4f46e5;
+}
+
+.dqm__btn--secondary {
+  background: white;
+  color: #374151;
+  border-color: #d1d5db;
+}
+
+.dqm__btn--secondary:hover:not(:disabled) {
+  background: #f9fafb;
+}
+
+/* Success */
+.dqm__success {
+  padding: 40px 32px;
+  text-align: center;
+}
+
+.dqm__success-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: #22c55e;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  margin: 0 auto 12px;
+  animation: scaleIn 0.3s ease;
+}
+
+.dqm__success-text {
+  font-size: 18px;
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 4px;
+}
+
+.dqm__success-sub {
+  font-size: 13px;
+  color: #6b7280;
+}
+
+@keyframes scaleIn {
+  from { transform: scale(0); }
+  to { transform: scale(1); }
+}

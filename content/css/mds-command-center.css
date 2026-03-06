@@ -1133,6 +1133,19 @@
   font-family: var(--super-font, sans-serif);
 }
 
+.cc-pop__source-badge--order {
+  color: #b45309;
+  background: rgba(245, 158, 11, 0.1);
+}
+
+.cc-pop__admin-viewer,
+.cc-pop__note-viewer {
+  position: absolute;
+  inset: 0;
+  overflow-y: auto;
+  font-family: var(--super-font, sans-serif);
+}
+
 
 /* Detail loading state */
 .mds-cc__prev-detail-loading {

@@ -429,7 +429,7 @@ const QuerySendModal = {
                       url.searchParams.get('ESOLclientid') || '';
 
     // Get org from cookie via background script
-    const orgResponse = await chrome.runtime.sendMessage({ type: 'GET_ORG' });
+    const orgResponse = getOrg();
     const orgSlug = orgResponse?.org || '';
 
     // Get facility from DOM — try multiple sources
