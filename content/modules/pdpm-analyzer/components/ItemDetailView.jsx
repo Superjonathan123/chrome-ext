@@ -48,7 +48,7 @@ export function ItemDetailView({ item, context, onBack, onSplitChange, onDismiss
   const handleDismiss = useCallback(async (reason) => {
     setDismissing(true);
     try {
-      const orgResponse = await chrome.runtime.sendMessage({ type: 'GET_ORG' });
+      const orgResponse = getOrg();
       const orgSlug = orgResponse?.org;
       const facilityName = window.getChatFacilityInfo?.() || '';
 
@@ -208,7 +208,7 @@ export function ItemDetailView({ item, context, onBack, onSplitChange, onDismiss
     if (window.renderSplitAdministrations) {
       // Build params from context so we don't rely on URL params (may not be on MDS page)
       const resolveAndRender = async () => {
-        const orgResponse = await chrome.runtime.sendMessage({ type: 'GET_ORG' });
+        const orgResponse = getOrg();
         const orgSlug = orgResponse?.org;
         const facilityName = window.getChatFacilityInfo?.() || '';
         const params = { assessmentId: context?.assessmentId, orgSlug, facilityName };
@@ -234,7 +234,7 @@ export function ItemDetailView({ item, context, onBack, onSplitChange, onDismiss
     el.innerHTML = '<div class="idv__viewer-loading" style="position:static;padding:40px 0"><div class="pdpm-an__spinner"></div><span>Loading...</span></div>';
 
     const resolveAndRender = async () => {
-      const orgResponse = await chrome.runtime.sendMessage({ type: 'GET_ORG' });
+      const orgResponse = getOrg();
       const orgSlug = orgResponse?.org;
       const facilityName = window.getChatFacilityInfo?.() || '';
       const params = { assessmentId: context?.assessmentId, orgSlug, facilityName };

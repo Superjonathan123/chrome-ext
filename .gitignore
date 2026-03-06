@@ -5,3 +5,9 @@ demo-dist/
 *.log
 .playwright-mcp
 .worktrees/
+.DS_Store
+*.zip
+store/
+
+# Root-level screenshots
+/*.png

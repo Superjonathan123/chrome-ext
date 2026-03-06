@@ -269,6 +269,22 @@ async function updateMDSBadge() {
     count = FacilityDashboardState.getTotalActionable?.() || 0;
   }
 
+  // Add cert actionable count
+  try {
+    if (window.CertAPI && window.FacilityDashboardState) {
+      const facilityName = FacilityDashboardState.facilityName;
+      const orgSlug = FacilityDashboardState.orgSlug;
+      if (facilityName && orgSlug) {
+        const certDash = await CertAPI.fetchDashboard(facilityName, orgSlug);
+        if (certDash) {
+          count += (certDash.pending || 0) + (certDash.overdue || 0);
+        }
+      }
+    }
+  } catch (err) {
+    console.warn('Super Menu: Failed to load cert badge count:', err);
+  }
+
   if (count > 0) {
     badge.textContent = count > 99 ? '99+' : count;
     badge.style.display = '';

@@ -37,7 +37,7 @@ export function usePDPMAnalyzer(context, selectedAssessmentId) {
     const authState = await chrome.runtime.sendMessage({ type: 'GET_AUTH_STATE' });
     if (!authState.authenticated) throw new Error('Please log in to view MDS data');
 
-    const orgResponse = await chrome.runtime.sendMessage({ type: 'GET_ORG' });
+    const orgResponse = getOrg();
     const orgSlug = orgResponse?.org;
     const facilityName = window.getChatFacilityInfo?.() || '';
 

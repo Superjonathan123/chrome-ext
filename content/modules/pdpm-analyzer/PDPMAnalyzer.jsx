@@ -11,6 +11,7 @@ import { useState } from 'preact/hooks';
 import { usePDPMAnalyzer } from './hooks/usePDPMAnalyzer.js';
 import { ComplianceCard } from './components/ComplianceCard.jsx';
 import { ItemDetailView } from './components/ItemDetailView.jsx';
+import { CertSection } from '../certifications/components/CertSection.jsx';
 import { Selector } from '../../components/Selector.jsx';
 import { formatPaymentRates } from '../../utils/payment.js';
 
@@ -1129,7 +1130,7 @@ function ErrorState({ message, onRetry }) {
 
 // ─── Assessment detail view ────────────────────────────────────────────────────
 
-function AssessmentView({ assessmentData, onItemClick, onQueryClick }) {
+function AssessmentView({ assessmentData, onItemClick, onQueryClick, patientId }) {
   const [collapsed, setCollapsed] = useState({});
   const toggle = (key) => setCollapsed(prev => ({ ...prev, [key]: !prev[key] }));
 
@@ -1152,6 +1153,7 @@ function AssessmentView({ assessmentData, onItemClick, onQueryClick }) {
       <DocRisksSection data={assessmentData} onItemClick={onItemClick} collapsed={collapsed.docRisks} onToggleCollapse={() => toggle('docRisks')} />
       <ClinicalScores data={assessmentData} collapsed={collapsed.scores} onToggleCollapse={() => toggle('scores')} />
       <ComplianceCard data={assessmentData} collapsed={collapsed.compliance} onToggleCollapse={() => toggle('compliance')} />
+      {patientId && <CertSection patientId={patientId} collapsed={collapsed.certs} onToggleCollapse={() => toggle('certs')} />}
     </div>
   );
 }
@@ -1277,6 +1279,7 @@ export function PDPMAnalyzer({ context, onClose, initialMode = 'modal' }) {
                 />
               : <AssessmentView
                   assessmentData={assessmentData}
+                  patientId={context?.patientId}
                   onItemClick={(d) => setDetailItem({ type: 'detection', item: d })}
                   onQueryClick={(q) => {
                     const enriched = {

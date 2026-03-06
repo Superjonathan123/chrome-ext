@@ -162,7 +162,7 @@ const ICD10Viewer = {
     // Get org slug from PCC cookie via background script (same pattern as mds-view, streaming, etc.)
     let orgSlug = null;
     try {
-      const orgResponse = await chrome.runtime.sendMessage({ type: 'GET_ORG' });
+      const orgResponse = getOrg();
       orgSlug = orgResponse?.org || null;
     } catch (e) {
       console.warn('ICD10Viewer: Could not get org slug:', e);

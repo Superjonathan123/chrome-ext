@@ -29,7 +29,7 @@ export function useAssessmentDetail(externalAssessmentId) {
           throw new Error('Please log in to view detail');
         }
 
-        const orgResponse = await chrome.runtime.sendMessage({ type: 'GET_ORG' });
+        const orgResponse = getOrg();
         const orgSlug = orgResponse?.org;
         const facilityName = window.getChatFacilityInfo?.() || '';
 

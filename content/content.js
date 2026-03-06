@@ -9,6 +9,7 @@ import './css/mds-command-center.css';
 import './css/pdpm-analyzer.css';
 import './css/item-detail.css';
 import './css/pdf-viewer.css';
+import './css/certifications.css';
 
 // 2. Import vanilla utilities (order matters - matches current manifest.json order)
 import './mockData.js';
@@ -19,6 +20,9 @@ import './section-transformers.js';
 import './components/modal.js';
 import './components/dropdown.js';
 import './components/toast.js';
+
+// 3.5. Import certifications API (makes window.CertAPI available for fab.js)
+import './modules/certifications/cert-api.js';
 
 // 4. Import query system
 import './queries/query-api.js';

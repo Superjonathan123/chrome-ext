@@ -1,9 +1,12 @@
 // Background service worker for Super LTC Chrome Extension
-// Handles cookie access, cross-origin requests, and authentication
+// Handles cross-origin requests and authentication
 
 // CONFIG is inlined here since service workers use ES modules and can't use importScripts
+// __DEV_MODE__ is replaced at build time by Vite:
+//   npm run dev        → true  (uses localhost:3000)
+//   npm run build:prod → false (uses superltc.com)
 const CONFIG = {
-  DEV_MODE: true,
+  DEV_MODE: __DEV_MODE__,
   get API_BASE() {
     return this.DEV_MODE ? 'http://localhost:3000' : 'https://superltc.com';
   },
@@ -39,18 +42,6 @@ async function apiRequest(endpoint, options = {}) {
 }
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  // Get PointClickCare org cookie
-  if (message.type === 'GET_ORG') {
-    chrome.cookies.getAll({ domain: '.pointclickcare.com' }, (cookies) => {
-      const lastOrgCookie = cookies.find(c => c.name === 'last_org');
-      sendResponse({
-        org: lastOrgCookie ? lastOrgCookie.value : null,
-        allCookies: cookies.map(c => ({ name: c.name, value: c.value }))
-      });
-    });
-    return true;
-  }
-
   // Initiate login - generate state and return auth URL
   if (message.type === 'LOGIN') {
     (async () => {

@@ -17,7 +17,7 @@ async function sendChatMessage(userMessage) {
   }
 
   // Get org and facility for API call
-  const orgResponse = await chrome.runtime.sendMessage({ type: 'GET_ORG' });
+  const orgResponse = getOrg();
   const orgSlug = orgResponse?.org;
   const facilityName = getChatFacilityInfo();
 
