@@ -1,7 +1,7 @@
-// Slide-in drawer showing chat history sessions
+// Slide-in drawer showing chat history conversations
 import { ChatHistoryItem } from './ChatHistoryItem.jsx';
 
-export function ChatHistoryDrawer({ sessions, loading, activeSessionId, onSelect, onNewChat, onDelete, onClose }) {
+export function ChatHistoryDrawer({ conversations, loading, activeConversationId, onSelect, onNewChat, onDelete, onClose }) {
   return (
     <div class="super-chat-history-drawer">
       <div class="super-chat-history-drawer__header">
@@ -27,17 +27,17 @@ export function ChatHistoryDrawer({ sessions, loading, activeSessionId, onSelect
           <div class="super-chat-history-drawer__loading">Loading...</div>
         )}
 
-        {!loading && sessions.length === 0 && (
+        {!loading && conversations.length === 0 && (
           <div class="super-chat-history-drawer__empty">
             No previous conversations
           </div>
         )}
 
-        {!loading && sessions.map(session => (
+        {!loading && conversations.map(conv => (
           <ChatHistoryItem
-            key={session.id}
-            session={session}
-            isActive={session.id === activeSessionId}
+            key={conv.id}
+            conversation={conv}
+            isActive={conv.id === activeConversationId}
             onSelect={onSelect}
             onDelete={onDelete}
           />

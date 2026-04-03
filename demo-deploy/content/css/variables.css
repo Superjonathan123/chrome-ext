@@ -1,0 +1,50 @@
+/* Super LTC MDS Overlay Styles */
+
+/* ============================================
+   CSS Variables - Super LTC Brand
+   ============================================ */
+:root {
+  --super-primary: #6366f1;
+  --super-primary-dark: #4f46e5;
+  --super-primary-light: #818cf8;
+
+  --super-match: #22c55e;
+  --super-match-bg: #dcfce7;
+  --super-match-border: #86efac;
+
+  --super-mismatch: #ef4444;
+  --super-mismatch-bg: #fee2e2;
+  --super-mismatch-border: #fca5a5;
+
+  --super-review: #f59e0b;
+  --super-review-bg: #fef3c7;
+  --super-review-border: #fcd34d;
+
+  --super-gray-50: #f9fafb;
+  --super-gray-100: #f3f4f6;
+  --super-gray-200: #e5e7eb;
+  --super-gray-300: #d1d5db;
+  --super-gray-400: #9ca3af;
+  --super-gray-500: #6b7280;
+  --super-gray-600: #4b5563;
+  --super-gray-700: #374151;
+  --super-gray-800: #1f2937;
+  --super-gray-900: #111827;
+
+  --super-shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --super-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  --super-shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --super-shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --super-shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+
+  --super-font: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --super-font-mono: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+
+  --super-radius-sm: 4px;
+  --super-radius: 6px;
+  --super-radius-md: 8px;
+  --super-radius-lg: 12px;
+
+  --super-transition: all 0.15s ease-in-out;
+}
+

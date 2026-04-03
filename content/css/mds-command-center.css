@@ -1011,6 +1011,7 @@
 /* ── Split-view mode (PDF evidence inline) ── */
 .cc-pop--split {
   width: min(960px, calc(100% - 32px));
+  height: 80vh;
   max-height: calc(100% - 32px);
   transition: width 0.25s ease;
 }

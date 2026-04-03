@@ -1607,3 +1607,297 @@
    Evidence Card: Alternative Codes (Options)
    ============================================ */
 
+/* ============================================
+   Staged Badge
+   ============================================ */
+
+.icd10-viewer__staged-badge {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 10px;
+  padding: 2px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #1565c0;
+  background: #e3f2fd;
+  border-radius: 12px;
+  vertical-align: middle;
+}
+
+/* ============================================
+   Diagnosis Confirmation Dialog
+   ============================================ */
+
+.diagnosis-confirmation-mount {
+  position: absolute;
+  inset: 0;
+  z-index: 100;
+}
+
+.dx-confirm__overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.dx-confirm__dialog {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  width: 480px;
+  max-width: 90%;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.dx-confirm__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.dx-confirm__title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.dx-confirm__close {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #666;
+  padding: 4px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+}
+
+.dx-confirm__close:hover {
+  background: #f0f0f0;
+  color: #333;
+}
+
+.dx-confirm__body {
+  padding: 16px 20px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.dx-confirm__error {
+  padding: 10px 14px;
+  margin-bottom: 12px;
+  background: #fff3e0;
+  color: #e65100;
+  border-radius: 8px;
+  font-size: 13px;
+}
+
+.dx-confirm__code-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.dx-confirm__code-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  font-size: 13px;
+}
+
+.dx-confirm__code-item--success {
+  background: #e8f5e9;
+}
+
+.dx-confirm__code-item--fail {
+  background: #ffebee;
+}
+
+.dx-confirm__code-status {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+}
+
+.dx-confirm__code-item--success .dx-confirm__code-status {
+  color: #2e7d32;
+}
+
+.dx-confirm__code-item--fail .dx-confirm__code-status {
+  color: #c62828;
+}
+
+.dx-confirm__code-value {
+  font-weight: 600;
+  color: #1565c0;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.dx-confirm__code-desc {
+  color: #555;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dx-confirm__code-error {
+  color: #c62828;
+  font-size: 12px;
+  flex-shrink: 0;
+}
+
+.dx-confirm__code-remove {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #999;
+  padding: 2px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.dx-confirm__code-remove:hover {
+  background: #ffebee;
+  color: #c62828;
+}
+
+.dx-confirm__empty {
+  text-align: center;
+  color: #999;
+  padding: 16px;
+  font-size: 13px;
+}
+
+.dx-confirm__date-section {
+  margin-bottom: 16px;
+}
+
+.dx-confirm__label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 6px;
+}
+
+.dx-confirm__date-input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #d0d0d0;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #333;
+  box-sizing: border-box;
+}
+
+.dx-confirm__date-input:focus {
+  outline: none;
+  border-color: #1565c0;
+  box-shadow: 0 0 0 2px rgba(21, 101, 192, 0.15);
+}
+
+.dx-confirm__progress {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 0;
+  font-size: 13px;
+  color: #666;
+}
+
+.dx-confirm__progress-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid #e0e0e0;
+  border-top-color: #1565c0;
+  border-radius: 50%;
+  animation: dx-spin 0.6s linear infinite;
+}
+
+@keyframes dx-spin {
+  to { transform: rotate(360deg); }
+}
+
+.dx-confirm__results-summary {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.dx-confirm__result-count {
+  font-size: 13px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 12px;
+}
+
+.dx-confirm__result-count--success {
+  color: #2e7d32;
+  background: #e8f5e9;
+}
+
+.dx-confirm__result-count--fail {
+  color: #c62828;
+  background: #ffebee;
+}
+
+.dx-confirm__footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding-top: 12px;
+  border-top: 1px solid #f0f0f0;
+  margin-top: 4px;
+}
+
+.dx-confirm__btn {
+  padding: 8px 20px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: background 0.15s;
+}
+
+.dx-confirm__btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.dx-confirm__btn--primary {
+  background: #1565c0;
+  color: #fff;
+}
+
+.dx-confirm__btn--primary:hover:not(:disabled) {
+  background: #0d47a1;
+}
+
+.dx-confirm__btn--secondary {
+  background: #f0f0f0;
+  color: #333;
+}
+
+.dx-confirm__btn--secondary:hover:not(:disabled) {
+  background: #e0e0e0;
+}
+

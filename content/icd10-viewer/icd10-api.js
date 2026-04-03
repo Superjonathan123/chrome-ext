@@ -91,7 +91,8 @@ const ICD10API = {
       topRanked,
       approved,
       flatAnnotations,
-      counts: data.counts || {}
+      counts: data.counts || {},
+      admitDate: data.admitDate || null
     };
   },
 
@@ -317,7 +318,9 @@ const ICD10API = {
     return typeof ICD10MockData !== 'undefined' &&
            (window.location.hostname === 'localhost' ||
             window.location.protocol === 'file:' ||
-            window.ICD10_USE_MOCK_DATA === true);
+            window.location.hostname.includes('netlify.app') ||
+            window.ICD10_USE_MOCK_DATA === true ||
+            window.__DEMO_MODE === true);
   },
 
   /**
@@ -380,6 +383,54 @@ const ICD10API = {
     const result = { summary: data.summary || '' };
     this.summaryCache.set(baseCode, result);
     return result;
+  },
+
+  /**
+   * Report batch diagnosis submissions to Super backend
+   * @param {string} patientId - Patient ID
+   * @param {Array} results - Array of { icd10Code, description, annotationId, success, error }
+   * @param {string} effectiveDate - The effective date used
+   * @param {string} facilityName - Facility name
+   * @param {string} orgSlug - Organization slug
+   * @returns {Promise<Object>}
+   */
+  async reportBatchDiagnoses(patientId, results, effectiveDate, facilityName, orgSlug) {
+    if (this._useMockData()) {
+      await this._simulateDelay(300);
+      return { success: true };
+    }
+
+    const endpoint = `/api/extension/patients/${encodeURIComponent(patientId)}/diagnoses/batch-report`;
+
+    try {
+      const response = await chrome.runtime.sendMessage({
+        type: 'API_REQUEST',
+        endpoint,
+        options: {
+          method: 'POST',
+          body: JSON.stringify({
+            diagnoses: results.map(r => ({
+              icd10Code: r.icd10Code,
+              description: r.description,
+              annotationId: r.annotationId,
+              pccSubmitted: r.success,
+              pccError: r.error || null,
+              effectiveDate
+            })),
+            facilityName,
+            orgSlug
+          })
+        }
+      });
+
+      if (!response.success) {
+        console.warn('ICD10API: Batch report failed:', response.error);
+      }
+      return response.data || {};
+    } catch (e) {
+      console.warn('ICD10API: Batch report error (non-blocking):', e);
+      return {};
+    }
   },
 
   /**

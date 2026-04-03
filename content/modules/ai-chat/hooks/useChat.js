@@ -1,70 +1,95 @@
 // Core chat hook — manages messages, status, streaming via Chrome port
+// Now uses /api/chat with conversation CRUD
 import { useState, useRef, useCallback, useEffect } from 'preact/hooks';
 import { parseStreamBuffer, processStreamEvent } from '../lib/stream-parser.js';
+import { createConversation, saveMessage, generateTitle } from '../lib/chat-history-api.js';
 
-export function useChat(patientId) {
+export function useChat() {
   const [messages, setMessages] = useState([]);
   const [status, setStatus] = useState('ready'); // ready | submitted | streaming
   const [error, setError] = useState(null);
-  const [sessionId, setSessionId] = useState(() => crypto.randomUUID());
+  const [conversationId, setConversationId] = useState(null);
   const portRef = useRef(null);
   const messagesRef = useRef(messages);
+  const turnCountRef = useRef(0);
   messagesRef.current = messages;
 
-  // Reset when patient changes
-  useEffect(() => {
-    clear();
-  }, [patientId]);
-
-  // Load a saved session (from history)
-  const loadSession = useCallback((savedSessionId, savedMessages) => {
-    // Disconnect any active stream
+  // Load a saved conversation (from history)
+  const loadConversation = useCallback((convId, savedMessages) => {
     if (portRef.current) {
       try { portRef.current.disconnect(); } catch (_) {}
       portRef.current = null;
     }
-    setSessionId(savedSessionId);
+    setConversationId(convId);
+    // Count existing user messages to know turn count
+    turnCountRef.current = (savedMessages || []).filter(m => m.role === 'user').length;
     setMessages(savedMessages || []);
     setStatus('ready');
     setError(null);
   }, []);
 
+  // Get auth + org context
+  async function getAuthContext() {
+    const authState = await chrome.runtime.sendMessage({ type: 'GET_AUTH_STATE' });
+    if (!authState?.authenticated) {
+      throw new Error('Please log in to use the AI assistant.');
+    }
+
+    // Get orgSlug from PCC page context (localStorage is accessible from content script)
+    const organizationId = localStorage.getItem('CORE.org_code');
+    if (!organizationId) {
+      throw new Error('Organization not found. Please make sure you are on a PCC page.');
+    }
+
+    return { organizationId };
+  }
+
   const send = useCallback(async (text) => {
-    if (status !== 'ready' || !patientId || !text.trim()) return;
+    if (status !== 'ready' || !text.trim()) return;
 
     setError(null);
 
-    // Check auth
-    let authState;
+    let organizationId;
     try {
-      authState = await chrome.runtime.sendMessage({ type: 'GET_AUTH_STATE' });
+      const ctx = await getAuthContext();
+      organizationId = ctx.organizationId;
     } catch (e) {
-      setError('Could not check authentication. Please refresh the page.');
+      setError(e.message);
       return;
     }
 
-    if (!authState?.authenticated) {
-      setError('Please log in to use the AI assistant.');
-      return;
+    // Create conversation on first message if we don't have one
+    let convId = conversationId;
+    if (!convId) {
+      try {
+        const { conversation } = await createConversation({
+          title: 'New conversation',
+          organizationId
+        });
+        convId = conversation.id;
+        setConversationId(convId);
+      } catch (e) {
+        console.error('[AI Chat] Failed to create conversation:', e);
+        setError('Failed to start conversation. Please try again.');
+        return;
+      }
     }
 
-    // Get org and facility
-    let orgSlug, facilityName;
+    // Save user message to backend
     try {
-      const orgResponse = await chrome.runtime.sendMessage({ type: 'GET_ORG' });
-      orgSlug = orgResponse?.org;
-      const facLink = document.getElementById('pccFacLink');
-      facilityName = facLink?.title || facLink?.textContent?.trim() || null;
+      await saveMessage(convId, { role: 'user', content: text });
     } catch (e) {
-      console.warn('[AI Chat] Could not get org/facility:', e);
+      console.warn('[AI Chat] Failed to save user message:', e);
+      // Non-blocking — continue with streaming
     }
 
-    // Add user message
+    // Add user message + empty assistant placeholder
     const userMsg = { role: 'user', content: text };
     const assistantMsg = { role: 'assistant', content: '', parts: [] };
     const newMessages = [...messagesRef.current, userMsg, assistantMsg];
     setMessages(newMessages);
     setStatus('submitted');
+    turnCountRef.current++;
 
     // Prepare messages for API (without the empty assistant placeholder)
     const messagesToSend = newMessages.slice(0, -1).map(m => ({
@@ -77,6 +102,7 @@ export function useChat(patientId) {
     portRef.current = port;
 
     let buffer = '';
+    const isFirstTurn = turnCountRef.current === 1;
 
     port.onMessage.addListener((msg) => {
       if (msg.type === 'CHUNK') {
@@ -84,13 +110,11 @@ export function useChat(patientId) {
         const { parsed, remaining } = parseStreamBuffer(buffer);
         buffer = remaining;
 
-        // Process events into the assistant message
         parsed.forEach(event => {
           processStreamEvent(event, assistantMsg);
         });
 
         setStatus('streaming');
-        // Trigger re-render with updated message
         setMessages(prev => {
           const updated = [...prev];
           updated[updated.length - 1] = { ...assistantMsg };
@@ -101,14 +125,29 @@ export function useChat(patientId) {
       if (msg.type === 'DONE') {
         setStatus('ready');
         portRef.current = null;
-        // Final re-render with completed message
         setMessages(prev => [...prev]);
+
+        // Save assistant message + generate title (fire-and-forget)
+        if (convId && assistantMsg.content) {
+          saveMessage(convId, {
+            role: 'assistant',
+            content: assistantMsg.content,
+            parts: assistantMsg.parts?.length ? assistantMsg.parts : undefined,
+          }).catch(e => console.warn('[AI Chat] Failed to save assistant message:', e));
+
+          if (isFirstTurn) {
+            generateTitle({
+              conversationId: convId,
+              userMessage: text,
+              assistantMessage: assistantMsg.content
+            }).catch(e => console.warn('[AI Chat] Failed to generate title:', e));
+          }
+        }
       }
 
       if (msg.type === 'ERROR') {
         setStatus('ready');
         portRef.current = null;
-        // Remove empty assistant message
         setMessages(prev => {
           const last = prev[prev.length - 1];
           if (last?.role === 'assistant' && !last.content && (!last.parts || last.parts.length === 0)) {
@@ -129,15 +168,14 @@ export function useChat(patientId) {
 
     port.postMessage({
       type: 'START_STREAM',
-      patientId,
-      orgSlug,
-      facilityName,
-      messages: messagesToSend
+      messages: messagesToSend,
+      context: {
+        organizationId
+      }
     });
-  }, [patientId, status]);
+  }, [status, conversationId]);
 
   const clear = useCallback(() => {
-    // Disconnect streaming port if active
     if (portRef.current) {
       try { portRef.current.disconnect(); } catch (_) {}
       portRef.current = null;
@@ -145,7 +183,8 @@ export function useChat(patientId) {
     setMessages([]);
     setStatus('ready');
     setError(null);
-    setSessionId(crypto.randomUUID());
+    setConversationId(null);
+    turnCountRef.current = 0;
   }, []);
 
   const stop = useCallback(() => {
@@ -156,5 +195,5 @@ export function useChat(patientId) {
     setStatus('ready');
   }, []);
 
-  return { messages, status, error, sessionId, send, clear, stop, setMessages, loadSession };
+  return { messages, status, error, conversationId, send, clear, stop, setMessages, loadConversation };
 }

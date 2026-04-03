@@ -5,29 +5,29 @@ import { copyFileSync, mkdirSync, readdirSync } from 'fs';
 import manifest from './manifest.json';
 
 // Plugin to copy content CSS into dist (crx plugin doesn't handle static CSS in content_scripts)
-function copyStaticAssets() {
+function copyStaticAssets(outDir) {
   return {
     name: 'copy-static-assets',
     writeBundle() {
       // Copy all content CSS files
-      mkdirSync('dist/content/css', { recursive: true });
+      mkdirSync(`${outDir}/content/css`, { recursive: true });
       readdirSync('content/css').filter(f => f.endsWith('.css')).forEach(f => {
-        copyFileSync(`content/css/${f}`, `dist/content/css/${f}`);
+        copyFileSync(`content/css/${f}`, `${outDir}/content/css/${f}`);
       });
-      copyFileSync('content/styles.css', 'dist/content/styles.css');
-      copyFileSync('content/chatbot.css', 'dist/content/chatbot.css');
+      copyFileSync('content/styles.css', `${outDir}/content/styles.css`);
+      copyFileSync('content/chatbot.css', `${outDir}/content/chatbot.css`);
       // Copy popup assets (not bundled since popup.html uses non-module script)
-      mkdirSync('dist/popup', { recursive: true });
-      copyFileSync('popup/popup.js', 'dist/popup/popup.js');
-      copyFileSync('popup/popup.css', 'dist/popup/popup.css');
-      // Copy callback.js (referenced by callback.html)
-      copyFileSync('callback.js', 'dist/callback.js');
+      mkdirSync(`${outDir}/popup`, { recursive: true });
+      copyFileSync('popup/popup.js', `${outDir}/popup/popup.js`);
+      copyFileSync('popup/popup.css', `${outDir}/popup/popup.css`);
+      // Copy auth callback content script
+      copyFileSync('content/auth-callback.js', `${outDir}/content/auth-callback.js`);
       // Copy PDF.js library (loaded dynamically by content script)
-      mkdirSync('dist/lib', { recursive: true });
-      copyFileSync('lib/pdf.min.js', 'dist/lib/pdf.min.js');
-      copyFileSync('lib/pdf.worker.min.js', 'dist/lib/pdf.worker.min.js');
+      mkdirSync(`${outDir}/lib`, { recursive: true });
+      copyFileSync('lib/pdf.min.js', `${outDir}/lib/pdf.min.js`);
+      copyFileSync('lib/pdf.worker.min.js', `${outDir}/lib/pdf.worker.min.js`);
       // Copy privacy policy (accessible from popup)
-      copyFileSync('privacy-policy.html', 'dist/privacy-policy.html');
+      copyFileSync('privacy-policy.html', `${outDir}/privacy-policy.html`);
     }
   };
 }
@@ -63,12 +63,14 @@ export default defineConfig(({ mode }) => {
     );
   }
 
+  const outDir = isDev ? 'dist' : 'dist-prod';
+
   return {
     plugins: [
       stripMocksInProduction(mode),
       preact(),
       crx({ manifest: buildManifest }),
-      copyStaticAssets()
+      copyStaticAssets(outDir)
     ],
     define: {
       // Replaced at build time in background.js
@@ -76,7 +78,7 @@ export default defineConfig(({ mode }) => {
       __DEV_MODE__: isDev,
     },
     build: {
-      outDir: 'dist',
+      outDir,
       rollupOptions: {
         input: {
           background: 'background/background.js',

@@ -37,6 +37,12 @@ function parseEvidenceForViewer(ev) {
     return { viewerType: 'document', id: sourceId };
   }
 
+  // Early check: if sourceId contains -chunk-, it's a document regardless of type label
+  // (AI sometimes mislabels document chunks as clinical_note)
+  if (sourceId && sourceId.includes('-chunk-')) {
+    return { viewerType: 'document', id: sourceId.split('-chunk-')[0], chunk: parseInt(sourceId.split('-chunk-')[1], 10) };
+  }
+
   // Pattern 1b: queryEvidence format uses "type" + "sourceId"
   // sourceId may have prefixes like "pcc-prognote-xxx" — strip them
   if (evType === 'clinical_note' && sourceId) {
@@ -65,7 +71,7 @@ function parseEvidenceForViewer(ev) {
     }
     if (eid.includes('-chunk-')) {
       // Document chunks: "abc123-chunk-1" -> "abc123"
-      return { viewerType: 'document', id: eid.split('-chunk-')[0] };
+      return { viewerType: 'document', id: eid.split('-chunk-')[0], chunk: parseInt(eid.split('-chunk-')[1], 10) };
     }
   }
 

@@ -41,6 +41,12 @@ export function parseViewer(ev) {
   const evType = ev.type || '';
   const evidenceId = ev.evidenceId || sourceId;
 
+  // Early check: if sourceId contains -chunk-, it's a document regardless of type label
+  // (AI sometimes mislabels document chunks as clinical_note)
+  if (sourceId && sourceId.includes('-chunk-')) {
+    return { viewerType: 'document', id: sourceId.split('-chunk-')[0], chunk: parseInt(sourceId.split('-chunk-')[1], 10) };
+  }
+
   // Direct sourceType
   if (sourceType === 'progress-note' && sourceId) return { viewerType: 'clinical-note', id: sourceId };
   if (sourceType === 'therapy-doc' && sourceId) return { viewerType: 'therapy-document', id: sourceId };
@@ -54,13 +60,14 @@ export function parseViewer(ev) {
     return { viewerType: 'therapy-document', id: sourceId.replace(/^therapy-doc-/, '') };
   }
   if (evType === 'document' && sourceId) return { viewerType: 'document', id: sourceId };
+  if (evType === 'order' && sourceId) return { viewerType: 'order', id: sourceId };
 
   // evidenceId prefixes
   if (evidenceId) {
     if (evidenceId.startsWith('therapy-doc-')) return { viewerType: 'therapy-document', id: evidenceId.replace('therapy-doc-', '') };
     if (evidenceId.startsWith('pcc-prognote-')) return { viewerType: 'clinical-note', id: evidenceId.replace('pcc-prognote-', '') };
     if (evidenceId.startsWith('patient-practnote-')) return { viewerType: 'clinical-note', id: evidenceId.replace('patient-practnote-', '') };
-    if (evidenceId.includes('-chunk-')) return { viewerType: 'document', id: evidenceId.split('-chunk-')[0] };
+    if (evidenceId.includes('-chunk-')) return { viewerType: 'document', id: evidenceId.split('-chunk-')[0], chunk: parseInt(evidenceId.split('-chunk-')[1], 10) };
   }
   return { viewerType: null, id: null };
 }

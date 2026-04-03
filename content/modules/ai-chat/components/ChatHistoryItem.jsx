@@ -1,4 +1,4 @@
-// Single session row in the chat history drawer
+// Single conversation row in the chat history drawer
 import { useCallback } from 'preact/hooks';
 
 function formatRelativeDate(dateStr) {
@@ -16,24 +16,24 @@ function formatRelativeDate(dateStr) {
   return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
 }
 
-export function ChatHistoryItem({ session, isActive, onSelect, onDelete }) {
+export function ChatHistoryItem({ conversation, isActive, onSelect, onDelete }) {
   const handleDelete = useCallback((e) => {
     e.stopPropagation();
-    onDelete(session.id);
-  }, [session.id, onDelete]);
+    onDelete(conversation.id);
+  }, [conversation.id, onDelete]);
 
   return (
     <button
       class={`super-chat-history-item ${isActive ? 'super-chat-history-item--active' : ''}`}
-      onClick={() => onSelect(session.id)}
-      title={session.title}
+      onClick={() => onSelect(conversation.id)}
+      title={conversation.title}
     >
       <div class="super-chat-history-item__content">
-        <div class="super-chat-history-item__title">{session.title}</div>
+        <div class="super-chat-history-item__title">{conversation.title}</div>
         <div class="super-chat-history-item__meta">
-          {formatRelativeDate(session.updatedAt || session.createdAt)}
-          {session.messageCount != null && (
-            <span> · {session.messageCount} msgs</span>
+          {formatRelativeDate(conversation.updatedAt || conversation.createdAt)}
+          {conversation.scope && (
+            <span> · {conversation.scope}</span>
           )}
         </div>
       </div>

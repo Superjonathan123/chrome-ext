@@ -6,30 +6,17 @@ import { MessageList } from './components/MessageList.jsx';
 import { ChatInput } from './components/ChatInput.jsx';
 import { ChatHistoryDrawer } from './components/ChatHistoryDrawer.jsx';
 
-export function AIChatOverlay({ patientId, onClose }) {
-  const { messages, status, error, sessionId, send, clear, stop, setMessages, loadSession } = useChat(patientId);
+export function AIChatOverlay({ onClose }) {
+  const { messages, status, error, conversationId, send, clear, stop, setMessages, loadConversation } = useChat();
   const [showHistory, setShowHistory] = useState(false);
 
   const {
-    sessions, loading: historyLoading, activeSessionId, setActiveSessionId,
-    startNewSession, selectSession, saveSession, removeSession
-  } = useChatHistory(patientId);
+    conversations, loading: historyLoading,
+    loadHistory, selectConversation, removeConversation
+  } = useChatHistory();
 
-  // Wire session persistence — auto-save to backend when streaming completes
-  const handleSaveComplete = useCallback(({ sessionId: sid, messages: msgs }) => {
-    saveSession({ sessionId: sid, messages: msgs });
-  }, [saveSession]);
-
-  useChatSession(patientId, messages, setMessages, {
-    sessionId,
-    status,
-    onSaveComplete: handleSaveComplete
-  });
-
-  // Keep history's activeSessionId in sync
-  useEffect(() => {
-    setActiveSessionId(sessionId);
-  }, [sessionId]);
+  // Local sessionStorage cache (fast restore on reopen)
+  useChatSession(conversationId, messages, setMessages);
 
   // Escape to close
   useEffect(() => {
@@ -51,29 +38,31 @@ export function AIChatOverlay({ patientId, onClose }) {
     setShowHistory(false);
   }, [clear]);
 
-  const handleSelectSession = useCallback((sid) => {
-    const session = selectSession(sid);
-    if (session?.messages) {
-      loadSession(sid, session.messages);
+  const handleSelectConversation = useCallback(async (convId) => {
+    const data = await selectConversation(convId);
+    if (data?.conversation && data?.messages) {
+      loadConversation(data.conversation.id, data.messages);
     }
     setShowHistory(false);
-  }, [selectSession, loadSession]);
+  }, [selectConversation, loadConversation]);
 
-  const handleDeleteSession = useCallback(async (sid) => {
-    await removeSession(sid);
-    // If deleting the active session, start fresh
-    if (sid === sessionId) {
+  const handleDeleteConversation = useCallback(async (convId) => {
+    await removeConversation(convId);
+    if (convId === conversationId) {
       clear();
     }
-  }, [removeSession, sessionId, clear]);
+  }, [removeConversation, conversationId, clear]);
 
   const handleSuggestionClick = useCallback((suggestion) => {
     send(suggestion);
   }, [send]);
 
   const toggleHistory = useCallback(() => {
-    setShowHistory(prev => !prev);
-  }, []);
+    setShowHistory(prev => {
+      if (!prev) loadHistory(); // Refresh list when opening
+      return !prev;
+    });
+  }, [loadHistory]);
 
   return (
     <div class="super-chat-overlay">
@@ -130,12 +119,12 @@ export function AIChatOverlay({ patientId, onClose }) {
         {/* History drawer (overlays the message area) */}
         {showHistory && (
           <ChatHistoryDrawer
-            sessions={sessions}
+            conversations={conversations}
             loading={historyLoading}
-            activeSessionId={activeSessionId}
-            onSelect={handleSelectSession}
+            activeConversationId={conversationId}
+            onSelect={handleSelectConversation}
             onNewChat={handleNewChat}
-            onDelete={handleDeleteSession}
+            onDelete={handleDeleteConversation}
             onClose={() => setShowHistory(false)}
           />
         )}

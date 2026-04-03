@@ -50,21 +50,186 @@ function injectAICodeButton() {
   if (reportsBtn) {
     const container = reportsBtn.closest('.dropDownButtonContainer');
     container.appendChild(btn);
-    return;
+  } else {
+    // Fallback: any .pccModuleHeader cell
+    const headerCell = document.querySelector('td.pccModuleHeader');
+    if (headerCell) {
+      headerCell.appendChild(btn);
+    } else {
+      // Last fallback: insert before the diagnosis table
+      const table = document.querySelector('#meddiaglisting, .pccResults, [id*="meddiag"]');
+      if (table) {
+        table.parentNode.insertBefore(btn, table);
+      }
+    }
   }
 
-  // Fallback: any .pccModuleHeader cell
-  const headerCell = document.querySelector('td.pccModuleHeader');
-  if (headerCell) {
-    headerCell.appendChild(btn);
-    return;
-  }
+  // Always show test button for now (remove before production)
+  _injectTestAddCodeButton(btn);
+}
 
-  // Last fallback: insert before the diagnosis table
-  const table = document.querySelector('#meddiaglisting, .pccResults, [id*="meddiag"]');
-  if (table) {
-    table.parentNode.insertBefore(btn, table);
-  }
+/**
+ * Check if we're in test/dev mode
+ */
+function _isTestMode() {
+  return window.location.hostname === 'localhost' ||
+         window.location.protocol === 'file:' ||
+         window.location.hostname.includes('netlify.app') ||
+         window.ICD10_USE_MOCK_DATA === true ||
+         window.__DEMO_MODE === true;
+}
+
+/**
+ * Inject a test button for manually adding a code to PCC (dev/demo only)
+ */
+function _injectTestAddCodeButton(siblingBtn) {
+  if (document.getElementById('super-test-add-code-btn')) return;
+
+  const testBtn = document.createElement('button');
+  testBtn.type = 'button';
+  testBtn.id = 'super-test-add-code-btn';
+  testBtn.textContent = 'Test Add Code';
+  testBtn.style.cssText = `
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 12px;
+    background: #ff9800;
+    color: #fff;
+    font: 600 11px/1.4 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-left: 6px;
+    vertical-align: middle;
+  `;
+
+  testBtn.addEventListener('click', () => {
+    _showTestAddCodeDialog();
+  });
+
+  siblingBtn.parentNode.insertBefore(testBtn, siblingBtn.nextSibling);
+}
+
+/**
+ * Show a simple test dialog for adding a code directly
+ */
+function _showTestAddCodeDialog() {
+  // Remove existing dialog if any
+  const existing = document.getElementById('super-test-add-dialog');
+  if (existing) existing.remove();
+
+  const today = new Date();
+  const todayStr = `${String(today.getMonth() + 1).padStart(2, '0')}/${String(today.getDate()).padStart(2, '0')}/${today.getFullYear()}`;
+
+  const dialog = document.createElement('div');
+  dialog.id = 'super-test-add-dialog';
+  dialog.style.cssText = `
+    position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    background: #fff; border-radius: 12px; box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    padding: 24px; z-index: 999999; width: 360px; font-family: -apple-system, sans-serif;
+  `;
+
+  dialog.innerHTML = `
+    <h3 style="margin: 0 0 16px; font-size: 16px; color: #333;">Test Add Code to PCC</h3>
+    <div style="margin-bottom: 12px;">
+      <label style="display:block; font-size: 13px; font-weight: 600; margin-bottom: 4px;">ICD-10 Code</label>
+      <input id="test-icd-code" type="text" value="E11.9" placeholder="e.g. E11.9"
+        style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; box-sizing: border-box;" />
+    </div>
+    <div style="margin-bottom: 16px;">
+      <label style="display:block; font-size: 13px; font-weight: 600; margin-bottom: 4px;">Effective Date</label>
+      <input id="test-icd-date" type="date" value="${today.toISOString().split('T')[0]}"
+        style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; box-sizing: border-box;" />
+    </div>
+    <div id="test-add-status" style="font-size: 13px; color: #666; margin-bottom: 12px; min-height: 20px;"></div>
+    <div style="display: flex; gap: 8px; justify-content: flex-end;">
+      <button id="test-add-cancel" style="padding: 8px 16px; background: #eee; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">Cancel</button>
+      <button id="test-add-confirm" style="padding: 8px 16px; background: #4caf50; color: #fff; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">Add to PCC</button>
+    </div>
+  `;
+
+  document.body.appendChild(dialog);
+
+  // Backdrop
+  const backdrop = document.createElement('div');
+  backdrop.id = 'super-test-add-backdrop';
+  backdrop.style.cssText = 'position: fixed; inset: 0; background: rgba(0,0,0,0.3); z-index: 999998;';
+  backdrop.addEventListener('click', () => { dialog.remove(); backdrop.remove(); });
+  document.body.appendChild(backdrop);
+
+  dialog.querySelector('#test-add-cancel').addEventListener('click', () => {
+    dialog.remove(); backdrop.remove();
+  });
+
+  dialog.querySelector('#test-add-confirm').addEventListener('click', async () => {
+    const code = dialog.querySelector('#test-icd-code').value.trim();
+    const rawDate = dialog.querySelector('#test-icd-date').value;
+    // Convert YYYY-MM-DD from date picker to MM/DD/YYYY for PCC
+    const [yr, mo, dy] = rawDate.split('-');
+    const date = mo && dy && yr ? `${mo}/${dy}/${yr}` : '';
+    const statusEl = dialog.querySelector('#test-add-status');
+    const confirmBtn = dialog.querySelector('#test-add-confirm');
+
+    if (!code || !date) {
+      statusEl.textContent = 'Code and date are required';
+      statusEl.style.color = '#c62828';
+      return;
+    }
+
+    confirmBtn.disabled = true;
+    confirmBtn.textContent = 'Adding...';
+    statusEl.textContent = 'Looking up code in PCC...';
+    statusEl.style.color = '#666';
+
+    try {
+      // Get patient ID from URL
+      const urlParams = new URLSearchParams(window.location.search);
+      const clientId = urlParams.get('ESOLclientid');
+
+      if (!clientId) {
+        statusEl.textContent = 'Could not find patient ID (ESOLclientid) in URL';
+        statusEl.style.color = '#c62828';
+        confirmBtn.disabled = false;
+        confirmBtn.textContent = 'Add to PCC';
+        return;
+      }
+
+      // Step 1: Look up code
+      const lookup = await PCCDiagnosisClient.lookupCode(code);
+      statusEl.textContent = `Found: ${lookup.code} (ID: ${lookup.diagnosisId}). Submitting...`;
+
+      // Step 2: Get rank
+      const rankOptions = await PCCDiagnosisClient.fetchRankOptions(clientId);
+      const rankId = PCCDiagnosisClient.autoSelectRank(rankOptions);
+
+      // Step 3: Submit
+      const result = await PCCDiagnosisClient.submitDiagnosis({
+        clientId,
+        diagnosisId: lookup.diagnosisId,
+        icd10Code: lookup.code,
+        description: lookup.name,
+        onsetDate: date,
+        rankId
+      });
+
+      if (result.success) {
+        statusEl.textContent = `Success! ${code} added to PCC.`;
+        statusEl.style.color = '#2e7d32';
+        confirmBtn.textContent = 'Done';
+        setTimeout(() => { dialog.remove(); backdrop.remove(); }, 2000);
+      } else {
+        statusEl.textContent = `Failed: ${result.error}`;
+        statusEl.style.color = '#c62828';
+        confirmBtn.disabled = false;
+        confirmBtn.textContent = 'Add to PCC';
+      }
+    } catch (err) {
+      statusEl.textContent = `Error: ${err.message}`;
+      statusEl.style.color = '#c62828';
+      confirmBtn.disabled = false;
+      confirmBtn.textContent = 'Add to PCC';
+    }
+  });
 }
 
 async function checkAuthAndPrompt() {

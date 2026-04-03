@@ -15,8 +15,11 @@ const ICD10Viewer = {
   approved: [],
   counts: {},
   approvedDiagnoses: [],
+  stagedCodes: [],          // Codes staged for PCC submission
+  admitDate: null,          // Patient admit date (from backend)
   _currentView: 'icd10', // 'icd10' or 'queryItems'
   _preactUnmount: null,  // cleanup function for Preact component
+  _confirmationUnmount: null, // cleanup function for confirmation dialog
   _assessmentId: null,   // external assessment ID for query items
 
   // DOM elements
@@ -65,7 +68,13 @@ const ICD10Viewer = {
       this._preactUnmount();
       this._preactUnmount = null;
     }
+    // Clean up confirmation dialog if showing
+    if (this._confirmationUnmount) {
+      this._confirmationUnmount();
+      this._confirmationUnmount = null;
+    }
     this._currentView = 'icd10';
+    this.stagedCodes = [];
 
     // Remove escape handler
     if (this._escapeHandler) {
@@ -253,7 +262,7 @@ const ICD10Viewer = {
   _attachEventListeners() {
     // Close button
     this.modal.querySelector('.icd10-viewer__close-btn').addEventListener('click', () => {
-      this.close();
+      this._handleExitAttempt(() => this.close());
     });
 
     // Back button - context-aware
@@ -261,31 +270,30 @@ const ICD10Viewer = {
       if (this._currentView === 'queryItems') {
         this.showICD10View();
       } else {
-        this.close();
+        this._handleExitAttempt(() => this.close());
       }
     });
 
     // Next button - go to Query Items
     this.modal.querySelector('.icd10-viewer__next-btn').addEventListener('click', () => {
-      this.showQueryItems();
+      this._handleExitAttempt(() => this.showQueryItems());
     });
 
     // Backdrop click
     this.modal.querySelector('.icd10-viewer-modal__backdrop').addEventListener('click', () => {
-      this.close();
+      this._handleExitAttempt(() => this.close());
     });
 
     // Escape key - context-aware
     this._escapeHandler = (e) => {
       if (e.key === 'Escape' && this.isOpen) {
-        // Don't handle Escape if a nested modal (e.g., BatchReviewModal) is open —
-        // let the nested modal's own handler close it first
-        if (document.querySelector('.super-modal--visible')) return;
+        // Don't handle Escape if a nested modal (e.g., BatchReviewModal or confirmation dialog) is open
+        if (document.querySelector('.super-modal--visible') || document.querySelector('.dx-confirm__overlay')) return;
 
         if (this._currentView === 'queryItems') {
           this.showICD10View();
         } else {
-          this.close();
+          this._handleExitAttempt(() => this.close());
         }
       }
     };
@@ -323,6 +331,7 @@ const ICD10Viewer = {
       this.approved = annotationData.approved || [];
       this.annotations = annotationData.flatAnnotations || [];
       this.counts = annotationData.counts || {};
+      this.admitDate = annotationData.admitDate || null;
       this.approvedDiagnoses = approvedDiagnoses || [];
 
       // Initialize components
@@ -464,26 +473,26 @@ const ICD10Viewer = {
   },
 
   /**
-   * Handle approve button click
-   * @param {Object} item - Annotation item to approve
+   * Handle add button click — stages the code locally (no API call yet)
+   * @param {Object} item - Annotation item to stage
    */
   async _handleApprove(item) {
     try {
-      await ICD10API.approveDiagnosis(
-        this.patientId,
-        item,
-        this.facilityName,
-        this.orgSlug
-      );
+      // Dedup check
+      if (this.stagedCodes.some(c => c.icd10Code === item.icd10Code)) {
+        console.log('ICD10Viewer: Code already staged:', item.icd10Code);
+        ICD10EvidencePanel.markApproved(item.id);
+        return;
+      }
 
-      // Add to approved diagnoses locally
-      const approvedDx = {
+      // Stage the code locally
+      this.stagedCodes.push({
         icd10Code: item.icd10Code,
         description: item.description,
-        onsetDate: new Date().toISOString().split('T')[0],
-        category: item.category
-      };
-      this.approvedDiagnoses.push(approvedDx);
+        annotationId: item.id,
+        category: item.category,
+        groupCode: item.groupCode || item.icd10Code
+      });
 
       // Remove from flat annotations
       const index = this.annotations.findIndex(a => a.id === item.id);
@@ -509,18 +518,145 @@ const ICD10Viewer = {
         approvedDiagnoses: this.approvedDiagnoses
       });
 
-      // Mark as approved in evidence panel
+      // Mark as added in evidence panel
       ICD10EvidencePanel.markApproved(item.id);
 
-      // Add to demo page table if it exists
-      this._addToPageTable(approvedDx);
+      // Update staged count badge
+      this._updateStagedBadge();
 
-      console.log('ICD10Viewer: Approved diagnosis:', item.icd10Code);
+      console.log('ICD10Viewer: Staged diagnosis:', item.icd10Code, `(${this.stagedCodes.length} total staged)`);
 
     } catch (error) {
-      console.error('ICD10Viewer: Failed to approve:', error);
-      throw error; // Re-throw so evidence panel shows error state
+      console.error('ICD10Viewer: Failed to stage:', error);
+      throw error;
     }
+  },
+
+  /**
+   * Handle exit attempt — shows confirmation dialog if codes are staged
+   * @param {Function} proceedCallback - Called after confirmation or if no staged codes
+   */
+  _handleExitAttempt(proceedCallback) {
+    if (this.stagedCodes.length === 0) {
+      proceedCallback();
+      return;
+    }
+    this._showConfirmationDialog(proceedCallback);
+  },
+
+  /**
+   * Show the diagnosis confirmation dialog (Preact component)
+   * @param {Function} proceedCallback - Called after submission completes or user skips
+   */
+  async _showConfirmationDialog(proceedCallback) {
+    const mountEl = document.createElement('div');
+    mountEl.className = 'diagnosis-confirmation-mount';
+    this.modal.querySelector('.icd10-viewer-modal__container').appendChild(mountEl);
+
+    try {
+      let render, h, DiagnosisConfirmationDialog;
+      if (window.__preact && window.__DiagnosisConfirmationDialog) {
+        ({ render, h } = window.__preact);
+        DiagnosisConfirmationDialog = window.__DiagnosisConfirmationDialog;
+      } else {
+        const [preactMod, dcMod] = await Promise.all([
+          import('preact'),
+          import('../modules/diagnosis-confirmation/DiagnosisConfirmationDialog.jsx')
+        ]);
+        ({ render, h } = preactMod);
+        ({ DiagnosisConfirmationDialog } = dcMod);
+      }
+
+      const cleanup = () => {
+        render(null, mountEl);
+        mountEl.remove();
+        this._confirmationUnmount = null;
+      };
+
+      this._confirmationUnmount = cleanup;
+
+      render(
+        h(DiagnosisConfirmationDialog, {
+          stagedCodes: [...this.stagedCodes],
+          defaultDate: this.admitDate || '',
+          patientId: this.patientId,
+          onApply: async (results) => {
+            // Report to backend (non-blocking)
+            this._reportToBackend(results);
+
+            // Update page table for successful submissions
+            results.filter(r => r.success).forEach(r => {
+              this._addToPageTable({
+                icd10Code: r.icd10Code,
+                description: r.description,
+                onsetDate: this.admitDate || new Date().toISOString().split('T')[0],
+                category: this.stagedCodes.find(c => c.icd10Code === r.icd10Code)?.category || 'other'
+              });
+            });
+
+            // Keep failed codes staged for retry
+            const failedCodes = results.filter(r => !r.success);
+            this.stagedCodes = this.stagedCodes.filter(c =>
+              failedCodes.some(f => f.icd10Code === c.icd10Code)
+            );
+
+            this._updateStagedBadge();
+            cleanup();
+            proceedCallback();
+          },
+          onCancel: () => {
+            cleanup();
+            // User stays in viewer, staged codes preserved
+          }
+        }),
+        mountEl
+      );
+    } catch (err) {
+      console.error('[ICD10Viewer] Failed to load confirmation dialog:', err);
+      mountEl.remove();
+      // Fallback: just proceed
+      proceedCallback();
+    }
+  },
+
+  /**
+   * Report batch results to Super backend
+   * @param {Array} results - Batch submission results
+   */
+  async _reportToBackend(results) {
+    try {
+      await ICD10API.reportBatchDiagnoses(
+        this.patientId,
+        results,
+        this.admitDate || new Date().toISOString().split('T')[0],
+        this.facilityName,
+        this.orgSlug
+      );
+    } catch (e) {
+      console.warn('ICD10Viewer: Backend report failed (non-blocking):', e);
+    }
+  },
+
+  /**
+   * Update the staged count badge in the header
+   */
+  _updateStagedBadge() {
+    if (!this.modal) return;
+    let badge = this.modal.querySelector('.icd10-viewer__staged-badge');
+
+    if (this.stagedCodes.length === 0) {
+      if (badge) badge.remove();
+      return;
+    }
+
+    if (!badge) {
+      badge = document.createElement('span');
+      badge.className = 'icd10-viewer__staged-badge';
+      const titleEl = this.modal.querySelector('.icd10-viewer__title');
+      if (titleEl) titleEl.appendChild(badge);
+    }
+
+    badge.textContent = `${this.stagedCodes.length} staged`;
   },
 
   /**
@@ -619,11 +755,19 @@ const ICD10Viewer = {
     }
 
     try {
-      // Dynamic imports — Vite handles code-splitting
-      const [{ render, h }, { QueryItemsPage }] = await Promise.all([
-        import('preact'),
-        import('../modules/query-items/QueryItemsPage.jsx')
-      ]);
+      // Use pre-bundled globals (demo) or dynamic imports (Vite/production)
+      let render, h, QueryItemsPage;
+      if (window.__preact && window.__QueryItemsPage) {
+        ({ render, h } = window.__preact);
+        QueryItemsPage = window.__QueryItemsPage;
+      } else {
+        const [preactMod, qipMod] = await Promise.all([
+          import('preact'),
+          import('../modules/query-items/QueryItemsPage.jsx')
+        ]);
+        ({ render, h } = preactMod);
+        ({ QueryItemsPage } = qipMod);
+      }
 
       // Render the Preact component
       render(

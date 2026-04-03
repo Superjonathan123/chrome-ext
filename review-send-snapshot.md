@@ -1,0 +1,829 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e3]:
+    - generic [ref=e4]:
+      - generic [ref=e5]: S
+      - generic [ref=e6]: Super LTC Demo
+    - generic [ref=e7]:
+      - link "Medical Diagnosis" [ref=e8] [cursor=pointer]:
+        - /url: medical-diagnosis.html
+        - img [ref=e10]
+        - generic [ref=e12]: Medical Diagnosis
+      - link "MDS Summary" [ref=e13] [cursor=pointer]:
+        - /url: mds-summary.html
+        - img [ref=e15]
+        - generic [ref=e18]: MDS Summary
+      - link "MDS Section I" [ref=e19] [cursor=pointer]:
+        - /url: mds-section-i.html
+        - img [ref=e21]
+        - generic [ref=e24]: MDS Section I
+      - link "MDS Section N" [ref=e25] [cursor=pointer]:
+        - /url: mds-section-n.html
+        - img [ref=e27]
+        - generic [ref=e30]: MDS Section N
+      - link "Simple Demo" [ref=e31] [cursor=pointer]:
+        - /url: index.html
+        - img [ref=e33]
+        - generic [ref=e36]: Simple Demo
+      - link "PCC Demo" [ref=e37] [cursor=pointer]:
+        - /url: pcc-demo.html
+        - img [ref=e39]
+        - generic [ref=e41]: PCC Demo
+    - generic [ref=e42]:
+      - button "ICD-10" [ref=e43] [cursor=pointer]:
+        - img [ref=e44]
+        - text: ICD-10
+      - button "MAR" [ref=e47] [cursor=pointer]
+      - button "TAR" [ref=e48] [cursor=pointer]
+      - button "Therapy" [ref=e49] [cursor=pointer]
+  - generic [ref=e50]:
+    - banner [ref=e52]:
+      - table [ref=e53]:
+        - rowgroup [ref=e54]:
+          - row "Point Click Care logo SUNNY MEADOWS DEMO FACILITY Resource Hub All Resident Submit No Alerts Demo User" [ref=e55]:
+            - cell "Point Click Care logo" [ref=e56]:
+              - img "Point Click Care logo" [ref=e57]
+            - cell "SUNNY MEADOWS DEMO FACILITY Resource Hub All Resident Submit No Alerts Demo User" [ref=e58]:
+              - link "SUNNY MEADOWS DEMO FACILITY" [ref=e59] [cursor=pointer]:
+                - /url: javascript:void(0)
+              - button "Resource Hub" [ref=e61] [cursor=pointer]:
+                - generic [ref=e579]: "6"
+              - generic [ref=e67]:
+                - list [ref=e68]:
+                  - listitem [ref=e69] [cursor=pointer]:
+                    - generic [ref=e70]: All
+                  - listitem [ref=e71] [cursor=pointer]:
+                    - generic [ref=e72]: Resident
+                  - listitem [ref=e73] [cursor=pointer]:
+                    - button "Submit" [ref=e74]
+                - generic [ref=e76]: No Alerts
+              - link "Demo User" [ref=e78] [cursor=pointer]:
+                - /url: javascript:void(0);
+    - table [ref=e79]:
+      - rowgroup [ref=e80]:
+        - row "Home Admin Clinical Reports Home Admin Clinical Reports This Facility Search" [ref=e81]:
+          - cell "Home Admin Clinical Reports Home Admin Clinical Reports This Facility Search" [ref=e82]:
+            - generic:
+              - list:
+                - listitem [ref=e83]:
+                  - link "Home" [ref=e84] [cursor=pointer]:
+                    - /url: https://www28.pointclickcare.com/home/home.jsp
+                - listitem [ref=e85]:
+                  - link "Admin" [ref=e86] [cursor=pointer]:
+                    - /url: https://www28.pointclickcare.com/profile/notes/adminnotelisting.xhtml?ESOLclientid=2657250
+                - listitem [ref=e87]:
+                  - link "Clinical" [ref=e88] [cursor=pointer]:
+                    - /url: https://www28.pointclickcare.com/admin/client/clientlist.jsp?ESOLtabtype=C
+                - listitem [ref=e89]:
+                  - link "Reports" [ref=e90] [cursor=pointer]:
+                    - /url: https://www28.pointclickcare.com/enterprisereporting/listing.xhtml
+              - list:
+                - listitem [ref=e91]:
+                  - link "Home" [ref=e92] [cursor=pointer]:
+                    - /url: /home/home.jsp
+                - listitem [ref=e93]:
+                  - link "Admin" [ref=e94] [cursor=pointer]:
+                    - /url: /profile/notes/adminnotelisting.xhtml?ESOLclientid=2657250
+                - listitem [ref=e95]:
+                  - link "Clinical" [ref=e96] [cursor=pointer]:
+                    - /url: /admin/client/clientlist.jsp?ESOLtabtype=C
+                - listitem [ref=e97]:
+                  - link "Reports" [ref=e98] [cursor=pointer]:
+                    - /url: /enterprisereporting/listing.xhtml
+            - table [ref=e101]:
+              - rowgroup [ref=e102]:
+                - row "This Facility Search" [ref=e103]:
+                  - cell "This Facility" [ref=e104]:
+                    - table [ref=e106] [cursor=pointer]:
+                      - rowgroup [ref=e107]:
+                        - row "This Facility" [ref=e108]:
+                          - cell "This Facility" [ref=e109]:
+                            - img "This Facility" [ref=e110]
+                          - cell [ref=e111]:
+                            - img [ref=e112]
+                  - cell [ref=e113]:
+                    - 'textbox "Search resident, room #, ID #..." [ref=e114]'
+                  - cell "Search" [ref=e115]:
+                    - button "Search" [ref=e116] [cursor=pointer]
+                    - img [ref=e118] [cursor=pointer]
+  - table:
+    - rowgroup:
+      - row:
+        - cell:
+          - list
+        - cell
+  - table [ref=e119]:
+    - rowgroup [ref=e120]:
+      - 'row "patient-photo.png Doe, Jane (23650) 4 of 91 Prev Next Status: Current Location: Unit 3 308-B Gender: Male DOB: 4/12/1953 Age: 72 Physician: Demo Provider Edit Print Current Vitals BP: 147/80 mmHg 1/27/2026 08:20 Temp:98.3 �F 1/27/2026 08:20 Pulse:53 bpm 1/27/2026 08:20 Weight:307 Lbs 1/21/2026 20:37 Resp:18 Breaths/min 1/27/2026 08:20 BS:141 mg/dL 1/27/2026 07:16 O2:97 % 1/27/2026 08:20 Pain:0 1/27/2026 15:45" [ref=e121]':
+        - cell "patient-photo.png" [ref=e122]:
+          - img "patient-photo.png" [ref=e123]
+        - 'cell "Doe, Jane (23650) 4 of 91 Prev Next Status: Current Location: Unit 3 308-B Gender: Male DOB: 4/12/1953 Age: 72 Physician: Demo Provider Edit Print Current Vitals BP: 147/80 mmHg 1/27/2026 08:20 Temp:98.3 �F 1/27/2026 08:20 Pulse:53 bpm 1/27/2026 08:20 Weight:307 Lbs 1/21/2026 20:37 Resp:18 Breaths/min 1/27/2026 08:20 BS:141 mg/dL 1/27/2026 07:16 O2:97 % 1/27/2026 08:20 Pain:0 1/27/2026 15:45" [ref=e124]':
+          - table [ref=e125]:
+            - rowgroup [ref=e126]:
+              - row "Doe, Jane (23650) 4 of 91 Prev Next" [ref=e127]:
+                - cell "Doe, Jane (23650)" [ref=e128]: Doe, Jane (23650)
+                - cell "4 of 91 Prev Next" [ref=e129]:
+                  - generic [ref=e130]:
+                    - text: 4 of 91
+                    - button "Prev" [ref=e131] [cursor=pointer]
+                    - button "Next" [ref=e132] [cursor=pointer]
+          - table [ref=e133]:
+            - rowgroup [ref=e134]:
+              - 'row "Status: Current Location: Unit 3 308-B Gender: Male DOB: 4/12/1953 Age: 72 Physician: Demo Provider Edit Print Current Vitals BP: 147/80 mmHg 1/27/2026 08:20 Temp:98.3 �F 1/27/2026 08:20 Pulse:53 bpm 1/27/2026 08:20 Weight:307 Lbs 1/21/2026 20:37 Resp:18 Breaths/min 1/27/2026 08:20 BS:141 mg/dL 1/27/2026 07:16 O2:97 % 1/27/2026 08:20 Pain:0 1/27/2026 15:45" [ref=e135]':
+                - 'cell "Status: Current Location: Unit 3 308-B Gender: Male DOB: 4/12/1953 Age: 72 Physician: Demo Provider Edit Print" [ref=e136]':
+                  - paragraph [ref=e137]: "Status: Current Location: Unit 3 308-B"
+                  - paragraph [ref=e138]: "Gender: Male DOB: 4/12/1953 Age: 72"
+                  - paragraph [ref=e139]: "Physician: Demo Provider"
+                  - table [ref=e140]:
+                    - rowgroup [ref=e141]:
+                      - row "Edit Print" [ref=e142]:
+                        - cell
+                        - cell "Edit" [ref=e143]:
+                          - generic [ref=e145]:
+                            - link "Edit":
+                              - /url: javascript:void(0)
+                              - generic [ref=e146] [cursor=pointer]: Edit
+                        - cell "Print" [ref=e147]:
+                          - generic [ref=e149]:
+                            - link "Print":
+                              - /url: javascript:void(0)
+                              - generic [ref=e150] [cursor=pointer]: Print
+                - 'cell "Current Vitals BP: 147/80 mmHg 1/27/2026 08:20 Temp:98.3 �F 1/27/2026 08:20 Pulse:53 bpm 1/27/2026 08:20 Weight:307 Lbs 1/21/2026 20:37 Resp:18 Breaths/min 1/27/2026 08:20 BS:141 mg/dL 1/27/2026 07:16 O2:97 % 1/27/2026 08:20 Pain:0 1/27/2026 15:45" [ref=e151]':
+                  - table [ref=e152]:
+                    - rowgroup [ref=e153]:
+                      - row "Current Vitals" [ref=e154]:
+                        - cell "Current Vitals" [ref=e155]
+                        - cell [ref=e156]:
+                          - img [ref=e158]
+                      - 'row "BP: 147/80 mmHg 1/27/2026 08:20 Temp:98.3 �F 1/27/2026 08:20 Pulse:53 bpm 1/27/2026 08:20 Weight:307 Lbs 1/21/2026 20:37" [ref=e159]':
+                        - 'cell "BP: 147/80 mmHg 1/27/2026 08:20" [ref=e160] [cursor=pointer]':
+                          - img [ref=e162]
+                          - generic [ref=e164]:
+                            - text: "BP: 147/80 mmHg"
+                            - generic [ref=e165]: 1/27/2026 08:20
+                        - cell "Temp:98.3 �F 1/27/2026 08:20" [ref=e166] [cursor=pointer]:
+                          - generic [ref=e167]:
+                            - generic [ref=e168]: Temp:98.3 �F
+                            - generic [ref=e169]: 1/27/2026 08:20
+                        - cell "Pulse:53 bpm 1/27/2026 08:20" [ref=e170] [cursor=pointer]:
+                          - img [ref=e172]
+                          - generic [ref=e173]:
+                            - generic [ref=e174]: Pulse:53 bpm
+                            - generic [ref=e175]: 1/27/2026 08:20
+                        - cell "Weight:307 Lbs 1/21/2026 20:37" [ref=e176] [cursor=pointer]:
+                          - generic [ref=e177]:
+                            - generic [ref=e178]: Weight:307 Lbs
+                            - generic [ref=e179]: 1/21/2026 20:37
+                      - row "Resp:18 Breaths/min 1/27/2026 08:20 BS:141 mg/dL 1/27/2026 07:16 O2:97 % 1/27/2026 08:20 Pain:0 1/27/2026 15:45" [ref=e180]:
+                        - cell "Resp:18 Breaths/min 1/27/2026 08:20" [ref=e181] [cursor=pointer]:
+                          - generic [ref=e182]:
+                            - generic [ref=e183]: Resp:18 Breaths/min
+                            - generic [ref=e184]: 1/27/2026 08:20
+                        - cell "BS:141 mg/dL 1/27/2026 07:16" [ref=e185] [cursor=pointer]:
+                          - generic [ref=e186]:
+                            - generic [ref=e187]: BS:141 mg/dL
+                            - generic [ref=e188]: 1/27/2026 07:16
+                        - cell "O2:97 % 1/27/2026 08:20" [ref=e189] [cursor=pointer]:
+                          - generic [ref=e190]:
+                            - generic [ref=e191]: O2:97 %
+                            - generic [ref=e192]: 1/27/2026 08:20
+                        - cell "Pain:0 1/27/2026 15:45" [ref=e193] [cursor=pointer]:
+                          - generic [ref=e194]:
+                            - generic [ref=e195]: Pain:0
+                            - generic [ref=e196]: 1/27/2026 15:45
+  - table [ref=e197]:
+    - rowgroup [ref=e198]:
+      - 'row "Allergies: No Known Allergies Code Status: (Advance Directives) DNR Show/Hide Extended Detail" [ref=e199]':
+        - 'cell "Allergies: No Known Allergies Code Status: (Advance Directives) DNR Show/Hide Extended Detail" [ref=e200]':
+          - generic [ref=e201] [cursor=pointer]:
+            - table [ref=e203]:
+              - rowgroup [ref=e209]:
+                - 'row "Allergies: No Known Allergies" [ref=e210]':
+                  - cell "Allergies:" [ref=e211]
+                  - cell "No Known Allergies" [ref=e212]
+                - 'row "Code Status: (Advance Directives) DNR" [ref=e213]':
+                  - cell "Code Status:" [ref=e214]
+                  - cell "(Advance Directives) DNR" [ref=e215]:
+                    - text: (
+                    - link "Advance Directives" [ref=e216]:
+                      - /url: javascript:void(0);
+                    - text: ) DNR
+                - row
+            - img "Show/Hide Extended Detail" [ref=e218]
+  - table [ref=e219]:
+    - rowgroup [ref=e220]:
+      - row "Dash Profile Census Med Diag Problems Allergy Immun Orders Wts/Vitals Results MDS Evaluations Prog Note Care Plan Tasks Misc" [ref=e221]:
+        - cell "Dash Profile Census Med Diag Problems Allergy Immun Orders Wts/Vitals Results MDS Evaluations Prog Note Care Plan Tasks Misc" [ref=e222]:
+          - list [ref=e223]:
+            - listitem [ref=e224]:
+              - link "Dash" [ref=e225] [cursor=pointer]:
+                - /url: https://www28.pointclickcare.com/admin/client/cp_residentdashboard.jsp?ESOLclientid=2657250
+            - listitem [ref=e226]:
+              - link "Profile" [ref=e227] [cursor=pointer]:
+                - /url: https://www28.pointclickcare.com/admin/client/cp_careclientprofile.jsp?ESOLclientid=2657250
+            - listitem [ref=e228]:
+              - link "Census" [ref=e229] [cursor=pointer]:
+                - /url: https://www28.pointclickcare.com/profile/census/clinicaldisplay.xhtml?ESOLclientid=2657250
+            - listitem [ref=e230]:
+              - link "Med Diag" [ref=e231] [cursor=pointer]:
+                - /url: https://www28.pointclickcare.com/clinical/meddiag/medDiagChart.xhtml?ESOLclientid=2657250
+            - listitem [ref=e232]:
+              - link "Problems" [ref=e233] [cursor=pointer]:
+                - /url: https://www28.pointclickcare.com/clinical/problem/problemChart.xhtml?ESOLclientid=2657250
+            - listitem [ref=e234]:
+              - link "Allergy" [ref=e235] [cursor=pointer]:
+                - /url: https://www28.pointclickcare.com/clinical/allergyList.xhtml?ESOLclientid=2657250
+            - listitem [ref=e236]:
+              - link "Immun" [ref=e237] [cursor=pointer]:
+                - /url: https://www28.pointclickcare.com/clinical/immunedisplay.xhtml?ESOLclientid=2657250
+            - listitem [ref=e238]:
+              - link "Orders" [ref=e239] [cursor=pointer]:
+                - /url: https://www28.pointclickcare.com/clinical/ordersChart.xhtml?ESOLclientid=2657250
+            - listitem [ref=e240]:
+              - link "Wts/Vitals" [ref=e241] [cursor=pointer]:
+                - /url: https://www28.pointclickcare.com/admin/client/cp_weightsandvitals.jsp?ESOLclientid=2657250
+            - listitem [ref=e242]:
+              - link "Results" [ref=e243] [cursor=pointer]:
+                - /url: https://www28.pointclickcare.com/clinical/lab/labResults.xhtml?ESOLclientid=2657250
+            - listitem [ref=e244]:
+              - link "MDS" [ref=e245] [cursor=pointer]:
+                - /url: https://www28.pointclickcare.com/admin/client/cp_mds.jsp?ESOLclientid=2657250
+            - listitem [ref=e246]:
+              - link "Evaluations" [ref=e247] [cursor=pointer]:
+                - /url: https://www28.pointclickcare.com/admin/client/cp_assessment.jsp?ESOLclientid=2657250
+            - listitem [ref=e248]:
+              - link "Prog Note" [ref=e249] [cursor=pointer]:
+                - /url: https://www28.pointclickcare.com/clinical/client/progressnotes.xhtml?ESOLclientid=2657250
+            - listitem [ref=e250]:
+              - link "Care Plan" [ref=e251] [cursor=pointer]:
+                - /url: https://www28.pointclickcare.com/admin/client/cp_careplans_rev.jsp?ESOLclientid=2657250
+            - listitem [ref=e252]:
+              - link "Tasks" [ref=e253] [cursor=pointer]:
+                - /url: https://www28.pointclickcare.com/admin/client/cp_tasks.jsp?ESOLclientid=2657250
+            - listitem [ref=e254]:
+              - link "Misc" [ref=e255] [cursor=pointer]:
+                - /url: https://www28.pointclickcare.com/upload/filesdisplay.xhtml?ESOLclientid=2657250
+  - table [ref=e256]:
+    - rowgroup [ref=e257]:
+      - row "Medical Diagnosis AI Code Patient Reports ▼" [ref=e258]:
+        - cell "Medical Diagnosis AI Code Patient" [ref=e259]:
+          - table [ref=e260]:
+            - rowgroup [ref=e261]:
+              - row "Medical Diagnosis" [ref=e262]:
+                - cell "Medical Diagnosis" [ref=e263]
+                - cell [ref=e264]
+                - cell [ref=e265]
+          - button "AI Code Patient" [ref=e266] [cursor=pointer]:
+            - img [ref=e267]
+            - text: AI Code Patient
+        - cell "Reports ▼" [ref=e271]:
+          - button "Reports ▼" [ref=e273] [cursor=pointer]
+        - cell [ref=e274]
+  - table [ref=e275]
+  - table [ref=e277] [cursor=pointer]:
+    - rowgroup [ref=e278]:
+      - row "Display Filters Additional Information" [ref=e279]:
+        - cell "Display Filters" [ref=e280]:
+          - generic [ref=e281]:
+            - img [ref=e282]
+            - text: Display Filters
+        - cell "Additional Information" [ref=e283]:
+          - generic "Additional Information" [ref=e284]:
+            - img [ref=e285]
+  - table [ref=e286]:
+    - rowgroup [ref=e287]:
+      - row "Code Description PDPM Comorbidities (NTA Points) Clinical Category Date Rank Classification Created Date Created By" [ref=e288]:
+        - columnheader [ref=e289]
+        - columnheader [ref=e290]
+        - columnheader [ref=e291]
+        - columnheader [ref=e292]
+        - columnheader "Code" [ref=e293]
+        - columnheader [ref=e294]
+        - columnheader "Description" [ref=e295] [cursor=pointer]:
+          - generic [ref=e296]: Description
+        - columnheader "PDPM Comorbidities (NTA Points)" [ref=e297] [cursor=pointer]:
+          - generic [ref=e298]: PDPM Comorbidities (NTA Points)
+        - columnheader "Clinical Category" [ref=e299] [cursor=pointer]:
+          - generic [ref=e300]: Clinical Category
+        - columnheader "Date" [ref=e301] [cursor=pointer]:
+          - generic [ref=e302]: Date
+        - columnheader "Rank" [ref=e303] [cursor=pointer]:
+          - generic [ref=e304]: Rank
+        - columnheader "Classification" [ref=e305]
+        - columnheader "Created Date" [ref=e306] [cursor=pointer]:
+          - generic [ref=e307]: Created Date
+        - columnheader "Created By" [ref=e308] [cursor=pointer]:
+          - generic [ref=e309]: Created By
+    - rowgroup [ref=e310]:
+      - row "view J44.9 CHRONIC OBSTRUCTIVE PULMONARY DISEASE, UNSPECIFIED NTA (2 pts) Pulmonary 6/12/2020 Principal DX(FL#67) Admitting Dx (#69) 6/16/2020 asimmons" [ref=e311]:
+        - cell "view" [ref=e312]:
+          - link "view" [ref=e313] [cursor=pointer]:
+            - /url: javascript:openEdit(2657250,990276, 'Y')
+        - cell [ref=e314]
+        - cell [ref=e315]
+        - cell [ref=e316]
+        - cell "J44.9" [ref=e317]
+        - cell [ref=e318]
+        - cell "CHRONIC OBSTRUCTIVE PULMONARY DISEASE, UNSPECIFIED" [ref=e319]
+        - cell "NTA (2 pts)" [ref=e320]
+        - cell "Pulmonary" [ref=e321]
+        - cell "6/12/2020" [ref=e322]
+        - cell "Principal DX(FL#67)" [ref=e323]
+        - cell "Admitting Dx (#69)" [ref=e324]
+        - cell "6/16/2020" [ref=e325]
+        - cell "asimmons" [ref=e326]
+      - row "view J43.1 PANLOBULAR EMPHYSEMA NTA (2 pts) Pulmonary 6/12/2020 Diagnosis A Admission 6/16/2020 asimmons" [ref=e327]:
+        - cell "view" [ref=e328]:
+          - link "view" [ref=e329] [cursor=pointer]:
+            - /url: javascript:openEdit(2657250,990237, 'Y')
+        - cell [ref=e330]
+        - cell [ref=e331]
+        - cell [ref=e332]
+        - cell "J43.1" [ref=e333]
+        - cell [ref=e334]
+        - cell "PANLOBULAR EMPHYSEMA" [ref=e335]
+        - cell "NTA (2 pts)" [ref=e336]
+        - cell "Pulmonary" [ref=e337]
+        - cell "6/12/2020" [ref=e338]
+        - cell "Diagnosis A" [ref=e339]
+        - cell "Admission" [ref=e340]
+        - cell "6/16/2020" [ref=e341]
+        - cell "asimmons" [ref=e342]
+      - row "view E66.01 MORBID (SEVERE) OBESITY DUE TO EXCESS CALORIES NTA (1 pts) N/A, not an acceptable Primary Diagnosis 6/12/2020 Diagnosis B Admission 6/16/2020 asimmons" [ref=e343]:
+        - cell "view" [ref=e344]:
+          - link "view" [ref=e345] [cursor=pointer]:
+            - /url: javascript:openEdit(2657250,990246, 'Y')
+        - cell [ref=e346]
+        - cell [ref=e347]
+        - cell [ref=e348]
+        - cell "E66.01" [ref=e349]
+        - cell [ref=e350]
+        - cell "MORBID (SEVERE) OBESITY DUE TO EXCESS CALORIES" [ref=e351]
+        - cell "NTA (1 pts)" [ref=e352]
+        - cell "N/A, not an acceptable Primary Diagnosis" [ref=e353]
+        - cell "6/12/2020" [ref=e354]
+        - cell "Diagnosis B" [ref=e355]
+        - cell "Admission" [ref=e356]
+        - cell "6/16/2020" [ref=e357]
+        - cell "asimmons" [ref=e358]
+      - row "view F10.239 ALCOHOL DEPENDENCE WITH WITHDRAWAL, UNSPECIFIED Medical Management 6/12/2020 Diagnosis C Admission 6/16/2020 asimmons" [ref=e359]:
+        - cell "view" [ref=e360]:
+          - link "view" [ref=e361] [cursor=pointer]:
+            - /url: javascript:openEdit(2657250,990226, 'Y')
+        - cell [ref=e362]
+        - cell [ref=e363]
+        - cell [ref=e364]
+        - cell "F10.239" [ref=e365]
+        - cell [ref=e366]
+        - cell "ALCOHOL DEPENDENCE WITH WITHDRAWAL, UNSPECIFIED" [ref=e367]
+        - cell [ref=e368]
+        - cell "Medical Management" [ref=e369]
+        - cell "6/12/2020" [ref=e370]
+        - cell "Diagnosis C" [ref=e371]
+        - cell "Admission" [ref=e372]
+        - cell "6/16/2020" [ref=e373]
+        - cell "asimmons" [ref=e374]
+      - row "view I10 ESSENTIAL (PRIMARY) HYPERTENSION N/A, not an acceptable Primary Diagnosis 6/12/2020 Diagnosis D Admission 6/16/2020 asimmons" [ref=e375]:
+        - cell "view" [ref=e376]:
+          - link "view" [ref=e377] [cursor=pointer]:
+            - /url: javascript:openEdit(2657250,990236, 'Y')
+        - cell [ref=e378]
+        - cell [ref=e379]
+        - cell [ref=e380]
+        - cell "I10" [ref=e381]
+        - cell [ref=e382]
+        - cell "ESSENTIAL (PRIMARY) HYPERTENSION" [ref=e383]
+        - cell [ref=e384]
+        - cell "N/A, not an acceptable Primary Diagnosis" [ref=e385]
+        - cell "6/12/2020" [ref=e386]
+        - cell "Diagnosis D" [ref=e387]
+        - cell "Admission" [ref=e388]
+        - cell "6/16/2020" [ref=e389]
+        - cell "asimmons" [ref=e390]
+      - row "view G47.33 OBSTRUCTIVE SLEEP APNEA (ADULT) (PEDIATRIC) Medical Management 6/12/2020 Diagnosis E Admission 6/16/2020 asimmons" [ref=e391]:
+        - cell "view" [ref=e392]:
+          - link "view" [ref=e393] [cursor=pointer]:
+            - /url: javascript:openEdit(2657250,990247, 'Y')
+        - cell [ref=e394]
+        - cell [ref=e395]
+        - cell [ref=e396]
+        - cell "G47.33" [ref=e397]
+        - cell [ref=e398]
+        - cell "OBSTRUCTIVE SLEEP APNEA (ADULT) (PEDIATRIC)" [ref=e399]
+        - cell [ref=e400]
+        - cell "Medical Management" [ref=e401]
+        - cell "6/12/2020" [ref=e402]
+        - cell "Diagnosis E" [ref=e403]
+        - cell "Admission" [ref=e404]
+        - cell "6/16/2020" [ref=e405]
+        - cell "asimmons" [ref=e406]
+      - row "view E11.9 TYPE 2 DIABETES MELLITUS WITHOUT COMPLICATIONS NTA (2 pts) Medical Management 10/2/2020 Diagnosis F During Stay 1/7/2021 chonnae" [ref=e407]:
+        - cell "view" [ref=e408]:
+          - link "view" [ref=e409] [cursor=pointer]:
+            - /url: javascript:openEdit(2657250,1032576, 'Y')
+        - cell [ref=e410]
+        - cell [ref=e411]
+        - cell [ref=e412]
+        - cell "E11.9" [ref=e413]
+        - cell [ref=e414]
+        - cell "TYPE 2 DIABETES MELLITUS WITHOUT COMPLICATIONS" [ref=e415]
+        - cell "NTA (2 pts)" [ref=e416]
+        - cell "Medical Management" [ref=e417]
+        - cell "10/2/2020" [ref=e418]
+        - cell "Diagnosis F" [ref=e419]
+        - cell "During Stay" [ref=e420]
+        - cell "1/7/2021" [ref=e421]
+        - cell "chonnae" [ref=e422]
+      - row "view I82.513 CHRONIC EMBOLISM AND THROMBOSIS OF FEMORAL VEIN, BILATERAL Cardiovascular and Coagulations 6/12/2020 Diagnosis G Admission 6/16/2020 asimmons" [ref=e423]:
+        - cell "view" [ref=e424]:
+          - link "view" [ref=e425] [cursor=pointer]:
+            - /url: javascript:openEdit(2657250,990267, 'Y')
+        - cell [ref=e426]
+        - cell [ref=e427]
+        - cell [ref=e428]
+        - cell "I82.513" [ref=e429]
+        - cell [ref=e430]
+        - cell "CHRONIC EMBOLISM AND THROMBOSIS OF FEMORAL VEIN, BILATERAL" [ref=e431]
+        - cell [ref=e432]
+        - cell "Cardiovascular and Coagulations" [ref=e433]
+        - cell "6/12/2020" [ref=e434]
+        - cell "Diagnosis G" [ref=e435]
+        - cell "Admission" [ref=e436]
+        - cell "6/16/2020" [ref=e437]
+        - cell "asimmons" [ref=e438]
+      - row "view G47.00 INSOMNIA, UNSPECIFIED N/A, not an acceptable Primary Diagnosis 7/24/2024 Diagnosis H During Stay 7/24/2024 ldenius2" [ref=e439]:
+        - cell "view" [ref=e440]:
+          - link "view" [ref=e441] [cursor=pointer]:
+            - /url: javascript:openEdit(2657250,1539259, 'Y')
+        - cell [ref=e442]
+        - cell [ref=e443]
+        - cell [ref=e444]
+        - cell "G47.00" [ref=e445]
+        - cell [ref=e446]
+        - cell "INSOMNIA, UNSPECIFIED" [ref=e447]
+        - cell [ref=e448]
+        - cell "N/A, not an acceptable Primary Diagnosis" [ref=e449]
+        - cell "7/24/2024" [ref=e450]
+        - cell "Diagnosis H" [ref=e451]
+        - cell "During Stay" [ref=e452]
+        - cell "7/24/2024" [ref=e453]
+        - cell "ldenius2" [ref=e454]
+  - table [ref=e455]:
+    - rowgroup [ref=e456]:
+      - row:
+        - cell
+        - cell
+        - cell
+      - row "Notifications Show Cleared Notifications" [ref=e457]:
+        - cell "Notifications Show Cleared Notifications" [ref=e458]:
+          - table [ref=e459]:
+            - rowgroup [ref=e460]:
+              - row "Notifications Show Cleared Notifications" [ref=e461]:
+                - cell [ref=e462]
+                - cell "Notifications" [ref=e463]
+                - cell "Show Cleared Notifications" [ref=e464]:
+                  - generic [ref=e465] [cursor=pointer]:
+                    - checkbox "Show Cleared Notifications" [ref=e466]
+                    - text: Show Cleared Notifications
+      - row "View All Notification Date Effective Date Description Created By 7/9/2020 6/12/2020 Diagnosis Sheet Completed - Review Required pfriedman" [ref=e467]:
+        - cell [ref=e468]
+        - cell "View All Notification Date Effective Date Description Created By 7/9/2020 6/12/2020 Diagnosis Sheet Completed - Review Required pfriedman" [ref=e469]:
+          - table [ref=e471]:
+            - rowgroup [ref=e472]:
+              - row "View All Notification Date Effective Date Description Created By" [ref=e473]:
+                - columnheader "View All" [ref=e474]:
+                  - generic [ref=e475] [cursor=pointer]:
+                    - checkbox "View All" [ref=e476]
+                    - text: View All
+                - columnheader "Notification Date" [ref=e477]
+                - columnheader "Effective Date" [ref=e478]
+                - columnheader "Description" [ref=e479]
+                - columnheader "Created By" [ref=e480]
+              - row "7/9/2020 6/12/2020 Diagnosis Sheet Completed - Review Required pfriedman" [ref=e481]:
+                - cell [ref=e482]
+                - cell "7/9/2020" [ref=e483]
+                - cell "6/12/2020" [ref=e484]
+                - cell "Diagnosis Sheet Completed - Review Required" [ref=e485]
+                - cell "pfriedman" [ref=e486]
+      - row [ref=e487]:
+        - cell [ref=e488]
+      - row [ref=e489]:
+        - cell [ref=e490]
+      - row [ref=e491]:
+        - cell [ref=e492]
+  - table [ref=e493]:
+    - rowgroup [ref=e494]:
+      - row "Diagnosis Sheets View All Effective Date Principal Admission Other Type Created By 7/1/2024 J44.9 J44.9 T ldenius2 7/1/2024 J44.9 J44.9 [J43.1][E66.01][F10.239][I10][G47.33][E11.9][I82.513][G47.00] P ldenius2 3/18/2021 J44.9 J44.9 T loconnor 3/18/2021 J44.9 J44.9 [J43.1][E66.01][F10.239][I10][G47.33][E11.9][I82.513] P loconnor 2/19/2021 J44.9 J44.9 T loconnor" [ref=e495]:
+        - cell "Diagnosis Sheets View All Effective Date Principal Admission Other Type Created By 7/1/2024 J44.9 J44.9 T ldenius2 7/1/2024 J44.9 J44.9 [J43.1][E66.01][F10.239][I10][G47.33][E11.9][I82.513][G47.00] P ldenius2 3/18/2021 J44.9 J44.9 T loconnor 3/18/2021 J44.9 J44.9 [J43.1][E66.01][F10.239][I10][G47.33][E11.9][I82.513] P loconnor 2/19/2021 J44.9 J44.9 T loconnor" [ref=e496]:
+          - table [ref=e497]:
+            - rowgroup [ref=e498]:
+              - row:
+                - cell
+                - cell
+                - cell
+              - row "Diagnosis Sheets" [ref=e499]:
+                - cell "Diagnosis Sheets" [ref=e500]:
+                  - table [ref=e501]:
+                    - rowgroup [ref=e502]:
+                      - row "Diagnosis Sheets" [ref=e503]:
+                        - cell [ref=e504]
+                        - cell "Diagnosis Sheets" [ref=e505]
+                        - cell [ref=e506]
+              - row "View All Effective Date Principal Admission Other Type Created By 7/1/2024 J44.9 J44.9 T ldenius2 7/1/2024 J44.9 J44.9 [J43.1][E66.01][F10.239][I10][G47.33][E11.9][I82.513][G47.00] P ldenius2 3/18/2021 J44.9 J44.9 T loconnor 3/18/2021 J44.9 J44.9 [J43.1][E66.01][F10.239][I10][G47.33][E11.9][I82.513] P loconnor 2/19/2021 J44.9 J44.9 T loconnor" [ref=e507]:
+                - cell [ref=e508]
+                - cell "View All Effective Date Principal Admission Other Type Created By 7/1/2024 J44.9 J44.9 T ldenius2 7/1/2024 J44.9 J44.9 [J43.1][E66.01][F10.239][I10][G47.33][E11.9][I82.513][G47.00] P ldenius2 3/18/2021 J44.9 J44.9 T loconnor 3/18/2021 J44.9 J44.9 [J43.1][E66.01][F10.239][I10][G47.33][E11.9][I82.513] P loconnor 2/19/2021 J44.9 J44.9 T loconnor" [ref=e509]:
+                  - table [ref=e511]:
+                    - rowgroup [ref=e512]:
+                      - row "View All Effective Date Principal Admission Other Type Created By" [ref=e513]:
+                        - columnheader "View All" [ref=e514]:
+                          - generic [ref=e515] [cursor=pointer]:
+                            - checkbox "View All" [ref=e516]
+                            - text: View All
+                        - columnheader "Effective Date" [ref=e517]
+                        - columnheader "Principal" [ref=e518]
+                        - columnheader "Admission" [ref=e519]
+                        - columnheader "Other" [ref=e520]
+                        - columnheader "Type" [ref=e521]
+                        - columnheader "Created By" [ref=e522]
+                      - row "7/1/2024 J44.9 J44.9 T ldenius2" [ref=e523]:
+                        - cell [ref=e524]
+                        - cell "7/1/2024" [ref=e525]
+                        - cell "J44.9" [ref=e526]
+                        - cell "J44.9" [ref=e527]
+                        - cell [ref=e528]
+                        - cell "T" [ref=e529]
+                        - cell "ldenius2" [ref=e530]
+                      - row "7/1/2024 J44.9 J44.9 [J43.1][E66.01][F10.239][I10][G47.33][E11.9][I82.513][G47.00] P ldenius2" [ref=e531]:
+                        - cell [ref=e532]
+                        - cell "7/1/2024" [ref=e533]
+                        - cell "J44.9" [ref=e534]
+                        - cell "J44.9" [ref=e535]
+                        - cell "[J43.1][E66.01][F10.239][I10][G47.33][E11.9][I82.513][G47.00]" [ref=e536]
+                        - cell "P" [ref=e537]
+                        - cell "ldenius2" [ref=e538]
+                      - row "3/18/2021 J44.9 J44.9 T loconnor" [ref=e539]:
+                        - cell [ref=e540]
+                        - cell "3/18/2021" [ref=e541]
+                        - cell "J44.9" [ref=e542]
+                        - cell "J44.9" [ref=e543]
+                        - cell [ref=e544]
+                        - cell "T" [ref=e545]
+                        - cell "loconnor" [ref=e546]
+                      - row "3/18/2021 J44.9 J44.9 [J43.1][E66.01][F10.239][I10][G47.33][E11.9][I82.513] P loconnor" [ref=e547]:
+                        - cell [ref=e548]
+                        - cell "3/18/2021" [ref=e549]
+                        - cell "J44.9" [ref=e550]
+                        - cell "J44.9" [ref=e551]
+                        - cell "[J43.1][E66.01][F10.239][I10][G47.33][E11.9][I82.513]" [ref=e552]
+                        - cell "P" [ref=e553]
+                        - cell "loconnor" [ref=e554]
+                      - row "2/19/2021 J44.9 J44.9 T loconnor" [ref=e555]:
+                        - cell [ref=e556]
+                        - cell "2/19/2021" [ref=e557]
+                        - cell "J44.9" [ref=e558]
+                        - cell "J44.9" [ref=e559]
+                        - cell [ref=e560]
+                        - cell "T" [ref=e561]
+                        - cell "loconnor" [ref=e562]
+                - cell [ref=e563]
+              - row [ref=e564]:
+                - cell [ref=e565]
+              - row [ref=e566]:
+                - cell [ref=e567]
+  - generic [ref=e568]:
+    - generic [ref=e569]:
+      - text: SUNNY MEADOWS DEMO FACILITY
+      - text: 677 East State Street
+      - text: Anytown, ST 00000
+      - text: "Phone: (262) 763-9531"
+      - text: "PCC Facility ID: 3"
+    - generic [ref=e570]:
+      - text: PointClickCare
+      - text: 5570 Explorer Drive
+      - text: Mississauga, Ontario L4W 0C4
+    - generic [ref=e571]:
+      - link "Privacy Policy" [ref=e572] [cursor=pointer]:
+        - /url: https://pointclickcare.com/us/privacy-policy/
+      - text: Version 4.4.48.5 www28-pcc-web-main-5f45c7f666-kz76n
+      - text: Copyright 2000-2026 PointClickCare Technologies Inc. All rights reserved.
+  - button "+" [ref=e574] [cursor=pointer]
+  - button "Open Super Menu" [ref=e575] [cursor=pointer]:
+    - text: Open Super Menu
+    - generic [ref=e576]: S
+    - generic [ref=e577]: "3"
+  - generic:
+    - generic:
+      - generic:
+        - button "Queries Dashboard":
+          - img
+        - button "MDS Analysis":
+          - img
+        - button "AI Assistant":
+          - img
+      - generic:
+        - generic: S
+        - generic: Queries
+      - generic:
+        - button "Refresh":
+          - img
+        - button "Close":
+          - img
+    - generic:
+      - generic:
+        - generic:
+          - generic:
+            - generic:
+              - img
+            - generic:
+              - generic: "2"
+              - generic: Draft Queries
+          - generic:
+            - generic:
+              - img
+            - generic:
+              - generic: "2"
+              - generic: Awaiting Signature
+          - generic:
+            - generic:
+              - img
+            - generic:
+              - generic: "2"
+              - generic: HIPPS Opportunities
+          - generic:
+            - generic:
+              - img
+            - generic:
+              - generic: "8"
+              - generic: Action Items
+        - generic:
+          - generic:
+            - generic:
+              - img
+              - generic: Outstanding Queries
+            - generic: "4"
+          - generic:
+            - generic:
+              - generic:
+                - generic: I5600
+                - generic:
+                  - generic: Malnutrition
+                  - generic: Doe, Jane
+              - generic:
+                - generic: Draft
+            - generic:
+              - generic:
+                - generic: K0510A
+                - generic:
+                  - generic: Parenteral/IV Feeding
+                  - generic: Smith, Robert
+              - generic:
+                - generic: Draft
+            - generic:
+              - generic:
+                - generic: I4900
+                - generic:
+                  - generic: Schizophrenia
+                  - generic: Doe, Jane
+              - generic:
+                - generic: Sent 2d ago
+            - generic:
+              - generic:
+                - generic: I5100
+                - generic:
+                  - generic: Quadriplegia
+                  - generic: Smith, Robert
+              - generic:
+                - generic: Sent 5d ago
+        - generic:
+          - generic:
+            - generic:
+              - img
+              - generic: HIPPS Opportunities
+            - generic: 2 MDS
+          - generic:
+            - generic:
+              - generic:
+                - generic:
+                  - generic:
+                    - img
+                  - generic:
+                    - generic: Doe, Jane
+                    - generic: 3 actionable items
+              - generic:
+                - generic:
+                  - generic:
+                    - generic: Current
+                    - generic: KAQD
+                  - generic:
+                    - img
+                  - generic:
+                    - generic: Potential
+                    - generic: KBQE
+                - generic:
+                  - img
+                  - generic: +$41.86/day potential increase
+              - generic:
+                - button "Open ICD-10 Viewer":
+                  - img
+                  - text: Open ICD-10 Viewer
+            - generic:
+              - generic:
+                - generic:
+                  - generic:
+                    - img
+                  - generic:
+                    - generic: Smith, Robert
+                    - generic: 5 actionable items
+              - generic:
+                - generic:
+                  - generic:
+                    - generic: Current
+                    - generic: CBQJ
+                  - generic:
+                    - img
+                  - generic:
+                    - generic: Potential
+                    - generic: CBQL
+                - generic:
+                  - img
+                  - generic: +$53.45/day potential increase
+              - generic:
+                - button "Open ICD-10 Viewer":
+                  - img
+                  - text: Open ICD-10 Viewer
+  - generic [ref=e582]:
+    - generic [ref=e583]:
+      - button "Back" [ref=e584] [cursor=pointer]:
+        - img [ref=e585]
+        - text: Back
+      - generic [ref=e587]:
+        - generic [ref=e588]: Query Items
+        - generic [ref=e589]: Doe, Jane
+      - button "Close" [ref=e594] [cursor=pointer]:
+        - img [ref=e595]
+    - generic [ref=e967]:
+      - generic [ref=e968]:
+        - button "Back" [ref=e969] [cursor=pointer]:
+          - img [ref=e970]
+          - text: Back
+        - generic [ref=e972]:
+          - heading "Review & Send" [level=2] [ref=e973]
+          - generic [ref=e974]: 3 Queries
+        - button "Send All" [disabled] [ref=e976]:
+          - img [ref=e977]
+          - text: Send All
+      - generic [ref=e981]:
+        - img [ref=e982]
+        - text: Physician
+      - generic [ref=e986]:
+        - generic [ref=e987]:
+          - generic [ref=e988]:
+            - generic [ref=e989]: "1"
+            - heading "Malnutrition" [level=3] [ref=e990]
+            - generic [ref=e991]: I5600
+          - generic [ref=e992]:
+            - generic [ref=e993]:
+              - generic [ref=e994]:
+                - img [ref=e995]
+                - text: ICD-10 Code
+              - combobox [ref=e998] [cursor=pointer]:
+                - option "E44.0 — Moderate protein-calorie malnutrition" [selected]
+                - option "E46 — Unspecified protein-calorie malnutrition"
+            - generic [ref=e999]:
+              - generic [ref=e1000]:
+                - img [ref=e1001]
+                - text: Query Note
+              - textbox [ref=e1004]: "Dear Doctor, I am writing to request your clinical assessment regarding malnutrition for this patient's current MDS assessment. Our review of the clinical documentation reveals the following evidence: • Weight loss of 17 lbs (12.6%) over the past 3 months (135 lbs → 118 lbs) • PO intake documented at <50% of estimated needs • Albumin: 2.9 g/dL (Low, ref: 3.5-5.0) • Prealbumin: 12 mg/dL (Low, ref: 18-38) • Dietitian has diagnosed moderate protein-calorie malnutrition • Current interventions: Ensure Plus 8oz BID, Fortified Cereal 6oz QD Please confirm whether a malnutrition diagnosis (ICD-10: E44.0) is appropriate for this patient. Thank you for your prompt attention to this matter."
+        - generic [ref=e1005]:
+          - generic [ref=e1006]:
+            - generic [ref=e1007]: "2"
+            - heading "Diabetes with Peripheral Vascular Disease" [level=3] [ref=e1008]
+            - generic [ref=e1009]: I4300
+          - generic [ref=e1010]:
+            - generic [ref=e1011]:
+              - generic [ref=e1012]:
+                - img [ref=e1013]
+                - text: ICD-10 Code
+              - combobox [ref=e1016] [cursor=pointer]:
+                - option "E11.51 — Type 2 DM with diabetic peripheral angiopathy" [selected]
+            - generic [ref=e1017]:
+              - generic [ref=e1018]:
+                - img [ref=e1019]
+                - text: Query Note
+              - textbox [ref=e1022]: Dear Doctor, I am writing to request your clinical assessment regarding Diabetes with Peripheral Vascular Disease (I4300) for this patient's current MDS assessment. Based on our review of the clinical documentation, there appears to be evidence supporting this diagnosis/condition that may warrant coding on the MDS. Your confirmation would help ensure accurate assessment completion. Thank you for your prompt attention to this matter.
+        - generic [ref=e1023]:
+          - generic [ref=e1024]:
+            - generic [ref=e1025]: "3"
+            - heading "Drug/Medication Induced Depression" [level=3] [ref=e1026]
+            - generic [ref=e1027]: I2900
+          - generic [ref=e1028]:
+            - generic [ref=e1029]:
+              - generic [ref=e1030]:
+                - img [ref=e1031]
+                - text: ICD-10 Code
+              - combobox [ref=e1034] [cursor=pointer]:
+                - option "F32.9 — Major depressive disorder, single episode, unspecified" [selected]
+            - generic [ref=e1035]:
+              - generic [ref=e1036]:
+                - img [ref=e1037]
+                - text: Query Note
+              - textbox [ref=e1040]: Dear Doctor, I am writing to request your clinical assessment regarding Drug/Medication Induced Depression (I2900) for this patient's current MDS assessment. Based on our review of the clinical documentation, there appears to be evidence supporting this diagnosis/condition that may warrant coding on the MDS. Your confirmation would help ensure accurate assessment completion. Thank you for your prompt attention to this matter.

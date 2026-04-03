@@ -571,7 +571,7 @@ const EvidenceModal = {
       const orderId = ev.sourceId || ev.evidenceId || '';
 
       // Check if this evidence has a viewable type (clinical note, therapy doc, PDF)
-      const { viewerType, id: viewerId } = typeof parseEvidenceForViewer === 'function'
+      const { viewerType, id: viewerId, chunk: viewerChunk } = typeof parseEvidenceForViewer === 'function'
         ? parseEvidenceForViewer(ev)
         : { viewerType: null, id: null };
 

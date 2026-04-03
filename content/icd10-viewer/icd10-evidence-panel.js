@@ -297,14 +297,14 @@ const ICD10EvidencePanel = {
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <polyline points="20 6 9 17 4 12"></polyline>
           </svg>
-          Approved
+          Added
         </button>
       `;
     } else if (this.approveLoading) {
       approveHtml = `
         <button class="icd10-evidence-panel__approve icd10-evidence-panel__approve--loading" disabled>
           <span class="icd10-evidence-panel__approve-spinner"></span>
-          Approving...
+          Adding...
         </button>
       `;
     } else {
@@ -313,7 +313,7 @@ const ICD10EvidencePanel = {
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <polyline points="20 6 9 17 4 12"></polyline>
           </svg>
-          Approve
+          Add
         </button>
       `;
     }

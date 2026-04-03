@@ -21,6 +21,7 @@ const ICD10MockData = {
 
   // New API response shape with topRanked groups and speculative
   apiResponse: {
+    admitDate: '2025-01-10',
     annotations: {
       topRanked: [
         {

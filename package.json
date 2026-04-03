@@ -11,7 +11,7 @@
     "build": "vite build --mode development",
     "build:prod": "vite build",
     "preview": "vite preview",
-    "zip": "npm run build:prod && cd dist && zip -r ../super-ltc-extension.zip . && cd .. && echo 'Created super-ltc-extension.zip'",
+    "zip": "npm run build:prod && cd dist-prod && zip -r ../super-ltc-extension.zip . && cd .. && echo 'Created super-ltc-extension.zip'",
     "demo": "vite --config vite.demo.config.js --open /demo/index.html",
     "demo:build": "vite build --config vite.demo.config.js"
   },

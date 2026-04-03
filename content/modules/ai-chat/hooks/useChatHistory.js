@@ -1,102 +1,67 @@
-// Hook for managing chat history — session list, active session, CRUD
-import { useState, useCallback, useEffect, useRef } from 'preact/hooks';
-import { listChatSessions, saveChatSession, deleteChatSession } from '../lib/chat-history-api.js';
+// Hook for managing chat history — conversation list, active conversation, CRUD
+import { useState, useCallback, useEffect } from 'preact/hooks';
+import { listConversations, loadConversation, deleteConversation } from '../lib/chat-history-api.js';
 
-export function useChatHistory(patientId) {
-  const [sessions, setSessions] = useState([]);
+export function useChatHistory() {
+  const [conversations, setConversations] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [activeSessionId, setActiveSessionId] = useState(null);
-  const saveTimeoutRef = useRef(null);
+  const [organizationId, setOrganizationId] = useState(null);
 
-  // Fetch sessions list from API
-  const loadSessions = useCallback(async () => {
-    if (!patientId) return;
+  // Get orgSlug from PCC page context on mount
+  useEffect(() => {
+    const org = localStorage.getItem('CORE.org_code');
+    if (org) setOrganizationId(org);
+  }, []);
+
+  // Fetch conversations list from API
+  const loadHistory = useCallback(async (searchQuery) => {
+    if (!organizationId) return;
     setLoading(true);
     try {
-      const data = await listChatSessions(patientId);
-      setSessions(data || []);
+      const data = await listConversations(organizationId, { limit: 20, q: searchQuery });
+      setConversations(data?.conversations || []);
     } catch (e) {
       console.warn('[AI Chat] Failed to load chat history:', e);
-      setSessions([]);
+      setConversations([]);
     } finally {
       setLoading(false);
     }
-  }, [patientId]);
+  }, [organizationId]);
 
-  // Load on mount / patient change
+  // Load on mount / org change
   useEffect(() => {
-    loadSessions();
-    setActiveSessionId(null);
-  }, [patientId]);
+    if (organizationId) {
+      loadHistory();
+    }
+  }, [organizationId]);
 
-  // Start a new session — clears active, returns new sessionId
-  const startNewSession = useCallback(() => {
-    const newId = crypto.randomUUID();
-    setActiveSessionId(newId);
-    return newId;
+  // Select a conversation — fetches full messages
+  const selectConversation = useCallback(async (convId) => {
+    try {
+      const data = await loadConversation(convId);
+      return data; // { conversation, messages }
+    } catch (e) {
+      console.warn('[AI Chat] Failed to load conversation:', e);
+      return null;
+    }
   }, []);
 
-  // Select an existing session by id — returns the session object (with messages)
-  const selectSession = useCallback((sessionId) => {
-    setActiveSessionId(sessionId);
-    const session = sessions.find(s => s.id === sessionId);
-    return session || null;
-  }, [sessions]);
-
-  // Save current session to backend (debounced)
-  const saveSession = useCallback(({ sessionId, messages }) => {
-    if (!patientId || !sessionId || !messages?.length) return;
-
-    // Clear pending save
-    if (saveTimeoutRef.current) clearTimeout(saveTimeoutRef.current);
-
-    saveTimeoutRef.current = setTimeout(async () => {
-      // Title = first user message, truncated
-      const firstUserMsg = messages.find(m => m.role === 'user');
-      const title = firstUserMsg
-        ? firstUserMsg.content.slice(0, 60) + (firstUserMsg.content.length > 60 ? '...' : '')
-        : 'New conversation';
-
-      try {
-        await saveChatSession({ sessionId, patientId, title, messages });
-        // Refresh session list to reflect the save
-        const data = await listChatSessions(patientId);
-        setSessions(data || []);
-      } catch (e) {
-        console.warn('[AI Chat] Failed to save session:', e);
-      }
-    }, 500);
-  }, [patientId]);
-
-  // Delete a session
-  const removeSession = useCallback(async (sessionId) => {
+  // Delete a conversation
+  const removeConversation = useCallback(async (convId) => {
     try {
-      await deleteChatSession(sessionId);
-      setSessions(prev => prev.filter(s => s.id !== sessionId));
-      if (activeSessionId === sessionId) {
-        setActiveSessionId(null);
-      }
+      await deleteConversation(convId);
+      setConversations(prev => prev.filter(c => c.id !== convId));
     } catch (e) {
-      console.warn('[AI Chat] Failed to delete session:', e);
+      console.warn('[AI Chat] Failed to delete conversation:', e);
     }
-  }, [activeSessionId]);
-
-  // Cleanup timeout on unmount
-  useEffect(() => {
-    return () => {
-      if (saveTimeoutRef.current) clearTimeout(saveTimeoutRef.current);
-    };
   }, []);
 
   return {
-    sessions,
+    conversations,
     loading,
-    activeSessionId,
-    setActiveSessionId,
-    loadSessions,
-    startNewSession,
-    selectSession,
-    saveSession,
-    removeSession
+    organizationId,
+    loadHistory,
+    selectConversation,
+    removeConversation
   };
 }

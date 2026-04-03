@@ -1,0 +1,17 @@
+/* demo/demo-chat.css */
+
+/* Make source links in chat messages look clickable */
+.super-chat-messages a[href^="#doc:"],
+.super-chat-messages a[href^="#viewer:"] {
+  color: #667eea;
+  text-decoration: none;
+  border-bottom: 1px dashed #667eea;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.super-chat-messages a[href^="#doc:"]:hover,
+.super-chat-messages a[href^="#viewer:"]:hover {
+  color: #5a3ed8;
+  border-bottom-style: solid;
+}

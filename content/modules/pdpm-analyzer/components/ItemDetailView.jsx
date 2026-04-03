@@ -15,7 +15,7 @@ import { fetchDocument } from '../../../evidence-viewers.js';
 
 /** Check if evidence is an order/admin type */
 function isOrderEvidence(ev) {
-  return ev.sourceType === 'order' || (ev.evidenceId || '').startsWith('order-');
+  return ev.sourceType === 'order' || ev.type === 'order' || (ev.evidenceId || '').startsWith('order-');
 }
 
 /** Get the order ID from evidence */
@@ -24,10 +24,16 @@ function getOrderId(ev) {
   return id.replace(/^order-/, '');
 }
 
+/** Check if evidence is an inline-only medication/admin record (no detail endpoint) */
+function isMedicationEvidence(ev) {
+  return ev.type === 'medication' || (ev.sourceId || '').startsWith('admin-');
+}
+
 /** Evidence is viewable inline if it has a recognized viewer type or is an order */
 function isViewableEvidence(ev) {
+  if (isMedicationEvidence(ev)) return true; // Show in sidebar with inline text
   const vt = parseViewer(ev).viewerType;
-  return vt === 'document' || vt === 'clinical-note' || vt === 'therapy-document' || isOrderEvidence(ev);
+  return vt === 'document' || vt === 'clinical-note' || vt === 'therapy-document' || vt === 'order' || isOrderEvidence(ev);
 }
 
 export function ItemDetailView({ item, context, onBack, onSplitChange, onDismiss: onDismissComplete }) {
@@ -106,11 +112,12 @@ export function ItemDetailView({ item, context, onBack, onSplitChange, onDismiss
   const viewableEvidence = allEvidence.filter(isViewableEvidence);
 
   const isSplit = viewingSource !== null;
-  const viewingOrder = viewingSource && isOrderEvidence(viewingSource.ev);
+  const viewingMedication = viewingSource && isMedicationEvidence(viewingSource.ev);
+  const viewingOrder = viewingSource && !viewingMedication && isOrderEvidence(viewingSource.ev);
   const viewingViewerType = viewingSource ? parseViewer(viewingSource.ev).viewerType : null;
-  const viewingNote = viewingViewerType === 'clinical-note';
-  const viewingTherapy = viewingViewerType === 'therapy-document';
-  const viewingDoc = viewingSource && !viewingOrder && !viewingNote && !viewingTherapy;
+  const viewingNote = !viewingMedication && viewingViewerType === 'clinical-note';
+  const viewingTherapy = !viewingMedication && viewingViewerType === 'therapy-document';
+  const viewingDoc = viewingSource && !viewingOrder && !viewingNote && !viewingTherapy && !viewingMedication;
   const noteContainerRef = useRef(null);
 
   // Notify parent when split mode changes so it can expand
@@ -358,6 +365,24 @@ export function ItemDetailView({ item, context, onBack, onSplitChange, onDismiss
             {(viewingNote || viewingTherapy) && (
               <div ref={noteContainerRef} class="idv__note-viewer" />
             )}
+
+            {/* Medication/admin — inline text display, no detail endpoint */}
+            {viewingMedication && (
+              <div class="idv__note-viewer">
+                <div class="super-split__content">
+                  <div class="super-split__content-header">
+                    <h3 class="super-split__content-title">Administration Record</h3>
+                    <span class="super-split__content-badge">Medication</span>
+                  </div>
+                  {viewingSource.ev.date && (
+                    <div class="super-split__content-meta">{viewingSource.ev.date}</div>
+                  )}
+                  <div class="super-split__content-body">
+                    <pre class="super-split__note-text">{viewingSource.ev.text || viewingSource.ev.quote || viewingSource.ev.quoteText || 'No details available.'}</pre>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       )}
@@ -371,15 +396,18 @@ function getEvidence(data) {
   if (!apiItem) return [];
 
   const isColumnBased = !!apiItem.columns;
-  if (!isColumnBased) return apiItem.evidence || apiItem.queryEvidence || [];
+  if (!isColumnBased) {
+    // Merge both evidence and queryEvidence — queryEvidence is used for needs_physician_query items
+    return [...(apiItem.evidence || []), ...(apiItem.queryEvidence || [])];
+  }
 
   const colEvidence = [];
   const seen = new Set();
   for (const col of Object.values(apiItem.columns || {})) {
-    if (col?.evidence) col.evidence.forEach(ev => {
+    for (const ev of [...(col?.evidence || []), ...(col?.queryEvidence || [])]) {
       const k = ev.sourceId || ev.quote || JSON.stringify(ev);
       if (!seen.has(k)) { seen.add(k); colEvidence.push(ev); }
-    });
+    }
   }
   return colEvidence;
 }

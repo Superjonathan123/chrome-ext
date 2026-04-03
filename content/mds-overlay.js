@@ -765,8 +765,8 @@ function renderEvidenceCard(ev, evIdx) {
   // - Section I documents: quoteText, displayName, rationale
   // - Section I orders/admins: orderDescription, displayName, rationale (quoteText may be null)
   // - Other sections: quote, sourceType
-  const quote = ev.quoteText || ev.orderDescription || ev.quote || '';
-  const sourceType = ev.sourceType || inferSourceType(ev.displayName, ev.evidenceId);
+  const quote = ev.quoteText || ev.orderDescription || ev.quote || ev.text || '';
+  const sourceType = ev.sourceType || ev.type || inferSourceType(ev.displayName, ev.evidenceId);
   const typeClass = `super-evidence-card__type--${sourceType}`;
   const typeLabel = ev.displayName || formatSourceType(sourceType);
 
@@ -781,7 +781,7 @@ function renderEvidenceCard(ev, evIdx) {
   const orderId = ev.sourceId || ev.evidenceId || '';
 
   // Check if this evidence has a viewable type (clinical note, therapy doc, PDF)
-  const { viewerType, id: viewerId } = typeof parseEvidenceForViewer === 'function'
+  const { viewerType, id: viewerId, chunk: viewerChunk } = typeof parseEvidenceForViewer === 'function'
     ? parseEvidenceForViewer(ev)
     : { viewerType: null, id: null };
 
@@ -1468,8 +1468,44 @@ async function renderSplitPDF(popover, viewerEl, documentId, wordBlocks) {
 async function renderSplitNote(viewerEl, noteId, overrideParams) {
   const params = overrideParams || await window.getCurrentParams();
   const data = await fetchClinicalNote(noteId, params);
-  const note = data.note;
 
+  // Handle document fallback — backend returns {type: "document", document: {...}} when
+  // the clinical note ID is actually a document (e.g., chunk IDs mislabeled as clinical_note)
+  if (data.type === 'document' && data.document) {
+    const doc = data.document;
+    if (doc.signedUrl) {
+      // Render PDF viewer for documents with signed URLs
+      const container = document.createElement('div');
+      container.style.cssText = 'width:100%;height:100%';
+      viewerEl.innerHTML = '';
+      viewerEl.appendChild(container);
+      render(h(PDFViewer, {
+        url: doc.signedUrl,
+        title: doc.title || 'Document',
+        documentType: doc.category,
+        effectiveDate: doc.effectiveDate,
+        expiresAt: true,
+        openInNewTabUrl: doc.signedUrl,
+      }), container);
+    } else {
+      // Fallback to extracted text
+      viewerEl.innerHTML = `
+        <div class="super-split__content">
+          <div class="super-split__content-header">
+            <h3 class="super-split__content-title">${escapeHTML(doc.title || 'Document')}</h3>
+            <span class="super-split__content-badge">Document</span>
+          </div>
+          ${doc.effectiveDate ? `<div class="super-split__content-meta">${formatDateDisplay(doc.effectiveDate)}</div>` : ''}
+          <div class="super-split__content-body">
+            <pre class="super-split__note-text">${escapeHTML(doc.extractedText || 'No content available.')}</pre>
+          </div>
+        </div>
+      `;
+    }
+    return;
+  }
+
+  const note = data.note;
   const noteTypeLabel = note.noteType === 'practitioner' ? 'Practitioner Note' : 'Progress Note';
   viewerEl.innerHTML = `
     <div class="super-split__content">

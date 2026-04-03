@@ -1,19 +1,16 @@
-// Session persistence hook — saves/loads chat per patient
-// Uses sessionStorage as fast cache + backend API for durable persistence
+// Session persistence hook — local sessionStorage cache for fast restore
+// Backend persistence (save messages, title gen) is now handled in useChat.js
 import { useEffect, useRef } from 'preact/hooks';
 
-const SESSION_KEY_PREFIX = 'super-chat-v2-';
+const SESSION_KEY = 'super-chat-v3';
 
-export function useChatSession(patientId, messages, setMessages, { sessionId, status, onSaveComplete } = {}) {
+export function useChatSession(conversationId, messages, setMessages) {
   const isInitialLoad = useRef(true);
-  const prevStatusRef = useRef(status);
 
-  // Load session on mount or patient change (from sessionStorage cache)
+  // Load from sessionStorage cache on mount
   useEffect(() => {
-    if (!patientId) return;
-
     try {
-      const saved = sessionStorage.getItem(`${SESSION_KEY_PREFIX}${patientId}`);
+      const saved = sessionStorage.getItem(SESSION_KEY);
       if (saved) {
         const data = JSON.parse(saved);
         if (data.messages?.length > 0) {
@@ -21,15 +18,15 @@ export function useChatSession(patientId, messages, setMessages, { sessionId, st
         }
       }
     } catch (e) {
-      console.warn('[AI Chat] Failed to load session:', e);
+      console.warn('[AI Chat] Failed to load session cache:', e);
     }
 
     isInitialLoad.current = false;
-  }, [patientId]);
+  }, []);
 
-  // Save to sessionStorage whenever messages change (write-through cache)
+  // Write-through cache whenever messages change
   useEffect(() => {
-    if (isInitialLoad.current || !patientId) return;
+    if (isInitialLoad.current) return;
 
     try {
       if (messages.length > 0) {
@@ -37,32 +34,17 @@ export function useChatSession(patientId, messages, setMessages, { sessionId, st
           m.role === 'user' || (m.role === 'assistant' && m.content)
         );
         if (completed.length > 0) {
-          sessionStorage.setItem(`${SESSION_KEY_PREFIX}${patientId}`, JSON.stringify({
+          sessionStorage.setItem(SESSION_KEY, JSON.stringify({
             messages: completed,
-            sessionId,
+            conversationId,
             timestamp: Date.now()
           }));
         }
       } else {
-        sessionStorage.removeItem(`${SESSION_KEY_PREFIX}${patientId}`);
+        sessionStorage.removeItem(SESSION_KEY);
       }
     } catch (e) {
-      console.warn('[AI Chat] Failed to save session:', e);
+      console.warn('[AI Chat] Failed to save session cache:', e);
     }
-  }, [messages, patientId, sessionId]);
-
-  // Auto-save to backend when streaming completes (status: streaming → ready)
-  useEffect(() => {
-    const wasStreaming = prevStatusRef.current === 'streaming';
-    prevStatusRef.current = status;
-
-    if (wasStreaming && status === 'ready' && sessionId && messages.length > 0 && onSaveComplete) {
-      const completed = messages.filter(m =>
-        m.role === 'user' || (m.role === 'assistant' && m.content)
-      );
-      if (completed.length > 0) {
-        onSaveComplete({ sessionId, messages: completed });
-      }
-    }
-  }, [status, sessionId, messages, onSaveComplete]);
+  }, [messages, conversationId]);
 }

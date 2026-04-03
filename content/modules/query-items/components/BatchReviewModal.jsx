@@ -42,6 +42,28 @@ export const BatchReviewPage = ({
         }
       });
       dropdownMounted.current = true;
+    } else {
+      // Fallback: render a native <select> when SuperDropdown isn't available (e.g. demo)
+      const select = document.createElement('select');
+      select.className = 'qr__physician-select-fallback';
+      select.style.cssText = 'width:100%;padding:10px 12px;border:1px solid #d0d5dd;border-radius:8px;font-size:14px;color:#344054;background:#fff;cursor:pointer;';
+      const defaultOpt = document.createElement('option');
+      defaultOpt.value = '';
+      defaultOpt.textContent = 'Select a practitioner...';
+      defaultOpt.disabled = true;
+      defaultOpt.selected = true;
+      select.appendChild(defaultOpt);
+      items.forEach(item => {
+        const opt = document.createElement('option');
+        opt.value = item.id;
+        opt.textContent = item.label + (item.subtitle ? ` — ${item.subtitle}` : '');
+        select.appendChild(opt);
+      });
+      select.addEventListener('change', (e) => {
+        onSelectPractitioner(e.target.value);
+      });
+      dropdownRef.current.appendChild(select);
+      dropdownMounted.current = true;
     }
 
     return () => {

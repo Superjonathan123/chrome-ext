@@ -1,0 +1,129 @@
+/**
+ * Super LTC Demo Navigation Bar
+ */
+
+.super-demo-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 56px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  z-index: 10000;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.super-demo-nav__left {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.super-demo-nav__brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+  font-size: 16px;
+  padding-right: 20px;
+  border-right: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.super-demo-nav__brand-icon {
+  width: 32px;
+  height: 32px;
+  background: white;
+  color: #667eea;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.super-demo-nav__tabs {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.super-demo-nav__tab {
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  color: white;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s;
+  white-space: nowrap;
+}
+
+.super-demo-nav__tab:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.super-demo-nav__tab--active {
+  background: rgba(255, 255, 255, 0.25);
+  font-weight: 500;
+}
+
+.super-demo-nav__right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.super-demo-nav__button {
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  background: transparent;
+  color: white;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.super-demo-nav__button:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: white;
+}
+
+.super-demo-nav__button--primary {
+  background: white;
+  color: #667eea;
+  border-color: white;
+}
+
+.super-demo-nav__button--primary:hover {
+  background: rgba(255, 255, 255, 0.9);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Adjust body padding to account for fixed navbar */
+body {
+  padding-top: 56px !important;
+}
+
+/* Secondary nav bar fix */
+.super-demo-secondary-nav {
+  position: sticky;
+  top: 56px;
+  z-index: 9999;
+  background: white;
+  border-bottom: 1px solid #ddd;
+  margin-top: -56px;
+  padding-top: 56px;
+}

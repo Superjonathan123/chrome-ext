@@ -121,12 +121,6 @@ const ChatOverlayLauncher = {
   async open() {
     if (this._overlayEl) return; // Already open
 
-    const patientId = getChatPatientId();
-    if (!patientId) {
-      console.warn('[AI Chat] No patient context — chat requires a patient page');
-      return;
-    }
-
     // Create overlay mount point
     const overlayEl = document.createElement('div');
     overlayEl.id = 'ai-chat-overlay';
@@ -141,7 +135,6 @@ const ChatOverlayLauncher = {
 
       render(
         h(AIChatOverlay, {
-          patientId,
           onClose: () => this.close()
         }),
         overlayEl

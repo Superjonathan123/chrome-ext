@@ -47,7 +47,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     (async () => {
       try {
         const state = crypto.randomUUID();
-        const redirectUri = chrome.runtime.getURL('callback.html');
+        const redirectUri = `${CONFIG.API_BASE}/auth/extension/callback`;
         await chrome.storage.local.set({ authState: state });
 
         const authUrl = `${CONFIG.API_BASE}/auth/extension?redirect_uri=${encodeURIComponent(redirectUri)}&state=${state}`;
@@ -191,12 +191,12 @@ chrome.runtime.onConnect.addListener((port) => {
 
   port.onMessage.addListener(async (msg) => {
     if (msg.type === 'START_STREAM') {
-      await handleChatStream(port, msg.patientId, msg.orgSlug, msg.facilityName, msg.messages);
+      await handleChatStream(port, msg.messages, msg.context);
     }
   });
 });
 
-async function handleChatStream(port, patientId, orgSlug, facilityName, messages) {
+async function handleChatStream(port, messages, context) {
   try {
     const { authToken } = await chrome.storage.local.get('authToken');
     if (!authToken) {
@@ -204,12 +204,7 @@ async function handleChatStream(port, patientId, orgSlug, facilityName, messages
       return;
     }
 
-    // Build URL with query params for extension auth
-    const params = new URLSearchParams();
-    if (orgSlug) params.append('orgSlug', orgSlug);
-    if (facilityName) params.append('facilityName', facilityName);
-
-    const url = `${CONFIG.API_BASE}/api/patients/${patientId}/search?${params.toString()}`;
+    const url = `${CONFIG.API_BASE}/api/chat`;
     console.log('Super LTC Chat: Starting stream to', url);
 
     const response = await fetch(url, {
@@ -218,7 +213,7 @@ async function handleChatStream(port, patientId, orgSlug, facilityName, messages
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${authToken}`
       },
-      body: JSON.stringify({ messages })
+      body: JSON.stringify({ messages, context })
     });
 
     if (!response.ok) {
