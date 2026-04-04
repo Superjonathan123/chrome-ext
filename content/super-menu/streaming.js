@@ -3,12 +3,6 @@
 async function sendChatMessage(userMessage) {
   if (SuperChat.status !== 'ready') return;
 
-  const patientId = getChatPatientId();
-  if (!patientId) {
-    console.error('Super LTC Chat: No patient ID');
-    return;
-  }
-
   // Check auth first
   const authState = await chrome.runtime.sendMessage({ type: 'GET_AUTH_STATE' });
   if (!authState.authenticated) {
@@ -16,13 +10,11 @@ async function sendChatMessage(userMessage) {
     return;
   }
 
-  // Get org and facility for API call
-  const orgResponse = getOrg();
-  const orgSlug = orgResponse?.org;
-  const facilityName = getChatFacilityInfo();
+  // Build context from current page (patient, MDS, facility, or org scope)
+  const context = getChatContext();
 
-  if (!orgSlug || !facilityName) {
-    console.warn('Super LTC Chat: Missing org or facility', { orgSlug, facilityName });
+  if (!context.orgSlug) {
+    console.warn('Super LTC Chat: Missing orgSlug — backend will try to resolve from user account');
   }
 
   // Add user message
@@ -104,10 +96,8 @@ async function sendChatMessage(userMessage) {
 
   port.postMessage({
     type: 'START_STREAM',
-    patientId,
-    orgSlug,
-    facilityName,
-    messages: messagesToSend
+    messages: messagesToSend,
+    context
   });
 }
 

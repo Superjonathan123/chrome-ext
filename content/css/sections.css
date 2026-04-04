@@ -410,3 +410,553 @@
   font-style: italic;
 }
 
+/* ============================================
+   Section J - Falls Evidence
+   ============================================ */
+.super-falls-section {
+  margin-bottom: 16px;
+}
+
+.super-falls-section__label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--super-gray-500);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+}
+
+.super-falls-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.super-fall-row {
+  padding: 10px 12px;
+  background: var(--super-gray-50);
+  border: 1px solid var(--super-gray-200);
+  border-radius: var(--super-radius);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.super-fall-row:hover {
+  border-color: #8b5cf6;
+  background: white;
+  box-shadow: 0 2px 8px rgba(139, 92, 246, 0.15);
+}
+
+.super-fall__header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.super-fall__date {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--super-gray-800);
+}
+
+.super-fall__type {
+  font-size: 11px;
+  color: var(--super-gray-500);
+  flex: 1;
+}
+
+.super-fall__resident {
+  font-size: 11px;
+  color: var(--super-gray-600);
+  margin-bottom: 4px;
+}
+
+.super-fall__injury {
+  font-size: 11px;
+  color: #166534;
+  font-weight: 500;
+}
+
+.super-fall__injury--minor {
+  color: #92400e;
+}
+
+.super-fall__injury--major {
+  color: #991b1b;
+  font-weight: 600;
+}
+
+.super-fall__action {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid var(--super-gray-200);
+  font-size: 11px;
+  font-weight: 600;
+  color: #8b5cf6;
+}
+
+.super-fall__action svg {
+  flex-shrink: 0;
+}
+
+/* ============================================
+   Incident Detail Modal
+   ============================================ */
+.super-incident-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 100004;
+}
+
+.super-incident-modal__backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 100004;
+}
+
+.super-incident-modal__container {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 600px;
+  max-width: calc(100vw - 32px);
+  max-height: 80vh;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  z-index: 100005;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: superIncidentModalIn 0.2s ease-out;
+}
+
+@keyframes superIncidentModalIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+.super-incident-modal__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 20px;
+  background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+  color: white;
+  flex-shrink: 0;
+}
+
+.super-incident-modal__header-text {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  min-width: 0;
+}
+
+.super-incident-modal__type-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 8px;
+  font-size: 10px;
+  font-weight: 600;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: var(--super-radius-sm);
+  white-space: nowrap;
+  max-width: 250px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.super-incident-modal__title {
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.super-incident-status {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  font-size: 10px;
+  font-weight: 600;
+  border-radius: var(--super-radius-sm);
+}
+
+.super-incident-status--open {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.super-incident-status--closed {
+  background: rgba(0, 0, 0, 0.15);
+}
+
+.super-incident-modal__close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  border-radius: 50%;
+  color: white;
+  font-size: 18px;
+  cursor: pointer;
+  transition: var(--super-transition);
+  flex-shrink: 0;
+}
+
+.super-incident-modal__close:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.super-incident-modal__body {
+  padding: 16px 20px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.super-incident-modal__body::-webkit-scrollbar {
+  width: 6px;
+}
+
+.super-incident-modal__body::-webkit-scrollbar-track {
+  background: var(--super-gray-100);
+}
+
+.super-incident-modal__body::-webkit-scrollbar-thumb {
+  background: var(--super-gray-300);
+  border-radius: 3px;
+}
+
+/* Incident Meta */
+.super-incident__meta {
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--super-gray-200);
+}
+
+.super-incident__resident {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--super-gray-800);
+  margin-bottom: 4px;
+}
+
+.super-incident__dates {
+  display: flex;
+  gap: 16px;
+  font-size: 12px;
+  color: var(--super-gray-500);
+}
+
+/* Incident Sections */
+.super-incident__section {
+  margin-bottom: 16px;
+}
+
+.super-incident__section-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--super-gray-700);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 10px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid var(--super-gray-200);
+}
+
+.super-incident__field {
+  margin-bottom: 10px;
+}
+
+.super-incident__field-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--super-gray-500);
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  margin-bottom: 3px;
+}
+
+.super-incident__field-value {
+  font-size: 13px;
+  color: var(--super-gray-700);
+  line-height: 1.5;
+}
+
+/* Injuries */
+.super-incident__injuries {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.super-incident__injury-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: var(--super-radius);
+  font-size: 12px;
+}
+
+.super-incident__injury-type {
+  font-weight: 600;
+  color: #991b1b;
+}
+
+.super-incident__injury-location {
+  color: var(--super-gray-600);
+}
+
+.super-incident__no-injuries {
+  font-size: 12px;
+  color: #166534;
+  font-weight: 500;
+  padding: 6px 10px;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: var(--super-radius);
+  margin-bottom: 10px;
+}
+
+/* Subsections */
+.super-incident__subsection {
+  margin-bottom: 12px;
+}
+
+.super-incident__subsection-title {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--super-gray-600);
+  margin-bottom: 6px;
+}
+
+/* Notified persons */
+.super-incident__notified-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.super-incident__notified {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 10px;
+  background: var(--super-gray-50);
+  border: 1px solid var(--super-gray-200);
+  border-radius: var(--super-radius);
+  font-size: 12px;
+}
+
+.super-incident__notified-role {
+  font-weight: 600;
+  color: var(--super-gray-700);
+  min-width: 100px;
+}
+
+.super-incident__notified-name {
+  flex: 1;
+  color: var(--super-gray-600);
+}
+
+.super-incident__notified-date {
+  font-size: 11px;
+  color: var(--super-gray-500);
+  font-family: var(--super-font-mono);
+}
+
+/* Progress notes */
+.super-incident__note {
+  padding: 10px 12px;
+  background: var(--super-gray-50);
+  border: 1px solid var(--super-gray-200);
+  border-radius: var(--super-radius);
+  margin-bottom: 6px;
+}
+
+.super-incident__note-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.super-incident__note-type {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 6px;
+  font-size: 9px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  border-radius: var(--super-radius-sm);
+  background: #8b5cf6;
+  color: white;
+}
+
+.super-incident__note-date {
+  font-size: 11px;
+  color: var(--super-gray-500);
+  font-family: var(--super-font-mono);
+}
+
+.super-incident__note-author {
+  font-size: 11px;
+  color: var(--super-gray-600);
+  margin-left: auto;
+}
+
+.super-incident__note-text {
+  font-size: 12px;
+  color: var(--super-gray-700);
+  line-height: 1.5;
+  white-space: pre-wrap;
+}
+
+.super-incident__note--clickable {
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.super-incident__note--clickable:hover {
+  border-color: #8b5cf6;
+  background: white;
+  box-shadow: 0 2px 8px rgba(139, 92, 246, 0.15);
+}
+
+.super-incident__note-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  margin-bottom: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: white;
+  background: #8b5cf6;
+  border: none;
+  border-radius: var(--super-radius);
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.super-incident__note-back:hover {
+  background: #7c3aed;
+}
+
+.super-incident__full-note {
+  flex: 1;
+  min-height: 0;
+}
+
+/* UDAs */
+.super-incident__uda {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 10px;
+  background: var(--super-gray-50);
+  border: 1px solid var(--super-gray-200);
+  border-radius: var(--super-radius);
+  font-size: 12px;
+  margin-bottom: 4px;
+}
+
+.super-incident__uda-desc {
+  flex: 1;
+  color: var(--super-gray-700);
+  font-weight: 500;
+}
+
+.super-incident__uda-date {
+  font-size: 11px;
+  color: var(--super-gray-500);
+  font-family: var(--super-font-mono);
+}
+
+.super-incident__uda-status {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 6px;
+  font-size: 9px;
+  font-weight: 600;
+  border-radius: var(--super-radius-sm);
+  background: var(--super-gray-200);
+  color: var(--super-gray-600);
+}
+
+.super-incident__uda-status--complete {
+  background: #d1fae5;
+  color: #166534;
+}
+
+.super-incident__uda-status--error {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+/* Care plan */
+.super-incident__care-plan {
+  font-size: 12px;
+  color: var(--super-gray-700);
+  line-height: 1.8;
+}
+
+/* Factors */
+.super-incident__factors-list {
+  margin: 0;
+  padding-left: 20px;
+  font-size: 12px;
+  color: var(--super-gray-700);
+  line-height: 1.6;
+}
+
+/* No detail state */
+.super-incident-no-detail {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  text-align: center;
+}
+
+.super-incident-no-detail__icon {
+  font-size: 32px;
+  margin-bottom: 12px;
+}
+
+.super-incident-no-detail__text {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--super-gray-700);
+  margin-bottom: 6px;
+}
+
+.super-incident-no-detail__sub {
+  font-size: 12px;
+  color: var(--super-gray-500);
+  max-width: 300px;
+  line-height: 1.5;
+}
+

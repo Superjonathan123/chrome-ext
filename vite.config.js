@@ -55,12 +55,19 @@ function stripMocksInProduction(mode) {
 export default defineConfig(({ mode }) => {
   const isDev = mode === 'development';
 
-  // For production builds, strip localhost from host_permissions
+  // Customize manifest per environment
   const buildManifest = JSON.parse(JSON.stringify(manifest));
-  if (!isDev) {
+  if (isDev) {
+    buildManifest.name = 'Super LTC DEV';
+  } else {
     buildManifest.host_permissions = buildManifest.host_permissions.filter(
       p => !p.includes('localhost')
     );
+    // Strip localhost from content_scripts matches in production
+    buildManifest.content_scripts = buildManifest.content_scripts.map(cs => ({
+      ...cs,
+      matches: cs.matches.filter(m => !m.includes('localhost'))
+    }));
   }
 
   const outDir = isDev ? 'dist' : 'dist-prod';

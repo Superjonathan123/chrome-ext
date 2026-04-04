@@ -107,7 +107,7 @@ export function PDFViewer({
 
       // Fit to width at 100% zoom. Scale proportionally for other zoom levels.
       const scrollWidth = scrollEl.clientWidth;
-      const containerWidth = Math.max(scrollWidth - 48, 200); // 24px padding each side
+      const containerWidth = Math.max(scrollWidth - 16, 200); // 8px padding each side
       const baseViewport = page.getViewport({ scale: 1, rotation });
       const fitScale = containerWidth / baseViewport.width;
       const scale = fitScale * (zoom / 100);
@@ -246,7 +246,7 @@ export function PDFViewer({
 
   return (
     <div class="super-pdfv" ref={rootRef}>
-      {/* ---- Document header ---- */}
+      {/* ---- Unified header: title + controls in one row ---- */}
       <div class="super-pdfv__header">
         <div class="super-pdfv__header-left">
           <svg class="super-pdfv__header-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -254,10 +254,54 @@ export function PDFViewer({
             <polyline points="14 2 14 8 20 8" />
           </svg>
           <span class="super-pdfv__header-title">{title}</span>
+          {effectiveDate && <span class="super-pdfv__header-date">{formatDate(effectiveDate)}</span>}
         </div>
         <div class="super-pdfv__header-right">
-          {effectiveDate && <span class="super-pdfv__header-date">{formatDate(effectiveDate)}</span>}
-          {fileSizeStr && <span class="super-pdfv__header-meta">{fileSizeStr}</span>}
+          {/* Page nav */}
+          <div class="super-pdfv__group">
+            <button class="super-pdfv__tb-btn" onClick={() => goToPage(currentPage - 1)} disabled={currentPage <= 1} title="Previous page">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6" /></svg>
+            </button>
+            <div class="super-pdfv__page-pill">
+              <input
+                class="super-pdfv__page-input"
+                type="text"
+                value={pageInputValue}
+                onInput={(e) => setPageInputValue(e.target.value)}
+                onBlur={commitPageInput}
+                onKeyDown={(e) => e.key === 'Enter' && e.target.blur()}
+                style={{ width: `${Math.max(2, String(totalPages).length + 0.5)}ch` }}
+              />
+              <span class="super-pdfv__page-of">of {totalPages}</span>
+            </div>
+            <button class="super-pdfv__tb-btn" onClick={() => goToPage(currentPage + 1)} disabled={currentPage >= totalPages} title="Next page">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6" /></svg>
+            </button>
+          </div>
+
+          <div class="super-pdfv__tb-sep" />
+
+          {/* Zoom */}
+          <div class="super-pdfv__group">
+            <button class="super-pdfv__tb-btn" onClick={() => changeZoom(-1)} disabled={zoom <= ZOOM_LEVELS[0]} title="Zoom out">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12" /></svg>
+            </button>
+            <span class="super-pdfv__zoom-label">{zoom}%</span>
+            <button class="super-pdfv__tb-btn" onClick={() => changeZoom(1)} disabled={zoom >= ZOOM_LEVELS[ZOOM_LEVELS.length - 1]} title="Zoom in">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>
+            </button>
+          </div>
+
+          <div class="super-pdfv__tb-sep" />
+
+          {/* Rotate */}
+          <button class="super-pdfv__tb-btn" onClick={rotate} title="Rotate 90°">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="1 4 1 10 7 10" />
+              <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10" />
+            </svg>
+          </button>
+
           {openInNewTabUrl && (
             <a href={openInNewTabUrl} target="_blank" rel="noopener noreferrer" class="super-pdfv__open-btn" title="Open in new tab">
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -268,54 +312,6 @@ export function PDFViewer({
             </a>
           )}
         </div>
-      </div>
-
-      {/* ---- Controls toolbar ---- */}
-      <div class="super-pdfv__toolbar">
-        {/* Page nav */}
-        <div class="super-pdfv__group">
-          <button class="super-pdfv__tb-btn" onClick={() => goToPage(currentPage - 1)} disabled={currentPage <= 1} title="Previous page (Left arrow)">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6" /></svg>
-          </button>
-          <div class="super-pdfv__page-pill">
-            <input
-              class="super-pdfv__page-input"
-              type="text"
-              value={pageInputValue}
-              onInput={(e) => setPageInputValue(e.target.value)}
-              onBlur={commitPageInput}
-              onKeyDown={(e) => e.key === 'Enter' && e.target.blur()}
-              style={{ width: `${Math.max(2, String(totalPages).length + 0.5)}ch` }}
-            />
-            <span class="super-pdfv__page-of">of {totalPages}</span>
-          </div>
-          <button class="super-pdfv__tb-btn" onClick={() => goToPage(currentPage + 1)} disabled={currentPage >= totalPages} title="Next page (Right arrow)">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6" /></svg>
-          </button>
-        </div>
-
-        <div class="super-pdfv__tb-sep" />
-
-        {/* Zoom */}
-        <div class="super-pdfv__group">
-          <button class="super-pdfv__tb-btn" onClick={() => changeZoom(-1)} disabled={zoom <= ZOOM_LEVELS[0]} title="Zoom out (-)">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12" /></svg>
-          </button>
-          <span class="super-pdfv__zoom-label">{zoom}%</span>
-          <button class="super-pdfv__tb-btn" onClick={() => changeZoom(1)} disabled={zoom >= ZOOM_LEVELS[ZOOM_LEVELS.length - 1]} title="Zoom in (+)">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>
-          </button>
-        </div>
-
-        <div class="super-pdfv__tb-sep" />
-
-        {/* Rotate */}
-        <button class="super-pdfv__tb-btn" onClick={rotate} title="Rotate 90° (R)">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <polyline points="1 4 1 10 7 10" />
-            <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10" />
-          </svg>
-        </button>
       </div>
 
       {/* ---- Canvas area ---- */}
@@ -400,28 +396,78 @@ async function detectRotation(page, pageNum, cacheRef, manualRotation) {
 // HIGHLIGHT RENDERING
 // =============================================================================
 
+/**
+ * Transform a highlight from normalised coords to pixel coords,
+ * accounting for viewport rotation.
+ */
+function hlToPixel(hl, vw, vh, rotation) {
+  const { x: ox, y: oy, w: ow, h: oh } = hl;
+  const r = rotation % 360;
+  if (r === 0)        return { x: ox * vw, y: oy * vh, w: ow * vw, h: oh * vh };
+  if (r === 90)       return { x: (1 - oy - oh) * vw, y: ox * vh, w: oh * vw, h: ow * vh };
+  if (r === 180)      return { x: (1 - ox - ow) * vw, y: (1 - oy - oh) * vh, w: ow * vw, h: oh * vh };
+  /* 270 */           return { x: oy * vw, y: (1 - ox - ow) * vh, w: oh * vw, h: ow * vh };
+}
+
+/**
+ * Merge pixel rects that sit on roughly the same line or are close
+ * vertically into contiguous regions, so the highlight looks like a
+ * text-marker stripe instead of per-word boxes.
+ */
+function mergeRects(rects) {
+  if (rects.length <= 1) return rects;
+
+  // Sort by Y then X
+  const sorted = [...rects].sort((a, b) => a.y - b.y || a.x - b.x);
+  const merged = [];
+  let cur = { ...sorted[0] };
+
+  for (let i = 1; i < sorted.length; i++) {
+    const r = sorted[i];
+    // Same row: vertical centres within half a line-height of each other
+    const lineH = Math.max(cur.h, r.h);
+    const sameLine = Math.abs((cur.y + cur.h / 2) - (r.y + r.h / 2)) < lineH * 0.6;
+    // Adjacent or overlapping horizontally (small gap ok)
+    const gap = r.x - (cur.x + cur.w);
+    const close = gap < lineH * 0.5;
+
+    if (sameLine && close) {
+      // Extend current rect to cover both
+      const right = Math.max(cur.x + cur.w, r.x + r.w);
+      const top = Math.min(cur.y, r.y);
+      const bottom = Math.max(cur.y + cur.h, r.y + r.h);
+      cur.x = Math.min(cur.x, r.x);
+      cur.y = top;
+      cur.w = right - cur.x;
+      cur.h = bottom - top;
+    } else {
+      merged.push(cur);
+      cur = { ...r };
+    }
+  }
+  merged.push(cur);
+  return merged;
+}
+
 function drawHighlights(ctx, highlights, viewport, rotation) {
-  const rects = [];
   const vw = viewport.width;
   const vh = viewport.height;
 
-  highlights.forEach((hl, i) => {
-    const isActive = i === 0;
-    ctx.fillStyle = isActive ? 'rgba(59, 130, 246, 0.30)' : 'rgba(254, 240, 138, 0.35)';
-    ctx.strokeStyle = isActive ? 'rgba(59, 130, 246, 0.75)' : 'rgba(234, 179, 8, 0.55)';
-    ctx.lineWidth = isActive ? 2 : 1.5;
+  // Convert to pixel coords, then merge adjacent blocks
+  const pixelRects = highlights.map(hl => hlToPixel(hl, vw, vh, rotation));
+  const merged = mergeRects(pixelRects);
 
-    const { x: ox, y: oy, w: ow, h: oh } = hl;
-    let x, y, w, h;
-    const r = rotation % 360;
+  // Subtle yellow marker — no stroke
+  ctx.fillStyle = 'rgba(250, 204, 21, 0.28)';
 
-    if (r === 0)        { x = ox * vw; y = oy * vh; w = ow * vw; h = oh * vh; }
-    else if (r === 90)  { x = (1 - oy - oh) * vw; y = ox * vh; w = oh * vw; h = ow * vh; }
-    else if (r === 180) { x = (1 - ox - ow) * vw; y = (1 - oy - oh) * vh; w = ow * vw; h = oh * vh; }
-    else if (r === 270) { x = oy * vw; y = (1 - ox - ow) * vh; w = oh * vw; h = ow * vh; }
-
-    // Rounded rect highlight
+  merged.forEach(rect => {
+    const pad = 2;
     const rad = 3;
+    const x = rect.x - pad;
+    const y = rect.y - pad;
+    const w = rect.w + pad * 2;
+    const h = rect.h + pad * 2;
+
     ctx.beginPath();
     ctx.moveTo(x + rad, y);
     ctx.lineTo(x + w - rad, y);
@@ -434,12 +480,9 @@ function drawHighlights(ctx, highlights, viewport, rotation) {
     ctx.quadraticCurveTo(x, y, x + rad, y);
     ctx.closePath();
     ctx.fill();
-    ctx.stroke();
-
-    rects.push({ x, y, w, h, isActive });
   });
 
-  return rects;
+  return merged.map((r, i) => ({ ...r, isActive: i === 0 }));
 }
 
 // =============================================================================

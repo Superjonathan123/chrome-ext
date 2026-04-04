@@ -5,11 +5,18 @@ function renderChatMessages() {
   if (!container) return;
 
   if (SuperChat.messages.length === 0) {
+    const ctx = typeof getChatContext === 'function' ? getChatContext() : {};
+    const hasPatient = ctx.externalPatientId || ctx.externalAssessmentId;
+    const emptyText = hasPatient
+      ? 'I can search medications, labs, vitals, clinical notes, and help you find information about this patient.'
+      : ctx.facilityName
+        ? 'I can search across patients in this facility — ask about census, falls, medications, and more.'
+        : 'I can search across all your facilities — ask about census, trends, and more.';
     container.innerHTML = `
       <div class="super-chat-empty">
         <div class="super-chat-empty__icon">&#10024;</div>
         <div class="super-chat-empty__title">Hi, I'm your AI assistant</div>
-        <div class="super-chat-empty__text">I can search medications, labs, vitals, clinical notes, and help you find information about this patient.</div>
+        <div class="super-chat-empty__text">${emptyText}</div>
       </div>
     `;
     return;
@@ -230,11 +237,18 @@ function updateInputState() {
     input.disabled = !isReady;
     sendBtn.disabled = !isReady || !input.value.trim();
 
-    // Dynamic placeholder based on state
+    // Dynamic placeholder based on state and page context
     if (isReady) {
-      input.placeholder = 'Ask me anything about this patient...';
+      const ctx = typeof getChatContext === 'function' ? getChatContext() : {};
+      if (ctx.externalPatientId || ctx.externalAssessmentId) {
+        input.placeholder = 'Ask about this patient...';
+      } else if (ctx.facilityName) {
+        input.placeholder = 'Search across this facility...';
+      } else {
+        input.placeholder = 'Search across your facilities...';
+      }
     } else if (SuperChat.status === 'submitted') {
-      input.placeholder = 'Searching patient records...';
+      input.placeholder = 'Searching records...';
     } else {
       input.placeholder = 'Generating response...';
     }

@@ -43,7 +43,11 @@ async function fetchItemEvidence(section, itemCode) {
     evidence: item.evidence || [],
     queryEvidence: item.queryEvidence || [],
     validation: item.validation || {},
-    columns: item.columns || null
+    columns: item.columns || null,
+    // Section J falls data
+    falls: item.falls || null,
+    fallCount: item.fallCount ?? null,
+    lookbackWindow: item.lookbackWindow || null
   };
   EvidenceCache.set(cacheKey, result);
   return result;
@@ -51,6 +55,7 @@ async function fetchItemEvidence(section, itemCode) {
 
 // Expose on window for other content scripts (query-send-modal.js, etc.)
 window.SuperOverlay = SuperOverlay;
+window.showIncidentDetailModal = showIncidentDetailModal;
 window.renderSplitAdministrations = renderSplitAdministrations;
 window.renderSplitNote = renderSplitNote;
 window.renderSplitTherapy = renderSplitTherapy;
@@ -619,6 +624,11 @@ function buildPopoverHTML(result) {
   const orderChangesHTML = renderOrderChanges(ai.orderChanges);
   const issuesHTML = renderDrugRegimenIssues(ai.issuesFound);
 
+  // Section J: Falls
+  const fallsHTML = ai.falls && ai.falls.length > 0
+    ? renderFalls(ai.falls, ai.fallCount, ai.lookbackWindow)
+    : (ai.fallCount > 0 ? renderFallsPlaceholder(ai.fallCount) : '');
+
   return `
     <div class="super-popover-header">
       <div>
@@ -685,6 +695,7 @@ function buildPopoverHTML(result) {
       ${indicationsHTML}
       ${orderChangesHTML}
       ${issuesHTML}
+      ${fallsHTML}
       ${datesHTML}
       ${evidenceHTML}
     </div>
@@ -1084,6 +1095,358 @@ function renderDrugRegimenIssues(issuesFound) {
   `;
 }
 
+// ============================================
+// Section J — Falls Evidence
+// ============================================
+
+function formatFallDate(dateStr) {
+  if (!dateStr) return '';
+  try {
+    const date = new Date(dateStr);
+    if (isNaN(date.getTime())) return dateStr;
+    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  } catch {
+    return dateStr;
+  }
+}
+
+function renderFallRow(fall) {
+  const date = formatFallDate(fall.incidentDate);
+  const type = escapeHTML(fall.incidentType || 'Fall');
+  const resident = escapeHTML(fall.residentName || '');
+
+  let injuryText = 'No injury';
+  if (fall.hasMajorInjury) {
+    injuryText = 'Major injury';
+    if (fall.injuryTypes?.length) injuryText += `: ${fall.injuryTypes.map(t => escapeHTML(t)).join(', ')}`;
+  } else if (fall.hasInjury) {
+    injuryText = 'Minor injury';
+    if (fall.injuryTypes?.length) injuryText += `: ${fall.injuryTypes.map(t => escapeHTML(t)).join(', ')}`;
+  }
+
+  const injuryClass = fall.hasMajorInjury ? 'super-fall__injury--major' : fall.hasInjury ? 'super-fall__injury--minor' : '';
+
+  return `
+    <div class="super-fall-row" data-incident-id="${fall.incidentId || ''}" role="button">
+      <div class="super-fall__header">
+        <span class="super-fall__date">${date}</span>
+        <span class="super-fall__type">${type}</span>
+      </div>
+      ${resident ? `<div class="super-fall__resident">${resident}</div>` : ''}
+      <div class="super-fall__injury ${injuryClass}">${injuryText}</div>
+      <div class="super-fall__action">
+        <span>View Incident</span>
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </div>
+    </div>
+  `;
+}
+
+function renderFalls(falls, fallCount, lookbackWindow) {
+  if (!falls || falls.length === 0) return '';
+
+  const lookbackHTML = lookbackWindow
+    ? `<div class="super-lookback-info">Lookback: ${lookbackWindow.startDate} – ${lookbackWindow.endDate} (${lookbackWindow.daysCovered} days)</div>`
+    : '';
+
+  const rows = falls.map(f => renderFallRow(f)).join('');
+
+  return `
+    <div class="super-falls-section" data-falls-section>
+      <div class="super-falls-section__label">Falls (${fallCount ?? falls.length})</div>
+      ${lookbackHTML}
+      <div class="super-falls-list">${rows}</div>
+    </div>
+  `;
+}
+
+function renderFallsPlaceholder(fallCount) {
+  if (!fallCount) return '';
+  return `
+    <div class="super-falls-section" data-falls-section>
+      <div class="super-falls-section__label">Falls (${fallCount})</div>
+      <div class="super-falls-list" data-falls-container>
+        <div class="super-evidence-loading"><div class="super-viewer-loading__spinner"></div><span>Loading falls...</span></div>
+      </div>
+    </div>
+  `;
+}
+
+// ============================================
+// Incident Detail Modal
+// ============================================
+
+async function fetchIncidentDetail(incidentId) {
+  const endpoint = `/api/extension/incidents/${encodeURIComponent(incidentId)}`;
+  const response = await chrome.runtime.sendMessage({ type: 'API_REQUEST', endpoint });
+  if (!response.success) throw new Error(response.error || 'Failed to fetch incident');
+  return response.data?.incident || response.data;
+}
+
+function showIncidentDetailModal(incidentId) {
+  // Remove any existing incident modal
+  document.querySelectorAll('.super-incident-modal').forEach(el => el.remove());
+
+  const modal = document.createElement('div');
+  modal.className = 'super-incident-modal';
+  modal.innerHTML = `
+    <div class="super-incident-modal__backdrop"></div>
+    <div class="super-incident-modal__container">
+      <div class="super-incident-modal__header">
+        <div class="super-incident-modal__header-text">
+          <span class="super-incident-modal__title">Incident Detail</span>
+        </div>
+        <button class="super-incident-modal__close" aria-label="Close">&times;</button>
+      </div>
+      <div class="super-incident-modal__body">
+        <div class="super-viewer-loading"><div class="super-viewer-loading__spinner"></div><span>Loading incident...</span></div>
+      </div>
+    </div>
+  `;
+
+  document.body.appendChild(modal);
+
+  // Close handlers
+  const close = () => modal.remove();
+  modal.querySelector('.super-incident-modal__backdrop').addEventListener('click', close);
+  modal.querySelector('.super-incident-modal__close').addEventListener('click', close);
+
+  // Fetch and render
+  fetchIncidentDetail(incidentId).then(incident => {
+    const body = modal.querySelector('.super-incident-modal__body');
+    const header = modal.querySelector('.super-incident-modal__header');
+
+    // Update header with incident info
+    const typeBadge = incident.incidentType || 'Fall Incident';
+    const statusText = incident.isClosed ? 'Closed' : 'Open';
+    const statusClass = incident.isClosed ? 'super-incident-status--closed' : 'super-incident-status--open';
+
+    header.querySelector('.super-incident-modal__header-text').innerHTML = `
+      <span class="super-incident-modal__type-badge">${escapeHTML(typeBadge)}</span>
+      <span class="super-incident-modal__title">#${escapeHTML(incident.incidentNumber || incident.pccIncidentId || '')}</span>
+      <span class="super-incident-status ${statusClass}">${statusText}</span>
+    `;
+
+    if (!incident.detail) {
+      body.innerHTML = `
+        <div class="super-incident-no-detail">
+          <div class="super-incident-no-detail__icon">📋</div>
+          <div class="super-incident-no-detail__text">Detail not yet synced</div>
+          <div class="super-incident-no-detail__sub">This incident's detail has not been fetched from PCC yet. It will be available after the next sync.</div>
+        </div>
+      `;
+      return;
+    }
+
+    body.innerHTML = renderIncidentDetail(incident);
+  }).catch(err => {
+    console.error('[Super LTC] Failed to load incident:', err);
+    const body = modal.querySelector('.super-incident-modal__body');
+    body.innerHTML = `
+      <div class="super-viewer-error">
+        <div class="super-viewer-error__icon">⚠️</div>
+        <div class="super-viewer-error__message">${escapeHTML(err.message || 'Failed to load incident')}</div>
+      </div>
+    `;
+  });
+}
+
+function renderIncidentDetail(incident) {
+  const d = incident.detail;
+  const detail = d.detail || {};
+  const injury = d.injury || {};
+  const factors = d.factors;
+  const action = d.action || {};
+
+  const sections = [];
+
+  // Date info
+  const incidentDate = formatFallDate(incident.incidentDate);
+  const closeDate = incident.incidentCloseDate ? formatFallDate(incident.incidentCloseDate) : null;
+  const residentName = incident.residentName || '';
+
+  sections.push(`
+    <div class="super-incident__meta">
+      ${residentName ? `<div class="super-incident__resident">${escapeHTML(residentName)}</div>` : ''}
+      <div class="super-incident__dates">
+        <span>Incident Date: <strong>${incidentDate}</strong></span>
+        ${closeDate ? `<span>Closed: <strong>${closeDate}</strong></span>` : ''}
+      </div>
+    </div>
+  `);
+
+  // Descriptions
+  const hasDescriptions = detail.nursingDescription || detail.residentDescription || detail.actionTaken;
+  if (hasDescriptions) {
+    let descHTML = '<div class="super-incident__section"><div class="super-incident__section-title">Descriptions</div>';
+    if (detail.nursingDescription) {
+      descHTML += `<div class="super-incident__field"><div class="super-incident__field-label">Nursing Description</div><div class="super-incident__field-value">${escapeHTML(detail.nursingDescription)}</div></div>`;
+    }
+    if (detail.residentDescription) {
+      descHTML += `<div class="super-incident__field"><div class="super-incident__field-label">Resident Description</div><div class="super-incident__field-value">${escapeHTML(detail.residentDescription)}</div></div>`;
+    }
+    if (detail.actionTaken) {
+      descHTML += `<div class="super-incident__field"><div class="super-incident__field-label">Action Taken</div><div class="super-incident__field-value">${escapeHTML(detail.actionTaken)}</div></div>`;
+    }
+    descHTML += '</div>';
+    sections.push(descHTML);
+  }
+
+  // Injury section
+  const injuries = injury.injuries || [];
+  const mentalStatus = injury.mentalStatus || {};
+  {
+    let injHTML = '<div class="super-incident__section"><div class="super-incident__section-title">Injury</div>';
+
+    if (injuries.length > 0) {
+      injHTML += '<div class="super-incident__injuries">';
+      injuries.forEach(inj => {
+        injHTML += `<div class="super-incident__injury-item">
+          <span class="super-incident__injury-type">${escapeHTML(inj.type || 'Injury')}</span>
+          ${inj.location ? `<span class="super-incident__injury-location">${escapeHTML(inj.location)}</span>` : ''}
+        </div>`;
+      });
+      injHTML += '</div>';
+    } else {
+      injHTML += '<div class="super-incident__no-injuries">No injuries reported</div>';
+    }
+
+    // Pain level
+    if (injury.painLevel && injury.painLevel.value !== undefined) {
+      const painVal = injury.painLevel.value === '-1' ? 'Unable to assess' : injury.painLevel.value;
+      injHTML += `<div class="super-incident__field"><div class="super-incident__field-label">Pain Level</div><div class="super-incident__field-value">${escapeHTML(String(painVal))}</div></div>`;
+    }
+
+    // Mental status
+    const orientations = [];
+    if (mentalStatus.isOrientedToPerson) orientations.push('Person');
+    if (mentalStatus.isOrientedToPlace) orientations.push('Place');
+    if (mentalStatus.isOrientedToTime) orientations.push('Time');
+    if (mentalStatus.isOrientedToSituation) orientations.push('Situation');
+    if (orientations.length > 0) {
+      injHTML += `<div class="super-incident__field"><div class="super-incident__field-label">Mental Status</div><div class="super-incident__field-value">Oriented to: ${orientations.join(', ')}</div></div>`;
+    }
+
+    // Witnessed / Hospitalized
+    const flags = [];
+    if (detail.isWitnessed !== undefined) flags.push(`Witnessed: ${detail.isWitnessed ? 'Yes' : 'No'}`);
+    if (detail.isHospitalized !== undefined) flags.push(`Hospitalized: ${detail.isHospitalized ? 'Yes' : 'No'}`);
+    if (flags.length > 0) {
+      injHTML += `<div class="super-incident__field"><div class="super-incident__field-label">Details</div><div class="super-incident__field-value">${flags.join(' · ')}</div></div>`;
+    }
+
+    injHTML += '</div>';
+    sections.push(injHTML);
+  }
+
+  // Contributing factors
+  if (factors && ((Array.isArray(factors) && factors.length > 0) || (!Array.isArray(factors) && Object.keys(factors).length > 0))) {
+    let factorsHTML = '<div class="super-incident__section"><div class="super-incident__section-title">Contributing Factors</div>';
+    if (Array.isArray(factors)) {
+      factorsHTML += '<ul class="super-incident__factors-list">';
+      factors.forEach(f => { factorsHTML += `<li>${escapeHTML(typeof f === 'string' ? f : f.name || JSON.stringify(f))}</li>`; });
+      factorsHTML += '</ul>';
+    } else {
+      factorsHTML += `<div class="super-incident__field-value">${escapeHTML(JSON.stringify(factors))}</div>`;
+    }
+    factorsHTML += '</div>';
+    sections.push(factorsHTML);
+  }
+
+  // Actions & Follow-up
+  const hasActions = (action.notifiedPersons?.length > 0) || (action.progressNotes?.length > 0) || (action.triggeredUDAs?.length > 0) || action.carePlan;
+  if (hasActions) {
+    let actHTML = '<div class="super-incident__section"><div class="super-incident__section-title">Actions &amp; Follow-up</div>';
+
+    // Notified persons
+    if (action.notifiedPersons?.length > 0) {
+      actHTML += '<div class="super-incident__subsection"><div class="super-incident__subsection-title">Notified Persons</div>';
+      actHTML += '<div class="super-incident__notified-list">';
+      action.notifiedPersons.forEach(p => {
+        actHTML += `<div class="super-incident__notified">
+          <span class="super-incident__notified-role">${escapeHTML(p.connection || '')}</span>
+          <span class="super-incident__notified-name">${escapeHTML(p.name || '')}</span>
+          ${p.date ? `<span class="super-incident__notified-date">${escapeHTML(p.date)}</span>` : ''}
+        </div>`;
+      });
+      actHTML += '</div></div>';
+    }
+
+    // Progress notes
+    if (action.progressNotes?.length > 0) {
+      actHTML += '<div class="super-incident__subsection"><div class="super-incident__subsection-title">Progress Notes</div>';
+      action.progressNotes.forEach(note => {
+        const noteId = note.id || '';
+        const clickableClass = noteId ? ' super-incident__note--clickable' : '';
+        const dataAttr = noteId ? ` data-note-id="${escapeHTML(noteId)}"` : '';
+        actHTML += `<div class="super-incident__note${clickableClass}"${dataAttr} role="${noteId ? 'button' : ''}">
+          <div class="super-incident__note-header">
+            <span class="super-incident__note-type">${escapeHTML(note.type || 'Note')}</span>
+            <span class="super-incident__note-date">${escapeHTML(note.effectiveDate || '')}</span>
+            ${note.author ? `<span class="super-incident__note-author">${escapeHTML(note.author)}</span>` : ''}
+          </div>
+          ${note.note ? `<div class="super-incident__note-text">${escapeHTML(note.note)}</div>` : ''}
+          ${noteId ? `<div class="super-fall__action"><span>View Full Note</span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>` : ''}
+        </div>`;
+      });
+      actHTML += '</div>';
+    }
+
+    // Triggered UDAs
+    if (action.triggeredUDAs?.length > 0) {
+      actHTML += '<div class="super-incident__subsection"><div class="super-incident__subsection-title">Triggered UDAs</div>';
+      action.triggeredUDAs.forEach(uda => {
+        const statusClass = uda.status === 'Complete' ? 'super-incident__uda-status--complete' : uda.status === 'Errors' ? 'super-incident__uda-status--error' : '';
+        actHTML += `<div class="super-incident__uda">
+          <span class="super-incident__uda-desc">${escapeHTML(uda.description || '')}</span>
+          <span class="super-incident__uda-date">${escapeHTML(uda.date || '')}</span>
+          <span class="super-incident__uda-status ${statusClass}">${escapeHTML(uda.status || '')}</span>
+        </div>`;
+      });
+      actHTML += '</div>';
+    }
+
+    // Care plan
+    if (action.carePlan) {
+      const cp = action.carePlan;
+      const items = [];
+      if (cp.isCarePlanReviewed !== undefined) items.push(`Care plan reviewed: ${cp.isCarePlanReviewed ? 'Yes' : 'No'}`);
+      if (cp.isUnusualOccurrenceReport !== undefined) items.push(`Unusual occurrence report: ${cp.isUnusualOccurrenceReport ? 'Yes' : 'No'}`);
+      if (cp.isCareConferenceRequired !== undefined) items.push(`Care conference required: ${cp.isCareConferenceRequired ? 'Yes' : 'No'}`);
+      if (items.length > 0) {
+        actHTML += '<div class="super-incident__subsection"><div class="super-incident__subsection-title">Care Plan</div>';
+        actHTML += `<div class="super-incident__care-plan">${items.map(i => `<div>${i}</div>`).join('')}</div>`;
+        actHTML += '</div>';
+      }
+    }
+
+    actHTML += '</div>';
+    sections.push(actHTML);
+  }
+
+  return sections.join('');
+}
+
+function setupFallClickHandlers(container) {
+  // Find the closest popover ancestor (for split view) or use modal fallback
+  const popover = container.closest?.('.super-popover') || container;
+
+  container.querySelectorAll('.super-fall-row[data-incident-id]').forEach(row => {
+    row.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const incidentId = row.dataset.incidentId;
+      if (!incidentId) return;
+
+      // Use split view if we're inside the overlay popover
+      if (popover.classList?.contains('super-popover')) {
+        enterSplitView(popover, 'incident', incidentId, {});
+      } else {
+        showIncidentDetailModal(incidentId);
+      }
+    });
+  });
+}
+
 function positionPopover(popover, anchorEl) {
   const anchorRect = anchorEl.getBoundingClientRect();
   const popoverRect = popover.getBoundingClientRect();
@@ -1132,6 +1495,48 @@ function setupPopoverListeners(popover, result) {
 
   // Order evidence click handlers for viewing administrations
   setupAdministrationViewers(popover);
+
+  // Falls click handlers (if falls are already rendered from transformer data)
+  setupFallClickHandlers(popover);
+
+  // Auto-load falls from evidence API if only placeholder was rendered
+  const fallsContainer = popover.querySelector('[data-falls-container]');
+  if (fallsContainer && result.aiAnswer.fallCount > 0) {
+    fetchItemEvidence(SuperOverlay.section, result.mdsItem).then(data => {
+      if (data.falls && data.falls.length > 0) {
+        // Backfill falls data onto aiAnswer
+        result.aiAnswer.falls = data.falls;
+        if (data.lookbackWindow) result.aiAnswer.lookbackWindow = data.lookbackWindow;
+
+        // Render fall rows
+        const rows = data.falls.map(f => renderFallRow(f)).join('');
+        fallsContainer.innerHTML = rows || '<div class="super-evidence-empty">No falls data available</div>';
+
+        // Update label
+        const label = popover.querySelector('.super-falls-section__label');
+        if (label) label.textContent = `Falls (${data.falls.length})`;
+
+        // Add lookback info if available
+        if (data.lookbackWindow) {
+          const existingLookback = popover.querySelector('.super-lookback-info');
+          if (!existingLookback) {
+            const lookbackEl = document.createElement('div');
+            lookbackEl.className = 'super-lookback-info';
+            lookbackEl.textContent = `Lookback: ${data.lookbackWindow.startDate} – ${data.lookbackWindow.endDate} (${data.lookbackWindow.daysCovered} days)`;
+            fallsContainer.parentElement.insertBefore(lookbackEl, fallsContainer);
+          }
+        }
+
+        // Attach click handlers
+        setupFallClickHandlers(popover);
+      } else {
+        fallsContainer.innerHTML = '<div class="super-evidence-empty">No falls data available</div>';
+      }
+    }).catch(err => {
+      console.error('[Super LTC] Failed to load falls:', err);
+      fallsContainer.innerHTML = '<div class="super-evidence-error">Failed to load falls data</div>';
+    });
+  }
 
   // Auto-load evidence when popover opens
   const evidenceContainer = popover.querySelector('[data-evidence-container]');
@@ -1316,44 +1721,83 @@ async function enterSplitView(popover, viewerType, viewerId, extra = {}) {
   body.className = 'super-popover-body super-popover-body--split';
   body.style.maxHeight = 'none';
 
-  const viewableEvidence = getViewableEvidence(popover);
+  // For incident viewer type, build a falls sidebar instead of evidence sidebar
+  const isIncidentView = viewerType === 'incident';
+  const falls = popover._result?.aiAnswer?.falls || [];
 
-  // Build source sidebar cards — each evidence item is distinct (even same doc)
-  const sourceCards = viewableEvidence.map((ev, idx) => {
-    const isActive = idx === activeIdx;
-    const displayName = ev.displayName || formatSourceType(ev.sourceType || inferSourceType(ev.displayName, ev.evidenceId));
-    const snippet = ev.quoteText || ev.orderDescription || ev.quote || '';
-    const truncated = snippet.length > 80 ? snippet.slice(0, 80) + '...' : snippet;
-    const page = ev.wordBlocks?.[0]?.p;
-    const typeLabel = getViewerLabel(ev._viewerType);
+  let sidebarHTML;
+  if (isIncidentView && falls.length > 0) {
+    const fallCards = falls.map((fall, idx) => {
+      const isActive = fall.incidentId === viewerId;
+      const date = formatFallDate(fall.incidentDate);
+      const type = escapeHTML(fall.incidentType || 'Fall');
+      let injuryLabel = 'No injury';
+      if (fall.hasMajorInjury) injuryLabel = 'Major injury';
+      else if (fall.hasInjury) injuryLabel = 'Minor injury';
 
-    let extraAttrs = '';
-    if (ev.wordBlocks && Array.isArray(ev.wordBlocks) && ev.wordBlocks.length > 0) {
-      extraAttrs += ` data-word-blocks="${JSON.stringify(ev.wordBlocks).replace(/"/g, '&quot;')}"`;
-    }
-    if (ev.quoteText || ev.quote) {
-      const q = (ev.quoteText || ev.quote || '').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-      extraAttrs += ` data-quote="${q}"`;
-    }
-
-    return `
-      <div class="super-split__source-card${isActive ? ' super-split__source-card--active' : ''}"
-           data-idx="${idx}" data-viewer-type="${ev._viewerType}" data-viewer-id="${ev._viewerId}"${extraAttrs} role="button">
-        <div class="super-split__source-badge-row">
-          <span class="super-split__source-type">${escapeHTML(typeLabel)}</span>
-          <span class="super-split__source-badge">${escapeHTML(displayName)}</span>
+      return `
+        <div class="super-split__source-card${isActive ? ' super-split__source-card--active' : ''}"
+             data-idx="${idx}" data-viewer-type="incident" data-viewer-id="${fall.incidentId || ''}" role="button">
+          <div class="super-split__source-badge-row">
+            <span class="super-split__source-type">Incident</span>
+            <span class="super-split__source-badge">${date}</span>
+          </div>
+          <div class="super-split__source-snippet">${type}</div>
+          <div class="super-split__source-page" style="color: ${fall.hasMajorInjury ? '#991b1b' : fall.hasInjury ? '#92400e' : '#166534'}">${injuryLabel}</div>
         </div>
-        ${truncated ? `<div class="super-split__source-snippet">${escapeHTML(truncated)}</div>` : ''}
-        ${page ? `<div class="super-split__source-page">Page ${page}</div>` : ''}
+      `;
+    }).join('');
+
+    sidebarHTML = `
+      <div class="super-split__sidebar">
+        <div class="super-split__sidebar-label">Falls (${falls.length})</div>
+        ${fallCards}
       </div>
     `;
-  }).join('');
+  } else {
+    const viewableEvidence = getViewableEvidence(popover);
+
+    // Build source sidebar cards — each evidence item is distinct (even same doc)
+    const sourceCards = viewableEvidence.map((ev, idx) => {
+      const isActive = idx === activeIdx;
+      const displayName = ev.displayName || formatSourceType(ev.sourceType || inferSourceType(ev.displayName, ev.evidenceId));
+      const snippet = ev.quoteText || ev.orderDescription || ev.quote || '';
+      const truncated = snippet.length > 80 ? snippet.slice(0, 80) + '...' : snippet;
+      const page = ev.wordBlocks?.[0]?.p;
+      const typeLabel = getViewerLabel(ev._viewerType);
+
+      let extraAttrs = '';
+      if (ev.wordBlocks && Array.isArray(ev.wordBlocks) && ev.wordBlocks.length > 0) {
+        extraAttrs += ` data-word-blocks="${JSON.stringify(ev.wordBlocks).replace(/"/g, '&quot;')}"`;
+      }
+      if (ev.quoteText || ev.quote) {
+        const q = (ev.quoteText || ev.quote || '').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        extraAttrs += ` data-quote="${q}"`;
+      }
+
+      return `
+        <div class="super-split__source-card${isActive ? ' super-split__source-card--active' : ''}"
+             data-idx="${idx}" data-viewer-type="${ev._viewerType}" data-viewer-id="${ev._viewerId}"${extraAttrs} role="button">
+          <div class="super-split__source-badge-row">
+            <span class="super-split__source-type">${escapeHTML(typeLabel)}</span>
+            <span class="super-split__source-badge">${escapeHTML(displayName)}</span>
+          </div>
+          ${truncated ? `<div class="super-split__source-snippet">${escapeHTML(truncated)}</div>` : ''}
+          ${page ? `<div class="super-split__source-page">Page ${page}</div>` : ''}
+        </div>
+      `;
+    }).join('');
+
+    sidebarHTML = `
+      <div class="super-split__sidebar">
+        <div class="super-split__sidebar-label">Sources (${viewableEvidence.length})</div>
+        ${sourceCards}
+      </div>
+    `;
+  }
 
   body.innerHTML = `
-    <div class="super-split__sidebar">
-      <div class="super-split__sidebar-label">Sources (${viewableEvidence.length})</div>
-      ${sourceCards}
-    </div>
+    ${sidebarHTML}
     <div class="super-split__viewer" id="super-split-viewer">
       <div class="super-split__viewer-loading">
         <div class="super-viewer-loading__spinner"></div>
@@ -1417,6 +1861,8 @@ async function renderSplitContent(popover, viewerEl, viewerType, viewerId, extra
       await renderSplitTherapy(viewerEl, viewerId, extra.quote);
     } else if (viewerType === 'order') {
       await renderSplitAdministrations(viewerEl, viewerId);
+    } else if (viewerType === 'incident') {
+      await renderSplitIncident(viewerEl, viewerId);
     } else {
       viewerEl.innerHTML = `<div class="super-split__viewer-loading"><span>Unknown source type</span></div>`;
     }
@@ -1655,6 +2101,183 @@ async function renderSplitAdministrations(viewerEl, orderId, customDateRange, ov
         await renderSplitAdministrations(viewerEl, orderId, newRange, params);
       } catch (err) {
         viewerEl.innerHTML = `<div class="super-split__viewer-loading"><span>Failed to load: ${escapeHTML(err.message)}</span></div>`;
+      }
+    });
+  });
+}
+
+/**
+ * Render incident detail in split viewer.
+ */
+async function renderSplitIncident(viewerEl, incidentId) {
+  const incident = await fetchIncidentDetail(incidentId);
+
+  if (!incident.detail) {
+    viewerEl.innerHTML = `
+      <div class="super-split__content">
+        <div class="super-incident-no-detail">
+          <div class="super-incident-no-detail__icon">📋</div>
+          <div class="super-incident-no-detail__text">Detail not yet synced</div>
+          <div class="super-incident-no-detail__sub">This incident's detail has not been fetched from PCC yet. It will be available after the next sync.</div>
+        </div>
+      </div>
+    `;
+    return;
+  }
+
+  const typeBadge = escapeHTML(incident.incidentType || 'Fall Incident');
+  const statusText = incident.isClosed ? 'Closed' : 'Open';
+  const statusClass = incident.isClosed ? 'super-incident-status--closed' : 'super-incident-status--open';
+  const incidentNum = incident.incidentNumber || incident.pccIncidentId || '';
+
+  viewerEl.innerHTML = `
+    <div class="super-split__content">
+      <div class="super-split__content-header">
+        <span class="super-incident-modal__type-badge">${typeBadge}</span>
+        <span class="super-split__content-title">#${escapeHTML(incidentNum)}</span>
+        <span class="super-incident-status ${statusClass}">${statusText}</span>
+      </div>
+      <div class="super-split__content-body">
+        ${renderIncidentDetail(incident)}
+      </div>
+    </div>
+  `;
+
+  // Wire up clickable progress notes — load full note in viewer with back nav
+  viewerEl.querySelectorAll('.super-incident__note--clickable[data-note-id]').forEach(noteEl => {
+    noteEl.addEventListener('click', async (e) => {
+      e.stopPropagation();
+      const noteId = noteEl.dataset.noteId;
+      if (!noteId) return;
+
+      // Save current content for back navigation
+      const savedHTML = viewerEl.innerHTML;
+
+      // Show loading
+      viewerEl.innerHTML = `
+        <div class="super-split__content">
+          <button class="super-incident__note-back" type="button">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+            Back to Incident
+          </button>
+          <div class="super-viewer-loading"><div class="super-viewer-loading__spinner"></div><span>Loading note...</span></div>
+        </div>
+      `;
+
+      // Back button restores incident view
+      viewerEl.querySelector('.super-incident__note-back').addEventListener('click', () => {
+        viewerEl.innerHTML = savedHTML;
+        // Re-attach note click handlers
+        setupNoteClickHandlers(viewerEl);
+      });
+
+      // Render the full note
+      const noteContainer = document.createElement('div');
+      noteContainer.className = 'super-incident__full-note';
+      try {
+        await renderSplitNote(noteContainer, noteId);
+        // Replace loading with back button + note content
+        viewerEl.innerHTML = '';
+        const wrapper = document.createElement('div');
+        wrapper.className = 'super-split__content';
+
+        const backBtn = document.createElement('button');
+        backBtn.className = 'super-incident__note-back';
+        backBtn.type = 'button';
+        backBtn.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg> Back to Incident`;
+        backBtn.addEventListener('click', () => {
+          viewerEl.innerHTML = savedHTML;
+          setupNoteClickHandlers(viewerEl);
+        });
+
+        wrapper.appendChild(backBtn);
+        wrapper.appendChild(noteContainer);
+        viewerEl.appendChild(wrapper);
+      } catch (err) {
+        console.error('[Super LTC] Failed to load note:', err);
+        viewerEl.innerHTML = `
+          <div class="super-split__content">
+            <button class="super-incident__note-back" type="button">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+              Back to Incident
+            </button>
+            <div class="super-viewer-error">
+              <div class="super-viewer-error__icon">⚠️</div>
+              <div class="super-viewer-error__message">${escapeHTML(err.message || 'Failed to load note')}</div>
+            </div>
+          </div>
+        `;
+        viewerEl.querySelector('.super-incident__note-back').addEventListener('click', () => {
+          viewerEl.innerHTML = savedHTML;
+          setupNoteClickHandlers(viewerEl);
+        });
+      }
+    });
+  });
+}
+
+/** Re-attach note click handlers after restoring incident HTML */
+function setupNoteClickHandlers(viewerEl) {
+  // Re-run renderSplitIncident's click handler setup by finding the closest
+  // split viewer and re-calling — but simpler to just recurse the setup inline.
+  viewerEl.querySelectorAll('.super-incident__note--clickable[data-note-id]').forEach(noteEl => {
+    noteEl.addEventListener('click', async function handler(e) {
+      e.stopPropagation();
+      const noteId = noteEl.dataset.noteId;
+      if (!noteId) return;
+
+      const savedHTML = viewerEl.innerHTML;
+
+      viewerEl.innerHTML = `
+        <div class="super-split__content">
+          <button class="super-incident__note-back" type="button">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+            Back to Incident
+          </button>
+          <div class="super-viewer-loading"><div class="super-viewer-loading__spinner"></div><span>Loading note...</span></div>
+        </div>
+      `;
+
+      viewerEl.querySelector('.super-incident__note-back').addEventListener('click', () => {
+        viewerEl.innerHTML = savedHTML;
+        setupNoteClickHandlers(viewerEl);
+      });
+
+      const noteContainer = document.createElement('div');
+      noteContainer.className = 'super-incident__full-note';
+      try {
+        await renderSplitNote(noteContainer, noteId);
+        viewerEl.innerHTML = '';
+        const wrapper = document.createElement('div');
+        wrapper.className = 'super-split__content';
+        const backBtn = document.createElement('button');
+        backBtn.className = 'super-incident__note-back';
+        backBtn.type = 'button';
+        backBtn.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg> Back to Incident`;
+        backBtn.addEventListener('click', () => {
+          viewerEl.innerHTML = savedHTML;
+          setupNoteClickHandlers(viewerEl);
+        });
+        wrapper.appendChild(backBtn);
+        wrapper.appendChild(noteContainer);
+        viewerEl.appendChild(wrapper);
+      } catch (err) {
+        viewerEl.innerHTML = `
+          <div class="super-split__content">
+            <button class="super-incident__note-back" type="button">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+              Back to Incident
+            </button>
+            <div class="super-viewer-error">
+              <div class="super-viewer-error__icon">⚠️</div>
+              <div class="super-viewer-error__message">${escapeHTML(err.message || 'Failed to load note')}</div>
+            </div>
+          </div>
+        `;
+        viewerEl.querySelector('.super-incident__note-back').addEventListener('click', () => {
+          viewerEl.innerHTML = savedHTML;
+          setupNoteClickHandlers(viewerEl);
+        });
       }
     });
   });

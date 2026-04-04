@@ -28,20 +28,30 @@ export function useChat() {
     setError(null);
   }, []);
 
-  // Get auth + org context
-  async function getAuthContext() {
+  // Build context from current PCC page — orgSlug, facilityName, externalPatientId
+  // Uses getChatContext() from context.js (exposed on window)
+  async function getAuthAndContext() {
     const authState = await chrome.runtime.sendMessage({ type: 'GET_AUTH_STATE' });
     if (!authState?.authenticated) {
       throw new Error('Please log in to use the AI assistant.');
     }
 
-    // Get orgSlug from PCC page context (localStorage is accessible from content script)
-    const organizationId = localStorage.getItem('CORE.org_code');
-    if (!organizationId) {
+    // getChatContext() handles patient pages, MDS pages, facility pages, etc.
+    const context = typeof window.getChatContext === 'function'
+      ? window.getChatContext()
+      : {};
+
+    // Fallback: ensure orgSlug is present
+    if (!context.orgSlug) {
+      const org = localStorage.getItem('CORE.org_code');
+      if (org) context.orgSlug = org;
+    }
+
+    if (!context.orgSlug) {
       throw new Error('Organization not found. Please make sure you are on a PCC page.');
     }
 
-    return { organizationId };
+    return context;
   }
 
   const send = useCallback(async (text) => {
@@ -49,10 +59,9 @@ export function useChat() {
 
     setError(null);
 
-    let organizationId;
+    let context;
     try {
-      const ctx = await getAuthContext();
-      organizationId = ctx.organizationId;
+      context = await getAuthAndContext();
     } catch (e) {
       setError(e.message);
       return;
@@ -64,7 +73,7 @@ export function useChat() {
       try {
         const { conversation } = await createConversation({
           title: 'New conversation',
-          organizationId
+          organizationId: context.orgSlug
         });
         convId = conversation.id;
         setConversationId(convId);
@@ -169,9 +178,7 @@ export function useChat() {
     port.postMessage({
       type: 'START_STREAM',
       messages: messagesToSend,
-      context: {
-        organizationId
-      }
+      context
     });
   }, [status, conversationId]);
 

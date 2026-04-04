@@ -137,6 +137,40 @@ function getCurrentParams() {
   return { facilityName, orgSlug };
 }
 
+// Build the context object for the chat API based on current page.
+// Returns { orgSlug, facilityName, externalPatientId? } matching the backend's
+// external-ID resolution (step 2b in /api/chat route).
+function getChatContext() {
+  const orgSlug = getOrg()?.org || '';
+  const facilityName = getChatFacilityInfo() || '';
+  const context = { orgSlug, facilityName };
+
+  // 1. Standard patient pages — ESOLclientid in URL
+  const urlPatientId = getChatPatientId();
+  if (urlPatientId) {
+    context.externalPatientId = urlPatientId;
+    return context;
+  }
+
+  // 2. MDS pages — no ESOLclientid in URL, but SuperOverlay may have resolved
+  //    the patientId from the assessment API response
+  const url = new URL(window.location.href);
+  const assessmentId = url.searchParams.get('ESOLassessid');
+  if (assessmentId) {
+    // SuperOverlay stores the internal patientId once the section data loads.
+    // We pass it as externalPatientId since the backend resolves it the same way.
+    if (window.SuperOverlay?.patientId) {
+      context.externalPatientId = String(window.SuperOverlay.patientId);
+    }
+    // Also pass assessmentId so backend has full MDS context
+    context.externalAssessmentId = assessmentId;
+    return context;
+  }
+
+  // 3. Facility-only or org-only page — no patient context
+  return context;
+}
+
 // Make available globally for cross-file access
 window.getChatPatientId = getChatPatientId;
 window.getPatientNameFromPage = getPatientNameFromPage;
@@ -145,3 +179,4 @@ window.setCachedPatientName = setCachedPatientName;
 window.getChatFacilityInfo = getChatFacilityInfo;
 window.getOrg = getOrg;
 window.getCurrentParams = getCurrentParams;
+window.getChatContext = getChatContext;

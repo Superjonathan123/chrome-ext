@@ -37,11 +37,19 @@ export function ChatInput({ onSend, status }) {
     textarea.style.height = Math.min(textarea.scrollHeight, 120) + 'px';
   };
 
-  const placeholder = isReady
-    ? 'Ask me anything about this patient...'
-    : status === 'submitted'
-      ? 'Searching patient records...'
-      : 'Generating response...';
+  let placeholder;
+  if (!isReady) {
+    placeholder = status === 'submitted' ? 'Searching records...' : 'Generating response...';
+  } else {
+    const ctx = typeof window.getChatContext === 'function' ? window.getChatContext() : {};
+    if (ctx.externalPatientId || ctx.externalAssessmentId) {
+      placeholder = 'Ask about this patient...';
+    } else if (ctx.facilityName) {
+      placeholder = 'Search across this facility...';
+    } else {
+      placeholder = 'Search across your facilities...';
+    }
+  }
 
   return (
     <div class="super-chat-input-container">

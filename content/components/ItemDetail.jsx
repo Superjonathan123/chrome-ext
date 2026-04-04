@@ -28,6 +28,45 @@ const ArrowIcon = () => (
 
 /* ── Sub-components ── */
 
+function FallCard({ fall }) {
+  const date = fall.incidentDate ? new Date(fall.incidentDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '';
+
+  let injuryText = 'No injury';
+  let injuryClass = '';
+  if (fall.hasMajorInjury) {
+    injuryText = 'Major injury';
+    injuryClass = 'super-fall__injury--major';
+    if (fall.injuryTypes?.length) injuryText += `: ${fall.injuryTypes.join(', ')}`;
+  } else if (fall.hasInjury) {
+    injuryText = 'Minor injury';
+    injuryClass = 'super-fall__injury--minor';
+    if (fall.injuryTypes?.length) injuryText += `: ${fall.injuryTypes.join(', ')}`;
+  }
+
+  const handleClick = () => {
+    if (fall.incidentId && window.showIncidentDetailModal) {
+      window.showIncidentDetailModal(fall.incidentId);
+    }
+  };
+
+  return (
+    <div class="super-fall-row" onClick={handleClick} role="button">
+      <div class="super-fall__header">
+        <span class="super-fall__date">{date}</span>
+        <span class="super-fall__type">{fall.incidentType || 'Fall'}</span>
+      </div>
+      {fall.residentName && <div class="super-fall__resident">{fall.residentName}</div>}
+      <div class={`super-fall__injury ${injuryClass}`}>{injuryText}</div>
+      {fall.incidentId && (
+        <div class="super-fall__action">
+          <span>View Incident</span>
+          <ArrowIcon />
+        </div>
+      )}
+    </div>
+  );
+}
+
 function EvidenceCard({ ev, index, onViewSource }) {
   const quote = ev.quoteText || ev.orderDescription || ev.quote || ev.snippet || ev.text || '';
   if (!quote && !ev.rationale) return null;
@@ -264,6 +303,21 @@ export function ItemDetail({ variant = 'compact', data, detectionItem, mdsItem, 
           <ImpactChip label="Nursing" impact={impact.nursing} />
           <ImpactChip label="SLP" impact={impact.slp} />
           <ImpactChip label="PT/OT" impact={impact.ptot} />
+        </div>
+      )}
+
+      {/* ── Falls (Section J) ── */}
+      {apiItem?.falls?.length > 0 && (
+        <div class="super-falls-section">
+          <div class="super-falls-section__label">Falls ({apiItem.fallCount ?? apiItem.falls.length})</div>
+          {apiItem.lookbackWindow && (
+            <div class="super-lookback-info">
+              Lookback: {apiItem.lookbackWindow.startDate} – {apiItem.lookbackWindow.endDate} ({apiItem.lookbackWindow.daysCovered} days)
+            </div>
+          )}
+          <div class="super-falls-list">
+            {apiItem.falls.map((fall, i) => <FallCard key={fall.incidentId || i} fall={fall} />)}
+          </div>
         </div>
       )}
 

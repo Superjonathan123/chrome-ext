@@ -24,10 +24,10 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
-  padding: 8px 12px;
-  background: #fff;
-  border-bottom: 1px solid #f3f4f6;
+  gap: 10px;
+  padding: 6px 10px;
+  background: #f9fafb;
+  border-bottom: 1px solid #e5e7eb;
   flex-shrink: 0;
   z-index: 2;
 }
@@ -56,7 +56,7 @@
 .super-pdfv__header-right {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 6px;
   flex-shrink: 0;
 }
 
@@ -74,21 +74,6 @@
   font-size: 11px;
   color: #9ca3af;
   white-space: nowrap;
-}
-
-/* ================================================================
-   TOOLBAR (controls)
-   ================================================================ */
-
-.super-pdfv__toolbar {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 5px 10px;
-  background: #f9fafb;
-  border-bottom: 1px solid #e5e7eb;
-  flex-shrink: 0;
-  z-index: 2;
 }
 
 .super-pdfv__group {
@@ -219,7 +204,7 @@
   position: relative;
   display: block;
   width: fit-content;
-  margin: 24px auto;
+  margin: 8px auto;
 }
 
 .super-pdfv__canvas {
