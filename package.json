@@ -9,7 +9,7 @@
   "scripts": {
     "dev": "vite build --watch --mode development",
     "build": "vite build --mode development",
-    "build:prod": "vite build",
+    "build:prod": "vite build --mode production --outDir dist-prod",
     "preview": "vite preview",
     "zip": "npm run build:prod && cd dist-prod && zip -r ../super-ltc-extension.zip . && cd .. && echo 'Created super-ltc-extension.zip'",
     "demo": "vite --config vite.demo.config.js --open /demo/index.html",
