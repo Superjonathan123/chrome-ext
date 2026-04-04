@@ -64,8 +64,10 @@ function injectAICodeButton() {
     }
   }
 
-  // Always show test button for now (remove before production)
-  _injectTestAddCodeButton(btn);
+  // Only show test button in dev/demo mode
+  if (_isTestMode()) {
+    _injectTestAddCodeButton(btn);
+  }
 }
 
 /**
