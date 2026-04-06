@@ -643,9 +643,11 @@ const ICD10Viewer = {
   _updateStagedBadge() {
     if (!this.modal) return;
     let badge = this.modal.querySelector('.icd10-viewer__staged-badge');
+    let pushBtn = this.modal.querySelector('.icd10-viewer__push-btn');
 
     if (this.stagedCodes.length === 0) {
       if (badge) badge.remove();
+      if (pushBtn) pushBtn.remove();
       return;
     }
 
@@ -657,6 +659,24 @@ const ICD10Viewer = {
     }
 
     badge.textContent = `${this.stagedCodes.length} staged`;
+
+    // Add or update push button
+    if (!pushBtn) {
+      pushBtn = document.createElement('button');
+      pushBtn.className = 'icd10-viewer__push-btn';
+      pushBtn.type = 'button';
+      pushBtn.addEventListener('click', () => {
+        this._showConfirmationDialog(() => {
+          // After push completes, stay in the viewer
+        });
+      });
+      // Insert before the close button in header actions
+      const headerActions = this.modal.querySelector('.icd10-viewer__header-actions');
+      if (headerActions) {
+        headerActions.insertBefore(pushBtn, headerActions.firstChild);
+      }
+    }
+    pushBtn.textContent = `Push ${this.stagedCodes.length} Code${this.stagedCodes.length !== 1 ? 's' : ''}`;
   },
 
   /**

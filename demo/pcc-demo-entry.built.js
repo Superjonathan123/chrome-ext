@@ -1,5 +1,252 @@
-// demo/demo-mock-data.js
-var DEMO_API_RESPONSES = {
+var ze, J, rs, me, Pt, os, cs, ds, mt, st, nt, Ie = {}, ls = [], zs = /acit|ex(?:s|g|n|p|$)|rph|grid|ows|mnc|ntw|ine[ch]|zoo|^ord|itera/i, je = Array.isArray;
+function pe(e, s) {
+  for (var n in s) e[n] = s[n];
+  return e;
+}
+function ht(e) {
+  e && e.parentNode && e.parentNode.removeChild(e);
+}
+function ps(e, s, n) {
+  var i, a, r, c = {};
+  for (r in s) r == "key" ? i = s[r] : r == "ref" ? a = s[r] : c[r] = s[r];
+  if (arguments.length > 2 && (c.children = arguments.length > 3 ? ze.call(arguments, 2) : n), typeof e == "function" && e.defaultProps != null) for (r in e.defaultProps) c[r] === void 0 && (c[r] = e.defaultProps[r]);
+  return $e(e, c, i, a, null);
+}
+function $e(e, s, n, i, a) {
+  var r = { type: e, props: s, key: n, ref: i, __k: null, __: null, __b: 0, __e: null, __c: null, constructor: void 0, __v: a ?? ++rs, __i: -1, __u: 0 };
+  return a == null && J.vnode != null && J.vnode(r), r;
+}
+function Y(e) {
+  return e.children;
+}
+function Re(e, s) {
+  this.props = e, this.context = s;
+}
+function ye(e, s) {
+  if (s == null) return e.__ ? ye(e.__, e.__i + 1) : null;
+  for (var n; s < e.__k.length; s++) if ((n = e.__k[s]) != null && n.__e != null) return n.__e;
+  return typeof e.type == "function" ? ye(e) : null;
+}
+function us(e) {
+  var s, n;
+  if ((e = e.__) != null && e.__c != null) {
+    for (e.__e = e.__c.base = null, s = 0; s < e.__k.length; s++) if ((n = e.__k[s]) != null && n.__e != null) {
+      e.__e = e.__c.base = n.__e;
+      break;
+    }
+    return us(e);
+  }
+}
+function Tt(e) {
+  (!e.__d && (e.__d = !0) && me.push(e) && !Fe.__r++ || Pt != J.debounceRendering) && ((Pt = J.debounceRendering) || os)(Fe);
+}
+function Fe() {
+  for (var e, s, n, i, a, r, c, o = 1; me.length; ) me.length > o && me.sort(cs), e = me.shift(), o = me.length, e.__d && (n = void 0, i = void 0, a = (i = (s = e).__v).__e, r = [], c = [], s.__P && ((n = pe({}, i)).__v = i.__v + 1, J.vnode && J.vnode(n), _t(s.__P, n, i, s.__n, s.__P.namespaceURI, 32 & i.__u ? [a] : null, r, a ?? ye(i), !!(32 & i.__u), c), n.__v = i.__v, n.__.__k[n.__i] = n, _s(r, n, c), i.__e = i.__ = null, n.__e != a && us(n)));
+  Fe.__r = 0;
+}
+function ms(e, s, n, i, a, r, c, o, p, d, u) {
+  var l, m, h, _, v, g, C, f = i && i.__k || ls, x = s.length;
+  for (p = js(n, s, f, p, x), l = 0; l < x; l++) (h = n.__k[l]) != null && (m = h.__i == -1 ? Ie : f[h.__i] || Ie, h.__i = l, g = _t(e, h, m, a, r, c, o, p, d, u), _ = h.__e, h.ref && m.ref != h.ref && (m.ref && gt(m.ref, null, h), u.push(h.ref, h.__c || _, h)), v == null && _ != null && (v = _), (C = !!(4 & h.__u)) || m.__k === h.__k ? p = hs(h, p, e, C) : typeof h.type == "function" && g !== void 0 ? p = g : _ && (p = _.nextSibling), h.__u &= -7);
+  return n.__e = v, p;
+}
+function js(e, s, n, i, a) {
+  var r, c, o, p, d, u = n.length, l = u, m = 0;
+  for (e.__k = new Array(a), r = 0; r < a; r++) (c = s[r]) != null && typeof c != "boolean" && typeof c != "function" ? (typeof c == "string" || typeof c == "number" || typeof c == "bigint" || c.constructor == String ? c = e.__k[r] = $e(null, c, null, null, null) : je(c) ? c = e.__k[r] = $e(Y, { children: c }, null, null, null) : c.constructor === void 0 && c.__b > 0 ? c = e.__k[r] = $e(c.type, c.props, c.key, c.ref ? c.ref : null, c.__v) : e.__k[r] = c, p = r + m, c.__ = e, c.__b = e.__b + 1, o = null, (d = c.__i = Qs(c, n, p, l)) != -1 && (l--, (o = n[d]) && (o.__u |= 2)), o == null || o.__v == null ? (d == -1 && (a > u ? m-- : a < u && m++), typeof c.type != "function" && (c.__u |= 4)) : d != p && (d == p - 1 ? m-- : d == p + 1 ? m++ : (d > p ? m-- : m++, c.__u |= 4))) : e.__k[r] = null;
+  if (l) for (r = 0; r < u; r++) (o = n[r]) != null && (2 & o.__u) == 0 && (o.__e == i && (i = ye(o)), fs(o, o));
+  return i;
+}
+function hs(e, s, n, i) {
+  var a, r;
+  if (typeof e.type == "function") {
+    for (a = e.__k, r = 0; a && r < a.length; r++) a[r] && (a[r].__ = e, s = hs(a[r], s, n, i));
+    return s;
+  }
+  e.__e != s && (i && (s && e.type && !s.parentNode && (s = ye(e)), n.insertBefore(e.__e, s || null)), s = e.__e);
+  do
+    s = s && s.nextSibling;
+  while (s != null && s.nodeType == 8);
+  return s;
+}
+function Qs(e, s, n, i) {
+  var a, r, c, o = e.key, p = e.type, d = s[n], u = d != null && (2 & d.__u) == 0;
+  if (d === null && o == null || u && o == d.key && p == d.type) return n;
+  if (i > (u ? 1 : 0)) {
+    for (a = n - 1, r = n + 1; a >= 0 || r < s.length; ) if ((d = s[c = a >= 0 ? a-- : r++]) != null && (2 & d.__u) == 0 && o == d.key && p == d.type) return c;
+  }
+  return -1;
+}
+function At(e, s, n) {
+  s[0] == "-" ? e.setProperty(s, n ?? "") : e[s] = n == null ? "" : typeof n != "number" || zs.test(s) ? n : n + "px";
+}
+function Te(e, s, n, i, a) {
+  var r, c;
+  e: if (s == "style") if (typeof n == "string") e.style.cssText = n;
+  else {
+    if (typeof i == "string" && (e.style.cssText = i = ""), i) for (s in i) n && s in n || At(e.style, s, "");
+    if (n) for (s in n) i && n[s] == i[s] || At(e.style, s, n[s]);
+  }
+  else if (s[0] == "o" && s[1] == "n") r = s != (s = s.replace(ds, "$1")), c = s.toLowerCase(), s = c in e || s == "onFocusOut" || s == "onFocusIn" ? c.slice(2) : s.slice(2), e.l || (e.l = {}), e.l[s + r] = n, n ? i ? n.u = i.u : (n.u = mt, e.addEventListener(s, r ? nt : st, r)) : e.removeEventListener(s, r ? nt : st, r);
+  else {
+    if (a == "http://www.w3.org/2000/svg") s = s.replace(/xlink(H|:h)/, "h").replace(/sName$/, "s");
+    else if (s != "width" && s != "height" && s != "href" && s != "list" && s != "form" && s != "tabIndex" && s != "download" && s != "rowSpan" && s != "colSpan" && s != "role" && s != "popover" && s in e) try {
+      e[s] = n ?? "";
+      break e;
+    } catch {
+    }
+    typeof n == "function" || (n == null || n === !1 && s[4] != "-" ? e.removeAttribute(s) : e.setAttribute(s, s == "popover" && n == 1 ? "" : n));
+  }
+}
+function Mt(e) {
+  return function(s) {
+    if (this.l) {
+      var n = this.l[s.type + e];
+      if (s.t == null) s.t = mt++;
+      else if (s.t < n.u) return;
+      return n(J.event ? J.event(s) : s);
+    }
+  };
+}
+function _t(e, s, n, i, a, r, c, o, p, d) {
+  var u, l, m, h, _, v, g, C, f, x, k, y, S, E, N, w, T, F = s.type;
+  if (s.constructor !== void 0) return null;
+  128 & n.__u && (p = !!(32 & n.__u), r = [o = s.__e = n.__e]), (u = J.__b) && u(s);
+  e: if (typeof F == "function") try {
+    if (C = s.props, f = "prototype" in F && F.prototype.render, x = (u = F.contextType) && i[u.__c], k = u ? x ? x.props.value : u.__ : i, n.__c ? g = (l = s.__c = n.__c).__ = l.__E : (f ? s.__c = l = new F(C, k) : (s.__c = l = new Re(C, k), l.constructor = F, l.render = Ks), x && x.sub(l), l.state || (l.state = {}), l.__n = i, m = l.__d = !0, l.__h = [], l._sb = []), f && l.__s == null && (l.__s = l.state), f && F.getDerivedStateFromProps != null && (l.__s == l.state && (l.__s = pe({}, l.__s)), pe(l.__s, F.getDerivedStateFromProps(C, l.__s))), h = l.props, _ = l.state, l.__v = s, m) f && F.getDerivedStateFromProps == null && l.componentWillMount != null && l.componentWillMount(), f && l.componentDidMount != null && l.__h.push(l.componentDidMount);
+    else {
+      if (f && F.getDerivedStateFromProps == null && C !== h && l.componentWillReceiveProps != null && l.componentWillReceiveProps(C, k), s.__v == n.__v || !l.__e && l.shouldComponentUpdate != null && l.shouldComponentUpdate(C, l.__s, k) === !1) {
+        for (s.__v != n.__v && (l.props = C, l.state = l.__s, l.__d = !1), s.__e = n.__e, s.__k = n.__k, s.__k.some(function(V) {
+          V && (V.__ = s);
+        }), y = 0; y < l._sb.length; y++) l.__h.push(l._sb[y]);
+        l._sb = [], l.__h.length && c.push(l);
+        break e;
+      }
+      l.componentWillUpdate != null && l.componentWillUpdate(C, l.__s, k), f && l.componentDidUpdate != null && l.__h.push(function() {
+        l.componentDidUpdate(h, _, v);
+      });
+    }
+    if (l.context = k, l.props = C, l.__P = e, l.__e = !1, S = J.__r, E = 0, f) {
+      for (l.state = l.__s, l.__d = !1, S && S(s), u = l.render(l.props, l.state, l.context), N = 0; N < l._sb.length; N++) l.__h.push(l._sb[N]);
+      l._sb = [];
+    } else do
+      l.__d = !1, S && S(s), u = l.render(l.props, l.state, l.context), l.state = l.__s;
+    while (l.__d && ++E < 25);
+    l.state = l.__s, l.getChildContext != null && (i = pe(pe({}, i), l.getChildContext())), f && !m && l.getSnapshotBeforeUpdate != null && (v = l.getSnapshotBeforeUpdate(h, _)), w = u, u != null && u.type === Y && u.key == null && (w = gs(u.props.children)), o = ms(e, je(w) ? w : [w], s, n, i, a, r, c, o, p, d), l.base = s.__e, s.__u &= -161, l.__h.length && c.push(l), g && (l.__E = l.__ = null);
+  } catch (V) {
+    if (s.__v = null, p || r != null) if (V.then) {
+      for (s.__u |= p ? 160 : 128; o && o.nodeType == 8 && o.nextSibling; ) o = o.nextSibling;
+      r[r.indexOf(o)] = null, s.__e = o;
+    } else {
+      for (T = r.length; T--; ) ht(r[T]);
+      it(s);
+    }
+    else s.__e = n.__e, s.__k = n.__k, V.then || it(s);
+    J.__e(V, s, n);
+  }
+  else r == null && s.__v == n.__v ? (s.__k = n.__k, s.__e = n.__e) : o = s.__e = Ws(n.__e, s, n, i, a, r, c, p, d);
+  return (u = J.diffed) && u(s), 128 & s.__u ? void 0 : o;
+}
+function it(e) {
+  e && e.__c && (e.__c.__e = !0), e && e.__k && e.__k.forEach(it);
+}
+function _s(e, s, n) {
+  for (var i = 0; i < n.length; i++) gt(n[i], n[++i], n[++i]);
+  J.__c && J.__c(s, e), e.some(function(a) {
+    try {
+      e = a.__h, a.__h = [], e.some(function(r) {
+        r.call(a);
+      });
+    } catch (r) {
+      J.__e(r, a.__v);
+    }
+  });
+}
+function gs(e) {
+  return typeof e != "object" || e == null || e.__b && e.__b > 0 ? e : je(e) ? e.map(gs) : pe({}, e);
+}
+function Ws(e, s, n, i, a, r, c, o, p) {
+  var d, u, l, m, h, _, v, g = n.props || Ie, C = s.props, f = s.type;
+  if (f == "svg" ? a = "http://www.w3.org/2000/svg" : f == "math" ? a = "http://www.w3.org/1998/Math/MathML" : a || (a = "http://www.w3.org/1999/xhtml"), r != null) {
+    for (d = 0; d < r.length; d++) if ((h = r[d]) && "setAttribute" in h == !!f && (f ? h.localName == f : h.nodeType == 3)) {
+      e = h, r[d] = null;
+      break;
+    }
+  }
+  if (e == null) {
+    if (f == null) return document.createTextNode(C);
+    e = document.createElementNS(a, f, C.is && C), o && (J.__m && J.__m(s, r), o = !1), r = null;
+  }
+  if (f == null) g === C || o && e.data == C || (e.data = C);
+  else {
+    if (r = r && ze.call(e.childNodes), !o && r != null) for (g = {}, d = 0; d < e.attributes.length; d++) g[(h = e.attributes[d]).name] = h.value;
+    for (d in g) if (h = g[d], d != "children") {
+      if (d == "dangerouslySetInnerHTML") l = h;
+      else if (!(d in C)) {
+        if (d == "value" && "defaultValue" in C || d == "checked" && "defaultChecked" in C) continue;
+        Te(e, d, null, h, a);
+      }
+    }
+    for (d in C) h = C[d], d == "children" ? m = h : d == "dangerouslySetInnerHTML" ? u = h : d == "value" ? _ = h : d == "checked" ? v = h : o && typeof h != "function" || g[d] === h || Te(e, d, h, g[d], a);
+    if (u) o || l && (u.__html == l.__html || u.__html == e.innerHTML) || (e.innerHTML = u.__html), s.__k = [];
+    else if (l && (e.innerHTML = ""), ms(s.type == "template" ? e.content : e, je(m) ? m : [m], s, n, i, f == "foreignObject" ? "http://www.w3.org/1999/xhtml" : a, r, c, r ? r[0] : n.__k && ye(n, 0), o, p), r != null) for (d = r.length; d--; ) ht(r[d]);
+    o || (d = "value", f == "progress" && _ == null ? e.removeAttribute("value") : _ != null && (_ !== e[d] || f == "progress" && !_ || f == "option" && _ != g[d]) && Te(e, d, _, g[d], a), d = "checked", v != null && v != e[d] && Te(e, d, v, g[d], a));
+  }
+  return e;
+}
+function gt(e, s, n) {
+  try {
+    if (typeof e == "function") {
+      var i = typeof e.__u == "function";
+      i && e.__u(), i && s == null || (e.__u = e(s));
+    } else e.current = s;
+  } catch (a) {
+    J.__e(a, n);
+  }
+}
+function fs(e, s, n) {
+  var i, a;
+  if (J.unmount && J.unmount(e), (i = e.ref) && (i.current && i.current != e.__e || gt(i, null, s)), (i = e.__c) != null) {
+    if (i.componentWillUnmount) try {
+      i.componentWillUnmount();
+    } catch (r) {
+      J.__e(r, s);
+    }
+    i.base = i.__P = null;
+  }
+  if (i = e.__k) for (a = 0; a < i.length; a++) i[a] && fs(i[a], s, n || typeof e.type != "function");
+  n || ht(e.__e), e.__c = e.__ = e.__e = void 0;
+}
+function Ks(e, s, n) {
+  return this.constructor(e, n);
+}
+function ys(e, s, n) {
+  var i, a, r, c;
+  s == document && (s = document.documentElement), J.__ && J.__(e, s), a = (i = !1) ? null : s.__k, r = [], c = [], _t(s, e = s.__k = ps(Y, null, [e]), a || Ie, Ie, s.namespaceURI, a ? null : s.firstChild ? ze.call(s.childNodes) : null, r, a ? a.__e : s.firstChild, i, c), _s(r, e, c);
+}
+ze = ls.slice, J = { __e: function(e, s, n, i) {
+  for (var a, r, c; s = s.__; ) if ((a = s.__c) && !a.__) try {
+    if ((r = a.constructor) && r.getDerivedStateFromError != null && (a.setState(r.getDerivedStateFromError(e)), c = a.__d), a.componentDidCatch != null && (a.componentDidCatch(e, i || {}), c = a.__d), c) return a.__E = a;
+  } catch (o) {
+    e = o;
+  }
+  throw e;
+} }, rs = 0, Re.prototype.setState = function(e, s) {
+  var n;
+  n = this.__s != null && this.__s != this.state ? this.__s : this.__s = pe({}, this.state), typeof e == "function" && (e = e(pe({}, n), this.props)), e && pe(n, e), e != null && this.__v && (s && this._sb.push(s), Tt(this));
+}, Re.prototype.forceUpdate = function(e) {
+  this.__v && (this.__e = !0, e && this.__h.push(e), Tt(this));
+}, Re.prototype.render = Y, me = [], os = typeof Promise == "function" ? Promise.prototype.then.bind(Promise.resolve()) : setTimeout, cs = function(e, s) {
+  return e.__v.__b - s.__v.__b;
+}, Fe.__r = 0, ds = /(PointerCapture)$|Capture$/i, mt = 0, st = Mt(!1), nt = Mt(!0);
+var Js = 0;
+function t(e, s, n, i, a, r) {
+  s || (s = {});
+  var c, o, p = s;
+  if ("ref" in p) for (o in p = {}, s) o == "ref" ? c = s[o] : p[o] = s[o];
+  var d = { type: e, props: p, key: n, ref: c, __k: null, __: null, __b: 0, __e: null, __c: null, constructor: void 0, __v: --Js, __i: -1, __u: 0, __source: a, __self: r };
+  if (typeof e == "function" && (c = e.defaultProps)) for (o in c) p[o] === void 0 && (p[o] = c[o]);
+  return J.vnode && J.vnode(d), d;
+}
+const ce = {
   // ════════════════════════════════════════════
   // DASHBOARD (useCommandCenter)
   // ════════════════════════════════════════════
@@ -15,7 +262,7 @@ var DEMO_API_RESPONSES = {
         status: "open",
         payerType: "medicaid",
         assessmentClass: "obra",
-        isHippsOpportunityPrimary: true,
+        isHippsOpportunityPrimary: !0,
         deadlines: {
           urgency: "urgent",
           ardDaysRemaining: 3,
@@ -27,7 +274,7 @@ var DEMO_API_RESPONSES = {
           gg: "complete"
         },
         pdpm: {
-          hasImprovements: true,
+          hasImprovements: !0,
           currentHipps: "KAQD",
           potentialHipps: "KBQE",
           payment: {
@@ -63,7 +310,7 @@ var DEMO_API_RESPONSES = {
         status: "open",
         payerType: "medicare",
         assessmentClass: "pps",
-        isHippsOpportunityPrimary: true,
+        isHippsOpportunityPrimary: !0,
         deadlines: {
           urgency: "overdue",
           ardDaysRemaining: -4,
@@ -75,7 +322,7 @@ var DEMO_API_RESPONSES = {
           gg: "in_progress"
         },
         pdpm: {
-          hasImprovements: true,
+          hasImprovements: !0,
           currentHipps: "CBQJ",
           potentialHipps: "CBQL",
           payment: {
@@ -111,7 +358,7 @@ var DEMO_API_RESPONSES = {
         status: "open",
         payerType: "medicare",
         assessmentClass: "pps",
-        isHippsOpportunityPrimary: false,
+        isHippsOpportunityPrimary: !1,
         deadlines: {
           urgency: "approaching",
           ardDaysRemaining: 7,
@@ -123,7 +370,7 @@ var DEMO_API_RESPONSES = {
           gg: "complete"
         },
         pdpm: {
-          hasImprovements: false,
+          hasImprovements: !1,
           currentHipps: "LAQF",
           potentialHipps: null
         },
@@ -154,7 +401,7 @@ var DEMO_API_RESPONSES = {
         status: "open",
         payerType: "medicaid",
         assessmentClass: "obra",
-        isHippsOpportunityPrimary: false,
+        isHippsOpportunityPrimary: !1,
         deadlines: {
           urgency: "on_track",
           ardDaysRemaining: 12,
@@ -166,7 +413,7 @@ var DEMO_API_RESPONSES = {
           gg: "missing"
         },
         pdpm: {
-          hasImprovements: false,
+          hasImprovements: !1,
           currentHipps: "KAQD",
           potentialHipps: null
         },
@@ -197,7 +444,7 @@ var DEMO_API_RESPONSES = {
         status: "locked",
         payerType: "medicaid",
         assessmentClass: "obra",
-        isHippsOpportunityPrimary: false,
+        isHippsOpportunityPrimary: !1,
         deadlines: {
           urgency: "completed",
           ardDaysRemaining: -30,
@@ -209,7 +456,7 @@ var DEMO_API_RESPONSES = {
           gg: "locked_in_range"
         },
         pdpm: {
-          hasImprovements: false,
+          hasImprovements: !1,
           currentHipps: "KAQD",
           potentialHipps: null
         },
@@ -240,7 +487,7 @@ var DEMO_API_RESPONSES = {
         status: "open",
         payerType: "medicare",
         assessmentClass: "pps",
-        isHippsOpportunityPrimary: false,
+        isHippsOpportunityPrimary: !1,
         deadlines: {
           urgency: "approaching",
           ardDaysRemaining: 10,
@@ -252,14 +499,14 @@ var DEMO_API_RESPONSES = {
           gg: "complete"
         },
         pdpm: {
-          hasImprovements: false,
+          hasImprovements: !1,
           currentHipps: "CBQJ",
           potentialHipps: null
         },
         compliance: {
           summary: { passed: 4, total: 5 },
           checks: {
-            bims: { status: "failed", message: "BIMS near miss \u2014 locked outside lookback" },
+            bims: { status: "failed", message: "BIMS near miss — locked outside lookback" },
             phq9: { status: "passed" },
             gg: { status: "passed" },
             orders: { status: "passed" },
@@ -329,8 +576,8 @@ var DEMO_API_RESPONSES = {
         mdsItemName: "Diabetes Mellitus",
         status: "signed",
         signedAt: new Date(Date.now() - 864e5).toISOString(),
-        mdsItemCoded: false,
-        hasPdf: true,
+        mdsItemCoded: !1,
+        hasPdf: !0,
         practitioner: { firstName: "Demo", lastName: "Provider", title: "MD" },
         selectedIcd10Code: "E11.9"
       }
@@ -347,8 +594,8 @@ var DEMO_API_RESPONSES = {
         assessmentType: "Quarterly",
         mdsItem: "I5600",
         itemName: "Malnutrition",
-        missingDiagnosis: true,
-        missingTreatment: false,
+        missingDiagnosis: !0,
+        missingTreatment: !1,
         rationale: "Nutrition assessment documents significant weight loss (12.6%), low albumin/prealbumin, and PO intake <50%, but no ICD-10 code for malnutrition on Med Diag."
       },
       {
@@ -356,8 +603,8 @@ var DEMO_API_RESPONSES = {
         assessmentType: "5-Day PPS",
         mdsItem: "I4300",
         itemName: "Diabetes with PVD",
-        missingDiagnosis: true,
-        missingTreatment: false,
+        missingDiagnosis: !0,
+        missingTreatment: !1,
         rationale: "Lab results and medication list support diabetes diagnosis, but no PVD code documented."
       },
       {
@@ -365,8 +612,8 @@ var DEMO_API_RESPONSES = {
         assessmentType: "5-Day PPS",
         mdsItem: "O0400A3",
         itemName: "IV Medications",
-        missingDiagnosis: false,
-        missingTreatment: true,
+        missingDiagnosis: !1,
+        missingTreatment: !0,
         rationale: "MAR shows IV antibiotic course, but treatment not reflected on active treatment plan."
       }
     ]
@@ -375,7 +622,7 @@ var DEMO_API_RESPONSES = {
   // PDPM POTENTIAL (usePDPMAnalyzer - keyed by assessmentId)
   // ════════════════════════════════════════════
   pdpmPotential: {
-    "4860265": {
+    4860265: {
       patientName: "Doe, Jane",
       assessment: {
         id: "4860265",
@@ -389,7 +636,7 @@ var DEMO_API_RESPONSES = {
       summary: {
         currentHipps: "KAQD",
         potentialHippsIfCoded: "KBQE",
-        hasImprovements: true,
+        hasImprovements: !0,
         totalActionableItems: 3
       },
       calculation: {
@@ -409,7 +656,7 @@ var DEMO_API_RESPONSES = {
           mdsItem: "I5600",
           itemName: "Malnutrition",
           section: "I",
-          wouldChangeHipps: true,
+          wouldChangeHipps: !0,
           solverStatus: "detected",
           confidence: 0.95,
           rationale: "Nutrition assessment documents significant weight loss (12.6% in 3 months), low albumin (2.9) and prealbumin (12), PO intake <50%, with supplementation orders supporting malnutrition diagnosis.",
@@ -418,14 +665,14 @@ var DEMO_API_RESPONSES = {
             { sourceType: "lab_result", sourceId: "doc-nutr-002", quote: "Albumin: 2.9 g/dL (Low), Prealbumin: 12 mg/dL (Low)", documentName: "Nutrition Lab Panel" }
           ],
           impact: {
-            nta: { wouldChangeGroup: true, currentGroup: "ND", newGroup: "NE" }
+            nta: { wouldChangeGroup: !0, currentGroup: "ND", newGroup: "NE" }
           }
         },
         {
           mdsItem: "I4300",
           itemName: "Diabetes with Peripheral Vascular Disease",
           section: "I",
-          wouldChangeHipps: true,
+          wouldChangeHipps: !0,
           solverStatus: "detected",
           confidence: 0.85,
           rationale: "Lab results show elevated HbA1c and medication list includes diabetic medications. Progress note documents PVD symptoms.",
@@ -434,14 +681,14 @@ var DEMO_API_RESPONSES = {
             { sourceType: "progress-note", sourceId: "doc-082", quote: "Bilateral lower extremity edema with diminished pedal pulses noted.", documentName: "MD Progress Note" }
           ],
           impact: {
-            nta: { wouldChangeLevel: true, currentLevel: "ND", newLevel: "NE" }
+            nta: { wouldChangeLevel: !0, currentLevel: "ND", newLevel: "NE" }
           }
         },
         {
           mdsItem: "O0400A3",
           itemName: "IV Medications",
           section: "O",
-          wouldChangeHipps: true,
+          wouldChangeHipps: !0,
           solverStatus: "detected",
           confidence: 0.95,
           rationale: "MAR shows active IV antibiotic course (Vancomycin) during lookback period.",
@@ -449,14 +696,14 @@ var DEMO_API_RESPONSES = {
             { sourceType: "order", sourceId: "order-080", quote: "Vancomycin 1g IV Q12H - administered 1/12, 1/13", documentName: "MAR" }
           ],
           impact: {
-            nursing: { wouldChangeGroup: true, currentPaymentGroup: "CA1", newPaymentGroup: "CB1" }
+            nursing: { wouldChangeGroup: !0, currentPaymentGroup: "CA1", newPaymentGroup: "CB1" }
           }
         },
         {
           mdsItem: "I2900",
           itemName: "Drug/Medication induced depression",
           section: "I",
-          wouldChangeHipps: false,
+          wouldChangeHipps: !1,
           solverStatus: "detected",
           confidence: 0.72,
           rationale: "PHQ-9 assessment missing. Multiple medications on profile associated with depressive side effects.",
@@ -472,7 +719,7 @@ var DEMO_API_RESPONSES = {
           mdsItemName: "Schizophrenia",
           status: "sent",
           sentAt: new Date(Date.now() - 2 * 864e5).toISOString(),
-          pdpmImpact: { wouldChangeHipps: false }
+          pdpmImpact: { wouldChangeHipps: !1 }
         }
       ],
       recentlySigned: [
@@ -482,7 +729,7 @@ var DEMO_API_RESPONSES = {
           mdsItemName: "Diabetes Mellitus",
           status: "signed",
           signedAt: new Date(Date.now() - 864e5).toISOString(),
-          mdsItemCoded: false
+          mdsItemCoded: !1
         }
       ],
       compliance: {
@@ -496,7 +743,7 @@ var DEMO_API_RESPONSES = {
         }
       }
     },
-    "4862100": {
+    4862100: {
       patientName: "Smith, Robert",
       assessment: {
         id: "4862100",
@@ -510,7 +757,7 @@ var DEMO_API_RESPONSES = {
       summary: {
         currentHipps: "CBQJ",
         potentialHippsIfCoded: "CBQL",
-        hasImprovements: true,
+        hasImprovements: !0,
         totalActionableItems: 5
       },
       calculation: {
@@ -530,7 +777,7 @@ var DEMO_API_RESPONSES = {
           mdsItem: "I5100",
           itemName: "Hemiplegia/Hemiparesis",
           section: "I",
-          wouldChangeHipps: true,
+          wouldChangeHipps: !0,
           solverStatus: "detected",
           confidence: 0.96,
           rationale: "Post-CVA left hemiparesis well documented in PT/OT evaluations.",
@@ -538,14 +785,14 @@ var DEMO_API_RESPONSES = {
             { sourceType: "progress-note", sourceId: "doc-084", quote: "Left-sided hemiparesis with 2/5 strength in left upper and lower extremities.", documentName: "PT Evaluation" }
           ],
           impact: {
-            ptot: { wouldChangeGroup: true, currentGroup: "TL", newGroup: "TM" }
+            ptot: { wouldChangeGroup: !0, currentGroup: "TL", newGroup: "TM" }
           }
         },
         {
           mdsItem: "K0510A",
           itemName: "Parenteral/IV Feeding",
           section: "K",
-          wouldChangeHipps: true,
+          wouldChangeHipps: !0,
           solverStatus: "detected",
           confidence: 0.88,
           rationale: "IV fluids administered during lookback period per MAR records.",
@@ -553,7 +800,7 @@ var DEMO_API_RESPONSES = {
             { sourceType: "order", sourceId: "order-081", quote: "D5 1/2NS 1000ml IV at 75ml/hr - running", documentName: "MAR" }
           ],
           impact: {
-            nta: { wouldChangeLevel: true, currentLevel: "NF", newLevel: "NG" }
+            nta: { wouldChangeLevel: !0, currentLevel: "NF", newLevel: "NG" }
           }
         }
       ],
@@ -564,7 +811,7 @@ var DEMO_API_RESPONSES = {
           mdsItemName: "Quadriplegia",
           status: "sent",
           sentAt: new Date(Date.now() - 5 * 864e5).toISOString(),
-          pdpmImpact: { wouldChangeHipps: false }
+          pdpmImpact: { wouldChangeHipps: !1 }
         }
       ],
       recentlySigned: [],
@@ -584,7 +831,7 @@ var DEMO_API_RESPONSES = {
   // PATIENT ASSESSMENTS (usePDPMAnalyzer patient scope)
   // ════════════════════════════════════════════
   patientAssessments: {
-    "2657226": {
+    2657226: {
       patientName: "Doe, Jane",
       assessments: [
         {
@@ -609,7 +856,7 @@ var DEMO_API_RESPONSES = {
         }
       ]
     },
-    "2657300": {
+    2657300: {
       patientName: "Smith, Robert",
       assessments: [
         {
@@ -734,7 +981,7 @@ var DEMO_API_RESPONSES = {
       certPeriodStart: "2026-01-15",
       certPeriodEnd: "2026-02-14",
       dueDate: new Date(Date.now() - 1 * 864e5).toISOString().split("T")[0],
-      clinicalReason: "Post-CVA rehabilitation requiring daily PT/OT/SLP. Patient demonstrating slow but measurable functional gains. Left hemiparesis persists \u2014 requires max assist for transfers.",
+      clinicalReason: "Post-CVA rehabilitation requiring daily PT/OT/SLP. Patient demonstrating slow but measurable functional gains. Left hemiparesis persists — requires max assist for transfers.",
       estimatedDays: 30,
       planForDischarge: "home_with_services",
       assignedPractitioner: { id: "pract-002", name: "Dr. Sample Doctor", title: "DO" },
@@ -801,7 +1048,7 @@ var DEMO_API_RESPONSES = {
       status: "pending",
       type: "day_30_recert",
       sequenceNumber: 2,
-      isDelayed: true,
+      isDelayed: !0,
       payerType: "medicare",
       partAStayId: "stay-003",
       partAStartDate: "2025-11-01",
@@ -826,23 +1073,23 @@ var DEMO_API_RESPONSES = {
   // ITEM DETAIL (useItemDetail - keyed by MDS code)
   // ════════════════════════════════════════════
   itemDetail: {
-    "I0400": {
+    I0400: {
       item: {
         mdsItem: "I0400",
         itemName: "Coronary Artery Disease (CAD)",
         section: "I",
-        description: "I0400 \u2014 Has the resident been diagnosed with coronary artery disease (CAD)?",
+        description: "I0400 — Has the resident been diagnosed with coronary artery disease (CAD)?",
         status: "needs_physician_query",
         validation: {
-          diagnosisCheck: { passed: false },
-          treatmentCheck: { passed: true }
+          diagnosisCheck: { passed: !1 },
+          treatmentCheck: { passed: !0 }
         },
         evidence: [
           {
             sourceType: "progress-note",
             sourceId: "doc-020",
             documentName: "Cardiology Consult",
-            displayName: "Cardiology Consult \u2014 12/18/2025",
+            displayName: "Cardiology Consult — 12/18/2025",
             effectiveDate: "2025-12-18",
             quote: "History of coronary artery disease s/p PCI with drug-eluting stent to LAD in 2022. Chronic stable angina well controlled on current regimen.",
             rationale: "Specialist documentation of established CAD diagnosis with interventional history.",
@@ -851,8 +1098,8 @@ var DEMO_API_RESPONSES = {
           {
             sourceType: "progress-note",
             sourceId: "doc-021",
-            documentName: "H&P \u2014 Admission",
-            displayName: "H&P \u2014 Admission \u2014 12/20/2025",
+            documentName: "H&P — Admission",
+            displayName: "H&P — Admission — 12/20/2025",
             effectiveDate: "2025-12-20",
             quote: "PMH: CAD s/p stent, HTN, DM type 2, CKD stage 3. Continue home medications.",
             rationale: "Admission history documenting CAD as part of past medical history.",
@@ -862,9 +1109,9 @@ var DEMO_API_RESPONSES = {
             sourceType: "order",
             sourceId: "mar-010",
             documentName: "MAR",
-            displayName: "MAR \u2014 01/27/2026",
+            displayName: "MAR — 01/27/2026",
             effectiveDate: "2026-01-27",
-            quote: "Aspirin 81mg PO daily \u2014 administered 0800. Atorvastatin 40mg PO QHS \u2014 administered 2100. Metoprolol succinate 25mg PO BID \u2014 administered 0800, 2000.",
+            quote: "Aspirin 81mg PO daily — administered 0800. Atorvastatin 40mg PO QHS — administered 2100. Metoprolol succinate 25mg PO BID — administered 0800, 2000.",
             rationale: "Active medications consistent with CAD treatment regimen."
           }
         ],
@@ -875,25 +1122,25 @@ var DEMO_API_RESPONSES = {
         ]
       },
       diagnosisSummary: 'PCC response is "No" but clinical documentation suggests possible CAD. Cardiology consult from 12/2025 references chronic stable angina and coronary stenting history. No ICD-10 code for CAD on current problem list.',
-      treatmentSummary: "Patient on aspirin 81mg daily, atorvastatin 40mg daily, and metoprolol 25mg BID \u2014 consistent with CAD management."
+      treatmentSummary: "Patient on aspirin 81mg daily, atorvastatin 40mg daily, and metoprolol 25mg BID — consistent with CAD management."
     },
-    "I0700": {
+    I0700: {
       item: {
         mdsItem: "I0700",
         itemName: "Hypertension (HTN)",
         section: "I",
-        description: "I0700 \u2014 Has the resident been diagnosed with hypertension?",
+        description: "I0700 — Has the resident been diagnosed with hypertension?",
         status: "code",
         validation: {
-          diagnosisCheck: { passed: true },
-          treatmentCheck: { passed: true }
+          diagnosisCheck: { passed: !0 },
+          treatmentCheck: { passed: !0 }
         },
         evidence: [
           {
             sourceType: "progress-note",
             sourceId: "doc-025",
             documentName: "MD Progress Note",
-            displayName: "MD Progress Note \u2014 01/22/2026",
+            displayName: "MD Progress Note — 01/22/2026",
             effectiveDate: "2026-01-22",
             quote: "HTN stable on current regimen. BP today 138/82. Continue lisinopril and amlodipine. Recheck BP in 2 weeks.",
             rationale: "Physician documentation confirming active hypertension management.",
@@ -903,38 +1150,38 @@ var DEMO_API_RESPONSES = {
             sourceType: "order",
             sourceId: "mar-012",
             documentName: "MAR",
-            displayName: "MAR \u2014 01/27/2026",
+            displayName: "MAR — 01/27/2026",
             effectiveDate: "2026-01-27",
-            quote: "Lisinopril 20mg PO daily \u2014 administered 0800. Amlodipine 5mg PO daily \u2014 administered 0800.",
+            quote: "Lisinopril 20mg PO daily — administered 0800. Amlodipine 5mg PO daily — administered 0800.",
             rationale: "Active antihypertensive medications on MAR."
           }
         ],
         keyFindings: [
           "Active ICD-10 code I10 on problem list",
-          "BP 138/82 on latest vitals \u2014 within target range",
+          "BP 138/82 on latest vitals — within target range",
           "Lisinopril 20mg + amlodipine 5mg daily regimen"
         ]
       },
       diagnosisSummary: "Hypertension well documented with active ICD-10 code I10 on problem list. Vital signs and medication regimen confirm active management.",
       treatmentSummary: "Lisinopril 20mg daily, amlodipine 5mg daily. BP monitoring per protocol with parameters documented."
     },
-    "I0900": {
+    I0900: {
       item: {
         mdsItem: "I0900",
         itemName: "Peripheral Vascular Disease (PVD) or Peripheral Arterial Disease (PAD)",
         section: "I",
-        description: "I0900 \u2014 Has the resident been diagnosed with peripheral vascular disease (PVD) or peripheral arterial disease (PAD)?",
+        description: "I0900 — Has the resident been diagnosed with peripheral vascular disease (PVD) or peripheral arterial disease (PAD)?",
         status: "needs_physician_query",
         validation: {
-          diagnosisCheck: { passed: false },
-          treatmentCheck: { passed: true }
+          diagnosisCheck: { passed: !1 },
+          treatmentCheck: { passed: !0 }
         },
         evidence: [
           {
             sourceType: "progress-note",
             sourceId: "doc-003",
             documentName: "MD Progress Note",
-            displayName: "MD Progress Note \u2014 01/22/2026",
+            displayName: "MD Progress Note — 01/22/2026",
             effectiveDate: "2026-01-22",
             quote: "Bilateral lower extremity edema with diminished pedal pulses noted. Continue compression stockings. Monitor for skin breakdown.",
             rationale: "Physical findings consistent with PVD but not definitively diagnosed.",
@@ -944,7 +1191,7 @@ var DEMO_API_RESPONSES = {
             sourceType: "progress-note",
             sourceId: "doc-030",
             documentName: "Nursing Assessment",
-            displayName: "Nursing Assessment \u2014 01/25/2026",
+            displayName: "Nursing Assessment — 01/25/2026",
             effectiveDate: "2026-01-25",
             quote: "Bilateral pedal edema 2+, feet cool to touch, diminished DP pulses bilaterally. Skin intact, no ulcerations. Compression stockings applied.",
             rationale: "Nursing assessment documenting vascular symptoms needing clinical correlation.",
@@ -953,82 +1200,82 @@ var DEMO_API_RESPONSES = {
         ],
         keyFindings: [
           "Bilateral LE edema with diminished pedal pulses",
-          "Symptoms overlap with diabetic neuropathy \u2014 clarification needed",
+          "Symptoms overlap with diabetic neuropathy — clarification needed",
           "No PVD/PAD ICD-10 code on problem list",
           "Compression stockings ordered but no specific PVD treatment plan"
         ]
       },
       diagnosisSummary: "Documentation is ambiguous. Progress notes describe bilateral lower extremity edema and diminished pedal pulses, but these symptoms could also indicate diabetic neuropathy or venous insufficiency. No definitive PVD/PAD diagnosis on problem list.",
-      treatmentSummary: "Compression stockings ordered. Diabetic foot care protocol in place. Vascular checks BID \u2014 but no specific PVD treatment plan."
+      treatmentSummary: "Compression stockings ordered. Diabetic foot care protocol in place. Vascular checks BID — but no specific PVD treatment plan."
     },
-    "I2000": {
+    I2000: {
       item: {
         mdsItem: "I2000",
         itemName: "Diabetes Mellitus (DM)",
         section: "I",
-        description: "I2000 \u2014 Has the resident been diagnosed with diabetes mellitus (DM)?",
+        description: "I2000 — Has the resident been diagnosed with diabetes mellitus (DM)?",
         status: "code",
         validation: {
-          diagnosisCheck: { passed: true },
-          treatmentCheck: { passed: true }
+          diagnosisCheck: { passed: !0 },
+          treatmentCheck: { passed: !0 }
         },
         evidence: [
           {
             sourceType: "lab_result",
             sourceId: "doc-006",
             documentName: "Lab Results",
-            displayName: "Lab Results \u2014 01/18/2026",
+            displayName: "Lab Results — 01/18/2026",
             effectiveDate: "2026-01-18",
-            quote: "HbA1c: 8.2%, Fasting glucose: 186 mg/dL. Diabetes management suboptimal \u2014 consider medication adjustment.",
+            quote: "HbA1c: 8.2%, Fasting glucose: 186 mg/dL. Diabetes management suboptimal — consider medication adjustment.",
             rationale: "Lab values confirming active diabetes with suboptimal control."
           },
           {
             sourceType: "order",
             sourceId: "mar-001",
             documentName: "MAR",
-            displayName: "MAR \u2014 01/27/2026",
+            displayName: "MAR — 01/27/2026",
             effectiveDate: "2026-01-27",
-            quote: "Metformin 500mg PO BID \u2014 administered 0800, 1800. Blood glucose AC: 0730=168, 1130=142, 1730=195. HS: 2100=156.",
+            quote: "Metformin 500mg PO BID — administered 0800, 1800. Blood glucose AC: 0730=168, 1130=142, 1730=195. HS: 2100=156.",
             rationale: "Active diabetic medication and glucose monitoring."
           },
           {
             sourceType: "progress-note",
             sourceId: "doc-025",
             documentName: "MD Progress Note",
-            displayName: "MD Progress Note \u2014 01/22/2026",
+            displayName: "MD Progress Note — 01/22/2026",
             effectiveDate: "2026-01-22",
-            quote: "DM type 2 \u2014 HbA1c elevated at 8.2%. Will increase metformin and add sliding scale insulin for glucose >200.",
+            quote: "DM type 2 — HbA1c elevated at 8.2%. Will increase metformin and add sliding scale insulin for glucose >200.",
             rationale: "Physician management of diabetes with medication adjustment.",
             pageNumber: 1
           }
         ],
         keyFindings: [
           "ICD-10 E11.9 on active problem list",
-          "HbA1c 8.2% \u2014 suboptimal glycemic control",
+          "HbA1c 8.2% — suboptimal glycemic control",
           "Metformin 500mg BID + glucose monitoring AC & HS",
-          "Physician adjusting regimen \u2014 adding sliding scale insulin"
+          "Physician adjusting regimen — adding sliding scale insulin"
         ]
       },
       diagnosisSummary: "Type 2 diabetes well documented. ICD-10 E11.9 on active problem list. Lab monitoring and multiple diabetic medications confirm active diagnosis.",
       treatmentSummary: "Metformin 500mg BID, blood glucose monitoring AC & HS, diabetic diet, podiatry consult Q3 months."
     },
-    "I5600": {
+    I5600: {
       item: {
         mdsItem: "I5600",
         itemName: "Malnutrition",
         section: "I",
-        description: "I5600 \u2014 Malnutrition (protein or calorie) or at risk for malnutrition.",
+        description: "I5600 — Malnutrition (protein or calorie) or at risk for malnutrition.",
         status: "recommend_coding",
         validation: {
-          diagnosisCheck: { passed: true },
-          treatmentCheck: { passed: true }
+          diagnosisCheck: { passed: !0 },
+          treatmentCheck: { passed: !0 }
         },
         evidence: [
           {
             sourceType: "progress-note",
             sourceId: "doc-nutr-001",
             documentName: "Nutrition Progress Note",
-            displayName: "Nutrition Progress Note \u2014 01/22/2026",
+            displayName: "Nutrition Progress Note — 01/22/2026",
             effectiveDate: "2026-01-22",
             quote: "Weight Loss: 17 lbs (12.6%) in past 3 months. PO Intake: < 50% meals/est. needs. Moderate protein-calorie malnutrition diagnosed.",
             rationale: "Dietitian assessment documenting malnutrition with objective weight loss and intake data.",
@@ -1039,39 +1286,39 @@ var DEMO_API_RESPONSES = {
               pages: 2,
               pageContent: {
                 1: [
-                  { text: "NUTRITION PROGRESS NOTE", highlight: false },
-                  { text: "Patient: Doe, Jane", highlight: false },
-                  { text: "Date: 01/22/2026", highlight: false },
-                  { text: "Dietitian: Sarah Kim, RD, LD", highlight: false },
-                  { text: "", highlight: false },
-                  { text: "NUTRITIONAL STATUS:", highlight: false },
-                  { text: "Current Weight: 118 lbs (53.5 kg)", highlight: false },
-                  { text: "Usual Body Weight: 135 lbs (61.2 kg)", highlight: false },
+                  { text: "NUTRITION PROGRESS NOTE", highlight: !1 },
+                  { text: "Patient: Doe, Jane", highlight: !1 },
+                  { text: "Date: 01/22/2026", highlight: !1 },
+                  { text: "Dietitian: Sarah Kim, RD, LD", highlight: !1 },
+                  { text: "", highlight: !1 },
+                  { text: "NUTRITIONAL STATUS:", highlight: !1 },
+                  { text: "Current Weight: 118 lbs (53.5 kg)", highlight: !1 },
+                  { text: "Usual Body Weight: 135 lbs (61.2 kg)", highlight: !1 },
                   { text: "Weight Loss: 17 lbs (12.6%) in past 3 months", highlight: "keyword" },
-                  { text: "", highlight: false },
-                  { text: "DIETARY INTAKE:", highlight: false },
+                  { text: "", highlight: !1 },
+                  { text: "DIETARY INTAKE:", highlight: !1 },
                   { text: "Ongoing PO Intake: < 50% meals/est. needs", highlight: "keyword" },
-                  { text: "Patient reports decreased appetite and early satiety.", highlight: false },
+                  { text: "Patient reports decreased appetite and early satiety.", highlight: !1 },
                   { text: "Difficulty with textures due to dysphagia.", highlight: "contextual" }
                 ],
                 2: [
-                  { text: "LABORATORY VALUES:", highlight: false },
+                  { text: "LABORATORY VALUES:", highlight: !1 },
                   { text: "Albumin: 2.9 g/dL (Low)", highlight: "keyword" },
                   { text: "Prealbumin: 12 mg/dL (Low)", highlight: "keyword" },
-                  { text: "Total Protein: 5.8 g/dL (Low)", highlight: false },
-                  { text: "", highlight: false },
-                  { text: "MALNUTRITION DIAGNOSIS:", highlight: false },
+                  { text: "Total Protein: 5.8 g/dL (Low)", highlight: !1 },
+                  { text: "", highlight: !1 },
+                  { text: "MALNUTRITION DIAGNOSIS:", highlight: !1 },
                   { text: "Moderate protein-calorie malnutrition based on:", highlight: "keyword" },
-                  { text: "- Significant unintentional weight loss (>10% in 3 months)", highlight: false },
-                  { text: "- Inadequate oral intake (<50% estimated needs)", highlight: false },
-                  { text: "- Low albumin and prealbumin", highlight: false },
-                  { text: "", highlight: false },
-                  { text: "RECOMMENDATIONS:", highlight: false },
-                  { text: "1. Fortified foods - pudding, cereal, milk", highlight: false },
-                  { text: "2. Ensure Plus BID with meals", highlight: false },
-                  { text: "3. Liberalized diet texture per SLP recommendations", highlight: false },
-                  { text: "4. Weekly weights", highlight: false },
-                  { text: "5. Re-evaluate in 1 week", highlight: false }
+                  { text: "- Significant unintentional weight loss (>10% in 3 months)", highlight: !1 },
+                  { text: "- Inadequate oral intake (<50% estimated needs)", highlight: !1 },
+                  { text: "- Low albumin and prealbumin", highlight: !1 },
+                  { text: "", highlight: !1 },
+                  { text: "RECOMMENDATIONS:", highlight: !1 },
+                  { text: "1. Fortified foods - pudding, cereal, milk", highlight: !1 },
+                  { text: "2. Ensure Plus BID with meals", highlight: !1 },
+                  { text: "3. Liberalized diet texture per SLP recommendations", highlight: !1 },
+                  { text: "4. Weekly weights", highlight: !1 },
+                  { text: "5. Re-evaluate in 1 week", highlight: !1 }
                 ]
               }
             }
@@ -1080,7 +1327,7 @@ var DEMO_API_RESPONSES = {
             sourceType: "progress-note",
             sourceId: "doc-nutr-002",
             documentName: "Nutrition Lab Panel",
-            displayName: "Nutrition Lab Panel \u2014 01/20/2026",
+            displayName: "Nutrition Lab Panel — 01/20/2026",
             effectiveDate: "2026-01-20",
             quote: "Albumin: 2.9 g/dL (Low), Prealbumin: 12 mg/dL (Low). Low values suggest malnutrition and/or inflammatory state.",
             rationale: "Lab values confirming malnutrition with low albumin and prealbumin.",
@@ -1089,19 +1336,19 @@ var DEMO_API_RESPONSES = {
               title: "Nutrition Panel Results",
               pages: 1,
               content: [
-                { text: "LABORATORY REPORT", highlight: false },
-                { text: "Patient: Doe, Jane", highlight: false },
-                { text: "Date Collected: 01/20/2026 06:15", highlight: false },
-                { text: "", highlight: false },
-                { text: "NUTRITION PANEL:", highlight: false },
-                { text: "", highlight: false },
+                { text: "LABORATORY REPORT", highlight: !1 },
+                { text: "Patient: Doe, Jane", highlight: !1 },
+                { text: "Date Collected: 01/20/2026 06:15", highlight: !1 },
+                { text: "", highlight: !1 },
+                { text: "NUTRITION PANEL:", highlight: !1 },
+                { text: "", highlight: !1 },
                 { text: "Albumin: 2.9 g/dL                    (L) Ref: 3.5-5.0", highlight: "keyword" },
                 { text: "Prealbumin: 12 mg/dL                 (L) Ref: 18-38", highlight: "keyword" },
-                { text: "Total Protein: 5.8 g/dL              (L) Ref: 6.0-8.3", highlight: false },
-                { text: "Transferrin: 165 mg/dL               (L) Ref: 200-360", highlight: false },
-                { text: "", highlight: false },
+                { text: "Total Protein: 5.8 g/dL              (L) Ref: 6.0-8.3", highlight: !1 },
+                { text: "Transferrin: 165 mg/dL               (L) Ref: 200-360", highlight: !1 },
+                { text: "", highlight: !1 },
                 { text: "Note: Low albumin and prealbumin suggest malnutrition", highlight: "keyword" },
-                { text: "and/or inflammatory state. Clinical correlation advised.", highlight: false }
+                { text: "and/or inflammatory state. Clinical correlation advised.", highlight: !1 }
               ]
             }
           },
@@ -1109,7 +1356,7 @@ var DEMO_API_RESPONSES = {
             sourceType: "order",
             sourceId: "doc-nutr-004",
             documentName: "MAR - Ensure Plus",
-            displayName: "MAR \u2014 Ensure Plus 8oz BID \u2014 01/22/2026",
+            displayName: "MAR — Ensure Plus 8oz BID — 01/22/2026",
             effectiveDate: "2026-01-22",
             quote: "Ensure Plus 8oz BID with meals for nutritional supplementation",
             rationale: "Oral nutrition supplement order supports malnutrition diagnosis and active treatment.",
@@ -1141,7 +1388,7 @@ var DEMO_API_RESPONSES = {
             sourceType: "order",
             sourceId: "doc-nutr-003",
             documentName: "MAR - Fortified Cereal",
-            displayName: "MAR \u2014 Fortified Cereal 6oz QD \u2014 01/22/2026",
+            displayName: "MAR — Fortified Cereal 6oz QD — 01/22/2026",
             effectiveDate: "2026-01-22",
             quote: "Fortified Cereal 6 oz QD to increase caloric and protein intake",
             rationale: "Nutrition intervention order for fortified foods supports malnutrition treatment.",
@@ -1166,45 +1413,45 @@ var DEMO_API_RESPONSES = {
             sourceType: "progress-note",
             sourceId: "doc-nutr-006",
             documentName: "Weight Monitoring Flow Sheet",
-            displayName: "Weight Monitoring \u2014 01/22/2026",
+            displayName: "Weight Monitoring — 01/22/2026",
             effectiveDate: "2026-01-22",
-            quote: "Weight trend: 135 lbs \u2192 128 lbs \u2192 118 lbs. Total loss: 17 lbs (12.6%). >10% in 3 months = SEVERE weight loss.",
+            quote: "Weight trend: 135 lbs → 128 lbs → 118 lbs. Total loss: 17 lbs (12.6%). >10% in 3 months = SEVERE weight loss.",
             rationale: "Nursing documentation of progressive weight loss meeting malnutrition criteria.",
             pdfData: {
               filename: "NURSING_WEIGHTS_01_22_38001945.PDF",
               title: "Weight Monitoring Flow Sheet",
               pages: 1,
               content: [
-                { text: "WEIGHT MONITORING - 3 MONTH TREND", highlight: false },
-                { text: "Patient: Doe, Jane", highlight: false },
-                { text: "Date: 01/22/2026", highlight: false },
-                { text: "", highlight: false },
-                { text: "WEIGHT HISTORY:", highlight: false },
-                { text: "10/22/2025: 135.0 lbs (Usual body weight)", highlight: false },
-                { text: "11/15/2025: 132.5 lbs (-2.5 lbs)", highlight: false },
+                { text: "WEIGHT MONITORING - 3 MONTH TREND", highlight: !1 },
+                { text: "Patient: Doe, Jane", highlight: !1 },
+                { text: "Date: 01/22/2026", highlight: !1 },
+                { text: "", highlight: !1 },
+                { text: "WEIGHT HISTORY:", highlight: !1 },
+                { text: "10/22/2025: 135.0 lbs (Usual body weight)", highlight: !1 },
+                { text: "11/15/2025: 132.5 lbs (-2.5 lbs)", highlight: !1 },
                 { text: "12/20/2025: 128.0 lbs (-7.0 lbs from usual)", highlight: "keyword" },
                 { text: "01/15/2026: 120.5 lbs (-14.5 lbs from usual)", highlight: "keyword" },
                 { text: "01/22/2026: 118.0 lbs (-17.0 lbs from usual)", highlight: "keyword" },
-                { text: "", highlight: false },
-                { text: "WEIGHT LOSS PERCENTAGE:", highlight: false },
+                { text: "", highlight: !1 },
+                { text: "WEIGHT LOSS PERCENTAGE:", highlight: !1 },
                 { text: "Total Loss: 17 lbs over 3 months", highlight: "keyword" },
                 { text: "Percentage: 12.6% of usual body weight", highlight: "keyword" },
-                { text: "", highlight: false },
-                { text: "SIGNIFICANCE:", highlight: false },
+                { text: "", highlight: !1 },
+                { text: "SIGNIFICANCE:", highlight: !1 },
                 { text: ">10% weight loss in 3 months = SEVERE weight loss", highlight: "keyword" },
                 { text: "Meets criteria for malnutrition diagnosis", highlight: "keyword" },
-                { text: "", highlight: false },
-                { text: "INTERVENTIONS INITIATED:", highlight: false },
-                { text: "- Dietary consult completed", highlight: false },
-                { text: "- Nutritional supplements ordered", highlight: false },
-                { text: "- Weekly weight monitoring ongoing", highlight: false }
+                { text: "", highlight: !1 },
+                { text: "INTERVENTIONS INITIATED:", highlight: !1 },
+                { text: "- Dietary consult completed", highlight: !1 },
+                { text: "- Nutritional supplements ordered", highlight: !1 },
+                { text: "- Weekly weight monitoring ongoing", highlight: !1 }
               ]
             }
           }
         ],
         keyFindings: [
-          "Weight loss 12.6% (17 lbs) in 3 months \u2014 meets severe weight loss criteria",
-          "Albumin 2.9 g/dL and Prealbumin 12 mg/dL \u2014 both below normal",
+          "Weight loss 12.6% (17 lbs) in 3 months — meets severe weight loss criteria",
+          "Albumin 2.9 g/dL and Prealbumin 12 mg/dL — both below normal",
           "PO intake <50% of estimated needs documented by dietitian",
           "Ensure Plus BID and fortified cereal QD ordered as interventions",
           "No malnutrition ICD-10 code on active problem list"
@@ -1215,9 +1462,13 @@ var DEMO_API_RESPONSES = {
         ]
       },
       diagnosisSummary: "Nutrition assessment from 1/22 documents moderate protein-calorie malnutrition: 12.6% weight loss in 3 months, PO intake <50%, albumin 2.9, prealbumin 12. No malnutrition ICD-10 code on active problem list.",
-      treatmentSummary: "Ensure Plus 8oz BID, fortified cereal 6oz QD, pureed diet with nectar thick liquids, weekly weights, dietitian follow-up."
+      treatmentSummary: "Ensure Plus 8oz BID, fortified cereal 6oz QD, pureed diet with nectar thick liquids, weekly weights, dietitian follow-up.",
+      carePlan: {
+        onCarePlan: !0,
+        items: ["Ensure Plus 8oz BID between meals", "Weekly weights every Monday AM", "Dietitian follow-up monthly", "Calorie count x 3 days if intake worsens"]
+      }
     },
-    "I4300": {
+    I4300: {
       item: {
         mdsItem: "I4300",
         itemName: "Diabetes Mellitus with Peripheral Vascular Disease",
@@ -1225,15 +1476,15 @@ var DEMO_API_RESPONSES = {
         description: "Active diagnosis of Diabetes Mellitus combined with Peripheral Vascular Disease.",
         status: "needs_physician_query",
         validation: {
-          diagnosisCheck: { passed: true },
-          treatmentCheck: { passed: true }
+          diagnosisCheck: { passed: !0 },
+          treatmentCheck: { passed: !0 }
         },
         evidence: [
           {
             sourceType: "lab_result",
             sourceId: "doc-006",
             documentName: "Lab Results",
-            displayName: "Lab Results \u2014 01/18/2026",
+            displayName: "Lab Results — 01/18/2026",
             effectiveDate: "2026-01-18",
             quote: "HbA1c: 8.2%, Fasting glucose: 186 mg/dL, GFR: 42, Creatinine: 1.8",
             rationale: "Lab values confirming uncontrolled diabetes with renal involvement."
@@ -1242,7 +1493,7 @@ var DEMO_API_RESPONSES = {
             sourceType: "progress-note",
             sourceId: "doc-003",
             documentName: "MD Progress Note",
-            displayName: "MD Progress Note \u2014 01/22/2026",
+            displayName: "MD Progress Note — 01/22/2026",
             effectiveDate: "2026-01-22",
             quote: "Bilateral lower extremity edema with diminished pedal pulses noted. Continue diabetic foot care protocol. Compression stockings ordered.",
             rationale: "Physician documentation of peripheral vascular disease symptoms.",
@@ -1252,9 +1503,9 @@ var DEMO_API_RESPONSES = {
             sourceType: "order",
             sourceId: "mar-001",
             documentName: "MAR",
-            displayName: "MAR \u2014 01/27/2026",
+            displayName: "MAR — 01/27/2026",
             effectiveDate: "2026-01-27",
-            quote: "Metformin 500mg PO BID \u2014 administered 0800, 1800",
+            quote: "Metformin 500mg PO BID — administered 0800, 1800",
             rationale: "Active diabetes medication administration."
           }
         ],
@@ -1265,14 +1516,18 @@ var DEMO_API_RESPONSES = {
         ]
       },
       diagnosisSummary: "Diabetes well documented with medications and lab monitoring. PVD symptoms noted in progress notes but no specific ICD-10 code on problem list.",
-      treatmentSummary: "Metformin 500mg BID, blood glucose monitoring AC & HS, vascular checks per protocol."
+      treatmentSummary: "Metformin 500mg BID, blood glucose monitoring AC & HS, vascular checks per protocol.",
+      carePlan: {
+        onCarePlan: !0,
+        items: ["Blood glucose monitoring AC and HS", "Diabetic foot care and vascular checks", "Consistent carbohydrate meal plan"]
+      }
     },
-    "O0400A3": {
+    O0400A3: {
       item: {
         mdsItem: "O0400A3",
         itemName: "IV Medications",
         section: "O",
-        description: "IV Medications \u2014 received any type of IV medications during the lookback period.",
+        description: "IV Medications — received any type of IV medications during the lookback period.",
         status: "code",
         rationale: "Vancomycin 1g IV Q12H administered during lookback period for suspected cellulitis.",
         evidence: [
@@ -1280,16 +1535,16 @@ var DEMO_API_RESPONSES = {
             sourceType: "order",
             sourceId: "mar-002",
             documentName: "MAR",
-            displayName: "MAR \u2014 01/13/2026",
+            displayName: "MAR — 01/13/2026",
             effectiveDate: "2026-01-13",
-            quote: "Vancomycin 1g IV Q12H \u2014 administered 1/12 2200, 1/13 1000, 1/13 2200",
+            quote: "Vancomycin 1g IV Q12H — administered 1/12 2200, 1/13 1000, 1/13 2200",
             rationale: "IV medication administration documented in MAR during lookback period."
           },
           {
             sourceType: "progress-note",
             sourceId: "doc-003",
             documentName: "MD Progress Note",
-            displayName: "MD Progress Note \u2014 01/12/2026",
+            displayName: "MD Progress Note — 01/12/2026",
             effectiveDate: "2026-01-12",
             quote: "Started Vancomycin IV for suspected cellulitis. Monitor labs and clinical response.",
             rationale: "Physician order for IV antibiotic corroborating MAR records.",
@@ -1300,23 +1555,23 @@ var DEMO_API_RESPONSES = {
       diagnosisSummary: null,
       treatmentSummary: "Vancomycin 1g IV Q12H administered during lookback period for suspected infection."
     },
-    "I2900": {
+    I2900: {
       item: {
         mdsItem: "I2900",
         itemName: "Drug/Medication Induced Depression",
         section: "I",
-        description: "Drug or medication-induced depression \u2014 depression caused by or associated with medication side effects.",
+        description: "Drug or medication-induced depression — depression caused by or associated with medication side effects.",
         status: "dont_code",
         validation: {
-          diagnosisCheck: { passed: false },
-          treatmentCheck: { passed: false }
+          diagnosisCheck: { passed: !1 },
+          treatmentCheck: { passed: !1 }
         },
         evidence: [
           {
             sourceType: "progress-note",
             sourceId: "doc-007",
             documentName: "Nursing Assessment",
-            displayName: "Nursing Assessment \u2014 01/25/2026",
+            displayName: "Nursing Assessment — 01/25/2026",
             effectiveDate: "2026-01-25",
             quote: 'Patient reports feeling down and having little interest in activities. Declined recreational therapy today. States she "just wants to rest."',
             rationale: "Nursing documentation of depressive symptoms.",
@@ -1325,30 +1580,31 @@ var DEMO_API_RESPONSES = {
         ],
         keyFindings: [
           "PHQ-9 not completed during lookback period",
-          "Beta-blockers and opioids on profile \u2014 depressive side effects possible",
+          "Beta-blockers and opioids on profile — depressive side effects possible",
           "Nursing notes mention low mood and decreased activity"
         ]
       },
       diagnosisSummary: "PHQ-9 not completed during lookback period. Multiple medications on profile (beta-blockers, opioids) associated with depressive side effects. Nursing notes mention low mood.",
-      treatmentSummary: "No active antidepressant therapy. No mental health referral on file."
+      treatmentSummary: "No active antidepressant therapy. No mental health referral on file.",
+      carePlan: { onCarePlan: !1 }
     },
-    "I5100": {
+    I5100: {
       item: {
         mdsItem: "I5100",
         itemName: "Hemiplegia/Hemiparesis",
         section: "I",
-        description: "Hemiplegia or hemiparesis \u2014 paralysis or weakness affecting one side of the body.",
+        description: "Hemiplegia or hemiparesis — paralysis or weakness affecting one side of the body.",
         status: "code",
         validation: {
-          diagnosisCheck: { passed: true },
-          treatmentCheck: { passed: true }
+          diagnosisCheck: { passed: !0 },
+          treatmentCheck: { passed: !0 }
         },
         evidence: [
           {
             sourceType: "progress-note",
             sourceId: "doc-010",
             documentName: "PT Evaluation",
-            displayName: "PT Evaluation \u2014 01/06/2026",
+            displayName: "PT Evaluation — 01/06/2026",
             effectiveDate: "2026-01-06",
             quote: "Left-sided hemiparesis with 2/5 strength in left upper and lower extremities. Requires max assist for transfers and ambulation.",
             rationale: "PT evaluation documenting hemiparesis severity and functional impact.",
@@ -1356,15 +1612,19 @@ var DEMO_API_RESPONSES = {
           }
         ],
         keyFindings: [
-          "Left hemiparesis following CVA \u2014 well documented",
+          "Left hemiparesis following CVA — well documented",
           "2/5 strength left UE and LE",
           "PT 5x/week + OT 5x/week for functional mobility"
         ]
       },
       diagnosisSummary: "Left hemiparesis following CVA well documented across PT, OT, and physician notes.",
-      treatmentSummary: "Receiving PT 5x/week and OT 5x/week for functional mobility and ADL training."
+      treatmentSummary: "Receiving PT 5x/week and OT 5x/week for functional mobility and ADL training.",
+      carePlan: {
+        onCarePlan: !0,
+        items: ["PT 5x/week for functional mobility", "OT 5x/week for ADL training", "Fall prevention and safety awareness", "Transfer training with progressive assist reduction"]
+      }
     },
-    "K0510A": {
+    K0510A: {
       item: {
         mdsItem: "K0510A",
         itemName: "Parenteral/IV Feeding",
@@ -1377,9 +1637,9 @@ var DEMO_API_RESPONSES = {
             sourceType: "order",
             sourceId: "mar-003",
             documentName: "MAR",
-            displayName: "MAR \u2014 01/08/2026",
+            displayName: "MAR — 01/08/2026",
             effectiveDate: "2026-01-08",
-            quote: "D5 1/2NS 1000ml IV at 75ml/hr \u2014 running continuously",
+            quote: "D5 1/2NS 1000ml IV at 75ml/hr — running continuously",
             rationale: "Active IV fluid administration documented in MAR."
           }
         ]
@@ -1388,45 +1648,46 @@ var DEMO_API_RESPONSES = {
       treatmentSummary: "IV fluids (D5 1/2NS) administered during lookback period for hydration management."
     },
     // ── Section I items with no existing detail (populated for demo) ──
-    "I0100": {
+    I0100: {
       item: {
         mdsItem: "I0100",
         itemName: "Cancer",
         section: "I",
-        description: "I0100 \u2014 Does the resident have a current or active diagnosis of cancer?",
+        description: "I0100 — Does the resident have a current or active diagnosis of cancer?",
         status: "dont_code",
-        validation: { diagnosisCheck: { passed: true }, treatmentCheck: { passed: true } },
+        validation: { diagnosisCheck: { passed: !0 }, treatmentCheck: { passed: !0 } },
         evidence: [
           {
             sourceType: "progress-note",
             sourceId: "doc-040",
             documentName: "MD Progress Note",
-            displayName: "MD Progress Note \u2014 01/22/2026",
+            displayName: "MD Progress Note — 01/22/2026",
             effectiveDate: "2026-01-22",
-            quote: "No active cancer diagnosis. History of basal cell carcinoma excised 2019, no recurrence. Last dermatology follow-up 6/2025 \u2014 clear.",
+            quote: "No active cancer diagnosis. History of basal cell carcinoma excised 2019, no recurrence. Last dermatology follow-up 6/2025 — clear.",
             rationale: "Physician documentation confirming no active cancer.",
             pageNumber: 1
           }
         ],
-        keyFindings: ["History of BCC excised 2019 \u2014 no recurrence", "Dermatology follow-up clear 06/2025"]
+        keyFindings: ["History of BCC excised 2019 — no recurrence", "Dermatology follow-up clear 06/2025"]
       },
       diagnosisSummary: "No active cancer diagnosis found. History of basal cell carcinoma excised in 2019 with no recurrence documented.",
-      treatmentSummary: "No active cancer treatment. Routine dermatology follow-up only."
+      treatmentSummary: "No active cancer treatment. Routine dermatology follow-up only.",
+      carePlan: { onCarePlan: !1 }
     },
-    "I0200": {
+    I0200: {
       item: {
         mdsItem: "I0200",
         itemName: "Anemia",
         section: "I",
-        description: "I0200 \u2014 Does the resident have a current diagnosis of anemia (e.g., iron deficiency, B12, folate)?",
+        description: "I0200 — Does the resident have a current diagnosis of anemia (e.g., iron deficiency, B12, folate)?",
         status: "code",
-        validation: { diagnosisCheck: { passed: true }, treatmentCheck: { passed: true } },
+        validation: { diagnosisCheck: { passed: !0 }, treatmentCheck: { passed: !0 } },
         evidence: [
           {
             sourceType: "lab_result",
             sourceId: "doc-041",
             documentName: "Lab Results",
-            displayName: "Lab Results \u2014 01/15/2026",
+            displayName: "Lab Results — 01/15/2026",
             effectiveDate: "2026-01-15",
             quote: "Hemoglobin: 9.8 g/dL (L), Hematocrit: 29.4% (L), MCV: 76 fL (L), Ferritin: 12 ng/mL (L). Iron deficiency anemia.",
             rationale: "Lab values consistent with iron deficiency anemia."
@@ -1435,56 +1696,61 @@ var DEMO_API_RESPONSES = {
             sourceType: "order",
             sourceId: "mar-041",
             documentName: "MAR",
-            displayName: "MAR \u2014 01/27/2026",
+            displayName: "MAR — 01/27/2026",
             effectiveDate: "2026-01-27",
-            quote: "Ferrous sulfate 325mg PO TID \u2014 administered 0800, 1200, 1800.",
+            quote: "Ferrous sulfate 325mg PO TID — administered 0800, 1200, 1800.",
             rationale: "Active iron supplementation for anemia treatment."
           }
         ],
-        keyFindings: ["Hgb 9.8, Hct 29.4%, Ferritin 12 \u2014 iron deficiency anemia", "Ferrous sulfate 325mg TID active on MAR"]
+        keyFindings: ["Hgb 9.8, Hct 29.4%, Ferritin 12 — iron deficiency anemia", "Ferrous sulfate 325mg TID active on MAR"]
       },
       diagnosisSummary: "Iron deficiency anemia documented with ICD-10 D50.9. Lab values confirm: Hgb 9.8, Ferritin 12.",
-      treatmentSummary: "Ferrous sulfate 325mg TID. Follow-up labs ordered in 4 weeks."
+      treatmentSummary: "Ferrous sulfate 325mg TID. Follow-up labs ordered in 4 weeks.",
+      carePlan: {
+        onCarePlan: !0,
+        items: ["Iron supplementation with meals", "CBC and iron panel recheck in 4 weeks", "Monitor for signs of GI bleeding"]
+      }
     },
-    "I0300": {
+    I0300: {
       item: {
         mdsItem: "I0300",
         itemName: "Atrial Fibrillation or Other Dysrhythmias",
         section: "I",
-        description: "I0300 \u2014 Does the resident have atrial fibrillation or other dysrhythmias?",
+        description: "I0300 — Does the resident have atrial fibrillation or other dysrhythmias?",
         status: "dont_code",
-        validation: { diagnosisCheck: { passed: true }, treatmentCheck: { passed: true } },
+        validation: { diagnosisCheck: { passed: !0 }, treatmentCheck: { passed: !0 } },
         evidence: [
           {
             sourceType: "progress-note",
             sourceId: "doc-042",
             documentName: "Cardiology Consult",
-            displayName: "Cardiology Consult \u2014 12/18/2025",
+            displayName: "Cardiology Consult — 12/18/2025",
             effectiveDate: "2025-12-18",
             quote: "Normal sinus rhythm on 12-lead ECG. No history of atrial fibrillation or other dysrhythmias. Holter monitor 2025 showed no significant arrhythmias.",
             rationale: "Cardiology documentation confirming no dysrhythmia.",
             pageNumber: 1
           }
         ],
-        keyFindings: ["Normal sinus rhythm on ECG", "Holter monitor 2025 \u2014 no arrhythmias"]
+        keyFindings: ["Normal sinus rhythm on ECG", "Holter monitor 2025 — no arrhythmias"]
       },
       diagnosisSummary: "No atrial fibrillation or dysrhythmia documented. ECG shows normal sinus rhythm. Holter monitor negative.",
-      treatmentSummary: "No antiarrhythmic therapy required."
+      treatmentSummary: "No antiarrhythmic therapy required.",
+      carePlan: { onCarePlan: !1 }
     },
-    "I0500": {
+    I0500: {
       item: {
         mdsItem: "I0500",
         itemName: "Deep Venous Thrombosis (DVT)",
         section: "I",
-        description: "I0500 \u2014 Does the resident have a current diagnosis of deep venous thrombosis (DVT)?",
+        description: "I0500 — Does the resident have a current diagnosis of deep venous thrombosis (DVT)?",
         status: "dont_code",
-        validation: { diagnosisCheck: { passed: true }, treatmentCheck: { passed: true } },
+        validation: { diagnosisCheck: { passed: !0 }, treatmentCheck: { passed: !0 } },
         evidence: [
           {
             sourceType: "progress-note",
             sourceId: "doc-043",
             documentName: "MD Progress Note",
-            displayName: "MD Progress Note \u2014 01/22/2026",
+            displayName: "MD Progress Note — 01/22/2026",
             effectiveDate: "2026-01-22",
             quote: "No history of DVT or PE. Lower extremity edema attributed to venous insufficiency, not thrombotic. Duplex ultrasound 11/2025 negative for DVT.",
             rationale: "Physician documentation ruling out DVT.",
@@ -1494,22 +1760,23 @@ var DEMO_API_RESPONSES = {
         keyFindings: ["Duplex US 11/2025 negative for DVT", "LE edema attributed to venous insufficiency"]
       },
       diagnosisSummary: "No DVT documented. Duplex ultrasound 11/2025 negative. Lower extremity edema from venous insufficiency.",
-      treatmentSummary: "No anticoagulation for DVT. Compression stockings for venous insufficiency only."
+      treatmentSummary: "No anticoagulation for DVT. Compression stockings for venous insufficiency only.",
+      carePlan: { onCarePlan: !1 }
     },
-    "I0600": {
+    I0600: {
       item: {
         mdsItem: "I0600",
         itemName: "Heart Failure",
         section: "I",
-        description: "I0600 \u2014 Does the resident have heart failure (e.g., CHF, pulmonary edema)?",
+        description: "I0600 — Does the resident have heart failure (e.g., CHF, pulmonary edema)?",
         status: "dont_code",
-        validation: { diagnosisCheck: { passed: true }, treatmentCheck: { passed: true } },
+        validation: { diagnosisCheck: { passed: !0 }, treatmentCheck: { passed: !0 } },
         evidence: [
           {
             sourceType: "progress-note",
             sourceId: "doc-044",
             documentName: "Cardiology Consult",
-            displayName: "Cardiology Consult \u2014 12/18/2025",
+            displayName: "Cardiology Consult — 12/18/2025",
             effectiveDate: "2025-12-18",
             quote: "Echocardiogram 12/2025: LVEF 58%, no wall motion abnormalities, no valvular disease. No clinical evidence of heart failure.",
             rationale: "Cardiology evaluation ruling out heart failure.",
@@ -1519,57 +1786,59 @@ var DEMO_API_RESPONSES = {
             sourceType: "progress-note",
             sourceId: "doc-045",
             documentName: "MD Progress Note",
-            displayName: "MD Progress Note \u2014 01/22/2026",
+            displayName: "MD Progress Note — 01/22/2026",
             effectiveDate: "2026-01-22",
             quote: "No signs of fluid overload. Lungs clear bilaterally. No peripheral edema concerning for CHF. BNP 45 pg/mL (normal).",
             rationale: "Physical exam and labs ruling out heart failure.",
             pageNumber: 1
           }
         ],
-        keyFindings: ["Echo LVEF 58% \u2014 normal", "BNP 45 pg/mL \u2014 normal", "No signs of fluid overload"]
+        keyFindings: ["Echo LVEF 58% — normal", "BNP 45 pg/mL — normal", "No signs of fluid overload"]
       },
       diagnosisSummary: "No heart failure documented. Echo shows preserved EF at 58%. BNP within normal limits.",
-      treatmentSummary: "No heart failure therapy. Current cardiac medications for HTN/CAD only."
+      treatmentSummary: "No heart failure therapy. Current cardiac medications for HTN/CAD only.",
+      carePlan: { onCarePlan: !1 }
     },
-    "I0800": {
+    I0800: {
       item: {
         mdsItem: "I0800",
         itemName: "Orthostatic Hypotension",
         section: "I",
-        description: "I0800 \u2014 Does the resident have orthostatic hypotension?",
+        description: "I0800 — Does the resident have orthostatic hypotension?",
         status: "dont_code",
-        validation: { diagnosisCheck: { passed: true }, treatmentCheck: { passed: true } },
+        validation: { diagnosisCheck: { passed: !0 }, treatmentCheck: { passed: !0 } },
         evidence: [
           {
             sourceType: "progress-note",
             sourceId: "doc-046",
             documentName: "Nursing Assessment",
-            displayName: "Nursing Assessment \u2014 01/25/2026",
+            displayName: "Nursing Assessment — 01/25/2026",
             effectiveDate: "2026-01-25",
             quote: "Orthostatic vitals: Supine 134/80, Standing 128/76 (1 min), 130/78 (3 min). No dizziness or lightheadedness reported. Negative orthostatic screen.",
             rationale: "Nursing assessment with negative orthostatic vitals.",
             pageNumber: 1
           }
         ],
-        keyFindings: ["Orthostatic vitals negative \u2014 no significant BP drop", "No symptoms of dizziness on standing"]
+        keyFindings: ["Orthostatic vitals negative — no significant BP drop", "No symptoms of dizziness on standing"]
       },
       diagnosisSummary: "No orthostatic hypotension documented. Orthostatic vital signs within normal parameters.",
-      treatmentSummary: "No specific orthostatic hypotension treatment. Fall precautions in place for general safety."
+      treatmentSummary: "No specific orthostatic hypotension treatment. Fall precautions in place for general safety.",
+      carePlan: { onCarePlan: !1 }
     },
-    "I1100": {
+    I1100: {
       item: {
         mdsItem: "I1100",
         itemName: "Cirrhosis",
         section: "I",
-        description: "I1100 \u2014 Does the resident have cirrhosis?",
+        description: "I1100 — Does the resident have cirrhosis?",
         status: "dont_code",
-        validation: { diagnosisCheck: { passed: true }, treatmentCheck: { passed: true } },
+        validation: { diagnosisCheck: { passed: !0 }, treatmentCheck: { passed: !0 } },
         evidence: [
           {
             sourceType: "lab_result",
             sourceId: "doc-047",
             documentName: "Lab Results",
-            displayName: "Lab Results \u2014 01/15/2026",
+            displayName: "Lab Results — 01/15/2026",
             effectiveDate: "2026-01-15",
             quote: "LFTs: AST 28 U/L (normal), ALT 22 U/L (normal), Albumin 3.8 g/dL (normal), Total bilirubin 0.9 mg/dL (normal). No evidence of hepatic dysfunction.",
             rationale: "Normal liver function tests ruling out cirrhosis."
@@ -1578,22 +1847,23 @@ var DEMO_API_RESPONSES = {
         keyFindings: ["LFTs all within normal limits", "No hepatic dysfunction documented"]
       },
       diagnosisSummary: "No cirrhosis documented. Liver function tests all within normal range.",
-      treatmentSummary: "No hepatic disease management required."
+      treatmentSummary: "No hepatic disease management required.",
+      carePlan: { onCarePlan: !1 }
     },
-    "I1200": {
+    I1200: {
       item: {
         mdsItem: "I1200",
         itemName: "GERD",
         section: "I",
-        description: "I1200 \u2014 Does the resident have gastroesophageal reflux disease (GERD)?",
+        description: "I1200 — Does the resident have gastroesophageal reflux disease (GERD)?",
         status: "code",
-        validation: { diagnosisCheck: { passed: true }, treatmentCheck: { passed: true } },
+        validation: { diagnosisCheck: { passed: !0 }, treatmentCheck: { passed: !0 } },
         evidence: [
           {
             sourceType: "progress-note",
             sourceId: "doc-048",
             documentName: "MD Progress Note",
-            displayName: "MD Progress Note \u2014 01/22/2026",
+            displayName: "MD Progress Note — 01/22/2026",
             effectiveDate: "2026-01-22",
             quote: "GERD well controlled on current PPI. No breakthrough symptoms. Continue omeprazole 20mg daily.",
             rationale: "Physician documentation of active GERD with treatment.",
@@ -1603,31 +1873,35 @@ var DEMO_API_RESPONSES = {
             sourceType: "order",
             sourceId: "mar-048",
             documentName: "MAR",
-            displayName: "MAR \u2014 01/27/2026",
+            displayName: "MAR — 01/27/2026",
             effectiveDate: "2026-01-27",
-            quote: "Omeprazole 20mg PO daily \u2014 administered 0730 (30 min before breakfast).",
+            quote: "Omeprazole 20mg PO daily — administered 0730 (30 min before breakfast).",
             rationale: "Active PPI therapy for GERD."
           }
         ],
-        keyFindings: ["GERD on active problem list with ICD-10 K21.0", "Omeprazole 20mg daily \u2014 well controlled"]
+        keyFindings: ["GERD on active problem list with ICD-10 K21.0", "Omeprazole 20mg daily — well controlled"]
       },
       diagnosisSummary: "GERD well documented on problem list. Active PPI therapy with good symptom control.",
-      treatmentSummary: "Omeprazole 20mg daily. Dietary modifications \u2014 elevated HOB, no late meals."
+      treatmentSummary: "Omeprazole 20mg daily. Dietary modifications — elevated HOB, no late meals.",
+      carePlan: {
+        onCarePlan: !0,
+        items: ["PPI administered 30 min before breakfast", "HOB elevated 30 degrees at night", "Avoid late meals — nothing 3 hours before bed"]
+      }
     },
-    "I2100": {
+    I2100: {
       item: {
         mdsItem: "I2100",
         itemName: "Thyroid Disorder",
         section: "I",
-        description: "I2100 \u2014 Does the resident have a thyroid disorder (e.g., hypothyroidism, hyperthyroidism)?",
+        description: "I2100 — Does the resident have a thyroid disorder (e.g., hypothyroidism, hyperthyroidism)?",
         status: "code",
-        validation: { diagnosisCheck: { passed: true }, treatmentCheck: { passed: true } },
+        validation: { diagnosisCheck: { passed: !0 }, treatmentCheck: { passed: !0 } },
         evidence: [
           {
             sourceType: "lab_result",
             sourceId: "doc-049",
             documentName: "Lab Results",
-            displayName: "Lab Results \u2014 01/15/2026",
+            displayName: "Lab Results — 01/15/2026",
             effectiveDate: "2026-01-15",
             quote: "TSH: 6.8 mIU/L (H), Free T4: 0.7 ng/dL (L-normal). Subclinical hypothyroidism on levothyroxine therapy.",
             rationale: "Lab values confirming hypothyroidism under treatment."
@@ -1636,31 +1910,35 @@ var DEMO_API_RESPONSES = {
             sourceType: "order",
             sourceId: "mar-049",
             documentName: "MAR",
-            displayName: "MAR \u2014 01/27/2026",
+            displayName: "MAR — 01/27/2026",
             effectiveDate: "2026-01-27",
-            quote: "Levothyroxine 75mcg PO daily \u2014 administered 0630 (on empty stomach, 30 min before food).",
+            quote: "Levothyroxine 75mcg PO daily — administered 0630 (on empty stomach, 30 min before food).",
             rationale: "Active thyroid replacement therapy."
           }
         ],
-        keyFindings: ["TSH 6.8 \u2014 suboptimally controlled hypothyroidism", "Levothyroxine 75mcg daily active on MAR"]
+        keyFindings: ["TSH 6.8 — suboptimally controlled hypothyroidism", "Levothyroxine 75mcg daily active on MAR"]
       },
-      diagnosisSummary: "Hypothyroidism documented with ICD-10 E03.9. TSH 6.8 on latest labs \u2014 dose adjustment may be needed.",
-      treatmentSummary: "Levothyroxine 75mcg daily. TSH recheck ordered in 6 weeks."
+      diagnosisSummary: "Hypothyroidism documented with ICD-10 E03.9. TSH 6.8 on latest labs — dose adjustment may be needed.",
+      treatmentSummary: "Levothyroxine 75mcg daily. TSH recheck ordered in 6 weeks.",
+      carePlan: {
+        onCarePlan: !0,
+        items: ["Levothyroxine on empty stomach at 0630", "TSH recheck in 6 weeks", "Hold calcium/iron 4 hours after dose"]
+      }
     },
-    "I2300": {
+    I2300: {
       item: {
         mdsItem: "I2300",
         itemName: "Hyperglycemia",
         section: "I",
-        description: "I2300 \u2014 Does the resident have hyperglycemia?",
+        description: "I2300 — Does the resident have hyperglycemia?",
         status: "dont_code",
-        validation: { diagnosisCheck: { passed: true }, treatmentCheck: { passed: true } },
+        validation: { diagnosisCheck: { passed: !0 }, treatmentCheck: { passed: !0 } },
         evidence: [
           {
             sourceType: "progress-note",
             sourceId: "doc-050",
             documentName: "MD Progress Note",
-            displayName: "MD Progress Note \u2014 01/22/2026",
+            displayName: "MD Progress Note — 01/22/2026",
             effectiveDate: "2026-01-22",
             quote: "Blood glucose elevations are attributed to known diabetes mellitus (I2000), not a separate hyperglycemia diagnosis. Covered under DM management plan.",
             rationale: "Glucose elevations accounted for under DM diagnosis.",
@@ -1670,104 +1948,111 @@ var DEMO_API_RESPONSES = {
         keyFindings: ["Glucose elevations managed under DM (I2000)", "No separate hyperglycemia diagnosis"]
       },
       diagnosisSummary: "No separate hyperglycemia diagnosis. Blood glucose elevations managed under diabetes mellitus (I2000).",
-      treatmentSummary: "Glucose management covered under DM treatment plan \u2014 metformin, sliding scale, monitoring."
+      treatmentSummary: "Glucose management covered under DM treatment plan — metformin, sliding scale, monitoring.",
+      carePlan: { onCarePlan: !1 }
     },
-    "I4200": {
+    I4200: {
       item: {
         mdsItem: "I4200",
         itemName: "Multi-Drug Resistant Organism (MDRO)",
         section: "I",
-        description: "I4200 \u2014 Does the resident have an infection with a multi-drug resistant organism (MDRO)?",
+        description: "I4200 — Does the resident have an infection with a multi-drug resistant organism (MDRO)?",
         status: "code",
-        validation: { diagnosisCheck: { passed: true }, treatmentCheck: { passed: true } },
+        validation: { diagnosisCheck: { passed: !0 }, treatmentCheck: { passed: !0 } },
         evidence: [
           {
             sourceType: "lab_result",
             sourceId: "doc-051",
             documentName: "Microbiology Report",
-            displayName: "Microbiology Report \u2014 01/10/2026",
+            displayName: "Microbiology Report — 01/10/2026",
             effectiveDate: "2026-01-10",
             quote: "Urine culture: E. coli >100,000 CFU/mL. ESBL-producing. Resistant to ampicillin, ciprofloxacin, TMP-SMX. Sensitive to meropenem, nitrofurantoin.",
-            rationale: "Culture confirming ESBL-producing E. coli \u2014 qualifies as MDRO."
+            rationale: "Culture confirming ESBL-producing E. coli — qualifies as MDRO."
           },
           {
             sourceType: "order",
             sourceId: "mar-051",
             documentName: "MAR",
-            displayName: "MAR \u2014 01/12/2026",
+            displayName: "MAR — 01/12/2026",
             effectiveDate: "2026-01-12",
-            quote: "Nitrofurantoin 100mg PO BID x 7 days \u2014 started 01/12. Contact precautions initiated per infection control protocol.",
+            quote: "Nitrofurantoin 100mg PO BID x 7 days — started 01/12. Contact precautions initiated per infection control protocol.",
             rationale: "Active antibiotic treatment for MDRO infection."
           }
         ],
         keyFindings: ["ESBL-producing E. coli in urine culture", "Contact precautions initiated", "Treated with nitrofurantoin 100mg BID"]
       },
       diagnosisSummary: "MDRO infection documented: ESBL-producing E. coli UTI confirmed by culture 01/10/2026.",
-      treatmentSummary: "Nitrofurantoin 100mg BID x 7 days. Contact precautions per infection control protocol."
+      treatmentSummary: "Nitrofurantoin 100mg BID x 7 days. Contact precautions per infection control protocol.",
+      carePlan: {
+        onCarePlan: !0,
+        items: ["Contact precautions per infection control", "Antibiotic with food to reduce GI upset", "Repeat urine culture after antibiotics complete", "Monitor for C. diff symptoms"]
+      }
     },
-    "I4400": {
+    I4400: {
       item: {
         mdsItem: "I4400",
         itemName: "Pneumonia",
         section: "I",
-        description: "I4400 \u2014 Does the resident have pneumonia?",
+        description: "I4400 — Does the resident have pneumonia?",
         status: "dont_code",
-        validation: { diagnosisCheck: { passed: true }, treatmentCheck: { passed: true } },
+        validation: { diagnosisCheck: { passed: !0 }, treatmentCheck: { passed: !0 } },
         evidence: [
           {
             sourceType: "progress-note",
             sourceId: "doc-052",
             documentName: "MD Progress Note",
-            displayName: "MD Progress Note \u2014 01/22/2026",
+            displayName: "MD Progress Note — 01/22/2026",
             effectiveDate: "2026-01-22",
-            quote: "Lungs clear to auscultation bilaterally. No cough, fever, or respiratory distress. Chest X-ray 01/05 \u2014 no infiltrates. No active pneumonia.",
+            quote: "Lungs clear to auscultation bilaterally. No cough, fever, or respiratory distress. Chest X-ray 01/05 — no infiltrates. No active pneumonia.",
             rationale: "Clinical exam and imaging ruling out pneumonia.",
             pageNumber: 1
           }
         ],
-        keyFindings: ["Lungs CTA bilaterally", "CXR 01/05 \u2014 no infiltrates", "No respiratory symptoms"]
+        keyFindings: ["Lungs CTA bilaterally", "CXR 01/05 — no infiltrates", "No respiratory symptoms"]
       },
       diagnosisSummary: "No pneumonia documented. Chest X-ray clear, lungs clear on exam, no respiratory symptoms.",
-      treatmentSummary: "No pneumonia treatment. Pneumococcal and influenza vaccines up to date."
+      treatmentSummary: "No pneumonia treatment. Pneumococcal and influenza vaccines up to date.",
+      carePlan: { onCarePlan: !1 }
     },
-    "I4500": {
+    I4500: {
       item: {
         mdsItem: "I4500",
         itemName: "Septicemia",
         section: "I",
-        description: "I4500 \u2014 Does the resident have septicemia?",
+        description: "I4500 — Does the resident have septicemia?",
         status: "dont_code",
-        validation: { diagnosisCheck: { passed: true }, treatmentCheck: { passed: true } },
+        validation: { diagnosisCheck: { passed: !0 }, treatmentCheck: { passed: !0 } },
         evidence: [
           {
             sourceType: "lab_result",
             sourceId: "doc-053",
             documentName: "Lab Results",
-            displayName: "Lab Results \u2014 01/15/2026",
+            displayName: "Lab Results — 01/15/2026",
             effectiveDate: "2026-01-15",
-            quote: "WBC: 7.2 (normal), Lactate: 1.1 mmol/L (normal), Procalcitonin: 0.04 ng/mL (normal). Blood cultures 01/10 \u2014 no growth at 5 days.",
+            quote: "WBC: 7.2 (normal), Lactate: 1.1 mmol/L (normal), Procalcitonin: 0.04 ng/mL (normal). Blood cultures 01/10 — no growth at 5 days.",
             rationale: "Labs and cultures ruling out septicemia."
           }
         ],
         keyFindings: ["Blood cultures negative at 5 days", "WBC, lactate, procalcitonin all normal"]
       },
       diagnosisSummary: "No septicemia documented. Blood cultures negative, inflammatory markers normal.",
-      treatmentSummary: "No sepsis treatment. UTI treated with targeted antibiotics only."
+      treatmentSummary: "No sepsis treatment. UTI treated with targeted antibiotics only.",
+      carePlan: { onCarePlan: !1 }
     },
-    "I4900": {
+    I4900: {
       item: {
         mdsItem: "I4900",
         itemName: "Schizophrenia",
         section: "I",
-        description: "I4900 \u2014 Does the resident have schizophrenia?",
+        description: "I4900 — Does the resident have schizophrenia?",
         status: "dont_code",
-        validation: { diagnosisCheck: { passed: true }, treatmentCheck: { passed: true } },
+        validation: { diagnosisCheck: { passed: !0 }, treatmentCheck: { passed: !0 } },
         evidence: [
           {
             sourceType: "progress-note",
             sourceId: "doc-054",
             documentName: "Psychiatric Evaluation",
-            displayName: "Psychiatric Evaluation \u2014 12/15/2025",
+            displayName: "Psychiatric Evaluation — 12/15/2025",
             effectiveDate: "2025-12-15",
             quote: "No history of schizophrenia or psychotic disorders. Psychiatric review of systems negative for hallucinations, delusions, or disorganized thinking.",
             rationale: "Psychiatric evaluation confirming no schizophrenia.",
@@ -1777,22 +2062,23 @@ var DEMO_API_RESPONSES = {
         keyFindings: ["Psychiatric evaluation negative for psychotic disorders", "No antipsychotic medications on profile"]
       },
       diagnosisSummary: "No schizophrenia documented. Psychiatric evaluation negative for psychotic symptoms.",
-      treatmentSummary: "No antipsychotic medications prescribed."
+      treatmentSummary: "No antipsychotic medications prescribed.",
+      carePlan: { onCarePlan: !1 }
     },
-    "I5200": {
+    I5200: {
       item: {
         mdsItem: "I5200",
         itemName: "Paraplegia",
         section: "I",
-        description: "I5200 \u2014 Does the resident have paraplegia?",
+        description: "I5200 — Does the resident have paraplegia?",
         status: "dont_code",
-        validation: { diagnosisCheck: { passed: true }, treatmentCheck: { passed: true } },
+        validation: { diagnosisCheck: { passed: !0 }, treatmentCheck: { passed: !0 } },
         evidence: [
           {
             sourceType: "progress-note",
             sourceId: "doc-055",
             documentName: "PT Evaluation",
-            displayName: "PT Evaluation \u2014 01/06/2026",
+            displayName: "PT Evaluation — 01/06/2026",
             effectiveDate: "2026-01-06",
             quote: "Left hemiparesis noted (see I5100) but bilateral lower extremity function preserved. Patient ambulates with rolling walker and min assist. No paraplegia.",
             rationale: "PT evaluation confirming no paraplegia.",
@@ -1802,49 +2088,51 @@ var DEMO_API_RESPONSES = {
         keyFindings: ["Bilateral LE function preserved", "Ambulates with walker and min assist"]
       },
       diagnosisSummary: "No paraplegia documented. Left hemiparesis (I5100) but both lower extremities functional.",
-      treatmentSummary: "PT 5x/week for mobility. No paraplegia-specific treatment needed."
+      treatmentSummary: "PT 5x/week for mobility. No paraplegia-specific treatment needed.",
+      carePlan: { onCarePlan: !1 }
     },
-    "I5250": {
+    I5250: {
       item: {
         mdsItem: "I5250",
         itemName: "Quadriplegia",
         section: "I",
-        description: "I5250 \u2014 Does the resident have quadriplegia?",
+        description: "I5250 — Does the resident have quadriplegia?",
         status: "dont_code",
-        validation: { diagnosisCheck: { passed: true }, treatmentCheck: { passed: true } },
+        validation: { diagnosisCheck: { passed: !0 }, treatmentCheck: { passed: !0 } },
         evidence: [
           {
             sourceType: "progress-note",
             sourceId: "doc-056",
             documentName: "PT Evaluation",
-            displayName: "PT Evaluation \u2014 01/06/2026",
+            displayName: "PT Evaluation — 01/06/2026",
             effectiveDate: "2026-01-06",
-            quote: "Right upper and lower extremities with full strength 5/5. Left-sided weakness 2-3/5 from CVA. No quadriplegia \u2014 functional use of right side.",
+            quote: "Right upper and lower extremities with full strength 5/5. Left-sided weakness 2-3/5 from CVA. No quadriplegia — functional use of right side.",
             rationale: "PT documentation ruling out quadriplegia.",
             pageNumber: 1
           }
         ],
-        keyFindings: ["Right side full strength 5/5", "Left side weakness from CVA only \u2014 not quadriplegia"]
+        keyFindings: ["Right side full strength 5/5", "Left side weakness from CVA only — not quadriplegia"]
       },
       diagnosisSummary: "No quadriplegia documented. Right-sided extremities with full strength. Left hemiparesis only.",
-      treatmentSummary: "No quadriplegia-specific interventions. PT/OT for left-sided weakness."
+      treatmentSummary: "No quadriplegia-specific interventions. PT/OT for left-sided weakness.",
+      carePlan: { onCarePlan: !1 }
     },
-    "I5300": {
+    I5300: {
       item: {
         mdsItem: "I5300",
         itemName: "Aphasia",
         section: "I",
-        description: "I5300 \u2014 Does the resident have aphasia?",
+        description: "I5300 — Does the resident have aphasia?",
         status: "dont_code",
-        validation: { diagnosisCheck: { passed: true }, treatmentCheck: { passed: true } },
+        validation: { diagnosisCheck: { passed: !0 }, treatmentCheck: { passed: !0 } },
         evidence: [
           {
             sourceType: "progress-note",
             sourceId: "doc-057",
             documentName: "SLP Evaluation",
-            displayName: "SLP Evaluation \u2014 01/20/2026",
+            displayName: "SLP Evaluation — 01/20/2026",
             effectiveDate: "2026-01-20",
-            quote: "No aphasia documented. Communication intact. Swallowing evaluation only \u2014 dysphagia noted but language function preserved.",
+            quote: "No aphasia documented. Communication intact. Swallowing evaluation only — dysphagia noted but language function preserved.",
             rationale: "SLP evaluation found no aphasia.",
             pageNumber: 1
           }
@@ -1852,47 +2140,49 @@ var DEMO_API_RESPONSES = {
         keyFindings: ["No aphasia documented in clinical records", "Communication abilities intact per SLP evaluation"]
       },
       diagnosisSummary: "No aphasia documented. SLP evaluation focused on swallowing/dysphagia only.",
-      treatmentSummary: "No aphasia-specific therapy. SLP treating dysphagia only."
+      treatmentSummary: "No aphasia-specific therapy. SLP treating dysphagia only.",
+      carePlan: { onCarePlan: !1 }
     },
-    "I5350": {
+    I5350: {
       item: {
         mdsItem: "I5350",
         itemName: "Non-Alzheimer Dementia",
         section: "I",
-        description: "I5350 \u2014 Does the resident have non-Alzheimer dementia (e.g., vascular, Lewy body)?",
+        description: "I5350 — Does the resident have non-Alzheimer dementia (e.g., vascular, Lewy body)?",
         status: "dont_code",
-        validation: { diagnosisCheck: { passed: true }, treatmentCheck: { passed: true } },
+        validation: { diagnosisCheck: { passed: !0 }, treatmentCheck: { passed: !0 } },
         evidence: [
           {
             sourceType: "progress-note",
             sourceId: "doc-058",
             documentName: "Neurology Consult",
-            displayName: "Neurology Consult \u2014 12/20/2025",
+            displayName: "Neurology Consult — 12/20/2025",
             effectiveDate: "2025-12-20",
-            quote: "MMSE 22/30 \u2014 mild cognitive impairment likely related to CVA sequelae. Does not meet criteria for dementia diagnosis at this time. Monitor and reassess in 3 months.",
-            rationale: "Neurology evaluation \u2014 cognitive impairment from CVA but not dementia.",
+            quote: "MMSE 22/30 — mild cognitive impairment likely related to CVA sequelae. Does not meet criteria for dementia diagnosis at this time. Monitor and reassess in 3 months.",
+            rationale: "Neurology evaluation — cognitive impairment from CVA but not dementia.",
             pageNumber: 2
           }
         ],
-        keyFindings: ["MMSE 22/30 \u2014 mild cognitive impairment", "CVA-related, not dementia per neurology", "Reassess in 3 months"]
+        keyFindings: ["MMSE 22/30 — mild cognitive impairment", "CVA-related, not dementia per neurology", "Reassess in 3 months"]
       },
-      diagnosisSummary: "No non-Alzheimer dementia documented. Mild cognitive impairment from CVA \u2014 does not meet dementia criteria per neurology.",
-      treatmentSummary: "Cognitive stimulation activities. Neurology follow-up in 3 months for reassessment."
+      diagnosisSummary: "No non-Alzheimer dementia documented. Mild cognitive impairment from CVA — does not meet dementia criteria per neurology.",
+      treatmentSummary: "Cognitive stimulation activities. Neurology follow-up in 3 months for reassessment.",
+      carePlan: { onCarePlan: !1 }
     },
-    "I5400": {
+    I5400: {
       item: {
         mdsItem: "I5400",
         itemName: "Alzheimer Disease",
         section: "I",
-        description: "I5400 \u2014 Does the resident have Alzheimer disease?",
+        description: "I5400 — Does the resident have Alzheimer disease?",
         status: "dont_code",
-        validation: { diagnosisCheck: { passed: true }, treatmentCheck: { passed: true } },
+        validation: { diagnosisCheck: { passed: !0 }, treatmentCheck: { passed: !0 } },
         evidence: [
           {
             sourceType: "progress-note",
             sourceId: "doc-059",
             documentName: "Neurology Consult",
-            displayName: "Neurology Consult \u2014 12/20/2025",
+            displayName: "Neurology Consult — 12/20/2025",
             effectiveDate: "2025-12-20",
             quote: "No clinical features suggestive of Alzheimer disease. Cognitive changes are acute post-CVA, not progressive degenerative pattern. No cholinesterase inhibitors indicated.",
             rationale: "Neurology ruling out Alzheimer disease.",
@@ -1902,47 +2192,49 @@ var DEMO_API_RESPONSES = {
         keyFindings: ["Cognitive changes acute post-CVA, not progressive", "No Alzheimer features per neurology"]
       },
       diagnosisSummary: "No Alzheimer disease documented. Cognitive impairment attributed to CVA, not neurodegenerative disease.",
-      treatmentSummary: "No Alzheimer-specific medications. No cholinesterase inhibitors or memantine."
+      treatmentSummary: "No Alzheimer-specific medications. No cholinesterase inhibitors or memantine.",
+      carePlan: { onCarePlan: !1 }
     },
-    "I5500": {
+    I5500: {
       item: {
         mdsItem: "I5500",
         itemName: "Multiple Sclerosis",
         section: "I",
-        description: "I5500 \u2014 Does the resident have multiple sclerosis (MS)?",
+        description: "I5500 — Does the resident have multiple sclerosis (MS)?",
         status: "dont_code",
-        validation: { diagnosisCheck: { passed: true }, treatmentCheck: { passed: true } },
+        validation: { diagnosisCheck: { passed: !0 }, treatmentCheck: { passed: !0 } },
         evidence: [
           {
             sourceType: "progress-note",
             sourceId: "doc-060",
             documentName: "Neurology Consult",
-            displayName: "Neurology Consult \u2014 12/20/2025",
+            displayName: "Neurology Consult — 12/20/2025",
             effectiveDate: "2025-12-20",
             quote: "No history of multiple sclerosis. Left-sided weakness is consistent with ischemic stroke, not demyelinating disease. MRI brain shows old infarct, no white matter lesions.",
-            rationale: "Neurology ruling out MS \u2014 findings consistent with stroke.",
+            rationale: "Neurology ruling out MS — findings consistent with stroke.",
             pageNumber: 3
           }
         ],
-        keyFindings: ["MRI \u2014 old infarct, no MS-type white matter lesions", "Weakness from stroke, not demyelination"]
+        keyFindings: ["MRI — old infarct, no MS-type white matter lesions", "Weakness from stroke, not demyelination"]
       },
       diagnosisSummary: "No multiple sclerosis documented. MRI shows old infarct only, no demyelinating lesions.",
-      treatmentSummary: "No MS disease-modifying therapy. Neurological deficits managed as CVA sequelae."
+      treatmentSummary: "No MS disease-modifying therapy. Neurological deficits managed as CVA sequelae.",
+      carePlan: { onCarePlan: !1 }
     },
-    "I5700": {
+    I5700: {
       item: {
         mdsItem: "I5700",
         itemName: "Schizophrenia (Section I)",
         section: "I",
-        description: "I5700 \u2014 Does the resident have schizophrenia?",
+        description: "I5700 — Does the resident have schizophrenia?",
         status: "dont_code",
-        validation: { diagnosisCheck: { passed: true }, treatmentCheck: { passed: true } },
+        validation: { diagnosisCheck: { passed: !0 }, treatmentCheck: { passed: !0 } },
         evidence: [
           {
             sourceType: "progress-note",
             sourceId: "doc-061",
             documentName: "Psychiatric Evaluation",
-            displayName: "Psychiatric Evaluation \u2014 12/15/2025",
+            displayName: "Psychiatric Evaluation — 12/15/2025",
             effectiveDate: "2025-12-15",
             quote: "No history or symptoms of schizophrenia. See I4900 evaluation. Mental status exam: oriented x3, no psychotic features, thought process linear and goal-directed.",
             rationale: "Psychiatric evaluation negative for schizophrenia.",
@@ -1951,48 +2243,50 @@ var DEMO_API_RESPONSES = {
         ],
         keyFindings: ["No psychotic features on mental status exam", "Thought process linear and goal-directed"]
       },
-      diagnosisSummary: "No schizophrenia. Psychiatric evaluation negative \u2014 no psychotic symptoms.",
-      treatmentSummary: "No antipsychotic medications. No psychiatric treatment for psychosis."
+      diagnosisSummary: "No schizophrenia. Psychiatric evaluation negative — no psychotic symptoms.",
+      treatmentSummary: "No antipsychotic medications. No psychiatric treatment for psychosis.",
+      carePlan: { onCarePlan: !1 }
     },
-    "I5800": {
+    I5800: {
       item: {
         mdsItem: "I5800",
         itemName: "Anxiety Disorder",
         section: "I",
-        description: "I5800 \u2014 Does the resident have an anxiety disorder?",
+        description: "I5800 — Does the resident have an anxiety disorder?",
         status: "dont_code",
-        validation: { diagnosisCheck: { passed: true }, treatmentCheck: { passed: true } },
+        validation: { diagnosisCheck: { passed: !0 }, treatmentCheck: { passed: !0 } },
         evidence: [
           {
             sourceType: "progress-note",
             sourceId: "doc-062",
             documentName: "Psychiatric Evaluation",
-            displayName: "Psychiatric Evaluation \u2014 12/15/2025",
+            displayName: "Psychiatric Evaluation — 12/15/2025",
             effectiveDate: "2025-12-15",
             quote: "GAD-7 score: 4 (minimal anxiety). Patient reports occasional worry about health but no panic attacks, avoidance behaviors, or functional impairment from anxiety.",
             rationale: "Psychiatric screening negative for anxiety disorder.",
             pageNumber: 1
           }
         ],
-        keyFindings: ["GAD-7 score 4 \u2014 minimal anxiety", "No panic attacks or avoidance behaviors"]
+        keyFindings: ["GAD-7 score 4 — minimal anxiety", "No panic attacks or avoidance behaviors"]
       },
-      diagnosisSummary: "No anxiety disorder documented. GAD-7 score 4 \u2014 minimal, subclinical anxiety only.",
-      treatmentSummary: "No anxiolytic medications. Supportive counseling available PRN."
+      diagnosisSummary: "No anxiety disorder documented. GAD-7 score 4 — minimal, subclinical anxiety only.",
+      treatmentSummary: "No anxiolytic medications. Supportive counseling available PRN.",
+      carePlan: { onCarePlan: !1 }
     },
-    "I5900": {
+    I5900: {
       item: {
         mdsItem: "I5900",
         itemName: "PTSD",
         section: "I",
-        description: "I5900 \u2014 Does the resident have post-traumatic stress disorder (PTSD)?",
+        description: "I5900 — Does the resident have post-traumatic stress disorder (PTSD)?",
         status: "dont_code",
-        validation: { diagnosisCheck: { passed: true }, treatmentCheck: { passed: true } },
+        validation: { diagnosisCheck: { passed: !0 }, treatmentCheck: { passed: !0 } },
         evidence: [
           {
             sourceType: "progress-note",
             sourceId: "doc-063",
             documentName: "Psychiatric Evaluation",
-            displayName: "Psychiatric Evaluation \u2014 12/15/2025",
+            displayName: "Psychiatric Evaluation — 12/15/2025",
             effectiveDate: "2025-12-15",
             quote: "No history of PTSD. Patient denies traumatic experiences, nightmares, flashbacks, or hypervigilance. PC-PTSD-5 screen negative.",
             rationale: "PTSD screening negative.",
@@ -2001,23 +2295,24 @@ var DEMO_API_RESPONSES = {
         ],
         keyFindings: ["PC-PTSD-5 screen negative", "No trauma history, nightmares, or flashbacks"]
       },
-      diagnosisSummary: "No PTSD documented. Screening negative \u2014 no traumatic stress symptoms.",
-      treatmentSummary: "No PTSD-specific treatment or trauma-focused therapy."
+      diagnosisSummary: "No PTSD documented. Screening negative — no traumatic stress symptoms.",
+      treatmentSummary: "No PTSD-specific treatment or trauma-focused therapy.",
+      carePlan: { onCarePlan: !1 }
     },
-    "I5950": {
+    I5950: {
       item: {
         mdsItem: "I5950",
         itemName: "Psychotic Disorder",
         section: "I",
-        description: "I5950 \u2014 Does the resident have a psychotic disorder (other than schizophrenia)?",
+        description: "I5950 — Does the resident have a psychotic disorder (other than schizophrenia)?",
         status: "dont_code",
-        validation: { diagnosisCheck: { passed: true }, treatmentCheck: { passed: true } },
+        validation: { diagnosisCheck: { passed: !0 }, treatmentCheck: { passed: !0 } },
         evidence: [
           {
             sourceType: "progress-note",
             sourceId: "doc-064",
             documentName: "Psychiatric Evaluation",
-            displayName: "Psychiatric Evaluation \u2014 12/15/2025",
+            displayName: "Psychiatric Evaluation — 12/15/2025",
             effectiveDate: "2025-12-15",
             quote: "No psychotic features identified. No hallucinations (auditory or visual), no delusions, no disorganized speech. Reality testing intact.",
             rationale: "Psychiatric evaluation ruling out psychotic disorder.",
@@ -2026,23 +2321,24 @@ var DEMO_API_RESPONSES = {
         ],
         keyFindings: ["No hallucinations or delusions", "Reality testing intact"]
       },
-      diagnosisSummary: "No psychotic disorder documented. Psychiatric evaluation \u2014 no hallucinations, delusions, or disorganized thinking.",
-      treatmentSummary: "No antipsychotic medications. No psychosis treatment."
+      diagnosisSummary: "No psychotic disorder documented. Psychiatric evaluation — no hallucinations, delusions, or disorganized thinking.",
+      treatmentSummary: "No antipsychotic medications. No psychosis treatment.",
+      carePlan: { onCarePlan: !1 }
     },
-    "I6000": {
+    I6000: {
       item: {
         mdsItem: "I6000",
         itemName: "Asthma / COPD / Chronic Lung Disease",
         section: "I",
-        description: "I6000 \u2014 Does the resident have asthma, COPD, or chronic lung disease?",
+        description: "I6000 — Does the resident have asthma, COPD, or chronic lung disease?",
         status: "dont_code",
-        validation: { diagnosisCheck: { passed: true }, treatmentCheck: { passed: true } },
+        validation: { diagnosisCheck: { passed: !0 }, treatmentCheck: { passed: !0 } },
         evidence: [
           {
             sourceType: "progress-note",
             sourceId: "doc-065",
             documentName: "MD Progress Note",
-            displayName: "MD Progress Note \u2014 01/22/2026",
+            displayName: "MD Progress Note — 01/22/2026",
             effectiveDate: "2026-01-22",
             quote: "Lungs clear to auscultation bilaterally. No wheezing, rhonchi, or prolonged expiratory phase. No history of asthma, COPD, or chronic lung disease. SpO2 97% on room air.",
             rationale: "Clinical exam negative for chronic lung disease.",
@@ -2052,48 +2348,50 @@ var DEMO_API_RESPONSES = {
             sourceType: "progress-note",
             sourceId: "doc-066",
             documentName: "Chest X-Ray Report",
-            displayName: "Chest X-Ray \u2014 01/05/2026",
+            displayName: "Chest X-Ray — 01/05/2026",
             effectiveDate: "2026-01-05",
             quote: "Lungs clear bilaterally. No hyperinflation. Normal cardiac silhouette. No pleural effusion.",
             rationale: "Chest imaging with no evidence of chronic lung disease."
           }
         ],
-        keyFindings: ["Lungs CTA \u2014 no wheezing or rhonchi", "SpO2 97% on room air", "CXR \u2014 no hyperinflation or chronic changes"]
+        keyFindings: ["Lungs CTA — no wheezing or rhonchi", "SpO2 97% on room air", "CXR — no hyperinflation or chronic changes"]
       },
       diagnosisSummary: "No asthma, COPD, or chronic lung disease documented. Lungs clear, SpO2 97%, imaging normal.",
-      treatmentSummary: "No bronchodilators or inhaled corticosteroids. No supplemental oxygen."
+      treatmentSummary: "No bronchodilators or inhaled corticosteroids. No supplemental oxygen.",
+      carePlan: { onCarePlan: !1 }
     },
-    "I6100": {
+    I6100: {
       item: {
         mdsItem: "I6100",
         itemName: "Respiratory Failure",
         section: "I",
-        description: "I6100 \u2014 Does the resident have respiratory failure?",
+        description: "I6100 — Does the resident have respiratory failure?",
         status: "dont_code",
-        validation: { diagnosisCheck: { passed: true }, treatmentCheck: { passed: true } },
+        validation: { diagnosisCheck: { passed: !0 }, treatmentCheck: { passed: !0 } },
         evidence: [
           {
             sourceType: "progress-note",
             sourceId: "doc-067",
             documentName: "MD Progress Note",
-            displayName: "MD Progress Note \u2014 01/22/2026",
+            displayName: "MD Progress Note — 01/22/2026",
             effectiveDate: "2026-01-22",
-            quote: "Respiratory status stable. SpO2 97% on room air. No supplemental oxygen required. ABG not indicated \u2014 no clinical concern for respiratory failure.",
+            quote: "Respiratory status stable. SpO2 97% on room air. No supplemental oxygen required. ABG not indicated — no clinical concern for respiratory failure.",
             rationale: "Clinical assessment ruling out respiratory failure.",
             pageNumber: 1
           }
         ],
-        keyFindings: ["SpO2 97% on room air \u2014 no supplemental O2", "No respiratory distress or failure"]
+        keyFindings: ["SpO2 97% on room air — no supplemental O2", "No respiratory distress or failure"]
       },
       diagnosisSummary: "No respiratory failure documented. Oxygenation adequate on room air.",
-      treatmentSummary: "No supplemental oxygen. No respiratory support devices."
+      treatmentSummary: "No supplemental oxygen. No respiratory support devices.",
+      carePlan: { onCarePlan: !1 }
     },
-    "I6200": {
+    I6200: {
       item: {
         mdsItem: "I6200",
         itemName: "None of the Above (Respiratory)",
         section: "I",
-        description: "I6200 \u2014 None of the above respiratory conditions.",
+        description: "I6200 — None of the above respiratory conditions.",
         status: "dont_code",
         evidence: [],
         rationale: "No respiratory conditions identified in I6000-I6100. This is a confirmation item."
@@ -2101,33 +2399,33 @@ var DEMO_API_RESPONSES = {
       diagnosisSummary: null,
       treatmentSummary: null
     },
-    "I6300": {
+    I6300: {
       item: {
         mdsItem: "I6300",
         itemName: "None of the Above (Additional)",
         section: "I",
-        description: "I6300 \u2014 None of the above additional conditions.",
+        description: "I6300 — None of the above additional conditions.",
         status: "dont_code",
         evidence: [],
-        rationale: "Confirmation item \u2014 no additional conditions in this category."
+        rationale: "Confirmation item — no additional conditions in this category."
       },
       diagnosisSummary: null,
       treatmentSummary: null
     },
-    "I6500": {
+    I6500: {
       item: {
         mdsItem: "I6500",
         itemName: "Seizure Disorder / Epilepsy",
         section: "I",
-        description: "I6500 \u2014 Does the resident have a seizure disorder or epilepsy?",
+        description: "I6500 — Does the resident have a seizure disorder or epilepsy?",
         status: "dont_code",
-        validation: { diagnosisCheck: { passed: true }, treatmentCheck: { passed: true } },
+        validation: { diagnosisCheck: { passed: !0 }, treatmentCheck: { passed: !0 } },
         evidence: [
           {
             sourceType: "progress-note",
             sourceId: "doc-068",
             documentName: "Neurology Consult",
-            displayName: "Neurology Consult \u2014 12/20/2025",
+            displayName: "Neurology Consult — 12/20/2025",
             effectiveDate: "2025-12-20",
             quote: "No seizure history. Post-CVA prophylactic seizure medication not indicated per current guidelines. EEG not required. No witnessed seizure activity.",
             rationale: "Neurology evaluation confirming no seizure disorder.",
@@ -2137,14 +2435,15 @@ var DEMO_API_RESPONSES = {
         keyFindings: ["No seizure history", "No prophylactic anticonvulsants indicated post-CVA", "No witnessed seizure activity"]
       },
       diagnosisSummary: "No seizure disorder or epilepsy documented. Neurology evaluation negative.",
-      treatmentSummary: "No anticonvulsant medications. No seizure precautions beyond standard post-CVA monitoring."
+      treatmentSummary: "No anticonvulsant medications. No seizure precautions beyond standard post-CVA monitoring.",
+      carePlan: { onCarePlan: !1 }
     },
-    "I7900": {
+    I7900: {
       item: {
         mdsItem: "I7900",
         itemName: "None of the Above (Neurological)",
         section: "I",
-        description: "I7900 \u2014 None of the above neurological conditions (besides those already coded).",
+        description: "I7900 — None of the above neurological conditions (besides those already coded).",
         status: "dont_code",
         evidence: [],
         rationale: "Hemiparesis (I5100) and Malnutrition (I5600) are coded. No additional neurological conditions apply."
@@ -2152,29 +2451,30 @@ var DEMO_API_RESPONSES = {
       diagnosisSummary: null,
       treatmentSummary: null
     },
-    "I8000": {
+    I8000: {
       item: {
         mdsItem: "I8000",
         itemName: "Additional Active Diagnoses",
         section: "I",
-        description: "I8000 \u2014 Does the resident have additional active diagnoses not captured above?",
+        description: "I8000 — Does the resident have additional active diagnoses not captured above?",
         status: "dont_code",
         evidence: [
           {
             sourceType: "progress-note",
             sourceId: "doc-069",
             documentName: "MD Progress Note",
-            displayName: "MD Progress Note \u2014 01/22/2026",
+            displayName: "MD Progress Note — 01/22/2026",
             effectiveDate: "2026-01-22",
             quote: "Active problem list reviewed. All active diagnoses captured in Sections I0100-I7900. CKD Stage 3, Obesity, and Chronic pain documented in problem list but not MDS-reportable in Section I.",
             rationale: "Physician review confirming all Section I diagnoses captured.",
             pageNumber: 1
           }
         ],
-        keyFindings: ["All Section I diagnoses captured above", "CKD Stage 3, Obesity, Chronic pain on problem list \u2014 not Section I items"]
+        keyFindings: ["All Section I diagnoses captured above", "CKD Stage 3, Obesity, Chronic pain on problem list — not Section I items"]
       },
       diagnosisSummary: "No additional Section I diagnoses to capture. Other active conditions (CKD, obesity, chronic pain) not reportable here.",
-      treatmentSummary: "All active treatments documented under their respective Section I items."
+      treatmentSummary: "All active treatments documented under their respective Section I items.",
+      carePlan: { onCarePlan: !1 }
     }
   },
   // ════════════════════════════════════════════
@@ -2203,10 +2503,10 @@ var DEMO_API_RESPONSES = {
         section: "I",
         solverStatus: "needs_physician_query",
         confidence: 0.95,
-        rationale: "Nutrition assessment documents significant weight loss (12.6%), low albumin (2.9) and prealbumin (12), PO intake <50%. No malnutrition ICD-10 code on active problem list \u2014 physician confirmation needed.",
+        rationale: "Nutrition assessment documents significant weight loss (12.6%), low albumin (2.9) and prealbumin (12), PO intake <50%. No malnutrition ICD-10 code on active problem list — physician confirmation needed.",
         keyFindings: [
-          "Weight loss 12.6% (17 lbs) in 3 months \u2014 severe",
-          "Albumin 2.9 g/dL, Prealbumin 12 mg/dL \u2014 both low",
+          "Weight loss 12.6% (17 lbs) in 3 months — severe",
+          "Albumin 2.9 g/dL, Prealbumin 12 mg/dL — both low",
           "PO intake <50% of estimated needs",
           "Ensure Plus BID and fortified cereal ordered",
           "No malnutrition ICD-10 on problem list"
@@ -2235,7 +2535,7 @@ var DEMO_API_RESPONSES = {
         confidence: 0.85,
         rationale: "Lab results confirm diabetes. PVD symptoms documented but no specific PVD ICD-10 code. Physician query needed to confirm combination diagnosis.",
         keyFindings: [
-          "HbA1c 8.2% \u2014 uncontrolled diabetes",
+          "HbA1c 8.2% — uncontrolled diabetes",
           "Diminished pedal pulses documented",
           "No PVD diagnosis on problem list"
         ],
@@ -2283,14 +2583,14 @@ var DEMO_API_RESPONSES = {
         section: "O",
         solverStatus: "recommend_coding",
         confidence: 0.95,
-        rationale: "MAR confirms IV antibiotic administration during lookback period. This is a treatment item \u2014 can be coded based on documentation without physician query.",
+        rationale: "MAR confirms IV antibiotic administration during lookback period. This is a treatment item — can be coded based on documentation without physician query.",
         keyFindings: [
           "Vancomycin IV administered during lookback",
           "Physician order on file",
           "Can be coded without query"
         ],
         evidence: [
-          { sourceType: "order", sourceId: "order-080", quote: "Vancomycin 1g IV Q12H \u2014 administered 1/12, 1/13", documentName: "MAR" }
+          { sourceType: "order", sourceId: "order-080", quote: "Vancomycin 1g IV Q12H — administered 1/12, 1/13", documentName: "MAR" }
         ],
         queryEvidence: [],
         recommendedIcd10: [],
@@ -2372,171 +2672,122 @@ var DEMO_API_RESPONSES = {
     }
   ]
 };
-
-// demo/demo-mock-chrome.js
-function delay(ms) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
+function Ys(e) {
+  return new Promise((s) => setTimeout(s, e));
 }
-function randomDelay() {
-  return delay(50 + Math.random() * 150);
+function Zs() {
+  return Ys(50 + Math.random() * 150);
 }
-function routeApiRequest(endpoint) {
-  const [path, queryString] = endpoint.split("?");
-  const params = new URLSearchParams(queryString || "");
-  if (path === "/api/extension/mds/dashboard") {
-    return { success: true, data: DEMO_API_RESPONSES.dashboard };
+function Xs(e) {
+  const [s, n] = e.split("?"), i = new URLSearchParams(n || "");
+  if (s === "/api/extension/mds/dashboard")
+    return { success: !0, data: ce.dashboard };
+  if (s === "/api/extension/mds/doc-risks")
+    return { success: !0, data: ce.docRisks };
+  if (s === "/api/extension/mds/pdpm-potential") {
+    const d = i.get("externalAssessmentId"), u = ce.pdpmPotential[d];
+    return u ? { success: !0, data: u } : { success: !1, error: `No PDPM data for assessment ${d}` };
   }
-  if (path === "/api/extension/mds/doc-risks") {
-    return { success: true, data: DEMO_API_RESPONSES.docRisks };
+  const a = s.match(/\/api\/extension\/patients\/([^/]+)\/assessments/);
+  if (a) {
+    const d = a[1], u = ce.patientAssessments[d];
+    return u ? { success: !0, data: u } : { success: !1, error: `No assessments for patient ${d}` };
   }
-  if (path === "/api/extension/mds/pdpm-potential") {
-    const assessmentId = params.get("externalAssessmentId");
-    const data = DEMO_API_RESPONSES.pdpmPotential[assessmentId];
-    if (data) return { success: true, data };
-    return { success: false, error: `No PDPM data for assessment ${assessmentId}` };
-  }
-  const patientAssessmentsMatch = path.match(/\/api\/extension\/patients\/([^/]+)\/assessments/);
-  if (patientAssessmentsMatch) {
-    const patientId = patientAssessmentsMatch[1];
-    const data = DEMO_API_RESPONSES.patientAssessments[patientId];
-    if (data) return { success: true, data };
-    return { success: false, error: `No assessments for patient ${patientId}` };
-  }
-  const itemDetailMatch = path.match(/\/api\/extension\/mds\/items\/([^/]+)/);
-  if (itemDetailMatch) {
-    const code = decodeURIComponent(itemDetailMatch[1]);
-    const data = DEMO_API_RESPONSES.itemDetail[code];
-    if (data) return { success: true, data };
-    return {
-      success: true,
+  const r = s.match(/\/api\/extension\/mds\/items\/([^/]+)/);
+  if (r) {
+    const d = decodeURIComponent(r[1]), u = ce.itemDetail[d];
+    return u ? { success: !0, data: u } : {
+      success: !0,
       data: {
-        item: { mdsItem: code, itemName: code, description: `MDS Item ${code}`, status: "dont_code", evidence: [] },
+        item: { mdsItem: d, itemName: d, description: `MDS Item ${d}`, status: "dont_code", evidence: [] },
         diagnosisSummary: null,
         treatmentSummary: null
       }
     };
   }
-  if (path === "/api/extension/mds/queryable-items") {
-    return { success: true, data: DEMO_API_RESPONSES.queryableItems };
+  if (s === "/api/extension/mds/queryable-items")
+    return { success: !0, data: ce.queryableItems };
+  if (s === "/api/extension/mds/queryable-items/batch-generate")
+    return { success: !0, data: { generated: !0 } };
+  if (s === "/api/extension/practitioners")
+    return { success: !0, data: ce.practitioners };
+  if (s === "/api/extension/certifications/dashboard")
+    return { success: !0, data: ce.certDashboard };
+  if (s === "/api/extension/certifications/practitioners")
+    return { success: !0, data: ce.practitioners };
+  if (s === "/api/extension/certifications/by-patient") {
+    const d = i.get("patientId"), u = ce.certifications || [];
+    return { success: !0, data: { certifications: d ? u.filter((m) => m.patientId === d) : u } };
   }
-  if (path === "/api/extension/mds/queryable-items/batch-generate") {
-    return { success: true, data: { generated: true } };
-  }
-  if (path === "/api/extension/practitioners") {
-    return { success: true, data: DEMO_API_RESPONSES.practitioners };
-  }
-  if (path === "/api/extension/certifications/dashboard") {
-    return { success: true, data: DEMO_API_RESPONSES.certDashboard };
-  }
-  if (path === "/api/extension/certifications/practitioners") {
-    return { success: true, data: DEMO_API_RESPONSES.practitioners };
-  }
-  if (path === "/api/extension/certifications/by-patient") {
-    const patientId = params.get("patientId");
-    const all = DEMO_API_RESPONSES.certifications || [];
-    const filtered = patientId ? all.filter((c3) => c3.patientId === patientId) : all;
-    return { success: true, data: { certifications: filtered } };
-  }
-  const certSendsMatch = path.match(/\/api\/extension\/certifications\/([^/]+)\/sends/);
-  if (certSendsMatch) {
+  const c = s.match(/\/api\/extension\/certifications\/([^/]+)\/sends/);
+  if (c)
     return {
-      success: true,
+      success: !0,
       data: [{
         id: "send-1",
-        certId: certSendsMatch[1],
+        certId: c[1],
         sentAt: new Date(Date.now() - 3 * 864e5).toISOString(),
         practitioner: { name: "Dr. Demo Provider" },
         method: "fax"
       }]
     };
+  const o = s.match(/\/api\/extension\/certifications\/([^/]+)\/(send|skip|delay|edit-reason|unskip)/);
+  if (o)
+    return { success: !0, data: { certId: o[1], action: o[2] } };
+  if (s === "/api/extension/certifications") {
+    const d = i.get("status"), u = ce.certifications || [];
+    return { success: !0, data: { certifications: d ? u.filter((m) => m.status === d) : u } };
   }
-  const certActionMatch = path.match(/\/api\/extension\/certifications\/([^/]+)\/(send|skip|delay|edit-reason|unskip)/);
-  if (certActionMatch) {
-    return { success: true, data: { certId: certActionMatch[1], action: certActionMatch[2] } };
-  }
-  if (path === "/api/extension/certifications") {
-    const status = params.get("status");
-    const all = DEMO_API_RESPONSES.certifications || [];
-    const filtered = status ? all.filter((c3) => c3.status === status) : all;
-    return { success: true, data: { certifications: filtered } };
-  }
-  const docMatch = path.match(/\/api\/extension\/documents\/([^/]+)/);
-  if (docMatch) {
-    return {
-      success: true,
-      data: {
-        document: {
-          id: docMatch[1],
-          title: "Clinical Document",
-          documentType: "Progress Note",
-          effectiveDate: "2026-01-22",
-          fileSize: 245760,
-          signedUrl: null
-          // No real PDF in demo — viewer will show empty state
-        }
+  const p = s.match(/\/api\/extension\/documents\/([^/]+)/);
+  return p ? {
+    success: !0,
+    data: {
+      document: {
+        id: p[1],
+        title: "Clinical Document",
+        documentType: "Progress Note",
+        effectiveDate: "2026-01-22",
+        fileSize: 245760,
+        signedUrl: null
+        // No real PDF in demo — viewer will show empty state
       }
-    };
-  }
-  console.warn("[DemoMock] Unhandled API endpoint:", path);
-  return { success: false, error: `Demo: unhandled endpoint ${path}` };
+    }
+  } : (console.warn("[DemoMock] Unhandled API endpoint:", s), { success: !1, error: `Demo: unhandled endpoint ${s}` });
 }
-async function handleMessage(msg) {
-  await randomDelay();
-  switch (msg.type) {
+async function en(e) {
+  switch (await Zs(), e.type) {
     case "GET_ORG":
       return { org: "demo-org" };
     case "GET_AUTH_STATE":
-      return { authenticated: true };
+      return { authenticated: !0 };
     case "API_REQUEST":
-      return routeApiRequest(msg.endpoint);
+      return Xs(e.endpoint);
     default:
-      console.log("[DemoMock] Unhandled message type:", msg.type);
-      return {};
+      return console.log("[DemoMock] Unhandled message type:", e.type), {};
   }
 }
-function createMockChrome() {
-  if (typeof window.chrome === "undefined") {
-    window.chrome = {};
-  }
-  if (!window.chrome.runtime) {
-    window.chrome.runtime = {};
-  }
-  window.chrome.runtime.sendMessage = function(msg, callback) {
-    const promise = handleMessage(msg);
-    if (typeof callback === "function") {
-      promise.then(callback).catch((err) => {
-        console.error("[DemoMock] Error in callback handler:", err);
-        callback({ success: false, error: err.message });
+function tn() {
+  typeof window.chrome > "u" && (window.chrome = {}), window.chrome.runtime || (window.chrome.runtime = {}), window.chrome.runtime.sendMessage = function(e, s) {
+    const n = en(e);
+    if (typeof s == "function") {
+      n.then(s).catch((i) => {
+        console.error("[DemoMock] Error in callback handler:", i), s({ success: !1, error: i.message });
       });
-      return void 0;
+      return;
     }
-    return promise;
-  };
-  window.chrome.runtime.getURL = function(path) {
-    if (path.startsWith("lib/")) return `./${path}`;
-    return path;
-  };
-  window.chrome.runtime.id = "demo-mock-extension-id";
-  console.log("[DemoMock] Chrome API mocks installed");
+    return n;
+  }, window.chrome.runtime.getURL = function(e) {
+    return e.startsWith("lib/") ? `./${e}` : e;
+  }, window.chrome.runtime.id = "demo-mock-extension-id", console.log("[DemoMock] Chrome API mocks installed");
 }
-
-// demo/demo-mock-globals.js
-function installGlobalMocks() {
-  window.__DEMO_CERT_DATA = DEMO_API_RESPONSES.certifications || [];
-  localStorage.setItem("CORE.org_code", "demo-org");
-  window.getOrg = () => ({ org: "demo-org" });
-  window.getChatFacilityInfo = () => "SUNNY MEADOWS DEMO FACILITY";
-  window.getChatPatientId = () => "2657226";
-  window.getPatientNameFromPage = () => "Doe, Jane";
-  window.getCurrentParams = () => ({
+function sn() {
+  window.__DEMO_CERT_DATA = ce.certifications || [], localStorage.setItem("CORE.org_code", "demo-org"), window.getOrg = () => ({ org: "demo-org" }), window.getChatFacilityInfo = () => "SUNNY MEADOWS DEMO FACILITY", window.getChatPatientId = () => "2657226", window.getPatientNameFromPage = () => "Doe, Jane", window.getCurrentParams = () => ({
     facilityName: "SUNNY MEADOWS DEMO FACILITY",
     orgSlug: "demo-org",
     assessmentId: "4860265"
-  });
-  window.QueryAPI = {
-    async fetchPractitioners(_facilityName, _orgSlug) {
-      await new Promise((r3) => setTimeout(r3, 200));
-      return [
+  }), window.QueryAPI = {
+    async fetchPractitioners(s, n) {
+      return await new Promise((i) => setTimeout(i, 200)), [
         {
           id: "pract-001",
           firstName: "Demo",
@@ -2563,182 +2814,141 @@ function installGlobalMocks() {
         }
       ];
     },
-    async generateNote(mdsItem, item) {
-      await new Promise((r3) => setTimeout(r3, 500 + Math.random() * 500));
-      const itemName = item.pdpmCategoryName || item.mdsItemName || item.itemName || mdsItem;
-      const notes = {
-        "I5600": `Dear Doctor,
+    async generateNote(s, n) {
+      await new Promise((c) => setTimeout(c, 500 + Math.random() * 500));
+      const i = n.pdpmCategoryName || n.mdsItemName || n.itemName || s;
+      return {
+        note: {
+          I5600: `Dear Doctor,
 
 I am writing to request your clinical assessment regarding malnutrition for this patient's current MDS assessment.
 
 Our review of the clinical documentation reveals the following evidence:
 
-\u2022 Weight loss of 17 lbs (12.6%) over the past 3 months (135 lbs \u2192 118 lbs)
-\u2022 PO intake documented at <50% of estimated needs
-\u2022 Albumin: 2.9 g/dL (Low, ref: 3.5-5.0)
-\u2022 Prealbumin: 12 mg/dL (Low, ref: 18-38)
-\u2022 Dietitian has diagnosed moderate protein-calorie malnutrition
-\u2022 Current interventions: Ensure Plus 8oz BID, Fortified Cereal 6oz QD
+• Weight loss of 17 lbs (12.6%) over the past 3 months (135 lbs → 118 lbs)
+• PO intake documented at <50% of estimated needs
+• Albumin: 2.9 g/dL (Low, ref: 3.5-5.0)
+• Prealbumin: 12 mg/dL (Low, ref: 18-38)
+• Dietitian has diagnosed moderate protein-calorie malnutrition
+• Current interventions: Ensure Plus 8oz BID, Fortified Cereal 6oz QD
 
 Please confirm whether a malnutrition diagnosis (ICD-10: E44.0) is appropriate for this patient.
 
 Thank you for your prompt attention to this matter.`
-      };
-      const note = notes[mdsItem] || `Dear Doctor,
+        }[s] || `Dear Doctor,
 
-I am writing to request your clinical assessment regarding ${itemName} (${mdsItem}) for this patient's current MDS assessment.
+I am writing to request your clinical assessment regarding ${i} (${s}) for this patient's current MDS assessment.
 
 Based on our review of the clinical documentation, there appears to be evidence supporting this diagnosis/condition that may warrant coding on the MDS. Your confirmation would help ensure accurate assessment completion.
 
-Thank you for your prompt attention to this matter.`;
-      return {
-        note,
-        preferredIcd10: item.recommendedIcd10?.[0] || { code: "R69", description: "Illness, unspecified" },
-        icd10Options: item.recommendedIcd10 || [
+Thank you for your prompt attention to this matter.`,
+        preferredIcd10: n.recommendedIcd10?.[0] || { code: "R69", description: "Illness, unspecified" },
+        icd10Options: n.recommendedIcd10 || [
           { code: "R69", description: "Illness, unspecified" }
         ]
       };
     },
-    async createQuery(params) {
-      await new Promise((r3) => setTimeout(r3, 300));
-      return {
+    async createQuery(s) {
+      return await new Promise((n) => setTimeout(n, 300)), {
         query: {
           id: `demo-query-${Date.now()}`,
-          mdsItem: params.mdsItem,
-          mdsItemName: params.mdsItemName,
+          mdsItem: s.mdsItem,
+          mdsItemName: s.mdsItemName,
           status: "draft",
           createdAt: (/* @__PURE__ */ new Date()).toISOString()
         }
       };
     },
-    async sendQuery(queryId, practitionerIds, noteText) {
-      await new Promise((r3) => setTimeout(r3, 300));
-      console.log(`[DemoMock] QueryAPI.sendQuery: ${queryId} \u2192 practitioners: ${practitionerIds.join(", ")}`);
-      return { success: true, sentAt: (/* @__PURE__ */ new Date()).toISOString() };
+    async sendQuery(s, n, i) {
+      return await new Promise((a) => setTimeout(a, 300)), console.log(`[DemoMock] QueryAPI.sendQuery: ${s} → practitioners: ${n.join(", ")}`), { success: !0, sentAt: (/* @__PURE__ */ new Date()).toISOString() };
     },
-    async resendQuery(queryId) {
-      await new Promise((r3) => setTimeout(r3, 200));
-      console.log(`[DemoMock] QueryAPI.resendQuery: ${queryId}`);
-      return { success: true };
+    async resendQuery(s) {
+      return await new Promise((n) => setTimeout(n, 200)), console.log(`[DemoMock] QueryAPI.resendQuery: ${s}`), { success: !0 };
     }
   };
-  function dispatchToast(type, message) {
-    console.log(`[DemoMock] SuperToast.${type}:`, message);
-    window.dispatchEvent(new CustomEvent("demo:toast", { detail: { type, message } }));
+  function e(s, n) {
+    console.log(`[DemoMock] SuperToast.${s}:`, n), window.dispatchEvent(new CustomEvent("demo:toast", { detail: { type: s, message: n } }));
   }
   window.SuperToast = {
-    show(opts) {
-      dispatchToast("info", opts.message || opts);
+    show(s) {
+      e("info", s.message || s);
     },
-    success(message) {
-      dispatchToast("success", message);
+    success(s) {
+      e("success", s);
     },
-    error(message) {
-      dispatchToast("error", message);
+    error(s) {
+      e("error", s);
     },
-    info(message) {
-      dispatchToast("info", message);
+    info(s) {
+      e("info", s);
     },
-    warning(message) {
-      dispatchToast("warning", message);
+    warning(s) {
+      e("warning", s);
     }
-  };
-  window.SuperOverlay = {
+  }, window.SuperOverlay = {
     facilityName: "SUNNY MEADOWS DEMO FACILITY",
     patientId: "2657226",
     assessmentId: "4860265"
-  };
-  window.navigateToMDSItem = (item) => {
-    console.log("[DemoMock] navigateToMDSItem:", item);
-  };
-  window.PDPMAnalyzerLauncher = {
-    open(opts) {
-      console.log("[DemoMock] PDPMAnalyzerLauncher.open:", opts);
-      window.dispatchEvent(new CustomEvent("demo:open-pdpm", { detail: opts }));
+  }, window.navigateToMDSItem = (s) => {
+    console.log("[DemoMock] navigateToMDSItem:", s);
+  }, window.PDPMAnalyzerLauncher = {
+    open(s) {
+      console.log("[DemoMock] PDPMAnalyzerLauncher.open:", s), window.dispatchEvent(new CustomEvent("demo:open-pdpm", { detail: s }));
     }
-  };
-  window.QueryDetailModal = {
-    show(opts) {
-      console.log("[DemoMock] QueryDetailModal.show:", opts);
+  }, window.QueryDetailModal = {
+    show(s) {
+      console.log("[DemoMock] QueryDetailModal.show:", s);
     }
-  };
-  window.renderSplitAdministrations = async (container, sourceId, _unused, params) => {
-    await new Promise((r3) => setTimeout(r3, 400));
-    const isMar = !sourceId?.includes("tar");
-    const typeBadge = isMar ? "MAR" : "TAR";
-    const typeBadgeClass = isMar ? "super-admin-badge--mar" : "super-admin-badge--tar";
-    const typeIcon = isMar ? "\u{1F48A}" : "\u26A1";
-    const orders = {
+  }, window.renderSplitAdministrations = async (s, n, i, a) => {
+    await new Promise((w) => setTimeout(w, 400));
+    const r = !n?.includes("tar"), c = r ? "MAR" : "TAR", o = r ? "super-admin-badge--mar" : "super-admin-badge--tar", p = r ? "💊" : "⚡", u = {
       "mar-010": { name: "Aspirin 81mg PO Daily", directions: "Take by mouth once daily with food", startDate: "2025-12-20", endDate: null },
       "mar-012": { name: "Lisinopril 20mg PO Daily", directions: "Take by mouth once daily in the morning", startDate: "2025-12-15", endDate: null },
       "mar-001": { name: "Metformin 500mg PO BID", directions: "Take by mouth twice daily with meals", startDate: "2025-11-01", endDate: null },
       "doc-nutr-004": { name: "Ensure Plus 8 OZ Oral Liquid", directions: "Give 8 oz Ensure Plus by mouth twice daily with lunch and dinner for nutritional supplementation", startDate: "2026-01-22", endDate: null },
       "doc-nutr-003": { name: "Fortified Cereal 6 OZ", directions: "Give 6 oz fortified cereal by mouth once daily with breakfast to increase caloric and protein intake", startDate: "2026-01-22", endDate: null }
-    };
-    const order = orders[sourceId] || { name: "Medication Order", directions: "As directed", startDate: "2025-12-20", endDate: null };
-    const dates = [];
-    const now = new Date(2026, 0, 27);
-    for (let i3 = 6; i3 >= 0; i3--) {
-      const d3 = new Date(now);
-      d3.setDate(d3.getDate() - i3);
-      dates.push(d3);
+    }[n] || { name: "Medication Order", directions: "As directed", startDate: "2025-12-20", endDate: null }, l = [], m = new Date(2026, 0, 27);
+    for (let w = 6; w >= 0; w--) {
+      const T = new Date(m);
+      T.setDate(T.getDate() - w), l.push(T);
     }
-    const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-    const formatRangeDate = (d3) => `${monthNames[d3.getMonth()]} ${d3.getDate()}, ${d3.getFullYear()}`;
-    const dateRangeStr = `${formatRangeDate(dates[0])} - ${formatRangeDate(dates[dates.length - 1])}`;
-    const formatOrderDate = (ds) => {
-      if (!ds) return "";
-      const d3 = new Date(ds);
-      return d3.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
-    };
-    const dateHeaders = dates.map((d3) => `
+    const h = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"], _ = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"], v = (w) => `${_[w.getMonth()]} ${w.getDate()}, ${w.getFullYear()}`, g = `${v(l[0])} - ${v(l[l.length - 1])}`, C = (w) => w ? new Date(w).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }) : "", f = l.map((w) => `
       <th class="super-admin-grid__date-header">
-        <div class="super-admin-grid__day">${dayNames[d3.getDay()]}</div>
-        <div class="super-admin-grid__date">${monthNames[d3.getMonth()]} ${d3.getDate()}</div>
+        <div class="super-admin-grid__day">${h[w.getDay()]}</div>
+        <div class="super-admin-grid__date">${_[w.getMonth()]} ${w.getDate()}</div>
       </th>
-    `).join("");
-    const isBID = order.name.includes("BID");
-    const timeSlots = isBID ? ["0800", "1800"] : ["0800"];
-    const staffPool = ["RN-JD", "RN-KM", "RN-TS", "LPN-AB"];
-    const formatTime = (t3) => {
-      const h3 = parseInt(t3.substring(0, 2), 10);
-      const m3 = t3.substring(2);
-      const ampm = h3 >= 12 ? "PM" : "AM";
-      const h12 = h3 > 12 ? h3 - 12 : h3 === 0 ? 12 : h3;
-      return `${h12}:${m3} ${ampm}`;
-    };
-    const rows = timeSlots.map((time) => {
-      const cells = dates.map((d3, di) => {
-        const staffIdx = (di + (time === "1800" ? 2 : 0)) % staffPool.length;
-        const initials = staffPool[staffIdx];
+    `).join(""), k = u.name.includes("BID") ? ["0800", "1800"] : ["0800"], y = ["RN-JD", "RN-KM", "RN-TS", "LPN-AB"], S = (w) => {
+      const T = parseInt(w.substring(0, 2), 10), F = w.substring(2), V = T >= 12 ? "PM" : "AM";
+      return `${T > 12 ? T - 12 : T === 0 ? 12 : T}:${F} ${V}`;
+    }, E = k.map((w) => {
+      const T = l.map((F, V) => {
+        const D = (V + (w === "1800" ? 2 : 0)) % y.length;
         return `<td class="super-admin-grid__cell super-admin-grid__cell--given">
-          <span class="super-admin-grid__check">\u2713</span>
-          <span class="super-admin-grid__initials">${initials}</span>
+          <span class="super-admin-grid__check">✓</span>
+          <span class="super-admin-grid__initials">${y[D]}</span>
         </td>`;
       }).join("");
       return `<tr class="super-admin-grid__row">
-        <td class="super-admin-grid__time">${formatTime(time)}</td>
-        ${cells}
+        <td class="super-admin-grid__time">${S(w)}</td>
+        ${T}
       </tr>`;
-    }).join("");
-    const eventCount = timeSlots.length * dates.length;
-    container.innerHTML = `
+    }).join(""), N = k.length * l.length;
+    s.innerHTML = `
       <div class="super-split__admin">
         <div class="super-admin-modal__header">
           <div class="super-admin-modal__title-row">
-            <span class="super-admin-modal__icon">${typeIcon}</span>
+            <span class="super-admin-modal__icon">${p}</span>
             <div class="super-admin-modal__title">
-              <span class="super-admin-modal__order-name">${order.name}</span>
-              <span class="super-admin-badge ${typeBadgeClass}">${typeBadge}</span>
+              <span class="super-admin-modal__order-name">${u.name}</span>
+              <span class="super-admin-badge ${o}">${c}</span>
             </div>
           </div>
-          ${order.directions ? `<div class="super-admin-modal__directions">${order.directions}</div>` : ""}
+          ${u.directions ? `<div class="super-admin-modal__directions">${u.directions}</div>` : ""}
           <div class="super-admin-modal__meta">
-            ${timeSlots.length} time slot${timeSlots.length !== 1 ? "s" : ""}
+            ${k.length} time slot${k.length !== 1 ? "s" : ""}
             <span class="super-admin-modal__dates">
-              Start: ${formatOrderDate(order.startDate)}
-              ${order.endDate ? ` \xB7 Stop: ${formatOrderDate(order.endDate)}` : ""}
+              Start: ${C(u.startDate)}
+              ${u.endDate ? ` · Stop: ${C(u.endDate)}` : ""}
             </span>
           </div>
         </div>
@@ -2746,7 +2956,7 @@ Thank you for your prompt attention to this matter.`;
           <button class="super-admin-modal__nav-btn" title="Previous week">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
           </button>
-          <span class="super-admin-modal__date-range">\u{1F4C5} ${dateRangeStr}</span>
+          <span class="super-admin-modal__date-range">📅 ${g}</span>
           <button class="super-admin-modal__nav-btn" title="Next week">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
           </button>
@@ -2757,19 +2967,19 @@ Thank you for your prompt attention to this matter.`;
               <thead>
                 <tr>
                   <th class="super-admin-grid__time-header">Time</th>
-                  ${dateHeaders}
+                  ${f}
                 </tr>
               </thead>
               <tbody>
-                ${rows}
+                ${E}
               </tbody>
             </table>
           </div>
         </div>
         <div class="super-admin-modal__footer">
-          <span class="super-admin-modal__event-count">${eventCount} events</span>
+          <span class="super-admin-modal__event-count">${N} events</span>
           <div class="super-admin-legend">
-            <span class="super-admin-legend__item super-admin-legend__item--given">\u2713 Given</span>
+            <span class="super-admin-legend__item super-admin-legend__item--given">✓ Given</span>
             <span class="super-admin-legend__item super-admin-legend__item--refused">2 Refused</span>
             <span class="super-admin-legend__item super-admin-legend__item--loa">3 LOA</span>
             <span class="super-admin-legend__item super-admin-legend__item--hold">5 Hold</span>
@@ -2777,57 +2987,56 @@ Thank you for your prompt attention to this matter.`;
         </div>
       </div>
     `;
-  };
-  window.renderSplitNote = async (container, sourceId, params) => {
-    await new Promise((r3) => setTimeout(r3, 350));
-    const pdfDocuments = {
+  }, window.renderSplitNote = async (s, n, i) => {
+    await new Promise((p) => setTimeout(p, 350));
+    const r = {
       "doc-nutr-001": {
         title: "NUTRITION_01_22_36001641.PDF",
         pages: 2,
         pageContent: {
           1: [
-            { text: "NUTRITION PROGRESS NOTE", highlight: false, bold: true },
-            { text: "", highlight: false },
-            { text: "Patient: Doe, Jane                    MRN: 000000", highlight: false },
-            { text: "Date: 01/22/2026                      Time: 10:28", highlight: false },
-            { text: "Dietitian: Sarah Kim, RD, LD", highlight: false },
-            { text: "_______________________________________________", highlight: false },
-            { text: "", highlight: false },
-            { text: "NUTRITIONAL STATUS:", highlight: false, bold: true },
-            { text: "Current Weight: 118 lbs (53.5 kg)", highlight: false },
-            { text: "Usual Body Weight: 135 lbs (61.2 kg)", highlight: false },
+            { text: "NUTRITION PROGRESS NOTE", highlight: !1, bold: !0 },
+            { text: "", highlight: !1 },
+            { text: "Patient: Doe, Jane                    MRN: 000000", highlight: !1 },
+            { text: "Date: 01/22/2026                      Time: 10:28", highlight: !1 },
+            { text: "Dietitian: Sarah Kim, RD, LD", highlight: !1 },
+            { text: "_______________________________________________", highlight: !1 },
+            { text: "", highlight: !1 },
+            { text: "NUTRITIONAL STATUS:", highlight: !1, bold: !0 },
+            { text: "Current Weight: 118 lbs (53.5 kg)", highlight: !1 },
+            { text: "Usual Body Weight: 135 lbs (61.2 kg)", highlight: !1 },
             { text: "Weight Loss: 17 lbs (12.6%) in past 3 months", highlight: "keyword" },
-            { text: "BMI: 20.2 (within normal range but declining)", highlight: false },
-            { text: "", highlight: false },
-            { text: "DIETARY INTAKE:", highlight: false, bold: true },
+            { text: "BMI: 20.2 (within normal range but declining)", highlight: !1 },
+            { text: "", highlight: !1 },
+            { text: "DIETARY INTAKE:", highlight: !1, bold: !0 },
             { text: "Ongoing PO Intake: < 50% meals/est. needs", highlight: "keyword" },
-            { text: "Patient reports decreased appetite and early satiety.", highlight: false },
+            { text: "Patient reports decreased appetite and early satiety.", highlight: !1 },
             { text: "Difficulty with textures due to dysphagia.", highlight: "contextual" },
-            { text: "Meal observation: consumed ~40% of lunch, refused", highlight: false },
-            { text: "dessert and most of entree.", highlight: false }
+            { text: "Meal observation: consumed ~40% of lunch, refused", highlight: !1 },
+            { text: "dessert and most of entree.", highlight: !1 }
           ],
           2: [
-            { text: "LABORATORY VALUES:", highlight: false, bold: true },
+            { text: "LABORATORY VALUES:", highlight: !1, bold: !0 },
             { text: "Albumin: 2.9 g/dL (Low)            Ref: 3.5-5.0", highlight: "keyword" },
             { text: "Prealbumin: 12 mg/dL (Low)          Ref: 18-38", highlight: "keyword" },
-            { text: "Total Protein: 5.8 g/dL (Low)       Ref: 6.0-8.3", highlight: false },
-            { text: "Transferrin: 165 mg/dL (Low)         Ref: 200-360", highlight: false },
-            { text: "", highlight: false },
-            { text: "MALNUTRITION DIAGNOSIS:", highlight: false, bold: true },
+            { text: "Total Protein: 5.8 g/dL (Low)       Ref: 6.0-8.3", highlight: !1 },
+            { text: "Transferrin: 165 mg/dL (Low)         Ref: 200-360", highlight: !1 },
+            { text: "", highlight: !1 },
+            { text: "MALNUTRITION DIAGNOSIS:", highlight: !1, bold: !0 },
             { text: "Moderate protein-calorie malnutrition based on:", highlight: "keyword" },
-            { text: "- Significant unintentional weight loss (>10% in 3 months)", highlight: false },
-            { text: "- Inadequate oral intake (<50% estimated needs)", highlight: false },
-            { text: "- Low albumin and prealbumin", highlight: false },
-            { text: "", highlight: false },
-            { text: "RECOMMENDATIONS:", highlight: false, bold: true },
-            { text: "1. Fortified foods - pudding, cereal, milk", highlight: false },
-            { text: "2. Ensure Plus BID with meals", highlight: false },
-            { text: "3. Liberalized diet texture per SLP recommendations", highlight: false },
-            { text: "4. Weekly weights", highlight: false },
-            { text: "5. Re-evaluate in 1 week", highlight: false },
-            { text: "", highlight: false },
-            { text: "_______________________________________________", highlight: false },
-            { text: "Electronically signed: Sarah Kim, RD, LD  01/22/2026", highlight: false }
+            { text: "- Significant unintentional weight loss (>10% in 3 months)", highlight: !1 },
+            { text: "- Inadequate oral intake (<50% estimated needs)", highlight: !1 },
+            { text: "- Low albumin and prealbumin", highlight: !1 },
+            { text: "", highlight: !1 },
+            { text: "RECOMMENDATIONS:", highlight: !1, bold: !0 },
+            { text: "1. Fortified foods - pudding, cereal, milk", highlight: !1 },
+            { text: "2. Ensure Plus BID with meals", highlight: !1 },
+            { text: "3. Liberalized diet texture per SLP recommendations", highlight: !1 },
+            { text: "4. Weekly weights", highlight: !1 },
+            { text: "5. Re-evaluate in 1 week", highlight: !1 },
+            { text: "", highlight: !1 },
+            { text: "_______________________________________________", highlight: !1 },
+            { text: "Electronically signed: Sarah Kim, RD, LD  01/22/2026", highlight: !1 }
           ]
         }
       },
@@ -2836,28 +3045,28 @@ Thank you for your prompt attention to this matter.`;
         pages: 1,
         pageContent: {
           1: [
-            { text: "LABORATORY REPORT", highlight: false, bold: true },
-            { text: "", highlight: false },
-            { text: "Patient: Doe, Jane                    MRN: 000000", highlight: false },
-            { text: "Date Collected: 01/20/2026 06:15", highlight: false },
-            { text: "Ordering Physician: Dr. Demo Provider, MD", highlight: false },
-            { text: "_______________________________________________", highlight: false },
-            { text: "", highlight: false },
-            { text: "NUTRITION PANEL:", highlight: false, bold: true },
-            { text: "", highlight: false },
-            { text: "Test                  Result          Flag    Reference", highlight: false, bold: true },
-            { text: "\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500", highlight: false },
+            { text: "LABORATORY REPORT", highlight: !1, bold: !0 },
+            { text: "", highlight: !1 },
+            { text: "Patient: Doe, Jane                    MRN: 000000", highlight: !1 },
+            { text: "Date Collected: 01/20/2026 06:15", highlight: !1 },
+            { text: "Ordering Physician: Dr. Demo Provider, MD", highlight: !1 },
+            { text: "_______________________________________________", highlight: !1 },
+            { text: "", highlight: !1 },
+            { text: "NUTRITION PANEL:", highlight: !1, bold: !0 },
+            { text: "", highlight: !1 },
+            { text: "Test                  Result          Flag    Reference", highlight: !1, bold: !0 },
+            { text: "─────────────────────────────────────────────────────", highlight: !1 },
             { text: "Albumin               2.9 g/dL        (L)     3.5-5.0", highlight: "keyword" },
             { text: "Prealbumin            12 mg/dL         (L)     18-38", highlight: "keyword" },
-            { text: "Total Protein         5.8 g/dL         (L)     6.0-8.3", highlight: false },
-            { text: "Transferrin           165 mg/dL        (L)     200-360", highlight: false },
-            { text: "CRP                   18.5 mg/L        (H)     0.0-10.0", highlight: false },
-            { text: "", highlight: false },
-            { text: "\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500", highlight: false },
+            { text: "Total Protein         5.8 g/dL         (L)     6.0-8.3", highlight: !1 },
+            { text: "Transferrin           165 mg/dL        (L)     200-360", highlight: !1 },
+            { text: "CRP                   18.5 mg/L        (H)     0.0-10.0", highlight: !1 },
+            { text: "", highlight: !1 },
+            { text: "─────────────────────────────────────────────────────", highlight: !1 },
             { text: "Note: Low albumin and prealbumin suggest malnutrition", highlight: "keyword" },
-            { text: "and/or inflammatory state. Clinical correlation advised.", highlight: false },
-            { text: "", highlight: false },
-            { text: "Verified by: Lab Director  01/20/2026 07:30", highlight: false }
+            { text: "and/or inflammatory state. Clinical correlation advised.", highlight: !1 },
+            { text: "", highlight: !1 },
+            { text: "Verified by: Lab Director  01/20/2026 07:30", highlight: !1 }
           ]
         }
       },
@@ -2866,58 +3075,50 @@ Thank you for your prompt attention to this matter.`;
         pages: 1,
         pageContent: {
           1: [
-            { text: "WEIGHT MONITORING - 3 MONTH TREND", highlight: false, bold: true },
-            { text: "", highlight: false },
-            { text: "Patient: Doe, Jane                    MRN: 000000", highlight: false },
-            { text: "Date: 01/22/2026", highlight: false },
-            { text: "_______________________________________________", highlight: false },
-            { text: "", highlight: false },
-            { text: "WEIGHT HISTORY:", highlight: false, bold: true },
-            { text: "Date          Weight        Change from Usual", highlight: false, bold: true },
-            { text: "\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500", highlight: false },
-            { text: "10/22/2025    135.0 lbs     (Usual body weight)", highlight: false },
-            { text: "11/15/2025    132.5 lbs     -2.5 lbs", highlight: false },
+            { text: "WEIGHT MONITORING - 3 MONTH TREND", highlight: !1, bold: !0 },
+            { text: "", highlight: !1 },
+            { text: "Patient: Doe, Jane                    MRN: 000000", highlight: !1 },
+            { text: "Date: 01/22/2026", highlight: !1 },
+            { text: "_______________________________________________", highlight: !1 },
+            { text: "", highlight: !1 },
+            { text: "WEIGHT HISTORY:", highlight: !1, bold: !0 },
+            { text: "Date          Weight        Change from Usual", highlight: !1, bold: !0 },
+            { text: "─────────────────────────────────────────────", highlight: !1 },
+            { text: "10/22/2025    135.0 lbs     (Usual body weight)", highlight: !1 },
+            { text: "11/15/2025    132.5 lbs     -2.5 lbs", highlight: !1 },
             { text: "12/20/2025    128.0 lbs     -7.0 lbs from usual", highlight: "keyword" },
             { text: "01/15/2026    120.5 lbs     -14.5 lbs from usual", highlight: "keyword" },
             { text: "01/22/2026    118.0 lbs     -17.0 lbs from usual", highlight: "keyword" },
-            { text: "", highlight: false },
-            { text: "WEIGHT LOSS PERCENTAGE:", highlight: false, bold: true },
+            { text: "", highlight: !1 },
+            { text: "WEIGHT LOSS PERCENTAGE:", highlight: !1, bold: !0 },
             { text: "Total Loss: 17 lbs over 3 months", highlight: "keyword" },
             { text: "Percentage: 12.6% of usual body weight", highlight: "keyword" },
-            { text: "", highlight: false },
-            { text: "SIGNIFICANCE:", highlight: false, bold: true },
+            { text: "", highlight: !1 },
+            { text: "SIGNIFICANCE:", highlight: !1, bold: !0 },
             { text: ">10% weight loss in 3 months = SEVERE weight loss", highlight: "keyword" },
             { text: "Meets criteria for malnutrition diagnosis", highlight: "keyword" },
-            { text: "", highlight: false },
-            { text: "INTERVENTIONS INITIATED:", highlight: false, bold: true },
-            { text: "- Dietary consult completed", highlight: false },
-            { text: "- Nutritional supplements ordered", highlight: false },
-            { text: "- Weekly weight monitoring ongoing", highlight: false },
-            { text: "", highlight: false },
-            { text: "_______________________________________________", highlight: false },
-            { text: "Documented by: RN-JD  01/22/2026 08:15", highlight: false }
+            { text: "", highlight: !1 },
+            { text: "INTERVENTIONS INITIATED:", highlight: !1, bold: !0 },
+            { text: "- Dietary consult completed", highlight: !1 },
+            { text: "- Nutritional supplements ordered", highlight: !1 },
+            { text: "- Weekly weight monitoring ongoing", highlight: !1 },
+            { text: "", highlight: !1 },
+            { text: "_______________________________________________", highlight: !1 },
+            { text: "Documented by: RN-JD  01/22/2026 08:15", highlight: !1 }
           ]
         }
       }
-    };
-    const pdfDoc = pdfDocuments[sourceId];
-    function renderPdfLines(lines) {
-      return lines.map((line) => {
-        let classes = "super-split-pdf__line";
-        if (line.highlight === "keyword" || line.highlight === true) {
-          classes += " super-split-pdf__line--keyword";
-        } else if (line.highlight === "contextual") {
-          classes += " super-split-pdf__line--contextual";
-        }
-        if (line.bold) classes += " super-split-pdf__line--bold";
-        return `<div class="${classes}">${line.text || "&nbsp;"}</div>`;
+    }[n];
+    function c(p) {
+      return p.map((d) => {
+        let u = "super-split-pdf__line";
+        return d.highlight === "keyword" || d.highlight === !0 ? u += " super-split-pdf__line--keyword" : d.highlight === "contextual" && (u += " super-split-pdf__line--contextual"), d.bold && (u += " super-split-pdf__line--bold"), `<div class="${u}">${d.text || "&nbsp;"}</div>`;
       }).join("");
     }
-    if (pdfDoc) {
-      const pageData = pdfDoc.pageContent[1];
-      const totalPages = pdfDoc.pages;
-      let currentPage = 1;
-      container.innerHTML = `
+    if (r) {
+      const p = r.pageContent[1], d = r.pages;
+      let u = 1;
+      if (s.innerHTML = `
         <style>
           .super-split-pdf { background: #525659; padding: 20px; min-height: 100%; display: flex; flex-direction: column; }
           .super-split-pdf__header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; padding: 0 4px; }
@@ -2940,83 +3141,70 @@ Thank you for your prompt attention to this matter.`;
         </style>
         <div class="super-split-pdf">
           <div class="super-split-pdf__header">
-            <span class="super-split-pdf__filename">${pdfDoc.title}</span>
+            <span class="super-split-pdf__filename">${r.title}</span>
             <div class="super-split-pdf__legend">
               <span class="super-split-pdf__legend-item"><span class="super-split-pdf__legend-swatch super-split-pdf__legend-swatch--keyword"></span>Keyword Match</span>
               <span class="super-split-pdf__legend-item"><span class="super-split-pdf__legend-swatch super-split-pdf__legend-swatch--contextual"></span>Contextual</span>
             </div>
           </div>
           <div class="super-split-pdf__paper">
-            ${renderPdfLines(pageData)}
+            ${c(p)}
           </div>
-          ${totalPages > 1 ? `
+          ${d > 1 ? `
           <div class="super-split-pdf__footer">
             <button class="super-split-pdf__page-btn super-split-pdf__prev" disabled>&#8249;</button>
-            <span class="super-split-pdf__page-num">Page 1 of ${totalPages}</span>
+            <span class="super-split-pdf__page-num">Page 1 of ${d}</span>
             <button class="super-split-pdf__page-btn super-split-pdf__next">&#8250;</button>
           </div>` : `
           <div class="super-split-pdf__footer">
             <span class="super-split-pdf__page-num">Page 1 of 1</span>
           </div>`}
-        </div>`;
-      if (totalPages > 1) {
-        let updatePage = function() {
-          paper.innerHTML = renderPdfLines(pdfDoc.pageContent[currentPage]);
-          pageNum.textContent = `Page ${currentPage} of ${totalPages}`;
-          prevBtn.disabled = currentPage <= 1;
-          nextBtn.disabled = currentPage >= totalPages;
+        </div>`, d > 1) {
+        let v = function() {
+          _.innerHTML = c(r.pageContent[u]), h.textContent = `Page ${u} of ${d}`, l.disabled = u <= 1, m.disabled = u >= d;
         };
-        const prevBtn = container.querySelector(".super-split-pdf__prev");
-        const nextBtn = container.querySelector(".super-split-pdf__next");
-        const pageNum = container.querySelector(".super-split-pdf__page-num");
-        const paper = container.querySelector(".super-split-pdf__paper");
-        prevBtn.addEventListener("click", () => {
-          if (currentPage > 1) {
-            currentPage--;
-            updatePage();
-          }
-        });
-        nextBtn.addEventListener("click", () => {
-          if (currentPage < totalPages) {
-            currentPage++;
-            updatePage();
-          }
+        var o = v;
+        const l = s.querySelector(".super-split-pdf__prev"), m = s.querySelector(".super-split-pdf__next"), h = s.querySelector(".super-split-pdf__page-num"), _ = s.querySelector(".super-split-pdf__paper");
+        l.addEventListener("click", () => {
+          u > 1 && (u--, v());
+        }), m.addEventListener("click", () => {
+          u < d && (u++, v());
         });
       }
     } else {
-      const defaultLines = [
-        { text: "PROGRESS NOTE", highlight: false, bold: true },
-        { text: "", highlight: false },
-        { text: "Patient: Doe, Jane                    MRN: 000000", highlight: false },
-        { text: "Date: 01/22/2026                      Time: 14:32", highlight: false },
-        { text: "Provider: Dr. Demo Provider, MD", highlight: false },
-        { text: "_______________________________________________", highlight: false },
-        { text: "", highlight: false },
-        { text: "SUBJECTIVE:", highlight: false, bold: true },
-        { text: "Patient reports mild intermittent chest discomfort,", highlight: false },
-        { text: "not activity related. Denies shortness of breath at", highlight: false },
-        { text: "rest. Reports compliance with medication regimen.", highlight: false },
-        { text: "", highlight: false },
-        { text: "OBJECTIVE:", highlight: false, bold: true },
-        { text: "VS: BP 138/82, HR 72 reg, RR 18, SpO2 97% RA", highlight: false },
-        { text: "General: Alert, oriented x3, in no acute distress", highlight: false },
-        { text: "CV: RRR, no murmurs/rubs/gallops. +1 bilateral LE edema", highlight: false },
-        { text: "Resp: CTAB, no wheezes or crackles", highlight: false },
-        { text: "", highlight: false },
-        { text: "ASSESSMENT:", highlight: false, bold: true },
-        { text: "1. HTN \u2014 stable on current regimen", highlight: false },
-        { text: "2. Type 2 DM \u2014 suboptimal control, HbA1c 8.2%", highlight: false },
-        { text: "3. CKD Stage 3 \u2014 stable, GFR 42", highlight: false },
-        { text: "", highlight: false },
-        { text: "PLAN:", highlight: false, bold: true },
-        { text: "- Continue current medications", highlight: false },
-        { text: "- Recheck HbA1c in 3 months", highlight: false },
-        { text: "- Monitor renal function, repeat BMP in 4 weeks", highlight: false },
-        { text: "", highlight: false },
-        { text: "_______________________________________________", highlight: false },
-        { text: "Electronically signed: Dr. Demo Provider, MD  01/22/2026", highlight: false }
+      const p = [
+        { text: "PROGRESS NOTE", highlight: !1, bold: !0 },
+        { text: "", highlight: !1 },
+        { text: "Patient: Doe, Jane                    MRN: 000000", highlight: !1 },
+        { text: "Date: 01/22/2026                      Time: 14:32", highlight: !1 },
+        { text: "Provider: Dr. Demo Provider, MD", highlight: !1 },
+        { text: "_______________________________________________", highlight: !1 },
+        { text: "", highlight: !1 },
+        { text: "SUBJECTIVE:", highlight: !1, bold: !0 },
+        { text: "Patient reports mild intermittent chest discomfort,", highlight: !1 },
+        { text: "not activity related. Denies shortness of breath at", highlight: !1 },
+        { text: "rest. Reports compliance with medication regimen.", highlight: !1 },
+        { text: "", highlight: !1 },
+        { text: "OBJECTIVE:", highlight: !1, bold: !0 },
+        { text: "VS: BP 138/82, HR 72 reg, RR 18, SpO2 97% RA", highlight: !1 },
+        { text: "General: Alert, oriented x3, in no acute distress", highlight: !1 },
+        { text: "CV: RRR, no murmurs/rubs/gallops. +1 bilateral LE edema", highlight: !1 },
+        { text: "Resp: CTAB, no wheezes or crackles", highlight: !1 },
+        { text: "", highlight: !1 },
+        { text: "ASSESSMENT:", highlight: !1, bold: !0 },
+        { text: "1. HTN — stable on current regimen", highlight: !1 },
+        { text: "2. Type 2 DM — suboptimal control, HbA1c 8.2%", highlight: !1 },
+        { text: "3. CKD Stage 3 — stable, GFR 42", highlight: !1 },
+        { text: "", highlight: !1 },
+        { text: "PLAN:", highlight: !1, bold: !0 },
+        { text: "- Continue current medications", highlight: !1 },
+        { text: "- Recheck HbA1c in 3 months", highlight: !1 },
+        { text: "- Monitor renal function, repeat BMP in 4 weeks", highlight: !1 },
+        { text: "", highlight: !1 },
+        { text: "_______________________________________________", highlight: !1 },
+        { text: "Electronically signed: Dr. Demo Provider, MD  01/22/2026", highlight: !1 }
       ];
-      container.innerHTML = `
+      s.innerHTML = `
         <style>
           .super-split-pdf { background: #525659; padding: 20px; min-height: 100%; display: flex; flex-direction: column; }
           .super-split-pdf__header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; padding: 0 4px; }
@@ -3032,24 +3220,22 @@ Thank you for your prompt attention to this matter.`;
             <span class="super-split-pdf__filename">PROGRESS_NOTE_01_22.PDF</span>
           </div>
           <div class="super-split-pdf__paper">
-            ${renderPdfLines(defaultLines)}
+            ${c(p)}
           </div>
           <div class="super-split-pdf__footer">
             <span class="super-split-pdf__page-num">Page 1 of 1</span>
           </div>
         </div>`;
     }
-  };
-  window.renderSplitTherapy = async (container, sourceId, quote, params) => {
-    await new Promise((r3) => setTimeout(r3, 300));
-    container.innerHTML = `
+  }, window.renderSplitTherapy = async (s, n, i, a) => {
+    await new Promise((r) => setTimeout(r, 300)), s.innerHTML = `
       <div style="padding:16px;font-family:system-ui,-apple-system,sans-serif;font-size:13px;color:#1e293b;line-height:1.6;">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid #e2e8f0;">
           <div style="display:flex;align-items:center;gap:8px;">
             <div style="width:8px;height:8px;border-radius:50%;background:#f59e0b;"></div>
             <span style="font-weight:600;font-size:14px;">Therapy Documentation</span>
           </div>
-          <span style="font-size:11px;color:#94a3b8;">01/20/2026 \u2014 Jane Specialist, PT, DPT</span>
+          <span style="font-size:11px;color:#94a3b8;">01/20/2026 — Jane Specialist, PT, DPT</span>
         </div>
         <div style="margin-bottom:14px;">
           <div style="font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:0.5px;color:#f59e0b;margin-bottom:6px;">Treatment Session</div>
@@ -3063,9 +3249,9 @@ Thank you for your prompt attention to this matter.`;
         <div style="margin-bottom:14px;">
           <div style="font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:0.5px;color:#f59e0b;margin-bottom:6px;">Functional Status</div>
           <table style="width:100%;border-collapse:collapse;font-size:12px;">
-            <tr><td style="padding:6px 8px;border-bottom:1px solid #f1f5f9;font-weight:500;">Transfers</td><td style="padding:6px 8px;border-bottom:1px solid #f1f5f9;">Mod A (FIM 3) \u2192 Min A (FIM 4)</td></tr>
-            <tr><td style="padding:6px 8px;border-bottom:1px solid #f1f5f9;font-weight:500;">Ambulation</td><td style="padding:6px 8px;border-bottom:1px solid #f1f5f9;">Max A x1 50ft (FW) \u2192 Mod A x1 100ft</td></tr>
-            <tr><td style="padding:6px 8px;font-weight:500;">Balance (Berg)</td><td style="padding:6px 8px;">18/56 \u2192 24/56</td></tr>
+            <tr><td style="padding:6px 8px;border-bottom:1px solid #f1f5f9;font-weight:500;">Transfers</td><td style="padding:6px 8px;border-bottom:1px solid #f1f5f9;">Mod A (FIM 3) → Min A (FIM 4)</td></tr>
+            <tr><td style="padding:6px 8px;border-bottom:1px solid #f1f5f9;font-weight:500;">Ambulation</td><td style="padding:6px 8px;border-bottom:1px solid #f1f5f9;">Max A x1 50ft (FW) → Mod A x1 100ft</td></tr>
+            <tr><td style="padding:6px 8px;font-weight:500;">Balance (Berg)</td><td style="padding:6px 8px;">18/56 → 24/56</td></tr>
           </table>
         </div>
         <div>
@@ -3076,910 +3262,532 @@ Thank you for your prompt attention to this matter.`;
           <div style="font-size:11px;color:#92400e;">Documented by <strong>Jane Specialist, PT, DPT</strong> on 01/20/2026 at 11:15</div>
         </div>
       </div>`;
-  };
-  window.QuerySendModal = {
-    show(opts) {
-      console.log("[DemoMock] QuerySendModal.show (stub):", opts?.mdsItem);
+  }, window.QuerySendModal = {
+    show(s) {
+      console.log("[DemoMock] QuerySendModal.show (stub):", s?.mdsItem);
     }
-  };
-  window.CertAPI = {
-    async sendCert(certId, practitionerIds, delayReason) {
-      await new Promise((r3) => setTimeout(r3, 300));
-      console.log("[DemoMock] CertAPI.sendCert:", certId);
-      dispatchToast("success", "Certification sent successfully");
-      return { success: true };
+  }, window.CertAPI = {
+    async sendCert(s, n, i) {
+      return await new Promise((a) => setTimeout(a, 300)), console.log("[DemoMock] CertAPI.sendCert:", s), e("success", "Certification sent successfully"), { success: !0 };
     },
-    async skipCert(certId, reason) {
-      await new Promise((r3) => setTimeout(r3, 200));
-      console.log("[DemoMock] CertAPI.skipCert:", certId);
-      dispatchToast("info", "Certification skipped");
-      return { success: true };
+    async skipCert(s, n) {
+      return await new Promise((i) => setTimeout(i, 200)), console.log("[DemoMock] CertAPI.skipCert:", s), e("info", "Certification skipped"), { success: !0 };
     },
-    async delayCert(certId, reason) {
-      await new Promise((r3) => setTimeout(r3, 200));
-      console.log("[DemoMock] CertAPI.delayCert:", certId);
-      dispatchToast("info", "Certification delayed");
-      return { success: true };
+    async delayCert(s, n) {
+      return await new Promise((i) => setTimeout(i, 200)), console.log("[DemoMock] CertAPI.delayCert:", s), e("info", "Certification delayed"), { success: !0 };
     },
-    async saveClinicalReason(certId, data) {
-      await new Promise((r3) => setTimeout(r3, 200));
-      console.log("[DemoMock] CertAPI.saveClinicalReason:", certId, data);
-      return { success: true };
+    async saveClinicalReason(s, n) {
+      return await new Promise((i) => setTimeout(i, 200)), console.log("[DemoMock] CertAPI.saveClinicalReason:", s, n), { success: !0 };
     },
-    async unskipCert(certId) {
-      await new Promise((r3) => setTimeout(r3, 200));
-      console.log("[DemoMock] CertAPI.unskipCert:", certId);
-      dispatchToast("info", "Certification unskipped");
-      return { success: true };
+    async unskipCert(s) {
+      return await new Promise((n) => setTimeout(n, 200)), console.log("[DemoMock] CertAPI.unskipCert:", s), e("info", "Certification unskipped"), { success: !0 };
     },
-    async fetchPractitioners(facilityName, orgSlug) {
-      await new Promise((r3) => setTimeout(r3, 200));
-      return [
+    async fetchPractitioners(s, n) {
+      return await new Promise((i) => setTimeout(i, 200)), [
         { id: "pract-001", firstName: "Demo", lastName: "Provider", title: "MD", name: "Dr. Demo Provider", phone: "555-0101", npi: "1234567890" },
         { id: "pract-002", firstName: "Sample", lastName: "Doctor", title: "DO", name: "Dr. Sample Doctor", phone: "555-0102", npi: "0987654321" },
         { id: "pract-003", firstName: "Jane", lastName: "Specialist", title: "NP", name: "Jane Specialist, NP", phone: "555-0103", npi: "1122334455" }
       ];
     },
-    async fetchPractitionerWorkload(practitionerId) {
-      await new Promise((r3) => setTimeout(r3, 200));
-      return {
-        practitioner: { id: practitionerId, name: "Dr. Demo Provider" },
+    async fetchPractitionerWorkload(s) {
+      return await new Promise((n) => setTimeout(n, 200)), {
+        practitioner: { id: s, name: "Dr. Demo Provider" },
         stats: { pending: 3, signed: 12, overdue: 1 },
         certs: []
       };
     },
-    async fetchDashboard(facilityName, orgSlug) {
-      await new Promise((r3) => setTimeout(r3, 200));
-      return { pending: 4, overdue: 1, dueSoon: 2, signedLast7Days: 3 };
+    async fetchDashboard(s, n) {
+      return await new Promise((i) => setTimeout(i, 200)), { pending: 4, overdue: 1, dueSoon: 2, signedLast7Days: 3 };
     },
-    async fetchCertifications(facilityName, orgSlug, filters) {
-      await new Promise((r3) => setTimeout(r3, 200));
-      return window.__DEMO_CERT_DATA || [];
+    async fetchCertifications(s, n, i) {
+      return await new Promise((a) => setTimeout(a, 200)), window.__DEMO_CERT_DATA || [];
     },
-    async fetchByPatient(facilityName, orgSlug, patientId) {
-      await new Promise((r3) => setTimeout(r3, 200));
-      const all = window.__DEMO_CERT_DATA || [];
-      return all.filter((c3) => c3.patientId === patientId);
+    async fetchByPatient(s, n, i) {
+      return await new Promise((r) => setTimeout(r, 200)), (window.__DEMO_CERT_DATA || []).filter((r) => r.patientId === i);
     },
-    async fetchSendHistory(certId) {
-      await new Promise((r3) => setTimeout(r3, 200));
-      return [
-        { id: "send-1", certId, sentAt: new Date(Date.now() - 3 * 864e5).toISOString(), practitioner: { name: "Dr. Demo Provider" }, method: "fax" }
+    async fetchSendHistory(s) {
+      return await new Promise((n) => setTimeout(n, 200)), [
+        { id: "send-1", certId: s, sentAt: new Date(Date.now() - 3 * 864e5).toISOString(), practitioner: { name: "Dr. Demo Provider" }, method: "fax" }
       ];
     }
-  };
-  window.CONFIG = { DEV_MODE: true };
-  console.log("[DemoMock] Global mocks installed");
+  }, window.CONFIG = { DEV_MODE: !0 }, console.log("[DemoMock] Global mocks installed");
 }
-
-// node_modules/preact/dist/preact.module.js
-var n;
-var l;
-var u;
-var t;
-var i;
-var o;
-var r;
-var e;
-var f;
-var c;
-var s;
-var a;
-var h;
-var p = {};
-var v = [];
-var y = /acit|ex(?:s|g|n|p|$)|rph|grid|ows|mnc|ntw|ine[ch]|zoo|^ord|itera/i;
-var d = Array.isArray;
-function w(n2, l3) {
-  for (var u4 in l3) n2[u4] = l3[u4];
-  return n2;
+var Ce, ne, Ze, Lt, ke = 0, vs = [], ie = J, $t = ie.__b, Rt = ie.__r, Et = ie.diffed, Ot = ie.__c, qt = ie.unmount, Ht = ie.__;
+function ft(e, s) {
+  ie.__h && ie.__h(ne, e, ke || s), ke = 0;
+  var n = ne.__H || (ne.__H = { __: [], __h: [] });
+  return e >= n.__.length && n.__.push({}), n.__[e];
 }
-function g(n2) {
-  n2 && n2.parentNode && n2.parentNode.removeChild(n2);
+function b(e) {
+  return ke = 1, nn(ws, e);
 }
-function _(l3, u4, t3) {
-  var i3, o3, r3, e3 = {};
-  for (r3 in u4) "key" == r3 ? i3 = u4[r3] : "ref" == r3 ? o3 = u4[r3] : e3[r3] = u4[r3];
-  if (arguments.length > 2 && (e3.children = arguments.length > 3 ? n.call(arguments, 2) : t3), "function" == typeof l3 && null != l3.defaultProps) for (r3 in l3.defaultProps) void 0 === e3[r3] && (e3[r3] = l3.defaultProps[r3]);
-  return m(l3, e3, i3, o3, null);
-}
-function m(n2, t3, i3, o3, r3) {
-  var e3 = { type: n2, props: t3, key: i3, ref: o3, __k: null, __: null, __b: 0, __e: null, __c: null, constructor: void 0, __v: null == r3 ? ++u : r3, __i: -1, __u: 0 };
-  return null == r3 && null != l.vnode && l.vnode(e3), e3;
-}
-function k(n2) {
-  return n2.children;
-}
-function x(n2, l3) {
-  this.props = n2, this.context = l3;
-}
-function S(n2, l3) {
-  if (null == l3) return n2.__ ? S(n2.__, n2.__i + 1) : null;
-  for (var u4; l3 < n2.__k.length; l3++) if (null != (u4 = n2.__k[l3]) && null != u4.__e) return u4.__e;
-  return "function" == typeof n2.type ? S(n2) : null;
-}
-function C(n2) {
-  var l3, u4;
-  if (null != (n2 = n2.__) && null != n2.__c) {
-    for (n2.__e = n2.__c.base = null, l3 = 0; l3 < n2.__k.length; l3++) if (null != (u4 = n2.__k[l3]) && null != u4.__e) {
-      n2.__e = n2.__c.base = u4.__e;
-      break;
-    }
-    return C(n2);
-  }
-}
-function M(n2) {
-  (!n2.__d && (n2.__d = true) && i.push(n2) && !$.__r++ || o != l.debounceRendering) && ((o = l.debounceRendering) || r)($);
-}
-function $() {
-  for (var n2, u4, t3, o3, r3, f4, c3, s3 = 1; i.length; ) i.length > s3 && i.sort(e), n2 = i.shift(), s3 = i.length, n2.__d && (t3 = void 0, o3 = void 0, r3 = (o3 = (u4 = n2).__v).__e, f4 = [], c3 = [], u4.__P && ((t3 = w({}, o3)).__v = o3.__v + 1, l.vnode && l.vnode(t3), O(u4.__P, t3, o3, u4.__n, u4.__P.namespaceURI, 32 & o3.__u ? [r3] : null, f4, null == r3 ? S(o3) : r3, !!(32 & o3.__u), c3), t3.__v = o3.__v, t3.__.__k[t3.__i] = t3, N(f4, t3, c3), o3.__e = o3.__ = null, t3.__e != r3 && C(t3)));
-  $.__r = 0;
-}
-function I(n2, l3, u4, t3, i3, o3, r3, e3, f4, c3, s3) {
-  var a3, h3, y3, d3, w3, g2, _2, m3 = t3 && t3.__k || v, b = l3.length;
-  for (f4 = P(u4, l3, m3, f4, b), a3 = 0; a3 < b; a3++) null != (y3 = u4.__k[a3]) && (h3 = -1 == y3.__i ? p : m3[y3.__i] || p, y3.__i = a3, g2 = O(n2, y3, h3, i3, o3, r3, e3, f4, c3, s3), d3 = y3.__e, y3.ref && h3.ref != y3.ref && (h3.ref && B(h3.ref, null, y3), s3.push(y3.ref, y3.__c || d3, y3)), null == w3 && null != d3 && (w3 = d3), (_2 = !!(4 & y3.__u)) || h3.__k === y3.__k ? f4 = A(y3, f4, n2, _2) : "function" == typeof y3.type && void 0 !== g2 ? f4 = g2 : d3 && (f4 = d3.nextSibling), y3.__u &= -7);
-  return u4.__e = w3, f4;
-}
-function P(n2, l3, u4, t3, i3) {
-  var o3, r3, e3, f4, c3, s3 = u4.length, a3 = s3, h3 = 0;
-  for (n2.__k = new Array(i3), o3 = 0; o3 < i3; o3++) null != (r3 = l3[o3]) && "boolean" != typeof r3 && "function" != typeof r3 ? ("string" == typeof r3 || "number" == typeof r3 || "bigint" == typeof r3 || r3.constructor == String ? r3 = n2.__k[o3] = m(null, r3, null, null, null) : d(r3) ? r3 = n2.__k[o3] = m(k, { children: r3 }, null, null, null) : void 0 === r3.constructor && r3.__b > 0 ? r3 = n2.__k[o3] = m(r3.type, r3.props, r3.key, r3.ref ? r3.ref : null, r3.__v) : n2.__k[o3] = r3, f4 = o3 + h3, r3.__ = n2, r3.__b = n2.__b + 1, e3 = null, -1 != (c3 = r3.__i = L(r3, u4, f4, a3)) && (a3--, (e3 = u4[c3]) && (e3.__u |= 2)), null == e3 || null == e3.__v ? (-1 == c3 && (i3 > s3 ? h3-- : i3 < s3 && h3++), "function" != typeof r3.type && (r3.__u |= 4)) : c3 != f4 && (c3 == f4 - 1 ? h3-- : c3 == f4 + 1 ? h3++ : (c3 > f4 ? h3-- : h3++, r3.__u |= 4))) : n2.__k[o3] = null;
-  if (a3) for (o3 = 0; o3 < s3; o3++) null != (e3 = u4[o3]) && 0 == (2 & e3.__u) && (e3.__e == t3 && (t3 = S(e3)), D(e3, e3));
-  return t3;
-}
-function A(n2, l3, u4, t3) {
-  var i3, o3;
-  if ("function" == typeof n2.type) {
-    for (i3 = n2.__k, o3 = 0; i3 && o3 < i3.length; o3++) i3[o3] && (i3[o3].__ = n2, l3 = A(i3[o3], l3, u4, t3));
-    return l3;
-  }
-  n2.__e != l3 && (t3 && (l3 && n2.type && !l3.parentNode && (l3 = S(n2)), u4.insertBefore(n2.__e, l3 || null)), l3 = n2.__e);
-  do {
-    l3 = l3 && l3.nextSibling;
-  } while (null != l3 && 8 == l3.nodeType);
-  return l3;
-}
-function L(n2, l3, u4, t3) {
-  var i3, o3, r3, e3 = n2.key, f4 = n2.type, c3 = l3[u4], s3 = null != c3 && 0 == (2 & c3.__u);
-  if (null === c3 && null == e3 || s3 && e3 == c3.key && f4 == c3.type) return u4;
-  if (t3 > (s3 ? 1 : 0)) {
-    for (i3 = u4 - 1, o3 = u4 + 1; i3 >= 0 || o3 < l3.length; ) if (null != (c3 = l3[r3 = i3 >= 0 ? i3-- : o3++]) && 0 == (2 & c3.__u) && e3 == c3.key && f4 == c3.type) return r3;
-  }
-  return -1;
-}
-function T(n2, l3, u4) {
-  "-" == l3[0] ? n2.setProperty(l3, null == u4 ? "" : u4) : n2[l3] = null == u4 ? "" : "number" != typeof u4 || y.test(l3) ? u4 : u4 + "px";
-}
-function j(n2, l3, u4, t3, i3) {
-  var o3, r3;
-  n: if ("style" == l3) if ("string" == typeof u4) n2.style.cssText = u4;
-  else {
-    if ("string" == typeof t3 && (n2.style.cssText = t3 = ""), t3) for (l3 in t3) u4 && l3 in u4 || T(n2.style, l3, "");
-    if (u4) for (l3 in u4) t3 && u4[l3] == t3[l3] || T(n2.style, l3, u4[l3]);
-  }
-  else if ("o" == l3[0] && "n" == l3[1]) o3 = l3 != (l3 = l3.replace(f, "$1")), r3 = l3.toLowerCase(), l3 = r3 in n2 || "onFocusOut" == l3 || "onFocusIn" == l3 ? r3.slice(2) : l3.slice(2), n2.l || (n2.l = {}), n2.l[l3 + o3] = u4, u4 ? t3 ? u4.u = t3.u : (u4.u = c, n2.addEventListener(l3, o3 ? a : s, o3)) : n2.removeEventListener(l3, o3 ? a : s, o3);
-  else {
-    if ("http://www.w3.org/2000/svg" == i3) l3 = l3.replace(/xlink(H|:h)/, "h").replace(/sName$/, "s");
-    else if ("width" != l3 && "height" != l3 && "href" != l3 && "list" != l3 && "form" != l3 && "tabIndex" != l3 && "download" != l3 && "rowSpan" != l3 && "colSpan" != l3 && "role" != l3 && "popover" != l3 && l3 in n2) try {
-      n2[l3] = null == u4 ? "" : u4;
-      break n;
-    } catch (n3) {
-    }
-    "function" == typeof u4 || (null == u4 || false === u4 && "-" != l3[4] ? n2.removeAttribute(l3) : n2.setAttribute(l3, "popover" == l3 && 1 == u4 ? "" : u4));
-  }
-}
-function F(n2) {
-  return function(u4) {
-    if (this.l) {
-      var t3 = this.l[u4.type + n2];
-      if (null == u4.t) u4.t = c++;
-      else if (u4.t < t3.u) return;
-      return t3(l.event ? l.event(u4) : u4);
-    }
-  };
-}
-function O(n2, u4, t3, i3, o3, r3, e3, f4, c3, s3) {
-  var a3, h3, p3, v3, y3, _2, m3, b, S2, C3, M2, $2, P2, A3, H, L2, T3, j3 = u4.type;
-  if (void 0 !== u4.constructor) return null;
-  128 & t3.__u && (c3 = !!(32 & t3.__u), r3 = [f4 = u4.__e = t3.__e]), (a3 = l.__b) && a3(u4);
-  n: if ("function" == typeof j3) try {
-    if (b = u4.props, S2 = "prototype" in j3 && j3.prototype.render, C3 = (a3 = j3.contextType) && i3[a3.__c], M2 = a3 ? C3 ? C3.props.value : a3.__ : i3, t3.__c ? m3 = (h3 = u4.__c = t3.__c).__ = h3.__E : (S2 ? u4.__c = h3 = new j3(b, M2) : (u4.__c = h3 = new x(b, M2), h3.constructor = j3, h3.render = E), C3 && C3.sub(h3), h3.state || (h3.state = {}), h3.__n = i3, p3 = h3.__d = true, h3.__h = [], h3._sb = []), S2 && null == h3.__s && (h3.__s = h3.state), S2 && null != j3.getDerivedStateFromProps && (h3.__s == h3.state && (h3.__s = w({}, h3.__s)), w(h3.__s, j3.getDerivedStateFromProps(b, h3.__s))), v3 = h3.props, y3 = h3.state, h3.__v = u4, p3) S2 && null == j3.getDerivedStateFromProps && null != h3.componentWillMount && h3.componentWillMount(), S2 && null != h3.componentDidMount && h3.__h.push(h3.componentDidMount);
-    else {
-      if (S2 && null == j3.getDerivedStateFromProps && b !== v3 && null != h3.componentWillReceiveProps && h3.componentWillReceiveProps(b, M2), u4.__v == t3.__v || !h3.__e && null != h3.shouldComponentUpdate && false === h3.shouldComponentUpdate(b, h3.__s, M2)) {
-        for (u4.__v != t3.__v && (h3.props = b, h3.state = h3.__s, h3.__d = false), u4.__e = t3.__e, u4.__k = t3.__k, u4.__k.some(function(n3) {
-          n3 && (n3.__ = u4);
-        }), $2 = 0; $2 < h3._sb.length; $2++) h3.__h.push(h3._sb[$2]);
-        h3._sb = [], h3.__h.length && e3.push(h3);
-        break n;
-      }
-      null != h3.componentWillUpdate && h3.componentWillUpdate(b, h3.__s, M2), S2 && null != h3.componentDidUpdate && h3.__h.push(function() {
-        h3.componentDidUpdate(v3, y3, _2);
+function nn(e, s, n) {
+  var i = ft(Ce++, 2);
+  if (i.t = e, !i.__c && (i.__ = [ws(void 0, s), function(o) {
+    var p = i.__N ? i.__N[0] : i.__[0], d = i.t(p, o);
+    p !== d && (i.__N = [d, i.__[1]], i.__c.setState({}));
+  }], i.__c = ne, !ne.__f)) {
+    var a = function(o, p, d) {
+      if (!i.__c.__H) return !0;
+      var u = i.__c.__H.__.filter(function(m) {
+        return !!m.__c;
       });
-    }
-    if (h3.context = M2, h3.props = b, h3.__P = n2, h3.__e = false, P2 = l.__r, A3 = 0, S2) {
-      for (h3.state = h3.__s, h3.__d = false, P2 && P2(u4), a3 = h3.render(h3.props, h3.state, h3.context), H = 0; H < h3._sb.length; H++) h3.__h.push(h3._sb[H]);
-      h3._sb = [];
-    } else do {
-      h3.__d = false, P2 && P2(u4), a3 = h3.render(h3.props, h3.state, h3.context), h3.state = h3.__s;
-    } while (h3.__d && ++A3 < 25);
-    h3.state = h3.__s, null != h3.getChildContext && (i3 = w(w({}, i3), h3.getChildContext())), S2 && !p3 && null != h3.getSnapshotBeforeUpdate && (_2 = h3.getSnapshotBeforeUpdate(v3, y3)), L2 = a3, null != a3 && a3.type === k && null == a3.key && (L2 = V(a3.props.children)), f4 = I(n2, d(L2) ? L2 : [L2], u4, t3, i3, o3, r3, e3, f4, c3, s3), h3.base = u4.__e, u4.__u &= -161, h3.__h.length && e3.push(h3), m3 && (h3.__E = h3.__ = null);
-  } catch (n3) {
-    if (u4.__v = null, c3 || null != r3) if (n3.then) {
-      for (u4.__u |= c3 ? 160 : 128; f4 && 8 == f4.nodeType && f4.nextSibling; ) f4 = f4.nextSibling;
-      r3[r3.indexOf(f4)] = null, u4.__e = f4;
-    } else {
-      for (T3 = r3.length; T3--; ) g(r3[T3]);
-      z(u4);
-    }
-    else u4.__e = t3.__e, u4.__k = t3.__k, n3.then || z(u4);
-    l.__e(n3, u4, t3);
-  }
-  else null == r3 && u4.__v == t3.__v ? (u4.__k = t3.__k, u4.__e = t3.__e) : f4 = u4.__e = q(t3.__e, u4, t3, i3, o3, r3, e3, c3, s3);
-  return (a3 = l.diffed) && a3(u4), 128 & u4.__u ? void 0 : f4;
-}
-function z(n2) {
-  n2 && n2.__c && (n2.__c.__e = true), n2 && n2.__k && n2.__k.forEach(z);
-}
-function N(n2, u4, t3) {
-  for (var i3 = 0; i3 < t3.length; i3++) B(t3[i3], t3[++i3], t3[++i3]);
-  l.__c && l.__c(u4, n2), n2.some(function(u5) {
-    try {
-      n2 = u5.__h, u5.__h = [], n2.some(function(n3) {
-        n3.call(u5);
-      });
-    } catch (n3) {
-      l.__e(n3, u5.__v);
-    }
-  });
-}
-function V(n2) {
-  return "object" != typeof n2 || null == n2 || n2.__b && n2.__b > 0 ? n2 : d(n2) ? n2.map(V) : w({}, n2);
-}
-function q(u4, t3, i3, o3, r3, e3, f4, c3, s3) {
-  var a3, h3, v3, y3, w3, _2, m3, b = i3.props || p, k3 = t3.props, x2 = t3.type;
-  if ("svg" == x2 ? r3 = "http://www.w3.org/2000/svg" : "math" == x2 ? r3 = "http://www.w3.org/1998/Math/MathML" : r3 || (r3 = "http://www.w3.org/1999/xhtml"), null != e3) {
-    for (a3 = 0; a3 < e3.length; a3++) if ((w3 = e3[a3]) && "setAttribute" in w3 == !!x2 && (x2 ? w3.localName == x2 : 3 == w3.nodeType)) {
-      u4 = w3, e3[a3] = null;
-      break;
-    }
-  }
-  if (null == u4) {
-    if (null == x2) return document.createTextNode(k3);
-    u4 = document.createElementNS(r3, x2, k3.is && k3), c3 && (l.__m && l.__m(t3, e3), c3 = false), e3 = null;
-  }
-  if (null == x2) b === k3 || c3 && u4.data == k3 || (u4.data = k3);
-  else {
-    if (e3 = e3 && n.call(u4.childNodes), !c3 && null != e3) for (b = {}, a3 = 0; a3 < u4.attributes.length; a3++) b[(w3 = u4.attributes[a3]).name] = w3.value;
-    for (a3 in b) if (w3 = b[a3], "children" == a3) ;
-    else if ("dangerouslySetInnerHTML" == a3) v3 = w3;
-    else if (!(a3 in k3)) {
-      if ("value" == a3 && "defaultValue" in k3 || "checked" == a3 && "defaultChecked" in k3) continue;
-      j(u4, a3, null, w3, r3);
-    }
-    for (a3 in k3) w3 = k3[a3], "children" == a3 ? y3 = w3 : "dangerouslySetInnerHTML" == a3 ? h3 = w3 : "value" == a3 ? _2 = w3 : "checked" == a3 ? m3 = w3 : c3 && "function" != typeof w3 || b[a3] === w3 || j(u4, a3, w3, b[a3], r3);
-    if (h3) c3 || v3 && (h3.__html == v3.__html || h3.__html == u4.innerHTML) || (u4.innerHTML = h3.__html), t3.__k = [];
-    else if (v3 && (u4.innerHTML = ""), I("template" == t3.type ? u4.content : u4, d(y3) ? y3 : [y3], t3, i3, o3, "foreignObject" == x2 ? "http://www.w3.org/1999/xhtml" : r3, e3, f4, e3 ? e3[0] : i3.__k && S(i3, 0), c3, s3), null != e3) for (a3 = e3.length; a3--; ) g(e3[a3]);
-    c3 || (a3 = "value", "progress" == x2 && null == _2 ? u4.removeAttribute("value") : null != _2 && (_2 !== u4[a3] || "progress" == x2 && !_2 || "option" == x2 && _2 != b[a3]) && j(u4, a3, _2, b[a3], r3), a3 = "checked", null != m3 && m3 != u4[a3] && j(u4, a3, m3, b[a3], r3));
-  }
-  return u4;
-}
-function B(n2, u4, t3) {
-  try {
-    if ("function" == typeof n2) {
-      var i3 = "function" == typeof n2.__u;
-      i3 && n2.__u(), i3 && null == u4 || (n2.__u = n2(u4));
-    } else n2.current = u4;
-  } catch (n3) {
-    l.__e(n3, t3);
-  }
-}
-function D(n2, u4, t3) {
-  var i3, o3;
-  if (l.unmount && l.unmount(n2), (i3 = n2.ref) && (i3.current && i3.current != n2.__e || B(i3, null, u4)), null != (i3 = n2.__c)) {
-    if (i3.componentWillUnmount) try {
-      i3.componentWillUnmount();
-    } catch (n3) {
-      l.__e(n3, u4);
-    }
-    i3.base = i3.__P = null;
-  }
-  if (i3 = n2.__k) for (o3 = 0; o3 < i3.length; o3++) i3[o3] && D(i3[o3], u4, t3 || "function" != typeof n2.type);
-  t3 || g(n2.__e), n2.__c = n2.__ = n2.__e = void 0;
-}
-function E(n2, l3, u4) {
-  return this.constructor(n2, u4);
-}
-function G(u4, t3, i3) {
-  var o3, r3, e3, f4;
-  t3 == document && (t3 = document.documentElement), l.__ && l.__(u4, t3), r3 = (o3 = "function" == typeof i3) ? null : i3 && i3.__k || t3.__k, e3 = [], f4 = [], O(t3, u4 = (!o3 && i3 || t3).__k = _(k, null, [u4]), r3 || p, p, t3.namespaceURI, !o3 && i3 ? [i3] : r3 ? null : t3.firstChild ? n.call(t3.childNodes) : null, e3, !o3 && i3 ? i3 : r3 ? r3.__e : t3.firstChild, o3, f4), N(e3, u4, f4);
-}
-n = v.slice, l = { __e: function(n2, l3, u4, t3) {
-  for (var i3, o3, r3; l3 = l3.__; ) if ((i3 = l3.__c) && !i3.__) try {
-    if ((o3 = i3.constructor) && null != o3.getDerivedStateFromError && (i3.setState(o3.getDerivedStateFromError(n2)), r3 = i3.__d), null != i3.componentDidCatch && (i3.componentDidCatch(n2, t3 || {}), r3 = i3.__d), r3) return i3.__E = i3;
-  } catch (l4) {
-    n2 = l4;
-  }
-  throw n2;
-} }, u = 0, t = function(n2) {
-  return null != n2 && void 0 === n2.constructor;
-}, x.prototype.setState = function(n2, l3) {
-  var u4;
-  u4 = null != this.__s && this.__s != this.state ? this.__s : this.__s = w({}, this.state), "function" == typeof n2 && (n2 = n2(w({}, u4), this.props)), n2 && w(u4, n2), null != n2 && this.__v && (l3 && this._sb.push(l3), M(this));
-}, x.prototype.forceUpdate = function(n2) {
-  this.__v && (this.__e = true, n2 && this.__h.push(n2), M(this));
-}, x.prototype.render = k, i = [], r = "function" == typeof Promise ? Promise.prototype.then.bind(Promise.resolve()) : setTimeout, e = function(n2, l3) {
-  return n2.__v.__b - l3.__v.__b;
-}, $.__r = 0, f = /(PointerCapture)$|Capture$/i, c = 0, s = F(false), a = F(true), h = 0;
-
-// node_modules/preact/hooks/dist/hooks.module.js
-var t2;
-var r2;
-var u2;
-var i2;
-var o2 = 0;
-var f2 = [];
-var c2 = l;
-var e2 = c2.__b;
-var a2 = c2.__r;
-var v2 = c2.diffed;
-var l2 = c2.__c;
-var m2 = c2.unmount;
-var s2 = c2.__;
-function p2(n2, t3) {
-  c2.__h && c2.__h(r2, n2, o2 || t3), o2 = 0;
-  var u4 = r2.__H || (r2.__H = { __: [], __h: [] });
-  return n2 >= u4.__.length && u4.__.push({}), u4.__[n2];
-}
-function d2(n2) {
-  return o2 = 1, h2(D2, n2);
-}
-function h2(n2, u4, i3) {
-  var o3 = p2(t2++, 2);
-  if (o3.t = n2, !o3.__c && (o3.__ = [i3 ? i3(u4) : D2(void 0, u4), function(n3) {
-    var t3 = o3.__N ? o3.__N[0] : o3.__[0], r3 = o3.t(t3, n3);
-    t3 !== r3 && (o3.__N = [r3, o3.__[1]], o3.__c.setState({}));
-  }], o3.__c = r2, !r2.__f)) {
-    var f4 = function(n3, t3, r3) {
-      if (!o3.__c.__H) return true;
-      var u5 = o3.__c.__H.__.filter(function(n4) {
-        return !!n4.__c;
-      });
-      if (u5.every(function(n4) {
-        return !n4.__N;
-      })) return !c3 || c3.call(this, n3, t3, r3);
-      var i4 = o3.__c.props !== n3;
-      return u5.forEach(function(n4) {
-        if (n4.__N) {
-          var t4 = n4.__[0];
-          n4.__ = n4.__N, n4.__N = void 0, t4 !== n4.__[0] && (i4 = true);
+      if (u.every(function(m) {
+        return !m.__N;
+      })) return !r || r.call(this, o, p, d);
+      var l = i.__c.props !== o;
+      return u.forEach(function(m) {
+        if (m.__N) {
+          var h = m.__[0];
+          m.__ = m.__N, m.__N = void 0, h !== m.__[0] && (l = !0);
         }
-      }), c3 && c3.call(this, n3, t3, r3) || i4;
+      }), r && r.call(this, o, p, d) || l;
     };
-    r2.__f = true;
-    var c3 = r2.shouldComponentUpdate, e3 = r2.componentWillUpdate;
-    r2.componentWillUpdate = function(n3, t3, r3) {
+    ne.__f = !0;
+    var r = ne.shouldComponentUpdate, c = ne.componentWillUpdate;
+    ne.componentWillUpdate = function(o, p, d) {
       if (this.__e) {
-        var u5 = c3;
-        c3 = void 0, f4(n3, t3, r3), c3 = u5;
+        var u = r;
+        r = void 0, a(o, p, d), r = u;
       }
-      e3 && e3.call(this, n3, t3, r3);
-    }, r2.shouldComponentUpdate = f4;
+      c && c.call(this, o, p, d);
+    }, ne.shouldComponentUpdate = a;
   }
-  return o3.__N || o3.__;
+  return i.__N || i.__;
 }
-function y2(n2, u4) {
-  var i3 = p2(t2++, 3);
-  !c2.__s && C2(i3.__H, u4) && (i3.__ = n2, i3.u = u4, r2.__H.__h.push(i3));
+function z(e, s) {
+  var n = ft(Ce++, 3);
+  !ie.__s && bs(n.__H, s) && (n.__ = e, n.u = s, ne.__H.__h.push(n));
 }
-function A2(n2) {
-  return o2 = 5, T2(function() {
-    return { current: n2 };
+function ee(e) {
+  return ke = 5, ae(function() {
+    return { current: e };
   }, []);
 }
-function T2(n2, r3) {
-  var u4 = p2(t2++, 7);
-  return C2(u4.__H, r3) && (u4.__ = n2(), u4.__H = r3, u4.__h = n2), u4.__;
+function ae(e, s) {
+  var n = ft(Ce++, 7);
+  return bs(n.__H, s) && (n.__ = e(), n.__H = s, n.__h = e), n.__;
 }
-function q2(n2, t3) {
-  return o2 = 8, T2(function() {
-    return n2;
-  }, t3);
+function X(e, s) {
+  return ke = 8, ae(function() {
+    return e;
+  }, s);
 }
-function j2() {
-  for (var n2; n2 = f2.shift(); ) if (n2.__P && n2.__H) try {
-    n2.__H.__h.forEach(z2), n2.__H.__h.forEach(B2), n2.__H.__h = [];
-  } catch (t3) {
-    n2.__H.__h = [], c2.__e(t3, n2.__v);
+function an() {
+  for (var e; e = vs.shift(); ) if (e.__P && e.__H) try {
+    e.__H.__h.forEach(Ee), e.__H.__h.forEach(at), e.__H.__h = [];
+  } catch (s) {
+    e.__H.__h = [], ie.__e(s, e.__v);
   }
 }
-c2.__b = function(n2) {
-  r2 = null, e2 && e2(n2);
-}, c2.__ = function(n2, t3) {
-  n2 && t3.__k && t3.__k.__m && (n2.__m = t3.__k.__m), s2 && s2(n2, t3);
-}, c2.__r = function(n2) {
-  a2 && a2(n2), t2 = 0;
-  var i3 = (r2 = n2.__c).__H;
-  i3 && (u2 === r2 ? (i3.__h = [], r2.__h = [], i3.__.forEach(function(n3) {
-    n3.__N && (n3.__ = n3.__N), n3.u = n3.__N = void 0;
-  })) : (i3.__h.forEach(z2), i3.__h.forEach(B2), i3.__h = [], t2 = 0)), u2 = r2;
-}, c2.diffed = function(n2) {
-  v2 && v2(n2);
-  var t3 = n2.__c;
-  t3 && t3.__H && (t3.__H.__h.length && (1 !== f2.push(t3) && i2 === c2.requestAnimationFrame || ((i2 = c2.requestAnimationFrame) || w2)(j2)), t3.__H.__.forEach(function(n3) {
-    n3.u && (n3.__H = n3.u), n3.u = void 0;
-  })), u2 = r2 = null;
-}, c2.__c = function(n2, t3) {
-  t3.some(function(n3) {
+ie.__b = function(e) {
+  ne = null, $t && $t(e);
+}, ie.__ = function(e, s) {
+  e && s.__k && s.__k.__m && (e.__m = s.__k.__m), Ht && Ht(e, s);
+}, ie.__r = function(e) {
+  Rt && Rt(e), Ce = 0;
+  var s = (ne = e.__c).__H;
+  s && (Ze === ne ? (s.__h = [], ne.__h = [], s.__.forEach(function(n) {
+    n.__N && (n.__ = n.__N), n.u = n.__N = void 0;
+  })) : (s.__h.forEach(Ee), s.__h.forEach(at), s.__h = [], Ce = 0)), Ze = ne;
+}, ie.diffed = function(e) {
+  Et && Et(e);
+  var s = e.__c;
+  s && s.__H && (s.__H.__h.length && (vs.push(s) !== 1 && Lt === ie.requestAnimationFrame || ((Lt = ie.requestAnimationFrame) || rn)(an)), s.__H.__.forEach(function(n) {
+    n.u && (n.__H = n.u), n.u = void 0;
+  })), Ze = ne = null;
+}, ie.__c = function(e, s) {
+  s.some(function(n) {
     try {
-      n3.__h.forEach(z2), n3.__h = n3.__h.filter(function(n4) {
-        return !n4.__ || B2(n4);
+      n.__h.forEach(Ee), n.__h = n.__h.filter(function(i) {
+        return !i.__ || at(i);
       });
-    } catch (r3) {
-      t3.some(function(n4) {
-        n4.__h && (n4.__h = []);
-      }), t3 = [], c2.__e(r3, n3.__v);
+    } catch (i) {
+      s.some(function(a) {
+        a.__h && (a.__h = []);
+      }), s = [], ie.__e(i, n.__v);
     }
-  }), l2 && l2(n2, t3);
-}, c2.unmount = function(n2) {
-  m2 && m2(n2);
-  var t3, r3 = n2.__c;
-  r3 && r3.__H && (r3.__H.__.forEach(function(n3) {
+  }), Ot && Ot(e, s);
+}, ie.unmount = function(e) {
+  qt && qt(e);
+  var s, n = e.__c;
+  n && n.__H && (n.__H.__.forEach(function(i) {
     try {
-      z2(n3);
-    } catch (n4) {
-      t3 = n4;
+      Ee(i);
+    } catch (a) {
+      s = a;
     }
-  }), r3.__H = void 0, t3 && c2.__e(t3, r3.__v));
+  }), n.__H = void 0, s && ie.__e(s, n.__v));
 };
-var k2 = "function" == typeof requestAnimationFrame;
-function w2(n2) {
-  var t3, r3 = function() {
-    clearTimeout(u4), k2 && cancelAnimationFrame(t3), setTimeout(n2);
-  }, u4 = setTimeout(r3, 35);
-  k2 && (t3 = requestAnimationFrame(r3));
+var Ft = typeof requestAnimationFrame == "function";
+function rn(e) {
+  var s, n = function() {
+    clearTimeout(i), Ft && cancelAnimationFrame(s), setTimeout(e);
+  }, i = setTimeout(n, 35);
+  Ft && (s = requestAnimationFrame(n));
 }
-function z2(n2) {
-  var t3 = r2, u4 = n2.__c;
-  "function" == typeof u4 && (n2.__c = void 0, u4()), r2 = t3;
+function Ee(e) {
+  var s = ne, n = e.__c;
+  typeof n == "function" && (e.__c = void 0, n()), ne = s;
 }
-function B2(n2) {
-  var t3 = r2;
-  n2.__c = n2.__(), r2 = t3;
+function at(e) {
+  var s = ne;
+  e.__c = e.__(), ne = s;
 }
-function C2(n2, t3) {
-  return !n2 || n2.length !== t3.length || t3.some(function(t4, r3) {
-    return t4 !== n2[r3];
+function bs(e, s) {
+  return !e || e.length !== s.length || s.some(function(n, i) {
+    return n !== e[i];
   });
 }
-function D2(n2, t3) {
-  return "function" == typeof t3 ? t3(n2) : t3;
+function ws(e, s) {
+  return typeof s == "function" ? s(e) : s;
 }
-
-// content/modules/mds-command-center/hooks/useCommandCenter.js
-function useCommandCenter({ facilityName, orgSlug }) {
-  const [data, setData] = d2(null);
-  const [loading, setLoading] = d2(true);
-  const [error, setError] = d2(null);
-  const fetchData = q2(async () => {
-    setLoading(true);
-    setError(null);
+function on({ facilityName: e, orgSlug: s }) {
+  const [n, i] = b(null), [a, r] = b(!0), [c, o] = b(null), p = X(async () => {
+    r(!0), o(null);
     try {
-      const params = new URLSearchParams({
-        facilityName,
-        orgSlug,
+      const d = new URLSearchParams({
+        facilityName: e,
+        orgSlug: s,
         windowDays: "30"
-      });
-      const result = await chrome.runtime.sendMessage({
+      }), u = await chrome.runtime.sendMessage({
         type: "API_REQUEST",
-        endpoint: `/api/extension/mds/dashboard?${params}`,
+        endpoint: `/api/extension/mds/dashboard?${d}`,
         options: { method: "GET" }
       });
-      if (!result.success) {
-        throw new Error(result.error || "Failed to load MDS dashboard data");
-      }
-      setData(result.data);
-    } catch (err) {
-      console.error("[MDSCommandCenter] Failed to fetch dashboard:", err);
-      setError(err.message || "Failed to load dashboard");
+      if (!u.success)
+        throw new Error(u.error || "Failed to load MDS dashboard data");
+      i(u.data);
+    } catch (d) {
+      console.error("[MDSCommandCenter] Failed to fetch dashboard:", d), o(d.message || "Failed to load dashboard");
     } finally {
-      setLoading(false);
+      r(!1);
     }
-  }, [facilityName, orgSlug]);
-  y2(() => {
-    fetchData();
-  }, [fetchData]);
-  return { data, loading, error, retry: fetchData };
+  }, [e, s]);
+  return z(() => {
+    p();
+  }, [p]), { data: n, loading: a, error: c, retry: p };
 }
-
-// content/modules/mds-command-center/hooks/useDocRisks.js
-function useDocRisks({ facilityName, orgSlug, windowDays = 30, enabled = false }) {
-  const [data, setData] = d2(null);
-  const [loading, setLoading] = d2(false);
-  const [error, setError] = d2(null);
-  y2(() => {
-    if (!enabled || !facilityName) {
-      setData(null);
-      setError(null);
+function cn({ facilityName: e, orgSlug: s, windowDays: n = 30, enabled: i = !1 }) {
+  const [a, r] = b(null), [c, o] = b(!1), [p, d] = b(null);
+  return z(() => {
+    if (!i || !e) {
+      r(null), d(null);
       return;
     }
-    let cancelled = false;
-    setLoading(true);
-    setError(null);
-    async function fetchDocRisks() {
+    let u = !1;
+    o(!0), d(null);
+    async function l() {
       try {
-        const authState = await chrome.runtime.sendMessage({ type: "GET_AUTH_STATE" });
-        if (!authState.authenticated) {
+        if (!(await chrome.runtime.sendMessage({ type: "GET_AUTH_STATE" })).authenticated)
           throw new Error("Please log in to view documentation risks");
-        }
-        const orgResponse = getOrg();
-        const resolvedOrg = orgSlug || orgResponse?.org;
-        const params = new URLSearchParams({
-          facilityName,
-          orgSlug: resolvedOrg,
-          windowDays: String(windowDays)
-        });
-        const result = await chrome.runtime.sendMessage({
+        const h = getOrg(), _ = s || h?.org, v = new URLSearchParams({
+          facilityName: e,
+          orgSlug: _,
+          windowDays: String(n)
+        }), g = await chrome.runtime.sendMessage({
           type: "API_REQUEST",
-          endpoint: `/api/extension/mds/doc-risks?${params}`,
+          endpoint: `/api/extension/mds/doc-risks?${v}`,
           options: { method: "GET" }
         });
-        if (!result.success) {
-          throw new Error(result.error || "Failed to load documentation risks");
-        }
-        if (!cancelled) setData(result.data);
-      } catch (err) {
-        if (!cancelled) setError(err.message || "Failed to load documentation risks");
+        if (!g.success)
+          throw new Error(g.error || "Failed to load documentation risks");
+        u || r(g.data);
+      } catch (m) {
+        u || d(m.message || "Failed to load documentation risks");
       } finally {
-        if (!cancelled) setLoading(false);
+        u || o(!1);
       }
     }
-    fetchDocRisks();
-    return () => {
-      cancelled = true;
+    return l(), () => {
+      u = !0;
     };
-  }, [facilityName, orgSlug, windowDays, enabled]);
-  return { data, loading, error };
+  }, [e, s, n, i]), { data: a, loading: c, error: p };
 }
-
-// content/modules/certifications/hooks/useCertDashboard.js
-function useCertDashboard({ facilityName, orgSlug, enabled = false }) {
-  const [data, setData] = d2(null);
-  const [loading, setLoading] = d2(false);
-  const [error, setError] = d2(null);
-  const fetchData = q2(async () => {
-    if (!enabled || !facilityName || !orgSlug) return;
-    setLoading(true);
-    setError(null);
-    try {
-      const params = new URLSearchParams({ facilityName, orgSlug });
-      const result = await chrome.runtime.sendMessage({
-        type: "API_REQUEST",
-        endpoint: `/api/extension/certifications/dashboard?${params}`,
-        options: { method: "GET" }
-      });
-      if (!result.success) {
-        setData(null);
-        return;
+function dn({ facilityName: e, orgSlug: s, enabled: n = !1 }) {
+  const [i, a] = b(null), [r, c] = b(!1), [o, p] = b(null), d = X(async () => {
+    if (!(!n || !e || !s)) {
+      c(!0), p(null);
+      try {
+        const u = new URLSearchParams({ facilityName: e, orgSlug: s }), l = await chrome.runtime.sendMessage({
+          type: "API_REQUEST",
+          endpoint: `/api/extension/certifications/dashboard?${u}`,
+          options: { method: "GET" }
+        });
+        if (!l.success) {
+          a(null);
+          return;
+        }
+        a(l.data || null);
+      } catch (u) {
+        console.warn("[Certifications] Dashboard unavailable:", u), a(null);
+      } finally {
+        c(!1);
       }
-      setData(result.data || null);
-    } catch (err) {
-      console.warn("[Certifications] Dashboard unavailable:", err);
-      setData(null);
-    } finally {
-      setLoading(false);
     }
-  }, [facilityName, orgSlug, enabled]);
-  y2(() => {
-    fetchData();
-  }, [fetchData]);
-  return { data, loading, error, retry: fetchData };
+  }, [e, s, n]);
+  return z(() => {
+    d();
+  }, [d]), { data: i, loading: r, error: o, retry: d };
 }
-
-// node_modules/preact/jsx-runtime/dist/jsxRuntime.module.js
-var f3 = 0;
-function u3(e3, t3, n2, o3, i3, u4) {
-  t3 || (t3 = {});
-  var a3, c3, p3 = t3;
-  if ("ref" in p3) for (c3 in p3 = {}, t3) "ref" == c3 ? a3 = t3[c3] : p3[c3] = t3[c3];
-  var l3 = { type: e3, props: p3, key: n2, ref: a3, __k: null, __: null, __b: 0, __e: null, __c: null, constructor: void 0, __v: --f3, __i: -1, __u: 0, __source: i3, __self: u4 };
-  if ("function" == typeof e3 && (a3 = e3.defaultProps)) for (c3 in a3) void 0 === p3[c3] && (p3[c3] = a3[c3]);
-  return l.vnode && l.vnode(l3), l3;
-}
-
-// content/components/Selector.jsx
-function Selector({
-  options = [],
-  value,
-  onChange,
-  placeholder = "Select\u2026",
-  size = "default",
-  searchable = false,
-  searchPlaceholder = "Search\u2026",
-  className = "",
-  ariaLabel,
-  align = "left"
+function Oe({
+  options: e = [],
+  value: s,
+  onChange: n,
+  placeholder: i = "Select…",
+  size: a = "default",
+  searchable: r = !1,
+  searchPlaceholder: c = "Search…",
+  className: o = "",
+  ariaLabel: p,
+  align: d = "left"
 }) {
-  const [open, setOpen] = d2(false);
-  const [query, setQuery] = d2("");
-  const [hlIdx, setHlIdx] = d2(-1);
-  const rootRef = A2(null);
-  const searchRef = A2(null);
-  const listRef = A2(null);
-  const selected = options.find((o3) => o3.value === value) || null;
-  y2(() => {
-    if (!open) return;
-    const handler = (e3) => {
-      if (rootRef.current && !rootRef.current.contains(e3.target)) setOpen(false);
+  const [u, l] = b(!1), [m, h] = b(""), [_, v] = b(-1), g = ee(null), C = ee(null), f = ee(null), x = e.find((N) => N.value === s) || null;
+  z(() => {
+    if (!u) return;
+    const N = (w) => {
+      g.current && !g.current.contains(w.target) && l(!1);
     };
-    document.addEventListener("mousedown", handler, true);
-    return () => document.removeEventListener("mousedown", handler, true);
-  }, [open]);
-  y2(() => {
-    if (open) {
-      setQuery("");
-      setHlIdx(-1);
-      if (searchable && searchRef.current) {
-        requestAnimationFrame(() => searchRef.current?.focus({ preventScroll: true }));
-      }
-    }
-  }, [open, searchable]);
-  const lowerQ = query.toLowerCase();
-  const filtered = query ? options.filter(
-    (o3) => o3.label.toLowerCase().includes(lowerQ) || o3.subtitle && o3.subtitle.toLowerCase().includes(lowerQ) || o3.badge && o3.badge.toLowerCase().includes(lowerQ)
-  ) : options;
-  const onKeyDown = q2((e3) => {
-    if (!open && (e3.key === "Enter" || e3.key === " " || e3.key === "ArrowDown")) {
-      e3.preventDefault();
-      setOpen(true);
+    return document.addEventListener("mousedown", N, !0), () => document.removeEventListener("mousedown", N, !0);
+  }, [u]), z(() => {
+    u && (h(""), v(-1), r && C.current && requestAnimationFrame(() => C.current?.focus({ preventScroll: !0 })));
+  }, [u, r]);
+  const k = m.toLowerCase(), y = m ? e.filter(
+    (N) => N.label.toLowerCase().includes(k) || N.subtitle && N.subtitle.toLowerCase().includes(k) || N.badge && N.badge.toLowerCase().includes(k)
+  ) : e, S = X((N) => {
+    if (!u && (N.key === "Enter" || N.key === " " || N.key === "ArrowDown")) {
+      N.preventDefault(), l(!0);
       return;
     }
-    if (!open) return;
-    switch (e3.key) {
-      case "ArrowDown":
-        e3.preventDefault();
-        setHlIdx((i3) => Math.min(i3 + 1, filtered.length - 1));
-        break;
-      case "ArrowUp":
-        e3.preventDefault();
-        setHlIdx((i3) => Math.max(i3 - 1, 0));
-        break;
-      case "Enter":
-        e3.preventDefault();
-        if (hlIdx >= 0 && filtered[hlIdx]) {
-          onChange(filtered[hlIdx].value);
-          setOpen(false);
-        }
-        break;
-      case "Escape":
-        e3.preventDefault();
-        setOpen(false);
-        break;
-      case "Tab":
-        setOpen(false);
-        break;
-    }
-  }, [open, hlIdx, filtered, onChange]);
-  y2(() => {
-    if (hlIdx < 0 || !listRef.current) return;
-    const items = listRef.current.children;
-    items[hlIdx]?.scrollIntoView({ block: "nearest" });
-  }, [hlIdx]);
-  const isCompact = size === "compact";
-  return /* @__PURE__ */ u3(
+    if (u)
+      switch (N.key) {
+        case "ArrowDown":
+          N.preventDefault(), v((w) => Math.min(w + 1, y.length - 1));
+          break;
+        case "ArrowUp":
+          N.preventDefault(), v((w) => Math.max(w - 1, 0));
+          break;
+        case "Enter":
+          N.preventDefault(), _ >= 0 && y[_] && (n(y[_].value), l(!1));
+          break;
+        case "Escape":
+          N.preventDefault(), l(!1);
+          break;
+        case "Tab":
+          l(!1);
+          break;
+      }
+  }, [u, _, y, n]);
+  return z(() => {
+    if (_ < 0 || !f.current) return;
+    f.current.children[_]?.scrollIntoView({ block: "nearest" });
+  }, [_]), /* @__PURE__ */ t(
     "div",
     {
-      class: `ss__root${isCompact ? " ss__root--compact" : ""} ${className}`,
-      ref: rootRef,
-      onKeyDown,
+      class: `ss__root${a === "compact" ? " ss__root--compact" : ""} ${o}`,
+      ref: g,
+      onKeyDown: S,
       children: [
-        /* @__PURE__ */ u3(
+        /* @__PURE__ */ t(
           "button",
           {
             type: "button",
-            class: `ss__trigger${open ? " ss__trigger--open" : ""}`,
-            onClick: () => setOpen(!open),
+            class: `ss__trigger${u ? " ss__trigger--open" : ""}`,
+            onClick: () => l(!u),
             "aria-haspopup": "listbox",
-            "aria-expanded": open,
-            "aria-label": ariaLabel,
+            "aria-expanded": u,
+            "aria-label": p,
             children: [
-              /* @__PURE__ */ u3("span", { class: "ss__trigger-text", children: selected ? selected.label : /* @__PURE__ */ u3("span", { class: "ss__placeholder", children: placeholder }) }),
-              /* @__PURE__ */ u3("svg", { class: `ss__chevron${open ? " ss__chevron--open" : ""}`, width: "12", height: "12", viewBox: "0 0 12 12", fill: "none", children: /* @__PURE__ */ u3("path", { d: "M3 4.5L6 7.5L9 4.5", stroke: "currentColor", "stroke-width": "1.5", "stroke-linecap": "round", "stroke-linejoin": "round" }) })
+              /* @__PURE__ */ t("span", { class: "ss__trigger-text", children: x ? x.label : /* @__PURE__ */ t("span", { class: "ss__placeholder", children: i }) }),
+              /* @__PURE__ */ t("svg", { class: `ss__chevron${u ? " ss__chevron--open" : ""}`, width: "12", height: "12", viewBox: "0 0 12 12", fill: "none", children: /* @__PURE__ */ t("path", { d: "M3 4.5L6 7.5L9 4.5", stroke: "currentColor", "stroke-width": "1.5", "stroke-linecap": "round", "stroke-linejoin": "round" }) })
             ]
           }
         ),
-        open && /* @__PURE__ */ u3("div", { class: `ss__dropdown${align === "right" ? " ss__dropdown--right" : ""}`, role: "listbox", children: [
-          searchable && /* @__PURE__ */ u3("div", { class: "ss__search-wrap", children: [
-            /* @__PURE__ */ u3("svg", { class: "ss__search-icon", width: "13", height: "13", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": "2", children: [
-              /* @__PURE__ */ u3("circle", { cx: "11", cy: "11", r: "8" }),
-              /* @__PURE__ */ u3("line", { x1: "21", y1: "21", x2: "16.65", y2: "16.65" })
+        u && /* @__PURE__ */ t("div", { class: `ss__dropdown${d === "right" ? " ss__dropdown--right" : ""}`, role: "listbox", children: [
+          r && /* @__PURE__ */ t("div", { class: "ss__search-wrap", children: [
+            /* @__PURE__ */ t("svg", { class: "ss__search-icon", width: "13", height: "13", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": "2", children: [
+              /* @__PURE__ */ t("circle", { cx: "11", cy: "11", r: "8" }),
+              /* @__PURE__ */ t("line", { x1: "21", y1: "21", x2: "16.65", y2: "16.65" })
             ] }),
-            /* @__PURE__ */ u3(
+            /* @__PURE__ */ t(
               "input",
               {
-                ref: searchRef,
+                ref: C,
                 class: "ss__search",
                 type: "text",
-                placeholder: searchPlaceholder,
-                value: query,
-                onInput: (e3) => {
-                  setQuery(e3.target.value);
-                  setHlIdx(-1);
+                placeholder: c,
+                value: m,
+                onInput: (N) => {
+                  h(N.target.value), v(-1);
                 },
                 autocomplete: "off"
               }
             )
           ] }),
-          /* @__PURE__ */ u3("div", { class: "ss__list", ref: listRef, children: [
-            filtered.map((opt, i3) => {
-              const isActive = opt.value === value;
-              const isHl = i3 === hlIdx;
-              return /* @__PURE__ */ u3(
+          /* @__PURE__ */ t("div", { class: "ss__list", ref: f, children: [
+            y.map((N, w) => {
+              const T = N.value === s;
+              return /* @__PURE__ */ t(
                 "button",
                 {
                   type: "button",
-                  class: `ss__option${isActive ? " ss__option--active" : ""}${isHl ? " ss__option--hl" : ""}`,
+                  class: `ss__option${T ? " ss__option--active" : ""}${w === _ ? " ss__option--hl" : ""}`,
                   role: "option",
-                  "aria-selected": isActive,
+                  "aria-selected": T,
                   onClick: () => {
-                    onChange(opt.value);
-                    setOpen(false);
+                    n(N.value), l(!1);
                   },
-                  onMouseEnter: () => setHlIdx(i3),
+                  onMouseEnter: () => v(w),
                   children: [
-                    /* @__PURE__ */ u3("div", { class: "ss__option-body", children: [
-                      /* @__PURE__ */ u3("span", { class: "ss__option-label", children: opt.label }),
-                      opt.subtitle && /* @__PURE__ */ u3("span", { class: "ss__option-sub", children: opt.subtitle })
+                    /* @__PURE__ */ t("div", { class: "ss__option-body", children: [
+                      /* @__PURE__ */ t("span", { class: "ss__option-label", children: N.label }),
+                      N.subtitle && /* @__PURE__ */ t("span", { class: "ss__option-sub", children: N.subtitle })
                     ] }),
-                    opt.badge && /* @__PURE__ */ u3("span", { class: "ss__option-badge", children: opt.badge }),
-                    isActive && /* @__PURE__ */ u3("svg", { class: "ss__check", width: "14", height: "14", viewBox: "0 0 14 14", fill: "none", children: /* @__PURE__ */ u3("path", { d: "M3 7L6 10L11 4", stroke: "currentColor", "stroke-width": "2", "stroke-linecap": "round", "stroke-linejoin": "round" }) })
+                    N.badge && /* @__PURE__ */ t("span", { class: "ss__option-badge", children: N.badge }),
+                    T && /* @__PURE__ */ t("svg", { class: "ss__check", width: "14", height: "14", viewBox: "0 0 14 14", fill: "none", children: /* @__PURE__ */ t("path", { d: "M3 7L6 10L11 4", stroke: "currentColor", "stroke-width": "2", "stroke-linecap": "round", "stroke-linejoin": "round" }) })
                   ]
                 },
-                opt.value
+                N.value
               );
             }),
-            filtered.length === 0 && /* @__PURE__ */ u3("div", { class: "ss__empty", children: "No matches" })
+            y.length === 0 && /* @__PURE__ */ t("div", { class: "ss__empty", children: "No matches" })
           ] })
         ] })
       ]
     }
   );
 }
-
-// content/modules/mds-command-center/CommandCenterHeader.jsx
-var URGENCY_PILLS = [
+const ln = [
   { value: "all", label: "All", color: null },
   { value: "overdue", label: "Overdue", color: "#ef4444" },
   { value: "urgent", label: "Urgent", color: "#f97316" },
   { value: "approaching", label: "Approaching", color: "#eab308" },
   { value: "on_track", label: "On Track", color: "#22c55e" }
 ];
-function StatPill({ value, label, highlight }) {
-  return /* @__PURE__ */ u3("span", { class: `mds-cc__stat${highlight ? " mds-cc__stat--highlight" : ""}`, children: [
-    /* @__PURE__ */ u3("strong", { children: value }),
+function Xe({ value: e, label: s, highlight: n }) {
+  return /* @__PURE__ */ t("span", { class: `mds-cc__stat${n ? " mds-cc__stat--highlight" : ""}`, children: [
+    /* @__PURE__ */ t("strong", { children: e }),
     " ",
-    label
+    s
   ] });
 }
-function CommandCenterHeader({
-  summary,
-  facilityName,
-  onClose,
-  activeView,
-  onViewChange,
-  queryCount,
-  certCount,
-  certsEnabled,
-  docRiskCount,
-  payerFilter,
-  onPayerFilterChange,
-  classFilter,
-  onClassFilterChange,
-  focusFilter,
-  onFocusFilterChange,
-  urgencyFilter,
-  onUrgencyFilterChange
+function pn({
+  summary: e,
+  facilityName: s,
+  onClose: n,
+  activeView: i,
+  onViewChange: a,
+  queryCount: r,
+  certCount: c,
+  certsEnabled: o,
+  docRiskCount: p,
+  payerFilter: d,
+  onPayerFilterChange: u,
+  classFilter: l,
+  onClassFilterChange: m,
+  focusFilter: h,
+  onFocusFilterChange: _,
+  urgencyFilter: v,
+  onUrgencyFilterChange: g
 }) {
-  const total = summary?.total ?? 0;
-  const urgentCount = summary?.urgent ?? 0;
-  const hippsCount = summary?.hippsImprovements ?? summary?.withHippsImprovements ?? 0;
-  const pendingQueryCount = summary?.pendingQueries ?? summary?.pendingQueriesCount ?? 0;
-  const revenuePerDay = summary?.totalRevenueOpportunityPerDay ?? 0;
-  return /* @__PURE__ */ u3("div", { class: "mds-cc__header", children: [
-    /* @__PURE__ */ u3("div", { class: "mds-cc__title-row", children: [
-      /* @__PURE__ */ u3("div", { class: "mds-cc__title-group", children: [
-        /* @__PURE__ */ u3("span", { class: "mds-cc__title", children: "MDS Command Center" }),
-        facilityName && /* @__PURE__ */ u3("span", { class: "mds-cc__facility-name", children: facilityName })
+  const C = e?.total ?? 0, f = e?.urgent ?? 0, x = e?.hippsImprovements ?? e?.withHippsImprovements ?? 0, k = e?.pendingQueries ?? e?.pendingQueriesCount ?? 0, y = e?.totalRevenueOpportunityPerDay ?? 0;
+  return /* @__PURE__ */ t("div", { class: "mds-cc__header", children: [
+    /* @__PURE__ */ t("div", { class: "mds-cc__title-row", children: [
+      /* @__PURE__ */ t("div", { class: "mds-cc__title-group", children: [
+        /* @__PURE__ */ t("span", { class: "mds-cc__title", children: "MDS Command Center" }),
+        s && /* @__PURE__ */ t("span", { class: "mds-cc__facility-name", children: s })
       ] }),
-      /* @__PURE__ */ u3("button", { class: "mds-cc__close-btn", onClick: onClose, "aria-label": "Close", children: /* @__PURE__ */ u3("svg", { width: "20", height: "20", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": "2", children: [
-        /* @__PURE__ */ u3("line", { x1: "18", y1: "6", x2: "6", y2: "18" }),
-        /* @__PURE__ */ u3("line", { x1: "6", y1: "6", x2: "18", y2: "18" })
+      /* @__PURE__ */ t("button", { class: "mds-cc__close-btn", onClick: n, "aria-label": "Close", children: /* @__PURE__ */ t("svg", { width: "20", height: "20", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": "2", children: [
+        /* @__PURE__ */ t("line", { x1: "18", y1: "6", x2: "6", y2: "18" }),
+        /* @__PURE__ */ t("line", { x1: "6", y1: "6", x2: "18", y2: "18" })
       ] }) })
     ] }),
-    /* @__PURE__ */ u3("div", { class: "mds-cc__stats-strip", children: [
-      /* @__PURE__ */ u3(StatPill, { value: total, label: "assessments" }),
-      /* @__PURE__ */ u3("span", { class: "mds-cc__stats-sep", children: "|" }),
-      /* @__PURE__ */ u3(StatPill, { value: urgentCount, label: "urgent", highlight: urgentCount > 0 }),
-      revenuePerDay > 0 && /* @__PURE__ */ u3(k, { children: [
-        /* @__PURE__ */ u3("span", { class: "mds-cc__stats-sep", children: "|" }),
-        /* @__PURE__ */ u3("span", { class: "mds-cc__stat mds-cc__stat--revenue", children: [
-          /* @__PURE__ */ u3("strong", { children: [
+    /* @__PURE__ */ t("div", { class: "mds-cc__stats-strip", children: [
+      /* @__PURE__ */ t(Xe, { value: C, label: "assessments" }),
+      /* @__PURE__ */ t("span", { class: "mds-cc__stats-sep", children: "|" }),
+      /* @__PURE__ */ t(Xe, { value: f, label: "urgent", highlight: f > 0 }),
+      y > 0 && /* @__PURE__ */ t(Y, { children: [
+        /* @__PURE__ */ t("span", { class: "mds-cc__stats-sep", children: "|" }),
+        /* @__PURE__ */ t("span", { class: "mds-cc__stat mds-cc__stat--revenue", children: [
+          /* @__PURE__ */ t("strong", { children: [
             "$",
-            Math.round(revenuePerDay),
+            Math.round(y),
             "/day available"
           ] }),
-          hippsCount > 0 && /* @__PURE__ */ u3("span", { class: "mds-cc__stat-sub", children: [
+          x > 0 && /* @__PURE__ */ t("span", { class: "mds-cc__stat-sub", children: [
             " across ",
-            hippsCount,
+            x,
             " improvements"
           ] })
         ] })
       ] }),
-      /* @__PURE__ */ u3("span", { class: "mds-cc__stats-sep", children: "|" }),
-      /* @__PURE__ */ u3(StatPill, { value: pendingQueryCount, label: "pending queries", highlight: pendingQueryCount > 0 }),
-      docRiskCount > 0 && /* @__PURE__ */ u3(k, { children: [
-        /* @__PURE__ */ u3("span", { class: "mds-cc__stats-sep", children: "|" }),
-        /* @__PURE__ */ u3("span", { class: "mds-cc__stat mds-cc__stat--amber", children: [
-          "\u26A0",
+      /* @__PURE__ */ t("span", { class: "mds-cc__stats-sep", children: "|" }),
+      /* @__PURE__ */ t(Xe, { value: k, label: "pending queries", highlight: k > 0 }),
+      p > 0 && /* @__PURE__ */ t(Y, { children: [
+        /* @__PURE__ */ t("span", { class: "mds-cc__stats-sep", children: "|" }),
+        /* @__PURE__ */ t("span", { class: "mds-cc__stat mds-cc__stat--amber", children: [
+          "⚠",
           " ",
-          /* @__PURE__ */ u3("strong", { children: docRiskCount }),
+          /* @__PURE__ */ t("strong", { children: p }),
           " doc risk",
-          docRiskCount !== 1 ? "s" : ""
+          p !== 1 ? "s" : ""
         ] })
       ] })
     ] }),
-    /* @__PURE__ */ u3("div", { class: "mds-cc__view-switcher", children: [
-      /* @__PURE__ */ u3(
+    /* @__PURE__ */ t("div", { class: "mds-cc__view-switcher", children: [
+      /* @__PURE__ */ t(
         "button",
         {
-          class: `mds-cc__view-tab${activeView === "overview" ? " mds-cc__view-tab--active" : ""}`,
-          onClick: () => onViewChange("overview"),
+          class: `mds-cc__view-tab${i === "overview" ? " mds-cc__view-tab--active" : ""}`,
+          onClick: () => a("overview"),
           children: "Overview"
         }
       ),
-      /* @__PURE__ */ u3(
+      /* @__PURE__ */ t(
         "button",
         {
-          class: `mds-cc__view-tab${activeView === "assessments" ? " mds-cc__view-tab--active" : ""}`,
-          onClick: () => onViewChange("assessments"),
+          class: `mds-cc__view-tab${i === "assessments" ? " mds-cc__view-tab--active" : ""}`,
+          onClick: () => a("assessments"),
           children: "Assessments"
         }
       ),
-      /* @__PURE__ */ u3(
+      /* @__PURE__ */ t(
         "button",
         {
-          class: `mds-cc__view-tab${activeView === "queries" ? " mds-cc__view-tab--active" : ""}`,
-          onClick: () => onViewChange("queries"),
+          class: `mds-cc__view-tab${i === "queries" ? " mds-cc__view-tab--active" : ""}`,
+          onClick: () => a("queries"),
           children: [
             "Queries",
-            queryCount > 0 && /* @__PURE__ */ u3("span", { class: "mds-cc__view-tab-badge", children: queryCount })
+            r > 0 && /* @__PURE__ */ t("span", { class: "mds-cc__view-tab-badge", children: r })
           ]
         }
       ),
-      certsEnabled && /* @__PURE__ */ u3(
+      o && /* @__PURE__ */ t(
         "button",
         {
-          class: `mds-cc__view-tab${activeView === "certs" ? " mds-cc__view-tab--active" : ""}`,
-          onClick: () => onViewChange("certs"),
+          class: `mds-cc__view-tab${i === "certs" ? " mds-cc__view-tab--active" : ""}`,
+          onClick: () => a("certs"),
           children: [
             "Certs",
-            certCount > 0 && /* @__PURE__ */ u3("span", { class: "mds-cc__view-tab-badge", children: certCount })
+            c > 0 && /* @__PURE__ */ t("span", { class: "mds-cc__view-tab-badge", children: c })
           ]
         }
       ),
-      docRiskCount > 0 && /* @__PURE__ */ u3(
+      p > 0 && /* @__PURE__ */ t(
         "button",
         {
-          class: `mds-cc__view-tab${activeView === "docRisks" ? " mds-cc__view-tab--active" : ""}`,
-          onClick: () => onViewChange("docRisks"),
+          class: `mds-cc__view-tab${i === "docRisks" ? " mds-cc__view-tab--active" : ""}`,
+          onClick: () => a("docRisks"),
           children: [
             "Doc Risks",
-            /* @__PURE__ */ u3("span", { class: "mds-cc__view-tab-badge mds-cc__view-tab-badge--amber", children: docRiskCount })
+            /* @__PURE__ */ t("span", { class: "mds-cc__view-tab-badge mds-cc__view-tab-badge--amber", children: p })
           ]
         }
       )
     ] }),
-    activeView === "assessments" && /* @__PURE__ */ u3("div", { class: "mds-cc__filter-row", children: [
-      /* @__PURE__ */ u3(
-        Selector,
+    i === "assessments" && /* @__PURE__ */ t("div", { class: "mds-cc__filter-row", children: [
+      /* @__PURE__ */ t(
+        Oe,
         {
           size: "compact",
           options: [
@@ -3988,13 +3796,13 @@ function CommandCenterHeader({
             { value: "obra_cmi", label: "OBRA / CMI" },
             { value: "end_of_stay", label: "End of Stay" }
           ],
-          value: classFilter,
-          onChange: onClassFilterChange,
+          value: l,
+          onChange: m,
           ariaLabel: "Assessment class filter"
         }
       ),
-      /* @__PURE__ */ u3(
-        Selector,
+      /* @__PURE__ */ t(
+        Oe,
         {
           size: "compact",
           options: [
@@ -4003,13 +3811,13 @@ function CommandCenterHeader({
             { value: "medicaid", label: "Medicaid" },
             { value: "managed_care", label: "Managed Care" }
           ],
-          value: payerFilter,
-          onChange: onPayerFilterChange,
+          value: d,
+          onChange: u,
           ariaLabel: "Payer filter"
         }
       ),
-      /* @__PURE__ */ u3(
-        Selector,
+      /* @__PURE__ */ t(
+        Oe,
         {
           size: "compact",
           options: [
@@ -4017,37 +3825,37 @@ function CommandCenterHeader({
             { value: "revenue", label: "Revenue Opportunities" },
             { value: "issues", label: "Has Issues" }
           ],
-          value: focusFilter,
-          onChange: onFocusFilterChange,
+          value: h,
+          onChange: _,
           ariaLabel: "Focus filter"
         }
       )
     ] }),
-    activeView === "assessments" && onUrgencyFilterChange && /* @__PURE__ */ u3("div", { class: "mds-cc__urgency-pills", children: [
-      URGENCY_PILLS.map((pill) => {
-        const isActive = urgencyFilter === pill.value;
-        return /* @__PURE__ */ u3(
+    i === "assessments" && g && /* @__PURE__ */ t("div", { class: "mds-cc__urgency-pills", children: [
+      ln.map((S) => {
+        const E = v === S.value;
+        return /* @__PURE__ */ t(
           "button",
           {
-            class: `mds-cc__urgency-pill${isActive ? " mds-cc__urgency-pill--active" : ""}`,
-            style: isActive && pill.color ? { background: pill.color, borderColor: pill.color, color: "#fff" } : void 0,
-            onClick: () => onUrgencyFilterChange(pill.value),
+            class: `mds-cc__urgency-pill${E ? " mds-cc__urgency-pill--active" : ""}`,
+            style: E && S.color ? { background: S.color, borderColor: S.color, color: "#fff" } : void 0,
+            onClick: () => g(S.value),
             children: [
-              pill.color && /* @__PURE__ */ u3("span", { class: "mds-cc__urgency-pill-dot", style: { background: isActive ? "#fff" : pill.color } }),
-              pill.label
+              S.color && /* @__PURE__ */ t("span", { class: "mds-cc__urgency-pill-dot", style: { background: E ? "#fff" : S.color } }),
+              S.label
             ]
           },
-          pill.value
+          S.value
         );
       }),
-      onFocusFilterChange && /* @__PURE__ */ u3(
+      _ && /* @__PURE__ */ t(
         "button",
         {
-          class: `mds-cc__urgency-pill mds-cc__revenue-pill${focusFilter === "revenue" ? " mds-cc__revenue-pill--active" : ""}`,
-          onClick: () => onFocusFilterChange(focusFilter === "revenue" ? "all" : "revenue"),
+          class: `mds-cc__urgency-pill mds-cc__revenue-pill${h === "revenue" ? " mds-cc__revenue-pill--active" : ""}`,
+          onClick: () => _(h === "revenue" ? "all" : "revenue"),
           title: "Show only assessments with revenue opportunities",
           children: [
-            /* @__PURE__ */ u3("span", { class: "mds-cc__revenue-pill-icon", children: "$" }),
+            /* @__PURE__ */ t("span", { class: "mds-cc__revenue-pill-icon", children: "$" }),
             "Revenue"
           ]
         }
@@ -4055,795 +3863,633 @@ function CommandCenterHeader({
     ] })
   ] });
 }
-
-// content/modules/certifications/hooks/useCertifications.js
-function useCertifications({ facilityName, orgSlug, status, patientId }) {
-  const [certs, setCerts] = d2([]);
-  const [loading, setLoading] = d2(true);
-  const [error, setError] = d2(null);
-  const fetchData = q2(async () => {
-    if (!facilityName || !orgSlug) return;
-    setLoading(true);
-    setError(null);
-    try {
-      const params = new URLSearchParams({ facilityName, orgSlug });
-      if (status) params.set("status", status);
-      if (patientId) params.set("patientId", patientId);
-      const result = await chrome.runtime.sendMessage({
-        type: "API_REQUEST",
-        endpoint: `/api/extension/certifications?${params}`,
-        options: { method: "GET" }
-      });
-      if (!result.success) {
-        throw new Error(result.error || "Failed to load certifications");
+function Bt({ facilityName: e, orgSlug: s, status: n, patientId: i }) {
+  const [a, r] = b([]), [c, o] = b(!0), [p, d] = b(null), u = X(async () => {
+    if (!(!e || !s)) {
+      o(!0), d(null);
+      try {
+        const l = new URLSearchParams({ facilityName: e, orgSlug: s });
+        n && l.set("status", n), i && l.set("patientId", i);
+        const m = await chrome.runtime.sendMessage({
+          type: "API_REQUEST",
+          endpoint: `/api/extension/certifications?${l}`,
+          options: { method: "GET" }
+        });
+        if (!m.success)
+          throw new Error(m.error || "Failed to load certifications");
+        r(m.data?.certifications || []);
+      } catch (l) {
+        console.error("[Certifications] Failed to fetch certifications:", l), d(l.message || "Failed to load certifications");
+      } finally {
+        o(!1);
       }
-      setCerts(result.data?.certifications || []);
-    } catch (err) {
-      console.error("[Certifications] Failed to fetch certifications:", err);
-      setError(err.message || "Failed to load certifications");
-    } finally {
-      setLoading(false);
     }
-  }, [facilityName, orgSlug, status, patientId]);
-  y2(() => {
-    fetchData();
-  }, [fetchData]);
-  return { certs, loading, error, refetch: fetchData };
+  }, [e, s, n, i]);
+  return z(() => {
+    u();
+  }, [u]), { certs: a, loading: c, error: p, refetch: u };
 }
-
-// content/modules/certifications/components/CertTypeBadge.jsx
-var TYPE_CONFIG = {
+const un = {
   initial: { label: "Initial", cls: "cert__type-badge--initial" },
   day_14_recert: { label: "Day 14", cls: "cert__type-badge--recert" },
   day_30_recert: { label: "Day 30", cls: "cert__type-badge--recert" }
 };
-function CertTypeBadge({ type }) {
-  const config = TYPE_CONFIG[type];
-  if (!config) return null;
-  return /* @__PURE__ */ u3("span", { class: `cert__type-badge ${config.cls}`, children: config.label });
+function yt({ type: e }) {
+  const s = un[e];
+  return s ? /* @__PURE__ */ t("span", { class: `cert__type-badge ${s.cls}`, children: s.label }) : null;
 }
-
-// content/modules/certifications/components/CertStatusBadge.jsx
-function getDaysUntil(dateStr) {
-  if (!dateStr) return null;
-  const due = new Date(dateStr);
-  const now = /* @__PURE__ */ new Date();
-  due.setHours(0, 0, 0, 0);
-  now.setHours(0, 0, 0, 0);
-  return Math.floor((due - now) / 864e5);
+function mn(e) {
+  if (!e) return null;
+  const s = new Date(e), n = /* @__PURE__ */ new Date();
+  return s.setHours(0, 0, 0, 0), n.setHours(0, 0, 0, 0), Math.floor((s - n) / 864e5);
 }
-function formatShortDate(dateStr) {
-  if (!dateStr) return "";
-  const d3 = new Date(dateStr);
-  if (isNaN(d3)) return dateStr;
-  return d3.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+function hn(e) {
+  if (!e) return "";
+  const s = new Date(e);
+  return isNaN(s) ? e : s.toLocaleDateString("en-US", { month: "short", day: "numeric" });
 }
-function CertStatusBadge({ status, isDelayed, dueDate, signedAt }) {
-  const daysUntil = getDaysUntil(dueDate);
-  const isOverdue = daysUntil !== null && daysUntil < 0;
-  const isDueSoon = daysUntil !== null && daysUntil >= 0 && daysUntil <= 3;
-  if ((isDelayed || status === "delayed") && isOverdue) {
-    const daysOver = Math.abs(daysUntil);
-    return /* @__PURE__ */ u3("span", { class: "cert__status-badge cert__status-badge--overdue", children: [
-      daysOver,
+function Ds({ status: e, isDelayed: s, dueDate: n, signedAt: i }) {
+  const a = mn(n), r = a !== null && a < 0, c = a !== null && a >= 0 && a <= 3;
+  if ((s || e === "delayed") && r) {
+    const o = Math.abs(a);
+    return /* @__PURE__ */ t("span", { class: "cert__status-badge cert__status-badge--overdue", children: [
+      o,
       " DAY",
-      daysOver !== 1 ? "S" : "",
+      o !== 1 ? "S" : "",
       " OVERDUE"
     ] });
   }
-  if (isOverdue && (status === "pending" || status === "sent")) {
-    const daysOver = Math.abs(daysUntil);
-    return /* @__PURE__ */ u3("span", { class: "cert__status-badge cert__status-badge--overdue", children: [
-      daysOver,
+  if (r && (e === "pending" || e === "sent")) {
+    const o = Math.abs(a);
+    return /* @__PURE__ */ t("span", { class: "cert__status-badge cert__status-badge--overdue", children: [
+      o,
       " DAY",
-      daysOver !== 1 ? "S" : "",
+      o !== 1 ? "S" : "",
       " OVERDUE"
     ] });
   }
-  if (isDueSoon && status !== "signed" && status !== "skipped") {
-    const label = daysUntil === 0 ? "DUE TODAY" : `DUE IN ${daysUntil} DAY${daysUntil !== 1 ? "S" : ""}`;
-    return /* @__PURE__ */ u3("span", { class: "cert__status-badge cert__status-badge--due-soon", children: label });
+  if (c && e !== "signed" && e !== "skipped") {
+    const o = a === 0 ? "DUE TODAY" : `DUE IN ${a} DAY${a !== 1 ? "S" : ""}`;
+    return /* @__PURE__ */ t("span", { class: "cert__status-badge cert__status-badge--due-soon", children: o });
   }
-  if (status === "sent") {
-    return /* @__PURE__ */ u3("span", { class: "cert__status-badge cert__status-badge--awaiting", children: "AWAITING SIGNATURE" });
-  }
-  if (status === "signed") {
-    return /* @__PURE__ */ u3("span", { class: "cert__status-badge cert__status-badge--signed", children: [
-      "Signed ",
-      formatShortDate(signedAt)
-    ] });
-  }
-  if (status === "delayed" || isDelayed) {
-    return /* @__PURE__ */ u3("span", { class: "cert__status-badge cert__status-badge--delayed", children: "DELAYED" });
-  }
-  if (status === "skipped") {
-    return /* @__PURE__ */ u3("span", { class: "cert__status-badge cert__status-badge--skipped", children: "SKIPPED" });
-  }
-  return /* @__PURE__ */ u3("span", { class: "cert__status-badge cert__status-badge--pending", children: "PENDING" });
+  return e === "sent" ? /* @__PURE__ */ t("span", { class: "cert__status-badge cert__status-badge--awaiting", children: "AWAITING SIGNATURE" }) : e === "signed" ? /* @__PURE__ */ t("span", { class: "cert__status-badge cert__status-badge--signed", children: [
+    "Signed ",
+    hn(i)
+  ] }) : e === "delayed" || s ? /* @__PURE__ */ t("span", { class: "cert__status-badge cert__status-badge--delayed", children: "DELAYED" }) : e === "skipped" ? /* @__PURE__ */ t("span", { class: "cert__status-badge cert__status-badge--skipped", children: "SKIPPED" }) : /* @__PURE__ */ t("span", { class: "cert__status-badge cert__status-badge--pending", children: "PENDING" });
 }
-
-// content/modules/certifications/components/MAPayerBadge.jsx
-function MAPayerBadge({ payerType }) {
-  if (payerType !== "managed_care") return null;
-  return /* @__PURE__ */ u3("span", { class: "cert__ma-badge", children: "MA" });
+function _n({ payerType: e }) {
+  return e !== "managed_care" ? null : /* @__PURE__ */ t("span", { class: "cert__ma-badge", children: "MA" });
 }
-
-// content/modules/certifications/components/CertListRow.jsx
-function formatShortDate2(dateStr) {
-  if (!dateStr) return "";
-  const d3 = new Date(dateStr);
-  if (isNaN(d3)) return dateStr;
-  return d3.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+function gn(e) {
+  if (!e) return "";
+  const s = new Date(e);
+  return isNaN(s) ? e : s.toLocaleDateString("en-US", { month: "short", day: "numeric" });
 }
-function formatDateTime(dateStr) {
-  if (!dateStr) return "";
-  const d3 = new Date(dateStr);
-  if (isNaN(d3)) return dateStr;
-  return d3.toLocaleDateString("en-US", { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" });
+function fn(e) {
+  if (!e) return "";
+  const s = new Date(e);
+  return isNaN(s) ? e : s.toLocaleDateString("en-US", { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" });
 }
-function getDaysUntil2(dateStr) {
-  if (!dateStr) return null;
-  const due = new Date(dateStr);
-  const now = /* @__PURE__ */ new Date();
-  due.setHours(0, 0, 0, 0);
-  now.setHours(0, 0, 0, 0);
-  return Math.floor((due - now) / 864e5);
+function Is(e) {
+  if (!e) return null;
+  const s = new Date(e), n = /* @__PURE__ */ new Date();
+  return s.setHours(0, 0, 0, 0), n.setHours(0, 0, 0, 0), Math.floor((s - n) / 864e5);
 }
-function getPrimaryAction(cert) {
-  const daysUntil = getDaysUntil2(cert.dueDate);
-  const isOverdue = daysUntil !== null && daysUntil < 0;
-  const hasSends = cert.sends?.length > 0;
-  if (cert.status === "skipped") {
-    return { label: "Unskip", variant: "ghost", action: "unskip" };
-  }
-  if (cert.status === "signed") {
-    return null;
-  }
-  if (isOverdue) {
-    return { label: hasSends ? "Resend" : "Send", variant: "destructive", action: "send" };
-  }
-  if (cert.status === "delayed") {
-    return { label: hasSends ? "Resend" : "Send", variant: "destructive", action: "send" };
-  }
-  if (hasSends) {
-    return { label: "Resend", variant: "outline", action: "send" };
-  }
-  return { label: "Send", variant: "primary", action: "send" };
+function yn(e) {
+  const s = Is(e.dueDate), n = s !== null && s < 0, i = e.sends?.length > 0;
+  return e.status === "skipped" ? { label: "Unskip", variant: "ghost", action: "unskip" } : e.status === "signed" ? null : n ? { label: i ? "Resend" : "Send", variant: "destructive", action: "send" } : e.status === "delayed" ? { label: i ? "Resend" : "Send", variant: "destructive", action: "send" } : i ? { label: "Resend", variant: "outline", action: "send" } : { label: "Send", variant: "primary", action: "send" };
 }
-function SendHistorySummary({ sends }) {
-  if (!sends || sends.length === 0) return null;
-  const label = sends.length === 1 ? `Sent to ${sends[0].practitionerName}` : `Sent ${sends.length} times`;
-  return /* @__PURE__ */ u3("span", { class: "cert__row-meta cert__row-meta--link cert__sends-summary", children: label });
+function vn({ sends: e }) {
+  if (!e || e.length === 0) return null;
+  const s = e.length === 1 ? `Sent to ${e[0].practitionerName}` : `Sent ${e.length} times`;
+  return /* @__PURE__ */ t("span", { class: "cert__row-meta cert__row-meta--link cert__sends-summary", children: s });
 }
-function SendHistoryExpanded({ sends }) {
-  return /* @__PURE__ */ u3("div", { class: "cert__sends-detail", children: sends.map((s3, i3) => /* @__PURE__ */ u3("div", { class: "cert__sends-detail-row", children: [
-    /* @__PURE__ */ u3("span", { class: "cert__sends-detail-name", children: [
-      s3.practitionerName,
-      s3.practitionerTitle ? `, ${s3.practitionerTitle}` : ""
+function bn({ sends: e }) {
+  return /* @__PURE__ */ t("div", { class: "cert__sends-detail", children: e.map((s, n) => /* @__PURE__ */ t("div", { class: "cert__sends-detail-row", children: [
+    /* @__PURE__ */ t("span", { class: "cert__sends-detail-name", children: [
+      s.practitionerName,
+      s.practitionerTitle ? `, ${s.practitionerTitle}` : ""
     ] }),
-    /* @__PURE__ */ u3("span", { class: "cert__sends-detail-date", children: formatDateTime(s3.sentAt) }),
-    s3.smsStatus && /* @__PURE__ */ u3("span", { class: `cert__sends-detail-status cert__sends-detail-status--${s3.smsStatus}`, children: s3.smsStatus })
-  ] }, i3)) });
+    /* @__PURE__ */ t("span", { class: "cert__sends-detail-date", children: fn(s.sentAt) }),
+    s.smsStatus && /* @__PURE__ */ t("span", { class: `cert__sends-detail-status cert__sends-detail-status--${s.smsStatus}`, children: s.smsStatus })
+  ] }, n)) });
 }
-function CertListRow({ cert, compact, onSend, onSkip, onUnskip, onDelay, onEditReason, onViewPractitioner }) {
-  const [menuOpen, setMenuOpen] = d2(false);
-  const [sendsExpanded, setSendsExpanded] = d2(false);
-  const menuRef = A2(null);
-  y2(() => {
-    if (!menuOpen) return;
-    const handleClick = (e3) => {
-      if (menuRef.current && !menuRef.current.contains(e3.target)) {
-        setMenuOpen(false);
-      }
+function Gt({ cert: e, compact: s, onSend: n, onSkip: i, onUnskip: a, onDelay: r, onEditReason: c, onViewPractitioner: o }) {
+  const [p, d] = b(!1), [u, l] = b(!1), m = ee(null);
+  z(() => {
+    if (!p) return;
+    const w = (T) => {
+      m.current && !m.current.contains(T.target) && d(!1);
     };
-    document.addEventListener("click", handleClick, true);
-    return () => document.removeEventListener("click", handleClick, true);
-  }, [menuOpen]);
-  const primaryAction = getPrimaryAction(cert);
-  const isRecert = cert.type === "day_14_recert" || cert.type === "day_30_recert";
-  const showSkip = cert.status !== "skipped" && cert.status !== "signed";
-  const showDelay = cert.status === "pending" && !cert.isDelayed && cert.status !== "signed";
-  const showEditReason = isRecert && cert.status !== "signed";
-  const hasSends = cert.sends?.length > 0;
-  const daysUntil = getDaysUntil2(cert.dueDate);
-  const isOverdue = daysUntil !== null && daysUntil < 0;
-  const isDueSoon = daysUntil !== null && daysUntil >= 0 && daysUntil <= 3;
-  let urgencyClass = "";
-  if (cert.status === "signed") urgencyClass = " cert__row--signed";
-  else if (cert.status === "skipped") urgencyClass = " cert__row--skipped";
-  else if (isOverdue || cert.isDelayed) urgencyClass = " cert__row--overdue";
-  else if (isDueSoon) urgencyClass = " cert__row--due-soon";
-  function handlePrimaryClick(e3) {
-    e3.stopPropagation();
-    if (!primaryAction) return;
-    if (primaryAction.action === "send") onSend?.(cert);
-    if (primaryAction.action === "unskip") onUnskip?.(cert);
+    return document.addEventListener("click", w, !0), () => document.removeEventListener("click", w, !0);
+  }, [p]);
+  const h = yn(e), _ = e.type === "day_14_recert" || e.type === "day_30_recert", v = e.status !== "skipped" && e.status !== "signed", g = e.status === "pending" && !e.isDelayed && e.status !== "signed", C = _ && e.status !== "signed", f = e.sends?.length > 0, x = Is(e.dueDate), k = x !== null && x < 0, y = x !== null && x >= 0 && x <= 3;
+  let S = "";
+  e.status === "signed" ? S = " cert__row--signed" : e.status === "skipped" ? S = " cert__row--skipped" : k || e.isDelayed ? S = " cert__row--overdue" : y && (S = " cert__row--due-soon");
+  function E(w) {
+    w.stopPropagation(), h && (h.action === "send" && n?.(e), h.action === "unskip" && a?.(e));
   }
-  function handleMenuAction(action) {
-    setMenuOpen(false);
-    if (action === "skip") onSkip?.(cert);
-    if (action === "delay") onDelay?.(cert);
-    if (action === "editReason") onEditReason?.(cert);
+  function N(w) {
+    d(!1), w === "skip" && i?.(e), w === "delay" && r?.(e), w === "editReason" && c?.(e);
   }
-  return /* @__PURE__ */ u3("div", { class: `cert__row${urgencyClass}`, children: [
-    /* @__PURE__ */ u3("div", { class: "cert__row-top", children: [
-      /* @__PURE__ */ u3("div", { class: "cert__row-left", children: [
-        /* @__PURE__ */ u3(CertTypeBadge, { type: cert.type }),
-        !compact && /* @__PURE__ */ u3("span", { class: "cert__row-patient", children: cert.patientName }),
-        !compact && /* @__PURE__ */ u3(MAPayerBadge, { payerType: cert.payerType })
+  return /* @__PURE__ */ t("div", { class: `cert__row${S}`, children: [
+    /* @__PURE__ */ t("div", { class: "cert__row-top", children: [
+      /* @__PURE__ */ t("div", { class: "cert__row-left", children: [
+        /* @__PURE__ */ t(yt, { type: e.type }),
+        !s && /* @__PURE__ */ t("span", { class: "cert__row-patient", children: e.patientName }),
+        !s && /* @__PURE__ */ t(_n, { payerType: e.payerType })
       ] }),
-      /* @__PURE__ */ u3("div", { class: "cert__row-right", children: [
-        /* @__PURE__ */ u3(
-          CertStatusBadge,
+      /* @__PURE__ */ t("div", { class: "cert__row-right", children: [
+        /* @__PURE__ */ t(
+          Ds,
           {
-            status: cert.status,
-            isDelayed: cert.isDelayed,
-            dueDate: cert.dueDate,
-            signedAt: cert.signedAt
+            status: e.status,
+            isDelayed: e.isDelayed,
+            dueDate: e.dueDate,
+            signedAt: e.signedAt
           }
         ),
-        primaryAction && /* @__PURE__ */ u3(
+        h && /* @__PURE__ */ t(
           "button",
           {
-            class: `cert__row-action cert__row-action--${primaryAction.variant}`,
-            onClick: handlePrimaryClick,
-            children: primaryAction.label
+            class: `cert__row-action cert__row-action--${h.variant}`,
+            onClick: E,
+            children: h.label
           }
         ),
-        (showSkip || showDelay || showEditReason) && /* @__PURE__ */ u3("div", { class: "cert__row-menu-container", ref: menuRef, children: [
-          /* @__PURE__ */ u3(
+        (v || g || C) && /* @__PURE__ */ t("div", { class: "cert__row-menu-container", ref: m, children: [
+          /* @__PURE__ */ t(
             "button",
             {
               class: "cert__row-menu-btn",
-              onClick: (e3) => {
-                e3.stopPropagation();
-                setMenuOpen(!menuOpen);
+              onClick: (w) => {
+                w.stopPropagation(), d(!p);
               },
               "aria-label": "More actions",
-              children: /* @__PURE__ */ u3("svg", { width: "16", height: "16", viewBox: "0 0 16 16", fill: "currentColor", children: [
-                /* @__PURE__ */ u3("circle", { cx: "8", cy: "3", r: "1.5" }),
-                /* @__PURE__ */ u3("circle", { cx: "8", cy: "8", r: "1.5" }),
-                /* @__PURE__ */ u3("circle", { cx: "8", cy: "13", r: "1.5" })
+              children: /* @__PURE__ */ t("svg", { width: "16", height: "16", viewBox: "0 0 16 16", fill: "currentColor", children: [
+                /* @__PURE__ */ t("circle", { cx: "8", cy: "3", r: "1.5" }),
+                /* @__PURE__ */ t("circle", { cx: "8", cy: "8", r: "1.5" }),
+                /* @__PURE__ */ t("circle", { cx: "8", cy: "13", r: "1.5" })
               ] })
             }
           ),
-          menuOpen && /* @__PURE__ */ u3("div", { class: "cert__row-menu", children: [
-            showSkip && /* @__PURE__ */ u3("button", { class: "cert__row-menu-item", onClick: () => handleMenuAction("skip"), children: "Skip Certification" }),
-            showDelay && /* @__PURE__ */ u3("button", { class: "cert__row-menu-item", onClick: () => handleMenuAction("delay"), children: "Mark as Delayed" }),
-            showEditReason && /* @__PURE__ */ u3("button", { class: "cert__row-menu-item", onClick: () => handleMenuAction("editReason"), children: "Edit Clinical Reason" })
+          p && /* @__PURE__ */ t("div", { class: "cert__row-menu", children: [
+            v && /* @__PURE__ */ t("button", { class: "cert__row-menu-item", onClick: () => N("skip"), children: "Skip Certification" }),
+            g && /* @__PURE__ */ t("button", { class: "cert__row-menu-item", onClick: () => N("delay"), children: "Mark as Delayed" }),
+            C && /* @__PURE__ */ t("button", { class: "cert__row-menu-item", onClick: () => N("editReason"), children: "Edit Clinical Reason" })
           ] })
         ] })
       ] })
     ] }),
-    /* @__PURE__ */ u3("div", { class: "cert__row-bottom", children: [
-      cert.dueDate && /* @__PURE__ */ u3("span", { class: "cert__row-meta", children: [
+    /* @__PURE__ */ t("div", { class: "cert__row-bottom", children: [
+      e.dueDate && /* @__PURE__ */ t("span", { class: "cert__row-meta", children: [
         "Due ",
-        formatShortDate2(cert.dueDate)
+        gn(e.dueDate)
       ] }),
-      !compact && cert.currentMedicareDay != null && /* @__PURE__ */ u3("span", { class: "cert__row-meta", children: [
+      !s && e.currentMedicareDay != null && /* @__PURE__ */ t("span", { class: "cert__row-meta", children: [
         "Medicare Day ",
-        cert.currentMedicareDay
+        e.currentMedicareDay
       ] }),
-      hasSends && /* @__PURE__ */ u3("span", { onClick: (e3) => {
-        e3.stopPropagation();
-        setSendsExpanded(!sendsExpanded);
-      }, children: /* @__PURE__ */ u3(SendHistorySummary, { sends: cert.sends }) }),
-      cert.signedByName && /* @__PURE__ */ u3(
+      f && /* @__PURE__ */ t("span", { onClick: (w) => {
+        w.stopPropagation(), l(!u);
+      }, children: /* @__PURE__ */ t(vn, { sends: e.sends }) }),
+      e.signedByName && /* @__PURE__ */ t(
         "span",
         {
-          class: `cert__row-meta${cert.signedByPractitionerId && onViewPractitioner ? " cert__row-meta--link" : ""}`,
-          onClick: cert.signedByPractitionerId && onViewPractitioner ? (e3) => {
-            e3.stopPropagation();
-            onViewPractitioner(cert.signedByPractitionerId);
+          class: `cert__row-meta${e.signedByPractitionerId && o ? " cert__row-meta--link" : ""}`,
+          onClick: e.signedByPractitionerId && o ? (w) => {
+            w.stopPropagation(), o(e.signedByPractitionerId);
           } : void 0,
           children: [
-            cert.signedByName,
-            cert.signedByTitle ? `, ${cert.signedByTitle}` : ""
+            e.signedByName,
+            e.signedByTitle ? `, ${e.signedByTitle}` : ""
           ]
         }
       )
     ] }),
-    sendsExpanded && hasSends && /* @__PURE__ */ u3(SendHistoryExpanded, { sends: cert.sends })
+    u && f && /* @__PURE__ */ t(bn, { sends: e.sends })
   ] });
 }
-
-// content/modules/certifications/components/StayTypeBadge.jsx
-function StayTypeBadge({ payerType }) {
-  const isManaged = payerType === "managed_care";
-  return /* @__PURE__ */ u3("span", { class: `cert__stay-type-badge${isManaged ? " cert__stay-type-badge--managed" : ""}`, children: isManaged ? "Managed" : "Med A" });
+function wn({ payerType: e }) {
+  const s = e === "managed_care";
+  return /* @__PURE__ */ t("span", { class: `cert__stay-type-badge${s ? " cert__stay-type-badge--managed" : ""}`, children: s ? "Managed" : "Med A" });
 }
-
-// content/modules/certifications/components/StayGroupCard.jsx
-function formatShortDate3(dateStr) {
-  if (!dateStr) return "";
-  const d3 = new Date(dateStr);
-  if (isNaN(d3)) return dateStr;
-  return d3.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+function Dn(e) {
+  if (!e) return "";
+  const s = new Date(e);
+  return isNaN(s) ? e : s.toLocaleDateString("en-US", { month: "short", day: "numeric" });
 }
-function getDaysUntil3(dateStr) {
-  if (!dateStr) return null;
-  const due = new Date(dateStr);
-  const now = /* @__PURE__ */ new Date();
-  due.setHours(0, 0, 0, 0);
-  now.setHours(0, 0, 0, 0);
-  return Math.floor((due - now) / 864e5);
+function rt(e) {
+  if (!e) return null;
+  const s = new Date(e), n = /* @__PURE__ */ new Date();
+  return s.setHours(0, 0, 0, 0), n.setHours(0, 0, 0, 0), Math.floor((s - n) / 864e5);
 }
-var CHAIN_TYPES = ["initial", "day_14_recert", "day_30_recert"];
-var CHAIN_LABELS = { initial: "I", day_14_recert: "14", day_30_recert: "30" };
-function getChainDotVariant(cert) {
-  if (!cert) return "empty";
-  const days = getDaysUntil3(cert.dueDate);
-  const isOverdue = days !== null && days < 0;
-  if (cert.status === "signed") return "signed";
-  if (cert.status === "skipped") return "skipped";
-  if (isOverdue || cert.isDelayed) return "overdue";
-  if (cert.status === "sent") return "sent";
-  if (days !== null && days >= 0 && days <= 3) return "due-soon";
-  return "pending";
+const In = ["initial", "day_14_recert", "day_30_recert"], Cn = { initial: "I", day_14_recert: "14", day_30_recert: "30" };
+function kn(e) {
+  if (!e) return "empty";
+  const s = rt(e.dueDate), n = s !== null && s < 0;
+  return e.status === "signed" ? "signed" : e.status === "skipped" ? "skipped" : n || e.isDelayed ? "overdue" : e.status === "sent" ? "sent" : s !== null && s >= 0 && s <= 3 ? "due-soon" : "pending";
 }
-function ChainIndicator({ allCerts }) {
-  const certByType = {};
-  for (const cert of allCerts) {
-    certByType[cert.type] = cert;
-  }
-  return /* @__PURE__ */ u3("div", { class: "cert__chain-indicator", children: CHAIN_TYPES.map((type, i3) => {
-    const cert = certByType[type];
-    const variant = getChainDotVariant(cert);
-    return /* @__PURE__ */ u3("span", { class: "cert__chain-item", children: [
-      i3 > 0 && /* @__PURE__ */ u3("span", { class: "cert__chain-line" }),
-      /* @__PURE__ */ u3("span", { class: `cert__chain-dot cert__chain-dot--${variant}` }),
-      /* @__PURE__ */ u3("span", { class: `cert__chain-label cert__chain-label--${variant}`, children: CHAIN_LABELS[type] })
-    ] }, type);
+function Sn({ allCerts: e }) {
+  const s = {};
+  for (const n of e)
+    s[n.type] = n;
+  return /* @__PURE__ */ t("div", { class: "cert__chain-indicator", children: In.map((n, i) => {
+    const a = s[n], r = kn(a);
+    return /* @__PURE__ */ t("span", { class: "cert__chain-item", children: [
+      i > 0 && /* @__PURE__ */ t("span", { class: "cert__chain-line" }),
+      /* @__PURE__ */ t("span", { class: `cert__chain-dot cert__chain-dot--${r}` }),
+      /* @__PURE__ */ t("span", { class: `cert__chain-label cert__chain-label--${r}`, children: Cn[n] })
+    ] }, n);
   }) });
 }
-function StayGroupCard({
-  stayId,
-  displayCerts,
-  historyCerts,
-  allCerts,
-  onSend,
-  onSkip,
-  onDelay,
-  onUnskip,
-  onEditReason,
-  onViewPractitioner
+function Nn({
+  stayId: e,
+  displayCerts: s,
+  historyCerts: n,
+  allCerts: i,
+  onSend: a,
+  onSkip: r,
+  onDelay: c,
+  onUnskip: o,
+  onEditReason: p,
+  onViewPractitioner: d
 }) {
-  const [historyOpen, setHistoryOpen] = d2(false);
-  const first = allCerts[0];
-  const patientName = first.patientName;
-  const payerType = first.payerType;
-  const currentMedicareDay = first.currentMedicareDay;
-  const partAStartDate = first.partAStartDate;
-  const hasOverdue = displayCerts.some((cert) => {
-    const days = getDaysUntil3(cert.dueDate);
-    return days !== null && days < 0 || cert.isDelayed;
+  const [u, l] = b(!1), m = i[0], h = m.patientName, _ = m.payerType, v = m.currentMedicareDay, g = m.partAStartDate, C = s.some((k) => {
+    const y = rt(k.dueDate);
+    return y !== null && y < 0 || k.isDelayed;
+  }), f = !C && s.some((k) => {
+    const y = rt(k.dueDate);
+    return y !== null && y >= 0 && y <= 3;
   });
-  const hasDueSoon = !hasOverdue && displayCerts.some((cert) => {
-    const days = getDaysUntil3(cert.dueDate);
-    return days !== null && days >= 0 && days <= 3;
-  });
-  let cardUrgency = "";
-  if (hasOverdue) cardUrgency = " cert__stay-card--overdue";
-  else if (hasDueSoon) cardUrgency = " cert__stay-card--due-soon";
-  return /* @__PURE__ */ u3("div", { class: `cert__stay-card${cardUrgency}`, children: [
-    /* @__PURE__ */ u3("div", { class: "cert__stay-header", children: [
-      /* @__PURE__ */ u3("div", { class: "cert__stay-header-left", children: [
-        /* @__PURE__ */ u3("span", { class: "cert__stay-patient", children: patientName }),
-        /* @__PURE__ */ u3(StayTypeBadge, { payerType }),
-        /* @__PURE__ */ u3(ChainIndicator, { allCerts })
+  let x = "";
+  return C ? x = " cert__stay-card--overdue" : f && (x = " cert__stay-card--due-soon"), /* @__PURE__ */ t("div", { class: `cert__stay-card${x}`, children: [
+    /* @__PURE__ */ t("div", { class: "cert__stay-header", children: [
+      /* @__PURE__ */ t("div", { class: "cert__stay-header-left", children: [
+        /* @__PURE__ */ t("span", { class: "cert__stay-patient", children: h }),
+        /* @__PURE__ */ t(wn, { payerType: _ }),
+        /* @__PURE__ */ t(Sn, { allCerts: i })
       ] }),
-      /* @__PURE__ */ u3("div", { class: "cert__stay-header-right", children: [
-        currentMedicareDay != null && /* @__PURE__ */ u3("span", { class: "cert__stay-meta", children: [
+      /* @__PURE__ */ t("div", { class: "cert__stay-header-right", children: [
+        v != null && /* @__PURE__ */ t("span", { class: "cert__stay-meta", children: [
           "Day ",
-          currentMedicareDay
+          v
         ] }),
-        partAStartDate && /* @__PURE__ */ u3("span", { class: "cert__stay-meta", children: formatShortDate3(partAStartDate) })
+        g && /* @__PURE__ */ t("span", { class: "cert__stay-meta", children: Dn(g) })
       ] })
     ] }),
-    /* @__PURE__ */ u3("div", { class: "cert__stay-certs", children: displayCerts.map((cert) => /* @__PURE__ */ u3(
-      CertListRow,
+    /* @__PURE__ */ t("div", { class: "cert__stay-certs", children: s.map((k) => /* @__PURE__ */ t(
+      Gt,
       {
-        cert,
-        compact: true,
-        onSend,
-        onSkip,
-        onDelay,
-        onUnskip,
-        onEditReason,
-        onViewPractitioner
+        cert: k,
+        compact: !0,
+        onSend: a,
+        onSkip: r,
+        onDelay: c,
+        onUnskip: o,
+        onEditReason: p,
+        onViewPractitioner: d
       },
-      cert.id
+      k.id
     )) }),
-    historyCerts.length > 0 && /* @__PURE__ */ u3("div", { class: "cert__stay-history", children: [
-      /* @__PURE__ */ u3(
+    n.length > 0 && /* @__PURE__ */ t("div", { class: "cert__stay-history", children: [
+      /* @__PURE__ */ t(
         "button",
         {
           class: "cert__stay-history-toggle",
-          onClick: () => setHistoryOpen(!historyOpen),
+          onClick: () => l(!u),
           children: [
-            /* @__PURE__ */ u3("span", { class: "cert__stay-history-icon", children: historyOpen ? "\u25BC" : "\u25B6" }),
-            historyCerts.length,
+            /* @__PURE__ */ t("span", { class: "cert__stay-history-icon", children: u ? "▼" : "▶" }),
+            n.length,
             " previous certification",
-            historyCerts.length !== 1 ? "s" : ""
+            n.length !== 1 ? "s" : ""
           ]
         }
       ),
-      historyOpen && /* @__PURE__ */ u3("div", { class: "cert__stay-history-list", children: historyCerts.map((cert) => /* @__PURE__ */ u3(
-        CertListRow,
+      u && /* @__PURE__ */ t("div", { class: "cert__stay-history-list", children: n.map((k) => /* @__PURE__ */ t(
+        Gt,
         {
-          cert,
-          compact: true,
-          onSend,
-          onSkip,
-          onDelay,
-          onUnskip,
-          onEditReason,
-          onViewPractitioner
+          cert: k,
+          compact: !0,
+          onSend: a,
+          onSkip: r,
+          onDelay: c,
+          onUnskip: o,
+          onEditReason: p,
+          onViewPractitioner: d
         },
-        cert.id
+        k.id
       )) })
     ] })
   ] });
 }
-
-// content/modules/certifications/components/CertModal.jsx
-function CertModal({ isOpen, onClose, title, subtitle, children, actions = [] }) {
-  const overlayRef = A2(null);
-  y2(() => {
-    if (!isOpen) return;
-    const handleKey = (e3) => {
-      if (e3.key === "Escape") onClose();
+function Qe({ isOpen: e, onClose: s, title: n, subtitle: i, children: a, actions: r = [] }) {
+  const c = ee(null);
+  return z(() => {
+    if (!e) return;
+    const o = (p) => {
+      p.key === "Escape" && s();
     };
-    document.addEventListener("keydown", handleKey);
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.removeEventListener("keydown", handleKey);
-      document.body.style.overflow = "";
+    return document.addEventListener("keydown", o), document.body.style.overflow = "hidden", () => {
+      document.removeEventListener("keydown", o), document.body.style.overflow = "";
     };
-  }, [isOpen, onClose]);
-  if (!isOpen) return null;
-  return /* @__PURE__ */ u3(
+  }, [e, s]), e ? /* @__PURE__ */ t(
     "div",
     {
       class: "cm-overlay",
-      ref: overlayRef,
-      onClick: (e3) => {
-        if (e3.target === overlayRef.current) onClose();
+      ref: c,
+      onClick: (o) => {
+        o.target === c.current && s();
       },
-      children: /* @__PURE__ */ u3("div", { class: "cm", children: [
-        /* @__PURE__ */ u3("div", { class: "cm__header", children: [
-          /* @__PURE__ */ u3("div", { class: "cm__header-text", children: [
-            /* @__PURE__ */ u3("h2", { class: "cm__title", children: title }),
-            subtitle && /* @__PURE__ */ u3("span", { class: "cm__subtitle", children: subtitle })
+      children: /* @__PURE__ */ t("div", { class: "cm", children: [
+        /* @__PURE__ */ t("div", { class: "cm__header", children: [
+          /* @__PURE__ */ t("div", { class: "cm__header-text", children: [
+            /* @__PURE__ */ t("h2", { class: "cm__title", children: n }),
+            i && /* @__PURE__ */ t("span", { class: "cm__subtitle", children: i })
           ] }),
-          /* @__PURE__ */ u3("button", { class: "cm__close", onClick: onClose, "aria-label": "Close", children: /* @__PURE__ */ u3("svg", { width: "14", height: "14", viewBox: "0 0 14 14", fill: "none", stroke: "currentColor", "stroke-width": "2", "stroke-linecap": "round", children: /* @__PURE__ */ u3("path", { d: "M1 1l12 12M13 1L1 13" }) }) })
+          /* @__PURE__ */ t("button", { class: "cm__close", onClick: s, "aria-label": "Close", children: /* @__PURE__ */ t("svg", { width: "14", height: "14", viewBox: "0 0 14 14", fill: "none", stroke: "currentColor", "stroke-width": "2", "stroke-linecap": "round", children: /* @__PURE__ */ t("path", { d: "M1 1l12 12M13 1L1 13" }) }) })
         ] }),
-        /* @__PURE__ */ u3("div", { class: "cm__body", children }),
-        actions.length > 0 && /* @__PURE__ */ u3("div", { class: "cm__footer", children: actions.map((action, i3) => /* @__PURE__ */ u3(
+        /* @__PURE__ */ t("div", { class: "cm__body", children: a }),
+        r.length > 0 && /* @__PURE__ */ t("div", { class: "cm__footer", children: r.map((o, p) => /* @__PURE__ */ t(
           "button",
           {
-            class: `cm__btn cm__btn--${action.variant || "secondary"}`,
-            onClick: action.onClick,
-            disabled: action.disabled,
-            children: action.label
+            class: `cm__btn cm__btn--${o.variant || "secondary"}`,
+            onClick: o.onClick,
+            disabled: o.disabled,
+            children: o.label
           },
-          i3
+          p
         )) })
       ] })
     }
-  );
+  ) : null;
 }
-
-// content/modules/certifications/components/DischargePlanPicker.jsx
-var DISCHARGE_OPTIONS = [
+const xn = [
   { value: "home_health", label: "Home Health Agency" },
   { value: "facility_care", label: "Facility Care" },
   { value: "other", label: "Other" }
 ];
-function parseDischargePlan(str) {
-  if (!str) return { option: "", otherText: "" };
-  if (str === "Home Health Agency") return { option: "home_health", otherText: "" };
-  if (str === "Facility Care") return { option: "facility_care", otherText: "" };
-  if (str.startsWith("Other: ")) return { option: "other", otherText: str.slice(7) };
-  return { option: "other", otherText: str };
+function Cs(e) {
+  return e ? e === "Home Health Agency" ? { option: "home_health", otherText: "" } : e === "Facility Care" ? { option: "facility_care", otherText: "" } : e.startsWith("Other: ") ? { option: "other", otherText: e.slice(7) } : { option: "other", otherText: e } : { option: "", otherText: "" };
 }
-function composeDischargePlan(option, otherText) {
-  if (option === "home_health") return "Home Health Agency";
-  if (option === "facility_care") return "Facility Care";
-  if (option === "other") return `Other: ${otherText}`;
-  return "";
+function ks(e, s) {
+  return e === "home_health" ? "Home Health Agency" : e === "facility_care" ? "Facility Care" : e === "other" ? `Other: ${s}` : "";
 }
-function isDischargePlanValid(option, otherText) {
-  if (!option) return false;
-  if (option === "other") return otherText.trim().length > 0;
-  return true;
+function ot(e, s) {
+  return e ? e === "other" ? s.trim().length > 0 : !0 : !1;
 }
-function DischargePlanPicker({ option, otherText, onOptionChange, onOtherTextChange }) {
-  return /* @__PURE__ */ u3("div", { class: "cm-discharge", children: [
-    DISCHARGE_OPTIONS.map((opt) => /* @__PURE__ */ u3(
+function Ss({ option: e, otherText: s, onOptionChange: n, onOtherTextChange: i }) {
+  return /* @__PURE__ */ t("div", { class: "cm-discharge", children: [
+    xn.map((a) => /* @__PURE__ */ t(
       "label",
       {
-        class: `cm-discharge__option${option === opt.value ? " cm-discharge__option--selected" : ""}`,
+        class: `cm-discharge__option${e === a.value ? " cm-discharge__option--selected" : ""}`,
         children: [
-          /* @__PURE__ */ u3(
+          /* @__PURE__ */ t(
             "input",
             {
               type: "radio",
               class: "cm-discharge__radio",
               name: "dischargePlan",
-              value: opt.value,
-              checked: option === opt.value,
-              onChange: () => onOptionChange(opt.value)
+              value: a.value,
+              checked: e === a.value,
+              onChange: () => n(a.value)
             }
           ),
-          /* @__PURE__ */ u3("span", { class: "cm-discharge__dot" }),
-          /* @__PURE__ */ u3("span", { class: "cm-discharge__label", children: opt.label })
+          /* @__PURE__ */ t("span", { class: "cm-discharge__dot" }),
+          /* @__PURE__ */ t("span", { class: "cm-discharge__label", children: a.label })
         ]
       },
-      opt.value
+      a.value
     )),
-    option === "other" && /* @__PURE__ */ u3(
+    e === "other" && /* @__PURE__ */ t(
       "input",
       {
         class: "cm-input cm-discharge__other-input",
         type: "text",
-        value: otherText,
-        onInput: (e3) => onOtherTextChange(e3.target.value),
+        value: s,
+        onInput: (a) => i(a.target.value),
         placeholder: "e.g., Assisted living, long-term care, hospice...",
-        autoFocus: true
+        autoFocus: !0
       }
     )
   ] });
 }
-
-// content/modules/certifications/components/SendCertModal.jsx
-function SendCertModal({ isOpen, onClose, cert, facilityName, orgSlug, onSent }) {
-  const [clinicalReason, setClinicalReason] = d2("");
-  const [estimatedDays, setEstimatedDays] = d2(30);
-  const [dischargeOption, setDischargeOption] = d2("");
-  const [dischargeOtherText, setDischargeOtherText] = d2("");
-  const [delayReason, setDelayReason] = d2("");
-  const [practitioners, setPractitioners] = d2([]);
-  const [practitionersLoading, setPractitionersLoading] = d2(false);
-  const [selectedPractitioners, setSelectedPractitioners] = d2(/* @__PURE__ */ new Set());
-  const [sending, setSending] = d2(false);
-  const isRecert = cert?.type === "day_14_recert" || cert?.type === "day_30_recert";
-  const isDelayed = cert?.isDelayed;
-  const certTypeLabel = cert?.type === "initial" ? "Initial" : cert?.type === "day_14_recert" ? "Day 14 Recert" : "Day 30 Recert";
-  y2(() => {
-    if (!isOpen || !cert) return;
-    setClinicalReason(cert.clinicalReason || "");
-    setEstimatedDays(cert.estimatedDays || 30);
-    const parsed = parseDischargePlan(cert.planForDischarge);
-    setDischargeOption(parsed.option);
-    setDischargeOtherText(parsed.otherText);
-    setDelayReason(cert.delayReason || "");
-    setSelectedPractitioners(/* @__PURE__ */ new Set());
-    setPractitionersLoading(true);
-    window.CertAPI.fetchPractitioners(facilityName, orgSlug).then((practs) => setPractitioners(practs)).catch((err) => console.error("[Certifications] Failed to load practitioners:", err)).finally(() => setPractitionersLoading(false));
-  }, [isOpen, cert?.id]);
-  function handleSend() {
-    if (selectedPractitioners.size === 0) return;
-    if (isRecert && !clinicalReason.trim()) return;
-    if (isRecert && !isDischargePlanValid(dischargeOption, dischargeOtherText)) return;
-    if (isDelayed && !delayReason.trim()) return;
-    setSending(true);
-    const planForDischarge = composeDischargePlan(dischargeOption, dischargeOtherText);
-    const saveReason = isRecert ? window.CertAPI.saveClinicalReason(cert.id, { clinicalReason, estimatedDays, planForDischarge }) : Promise.resolve();
-    saveReason.then(() => window.CertAPI.sendCert(cert.id, [...selectedPractitioners], isDelayed ? delayReason : void 0)).then(() => {
-      const names = practitioners.filter((p3) => selectedPractitioners.has(p3.id)).map((p3) => `${p3.firstName} ${p3.lastName}`);
-      const recipientStr = names.length <= 2 ? names.join(" & ") : `${names.length} practitioners`;
-      window.SuperToast?.success?.(`${certTypeLabel} for ${cert.patientName} sent to ${recipientStr}`);
-      onSent?.();
-      onClose();
-    }).catch((err) => {
-      console.error("[Certifications] Failed to send:", err);
-      window.SuperToast?.error?.("Failed to send certification");
-    }).finally(() => setSending(false));
+function Ns({ isOpen: e, onClose: s, cert: n, facilityName: i, orgSlug: a, onSent: r }) {
+  const [c, o] = b(""), [p, d] = b(30), [u, l] = b(""), [m, h] = b(""), [_, v] = b(""), [g, C] = b([]), [f, x] = b(!1), [k, y] = b(/* @__PURE__ */ new Set()), [S, E] = b(!1), N = n?.type === "day_14_recert" || n?.type === "day_30_recert", w = n?.isDelayed, T = n?.type === "initial" ? "Initial" : n?.type === "day_14_recert" ? "Day 14 Recert" : "Day 30 Recert";
+  z(() => {
+    if (!e || !n) return;
+    o(n.clinicalReason || ""), d(n.estimatedDays || 30);
+    const $ = Cs(n.planForDischarge);
+    l($.option), h($.otherText), v(n.delayReason || ""), y(/* @__PURE__ */ new Set()), x(!0), window.CertAPI.fetchPractitioners(i, a).then((M) => C(M)).catch((M) => console.error("[Certifications] Failed to load practitioners:", M)).finally(() => x(!1));
+  }, [e, n?.id]);
+  function F() {
+    if (k.size === 0 || N && !c.trim() || N && !ot(u, m) || w && !_.trim()) return;
+    E(!0);
+    const $ = ks(u, m);
+    (N ? window.CertAPI.saveClinicalReason(n.id, { clinicalReason: c, estimatedDays: p, planForDischarge: $ }) : Promise.resolve()).then(() => window.CertAPI.sendCert(n.id, [...k], w ? _ : void 0)).then(() => {
+      const G = g.filter((Q) => k.has(Q.id)).map((Q) => `${Q.firstName} ${Q.lastName}`), K = G.length <= 2 ? G.join(" & ") : `${G.length} practitioners`;
+      window.SuperToast?.success?.(`${T} for ${n.patientName} sent to ${K}`), r?.(), s();
+    }).catch((G) => {
+      console.error("[Certifications] Failed to send:", G), window.SuperToast?.error?.("Failed to send certification");
+    }).finally(() => E(!1));
   }
-  function togglePractitioner(id) {
-    setSelectedPractitioners((prev) => {
-      const next = new Set(prev);
-      next.has(id) ? next.delete(id) : next.add(id);
-      return next;
+  function V($) {
+    y((M) => {
+      const G = new Set(M);
+      return G.has($) ? G.delete($) : G.add($), G;
     });
   }
-  function toggleAll() {
-    setSelectedPractitioners(
-      (prev) => prev.size === practitioners.length ? /* @__PURE__ */ new Set() : new Set(practitioners.map((p3) => p3.id))
+  function D() {
+    y(
+      ($) => $.size === g.length ? /* @__PURE__ */ new Set() : new Set(g.map((M) => M.id))
     );
   }
-  if (!cert) return null;
-  const canSend = selectedPractitioners.size > 0 && (!isRecert || clinicalReason.trim()) && (!isRecert || isDischargePlanValid(dischargeOption, dischargeOtherText)) && (!isDelayed || delayReason.trim()) && !sending;
-  return /* @__PURE__ */ u3(
-    CertModal,
+  if (!n) return null;
+  const B = k.size > 0 && (!N || c.trim()) && (!N || ot(u, m)) && (!w || _.trim()) && !S;
+  return /* @__PURE__ */ t(
+    Qe,
     {
-      isOpen,
-      onClose,
+      isOpen: e,
+      onClose: s,
       title: "Send Certification",
-      subtitle: `${cert.patientName} \xB7 ${certTypeLabel}`,
+      subtitle: `${n.patientName} · ${T}`,
       actions: [
-        { label: "Cancel", variant: "secondary", onClick: onClose },
+        { label: "Cancel", variant: "secondary", onClick: s },
         {
-          label: sending ? "Sending..." : `Send to ${selectedPractitioners.size} practitioner${selectedPractitioners.size !== 1 ? "s" : ""}`,
+          label: S ? "Sending..." : `Send to ${k.size} practitioner${k.size !== 1 ? "s" : ""}`,
           variant: "primary",
-          onClick: handleSend,
-          disabled: !canSend
+          onClick: F,
+          disabled: !B
         }
       ],
       children: [
-        isRecert && /* @__PURE__ */ u3("div", { class: "cm-section", children: [
-          /* @__PURE__ */ u3("div", { class: "cm-section__head", children: [
-            /* @__PURE__ */ u3("span", { class: "cm-section__icon", children: /* @__PURE__ */ u3("svg", { width: "14", height: "14", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": "2", "stroke-linecap": "round", "stroke-linejoin": "round", children: [
-              /* @__PURE__ */ u3("path", { d: "M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" }),
-              /* @__PURE__ */ u3("polyline", { points: "14 2 14 8 20 8" }),
-              /* @__PURE__ */ u3("line", { x1: "16", y1: "13", x2: "8", y2: "13" }),
-              /* @__PURE__ */ u3("line", { x1: "16", y1: "17", x2: "8", y2: "17" })
+        N && /* @__PURE__ */ t("div", { class: "cm-section", children: [
+          /* @__PURE__ */ t("div", { class: "cm-section__head", children: [
+            /* @__PURE__ */ t("span", { class: "cm-section__icon", children: /* @__PURE__ */ t("svg", { width: "14", height: "14", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": "2", "stroke-linecap": "round", "stroke-linejoin": "round", children: [
+              /* @__PURE__ */ t("path", { d: "M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" }),
+              /* @__PURE__ */ t("polyline", { points: "14 2 14 8 20 8" }),
+              /* @__PURE__ */ t("line", { x1: "16", y1: "13", x2: "8", y2: "13" }),
+              /* @__PURE__ */ t("line", { x1: "16", y1: "17", x2: "8", y2: "17" })
             ] }) }),
-            /* @__PURE__ */ u3("span", { class: "cm-section__label", children: "Clinical Reason" })
+            /* @__PURE__ */ t("span", { class: "cm-section__label", children: "Clinical Reason" })
           ] }),
-          /* @__PURE__ */ u3(
+          /* @__PURE__ */ t(
             "textarea",
             {
               class: "cm-input cm-input--textarea",
               rows: 2,
-              value: clinicalReason,
-              onInput: (e3) => setClinicalReason(e3.target.value),
+              value: c,
+              onInput: ($) => o($.target.value),
               placeholder: "Reason for continued skilled nursing care..."
             }
           ),
-          /* @__PURE__ */ u3("div", { class: "cm-section__row", children: [
-            /* @__PURE__ */ u3("span", { class: "cm-section__meta", children: "Estimated stay" }),
-            /* @__PURE__ */ u3("div", { class: "cm-input--days-wrap", children: [
-              /* @__PURE__ */ u3(
+          /* @__PURE__ */ t("div", { class: "cm-section__row", children: [
+            /* @__PURE__ */ t("span", { class: "cm-section__meta", children: "Estimated stay" }),
+            /* @__PURE__ */ t("div", { class: "cm-input--days-wrap", children: [
+              /* @__PURE__ */ t(
                 "input",
                 {
                   class: "cm-input cm-input--days",
                   type: "number",
                   min: 1,
-                  value: estimatedDays,
-                  onInput: (e3) => setEstimatedDays(parseInt(e3.target.value) || 30)
+                  value: p,
+                  onInput: ($) => d(parseInt($.target.value) || 30)
                 }
               ),
-              /* @__PURE__ */ u3("span", { class: "cm-input--days-unit", children: "days" })
+              /* @__PURE__ */ t("span", { class: "cm-input--days-unit", children: "days" })
             ] })
           ] }),
-          /* @__PURE__ */ u3("div", { class: "cm-section__divider" }),
-          /* @__PURE__ */ u3("div", { class: "cm-section__head", children: [
-            /* @__PURE__ */ u3("span", { class: "cm-section__icon", children: /* @__PURE__ */ u3("svg", { width: "14", height: "14", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": "2", "stroke-linecap": "round", "stroke-linejoin": "round", children: [
-              /* @__PURE__ */ u3("path", { d: "M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" }),
-              /* @__PURE__ */ u3("polyline", { points: "9 22 9 12 15 12 15 22" })
+          /* @__PURE__ */ t("div", { class: "cm-section__divider" }),
+          /* @__PURE__ */ t("div", { class: "cm-section__head", children: [
+            /* @__PURE__ */ t("span", { class: "cm-section__icon", children: /* @__PURE__ */ t("svg", { width: "14", height: "14", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": "2", "stroke-linecap": "round", "stroke-linejoin": "round", children: [
+              /* @__PURE__ */ t("path", { d: "M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" }),
+              /* @__PURE__ */ t("polyline", { points: "9 22 9 12 15 12 15 22" })
             ] }) }),
-            /* @__PURE__ */ u3("span", { class: "cm-section__label", children: "Plan for Discharge" })
+            /* @__PURE__ */ t("span", { class: "cm-section__label", children: "Plan for Discharge" })
           ] }),
-          /* @__PURE__ */ u3(
-            DischargePlanPicker,
+          /* @__PURE__ */ t(
+            Ss,
             {
-              option: dischargeOption,
-              otherText: dischargeOtherText,
-              onOptionChange: setDischargeOption,
-              onOtherTextChange: setDischargeOtherText
+              option: u,
+              otherText: m,
+              onOptionChange: l,
+              onOtherTextChange: h
             }
           )
         ] }),
-        isDelayed && /* @__PURE__ */ u3("div", { class: "cm-section cm-section--warn", children: [
-          /* @__PURE__ */ u3("div", { class: "cm-section__head", children: [
-            /* @__PURE__ */ u3("span", { class: "cm-section__icon cm-section__icon--warn", children: /* @__PURE__ */ u3("svg", { width: "14", height: "14", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": "2", "stroke-linecap": "round", "stroke-linejoin": "round", children: [
-              /* @__PURE__ */ u3("circle", { cx: "12", cy: "12", r: "10" }),
-              /* @__PURE__ */ u3("line", { x1: "12", y1: "8", x2: "12", y2: "12" }),
-              /* @__PURE__ */ u3("line", { x1: "12", y1: "16", x2: "12.01", y2: "16" })
+        w && /* @__PURE__ */ t("div", { class: "cm-section cm-section--warn", children: [
+          /* @__PURE__ */ t("div", { class: "cm-section__head", children: [
+            /* @__PURE__ */ t("span", { class: "cm-section__icon cm-section__icon--warn", children: /* @__PURE__ */ t("svg", { width: "14", height: "14", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": "2", "stroke-linecap": "round", "stroke-linejoin": "round", children: [
+              /* @__PURE__ */ t("circle", { cx: "12", cy: "12", r: "10" }),
+              /* @__PURE__ */ t("line", { x1: "12", y1: "8", x2: "12", y2: "12" }),
+              /* @__PURE__ */ t("line", { x1: "12", y1: "16", x2: "12.01", y2: "16" })
             ] }) }),
-            /* @__PURE__ */ u3("span", { class: "cm-section__label", children: "Delay Reason" }),
-            /* @__PURE__ */ u3("span", { class: "cm-section__badge cm-section__badge--warn", children: "Required" })
+            /* @__PURE__ */ t("span", { class: "cm-section__label", children: "Delay Reason" }),
+            /* @__PURE__ */ t("span", { class: "cm-section__badge cm-section__badge--warn", children: "Required" })
           ] }),
-          /* @__PURE__ */ u3("p", { class: "cm-section__hint", children: "This certification is overdue. Document the reason for compliance." }),
-          /* @__PURE__ */ u3(
+          /* @__PURE__ */ t("p", { class: "cm-section__hint", children: "This certification is overdue. Document the reason for compliance." }),
+          /* @__PURE__ */ t(
             "textarea",
             {
               class: "cm-input cm-input--textarea",
               rows: 2,
-              value: delayReason,
-              onInput: (e3) => setDelayReason(e3.target.value),
+              value: _,
+              onInput: ($) => v($.target.value),
               placeholder: "Why was this certification delayed..."
             }
           )
         ] }),
-        cert.sends?.length > 0 && /* @__PURE__ */ u3("div", { class: "cm-notice", children: [
-          /* @__PURE__ */ u3("svg", { width: "12", height: "12", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": "2", "stroke-linecap": "round", "stroke-linejoin": "round", children: [
-            /* @__PURE__ */ u3("circle", { cx: "12", cy: "12", r: "10" }),
-            /* @__PURE__ */ u3("path", { d: "M12 16v-4M12 8h.01" })
+        n.sends?.length > 0 && /* @__PURE__ */ t("div", { class: "cm-notice", children: [
+          /* @__PURE__ */ t("svg", { width: "12", height: "12", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": "2", "stroke-linecap": "round", "stroke-linejoin": "round", children: [
+            /* @__PURE__ */ t("circle", { cx: "12", cy: "12", r: "10" }),
+            /* @__PURE__ */ t("path", { d: "M12 16v-4M12 8h.01" })
           ] }),
           "Previously sent to ",
-          cert.sends.map((s3) => s3.practitionerName).join(", ")
+          n.sends.map(($) => $.practitionerName).join(", ")
         ] }),
-        /* @__PURE__ */ u3("div", { class: "cm-section", children: [
-          /* @__PURE__ */ u3("div", { class: "cm-section__head", children: [
-            /* @__PURE__ */ u3("span", { class: "cm-section__icon", children: /* @__PURE__ */ u3("svg", { width: "14", height: "14", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": "2", "stroke-linecap": "round", "stroke-linejoin": "round", children: [
-              /* @__PURE__ */ u3("path", { d: "M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" }),
-              /* @__PURE__ */ u3("circle", { cx: "9", cy: "7", r: "4" }),
-              /* @__PURE__ */ u3("path", { d: "M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" })
+        /* @__PURE__ */ t("div", { class: "cm-section", children: [
+          /* @__PURE__ */ t("div", { class: "cm-section__head", children: [
+            /* @__PURE__ */ t("span", { class: "cm-section__icon", children: /* @__PURE__ */ t("svg", { width: "14", height: "14", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": "2", "stroke-linecap": "round", "stroke-linejoin": "round", children: [
+              /* @__PURE__ */ t("path", { d: "M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" }),
+              /* @__PURE__ */ t("circle", { cx: "9", cy: "7", r: "4" }),
+              /* @__PURE__ */ t("path", { d: "M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" })
             ] }) }),
-            /* @__PURE__ */ u3("span", { class: "cm-section__label", children: "Send to" }),
-            /* @__PURE__ */ u3("span", { class: "cm-section__count", children: [
-              selectedPractitioners.size,
+            /* @__PURE__ */ t("span", { class: "cm-section__label", children: "Send to" }),
+            /* @__PURE__ */ t("span", { class: "cm-section__count", children: [
+              k.size,
               " of ",
-              practitioners.length
+              g.length
             ] })
           ] }),
-          practitionersLoading ? /* @__PURE__ */ u3("div", { class: "cm-loading", children: [
-            /* @__PURE__ */ u3("div", { class: "cm-loading__spinner" }),
+          f ? /* @__PURE__ */ t("div", { class: "cm-loading", children: [
+            /* @__PURE__ */ t("div", { class: "cm-loading__spinner" }),
             "Loading practitioners..."
-          ] }) : /* @__PURE__ */ u3("div", { class: "cm-practitioners", children: [
-            /* @__PURE__ */ u3("label", { class: "cm-pract cm-pract--all", children: [
-              /* @__PURE__ */ u3(
+          ] }) : /* @__PURE__ */ t("div", { class: "cm-practitioners", children: [
+            /* @__PURE__ */ t("label", { class: "cm-pract cm-pract--all", children: [
+              /* @__PURE__ */ t(
                 "input",
                 {
                   type: "checkbox",
                   class: "cm-check",
-                  checked: selectedPractitioners.size === practitioners.length && practitioners.length > 0,
-                  onChange: toggleAll
+                  checked: k.size === g.length && g.length > 0,
+                  onChange: D
                 }
               ),
-              /* @__PURE__ */ u3("span", { class: "cm-check-box" }),
-              /* @__PURE__ */ u3("span", { class: "cm-pract__label", children: "Select all" })
+              /* @__PURE__ */ t("span", { class: "cm-check-box" }),
+              /* @__PURE__ */ t("span", { class: "cm-pract__label", children: "Select all" })
             ] }),
-            practitioners.map((p3) => /* @__PURE__ */ u3("label", { class: `cm-pract${selectedPractitioners.has(p3.id) ? " cm-pract--selected" : ""}`, children: [
-              /* @__PURE__ */ u3(
+            g.map(($) => /* @__PURE__ */ t("label", { class: `cm-pract${k.has($.id) ? " cm-pract--selected" : ""}`, children: [
+              /* @__PURE__ */ t(
                 "input",
                 {
                   type: "checkbox",
                   class: "cm-check",
-                  checked: selectedPractitioners.has(p3.id),
-                  onChange: () => togglePractitioner(p3.id)
+                  checked: k.has($.id),
+                  onChange: () => V($.id)
                 }
               ),
-              /* @__PURE__ */ u3("span", { class: "cm-check-box" }),
-              /* @__PURE__ */ u3("span", { class: "cm-pract__label", children: [
-                p3.firstName,
+              /* @__PURE__ */ t("span", { class: "cm-check-box" }),
+              /* @__PURE__ */ t("span", { class: "cm-pract__label", children: [
+                $.firstName,
                 " ",
-                p3.lastName,
-                p3.title && /* @__PURE__ */ u3("span", { class: "cm-pract__title", children: p3.title })
+                $.lastName,
+                $.title && /* @__PURE__ */ t("span", { class: "cm-pract__title", children: $.title })
               ] })
-            ] }, p3.id))
+            ] }, $.id))
           ] })
         ] })
       ]
     }
   );
 }
-
-// content/modules/certifications/components/SkipCertModal.jsx
-function SkipCertModal({ isOpen, onClose, cert, onSkipped }) {
-  const [reason, setReason] = d2("");
-  const [submitting, setSubmitting] = d2(false);
-  function handleSkip() {
-    if (!reason.trim()) return;
-    setSubmitting(true);
-    onSkipped(reason).then(() => {
-      setReason("");
-      onClose();
-    }).catch(() => setSubmitting(false));
+function xs({ isOpen: e, onClose: s, cert: n, onSkipped: i }) {
+  const [a, r] = b(""), [c, o] = b(!1);
+  function p() {
+    a.trim() && (o(!0), i(a).then(() => {
+      r(""), s();
+    }).catch(() => o(!1)));
   }
-  return /* @__PURE__ */ u3(
-    CertModal,
+  return /* @__PURE__ */ t(
+    Qe,
     {
-      isOpen,
-      onClose,
+      isOpen: e,
+      onClose: s,
       title: "Skip Certification",
-      subtitle: cert?.patientName,
+      subtitle: n?.patientName,
       actions: [
-        { label: "Cancel", variant: "secondary", onClick: onClose },
-        { label: submitting ? "Skipping..." : "Skip", variant: "primary", onClick: handleSkip, disabled: !reason.trim() || submitting }
+        { label: "Cancel", variant: "secondary", onClick: s },
+        { label: c ? "Skipping..." : "Skip", variant: "primary", onClick: p, disabled: !a.trim() || c }
       ],
-      children: /* @__PURE__ */ u3("div", { class: "cm-section", children: [
-        /* @__PURE__ */ u3("div", { class: "cm-section__head", children: /* @__PURE__ */ u3("span", { class: "cm-section__label", children: "Reason for Skipping" }) }),
-        /* @__PURE__ */ u3(
+      children: /* @__PURE__ */ t("div", { class: "cm-section", children: [
+        /* @__PURE__ */ t("div", { class: "cm-section__head", children: /* @__PURE__ */ t("span", { class: "cm-section__label", children: "Reason for Skipping" }) }),
+        /* @__PURE__ */ t(
           "textarea",
           {
             class: "cm-input cm-input--textarea",
             rows: 3,
-            value: reason,
-            onInput: (e3) => setReason(e3.target.value),
+            value: a,
+            onInput: (d) => r(d.target.value),
             placeholder: "Why is this certification being skipped?"
           }
         )
@@ -4851,140 +4497,126 @@ function SkipCertModal({ isOpen, onClose, cert, onSkipped }) {
     }
   );
 }
-
-// content/modules/certifications/components/EditClinicalReasonModal.jsx
-function EditClinicalReasonModal({ isOpen, onClose, cert, onSaved }) {
-  const [clinicalReason, setClinicalReason] = d2("");
-  const [estimatedDays, setEstimatedDays] = d2(30);
-  const [dischargeOption, setDischargeOption] = d2("");
-  const [dischargeOtherText, setDischargeOtherText] = d2("");
-  const [submitting, setSubmitting] = d2(false);
-  y2(() => {
-    if (isOpen && cert) {
-      setClinicalReason(cert.clinicalReason || "");
-      setEstimatedDays(cert.estimatedDays || 30);
-      const parsed = parseDischargePlan(cert.planForDischarge);
-      setDischargeOption(parsed.option);
-      setDischargeOtherText(parsed.otherText);
+function Pn({ isOpen: e, onClose: s, cert: n, onSaved: i }) {
+  const [a, r] = b(""), [c, o] = b(30), [p, d] = b(""), [u, l] = b(""), [m, h] = b(!1);
+  z(() => {
+    if (e && n) {
+      r(n.clinicalReason || ""), o(n.estimatedDays || 30);
+      const g = Cs(n.planForDischarge);
+      d(g.option), l(g.otherText);
     }
-  }, [isOpen, cert?.id]);
-  const canSave = clinicalReason.trim() && isDischargePlanValid(dischargeOption, dischargeOtherText) && !submitting;
-  function handleSave() {
-    if (!canSave) return;
-    setSubmitting(true);
-    const planForDischarge = composeDischargePlan(dischargeOption, dischargeOtherText);
-    onSaved({ clinicalReason, estimatedDays, planForDischarge }).then(() => onClose()).catch(() => setSubmitting(false));
+  }, [e, n?.id]);
+  const _ = a.trim() && ot(p, u) && !m;
+  function v() {
+    if (!_) return;
+    h(!0);
+    const g = ks(p, u);
+    i({ clinicalReason: a, estimatedDays: c, planForDischarge: g }).then(() => s()).catch(() => h(!1));
   }
-  return /* @__PURE__ */ u3(
-    CertModal,
+  return /* @__PURE__ */ t(
+    Qe,
     {
-      isOpen,
-      onClose,
+      isOpen: e,
+      onClose: s,
       title: "Edit Clinical Reason",
-      subtitle: cert?.patientName,
+      subtitle: n?.patientName,
       actions: [
-        { label: "Cancel", variant: "secondary", onClick: onClose },
-        { label: submitting ? "Saving..." : "Save", variant: "primary", onClick: handleSave, disabled: !canSave }
+        { label: "Cancel", variant: "secondary", onClick: s },
+        { label: m ? "Saving..." : "Save", variant: "primary", onClick: v, disabled: !_ }
       ],
-      children: /* @__PURE__ */ u3("div", { class: "cm-section", children: [
-        /* @__PURE__ */ u3("div", { class: "cm-section__head", children: [
-          /* @__PURE__ */ u3("span", { class: "cm-section__icon", children: /* @__PURE__ */ u3("svg", { width: "14", height: "14", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": "2", "stroke-linecap": "round", "stroke-linejoin": "round", children: [
-            /* @__PURE__ */ u3("path", { d: "M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" }),
-            /* @__PURE__ */ u3("polyline", { points: "14 2 14 8 20 8" }),
-            /* @__PURE__ */ u3("line", { x1: "16", y1: "13", x2: "8", y2: "13" }),
-            /* @__PURE__ */ u3("line", { x1: "16", y1: "17", x2: "8", y2: "17" })
+      children: /* @__PURE__ */ t("div", { class: "cm-section", children: [
+        /* @__PURE__ */ t("div", { class: "cm-section__head", children: [
+          /* @__PURE__ */ t("span", { class: "cm-section__icon", children: /* @__PURE__ */ t("svg", { width: "14", height: "14", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": "2", "stroke-linecap": "round", "stroke-linejoin": "round", children: [
+            /* @__PURE__ */ t("path", { d: "M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" }),
+            /* @__PURE__ */ t("polyline", { points: "14 2 14 8 20 8" }),
+            /* @__PURE__ */ t("line", { x1: "16", y1: "13", x2: "8", y2: "13" }),
+            /* @__PURE__ */ t("line", { x1: "16", y1: "17", x2: "8", y2: "17" })
           ] }) }),
-          /* @__PURE__ */ u3("span", { class: "cm-section__label", children: "Clinical Reason" })
+          /* @__PURE__ */ t("span", { class: "cm-section__label", children: "Clinical Reason" })
         ] }),
-        /* @__PURE__ */ u3(
+        /* @__PURE__ */ t(
           "textarea",
           {
             class: "cm-input cm-input--textarea",
             rows: 3,
-            value: clinicalReason,
-            onInput: (e3) => setClinicalReason(e3.target.value),
+            value: a,
+            onInput: (g) => r(g.target.value),
             placeholder: "Describe the clinical reason for continued skilled nursing care..."
           }
         ),
-        /* @__PURE__ */ u3("div", { class: "cm-section__row", children: [
-          /* @__PURE__ */ u3("span", { class: "cm-section__meta", children: "Estimated stay" }),
-          /* @__PURE__ */ u3("div", { class: "cm-input--days-wrap", children: [
-            /* @__PURE__ */ u3(
+        /* @__PURE__ */ t("div", { class: "cm-section__row", children: [
+          /* @__PURE__ */ t("span", { class: "cm-section__meta", children: "Estimated stay" }),
+          /* @__PURE__ */ t("div", { class: "cm-input--days-wrap", children: [
+            /* @__PURE__ */ t(
               "input",
               {
                 class: "cm-input cm-input--days",
                 type: "number",
                 min: 1,
-                value: estimatedDays,
-                onInput: (e3) => setEstimatedDays(parseInt(e3.target.value) || 30)
+                value: c,
+                onInput: (g) => o(parseInt(g.target.value) || 30)
               }
             ),
-            /* @__PURE__ */ u3("span", { class: "cm-input--days-unit", children: "days" })
+            /* @__PURE__ */ t("span", { class: "cm-input--days-unit", children: "days" })
           ] })
         ] }),
-        /* @__PURE__ */ u3("div", { class: "cm-section__divider" }),
-        /* @__PURE__ */ u3("div", { class: "cm-section__head", children: [
-          /* @__PURE__ */ u3("span", { class: "cm-section__icon", children: /* @__PURE__ */ u3("svg", { width: "14", height: "14", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": "2", "stroke-linecap": "round", "stroke-linejoin": "round", children: [
-            /* @__PURE__ */ u3("path", { d: "M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" }),
-            /* @__PURE__ */ u3("polyline", { points: "9 22 9 12 15 12 15 22" })
+        /* @__PURE__ */ t("div", { class: "cm-section__divider" }),
+        /* @__PURE__ */ t("div", { class: "cm-section__head", children: [
+          /* @__PURE__ */ t("span", { class: "cm-section__icon", children: /* @__PURE__ */ t("svg", { width: "14", height: "14", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": "2", "stroke-linecap": "round", "stroke-linejoin": "round", children: [
+            /* @__PURE__ */ t("path", { d: "M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" }),
+            /* @__PURE__ */ t("polyline", { points: "9 22 9 12 15 12 15 22" })
           ] }) }),
-          /* @__PURE__ */ u3("span", { class: "cm-section__label", children: "Plan for Discharge" })
+          /* @__PURE__ */ t("span", { class: "cm-section__label", children: "Plan for Discharge" })
         ] }),
-        /* @__PURE__ */ u3(
-          DischargePlanPicker,
+        /* @__PURE__ */ t(
+          Ss,
           {
-            option: dischargeOption,
-            otherText: dischargeOtherText,
-            onOptionChange: setDischargeOption,
-            onOtherTextChange: setDischargeOtherText
+            option: p,
+            otherText: u,
+            onOptionChange: d,
+            onOtherTextChange: l
           }
         )
       ] })
     }
   );
 }
-
-// content/modules/certifications/components/DelayCertModal.jsx
-function DelayCertModal({ isOpen, onClose, cert, onDelayed }) {
-  const [reason, setReason] = d2("");
-  const [submitting, setSubmitting] = d2(false);
-  function handleDelay() {
-    if (!reason.trim()) return;
-    setSubmitting(true);
-    onDelayed(reason).then(() => {
-      setReason("");
-      onClose();
-    }).catch(() => setSubmitting(false));
+function Ps({ isOpen: e, onClose: s, cert: n, onDelayed: i }) {
+  const [a, r] = b(""), [c, o] = b(!1);
+  function p() {
+    a.trim() && (o(!0), i(a).then(() => {
+      r(""), s();
+    }).catch(() => o(!1)));
   }
-  return /* @__PURE__ */ u3(
-    CertModal,
+  return /* @__PURE__ */ t(
+    Qe,
     {
-      isOpen,
-      onClose,
+      isOpen: e,
+      onClose: s,
       title: "Mark as Delayed",
-      subtitle: cert?.patientName,
+      subtitle: n?.patientName,
       actions: [
-        { label: "Cancel", variant: "secondary", onClick: onClose },
-        { label: submitting ? "Saving..." : "Mark Delayed", variant: "primary", onClick: handleDelay, disabled: !reason.trim() || submitting }
+        { label: "Cancel", variant: "secondary", onClick: s },
+        { label: c ? "Saving..." : "Mark Delayed", variant: "primary", onClick: p, disabled: !a.trim() || c }
       ],
-      children: /* @__PURE__ */ u3("div", { class: "cm-section cm-section--warn", children: [
-        /* @__PURE__ */ u3("div", { class: "cm-section__head", children: [
-          /* @__PURE__ */ u3("span", { class: "cm-section__icon cm-section__icon--warn", children: /* @__PURE__ */ u3("svg", { width: "14", height: "14", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": "2", "stroke-linecap": "round", "stroke-linejoin": "round", children: [
-            /* @__PURE__ */ u3("circle", { cx: "12", cy: "12", r: "10" }),
-            /* @__PURE__ */ u3("line", { x1: "12", y1: "8", x2: "12", y2: "12" }),
-            /* @__PURE__ */ u3("line", { x1: "12", y1: "16", x2: "12.01", y2: "16" })
+      children: /* @__PURE__ */ t("div", { class: "cm-section cm-section--warn", children: [
+        /* @__PURE__ */ t("div", { class: "cm-section__head", children: [
+          /* @__PURE__ */ t("span", { class: "cm-section__icon cm-section__icon--warn", children: /* @__PURE__ */ t("svg", { width: "14", height: "14", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": "2", "stroke-linecap": "round", "stroke-linejoin": "round", children: [
+            /* @__PURE__ */ t("circle", { cx: "12", cy: "12", r: "10" }),
+            /* @__PURE__ */ t("line", { x1: "12", y1: "8", x2: "12", y2: "12" }),
+            /* @__PURE__ */ t("line", { x1: "12", y1: "16", x2: "12.01", y2: "16" })
           ] }) }),
-          /* @__PURE__ */ u3("span", { class: "cm-section__label", children: "Delay Reason" }),
-          /* @__PURE__ */ u3("span", { class: "cm-section__badge cm-section__badge--warn", children: "Required" })
+          /* @__PURE__ */ t("span", { class: "cm-section__label", children: "Delay Reason" }),
+          /* @__PURE__ */ t("span", { class: "cm-section__badge cm-section__badge--warn", children: "Required" })
         ] }),
-        /* @__PURE__ */ u3("p", { class: "cm-section__hint", children: "This will log a delay reason for compliance. The cert remains unsent." }),
-        /* @__PURE__ */ u3(
+        /* @__PURE__ */ t("p", { class: "cm-section__hint", children: "This will log a delay reason for compliance. The cert remains unsent." }),
+        /* @__PURE__ */ t(
           "textarea",
           {
             class: "cm-input cm-input--textarea",
             rows: 3,
-            value: reason,
-            onInput: (e3) => setReason(e3.target.value),
+            value: a,
+            onInput: (d) => r(d.target.value),
             placeholder: "Why is this certification being delayed?"
           }
         )
@@ -4992,1936 +4624,1602 @@ function DelayCertModal({ isOpen, onClose, cert, onDelayed }) {
     }
   );
 }
-
-// content/modules/certifications/hooks/usePractitionerWorkload.js
-function usePractitionerWorkload(practitionerId) {
-  const [data, setData] = d2(null);
-  const [loading, setLoading] = d2(false);
-  const [error, setError] = d2(null);
-  const [fetchCount, setFetchCount] = d2(0);
-  const retry = q2(() => {
-    setFetchCount((n2) => n2 + 1);
+function Tn(e) {
+  const [s, n] = b(null), [i, a] = b(!1), [r, c] = b(null), [o, p] = b(0), d = X(() => {
+    p((u) => u + 1);
   }, []);
-  y2(() => {
-    if (!practitionerId || !window.CertAPI) {
-      setData(null);
+  return z(() => {
+    if (!e || !window.CertAPI) {
+      n(null);
       return;
     }
-    let cancelled = false;
-    setLoading(true);
-    setError(null);
-    window.CertAPI.fetchPractitionerWorkload(practitionerId).then((result) => {
-      if (!cancelled) setData(result);
-    }).catch((err) => {
-      if (!cancelled) setError(err.message || "Failed to load practitioner data");
+    let u = !1;
+    return a(!0), c(null), window.CertAPI.fetchPractitionerWorkload(e).then((l) => {
+      u || n(l);
+    }).catch((l) => {
+      u || c(l.message || "Failed to load practitioner data");
     }).finally(() => {
-      if (!cancelled) setLoading(false);
-    });
-    return () => {
-      cancelled = true;
+      u || a(!1);
+    }), () => {
+      u = !0;
     };
-  }, [practitionerId, fetchCount]);
-  return { data, loading, error, retry };
+  }, [e, o]), { data: s, loading: i, error: r, retry: d };
 }
-
-// content/modules/certifications/components/PractitionerWorkloadView.jsx
-function formatShortDate4(dateStr) {
-  if (!dateStr) return "";
-  const d3 = new Date(dateStr);
-  if (isNaN(d3)) return dateStr;
-  return d3.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+function ct(e) {
+  if (!e) return "";
+  const s = new Date(e);
+  return isNaN(s) ? e : s.toLocaleDateString("en-US", { month: "short", day: "numeric" });
 }
-function QueueRow({ item }) {
-  const isCert = !!item.type && (item.type === "initial" || item.type.includes("recert"));
-  return /* @__PURE__ */ u3("div", { class: "cert__workload-row", children: [
-    /* @__PURE__ */ u3("div", { class: "cert__workload-row-top", children: isCert ? /* @__PURE__ */ u3(k, { children: [
-      /* @__PURE__ */ u3(CertTypeBadge, { type: item.type }),
-      /* @__PURE__ */ u3("span", { class: "cert__workload-patient", children: item.patientName }),
-      /* @__PURE__ */ u3(
-        CertStatusBadge,
+function An({ item: e }) {
+  const s = !!e.type && (e.type === "initial" || e.type.includes("recert"));
+  return /* @__PURE__ */ t("div", { class: "cert__workload-row", children: [
+    /* @__PURE__ */ t("div", { class: "cert__workload-row-top", children: s ? /* @__PURE__ */ t(Y, { children: [
+      /* @__PURE__ */ t(yt, { type: e.type }),
+      /* @__PURE__ */ t("span", { class: "cert__workload-patient", children: e.patientName }),
+      /* @__PURE__ */ t(
+        Ds,
         {
-          status: item.status,
-          isDelayed: item.isDelayed,
-          dueDate: item.dueDate,
-          signedAt: item.signedAt
+          status: e.status,
+          isDelayed: e.isDelayed,
+          dueDate: e.dueDate,
+          signedAt: e.signedAt
         }
       )
-    ] }) : /* @__PURE__ */ u3(k, { children: [
-      /* @__PURE__ */ u3("span", { class: "cert__workload-query-badge", children: "Query" }),
-      /* @__PURE__ */ u3("span", { class: "cert__workload-patient", children: item.patientName }),
-      item.mdsItem && /* @__PURE__ */ u3("span", { class: "cert__workload-meta", children: [
-        item.mdsItem,
-        item.mdsItemName ? ` \u2014 ${item.mdsItemName}` : ""
+    ] }) : /* @__PURE__ */ t(Y, { children: [
+      /* @__PURE__ */ t("span", { class: "cert__workload-query-badge", children: "Query" }),
+      /* @__PURE__ */ t("span", { class: "cert__workload-patient", children: e.patientName }),
+      e.mdsItem && /* @__PURE__ */ t("span", { class: "cert__workload-meta", children: [
+        e.mdsItem,
+        e.mdsItemName ? ` — ${e.mdsItemName}` : ""
       ] })
     ] }) }),
-    /* @__PURE__ */ u3("div", { class: "cert__workload-row-bottom", children: [
-      isCert && item.dueDate && /* @__PURE__ */ u3("span", { class: "cert__row-meta", children: [
+    /* @__PURE__ */ t("div", { class: "cert__workload-row-bottom", children: [
+      s && e.dueDate && /* @__PURE__ */ t("span", { class: "cert__row-meta", children: [
         "Due ",
-        formatShortDate4(item.dueDate)
+        ct(e.dueDate)
       ] }),
-      !isCert && item.sentAt && /* @__PURE__ */ u3("span", { class: "cert__row-meta", children: [
+      !s && e.sentAt && /* @__PURE__ */ t("span", { class: "cert__row-meta", children: [
         "Sent ",
-        formatShortDate4(item.sentAt)
+        ct(e.sentAt)
       ] })
     ] })
   ] });
 }
-function SignedRow({ item }) {
-  const isCert = !!item.type && (item.type === "initial" || item.type.includes("recert"));
-  return /* @__PURE__ */ u3("div", { class: "cert__workload-row", children: [
-    /* @__PURE__ */ u3("div", { class: "cert__workload-row-top", children: isCert ? /* @__PURE__ */ u3(k, { children: [
-      /* @__PURE__ */ u3(CertTypeBadge, { type: item.type }),
-      /* @__PURE__ */ u3("span", { class: "cert__workload-patient", children: item.patientName })
-    ] }) : /* @__PURE__ */ u3(k, { children: [
-      /* @__PURE__ */ u3("span", { class: "cert__workload-query-badge", children: "Query" }),
-      /* @__PURE__ */ u3("span", { class: "cert__workload-patient", children: item.patientName }),
-      item.mdsItem && /* @__PURE__ */ u3("span", { class: "cert__workload-meta", children: item.mdsItem })
+function Mn({ item: e }) {
+  const s = !!e.type && (e.type === "initial" || e.type.includes("recert"));
+  return /* @__PURE__ */ t("div", { class: "cert__workload-row", children: [
+    /* @__PURE__ */ t("div", { class: "cert__workload-row-top", children: s ? /* @__PURE__ */ t(Y, { children: [
+      /* @__PURE__ */ t(yt, { type: e.type }),
+      /* @__PURE__ */ t("span", { class: "cert__workload-patient", children: e.patientName })
+    ] }) : /* @__PURE__ */ t(Y, { children: [
+      /* @__PURE__ */ t("span", { class: "cert__workload-query-badge", children: "Query" }),
+      /* @__PURE__ */ t("span", { class: "cert__workload-patient", children: e.patientName }),
+      e.mdsItem && /* @__PURE__ */ t("span", { class: "cert__workload-meta", children: e.mdsItem })
     ] }) }),
-    /* @__PURE__ */ u3("div", { class: "cert__workload-row-bottom", children: [
-      item.signedAt && /* @__PURE__ */ u3("span", { class: "cert__row-meta", children: [
+    /* @__PURE__ */ t("div", { class: "cert__workload-row-bottom", children: [
+      e.signedAt && /* @__PURE__ */ t("span", { class: "cert__row-meta", children: [
         "Signed ",
-        formatShortDate4(item.signedAt)
+        ct(e.signedAt)
       ] }),
-      !isCert && item.selectedIcd10Code && /* @__PURE__ */ u3("span", { class: "cert__row-meta", children: [
+      !s && e.selectedIcd10Code && /* @__PURE__ */ t("span", { class: "cert__row-meta", children: [
         "ICD-10: ",
-        item.selectedIcd10Code
+        e.selectedIcd10Code
       ] })
     ] })
   ] });
 }
-function PractitionerWorkloadView({ practitionerId, onBack }) {
-  const { data, loading, error, retry } = usePractitionerWorkload(practitionerId);
-  if (loading) {
-    return /* @__PURE__ */ u3("div", { class: "cert__workload", children: [
-      /* @__PURE__ */ u3("div", { class: "cert__workload-header", children: /* @__PURE__ */ u3("button", { class: "cert__workload-back", onClick: onBack, children: [
-        "\u2190",
+function Ln({ practitionerId: e, onBack: s }) {
+  const { data: n, loading: i, error: a, retry: r } = Tn(e);
+  if (i)
+    return /* @__PURE__ */ t("div", { class: "cert__workload", children: [
+      /* @__PURE__ */ t("div", { class: "cert__workload-header", children: /* @__PURE__ */ t("button", { class: "cert__workload-back", onClick: s, children: [
+        "←",
         " Back to Certs"
       ] }) }),
-      /* @__PURE__ */ u3("div", { class: "mds-cc__state-container", children: [
-        /* @__PURE__ */ u3("div", { class: "mds-cc__spinner" }),
-        /* @__PURE__ */ u3("p", { class: "mds-cc__state-text", children: "Loading practitioner..." })
+      /* @__PURE__ */ t("div", { class: "mds-cc__state-container", children: [
+        /* @__PURE__ */ t("div", { class: "mds-cc__spinner" }),
+        /* @__PURE__ */ t("p", { class: "mds-cc__state-text", children: "Loading practitioner..." })
       ] })
     ] });
-  }
-  if (error) {
-    return /* @__PURE__ */ u3("div", { class: "cert__workload", children: [
-      /* @__PURE__ */ u3("div", { class: "cert__workload-header", children: /* @__PURE__ */ u3("button", { class: "cert__workload-back", onClick: onBack, children: [
-        "\u2190",
+  if (a)
+    return /* @__PURE__ */ t("div", { class: "cert__workload", children: [
+      /* @__PURE__ */ t("div", { class: "cert__workload-header", children: /* @__PURE__ */ t("button", { class: "cert__workload-back", onClick: s, children: [
+        "←",
         " Back to Certs"
       ] }) }),
-      /* @__PURE__ */ u3("div", { class: "mds-cc__state-container", children: [
-        /* @__PURE__ */ u3("div", { class: "mds-cc__state-icon", children: "\u26A0" }),
-        /* @__PURE__ */ u3("p", { class: "mds-cc__state-text", children: error }),
-        /* @__PURE__ */ u3("button", { class: "mds-cc__retry-btn", onClick: retry, children: "Retry" })
+      /* @__PURE__ */ t("div", { class: "mds-cc__state-container", children: [
+        /* @__PURE__ */ t("div", { class: "mds-cc__state-icon", children: "⚠" }),
+        /* @__PURE__ */ t("p", { class: "mds-cc__state-text", children: a }),
+        /* @__PURE__ */ t("button", { class: "mds-cc__retry-btn", onClick: r, children: "Retry" })
       ] })
     ] });
-  }
-  if (!data) return null;
-  const { practitioner, queue = [], recentlySigned = [] } = data;
-  return /* @__PURE__ */ u3("div", { class: "cert__workload", children: [
-    /* @__PURE__ */ u3("div", { class: "cert__workload-header", children: /* @__PURE__ */ u3("button", { class: "cert__workload-back", onClick: onBack, children: [
-      "\u2190",
+  if (!n) return null;
+  const { practitioner: c, queue: o = [], recentlySigned: p = [] } = n;
+  return /* @__PURE__ */ t("div", { class: "cert__workload", children: [
+    /* @__PURE__ */ t("div", { class: "cert__workload-header", children: /* @__PURE__ */ t("button", { class: "cert__workload-back", onClick: s, children: [
+      "←",
       " Back to Certs"
     ] }) }),
-    /* @__PURE__ */ u3("div", { class: "cert__workload-info", children: [
-      /* @__PURE__ */ u3("div", { class: "cert__workload-name", children: [
-        practitioner?.firstName,
+    /* @__PURE__ */ t("div", { class: "cert__workload-info", children: [
+      /* @__PURE__ */ t("div", { class: "cert__workload-name", children: [
+        c?.firstName,
         " ",
-        practitioner?.lastName,
-        practitioner?.title && /* @__PURE__ */ u3("span", { class: "cert__workload-title", children: [
+        c?.lastName,
+        c?.title && /* @__PURE__ */ t("span", { class: "cert__workload-title", children: [
           ", ",
-          practitioner.title
+          c.title
         ] })
       ] }),
-      practitioner?.phone && /* @__PURE__ */ u3("div", { class: "cert__workload-phone", children: practitioner.phone })
+      c?.phone && /* @__PURE__ */ t("div", { class: "cert__workload-phone", children: c.phone })
     ] }),
-    /* @__PURE__ */ u3("div", { class: "cert__workload-section", children: [
-      /* @__PURE__ */ u3("div", { class: "cert__workload-section-header", children: [
+    /* @__PURE__ */ t("div", { class: "cert__workload-section", children: [
+      /* @__PURE__ */ t("div", { class: "cert__workload-section-header", children: [
         "In Queue",
-        queue.length > 0 && /* @__PURE__ */ u3("span", { class: "cert__workload-section-count", children: queue.length })
+        o.length > 0 && /* @__PURE__ */ t("span", { class: "cert__workload-section-count", children: o.length })
       ] }),
-      queue.length === 0 ? /* @__PURE__ */ u3("div", { class: "cert__workload-empty", children: "No items in queue" }) : queue.map((item, i3) => /* @__PURE__ */ u3(QueueRow, { item }, i3))
+      o.length === 0 ? /* @__PURE__ */ t("div", { class: "cert__workload-empty", children: "No items in queue" }) : o.map((d, u) => /* @__PURE__ */ t(An, { item: d }, u))
     ] }),
-    /* @__PURE__ */ u3("div", { class: "cert__workload-section", children: [
-      /* @__PURE__ */ u3("div", { class: "cert__workload-section-header", children: [
+    /* @__PURE__ */ t("div", { class: "cert__workload-section", children: [
+      /* @__PURE__ */ t("div", { class: "cert__workload-section-header", children: [
         "Recently Signed",
-        recentlySigned.length > 0 && /* @__PURE__ */ u3("span", { class: "cert__workload-section-count", children: recentlySigned.length })
+        p.length > 0 && /* @__PURE__ */ t("span", { class: "cert__workload-section-count", children: p.length })
       ] }),
-      recentlySigned.length === 0 ? /* @__PURE__ */ u3("div", { class: "cert__workload-empty", children: "No recent signatures" }) : recentlySigned.map((item, i3) => /* @__PURE__ */ u3(SignedRow, { item }, i3))
+      p.length === 0 ? /* @__PURE__ */ t("div", { class: "cert__workload-empty", children: "No recent signatures" }) : p.map((d, u) => /* @__PURE__ */ t(Mn, { item: d }, u))
     ] })
   ] });
 }
-
-// content/modules/certifications/CertsView.jsx
-var SUB_TABS = [
+const $n = [
   { id: "action", label: "Action Needed" },
   { id: "awaiting", label: "Awaiting Signature" },
   { id: "overdue", label: "Overdue" },
   { id: "dueSoon", label: "Due Soon" },
   { id: "signed", label: "Signed" }
 ];
-function getDaysUntil4(dateStr) {
-  if (!dateStr) return null;
-  const due = new Date(dateStr);
-  const now = /* @__PURE__ */ new Date();
-  due.setHours(0, 0, 0, 0);
-  now.setHours(0, 0, 0, 0);
-  return Math.floor((due - now) / 864e5);
+function dt(e) {
+  if (!e) return null;
+  const s = new Date(e), n = /* @__PURE__ */ new Date();
+  return s.setHours(0, 0, 0, 0), n.setHours(0, 0, 0, 0), Math.floor((s - n) / 864e5);
 }
-function getCertUrgency(cert) {
-  const days = getDaysUntil4(cert.dueDate);
-  if (days !== null && days < 0) return days;
-  if (cert.isDelayed) return -0.5;
-  return days ?? Infinity;
+function Ut(e) {
+  const s = dt(e.dueDate);
+  return s !== null && s < 0 ? s : e.isDelayed ? -0.5 : s ?? 1 / 0;
 }
-var STAY_TYPES = [
+const Rn = [
   { id: "all", label: "All" },
   { id: "medicare", label: "Med A" },
   { id: "managed", label: "Managed" }
 ];
-function matchesStayType(cert, filter) {
-  if (filter === "all") return true;
-  if (filter === "managed") return cert.payerType === "managed_care";
-  return cert.payerType !== "managed_care";
+function Vt(e, s) {
+  return s === "all" ? !0 : s === "managed" ? e.payerType === "managed_care" : e.payerType !== "managed_care";
 }
-function CertsView({ facilityName, orgSlug, patientId, patientName }) {
-  const [activeSubTab, setActiveSubTab] = d2("action");
-  const [stayTypeFilter, setStayTypeFilter] = d2("all");
-  const [workloadPractitionerId, setWorkloadPractitionerId] = d2(null);
-  const [sendCert, setSendCert] = d2(null);
-  const [skipCert, setSkipCert] = d2(null);
-  const [delayCert, setDelayCert] = d2(null);
-  const [editCert, setEditCert] = d2(null);
-  const { certs: activeCerts, loading: activeLoading, error: activeError, refetch: refetchActive } = useCertifications({
-    facilityName,
-    orgSlug,
-    patientId
-  });
-  const { certs: signedCerts, loading: signedLoading, refetch: refetchSigned } = useCertifications({
-    facilityName,
-    orgSlug,
-    patientId,
+function En({ facilityName: e, orgSlug: s, patientId: n, patientName: i }) {
+  const [a, r] = b("action"), [c, o] = b("all"), [p, d] = b(null), [u, l] = b(null), [m, h] = b(null), [_, v] = b(null), [g, C] = b(null), { certs: f, loading: x, error: k, refetch: y } = Bt({
+    facilityName: e,
+    orgSlug: s,
+    patientId: n
+  }), { certs: S, loading: E, refetch: N } = Bt({
+    facilityName: e,
+    orgSlug: s,
+    patientId: n,
     status: "signed"
-  });
-  const refetchAll = q2(() => {
-    refetchActive();
-    refetchSigned();
-  }, [refetchActive, refetchSigned]);
-  const filteredActive = T2(
-    () => activeCerts.filter((c3) => matchesStayType(c3, stayTypeFilter)),
-    [activeCerts, stayTypeFilter]
-  );
-  const filteredSigned = T2(
-    () => signedCerts.filter((c3) => matchesStayType(c3, stayTypeFilter)),
-    [signedCerts, stayTypeFilter]
-  );
-  const stayTypeCounts = T2(() => {
-    const all = activeCerts.length + signedCerts.length;
-    let medicare = 0, managed = 0;
-    for (const cert of [...activeCerts, ...signedCerts]) {
-      if (cert.payerType === "managed_care") managed++;
-      else medicare++;
-    }
-    return { all, medicare, managed };
-  }, [activeCerts, signedCerts]);
-  const counts = T2(() => {
-    let overdue = 0, dueSoon = 0, awaiting = 0;
-    for (const cert of filteredActive) {
-      const daysUntil = getDaysUntil4(cert.dueDate);
-      if (daysUntil !== null && daysUntil < 0) overdue++;
-      else if (cert.isDelayed) overdue++;
-      else if (daysUntil !== null && daysUntil >= 0 && daysUntil <= 3) dueSoon++;
-      if (cert.status === "sent") awaiting++;
+  }), w = X(() => {
+    y(), N();
+  }, [y, N]), T = ae(
+    () => f.filter((R) => Vt(R, c)),
+    [f, c]
+  ), F = ae(
+    () => S.filter((R) => Vt(R, c)),
+    [S, c]
+  ), V = ae(() => {
+    const R = f.length + S.length;
+    let j = 0, te = 0;
+    for (const I of [...f, ...S])
+      I.payerType === "managed_care" ? te++ : j++;
+    return { all: R, medicare: j, managed: te };
+  }, [f, S]), D = ae(() => {
+    let R = 0, j = 0, te = 0;
+    for (const I of T) {
+      const P = dt(I.dueDate);
+      P !== null && P < 0 || I.isDelayed ? R++ : P !== null && P >= 0 && P <= 3 && j++, I.status === "sent" && te++;
     }
     return {
-      action: filteredActive.length,
-      awaiting,
-      overdue,
-      dueSoon,
-      signed: filteredSigned.length
+      action: T.length,
+      awaiting: te,
+      overdue: R,
+      dueSoon: j,
+      signed: F.length
     };
-  }, [filteredActive, filteredSigned]);
-  const stayGroups = T2(() => {
-    let displaySource;
-    if (activeSubTab === "signed") {
-      displaySource = filteredSigned;
-    } else {
-      displaySource = filteredActive.filter((cert) => {
-        const daysUntil = getDaysUntil4(cert.dueDate);
-        const isOverdue = daysUntil !== null && daysUntil < 0;
-        const isDueSoon = daysUntil !== null && daysUntil >= 0 && daysUntil <= 3;
-        if (activeSubTab === "awaiting") return cert.status === "sent";
-        if (activeSubTab === "overdue") return isOverdue || cert.isDelayed;
-        if (activeSubTab === "dueSoon") return isDueSoon && !isOverdue;
-        return true;
-      });
+  }, [T, F]), B = ae(() => {
+    let R;
+    if (a === "signed" ? R = F : R = T.filter((I) => {
+      const P = dt(I.dueDate), U = P !== null && P < 0, q = P !== null && P >= 0 && P <= 3;
+      return a === "awaiting" ? I.status === "sent" : a === "overdue" ? U || I.isDelayed : a === "dueSoon" ? q && !U : !0;
+    }), R.length === 0) return [];
+    const j = {};
+    for (const I of R) {
+      const P = I.partAStayId || I.id;
+      j[P] || (j[P] = { stayId: P, displayCerts: [], historyCerts: [] }), j[P].displayCerts.push(I);
     }
-    if (displaySource.length === 0) return [];
-    const groupMap = {};
-    for (const cert of displaySource) {
-      const key = cert.partAStayId || cert.id;
-      if (!groupMap[key]) groupMap[key] = { stayId: key, displayCerts: [], historyCerts: [] };
-      groupMap[key].displayCerts.push(cert);
-    }
-    if (activeSubTab !== "signed") {
-      for (const cert of filteredSigned) {
-        const key = cert.partAStayId;
-        if (key && groupMap[key]) {
-          groupMap[key].historyCerts.push(cert);
-        }
+    if (a !== "signed")
+      for (const I of F) {
+        const P = I.partAStayId;
+        P && j[P] && j[P].historyCerts.push(I);
       }
+    const te = Object.values(j);
+    for (const I of te) {
+      I.displayCerts.sort((U, q) => (U.sequenceNumber || 0) - (q.sequenceNumber || 0)), I.historyCerts.sort((U, q) => (U.sequenceNumber || 0) - (q.sequenceNumber || 0));
+      const P = /* @__PURE__ */ new Set();
+      I.allCerts = [];
+      for (const U of [...I.displayCerts, ...I.historyCerts])
+        P.has(U.id) || (P.add(U.id), I.allCerts.push(U));
+      I.allCerts.sort((U, q) => (U.sequenceNumber || 0) - (q.sequenceNumber || 0));
     }
-    const groups = Object.values(groupMap);
-    for (const group of groups) {
-      group.displayCerts.sort((a3, b) => (a3.sequenceNumber || 0) - (b.sequenceNumber || 0));
-      group.historyCerts.sort((a3, b) => (a3.sequenceNumber || 0) - (b.sequenceNumber || 0));
-      const seen = /* @__PURE__ */ new Set();
-      group.allCerts = [];
-      for (const cert of [...group.displayCerts, ...group.historyCerts]) {
-        if (!seen.has(cert.id)) {
-          seen.add(cert.id);
-          group.allCerts.push(cert);
-        }
-      }
-      group.allCerts.sort((a3, b) => (a3.sequenceNumber || 0) - (b.sequenceNumber || 0));
-    }
-    groups.sort((a3, b) => {
-      const aMin = Math.min(...a3.displayCerts.map(getCertUrgency));
-      const bMin = Math.min(...b.displayCerts.map(getCertUrgency));
-      return aMin - bMin;
-    });
-    return groups;
-  }, [filteredActive, filteredSigned, activeSubTab]);
-  async function handleSkipCert(reason) {
-    await window.CertAPI.skipCert(skipCert.id, reason);
-    window.SuperToast?.success?.("Certification skipped");
-    refetchAll();
+    return te.sort((I, P) => {
+      const U = Math.min(...I.displayCerts.map(Ut)), q = Math.min(...P.displayCerts.map(Ut));
+      return U - q;
+    }), te;
+  }, [T, F, a]);
+  async function $(R) {
+    await window.CertAPI.skipCert(m.id, R), window.SuperToast?.success?.("Certification skipped"), w();
   }
-  async function handleDelayCert(reason) {
-    await window.CertAPI.delayCert(delayCert.id, reason);
-    window.SuperToast?.success?.("Certification marked as delayed");
-    refetchAll();
+  async function M(R) {
+    await window.CertAPI.delayCert(_.id, R), window.SuperToast?.success?.("Certification marked as delayed"), w();
   }
-  async function handleEditReason({ clinicalReason, estimatedDays, planForDischarge }) {
-    await window.CertAPI.saveClinicalReason(editCert.id, { clinicalReason, estimatedDays, planForDischarge });
-    window.SuperToast?.success?.(`Clinical details updated for ${editCert.patientName}`);
-    refetchAll();
+  async function G({ clinicalReason: R, estimatedDays: j, planForDischarge: te }) {
+    await window.CertAPI.saveClinicalReason(g.id, { clinicalReason: R, estimatedDays: j, planForDischarge: te }), window.SuperToast?.success?.(`Clinical details updated for ${g.patientName}`), w();
   }
-  async function handleUnskip(cert) {
+  async function K(R) {
     try {
-      await window.CertAPI.unskipCert(cert.id);
-      window.SuperToast?.success?.("Certification restored");
-      refetchAll();
-    } catch (err) {
-      console.error("[Certifications] Failed to unskip:", err);
-      window.SuperToast?.error?.("Failed to restore certification");
+      await window.CertAPI.unskipCert(R.id), window.SuperToast?.success?.("Certification restored"), w();
+    } catch (j) {
+      console.error("[Certifications] Failed to unskip:", j), window.SuperToast?.error?.("Failed to restore certification");
     }
   }
-  const loading = activeSubTab === "signed" ? signedLoading : activeLoading;
-  if (workloadPractitionerId) {
-    return /* @__PURE__ */ u3("div", { class: "cert__view", children: /* @__PURE__ */ u3(
-      PractitionerWorkloadView,
-      {
-        practitionerId: workloadPractitionerId,
-        onBack: () => setWorkloadPractitionerId(null)
-      }
-    ) });
-  }
-  return /* @__PURE__ */ u3("div", { class: "cert__view", children: [
-    patientId && patientName && /* @__PURE__ */ u3("div", { class: "cert__patient-banner", children: [
+  const Q = a === "signed" ? E : x;
+  return p ? /* @__PURE__ */ t("div", { class: "cert__view", children: /* @__PURE__ */ t(
+    Ln,
+    {
+      practitionerId: p,
+      onBack: () => d(null)
+    }
+  ) }) : /* @__PURE__ */ t("div", { class: "cert__view", children: [
+    n && i && /* @__PURE__ */ t("div", { class: "cert__patient-banner", children: [
       "Showing certs for ",
-      /* @__PURE__ */ u3("strong", { children: patientName })
+      /* @__PURE__ */ t("strong", { children: i })
     ] }),
-    /* @__PURE__ */ u3("div", { class: "cert__filters", children: [
-      /* @__PURE__ */ u3("div", { class: "cert__stay-type-filter", children: STAY_TYPES.map((t3) => /* @__PURE__ */ u3(
+    /* @__PURE__ */ t("div", { class: "cert__filters", children: [
+      /* @__PURE__ */ t("div", { class: "cert__stay-type-filter", children: Rn.map((R) => /* @__PURE__ */ t(
         "button",
         {
-          class: `cert__stay-type-pill${stayTypeFilter === t3.id ? " cert__stay-type-pill--active" : ""}`,
-          onClick: () => setStayTypeFilter(t3.id),
+          class: `cert__stay-type-pill${c === R.id ? " cert__stay-type-pill--active" : ""}`,
+          onClick: () => o(R.id),
           children: [
-            t3.label,
-            stayTypeCounts[t3.id] > 0 && /* @__PURE__ */ u3("span", { class: "cert__stay-type-pill-count", children: stayTypeCounts[t3.id] })
+            R.label,
+            V[R.id] > 0 && /* @__PURE__ */ t("span", { class: "cert__stay-type-pill-count", children: V[R.id] })
           ]
         },
-        t3.id
+        R.id
       )) }),
-      /* @__PURE__ */ u3("div", { class: "cert__sub-tabs", children: SUB_TABS.map((tab) => /* @__PURE__ */ u3(
+      /* @__PURE__ */ t("div", { class: "cert__sub-tabs", children: $n.map((R) => /* @__PURE__ */ t(
         "button",
         {
-          class: `cert__sub-tab${activeSubTab === tab.id ? " cert__sub-tab--active" : ""}`,
-          onClick: () => setActiveSubTab(tab.id),
+          class: `cert__sub-tab${a === R.id ? " cert__sub-tab--active" : ""}`,
+          onClick: () => r(R.id),
           children: [
-            tab.label,
-            counts[tab.id] > 0 && /* @__PURE__ */ u3("span", { class: "cert__sub-tab-count", children: counts[tab.id] })
+            R.label,
+            D[R.id] > 0 && /* @__PURE__ */ t("span", { class: "cert__sub-tab-count", children: D[R.id] })
           ]
         },
-        tab.id
+        R.id
       )) })
     ] }),
-    /* @__PURE__ */ u3("div", { class: "cert__list", children: [
-      loading && /* @__PURE__ */ u3("div", { class: "mds-cc__state-container", children: [
-        /* @__PURE__ */ u3("div", { class: "mds-cc__spinner" }),
-        /* @__PURE__ */ u3("p", { class: "mds-cc__state-text", children: "Loading certifications..." })
+    /* @__PURE__ */ t("div", { class: "cert__list", children: [
+      Q && /* @__PURE__ */ t("div", { class: "mds-cc__state-container", children: [
+        /* @__PURE__ */ t("div", { class: "mds-cc__spinner" }),
+        /* @__PURE__ */ t("p", { class: "mds-cc__state-text", children: "Loading certifications..." })
       ] }),
-      !loading && activeError && /* @__PURE__ */ u3("div", { class: "mds-cc__state-container", children: [
-        /* @__PURE__ */ u3("div", { class: "mds-cc__state-icon", children: "\u26A0" }),
-        /* @__PURE__ */ u3("p", { class: "mds-cc__state-text", children: activeError }),
-        /* @__PURE__ */ u3("button", { class: "mds-cc__retry-btn", onClick: refetchAll, children: "Retry" })
+      !Q && k && /* @__PURE__ */ t("div", { class: "mds-cc__state-container", children: [
+        /* @__PURE__ */ t("div", { class: "mds-cc__state-icon", children: "⚠" }),
+        /* @__PURE__ */ t("p", { class: "mds-cc__state-text", children: k }),
+        /* @__PURE__ */ t("button", { class: "mds-cc__retry-btn", onClick: w, children: "Retry" })
       ] }),
-      !loading && !activeError && stayGroups.length === 0 && /* @__PURE__ */ u3("div", { class: "mds-cc__state-container", children: [
-        /* @__PURE__ */ u3("div", { class: "mds-cc__state-icon", children: activeSubTab === "overdue" ? "\u2705" : "\u{1F4CB}" }),
-        /* @__PURE__ */ u3("p", { class: "mds-cc__state-text", children: [
-          activeSubTab === "action" && "All certifications are up to date",
-          activeSubTab === "awaiting" && "No certifications awaiting signature",
-          activeSubTab === "overdue" && "No overdue certifications",
-          activeSubTab === "dueSoon" && "No certifications due soon",
-          activeSubTab === "signed" && "No certifications signed in the last 7 days"
+      !Q && !k && B.length === 0 && /* @__PURE__ */ t("div", { class: "mds-cc__state-container", children: [
+        /* @__PURE__ */ t("div", { class: "mds-cc__state-icon", children: a === "overdue" ? "✅" : "📋" }),
+        /* @__PURE__ */ t("p", { class: "mds-cc__state-text", children: [
+          a === "action" && "All certifications are up to date",
+          a === "awaiting" && "No certifications awaiting signature",
+          a === "overdue" && "No overdue certifications",
+          a === "dueSoon" && "No certifications due soon",
+          a === "signed" && "No certifications signed in the last 7 days"
         ] })
       ] }),
-      !loading && !activeError && stayGroups.map((group) => /* @__PURE__ */ u3(
-        StayGroupCard,
+      !Q && !k && B.map((R) => /* @__PURE__ */ t(
+        Nn,
         {
-          stayId: group.stayId,
-          displayCerts: group.displayCerts,
-          historyCerts: group.historyCerts,
-          allCerts: group.allCerts,
-          onSend: (c3) => setSendCert(c3),
-          onSkip: (c3) => setSkipCert(c3),
-          onDelay: (c3) => setDelayCert(c3),
-          onUnskip: handleUnskip,
-          onEditReason: (c3) => setEditCert(c3),
-          onViewPractitioner: (practId) => setWorkloadPractitionerId(practId)
+          stayId: R.stayId,
+          displayCerts: R.displayCerts,
+          historyCerts: R.historyCerts,
+          allCerts: R.allCerts,
+          onSend: (j) => l(j),
+          onSkip: (j) => h(j),
+          onDelay: (j) => v(j),
+          onUnskip: K,
+          onEditReason: (j) => C(j),
+          onViewPractitioner: (j) => d(j)
         },
-        group.stayId
+        R.stayId
       ))
     ] }),
-    /* @__PURE__ */ u3(
-      SendCertModal,
+    /* @__PURE__ */ t(
+      Ns,
       {
-        isOpen: !!sendCert,
-        onClose: () => setSendCert(null),
-        cert: sendCert,
-        facilityName,
-        orgSlug,
-        onSent: refetchAll
+        isOpen: !!u,
+        onClose: () => l(null),
+        cert: u,
+        facilityName: e,
+        orgSlug: s,
+        onSent: w
       }
     ),
-    /* @__PURE__ */ u3(
-      SkipCertModal,
+    /* @__PURE__ */ t(
+      xs,
       {
-        isOpen: !!skipCert,
-        onClose: () => setSkipCert(null),
-        cert: skipCert,
-        onSkipped: handleSkipCert
+        isOpen: !!m,
+        onClose: () => h(null),
+        cert: m,
+        onSkipped: $
       }
     ),
-    /* @__PURE__ */ u3(
-      DelayCertModal,
+    /* @__PURE__ */ t(
+      Ps,
       {
-        isOpen: !!delayCert,
-        onClose: () => setDelayCert(null),
-        cert: delayCert,
-        onDelayed: handleDelayCert
+        isOpen: !!_,
+        onClose: () => v(null),
+        cert: _,
+        onDelayed: M
       }
     ),
-    /* @__PURE__ */ u3(
-      EditClinicalReasonModal,
+    /* @__PURE__ */ t(
+      Pn,
       {
-        isOpen: !!editCert,
-        onClose: () => setEditCert(null),
-        cert: editCert,
-        onSaved: handleEditReason
+        isOpen: !!g,
+        onClose: () => C(null),
+        cert: g,
+        onSaved: G
       }
     )
   ] });
 }
-
-// content/utils/payment.js
-function isPaymentApplicable(payment) {
-  if (!payment) return false;
-  if (payment.mode === "not_applicable") return false;
-  if ("isApplicable" in payment) return !!payment.isApplicable;
-  return true;
+function We(e) {
+  return !e || e.mode === "not_applicable" ? !1 : "isApplicable" in e ? !!e.isApplicable : !0;
 }
-function getPaymentModeLabel(payment) {
-  if (!payment) return "";
-  switch (payment.mode) {
+function On(e) {
+  if (!e) return "";
+  switch (e.mode) {
     case "medicare":
       return "Medicare";
     case "state_rate":
-      return payment.stateName || "State Rate";
+      return e.stateName || "State Rate";
     case "cmi":
       return "CMI";
     default:
       return "";
   }
 }
-function getPaymentDeltaNumeric(payment) {
-  if (!isPaymentApplicable(payment)) return 0;
-  return payment.delta > 0 ? payment.delta : 0;
+function qn(e) {
+  return We(e) && e.delta > 0 ? e.delta : 0;
 }
-function formatPaymentDelta(payment, format = "long") {
-  if (!isPaymentApplicable(payment)) return null;
-  if (!(payment.delta > 0)) return null;
-  const suffix = format === "short" ? "/d" : "/day";
-  switch (payment.mode) {
+function Se(e, s = "long") {
+  if (!We(e) || !(e.delta > 0)) return null;
+  const n = s === "short" ? "/d" : "/day";
+  switch (e.mode) {
     case "medicare":
-      return `+$${Math.round(payment.delta)}${suffix}`;
+      return `+$${Math.round(e.delta)}${n}`;
     case "state_rate":
-      return `+$${Math.round(payment.delta)}${suffix}`;
+      return `+$${Math.round(e.delta)}${n}`;
     case "cmi":
-      return `+${payment.delta.toFixed(2)} CMI`;
+      return `+${e.delta.toFixed(2)} CMI`;
     default:
       return null;
   }
 }
-function cleanGroupCode(code) {
-  return code ? code.replace(/_/g, "") : null;
+function zt(e) {
+  return e ? e.replace(/_/g, "") : null;
 }
-function formatPaymentRates(payment) {
-  if (!isPaymentApplicable(payment)) return null;
-  if (!(payment.delta > 0)) return null;
-  const label = getPaymentModeLabel(payment);
-  const isEstimated = !!payment.isEstimated;
-  switch (payment.mode) {
+function Hn(e) {
+  if (!We(e) || !(e.delta > 0)) return null;
+  const s = On(e), n = !!e.isEstimated;
+  switch (e.mode) {
     case "medicare": {
-      const cur = payment.current?.total;
-      const pot = payment.potential?.total;
-      if (cur == null && pot == null) return null;
-      return {
-        current: cur != null ? `$${Math.round(cur).toLocaleString()}/day` : null,
-        potential: pot != null ? `$${Math.round(pot).toLocaleString()}/day` : null,
-        delta: `+$${Math.round(payment.delta).toLocaleString()}/day`,
-        label,
-        isEstimated
+      const i = e.current?.total, a = e.potential?.total;
+      return i == null && a == null ? null : {
+        current: i != null ? `$${Math.round(i).toLocaleString()}/day` : null,
+        potential: a != null ? `$${Math.round(a).toLocaleString()}/day` : null,
+        delta: `+$${Math.round(e.delta).toLocaleString()}/day`,
+        label: s,
+        isEstimated: n
       };
     }
     case "state_rate": {
-      const cur = payment.current?.rate;
-      const pot = payment.potential?.rate;
-      if (cur == null && pot == null) return null;
-      return {
-        current: cur != null ? `$${Math.round(cur).toLocaleString()}/day` : null,
-        potential: pot != null ? `$${Math.round(pot).toLocaleString()}/day` : null,
-        delta: `+$${Math.round(payment.delta).toLocaleString()}/day`,
-        label,
-        isEstimated,
-        currentGroupCode: cleanGroupCode(payment.current?.groupCode),
-        potentialGroupCode: cleanGroupCode(payment.potential?.groupCode)
+      const i = e.current?.rate, a = e.potential?.rate;
+      return i == null && a == null ? null : {
+        current: i != null ? `$${Math.round(i).toLocaleString()}/day` : null,
+        potential: a != null ? `$${Math.round(a).toLocaleString()}/day` : null,
+        delta: `+$${Math.round(e.delta).toLocaleString()}/day`,
+        label: s,
+        isEstimated: n,
+        currentGroupCode: zt(e.current?.groupCode),
+        potentialGroupCode: zt(e.potential?.groupCode)
       };
     }
     case "cmi": {
-      const cur = payment.current?.total;
-      const pot = payment.potential?.total;
-      if (cur == null && pot == null) return null;
-      return {
-        current: cur != null ? `${cur.toFixed(3)} CMI` : null,
-        potential: pot != null ? `${pot.toFixed(3)} CMI` : null,
-        delta: `+${payment.delta.toFixed(3)} CMI`,
-        label,
-        isEstimated
+      const i = e.current?.total, a = e.potential?.total;
+      return i == null && a == null ? null : {
+        current: i != null ? `${i.toFixed(3)} CMI` : null,
+        potential: a != null ? `${a.toFixed(3)} CMI` : null,
+        delta: `+${e.delta.toFixed(3)} CMI`,
+        label: s,
+        isEstimated: n
       };
     }
     default:
       return null;
   }
 }
-
-// content/modules/mds-command-center/AssessmentRow.jsx
-var URGENCY_ACCENT = {
+const Fn = {
   overdue: "#ef4444",
   urgent: "#f97316",
   approaching: "#eab308",
   on_track: "#22c55e",
   completed: "#6b7280"
-};
-var UDA_STATUS = {
-  complete: { icon: "\u2713", cls: "done", tip: "Locked in range" },
-  locked_in_range: { icon: "\u2713", cls: "done", tip: "Locked in range" },
-  in_progress: { icon: "\u25D0", cls: "wip", tip: "In progress" },
+}, Bn = {
+  complete: { icon: "✓", cls: "done", tip: "Locked in range" },
+  locked_in_range: { icon: "✓", cls: "done", tip: "Locked in range" },
+  in_progress: { icon: "◐", cls: "wip", tip: "In progress" },
   near_miss: { icon: "!", cls: "warn", tip: "Outside date range" },
   out_of_range: { icon: "!", cls: "warn", tip: "Outside date range" },
-  missing: { icon: "\u2717", cls: "miss", tip: "Not created" },
-  not_created: { icon: "\u2717", cls: "miss", tip: "Not created" },
+  missing: { icon: "✗", cls: "miss", tip: "Not created" },
+  not_created: { icon: "✗", cls: "miss", tip: "Not created" },
   not_required: null
   // hidden entirely
 };
-function UdaBadge({ label, status }) {
-  const cfg = UDA_STATUS[status];
-  if (!cfg) return null;
-  return /* @__PURE__ */ u3("span", { class: `mds-cc__uda-badge mds-cc__uda-badge--${cfg.cls}`, title: cfg.tip, children: [
-    label,
+function et({ label: e, status: s }) {
+  const n = Bn[s];
+  return n ? /* @__PURE__ */ t("span", { class: `mds-cc__uda-badge mds-cc__uda-badge--${n.cls}`, title: n.tip, children: [
+    e,
     " ",
-    cfg.icon
-  ] });
+    n.icon
+  ] }) : null;
 }
-function cleanAssessmentType(type) {
-  if (!type) return "";
-  return type.replace(/^(Medicare|Medicaid|Managed\s*Care)\s*[-\u2013\u2014]\s*/i, "").replace(/\s*\/\s*/g, " ").replace(/\s*-\s*None\s*PPS\s*/i, "").replace(/\s{2,}/g, " ").trim() || type;
+function lt(e) {
+  return e ? e.replace(/^(Medicare|Medicaid|Managed\s*Care)\s*[-\u2013\u2014]\s*/i, "").replace(/\s*\/\s*/g, " ").replace(/\s*-\s*None\s*PPS\s*/i, "").replace(/\s{2,}/g, " ").trim() || e : "";
 }
-function computeArdContext(ardDate, deadlines) {
-  if (!ardDate) return { dateText: "", deadlineText: "", cls: "na" };
-  const d3 = new Date(ardDate);
-  if (isNaN(d3)) return { dateText: "", deadlineText: "", cls: "na" };
-  const dateText = d3.toLocaleDateString("en-US", { month: "short", day: "numeric" });
-  const urgency = deadlines?.urgency || "on_track";
-  if (urgency === "completed") {
-    return { dateText, deadlineText: "", cls: "done" };
-  }
-  const daysLeft = deadlines?.completionDaysRemaining;
-  if (daysLeft != null) {
-    if (daysLeft < 0) return { dateText, deadlineText: `${Math.abs(daysLeft)}d overdue`, cls: "overdue" };
-    if (daysLeft === 0) return { dateText, deadlineText: "Due today", cls: "urgent" };
-    if (daysLeft <= 3) return { dateText, deadlineText: `${daysLeft}d left`, cls: "urgent" };
-    if (daysLeft <= 7) return { dateText, deadlineText: `${daysLeft}d left`, cls: "approaching" };
-    return { dateText, deadlineText: `${daysLeft}d left`, cls: "ok" };
-  }
-  const now = /* @__PURE__ */ new Date();
-  now.setHours(0, 0, 0, 0);
-  const completionDate = new Date(d3);
-  completionDate.setDate(completionDate.getDate() + 14);
-  const diffDays = Math.round((completionDate - now) / 864e5);
-  if (diffDays < 0) return { dateText, deadlineText: `${Math.abs(diffDays)}d overdue`, cls: "overdue" };
-  if (diffDays === 0) return { dateText, deadlineText: "Due today", cls: "urgent" };
-  if (diffDays <= 3) return { dateText, deadlineText: `${diffDays}d left`, cls: "urgent" };
-  if (diffDays <= 7) return { dateText, deadlineText: `${diffDays}d left`, cls: "approaching" };
-  return { dateText, deadlineText: `${diffDays}d left`, cls: "ok" };
+function Gn(e, s) {
+  if (!e) return { dateText: "", deadlineText: "", cls: "na" };
+  const n = new Date(e);
+  if (isNaN(n)) return { dateText: "", deadlineText: "", cls: "na" };
+  const i = n.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+  if ((s?.urgency || "on_track") === "completed")
+    return { dateText: i, deadlineText: "", cls: "done" };
+  const r = s?.completionDaysRemaining;
+  if (r != null)
+    return r < 0 ? { dateText: i, deadlineText: `${Math.abs(r)}d overdue`, cls: "overdue" } : r === 0 ? { dateText: i, deadlineText: "Due today", cls: "urgent" } : r <= 3 ? { dateText: i, deadlineText: `${r}d left`, cls: "urgent" } : r <= 7 ? { dateText: i, deadlineText: `${r}d left`, cls: "approaching" } : { dateText: i, deadlineText: `${r}d left`, cls: "ok" };
+  const c = /* @__PURE__ */ new Date();
+  c.setHours(0, 0, 0, 0);
+  const o = new Date(n);
+  o.setDate(o.getDate() + 14);
+  const p = Math.round((o - c) / 864e5);
+  return p < 0 ? { dateText: i, deadlineText: `${Math.abs(p)}d overdue`, cls: "overdue" } : p === 0 ? { dateText: i, deadlineText: "Due today", cls: "urgent" } : p <= 3 ? { dateText: i, deadlineText: `${p}d left`, cls: "urgent" } : p <= 7 ? { dateText: i, deadlineText: `${p}d left`, cls: "approaching" } : { dateText: i, deadlineText: `${p}d left`, cls: "ok" };
 }
-function AssessmentRow({ assessment, isExpanded, onToggle, onOpenAnalyzer }) {
+function Un({ assessment: e, isExpanded: s, onToggle: n, onOpenAnalyzer: i }) {
   const {
-    patientName,
-    assessmentType,
-    ardDate,
-    pdpm,
-    assessmentClass,
-    sectionProgress,
-    udaSummary,
-    querySummary
-  } = assessment;
-  const deadlines = assessment.deadlines;
-  const urgency = deadlines?.urgency || "on_track";
-  const hideRevenue = assessmentClass === "end_of_stay";
-  const delta = hideRevenue ? null : formatPaymentDelta(pdpm?.payment, "short");
-  const ard = computeArdContext(ardDate, deadlines);
-  const sectionsDone = sectionProgress?.total > 0 && sectionProgress.completed === sectionProgress.total;
-  const pendingQueries = (querySummary?.pending || 0) + (querySummary?.sent || 0);
-  return /* @__PURE__ */ u3(
+    patientName: a,
+    assessmentType: r,
+    ardDate: c,
+    pdpm: o,
+    assessmentClass: p,
+    sectionProgress: d,
+    udaSummary: u,
+    querySummary: l
+  } = e, m = e.deadlines, h = m?.urgency || "on_track", v = p === "end_of_stay" ? null : Se(o?.payment, "short"), g = Gn(c, m), C = d?.total > 0 && d.completed === d.total, f = (l?.pending || 0) + (l?.sent || 0);
+  return /* @__PURE__ */ t(
     "div",
     {
-      class: `mds-cc__card${isExpanded ? " mds-cc__card--expanded" : ""}`,
-      style: { borderLeftColor: URGENCY_ACCENT[urgency] || "#9ca3af" },
-      onClick: onToggle,
+      class: `mds-cc__card${s ? " mds-cc__card--expanded" : ""}`,
+      style: { borderLeftColor: Fn[h] || "#9ca3af" },
+      onClick: n,
       role: "button",
       tabIndex: 0,
-      onKeyDown: (e3) => {
-        if (e3.key === "Enter" || e3.key === " ") {
-          e3.preventDefault();
-          onToggle();
-        }
+      onKeyDown: (x) => {
+        (x.key === "Enter" || x.key === " ") && (x.preventDefault(), n());
       },
       children: [
-        /* @__PURE__ */ u3("div", { class: "mds-cc__card-line1", children: [
-          /* @__PURE__ */ u3("span", { class: "mds-cc__card-name", children: patientName || "Unknown" }),
-          /* @__PURE__ */ u3("span", { class: "mds-cc__card-badges", children: [
-            /* @__PURE__ */ u3(UdaBadge, { label: "BIM", status: udaSummary?.bims }),
-            /* @__PURE__ */ u3(UdaBadge, { label: "GG", status: udaSummary?.gg }),
-            /* @__PURE__ */ u3(UdaBadge, { label: "PHQ", status: udaSummary?.phq9 }),
-            sectionProgress?.total > 0 && /* @__PURE__ */ u3("span", { class: `mds-cc__card-progress${sectionsDone ? " mds-cc__card-progress--done" : ""}`, children: [
-              /* @__PURE__ */ u3("span", { class: "mds-cc__card-progress-bar", children: /* @__PURE__ */ u3(
+        /* @__PURE__ */ t("div", { class: "mds-cc__card-line1", children: [
+          /* @__PURE__ */ t("span", { class: "mds-cc__card-name", children: a || "Unknown" }),
+          /* @__PURE__ */ t("span", { class: "mds-cc__card-badges", children: [
+            /* @__PURE__ */ t(et, { label: "BIM", status: u?.bims }),
+            /* @__PURE__ */ t(et, { label: "GG", status: u?.gg }),
+            /* @__PURE__ */ t(et, { label: "PHQ", status: u?.phq9 }),
+            d?.total > 0 && /* @__PURE__ */ t("span", { class: `mds-cc__card-progress${C ? " mds-cc__card-progress--done" : ""}`, children: [
+              /* @__PURE__ */ t("span", { class: "mds-cc__card-progress-bar", children: /* @__PURE__ */ t(
                 "span",
                 {
                   class: "mds-cc__card-progress-fill",
-                  style: { width: `${Math.round(sectionProgress.completed / sectionProgress.total * 100)}%` }
+                  style: { width: `${Math.round(d.completed / d.total * 100)}%` }
                 }
               ) }),
-              /* @__PURE__ */ u3("span", { class: "mds-cc__card-progress-text", children: [
-                sectionProgress.completed,
+              /* @__PURE__ */ t("span", { class: "mds-cc__card-progress-text", children: [
+                d.completed,
                 "/",
-                sectionProgress.total
+                d.total
               ] })
             ] }),
-            delta && /* @__PURE__ */ u3(
+            v && /* @__PURE__ */ t(
               "span",
               {
-                class: `mds-cc__card-revenue${onOpenAnalyzer ? " mds-cc__card-revenue--clickable" : ""}`,
-                onClick: onOpenAnalyzer ? (e3) => {
-                  e3.stopPropagation();
-                  onOpenAnalyzer();
+                class: `mds-cc__card-revenue${i ? " mds-cc__card-revenue--clickable" : ""}`,
+                onClick: i ? (x) => {
+                  x.stopPropagation(), i();
                 } : void 0,
-                title: onOpenAnalyzer ? "Open PDPM Analyzer" : void 0,
-                role: onOpenAnalyzer ? "button" : void 0,
-                children: delta
+                title: i ? "Open PDPM Analyzer" : void 0,
+                role: i ? "button" : void 0,
+                children: v
               }
             ),
-            pendingQueries > 0 && /* @__PURE__ */ u3("span", { class: "mds-cc__card-queries", children: [
-              pendingQueries,
+            f > 0 && /* @__PURE__ */ t("span", { class: "mds-cc__card-queries", children: [
+              f,
               "Q"
             ] }),
-            /* @__PURE__ */ u3("span", { class: `mds-cc__chevron${isExpanded ? " mds-cc__chevron--open" : ""}`, children: "\u203A" })
+            /* @__PURE__ */ t("span", { class: `mds-cc__chevron${s ? " mds-cc__chevron--open" : ""}`, children: "›" })
           ] })
         ] }),
-        /* @__PURE__ */ u3("div", { class: "mds-cc__card-line2", children: [
-          /* @__PURE__ */ u3("span", { class: "mds-cc__card-type", children: cleanAssessmentType(assessmentType) }),
-          ard.dateText && /* @__PURE__ */ u3(k, { children: [
-            /* @__PURE__ */ u3("span", { class: "mds-cc__card-meta-sep", children: "\xB7" }),
-            /* @__PURE__ */ u3("span", { class: "mds-cc__card-ard-date", children: [
+        /* @__PURE__ */ t("div", { class: "mds-cc__card-line2", children: [
+          /* @__PURE__ */ t("span", { class: "mds-cc__card-type", children: lt(r) }),
+          g.dateText && /* @__PURE__ */ t(Y, { children: [
+            /* @__PURE__ */ t("span", { class: "mds-cc__card-meta-sep", children: "·" }),
+            /* @__PURE__ */ t("span", { class: "mds-cc__card-ard-date", children: [
               "ARD ",
-              ard.dateText
+              g.dateText
             ] })
           ] }),
-          ard.deadlineText && /* @__PURE__ */ u3(k, { children: [
-            /* @__PURE__ */ u3("span", { class: "mds-cc__card-meta-sep", children: "\xB7" }),
-            /* @__PURE__ */ u3("span", { class: `mds-cc__card-ard mds-cc__card-ard--${ard.cls}`, children: ard.deadlineText })
+          g.deadlineText && /* @__PURE__ */ t(Y, { children: [
+            /* @__PURE__ */ t("span", { class: "mds-cc__card-meta-sep", children: "·" }),
+            /* @__PURE__ */ t("span", { class: `mds-cc__card-ard mds-cc__card-ard--${g.cls}`, children: g.deadlineText })
           ] })
         ] })
       ]
     }
   );
 }
-
-// content/modules/mds-command-center/hooks/useAssessmentDetail.js
-function useAssessmentDetail(externalAssessmentId) {
-  const [detailData, setDetailData] = d2(null);
-  const [loading, setLoading] = d2(false);
-  const [error, setError] = d2(null);
-  y2(() => {
-    if (!externalAssessmentId) {
-      setDetailData(null);
-      setError(null);
+function Vn(e) {
+  const [s, n] = b(null), [i, a] = b(!1), [r, c] = b(null);
+  return z(() => {
+    if (!e) {
+      n(null), c(null);
       return;
     }
-    let cancelled = false;
-    setLoading(true);
-    setError(null);
-    async function fetchDetail() {
+    let o = !1;
+    a(!0), c(null);
+    async function p() {
       try {
-        const authState = await chrome.runtime.sendMessage({ type: "GET_AUTH_STATE" });
-        if (!authState.authenticated) {
+        if (!(await chrome.runtime.sendMessage({ type: "GET_AUTH_STATE" })).authenticated)
           throw new Error("Please log in to view detail");
-        }
-        const orgResponse = getOrg();
-        const orgSlug = orgResponse?.org;
-        const facilityName = window.getChatFacilityInfo?.() || "";
-        const params = new URLSearchParams({
-          externalAssessmentId,
-          facilityName,
-          orgSlug
-        });
-        const result = await chrome.runtime.sendMessage({
+        const l = getOrg()?.org, m = window.getChatFacilityInfo?.() || "", h = new URLSearchParams({
+          externalAssessmentId: e,
+          facilityName: m,
+          orgSlug: l
+        }), _ = await chrome.runtime.sendMessage({
           type: "API_REQUEST",
-          endpoint: `/api/extension/mds/pdpm-potential?${params}`,
+          endpoint: `/api/extension/mds/pdpm-potential?${h}`,
           options: { method: "GET" }
         });
-        if (!result.success) {
-          throw new Error(result.error || "Failed to load assessment detail");
-        }
-        if (!cancelled) setDetailData(result.data);
-      } catch (err) {
-        if (!cancelled) setError(err.message || "Failed to load detail");
+        if (!_.success)
+          throw new Error(_.error || "Failed to load assessment detail");
+        o || n(_.data);
+      } catch (d) {
+        o || c(d.message || "Failed to load detail");
       } finally {
-        if (!cancelled) setLoading(false);
+        o || a(!1);
       }
     }
-    fetchDetail();
-    return () => {
-      cancelled = true;
+    return p(), () => {
+      o = !0;
     };
-  }, [externalAssessmentId]);
-  return { detailData, loading, error };
+  }, [e]), { detailData: s, loading: i, error: r };
 }
-
-// content/modules/mds-command-center/AssessmentPreview.jsx
-function ntaLevelToTier(level, payment) {
-  if (!payment?.meta?.ntaTiers) return null;
-  for (const t3 of payment.meta.ntaTiers) {
-    if ((t3.levels || []).includes(level)) return t3.tier;
-  }
+function jt(e, s) {
+  if (!s?.meta?.ntaTiers) return null;
+  for (const n of s.meta.ntaTiers)
+    if ((n.levels || []).includes(e)) return n.tier;
   return null;
 }
-function formatNtaImpact(nta, payment) {
-  if (payment?.mode === "state_rate") {
-    const curTier = ntaLevelToTier(nta.currentLevel, payment);
-    const newTier = ntaLevelToTier(nta.newLevel, payment);
-    if (curTier != null && newTier != null) return `NTA: Tier ${curTier}\u2009\u2192\u2009Tier ${newTier}`;
-    return "NTA: tier upgrade";
+function Ts(e, s) {
+  if (s?.mode === "state_rate") {
+    const n = jt(e.currentLevel, s), i = jt(e.newLevel, s);
+    return n != null && i != null ? `NTA: Tier ${n} → Tier ${i}` : "NTA: tier upgrade";
   }
-  return `NTA: ${nta.currentLevel}\u2009\u2192\u2009${nta.newLevel}`;
+  return `NTA: ${e.currentLevel} → ${e.newLevel}`;
 }
-function buildImpacts(d3, payment) {
-  const impacts = [];
-  if (d3.impact?.slp?.wouldChangeGroup)
-    impacts.push(`SLP: ${d3.impact.slp.currentGroup}\u2009\u2192\u2009${d3.impact.slp.newGroup}`);
-  if (d3.impact?.nta?.wouldChangeLevel)
-    impacts.push(formatNtaImpact(d3.impact.nta, payment));
-  if (d3.impact?.nursing?.wouldChangeGroup)
-    impacts.push(`Nursing: ${d3.impact.nursing.currentPaymentGroup}\u2009\u2192\u2009${d3.impact.nursing.newPaymentGroup}`);
-  if (d3.impact?.ptot?.wouldChangeGroup)
-    impacts.push(`PT/OT: ${d3.impact.ptot.currentGroup}\u2009\u2192\u2009${d3.impact.ptot.newGroup}`);
-  return impacts;
+function zn(e, s) {
+  const n = [];
+  return e.impact?.slp?.wouldChangeGroup && n.push(`SLP: ${e.impact.slp.currentGroup} → ${e.impact.slp.newGroup}`), e.impact?.nta?.wouldChangeLevel && n.push(Ts(e.impact.nta, s)), e.impact?.nursing?.wouldChangeGroup && n.push(`Nursing: ${e.impact.nursing.currentPaymentGroup} → ${e.impact.nursing.newPaymentGroup}`), e.impact?.ptot?.wouldChangeGroup && n.push(`PT/OT: ${e.impact.ptot.currentGroup} → ${e.impact.ptot.newGroup}`), n;
 }
-function buildQueryImpacts(q3, payment) {
-  const ci = q3.pdpmImpact?.componentImpacts;
-  if (!ci) return [];
-  const impacts = [];
-  if (ci.slp?.wouldChangeGroup)
-    impacts.push(`SLP: ${ci.slp.currentGroup}\u2009\u2192\u2009${ci.slp.newGroup}`);
-  if (ci.nta?.wouldChangeLevel)
-    impacts.push(formatNtaImpact(ci.nta, payment));
-  if (ci.nursing?.wouldChangeGroup)
-    impacts.push(`Nursing: ${ci.nursing.currentPaymentGroup}\u2009\u2192\u2009${ci.nursing.newPaymentGroup}`);
-  if (ci.ptot?.wouldChangeGroup)
-    impacts.push(`PT/OT: ${ci.ptot.currentGroup}\u2009\u2192\u2009${ci.ptot.newGroup}`);
-  return impacts;
+function jn(e, s) {
+  const n = e.pdpmImpact?.componentImpacts;
+  if (!n) return [];
+  const i = [];
+  return n.slp?.wouldChangeGroup && i.push(`SLP: ${n.slp.currentGroup} → ${n.slp.newGroup}`), n.nta?.wouldChangeLevel && i.push(Ts(n.nta, s)), n.nursing?.wouldChangeGroup && i.push(`Nursing: ${n.nursing.currentPaymentGroup} → ${n.nursing.newPaymentGroup}`), n.ptot?.wouldChangeGroup && i.push(`PT/OT: ${n.ptot.currentGroup} → ${n.ptot.newGroup}`), i;
 }
-function relativeDate(sentAt) {
-  if (!sentAt) return "not yet sent";
-  const days = Math.floor((Date.now() - new Date(sentAt)) / 864e5);
-  return days === 0 ? "sent today" : `sent ${days}d ago`;
+function Qn(e) {
+  if (!e) return "not yet sent";
+  const s = Math.floor((Date.now() - new Date(e)) / 864e5);
+  return s === 0 ? "sent today" : `sent ${s}d ago`;
 }
-function getFailedChecks(compliance) {
-  if (!compliance?.checks) {
-    if (compliance?.status === "failed" && compliance.issues?.length > 0) {
-      return compliance.issues.map((i3) => i3.message || i3);
-    }
-    return [];
-  }
-  const labels = { bims: "BIMS", phq9: "PHQ-9", gg: "GG", orders: "Orders", therapyDocs: "Therapy" };
-  const failed = [];
-  for (const [key, check] of Object.entries(compliance.checks)) {
-    if (check.status === "failed") {
-      failed.push(check.message || `${labels[key] || key} incomplete`);
-    }
-  }
-  return failed;
+function As(e) {
+  if (!e?.checks)
+    return e?.status === "failed" && e.issues?.length > 0 ? e.issues.map((i) => i.message || i) : [];
+  const s = { bims: "BIMS", phq9: "PHQ-9", gg: "GG", orders: "Orders", therapyDocs: "Therapy" }, n = [];
+  for (const [i, a] of Object.entries(e.checks))
+    a.status === "failed" && n.push(a.message || `${s[i] || i} incomplete`);
+  return n;
 }
-function SummaryStrip({ pdpm, detailData, payment, sectionProgress, compliance, isEndOfStay }) {
-  const parts = [];
-  const currentHipps = detailData?.currentHipps || pdpm?.currentHipps;
-  const potentialHipps = detailData?.potentialHipps || pdpm?.potentialHipps;
-  const hasChange = potentialHipps && potentialHipps !== currentHipps && !isEndOfStay;
-  const hasDelta = isPaymentApplicable(payment) && payment.delta > 0;
-  const delta = hasDelta ? formatPaymentDelta(payment, "short") : null;
-  if (hasChange && delta) {
-    parts.push(/* @__PURE__ */ u3("span", { class: "mds-cc__ss-part mds-cc__ss-part--revenue", children: [
-      delta,
-      " opportunity"
-    ] }));
-  } else if (hasChange) {
-    parts.push(/* @__PURE__ */ u3("span", { class: "mds-cc__ss-part", children: [
-      "HIPPS ",
-      currentHipps,
-      " ",
-      "\u2192",
-      " ",
-      potentialHipps
-    ] }));
-  }
-  if (sectionProgress?.percentComplete != null) {
-    parts.push(/* @__PURE__ */ u3("span", { class: "mds-cc__ss-part", children: [
-      "Sections ",
-      sectionProgress.percentComplete,
-      "%"
-    ] }));
-  }
-  const failedChecks = getFailedChecks(compliance);
-  const docRiskCount = detailData?.enhancedDetections?.filter(
-    (d3) => d3.solverStatus === "dont_code" && (d3.diagnosisPassed === false || d3.activeStatusPassed === false)
-  ).length || 0;
-  const issueCount = failedChecks.length + docRiskCount;
-  if (issueCount > 0) {
-    parts.push(/* @__PURE__ */ u3("span", { class: "mds-cc__ss-part mds-cc__ss-part--issues", children: [
-      "\u26A0",
-      " ",
-      issueCount,
-      " ",
-      issueCount === 1 ? "issue" : "issues"
-    ] }));
-  }
-  if (parts.length === 0) return null;
-  return /* @__PURE__ */ u3("div", { class: "mds-cc__ss", children: parts.map((p3, i3) => /* @__PURE__ */ u3(k, { children: [
-    i3 > 0 && /* @__PURE__ */ u3("span", { class: "mds-cc__ss-sep" }),
-    p3
+function Wn({ pdpm: e, detailData: s, payment: n, sectionProgress: i, compliance: a, isEndOfStay: r }) {
+  const c = [], o = s?.currentHipps || e?.currentHipps, p = s?.potentialHipps || e?.potentialHipps, d = p && p !== o && !r, l = We(n) && n.delta > 0 ? Se(n, "short") : null;
+  d && l ? c.push(/* @__PURE__ */ t("span", { class: "mds-cc__ss-part mds-cc__ss-part--revenue", children: [
+    l,
+    " opportunity"
+  ] })) : d && c.push(/* @__PURE__ */ t("span", { class: "mds-cc__ss-part", children: [
+    "HIPPS ",
+    o,
+    " ",
+    "→",
+    " ",
+    p
+  ] })), i?.percentComplete != null && c.push(/* @__PURE__ */ t("span", { class: "mds-cc__ss-part", children: [
+    "Sections ",
+    i.percentComplete,
+    "%"
+  ] }));
+  const m = As(a), h = s?.enhancedDetections?.filter(
+    (v) => v.solverStatus === "dont_code" && (v.diagnosisPassed === !1 || v.activeStatusPassed === !1)
+  ).length || 0, _ = m.length + h;
+  return _ > 0 && c.push(/* @__PURE__ */ t("span", { class: "mds-cc__ss-part mds-cc__ss-part--issues", children: [
+    "⚠",
+    " ",
+    _,
+    " ",
+    _ === 1 ? "issue" : "issues"
+  ] })), c.length === 0 ? null : /* @__PURE__ */ t("div", { class: "mds-cc__ss", children: c.map((v, g) => /* @__PURE__ */ t(Y, { children: [
+    g > 0 && /* @__PURE__ */ t("span", { class: "mds-cc__ss-sep" }),
+    v
   ] })) });
 }
-function RevenueSection({ detailData, onSelectItem }) {
-  const detections = detailData?.enhancedDetections || [];
-  const payment = detailData?.payment;
-  const drivers = detections.filter(
-    (d3) => d3.wouldChangeHipps && d3.solverStatus !== "query_sent" && d3.solverStatus !== "awaiting_response" && d3.solverStatus !== "dont_code"
+function Kn({ detailData: e, onSelectItem: s }) {
+  const n = e?.enhancedDetections || [], i = e?.payment, a = n.filter(
+    (p) => p.wouldChangeHipps && p.solverStatus !== "query_sent" && p.solverStatus !== "awaiting_response" && p.solverStatus !== "dont_code"
   );
-  if (drivers.length === 0) return null;
-  const currentHipps = detailData?.currentHipps;
-  const potentialHipps = detailData?.potentialHipps;
-  const hippsNote = potentialHipps && potentialHipps !== currentHipps ? ` (${currentHipps} \u2192 ${potentialHipps})` : "";
-  return /* @__PURE__ */ u3("div", { class: "mds-cc__ps", children: [
-    /* @__PURE__ */ u3("div", { class: "mds-cc__ps-header", children: [
-      drivers.length,
+  if (a.length === 0) return null;
+  const r = e?.currentHipps, c = e?.potentialHipps, o = c && c !== r ? ` (${r} → ${c})` : "";
+  return /* @__PURE__ */ t("div", { class: "mds-cc__ps", children: [
+    /* @__PURE__ */ t("div", { class: "mds-cc__ps-header", children: [
+      a.length,
       " ",
-      drivers.length === 1 ? "item" : "items",
+      a.length === 1 ? "item" : "items",
       " would change HIPPS",
-      hippsNote
+      o
     ] }),
-    /* @__PURE__ */ u3("div", { class: "mds-cc__ps-items", children: drivers.map((d3, i3) => {
-      const code = d3.mdsItem?.startsWith("I8000:") ? "I8000" : d3.mdsItem;
-      const impacts = buildImpacts(d3, payment);
-      return /* @__PURE__ */ u3(
+    /* @__PURE__ */ t("div", { class: "mds-cc__ps-items", children: a.map((p, d) => {
+      const u = p.mdsItem?.startsWith("I8000:") ? "I8000" : p.mdsItem, l = zn(p, i);
+      return /* @__PURE__ */ t(
         "div",
         {
           class: "mds-cc__ps-item mds-cc__ps-item--clickable",
-          onClick: () => onSelectItem(d3),
+          onClick: () => s(p),
           role: "button",
           title: "View evidence",
           children: [
-            /* @__PURE__ */ u3("div", { class: "mds-cc__ps-item-top", children: [
-              /* @__PURE__ */ u3("span", { class: "mds-cc__ps-item-name", children: d3.itemName }),
-              /* @__PURE__ */ u3("span", { class: "mds-cc__ps-item-code", children: code })
+            /* @__PURE__ */ t("div", { class: "mds-cc__ps-item-top", children: [
+              /* @__PURE__ */ t("span", { class: "mds-cc__ps-item-name", children: p.itemName }),
+              /* @__PURE__ */ t("span", { class: "mds-cc__ps-item-code", children: u })
             ] }),
-            impacts.length > 0 && /* @__PURE__ */ u3("div", { class: "mds-cc__ps-item-detail", children: [
+            l.length > 0 && /* @__PURE__ */ t("div", { class: "mds-cc__ps-item-detail", children: [
               "Would change ",
-              impacts.join(", ")
+              l.join(", ")
             ] })
           ]
         },
-        i3
+        d
       );
     }) })
   ] });
 }
-function DocRisksSection({ detailData }) {
-  const detections = detailData?.enhancedDetections || [];
-  const allRisks = detections.filter(
-    (d3) => d3.solverStatus === "dont_code" && (d3.diagnosisPassed === false || d3.activeStatusPassed === false)
+function Jn({ detailData: e }) {
+  const n = (e?.enhancedDetections || []).filter(
+    (i) => i.solverStatus === "dont_code" && (i.diagnosisPassed === !1 || i.activeStatusPassed === !1)
   );
-  if (allRisks.length === 0) return null;
-  return /* @__PURE__ */ u3("div", { class: "mds-cc__ps", children: [
-    /* @__PURE__ */ u3("div", { class: "mds-cc__ps-header mds-cc__ps-header--amber", children: [
-      allRisks.length,
+  return n.length === 0 ? null : /* @__PURE__ */ t("div", { class: "mds-cc__ps", children: [
+    /* @__PURE__ */ t("div", { class: "mds-cc__ps-header mds-cc__ps-header--amber", children: [
+      n.length,
       " documentation ",
-      allRisks.length === 1 ? "risk" : "risks"
+      n.length === 1 ? "risk" : "risks"
     ] }),
-    /* @__PURE__ */ u3("div", { class: "mds-cc__ps-items", children: allRisks.map((d3, i3) => {
-      const code = d3.mdsItem?.startsWith("I8000:") ? "I8000" : d3.mdsItem;
-      const reasons = [];
-      if (d3.diagnosisPassed === false) reasons.push("No physician diagnosis");
-      if (d3.activeStatusPassed === false) reasons.push("No active treatment order");
-      return /* @__PURE__ */ u3("div", { class: "mds-cc__ps-item", children: [
-        /* @__PURE__ */ u3("div", { class: "mds-cc__ps-item-top", children: [
-          /* @__PURE__ */ u3("span", { class: "mds-cc__ps-item-name", children: d3.itemName }),
-          /* @__PURE__ */ u3("span", { class: "mds-cc__ps-item-code", children: code })
+    /* @__PURE__ */ t("div", { class: "mds-cc__ps-items", children: n.map((i, a) => {
+      const r = i.mdsItem?.startsWith("I8000:") ? "I8000" : i.mdsItem, c = [];
+      return i.diagnosisPassed === !1 && c.push("No physician diagnosis"), i.activeStatusPassed === !1 && c.push("No active treatment order"), /* @__PURE__ */ t("div", { class: "mds-cc__ps-item", children: [
+        /* @__PURE__ */ t("div", { class: "mds-cc__ps-item-top", children: [
+          /* @__PURE__ */ t("span", { class: "mds-cc__ps-item-name", children: i.itemName }),
+          /* @__PURE__ */ t("span", { class: "mds-cc__ps-item-code", children: r })
         ] }),
-        reasons.length > 0 && /* @__PURE__ */ u3("div", { class: "mds-cc__ps-item-detail", children: reasons.join(" \xB7 ") })
-      ] }, i3);
+        c.length > 0 && /* @__PURE__ */ t("div", { class: "mds-cc__ps-item-detail", children: c.join(" · ") })
+      ] }, a);
     }) })
   ] });
 }
-function QueriesSection({ detailData, querySummary, assessmentClass }) {
-  const queries = detailData?.outstandingQueries || [];
-  const payment = detailData?.payment;
-  const pending = queries.filter(
-    (q3) => q3.status === "sent" || q3.status === "pending" || q3.status === "awaiting_response"
+function Yn({ detailData: e, querySummary: s, assessmentClass: n }) {
+  const i = e?.outstandingQueries || [], a = e?.payment, r = i.filter(
+    (d) => d.status === "sent" || d.status === "pending" || d.status === "awaiting_response"
   );
-  if (pending.length > 0) {
-    return /* @__PURE__ */ u3("div", { class: "mds-cc__ps", children: [
-      /* @__PURE__ */ u3("div", { class: "mds-cc__ps-header", children: [
-        pending.length,
+  if (r.length > 0)
+    return /* @__PURE__ */ t("div", { class: "mds-cc__ps", children: [
+      /* @__PURE__ */ t("div", { class: "mds-cc__ps-header", children: [
+        r.length,
         " pending ",
-        pending.length === 1 ? "query" : "queries"
+        r.length === 1 ? "query" : "queries"
       ] }),
-      /* @__PURE__ */ u3("div", { class: "mds-cc__ps-items", children: pending.map((q3, i3) => {
-        const impacts = buildQueryImpacts(q3, payment);
-        return /* @__PURE__ */ u3("div", { class: "mds-cc__ps-item", children: [
-          /* @__PURE__ */ u3("div", { class: "mds-cc__ps-item-top", children: [
-            /* @__PURE__ */ u3("span", { class: "mds-cc__ps-item-name", children: q3.mdsItemName }),
-            q3.mdsItem && /* @__PURE__ */ u3("span", { class: "mds-cc__ps-item-code", children: q3.mdsItem }),
-            /* @__PURE__ */ u3("span", { class: "mds-cc__ps-item-meta", children: relativeDate(q3.sentAt) })
+      /* @__PURE__ */ t("div", { class: "mds-cc__ps-items", children: r.map((d, u) => {
+        const l = jn(d, a);
+        return /* @__PURE__ */ t("div", { class: "mds-cc__ps-item", children: [
+          /* @__PURE__ */ t("div", { class: "mds-cc__ps-item-top", children: [
+            /* @__PURE__ */ t("span", { class: "mds-cc__ps-item-name", children: d.mdsItemName }),
+            d.mdsItem && /* @__PURE__ */ t("span", { class: "mds-cc__ps-item-code", children: d.mdsItem }),
+            /* @__PURE__ */ t("span", { class: "mds-cc__ps-item-meta", children: Qn(d.sentAt) })
           ] }),
-          impacts.length > 0 && /* @__PURE__ */ u3("div", { class: "mds-cc__ps-item-detail", children: [
+          l.length > 0 && /* @__PURE__ */ t("div", { class: "mds-cc__ps-item-detail", children: [
             "Would change ",
-            impacts.join(", ")
+            l.join(", ")
           ] })
-        ] }, i3);
+        ] }, u);
       }) })
     ] });
-  }
-  if (assessmentClass !== "pps_payment" || !querySummary) return null;
-  const { pending: pendCount = 0, sent = 0 } = querySummary;
-  if (pendCount === 0 && sent === 0) return null;
-  const parts = [];
-  if (pendCount > 0) parts.push(`${pendCount} pending`);
-  if (sent > 0) parts.push(`${sent} sent, awaiting response`);
-  return /* @__PURE__ */ u3("div", { class: "mds-cc__ps", children: [
-    /* @__PURE__ */ u3("div", { class: "mds-cc__ps-header", children: "Outstanding queries" }),
-    /* @__PURE__ */ u3("div", { class: "mds-cc__ps-item-detail", style: { paddingLeft: "0" }, children: parts.join(" \xB7 ") })
+  if (n !== "pps_payment" || !s) return null;
+  const { pending: c = 0, sent: o = 0 } = s;
+  if (c === 0 && o === 0) return null;
+  const p = [];
+  return c > 0 && p.push(`${c} pending`), o > 0 && p.push(`${o} sent, awaiting response`), /* @__PURE__ */ t("div", { class: "mds-cc__ps", children: [
+    /* @__PURE__ */ t("div", { class: "mds-cc__ps-header", children: "Outstanding queries" }),
+    /* @__PURE__ */ t("div", { class: "mds-cc__ps-item-detail", style: { paddingLeft: "0" }, children: p.join(" · ") })
   ] });
 }
-function ComplianceIssues({ compliance }) {
-  const failed = getFailedChecks(compliance);
-  if (failed.length === 0) return null;
-  return /* @__PURE__ */ u3("div", { class: "mds-cc__ps", children: [
-    /* @__PURE__ */ u3("div", { class: "mds-cc__ps-header mds-cc__ps-header--amber", children: [
-      failed.length,
+function Zn({ compliance: e }) {
+  const s = As(e);
+  return s.length === 0 ? null : /* @__PURE__ */ t("div", { class: "mds-cc__ps", children: [
+    /* @__PURE__ */ t("div", { class: "mds-cc__ps-header mds-cc__ps-header--amber", children: [
+      s.length,
       " compliance ",
-      failed.length === 1 ? "issue" : "issues"
+      s.length === 1 ? "issue" : "issues"
     ] }),
-    /* @__PURE__ */ u3("div", { class: "mds-cc__ps-item-detail", style: { paddingLeft: "0" }, children: failed.join(" \xB7 ") })
+    /* @__PURE__ */ t("div", { class: "mds-cc__ps-item-detail", style: { paddingLeft: "0" }, children: s.join(" · ") })
   ] });
 }
-function DetailLoading() {
-  return /* @__PURE__ */ u3("div", { class: "mds-cc__prev-detail-loading", children: [
-    /* @__PURE__ */ u3("div", { class: "mds-cc__spinner mds-cc__spinner--sm" }),
-    /* @__PURE__ */ u3("span", { children: "Loading assessment detail..." })
+function Xn() {
+  return /* @__PURE__ */ t("div", { class: "mds-cc__prev-detail-loading", children: [
+    /* @__PURE__ */ t("div", { class: "mds-cc__spinner mds-cc__spinner--sm" }),
+    /* @__PURE__ */ t("span", { children: "Loading assessment detail..." })
   ] });
 }
-function DetailError({ message }) {
-  return /* @__PURE__ */ u3("div", { class: "mds-cc__prev-detail-error", children: /* @__PURE__ */ u3("span", { children: [
-    "\u26A0",
+function ei({ message: e }) {
+  return /* @__PURE__ */ t("div", { class: "mds-cc__prev-detail-error", children: /* @__PURE__ */ t("span", { children: [
+    "⚠",
     " ",
-    message
+    e
   ] }) });
 }
-function AssessmentPreview({ assessment, onOpenAnalyzer, onSelectItem }) {
-  const { pdpm, sectionProgress, compliance, querySummary } = assessment;
-  const assessmentId = assessment.externalAssessmentId || assessment.assessmentId;
-  const isEndOfStay = assessment.assessmentClass === "end_of_stay";
-  const { detailData, loading: detailLoading, error: detailError } = useAssessmentDetail(assessmentId);
-  const detailPayment = detailData?.payment || pdpm?.payment;
-  return /* @__PURE__ */ u3("div", { class: "mds-cc__preview", onClick: (e3) => e3.stopPropagation(), children: [
-    /* @__PURE__ */ u3(
-      SummaryStrip,
+function ti({ assessment: e, onOpenAnalyzer: s, onSelectItem: n }) {
+  const { pdpm: i, sectionProgress: a, compliance: r, querySummary: c } = e, o = e.externalAssessmentId || e.assessmentId, p = e.assessmentClass === "end_of_stay", { detailData: d, loading: u, error: l } = Vn(o), m = d?.payment || i?.payment;
+  return /* @__PURE__ */ t("div", { class: "mds-cc__preview", onClick: (h) => h.stopPropagation(), children: [
+    /* @__PURE__ */ t(
+      Wn,
       {
-        pdpm,
-        detailData,
-        payment: detailPayment,
-        sectionProgress,
-        compliance,
-        isEndOfStay
+        pdpm: i,
+        detailData: d,
+        payment: m,
+        sectionProgress: a,
+        compliance: r,
+        isEndOfStay: p
       }
     ),
-    detailLoading && /* @__PURE__ */ u3(DetailLoading, {}),
-    !detailLoading && detailError && /* @__PURE__ */ u3(DetailError, { message: detailError }),
-    !detailLoading && detailData && /* @__PURE__ */ u3(k, { children: [
-      /* @__PURE__ */ u3(RevenueSection, { detailData, onSelectItem }),
-      /* @__PURE__ */ u3(DocRisksSection, { detailData })
+    u && /* @__PURE__ */ t(Xn, {}),
+    !u && l && /* @__PURE__ */ t(ei, { message: l }),
+    !u && d && /* @__PURE__ */ t(Y, { children: [
+      /* @__PURE__ */ t(Kn, { detailData: d, onSelectItem: n }),
+      /* @__PURE__ */ t(Jn, { detailData: d })
     ] }),
-    /* @__PURE__ */ u3(
-      QueriesSection,
+    /* @__PURE__ */ t(
+      Yn,
       {
-        detailData: detailLoading ? null : detailData,
-        querySummary,
-        assessmentClass: assessment.assessmentClass
+        detailData: u ? null : d,
+        querySummary: c,
+        assessmentClass: e.assessmentClass
       }
     ),
-    /* @__PURE__ */ u3(ComplianceIssues, { compliance }),
-    /* @__PURE__ */ u3("div", { class: "mds-cc__prev-actions", children: [
-      /* @__PURE__ */ u3("button", { class: "mds-cc__action-btn mds-cc__action-btn--primary", onClick: onOpenAnalyzer, children: "Open Full Analyzer" }),
-      assessmentId && /* @__PURE__ */ u3(
+    /* @__PURE__ */ t(Zn, { compliance: r }),
+    /* @__PURE__ */ t("div", { class: "mds-cc__prev-actions", children: [
+      /* @__PURE__ */ t("button", { class: "mds-cc__action-btn mds-cc__action-btn--primary", onClick: s, children: "Open Full Analyzer" }),
+      o && /* @__PURE__ */ t(
         "button",
         {
           class: "mds-cc__action-btn mds-cc__action-btn--secondary",
           onClick: () => {
             try {
               sessionStorage.setItem("super_cc_restore", JSON.stringify({
-                expandedId: assessmentId,
-                openAnalyzer: true,
+                expandedId: o,
+                openAnalyzer: !0,
                 analyzerMode: "panel",
                 timestamp: Date.now()
               }));
-            } catch (_2) {
+            } catch {
             }
-            location.href = `${location.origin}/clinical/mds3/sectionlisting.xhtml?ESOLassessid=${assessmentId}`;
+            location.href = `${location.origin}/clinical/mds3/sectionlisting.xhtml?ESOLassessid=${o}`;
           },
           children: [
             "Go to MDS ",
-            "\u2197"
+            "↗"
           ]
         }
       )
     ] })
   ] });
 }
-
-// content/modules/pdpm-analyzer/hooks/useItemDetail.js
-function useItemDetail(mdsItem, categoryKey, context) {
-  const [data, setData] = d2(null);
-  const [loading, setLoading] = d2(false);
-  const [error, setError] = d2(null);
-  y2(() => {
-    if (!mdsItem || !context?.assessmentId) return;
-    let cancelled = false;
-    setData(null);
-    setError(null);
-    setLoading(true);
-    async function fetchDetail() {
+function Ms(e, s, n) {
+  const [i, a] = b(null), [r, c] = b(!1), [o, p] = b(null);
+  return z(() => {
+    if (!e || !n?.assessmentId) return;
+    let d = !1;
+    a(null), p(null), c(!0);
+    async function u() {
       try {
-        const orgResponse = getOrg();
-        const orgSlug = orgResponse?.org;
-        const facilityName = window.getChatFacilityInfo?.() || "";
-        if (!orgSlug || !facilityName) {
+        const m = getOrg()?.org, h = window.getChatFacilityInfo?.() || "";
+        if (!m || !h)
           throw new Error("Could not determine organization or facility");
-        }
-        const apiCode = mdsItem.includes(":") ? mdsItem.split(":")[0] : mdsItem;
-        let endpoint = `/api/extension/mds/items/${encodeURIComponent(apiCode)}?externalAssessmentId=${context.assessmentId}&facilityName=${encodeURIComponent(facilityName)}&orgSlug=${encodeURIComponent(orgSlug)}`;
-        if (categoryKey) endpoint += `&categoryKey=${encodeURIComponent(categoryKey)}`;
-        chrome.runtime.sendMessage({ type: "API_REQUEST", endpoint }, (resp) => {
-          if (cancelled) return;
-          if (resp?.success) setData(resp.data);
-          else setError(resp?.error || "Failed to load item detail");
-          setLoading(false);
+        const _ = e.includes(":") ? e.split(":")[0] : e;
+        let v = `/api/extension/mds/items/${encodeURIComponent(_)}?externalAssessmentId=${n.assessmentId}&facilityName=${encodeURIComponent(h)}&orgSlug=${encodeURIComponent(m)}`;
+        s && (v += `&categoryKey=${encodeURIComponent(s)}`), chrome.runtime.sendMessage({ type: "API_REQUEST", endpoint: v }, (g) => {
+          d || (g?.success ? a(g.data) : p(g?.error || "Failed to load item detail"), c(!1));
         });
-      } catch (err) {
-        if (!cancelled) {
-          setError(err.message || "Failed to load item detail");
-          setLoading(false);
-        }
+      } catch (l) {
+        d || (p(l.message || "Failed to load item detail"), c(!1));
       }
     }
-    fetchDetail();
-    return () => {
-      cancelled = true;
+    return u(), () => {
+      d = !0;
     };
-  }, [mdsItem, categoryKey, context?.assessmentId]);
-  return { data, loading, error };
+  }, [e, s, n?.assessmentId]), { data: i, loading: r, error: o };
 }
-
-// content/utils/evidence-helpers.js
-function inferSourceType(displayName, evidenceId) {
-  if (evidenceId) {
-    if (evidenceId.startsWith("order-")) return "order";
-    if (evidenceId.startsWith("mar-")) return "mar";
-    if (evidenceId.startsWith("lab-")) return "lab-result";
+function vt(e, s) {
+  if (s) {
+    if (s.startsWith("order-")) return "order";
+    if (s.startsWith("mar-")) return "mar";
+    if (s.startsWith("lab-")) return "lab-result";
   }
-  if (!displayName) return "document";
-  const lower = displayName.toLowerCase();
-  if (lower.includes("dc_summary") || lower.includes("discharge")) return "progress-note";
-  if (lower.includes("lab")) return "lab-result";
-  if (lower.includes("order")) return "order";
-  if (lower.includes("mar")) return "mar";
-  if (lower.includes("vital")) return "vital-signs";
-  if (lower.includes("nursing")) return "nursing-note";
-  if (lower.includes("history") || lower.includes("h&p") || lower.includes("physical")) return "progress-note";
-  if (lower.includes("eval") || lower.includes("st ") || lower.includes("slp")) return "progress-note";
-  return "document";
+  if (!e) return "document";
+  const n = e.toLowerCase();
+  return n.includes("dc_summary") || n.includes("discharge") ? "progress-note" : n.includes("lab") ? "lab-result" : n.includes("order") ? "order" : n.includes("mar") ? "mar" : n.includes("vital") ? "vital-signs" : n.includes("nursing") ? "nursing-note" : n.includes("history") || n.includes("h&p") || n.includes("physical") || n.includes("eval") || n.includes("st ") || n.includes("slp") ? "progress-note" : "document";
 }
-var SOURCE_LABELS = {
-  "order": "Order",
-  "mar": "MAR",
+const bt = {
+  order: "Order",
+  mar: "MAR",
   "lab-result": "Lab",
   "progress-note": "Progress Note",
   "nursing-note": "Nursing Note",
   "vital-signs": "Vitals",
   "therapy-doc": "Therapy Doc",
-  "document": "Document"
+  document: "Document"
 };
-function parseViewer(ev) {
-  const sourceType = ev.sourceType || "";
-  const sourceId = ev.sourceId || ev.id || "";
-  const evType = ev.type || "";
-  const evidenceId = ev.evidenceId || sourceId;
-  if (sourceType === "progress-note" && sourceId) return { viewerType: "clinical-note", id: sourceId };
-  if (sourceType === "therapy-doc" && sourceId) return { viewerType: "therapy-document", id: sourceId };
-  if (sourceType === "document" && sourceId) return { viewerType: "document", id: sourceId };
-  if (evType === "clinical_note" && sourceId) {
-    return { viewerType: "clinical-note", id: sourceId.replace(/^pcc-prognote-/, "").replace(/^patient-practnote-/, "") };
-  }
-  if (evType === "therapy_document" && sourceId) {
-    return { viewerType: "therapy-document", id: sourceId.replace(/^therapy-doc-/, "") };
-  }
-  if (evType === "document" && sourceId) return { viewerType: "document", id: sourceId };
-  if (evidenceId) {
-    if (evidenceId.startsWith("therapy-doc-")) return { viewerType: "therapy-document", id: evidenceId.replace("therapy-doc-", "") };
-    if (evidenceId.startsWith("pcc-prognote-")) return { viewerType: "clinical-note", id: evidenceId.replace("pcc-prognote-", "") };
-    if (evidenceId.startsWith("patient-practnote-")) return { viewerType: "clinical-note", id: evidenceId.replace("patient-practnote-", "") };
-    if (evidenceId.includes("-chunk-")) return { viewerType: "document", id: evidenceId.split("-chunk-")[0] };
+function re(e) {
+  const s = e.sourceType || "", n = e.sourceId || e.id || "", i = e.type || "", a = e.evidenceId || n;
+  if (n && n.includes("-chunk-"))
+    return { viewerType: "document", id: n.split("-chunk-")[0], chunk: parseInt(n.split("-chunk-")[1], 10) };
+  if (s === "progress-note" && n) return { viewerType: "clinical-note", id: n };
+  if (s === "therapy-doc" && n) return { viewerType: "therapy-document", id: n };
+  if (s === "document" && n) return { viewerType: "document", id: n };
+  if (i === "clinical_note" && n)
+    return { viewerType: "clinical-note", id: n.replace(/^pcc-prognote-/, "").replace(/^patient-practnote-/, "") };
+  if (i === "therapy_document" && n)
+    return { viewerType: "therapy-document", id: n.replace(/^therapy-doc-/, "") };
+  if (i === "document" && n) return { viewerType: "document", id: n };
+  if (i === "order" && n) return { viewerType: "order", id: n };
+  if (a) {
+    if (a.startsWith("therapy-doc-")) return { viewerType: "therapy-document", id: a.replace("therapy-doc-", "") };
+    if (a.startsWith("pcc-prognote-")) return { viewerType: "clinical-note", id: a.replace("pcc-prognote-", "") };
+    if (a.startsWith("patient-practnote-")) return { viewerType: "clinical-note", id: a.replace("patient-practnote-", "") };
+    if (a.includes("-chunk-")) return { viewerType: "document", id: a.split("-chunk-")[0], chunk: parseInt(a.split("-chunk-")[1], 10) };
   }
   return { viewerType: null, id: null };
 }
-function openEvidence(ev) {
-  const viewer = parseViewer(ev);
-  const quote = ev.quoteText || ev.quote || ev.snippet || "";
-  if (viewer.viewerType === "clinical-note" && viewer.id) {
-    return window.showClinicalNoteModal?.(viewer.id);
-  }
-  if (viewer.viewerType === "therapy-document" && viewer.id) {
-    return window.showTherapyDocModal?.(viewer.id, quote);
-  }
-  if (viewer.viewerType === "document" && viewer.id) {
-    return window.showDocumentModal?.(viewer.id, ev.wordBlocks || []);
-  }
-  const orderId = ev.sourceId || ev.evidenceId || "";
-  if ((ev.sourceType === "order" || orderId.startsWith("order-")) && window.showAdministrationModal) {
-    return window.showAdministrationModal(orderId.replace(/^order-/, ""));
-  }
-  window.SuperDocViewer?.open(ev);
+function si(e) {
+  const s = re(e), n = e.quoteText || e.quote || e.snippet || "";
+  if (s.viewerType === "clinical-note" && s.id)
+    return window.showClinicalNoteModal?.(s.id);
+  if (s.viewerType === "therapy-document" && s.id)
+    return window.showTherapyDocModal?.(s.id, n);
+  if (s.viewerType === "document" && s.id)
+    return window.showDocumentModal?.(s.id, e.wordBlocks || []);
+  const i = e.sourceId || e.evidenceId || "";
+  if ((e.sourceType === "order" || i.startsWith("order-")) && window.showAdministrationModal)
+    return window.showAdministrationModal(i.replace(/^order-/, ""));
+  window.SuperDocViewer?.open(e);
 }
-function getActionText(ev) {
-  const viewer = parseViewer(ev);
-  if (ev.sourceType === "order" || (ev.evidenceId || "").startsWith("order-")) return "View Administrations";
-  if (viewer.viewerType === "therapy-document") return "View Document";
-  if (viewer.viewerType === "clinical-note") return "View Note";
-  if (viewer.viewerType === "document") return "View PDF";
-  return null;
+function ni(e) {
+  const s = re(e);
+  return e.sourceType === "order" || (e.evidenceId || "").startsWith("order-") ? "View Administrations" : s.viewerType === "therapy-document" ? "View Document" : s.viewerType === "clinical-note" ? "View Note" : s.viewerType === "document" ? "View PDF" : null;
 }
-
-// content/components/ItemDetail.jsx
-var CheckIcon = () => /* @__PURE__ */ u3("svg", { class: "sid__step-icon sid__step-icon--pass", viewBox: "0 0 20 20", fill: "currentColor", width: "18", height: "18", children: /* @__PURE__ */ u3("path", { "fill-rule": "evenodd", d: "M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z", "clip-rule": "evenodd" }) });
-var XIcon = () => /* @__PURE__ */ u3("svg", { class: "sid__step-icon sid__step-icon--fail", viewBox: "0 0 20 20", fill: "currentColor", width: "18", height: "18", children: /* @__PURE__ */ u3("path", { "fill-rule": "evenodd", d: "M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z", "clip-rule": "evenodd" }) });
-var ArrowIcon = () => /* @__PURE__ */ u3("svg", { width: "12", height: "12", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": "2", "stroke-linecap": "round", "stroke-linejoin": "round", children: /* @__PURE__ */ u3("path", { d: "M5 12h14M12 5l7 7-7 7" }) });
-function EvidenceCard({ ev, index, onViewSource }) {
-  const quote = ev.quoteText || ev.orderDescription || ev.quote || ev.snippet || ev.text || "";
-  if (!quote && !ev.rationale) return null;
-  const sourceType = ev.sourceType || inferSourceType(ev.displayName, ev.evidenceId);
-  const typeLabel = ev.displayName || SOURCE_LABELS[sourceType] || sourceType;
-  const actionText = getActionText(ev);
-  const isClickable = !!actionText;
-  const handleClick = isClickable ? () => {
-    if (onViewSource) {
-      const viewer = parseViewer(ev);
-      const isOrder = ev.sourceType === "order" || (ev.evidenceId || "").startsWith("order-");
-      const vt = viewer.viewerType;
-      if (vt === "document" || vt === "clinical-note" || vt === "therapy-document" || isOrder) {
-        onViewSource(ev, index);
-        return;
-      }
-    }
-    openEvidence(ev);
-  } : void 0;
-  return /* @__PURE__ */ u3(
+const Qt = () => /* @__PURE__ */ t("svg", { class: "sid__step-icon sid__step-icon--pass", viewBox: "0 0 20 20", fill: "currentColor", width: "18", height: "18", children: /* @__PURE__ */ t("path", { "fill-rule": "evenodd", d: "M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z", "clip-rule": "evenodd" }) }), Wt = () => /* @__PURE__ */ t("svg", { class: "sid__step-icon sid__step-icon--fail", viewBox: "0 0 20 20", fill: "currentColor", width: "18", height: "18", children: /* @__PURE__ */ t("path", { "fill-rule": "evenodd", d: "M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z", "clip-rule": "evenodd" }) }), Ls = () => /* @__PURE__ */ t("svg", { width: "12", height: "12", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": "2", "stroke-linecap": "round", "stroke-linejoin": "round", children: /* @__PURE__ */ t("path", { d: "M5 12h14M12 5l7 7-7 7" }) });
+function Kt(e) {
+  const s = e.sourceType || e.type || "", n = e.evidenceId || e.sourceId || "";
+  return s === "order" || s === "mar" || s === "medication" || n.startsWith("order-") || n.startsWith("admin-") || n.startsWith("mar-") ? "orders" : s === "progress-note" || s === "nursing-note" || s === "clinical_note" || e.type === "clinical_note" || n.startsWith("pcc-prognote-") || n.startsWith("patient-practnote-") ? "notes" : s === "document" || s === "therapy-doc" || e.type === "document" || e.type === "therapy_document" || n.startsWith("therapy-doc-") || n.includes("-chunk-") ? "documents" : s ? "other" : "documents";
+}
+const ii = { orders: "Orders", notes: "Notes", documents: "Documents", other: "Other" };
+function ai({ fall: e }) {
+  const s = e.incidentDate ? new Date(e.incidentDate).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }) : "";
+  let n = "No injury", i = "";
+  return e.hasMajorInjury ? (n = "Major injury", i = "super-fall__injury--major", e.injuryTypes?.length && (n += `: ${e.injuryTypes.join(", ")}`)) : e.hasInjury && (n = "Minor injury", i = "super-fall__injury--minor", e.injuryTypes?.length && (n += `: ${e.injuryTypes.join(", ")}`)), /* @__PURE__ */ t("div", { class: "super-fall-row", onClick: () => {
+    e.incidentId && window.showIncidentDetailModal && window.showIncidentDetailModal(e.incidentId);
+  }, role: "button", children: [
+    /* @__PURE__ */ t("div", { class: "super-fall__header", children: [
+      /* @__PURE__ */ t("span", { class: "super-fall__date", children: s }),
+      /* @__PURE__ */ t("span", { class: "super-fall__type", children: e.incidentType || "Fall" })
+    ] }),
+    e.residentName && /* @__PURE__ */ t("div", { class: "super-fall__resident", children: e.residentName }),
+    /* @__PURE__ */ t("div", { class: `super-fall__injury ${i}`, children: n }),
+    e.incidentId && /* @__PURE__ */ t("div", { class: "super-fall__action", children: [
+      /* @__PURE__ */ t("span", { children: "View Incident" }),
+      /* @__PURE__ */ t(Ls, {})
+    ] })
+  ] });
+}
+function ri({ ev: e, index: s, onViewSource: n }) {
+  const i = e.quoteText || e.orderDescription || e.quote || e.snippet || e.text || "";
+  if (!i && !e.rationale) return null;
+  const a = e.sourceType || vt(e.displayName, e.evidenceId), r = e.displayName || bt[a] || a, c = ni(e), o = !!c;
+  return /* @__PURE__ */ t(
     "div",
     {
-      class: `sid__ev-card${isClickable ? " sid__ev-card--clickable" : ""}`,
-      onClick: handleClick,
-      role: isClickable ? "button" : void 0,
+      class: `sid__ev-card${o ? " sid__ev-card--clickable" : ""}`,
+      onClick: o ? () => {
+        if (n) {
+          const d = re(e), u = e.sourceType === "order" || (e.evidenceId || "").startsWith("order-"), l = d.viewerType;
+          if (l === "document" || l === "clinical-note" || l === "therapy-document" || u) {
+            n(e, s);
+            return;
+          }
+        }
+        si(e);
+      } : void 0,
+      role: o ? "button" : void 0,
       children: [
-        /* @__PURE__ */ u3("div", { class: "sid__ev-header", children: /* @__PURE__ */ u3("span", { class: `sid__ev-type sid__ev-type--${sourceType}`, children: typeLabel }) }),
-        quote && /* @__PURE__ */ u3("div", { class: "sid__ev-quote", children: quote }),
-        ev.rationale && /* @__PURE__ */ u3("div", { class: "sid__ev-rationale", children: ev.rationale }),
-        isClickable && /* @__PURE__ */ u3("div", { class: "sid__ev-action", children: [
-          /* @__PURE__ */ u3("span", { children: actionText }),
-          /* @__PURE__ */ u3(ArrowIcon, {})
+        /* @__PURE__ */ t("div", { class: "sid__ev-header", children: /* @__PURE__ */ t("span", { class: `sid__ev-type sid__ev-type--${a}`, children: r }) }),
+        i && /* @__PURE__ */ t("div", { class: "sid__ev-quote", children: i }),
+        e.rationale && /* @__PURE__ */ t("div", { class: "sid__ev-rationale", children: e.rationale }),
+        o && /* @__PURE__ */ t("div", { class: "sid__ev-action", children: [
+          /* @__PURE__ */ t("span", { children: c }),
+          /* @__PURE__ */ t(Ls, {})
         ] })
       ]
     }
   );
 }
-function ImpactChip({ label, impact }) {
-  if (!impact) return null;
-  if (!impact.wouldChangeGroup && !impact.wouldChangeLevel) return null;
-  const from = impact.currentGroup || impact.currentLevel || impact.currentPaymentGroup;
-  const to = impact.newGroup || impact.newLevel || impact.newPaymentGroup;
-  return /* @__PURE__ */ u3("span", { class: "sid__impact", children: [
-    label,
+function Ae({ label: e, impact: s }) {
+  if (!s || !s.wouldChangeGroup && !s.wouldChangeLevel) return null;
+  const n = s.currentGroup || s.currentLevel || s.currentPaymentGroup, i = s.newGroup || s.newLevel || s.newPaymentGroup;
+  return /* @__PURE__ */ t("span", { class: "sid__impact", children: [
+    e,
     " ",
-    /* @__PURE__ */ u3("span", { class: "sid__impact-from", children: from }),
-    " \u2192 ",
-    /* @__PURE__ */ u3("span", { class: "sid__impact-to", children: to })
+    /* @__PURE__ */ t("span", { class: "sid__impact-from", children: n }),
+    " → ",
+    /* @__PURE__ */ t("span", { class: "sid__impact-to", children: i })
   ] });
 }
-function ValidationSteps({ diagnosisSummary, treatmentSummary, validation }) {
-  const diagPassed = validation?.diagnosisCheck?.passed ?? validation?.diagnosisPassed;
-  const treatPassed = validation?.treatmentCheck?.passed ?? validation?.activeStatusPassed;
-  return /* @__PURE__ */ u3("div", { class: "sid__steps", children: [
-    /* @__PURE__ */ u3("div", { class: `sid__step ${diagPassed ? "sid__step--pass" : "sid__step--fail"}`, children: [
-      diagPassed ? /* @__PURE__ */ u3(CheckIcon, {}) : /* @__PURE__ */ u3(XIcon, {}),
-      /* @__PURE__ */ u3("div", { class: "sid__step-content", children: [
-        /* @__PURE__ */ u3("div", { class: "sid__step-label", children: "Diagnosis" }),
-        diagnosisSummary && /* @__PURE__ */ u3("div", { class: "sid__step-summary", children: diagnosisSummary })
+function oi({ diagnosisSummary: e, treatmentSummary: s, validation: n }) {
+  const i = n?.diagnosisCheck?.passed ?? n?.diagnosisPassed, a = n?.treatmentCheck?.passed ?? n?.activeStatusPassed;
+  return /* @__PURE__ */ t("div", { class: "sid__steps", children: [
+    /* @__PURE__ */ t("div", { class: `sid__step ${i ? "sid__step--pass" : "sid__step--fail"}`, children: [
+      i ? /* @__PURE__ */ t(Qt, {}) : /* @__PURE__ */ t(Wt, {}),
+      /* @__PURE__ */ t("div", { class: "sid__step-content", children: [
+        /* @__PURE__ */ t("div", { class: "sid__step-label", children: "Diagnosis" }),
+        e && /* @__PURE__ */ t("div", { class: "sid__step-summary", children: e })
       ] })
     ] }),
-    /* @__PURE__ */ u3("div", { class: `sid__step ${treatPassed ? "sid__step--pass" : "sid__step--fail"}`, children: [
-      treatPassed ? /* @__PURE__ */ u3(CheckIcon, {}) : /* @__PURE__ */ u3(XIcon, {}),
-      /* @__PURE__ */ u3("div", { class: "sid__step-content", children: [
-        /* @__PURE__ */ u3("div", { class: "sid__step-label", children: "Treatment" }),
-        treatmentSummary && /* @__PURE__ */ u3("div", { class: "sid__step-summary", children: treatmentSummary })
+    /* @__PURE__ */ t("div", { class: `sid__step ${a ? "sid__step--pass" : "sid__step--fail"}`, children: [
+      a ? /* @__PURE__ */ t(Qt, {}) : /* @__PURE__ */ t(Wt, {}),
+      /* @__PURE__ */ t("div", { class: "sid__step-content", children: [
+        /* @__PURE__ */ t("div", { class: "sid__step-label", children: "Treatment" }),
+        s && /* @__PURE__ */ t("div", { class: "sid__step-summary", children: s })
       ] })
     ] })
   ] });
 }
-function RationaleBlock({ rationale }) {
-  if (!rationale) return null;
-  return /* @__PURE__ */ u3("div", { class: "sid__rationale", children: [
-    /* @__PURE__ */ u3("div", { class: "sid__rationale-label", children: "Rationale" }),
-    rationale
-  ] });
+function ci({ rationale: e }) {
+  return e ? /* @__PURE__ */ t("div", { class: "sid__rationale", children: [
+    /* @__PURE__ */ t("div", { class: "sid__rationale-label", children: "Rationale" }),
+    e
+  ] }) : null;
 }
-function ItemDetail({ variant = "compact", data, detectionItem, mdsItem, onViewSource, onDismiss, dismissing, assessmentId }) {
-  const isFull = variant === "full";
-  const apiItem = data?.item;
-  const isColumnBased = !!apiItem?.columns;
-  const isDiag = apiItem && !isColumnBased;
-  const hasSectionISteps = !!(data?.diagnosisSummary || data?.treatmentSummary);
-  let status = apiItem?.status;
-  if (!status && isColumnBased) {
-    const hasYes = Object.values(apiItem.columns || {}).some((c3) => c3?.answer?.toLowerCase() === "yes");
-    status = hasYes ? "code" : "dont_code";
-  }
-  const needsQuery = status === "needs_physician_query";
-  const shouldCode = status === "code" || status === "recommend_coding";
-  const verdictDotClass = needsQuery ? "sid__verdict-dot--query" : shouldCode ? "sid__verdict-dot--code" : "sid__verdict-dot--no-code";
-  const verdictLabel = needsQuery ? "Needs Query" : shouldCode ? "Recommend Coding" : status?.replace(/_/g, " ") || "Don't Code";
-  const diagEvidence = apiItem?.evidence || apiItem?.queryEvidence || [];
-  const colEvidence = [];
-  if (isColumnBased) {
-    const seen = /* @__PURE__ */ new Set();
-    for (const col of Object.values(apiItem.columns || {})) {
-      if (col?.evidence) col.evidence.forEach((ev) => {
-        const k3 = ev.sourceId || ev.quote || JSON.stringify(ev);
-        if (!seen.has(k3)) {
-          seen.add(k3);
-          colEvidence.push(ev);
-        }
-      });
-    }
-  }
-  const evidence = isDiag ? diagEvidence : colEvidence;
-  const [showAllEv, setShowAllEv] = d2(false);
-  const visibleEvidence = showAllEv ? evidence : evidence.slice(0, 4);
-  const keyFindings = apiItem?.keyFindings || [];
-  const [findingsOpen, setFindingsOpen] = d2(isFull);
-  const impact = detectionItem?.impact;
-  const hasImpact = impact && (impact.slp || impact.nta || impact.nursing || impact.ptot);
-  const columns = apiItem?.columns || {};
-  const colKeys = Object.keys(columns);
-  const [activeCol, setActiveCol] = d2(colKeys[0] || "A");
-  const activeColData = columns[activeCol];
-  const subItems = apiItem?.subItems || [];
-  const [dismissMode, setDismissMode] = d2(false);
-  const [dismissReason, setDismissReason] = d2("");
-  const displayCode = mdsItem?.startsWith("I8000:") ? "I8000" : mdsItem;
-  return /* @__PURE__ */ u3(k, { children: [
-    /* @__PURE__ */ u3("div", { class: "sid__verdict", children: [
-      /* @__PURE__ */ u3("span", { class: `sid__verdict-dot ${verdictDotClass}` }),
-      /* @__PURE__ */ u3("span", { class: "sid__verdict-text", children: verdictLabel })
-    ] }),
-    hasSectionISteps && /* @__PURE__ */ u3(
-      ValidationSteps,
+function di({ carePlan: e }) {
+  if (!e) return null;
+  const [s, n] = b(!1), i = e.onCarePlan, a = e.items || [];
+  return /* @__PURE__ */ t("div", { class: "sid__careplan", children: [
+    /* @__PURE__ */ t(
+      "button",
       {
-        diagnosisSummary: data.diagnosisSummary,
-        treatmentSummary: data.treatmentSummary,
-        validation: apiItem?.validation
+        class: "sid__careplan-toggle",
+        type: "button",
+        onClick: () => a.length > 0 && n(!s),
+        children: [
+          /* @__PURE__ */ t("span", { class: `sid__careplan-dot ${i ? "sid__careplan-dot--on" : "sid__careplan-dot--off"}` }),
+          /* @__PURE__ */ t("span", { class: "sid__careplan-title", children: "Care Plan" }),
+          /* @__PURE__ */ t("span", { class: "sid__careplan-status", children: i ? "On Care Plan" : "Not on Care Plan" }),
+          a.length > 0 && /* @__PURE__ */ t("span", { class: `sid__findings-arrow ${s ? "sid__findings-arrow--open" : ""}`, children: "▶" })
+        ]
       }
     ),
-    !hasSectionISteps && isColumnBased && activeColData && /* @__PURE__ */ u3("div", { class: "sid__rationale", children: [
-      /* @__PURE__ */ u3("div", { class: "sid__col-answer", children: [
-        /* @__PURE__ */ u3("span", { class: "sid__col-label", children: [
+    s && a.length > 0 && /* @__PURE__ */ t("ul", { class: "sid__careplan-items", children: a.map((r, c) => /* @__PURE__ */ t("li", { children: r }, c)) })
+  ] });
+}
+function $s({ variant: e = "compact", data: s, detectionItem: n, mdsItem: i, onViewSource: a, onDismiss: r, dismissing: c, assessmentId: o }) {
+  const p = e === "full", d = s?.item, u = !!d?.columns, l = d && !u, m = !!(s?.diagnosisSummary || s?.treatmentSummary);
+  let h = d?.status;
+  !h && u && (h = Object.values(d.columns || {}).some((W) => W?.answer?.toLowerCase() === "yes") ? "code" : "dont_code");
+  const _ = h === "needs_physician_query", v = h === "code" || h === "recommend_coding", g = _ ? "sid__verdict-dot--query" : v ? "sid__verdict-dot--code" : "sid__verdict-dot--no-code", C = _ ? "Needs Query" : v ? "Recommend Coding" : h?.replace(/_/g, " ") || "Don't Code", f = d?.evidence || d?.queryEvidence || [], x = [];
+  if (u) {
+    const A = /* @__PURE__ */ new Set();
+    for (const W of Object.values(d.columns || {}))
+      W?.evidence && W.evidence.forEach((oe) => {
+        const ue = oe.sourceId || oe.quote || JSON.stringify(oe);
+        A.has(ue) || (A.add(ue), x.push(oe));
+      });
+  }
+  const k = l ? f : x, [y, S] = b(!1), [E, N] = b(null), w = {};
+  k.forEach((A) => {
+    const W = Kt(A);
+    w[W] = (w[W] || 0) + 1;
+  });
+  const T = Object.keys(w).sort(), F = T.length > 1, V = E ? k.filter((A) => Kt(A) === E) : k, D = y ? V : V.slice(0, 4), B = d?.keyFindings || [], [$, M] = b(p), G = n?.impact, K = G && (G.slp || G.nta || G.nursing || G.ptot), Q = d?.columns || {}, R = Object.keys(Q), [j, te] = b(R[0] || "A"), I = Q[j], P = d?.subItems || [], [U, q] = b(!1), [Z, L] = b(""), O = i?.startsWith("I8000:") ? "I8000" : i;
+  return /* @__PURE__ */ t(Y, { children: [
+    /* @__PURE__ */ t("div", { class: "sid__verdict", children: [
+      /* @__PURE__ */ t("span", { class: `sid__verdict-dot ${g}` }),
+      /* @__PURE__ */ t("span", { class: "sid__verdict-text", children: C })
+    ] }),
+    m && /* @__PURE__ */ t(
+      oi,
+      {
+        diagnosisSummary: s.diagnosisSummary,
+        treatmentSummary: s.treatmentSummary,
+        validation: d?.validation
+      }
+    ),
+    m && s?.carePlan && /* @__PURE__ */ t(di, { carePlan: s.carePlan }),
+    !m && u && I && /* @__PURE__ */ t("div", { class: "sid__rationale", children: [
+      /* @__PURE__ */ t("div", { class: "sid__col-answer", children: [
+        /* @__PURE__ */ t("span", { class: "sid__col-label", children: [
           "Column ",
-          activeCol,
+          j,
           ":"
         ] }),
-        /* @__PURE__ */ u3("span", { class: `sid__col-badge ${activeColData.answer?.toLowerCase() === "yes" ? "sid__col-badge--yes" : "sid__col-badge--no"}`, children: activeColData.answer?.toUpperCase() }),
-        (activeColData.firstAdministered || activeColData.lastAdministered) && /* @__PURE__ */ u3("span", { class: "sid__col-dates", children: [
-          activeColData.firstAdministered,
-          activeColData.firstAdministered && activeColData.lastAdministered && " \u2013 ",
-          activeColData.lastAdministered
+        /* @__PURE__ */ t("span", { class: `sid__col-badge ${I.answer?.toLowerCase() === "yes" ? "sid__col-badge--yes" : "sid__col-badge--no"}`, children: I.answer?.toUpperCase() }),
+        (I.firstAdministered || I.lastAdministered) && /* @__PURE__ */ t("span", { class: "sid__col-dates", children: [
+          I.firstAdministered,
+          I.firstAdministered && I.lastAdministered && " – ",
+          I.lastAdministered
         ] })
       ] }),
-      activeColData.rationale && /* @__PURE__ */ u3("div", { children: activeColData.rationale })
+      I.rationale && /* @__PURE__ */ t("div", { children: I.rationale })
     ] }),
-    !hasSectionISteps && !isColumnBased && /* @__PURE__ */ u3(RationaleBlock, { rationale: apiItem?.rationale }),
-    isColumnBased && colKeys.length > 1 && /* @__PURE__ */ u3("div", { class: "sid__coltabs", children: colKeys.map((k3) => {
-      const c3 = columns[k3];
-      const yes = c3?.answer?.toLowerCase() === "yes";
-      return /* @__PURE__ */ u3(
+    !m && !u && /* @__PURE__ */ t(ci, { rationale: d?.rationale }),
+    u && R.length > 1 && /* @__PURE__ */ t("div", { class: "sid__coltabs", children: R.map((A) => {
+      const oe = Q[A]?.answer?.toLowerCase() === "yes";
+      return /* @__PURE__ */ t(
         "button",
         {
           type: "button",
-          class: `sid__coltab ${activeCol === k3 ? "sid__coltab--on" : ""}`,
-          onClick: () => setActiveCol(k3),
+          class: `sid__coltab ${j === A ? "sid__coltab--on" : ""}`,
+          onClick: () => te(A),
           children: [
             "Col ",
-            k3,
-            /* @__PURE__ */ u3("span", { class: `sid__coltab-dot ${yes ? "sid__coltab-dot--yes" : ""}` })
+            A,
+            /* @__PURE__ */ t("span", { class: `sid__coltab-dot ${oe ? "sid__coltab-dot--yes" : ""}` })
           ]
         },
-        k3
+        A
       );
     }) }),
-    subItems.length > 0 && /* @__PURE__ */ u3("div", { class: "sid__subs", children: subItems.map((sub, i3) => {
-      const a3 = sub.columns?.A;
-      if (!a3) return null;
-      const yes = a3.answer?.toLowerCase() === "yes";
-      return /* @__PURE__ */ u3("div", { class: `sid__sub ${yes ? "sid__sub--on" : ""}`, children: [
-        /* @__PURE__ */ u3("span", { class: `sid__sub-dot ${yes ? "sid__sub-dot--yes" : ""}`, children: yes ? "\u2713" : "\u2013" }),
-        /* @__PURE__ */ u3("span", { class: "sid__sub-name", children: sub.description })
-      ] }, sub.mdsItem || i3);
+    P.length > 0 && /* @__PURE__ */ t("div", { class: "sid__subs", children: P.map((A, W) => {
+      const oe = A.columns?.A;
+      if (!oe) return null;
+      const ue = oe.answer?.toLowerCase() === "yes";
+      return /* @__PURE__ */ t("div", { class: `sid__sub ${ue ? "sid__sub--on" : ""}`, children: [
+        /* @__PURE__ */ t("span", { class: `sid__sub-dot ${ue ? "sid__sub-dot--yes" : ""}`, children: ue ? "✓" : "–" }),
+        /* @__PURE__ */ t("span", { class: "sid__sub-name", children: A.description })
+      ] }, A.mdsItem || W);
     }) }),
-    isFull && hasImpact && /* @__PURE__ */ u3("div", { class: "sid__impacts", children: [
-      /* @__PURE__ */ u3(ImpactChip, { label: "NTA", impact: impact.nta }),
-      /* @__PURE__ */ u3(ImpactChip, { label: "Nursing", impact: impact.nursing }),
-      /* @__PURE__ */ u3(ImpactChip, { label: "SLP", impact: impact.slp }),
-      /* @__PURE__ */ u3(ImpactChip, { label: "PT/OT", impact: impact.ptot })
+    p && K && /* @__PURE__ */ t("div", { class: "sid__impacts", children: [
+      /* @__PURE__ */ t(Ae, { label: "NTA", impact: G.nta }),
+      /* @__PURE__ */ t(Ae, { label: "Nursing", impact: G.nursing }),
+      /* @__PURE__ */ t(Ae, { label: "SLP", impact: G.slp }),
+      /* @__PURE__ */ t(Ae, { label: "PT/OT", impact: G.ptot })
     ] }),
-    evidence.length > 0 && /* @__PURE__ */ u3("div", { class: "sid__evidence", children: [
-      /* @__PURE__ */ u3("div", { class: "sid__ev-label", children: [
-        "Evidence (",
-        evidence.length,
+    d?.falls?.length > 0 && /* @__PURE__ */ t("div", { class: "super-falls-section", children: [
+      /* @__PURE__ */ t("div", { class: "super-falls-section__label", children: [
+        "Falls (",
+        d.fallCount ?? d.falls.length,
         ")"
       ] }),
-      /* @__PURE__ */ u3("div", { class: "sid__ev-list", children: visibleEvidence.map((ev, i3) => /* @__PURE__ */ u3(EvidenceCard, { ev, index: i3, onViewSource }, i3)) }),
-      evidence.length > 4 && !showAllEv && /* @__PURE__ */ u3("button", { class: "sid__ev-show-more", type: "button", onClick: () => setShowAllEv(true), children: [
+      d.lookbackWindow && /* @__PURE__ */ t("div", { class: "super-lookback-info", children: [
+        "Lookback: ",
+        d.lookbackWindow.startDate,
+        " – ",
+        d.lookbackWindow.endDate,
+        " (",
+        d.lookbackWindow.daysCovered,
+        " days)"
+      ] }),
+      /* @__PURE__ */ t("div", { class: "super-falls-list", children: d.falls.map((A, W) => /* @__PURE__ */ t(ai, { fall: A }, A.incidentId || W)) })
+    ] }),
+    k.length > 0 && /* @__PURE__ */ t("div", { class: "sid__evidence", children: [
+      /* @__PURE__ */ t("div", { class: "sid__ev-label", children: [
+        "Evidence (",
+        k.length,
+        ")"
+      ] }),
+      F && /* @__PURE__ */ t("div", { class: "sid__ev-filters", children: [
+        /* @__PURE__ */ t(
+          "button",
+          {
+            type: "button",
+            class: `sid__ev-chip ${E === null ? "sid__ev-chip--active" : ""}`,
+            onClick: () => {
+              N(null), S(!1);
+            },
+            children: [
+              "All (",
+              k.length,
+              ")"
+            ]
+          }
+        ),
+        T.map((A) => /* @__PURE__ */ t(
+          "button",
+          {
+            type: "button",
+            class: `sid__ev-chip ${E === A ? "sid__ev-chip--active" : ""}`,
+            onClick: () => {
+              N(E === A ? null : A), S(!1);
+            },
+            children: [
+              ii[A] || A,
+              " (",
+              w[A],
+              ")"
+            ]
+          },
+          A
+        ))
+      ] }),
+      /* @__PURE__ */ t("div", { class: "sid__ev-list", children: D.map((A, W) => /* @__PURE__ */ t(ri, { ev: A, index: W, onViewSource: a }, W)) }),
+      V.length > 4 && !y && /* @__PURE__ */ t("button", { class: "sid__ev-show-more", type: "button", onClick: () => S(!0), children: [
         "Show all ",
-        evidence.length,
-        " \u2193"
+        V.length,
+        " ↓"
       ] })
     ] }),
-    keyFindings.length > 0 && /* @__PURE__ */ u3(k, { children: [
-      /* @__PURE__ */ u3("button", { class: "sid__findings-toggle", type: "button", onClick: () => setFindingsOpen(!findingsOpen), children: [
-        /* @__PURE__ */ u3("span", { class: `sid__findings-arrow ${findingsOpen ? "sid__findings-arrow--open" : ""}`, children: "\u25B6" }),
+    B.length > 0 && /* @__PURE__ */ t(Y, { children: [
+      /* @__PURE__ */ t("button", { class: "sid__findings-toggle", type: "button", onClick: () => M(!$), children: [
+        /* @__PURE__ */ t("span", { class: `sid__findings-arrow ${$ ? "sid__findings-arrow--open" : ""}`, children: "▶" }),
         "Key Findings (",
-        keyFindings.length,
+        B.length,
         ")"
       ] }),
-      findingsOpen && /* @__PURE__ */ u3("ul", { class: "sid__findings", children: keyFindings.map((f4, i3) => /* @__PURE__ */ u3("li", { children: f4 }, i3)) })
+      $ && /* @__PURE__ */ t("ul", { class: "sid__findings", children: B.map((A, W) => /* @__PURE__ */ t("li", { children: A }, W)) })
     ] }),
-    dismissMode && onDismiss ? /* @__PURE__ */ u3("div", { class: "sid__dismiss-form", children: [
-      /* @__PURE__ */ u3("label", { children: "Why do you disagree? (optional)" }),
-      /* @__PURE__ */ u3(
+    U && r ? /* @__PURE__ */ t("div", { class: "sid__dismiss-form", children: [
+      /* @__PURE__ */ t("label", { children: "Why do you disagree? (optional)" }),
+      /* @__PURE__ */ t(
         "textarea",
         {
-          value: dismissReason,
-          onInput: (e3) => setDismissReason(e3.target.value),
+          value: Z,
+          onInput: (A) => L(A.target.value),
           placeholder: "Enter reason...",
-          disabled: dismissing
+          disabled: c
         }
       ),
-      /* @__PURE__ */ u3("div", { class: "sid__dismiss-form-btns", children: [
-        /* @__PURE__ */ u3(
+      /* @__PURE__ */ t("div", { class: "sid__dismiss-form-btns", children: [
+        /* @__PURE__ */ t(
           "button",
           {
             class: "sid__btn sid__btn--secondary",
             type: "button",
-            disabled: dismissing,
+            disabled: c,
             onClick: () => {
-              setDismissMode(false);
-              setDismissReason("");
+              q(!1), L("");
             },
             children: "Cancel"
           }
         ),
-        /* @__PURE__ */ u3(
+        /* @__PURE__ */ t(
           "button",
           {
             class: "sid__btn sid__btn--primary",
             type: "button",
-            disabled: dismissing,
-            onClick: () => onDismiss(dismissReason),
-            children: dismissing ? "Submitting..." : "Submit"
+            disabled: c,
+            onClick: () => r(Z),
+            children: c ? "Submitting..." : "Submit"
           }
         )
       ] })
-    ] }) : /* @__PURE__ */ u3("div", { class: "sid__actions", children: [
-      onDismiss && /* @__PURE__ */ u3("button", { class: "sid__btn sid__btn--dismiss", type: "button", onClick: () => setDismissMode(true), children: "Dismiss" }),
-      /* @__PURE__ */ u3("div", { class: "sid__actions-right", children: [
-        /* @__PURE__ */ u3("button", { class: "sid__btn sid__btn--primary", onClick: () => {
-          const queryData = {
-            mdsItem: apiItem?.mdsItem || mdsItem,
-            description: apiItem?.description || detectionItem?.itemName,
-            aiAnswer: apiItem
+    ] }) : /* @__PURE__ */ t("div", { class: "sid__actions", children: [
+      r && /* @__PURE__ */ t("button", { class: "sid__btn sid__btn--dismiss", type: "button", onClick: () => q(!0), children: "Dismiss" }),
+      /* @__PURE__ */ t("div", { class: "sid__actions-right", children: [
+        /* @__PURE__ */ t("button", { class: "sid__btn sid__btn--primary", onClick: () => {
+          const A = {
+            mdsItem: d?.mdsItem || i,
+            description: d?.description || n?.itemName,
+            aiAnswer: d
           };
-          window.QuerySendModal?.show(queryData);
+          window.QuerySendModal?.show(A);
         }, type: "button", children: "Query Physician" }),
-        mdsItem && /* @__PURE__ */ u3("button", { class: "sid__btn sid__btn--secondary", onClick: () => window.navigateToMDSItem?.(mdsItem, assessmentId), type: "button", children: [
+        i && /* @__PURE__ */ t("button", { class: "sid__btn sid__btn--secondary", onClick: () => window.navigateToMDSItem?.(i, o), type: "button", children: [
           "Go to ",
-          displayCode,
-          " \u2197"
+          O,
+          " ↗"
         ] })
       ] })
     ] })
   ] });
 }
-
-// content/components/PDFViewer.jsx
-var ZOOM_LEVELS = [50, 75, 100, 125, 150, 200];
-var DEFAULT_ZOOM = 100;
-function PDFViewer({
-  url,
-  wordBlocks = [],
-  targetPage = 1,
-  title = "Document",
-  documentType,
-  effectiveDate,
-  fileSize,
-  onClose,
-  openInNewTabUrl
+const le = [50, 75, 100, 125, 150, 200], li = 100;
+function wt({
+  url: e,
+  wordBlocks: s = [],
+  targetPage: n = 1,
+  title: i = "Document",
+  documentType: a,
+  effectiveDate: r,
+  fileSize: c,
+  onClose: o,
+  openInNewTabUrl: p
 }) {
-  const [pdfDoc, setPdfDoc] = d2(null);
-  const [currentPage, setCurrentPage] = d2(targetPage);
-  const [totalPages, setTotalPages] = d2(1);
-  const [zoom, setZoom] = d2(DEFAULT_ZOOM);
-  const [manualRotation, setManualRotation] = d2(0);
-  const [loading, setLoading] = d2(true);
-  const [rendering, setRendering] = d2(false);
-  const [error, setError] = d2(null);
-  const [pageInputValue, setPageInputValue] = d2(String(targetPage));
-  const canvasRef = A2(null);
-  const highlightCanvasRef = A2(null);
-  const scrollRef = A2(null);
-  const rotationCacheRef = A2({});
-  const rootRef = A2(null);
-  const renderIdRef = A2(0);
-  const fileSizeStr = fileSize ? fileSize / 1024 > 1024 ? `${(fileSize / 1024 / 1024).toFixed(1)} MB` : `${(fileSize / 1024).toFixed(0)} KB` : "";
-  const formatDate = (dateStr) => {
-    if (!dateStr) return "";
+  const [d, u] = b(null), [l, m] = b(n), [h, _] = b(1), [v, g] = b(li), [C, f] = b(0), [x, k] = b(!0), [y, S] = b(!1), [E, N] = b(null), [w, T] = b(String(n)), F = ee(null), V = ee(null), D = ee(null), B = ee({}), $ = ee(null), M = ee(0);
+  c && (c / 1024 > 1024 ? `${(c / 1024 / 1024).toFixed(1)}` : `${(c / 1024).toFixed(0)}`);
+  const G = (I) => {
+    if (!I) return "";
     try {
-      return new Date(dateStr).toLocaleDateString("en-US", {
+      return new Date(I).toLocaleDateString("en-US", {
         month: "short",
         day: "numeric",
         year: "numeric"
       });
     } catch {
-      return dateStr;
+      return I;
     }
   };
-  y2(() => {
-    if (!url) {
-      setError("No document URL available");
-      setLoading(false);
+  z(() => {
+    if (!e) {
+      N("No document URL available"), k(!1);
       return;
     }
-    let cancelled = false;
-    (async () => {
+    let I = !1;
+    return (async () => {
       try {
-        if (typeof pdfjsLib === "undefined") throw new Error("PDF.js library not loaded");
-        if (!pdfjsLib.GlobalWorkerOptions.workerSrc) {
-          pdfjsLib.GlobalWorkerOptions.workerSrc = chrome.runtime.getURL("lib/pdf.worker.min.js");
-        }
-        const doc = await pdfjsLib.getDocument(url).promise;
-        if (cancelled) return;
-        const initPage = Math.min(targetPage, doc.numPages);
-        setPdfDoc(doc);
-        setTotalPages(doc.numPages);
-        setCurrentPage(initPage);
-        setPageInputValue(String(initPage));
-        setLoading(false);
-      } catch (err) {
-        if (!cancelled) {
-          console.error("[PDFViewer] Load failed:", err);
-          setError(`Failed to load PDF: ${err.message}`);
-          setLoading(false);
-        }
+        if (typeof pdfjsLib > "u") throw new Error("PDF.js library not loaded");
+        pdfjsLib.GlobalWorkerOptions.workerSrc || (pdfjsLib.GlobalWorkerOptions.workerSrc = chrome.runtime.getURL("lib/pdf.worker.min.js"));
+        const P = await pdfjsLib.getDocument(e).promise;
+        if (I) return;
+        const U = Math.min(n, P.numPages);
+        u(P), _(P.numPages), m(U), T(String(U)), k(!1);
+      } catch (P) {
+        I || (console.error("[PDFViewer] Load failed:", P), N(`Failed to load PDF: ${P.message}`), k(!1));
       }
-    })();
-    return () => {
-      cancelled = true;
+    })(), () => {
+      I = !0;
     };
-  }, [url]);
-  const renderPage = q2(async (pageNum) => {
-    if (!pdfDoc) return;
-    const canvas = canvasRef.current;
-    const hlCanvas = highlightCanvasRef.current;
-    const scrollEl = scrollRef.current;
-    if (!canvas || !hlCanvas || !scrollEl) return;
-    const myId = ++renderIdRef.current;
-    const validPage = Math.max(1, Math.min(pageNum, totalPages));
-    setRendering(true);
+  }, [e]);
+  const K = X(async (I) => {
+    if (!d) return;
+    const P = F.current, U = V.current, q = D.current;
+    if (!P || !U || !q) return;
+    const Z = ++M.current, L = Math.max(1, Math.min(I, h));
+    S(!0);
     try {
-      const page = await pdfDoc.getPage(validPage);
-      if (renderIdRef.current !== myId) return;
-      const rotation = await detectRotation(page, validPage, rotationCacheRef, manualRotation);
-      const scrollWidth = scrollEl.clientWidth;
-      const containerWidth = Math.max(scrollWidth - 48, 200);
-      const baseViewport = page.getViewport({ scale: 1, rotation });
-      const fitScale = containerWidth / baseViewport.width;
-      const scale = fitScale * (zoom / 100);
-      const viewport = page.getViewport({ scale, rotation });
-      const ctx = canvas.getContext("2d");
-      const hCtx = hlCanvas.getContext("2d");
-      canvas.width = viewport.width;
-      canvas.height = viewport.height;
-      hlCanvas.width = viewport.width;
-      hlCanvas.height = viewport.height;
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      hCtx.clearRect(0, 0, hlCanvas.width, hlCanvas.height);
-      await page.render({ canvasContext: ctx, viewport }).promise;
-      if (renderIdRef.current !== myId) return;
-      const pageHL = (wordBlocks || []).filter((h3) => h3.p === validPage);
-      if (pageHL.length > 0) {
-        const rects = drawHighlights(hCtx, pageHL, viewport, rotation);
-        if (rects.length > 0) {
-          scrollToHighlight(rects, scrollEl);
-        }
+      const O = await d.getPage(L);
+      if (M.current !== Z) return;
+      const A = await pi(O, L, B, C), W = q.clientWidth, oe = Math.max(W - 16, 200), ue = O.getViewport({ scale: 1, rotation: A }), Vs = oe / ue.width * (v / 100), ge = O.getViewport({ scale: Vs, rotation: A }), St = P.getContext("2d"), Nt = U.getContext("2d");
+      if (P.width = ge.width, P.height = ge.height, U.width = ge.width, U.height = ge.height, St.clearRect(0, 0, P.width, P.height), Nt.clearRect(0, 0, U.width, U.height), await O.render({ canvasContext: St, viewport: ge }).promise, M.current !== Z) return;
+      const xt = (s || []).filter((Pe) => Pe.p === L);
+      if (xt.length > 0) {
+        const Pe = hi(Nt, xt, ge, A);
+        Pe.length > 0 && _i(Pe, q);
       }
-    } catch (err) {
-      console.error("[PDFViewer] Render failed:", err);
+    } catch (O) {
+      console.error("[PDFViewer] Render failed:", O);
     } finally {
-      if (renderIdRef.current === myId) setRendering(false);
+      M.current === Z && S(!1);
     }
-  }, [pdfDoc, totalPages, zoom, manualRotation, wordBlocks]);
-  y2(() => {
-    if (pdfDoc) renderPage(currentPage);
-  }, [pdfDoc, currentPage, zoom, manualRotation, renderPage]);
-  const goToPage = q2((n2) => {
-    const p3 = Math.max(1, Math.min(n2, totalPages));
-    setCurrentPage(p3);
-    setPageInputValue(String(p3));
-  }, [totalPages]);
-  const changeZoom = q2((dir) => {
-    setZoom((prev) => {
-      const idx = ZOOM_LEVELS.indexOf(prev);
-      if (idx === -1) {
-        const nearest = ZOOM_LEVELS.reduce((a3, b) => Math.abs(b - prev) < Math.abs(a3 - prev) ? b : a3);
-        const ni = ZOOM_LEVELS.indexOf(nearest);
-        return ZOOM_LEVELS[Math.max(0, Math.min(ni + dir, ZOOM_LEVELS.length - 1))];
+  }, [d, h, v, C, s]);
+  z(() => {
+    d && K(l);
+  }, [d, l, v, C, K]);
+  const Q = X((I) => {
+    const P = Math.max(1, Math.min(I, h));
+    m(P), T(String(P));
+  }, [h]), R = X((I) => {
+    g((P) => {
+      const U = le.indexOf(P);
+      if (U === -1) {
+        const q = le.reduce((L, O) => Math.abs(O - P) < Math.abs(L - P) ? O : L), Z = le.indexOf(q);
+        return le[Math.max(0, Math.min(Z + I, le.length - 1))];
       }
-      return ZOOM_LEVELS[Math.max(0, Math.min(idx + dir, ZOOM_LEVELS.length - 1))];
+      return le[Math.max(0, Math.min(U + I, le.length - 1))];
     });
+  }, []), j = X(() => {
+    f((I) => (I + 90) % 360), B.current = {};
   }, []);
-  const rotate = q2(() => {
-    setManualRotation((prev) => (prev + 90) % 360);
-    rotationCacheRef.current = {};
-  }, []);
-  y2(() => {
-    const handler = (e3) => {
-      if (!rootRef.current) return;
-      if (e3.target.tagName === "INPUT" || e3.target.tagName === "TEXTAREA") return;
-      if (!rootRef.current.closest(".super-pdf-modal")) return;
-      switch (e3.key) {
-        case "ArrowLeft":
-          e3.preventDefault();
-          setCurrentPage((p3) => {
-            const n2 = Math.max(1, p3 - 1);
-            setPageInputValue(String(n2));
-            return n2;
-          });
-          break;
-        case "ArrowRight":
-          e3.preventDefault();
-          setCurrentPage((p3) => {
-            const n2 = Math.min(totalPages, p3 + 1);
-            setPageInputValue(String(n2));
-            return n2;
-          });
-          break;
-        case "+":
-        case "=":
-          e3.preventDefault();
-          changeZoom(1);
-          break;
-        case "-":
-          e3.preventDefault();
-          changeZoom(-1);
-          break;
-        case "r":
-        case "R":
-          e3.preventDefault();
-          rotate();
-          break;
-      }
+  z(() => {
+    const I = (P) => {
+      if ($.current && !(P.target.tagName === "INPUT" || P.target.tagName === "TEXTAREA") && $.current.closest(".super-pdf-modal"))
+        switch (P.key) {
+          case "ArrowLeft":
+            P.preventDefault(), m((U) => {
+              const q = Math.max(1, U - 1);
+              return T(String(q)), q;
+            });
+            break;
+          case "ArrowRight":
+            P.preventDefault(), m((U) => {
+              const q = Math.min(h, U + 1);
+              return T(String(q)), q;
+            });
+            break;
+          case "+":
+          case "=":
+            P.preventDefault(), R(1);
+            break;
+          case "-":
+            P.preventDefault(), R(-1);
+            break;
+          case "r":
+          case "R":
+            P.preventDefault(), j();
+            break;
+        }
     };
-    document.addEventListener("keydown", handler);
-    return () => document.removeEventListener("keydown", handler);
-  }, [totalPages, changeZoom, rotate]);
-  const commitPageInput = () => {
-    const n2 = parseInt(pageInputValue, 10);
-    if (!isNaN(n2) && n2 >= 1 && n2 <= totalPages) {
-      goToPage(n2);
-    } else {
-      setPageInputValue(String(currentPage));
-    }
+    return document.addEventListener("keydown", I), () => document.removeEventListener("keydown", I);
+  }, [h, R, j]);
+  const te = () => {
+    const I = parseInt(w, 10);
+    !isNaN(I) && I >= 1 && I <= h ? Q(I) : T(String(l));
   };
-  if (loading) {
-    return /* @__PURE__ */ u3("div", { class: "super-pdfv super-pdfv--center", ref: rootRef, children: /* @__PURE__ */ u3("div", { class: "super-pdfv__loader", children: [
-      /* @__PURE__ */ u3("div", { class: "super-pdfv__loader-ring" }),
-      /* @__PURE__ */ u3("span", { children: "Loading document..." })
-    ] }) });
-  }
-  if (error) {
-    return /* @__PURE__ */ u3("div", { class: "super-pdfv super-pdfv--center", ref: rootRef, children: /* @__PURE__ */ u3("div", { class: "super-pdfv__empty-state", children: [
-      /* @__PURE__ */ u3("svg", { width: "40", height: "40", viewBox: "0 0 24 24", fill: "none", stroke: "#9ca3af", "stroke-width": "1.5", children: [
-        /* @__PURE__ */ u3("circle", { cx: "12", cy: "12", r: "10" }),
-        /* @__PURE__ */ u3("line", { x1: "12", y1: "8", x2: "12", y2: "12" }),
-        /* @__PURE__ */ u3("line", { x1: "12", y1: "16", x2: "12.01", y2: "16" })
-      ] }),
-      /* @__PURE__ */ u3("p", { children: error })
-    ] }) });
-  }
-  return /* @__PURE__ */ u3("div", { class: "super-pdfv", ref: rootRef, children: [
-    /* @__PURE__ */ u3("div", { class: "super-pdfv__header", children: [
-      /* @__PURE__ */ u3("div", { class: "super-pdfv__header-left", children: [
-        /* @__PURE__ */ u3("svg", { class: "super-pdfv__header-icon", width: "14", height: "14", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": "2", children: [
-          /* @__PURE__ */ u3("path", { d: "M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" }),
-          /* @__PURE__ */ u3("polyline", { points: "14 2 14 8 20 8" })
+  return x ? /* @__PURE__ */ t("div", { class: "super-pdfv super-pdfv--center", ref: $, children: /* @__PURE__ */ t("div", { class: "super-pdfv__loader", children: [
+    /* @__PURE__ */ t("div", { class: "super-pdfv__loader-ring" }),
+    /* @__PURE__ */ t("span", { children: "Loading document..." })
+  ] }) }) : E ? /* @__PURE__ */ t("div", { class: "super-pdfv super-pdfv--center", ref: $, children: /* @__PURE__ */ t("div", { class: "super-pdfv__empty-state", children: [
+    /* @__PURE__ */ t("svg", { width: "40", height: "40", viewBox: "0 0 24 24", fill: "none", stroke: "#9ca3af", "stroke-width": "1.5", children: [
+      /* @__PURE__ */ t("circle", { cx: "12", cy: "12", r: "10" }),
+      /* @__PURE__ */ t("line", { x1: "12", y1: "8", x2: "12", y2: "12" }),
+      /* @__PURE__ */ t("line", { x1: "12", y1: "16", x2: "12.01", y2: "16" })
+    ] }),
+    /* @__PURE__ */ t("p", { children: E })
+  ] }) }) : /* @__PURE__ */ t("div", { class: "super-pdfv", ref: $, children: [
+    /* @__PURE__ */ t("div", { class: "super-pdfv__header", children: [
+      /* @__PURE__ */ t("div", { class: "super-pdfv__header-left", children: [
+        /* @__PURE__ */ t("svg", { class: "super-pdfv__header-icon", width: "14", height: "14", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": "2", children: [
+          /* @__PURE__ */ t("path", { d: "M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" }),
+          /* @__PURE__ */ t("polyline", { points: "14 2 14 8 20 8" })
         ] }),
-        /* @__PURE__ */ u3("span", { class: "super-pdfv__header-title", children: title })
+        /* @__PURE__ */ t("span", { class: "super-pdfv__header-title", children: i }),
+        r && /* @__PURE__ */ t("span", { class: "super-pdfv__header-date", children: G(r) })
       ] }),
-      /* @__PURE__ */ u3("div", { class: "super-pdfv__header-right", children: [
-        effectiveDate && /* @__PURE__ */ u3("span", { class: "super-pdfv__header-date", children: formatDate(effectiveDate) }),
-        fileSizeStr && /* @__PURE__ */ u3("span", { class: "super-pdfv__header-meta", children: fileSizeStr }),
-        openInNewTabUrl && /* @__PURE__ */ u3("a", { href: openInNewTabUrl, target: "_blank", rel: "noopener noreferrer", class: "super-pdfv__open-btn", title: "Open in new tab", children: /* @__PURE__ */ u3("svg", { width: "13", height: "13", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": "2", children: [
-          /* @__PURE__ */ u3("path", { d: "M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" }),
-          /* @__PURE__ */ u3("polyline", { points: "15 3 21 3 21 9" }),
-          /* @__PURE__ */ u3("line", { x1: "10", y1: "14", x2: "21", y2: "3" })
+      /* @__PURE__ */ t("div", { class: "super-pdfv__header-right", children: [
+        /* @__PURE__ */ t("div", { class: "super-pdfv__group", children: [
+          /* @__PURE__ */ t("button", { class: "super-pdfv__tb-btn", onClick: () => Q(l - 1), disabled: l <= 1, title: "Previous page", children: /* @__PURE__ */ t("svg", { width: "14", height: "14", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": "2.5", children: /* @__PURE__ */ t("polyline", { points: "15 18 9 12 15 6" }) }) }),
+          /* @__PURE__ */ t("div", { class: "super-pdfv__page-pill", children: [
+            /* @__PURE__ */ t(
+              "input",
+              {
+                class: "super-pdfv__page-input",
+                type: "text",
+                value: w,
+                onInput: (I) => T(I.target.value),
+                onBlur: te,
+                onKeyDown: (I) => I.key === "Enter" && I.target.blur(),
+                style: { width: `${Math.max(2, String(h).length + 0.5)}ch` }
+              }
+            ),
+            /* @__PURE__ */ t("span", { class: "super-pdfv__page-of", children: [
+              "of ",
+              h
+            ] })
+          ] }),
+          /* @__PURE__ */ t("button", { class: "super-pdfv__tb-btn", onClick: () => Q(l + 1), disabled: l >= h, title: "Next page", children: /* @__PURE__ */ t("svg", { width: "14", height: "14", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": "2.5", children: /* @__PURE__ */ t("polyline", { points: "9 18 15 12 9 6" }) }) })
+        ] }),
+        /* @__PURE__ */ t("div", { class: "super-pdfv__tb-sep" }),
+        /* @__PURE__ */ t("div", { class: "super-pdfv__group", children: [
+          /* @__PURE__ */ t("button", { class: "super-pdfv__tb-btn", onClick: () => R(-1), disabled: v <= le[0], title: "Zoom out", children: /* @__PURE__ */ t("svg", { width: "14", height: "14", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": "2", children: /* @__PURE__ */ t("line", { x1: "5", y1: "12", x2: "19", y2: "12" }) }) }),
+          /* @__PURE__ */ t("span", { class: "super-pdfv__zoom-label", children: [
+            v,
+            "%"
+          ] }),
+          /* @__PURE__ */ t("button", { class: "super-pdfv__tb-btn", onClick: () => R(1), disabled: v >= le[le.length - 1], title: "Zoom in", children: /* @__PURE__ */ t("svg", { width: "14", height: "14", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": "2", children: [
+            /* @__PURE__ */ t("line", { x1: "12", y1: "5", x2: "12", y2: "19" }),
+            /* @__PURE__ */ t("line", { x1: "5", y1: "12", x2: "19", y2: "12" })
+          ] }) })
+        ] }),
+        /* @__PURE__ */ t("div", { class: "super-pdfv__tb-sep" }),
+        /* @__PURE__ */ t("button", { class: "super-pdfv__tb-btn", onClick: j, title: "Rotate 90°", children: /* @__PURE__ */ t("svg", { width: "14", height: "14", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": "2", children: [
+          /* @__PURE__ */ t("polyline", { points: "1 4 1 10 7 10" }),
+          /* @__PURE__ */ t("path", { d: "M3.51 15a9 9 0 1 0 2.13-9.36L1 10" })
+        ] }) }),
+        p && /* @__PURE__ */ t("a", { href: p, target: "_blank", rel: "noopener noreferrer", class: "super-pdfv__open-btn", title: "Open in new tab", children: /* @__PURE__ */ t("svg", { width: "13", height: "13", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": "2", children: [
+          /* @__PURE__ */ t("path", { d: "M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" }),
+          /* @__PURE__ */ t("polyline", { points: "15 3 21 3 21 9" }),
+          /* @__PURE__ */ t("line", { x1: "10", y1: "14", x2: "21", y2: "3" })
         ] }) })
       ] })
     ] }),
-    /* @__PURE__ */ u3("div", { class: "super-pdfv__toolbar", children: [
-      /* @__PURE__ */ u3("div", { class: "super-pdfv__group", children: [
-        /* @__PURE__ */ u3("button", { class: "super-pdfv__tb-btn", onClick: () => goToPage(currentPage - 1), disabled: currentPage <= 1, title: "Previous page (Left arrow)", children: /* @__PURE__ */ u3("svg", { width: "14", height: "14", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": "2.5", children: /* @__PURE__ */ u3("polyline", { points: "15 18 9 12 15 6" }) }) }),
-        /* @__PURE__ */ u3("div", { class: "super-pdfv__page-pill", children: [
-          /* @__PURE__ */ u3(
-            "input",
-            {
-              class: "super-pdfv__page-input",
-              type: "text",
-              value: pageInputValue,
-              onInput: (e3) => setPageInputValue(e3.target.value),
-              onBlur: commitPageInput,
-              onKeyDown: (e3) => e3.key === "Enter" && e3.target.blur(),
-              style: { width: `${Math.max(2, String(totalPages).length + 0.5)}ch` }
-            }
-          ),
-          /* @__PURE__ */ u3("span", { class: "super-pdfv__page-of", children: [
-            "of ",
-            totalPages
-          ] })
-        ] }),
-        /* @__PURE__ */ u3("button", { class: "super-pdfv__tb-btn", onClick: () => goToPage(currentPage + 1), disabled: currentPage >= totalPages, title: "Next page (Right arrow)", children: /* @__PURE__ */ u3("svg", { width: "14", height: "14", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": "2.5", children: /* @__PURE__ */ u3("polyline", { points: "9 18 15 12 9 6" }) }) })
+    /* @__PURE__ */ t("div", { class: "super-pdfv__scroll", ref: D, children: [
+      /* @__PURE__ */ t("div", { class: "super-pdfv__canvas-wrap", children: [
+        /* @__PURE__ */ t("canvas", { class: "super-pdfv__canvas", ref: F }),
+        /* @__PURE__ */ t("canvas", { class: "super-pdfv__highlight", ref: V })
       ] }),
-      /* @__PURE__ */ u3("div", { class: "super-pdfv__tb-sep" }),
-      /* @__PURE__ */ u3("div", { class: "super-pdfv__group", children: [
-        /* @__PURE__ */ u3("button", { class: "super-pdfv__tb-btn", onClick: () => changeZoom(-1), disabled: zoom <= ZOOM_LEVELS[0], title: "Zoom out (-)", children: /* @__PURE__ */ u3("svg", { width: "14", height: "14", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": "2", children: /* @__PURE__ */ u3("line", { x1: "5", y1: "12", x2: "19", y2: "12" }) }) }),
-        /* @__PURE__ */ u3("span", { class: "super-pdfv__zoom-label", children: [
-          zoom,
-          "%"
-        ] }),
-        /* @__PURE__ */ u3("button", { class: "super-pdfv__tb-btn", onClick: () => changeZoom(1), disabled: zoom >= ZOOM_LEVELS[ZOOM_LEVELS.length - 1], title: "Zoom in (+)", children: /* @__PURE__ */ u3("svg", { width: "14", height: "14", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": "2", children: [
-          /* @__PURE__ */ u3("line", { x1: "12", y1: "5", x2: "12", y2: "19" }),
-          /* @__PURE__ */ u3("line", { x1: "5", y1: "12", x2: "19", y2: "12" })
-        ] }) })
-      ] }),
-      /* @__PURE__ */ u3("div", { class: "super-pdfv__tb-sep" }),
-      /* @__PURE__ */ u3("button", { class: "super-pdfv__tb-btn", onClick: rotate, title: "Rotate 90\xB0 (R)", children: /* @__PURE__ */ u3("svg", { width: "14", height: "14", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": "2", children: [
-        /* @__PURE__ */ u3("polyline", { points: "1 4 1 10 7 10" }),
-        /* @__PURE__ */ u3("path", { d: "M3.51 15a9 9 0 1 0 2.13-9.36L1 10" })
-      ] }) })
-    ] }),
-    /* @__PURE__ */ u3("div", { class: "super-pdfv__scroll", ref: scrollRef, children: [
-      /* @__PURE__ */ u3("div", { class: "super-pdfv__canvas-wrap", children: [
-        /* @__PURE__ */ u3("canvas", { class: "super-pdfv__canvas", ref: canvasRef }),
-        /* @__PURE__ */ u3("canvas", { class: "super-pdfv__highlight", ref: highlightCanvasRef })
-      ] }),
-      rendering && /* @__PURE__ */ u3("div", { class: "super-pdfv__page-loading", children: /* @__PURE__ */ u3("div", { class: "super-pdfv__loader-ring super-pdfv__loader-ring--sm" }) })
+      y && /* @__PURE__ */ t("div", { class: "super-pdfv__page-loading", children: /* @__PURE__ */ t("div", { class: "super-pdfv__loader-ring super-pdfv__loader-ring--sm" }) })
     ] })
   ] });
 }
-async function detectRotation(page, pageNum, cacheRef, manualRotation) {
-  if (cacheRef.current[pageNum] !== void 0) {
-    return (cacheRef.current[pageNum] + manualRotation) % 360;
-  }
-  const rawView = page.view;
-  const rawW = rawView[2] - rawView[0];
-  const rawH = rawView[3] - rawView[1];
-  let autoFix = 0;
-  let textItemCount = 0;
+async function pi(e, s, n, i) {
+  if (n.current[s] !== void 0)
+    return (n.current[s] + i) % 360;
+  const a = e.view, r = a[2] - a[0], c = a[3] - a[1];
+  let o = 0, p = 0;
   try {
-    const tc = await page.getTextContent();
-    const items = tc.items.filter((i3) => i3.str && i3.str.trim().length > 0);
-    textItemCount = items.length;
-    if (items.length >= 3) {
-      const counts = { 0: 0, 90: 0, 180: 0, 270: 0 };
-      for (const item of items) {
-        const [a3, b] = item.transform;
-        const absA = Math.abs(a3), absB = Math.abs(b);
-        if (absA < 0.01 && absB < 0.01) continue;
-        if (absA > absB) counts[a3 > 0 ? 0 : 180]++;
-        else counts[b > 0 ? 90 : 270]++;
+    const u = (await e.getTextContent()).items.filter((l) => l.str && l.str.trim().length > 0);
+    if (p = u.length, u.length >= 3) {
+      const l = { 0: 0, 90: 0, 180: 0, 270: 0 };
+      for (const _ of u) {
+        const [v, g] = _.transform, C = Math.abs(v), f = Math.abs(g);
+        C < 0.01 && f < 0.01 || (C > f ? l[v > 0 ? 0 : 180]++ : l[g > 0 ? 90 : 270]++);
       }
-      let maxCount = 0, dominant = 0;
-      for (const [angle, count] of Object.entries(counts)) {
-        if (count > maxCount) {
-          maxCount = count;
-          dominant = parseInt(angle);
-        }
-      }
-      if (dominant !== 0) autoFix = dominant;
+      let m = 0, h = 0;
+      for (const [_, v] of Object.entries(l))
+        v > m && (m = v, h = parseInt(_));
+      h !== 0 && (o = h);
     }
-  } catch (e3) {
+  } catch {
   }
-  if (autoFix === 0 && textItemCount < 3) {
+  if (o === 0 && p < 3)
     try {
-      const ops = await page.getOperatorList();
-      let lastT = [1, 0, 0, 1, 0, 0];
-      for (let i3 = 0; i3 < ops.fnArray.length; i3++) {
-        if (ops.fnArray[i3] === 12) lastT = ops.argsArray[i3];
-        if (ops.fnArray[i3] === 85 || ops.fnArray[i3] === 82) {
-          const [a3, b] = lastT;
-          if (Math.abs(b) > Math.abs(a3) * 5 && Math.abs(lastT[2]) > Math.abs(lastT[3]) * 5) {
-            autoFix = b > 0 ? 270 : 90;
-          }
+      const d = await e.getOperatorList();
+      let u = [1, 0, 0, 1, 0, 0];
+      for (let l = 0; l < d.fnArray.length; l++)
+        if (d.fnArray[l] === 12 && (u = d.argsArray[l]), d.fnArray[l] === 85 || d.fnArray[l] === 82) {
+          const [m, h] = u;
+          Math.abs(h) > Math.abs(m) * 5 && Math.abs(u[2]) > Math.abs(u[3]) * 5 && (o = h > 0 ? 270 : 90);
           break;
         }
-      }
-    } catch (e3) {
+    } catch {
     }
+  return o === 0 && r > c * 1.05 && (o = 90), n.current[s] = o, (o + i) % 360;
+}
+function ui(e, s, n, i) {
+  const { x: a, y: r, w: c, h: o } = e, p = i % 360;
+  return p === 0 ? { x: a * s, y: r * n, w: c * s, h: o * n } : p === 90 ? { x: (1 - r - o) * s, y: a * n, w: o * s, h: c * n } : p === 180 ? { x: (1 - a - c) * s, y: (1 - r - o) * n, w: c * s, h: o * n } : { x: r * s, y: (1 - a - c) * n, w: o * s, h: c * n };
+}
+function mi(e) {
+  if (e.length <= 1) return e;
+  const s = [...e].sort((a, r) => a.y - r.y || a.x - r.x), n = [];
+  let i = { ...s[0] };
+  for (let a = 1; a < s.length; a++) {
+    const r = s[a], c = Math.max(i.h, r.h), o = Math.abs(i.y + i.h / 2 - (r.y + r.h / 2)) < c * 0.6, d = r.x - (i.x + i.w) < c * 0.5;
+    if (o && d) {
+      const u = Math.max(i.x + i.w, r.x + r.w), l = Math.min(i.y, r.y), m = Math.max(i.y + i.h, r.y + r.h);
+      i.x = Math.min(i.x, r.x), i.y = l, i.w = u - i.x, i.h = m - l;
+    } else
+      n.push(i), i = { ...r };
   }
-  if (autoFix === 0 && rawW > rawH * 1.05) autoFix = 90;
-  cacheRef.current[pageNum] = autoFix;
-  return (autoFix + manualRotation) % 360;
+  return n.push(i), n;
 }
-function drawHighlights(ctx, highlights, viewport, rotation) {
-  const rects = [];
-  const vw = viewport.width;
-  const vh = viewport.height;
-  highlights.forEach((hl, i3) => {
-    const isActive = i3 === 0;
-    ctx.fillStyle = isActive ? "rgba(59, 130, 246, 0.30)" : "rgba(254, 240, 138, 0.35)";
-    ctx.strokeStyle = isActive ? "rgba(59, 130, 246, 0.75)" : "rgba(234, 179, 8, 0.55)";
-    ctx.lineWidth = isActive ? 2 : 1.5;
-    const { x: ox, y: oy, w: ow, h: oh } = hl;
-    let x2, y3, w3, h3;
-    const r3 = rotation % 360;
-    if (r3 === 0) {
-      x2 = ox * vw;
-      y3 = oy * vh;
-      w3 = ow * vw;
-      h3 = oh * vh;
-    } else if (r3 === 90) {
-      x2 = (1 - oy - oh) * vw;
-      y3 = ox * vh;
-      w3 = oh * vw;
-      h3 = ow * vh;
-    } else if (r3 === 180) {
-      x2 = (1 - ox - ow) * vw;
-      y3 = (1 - oy - oh) * vh;
-      w3 = ow * vw;
-      h3 = oh * vh;
-    } else if (r3 === 270) {
-      x2 = oy * vw;
-      y3 = (1 - ox - ow) * vh;
-      w3 = oh * vw;
-      h3 = ow * vh;
-    }
-    const rad = 3;
-    ctx.beginPath();
-    ctx.moveTo(x2 + rad, y3);
-    ctx.lineTo(x2 + w3 - rad, y3);
-    ctx.quadraticCurveTo(x2 + w3, y3, x2 + w3, y3 + rad);
-    ctx.lineTo(x2 + w3, y3 + h3 - rad);
-    ctx.quadraticCurveTo(x2 + w3, y3 + h3, x2 + w3 - rad, y3 + h3);
-    ctx.lineTo(x2 + rad, y3 + h3);
-    ctx.quadraticCurveTo(x2, y3 + h3, x2, y3 + h3 - rad);
-    ctx.lineTo(x2, y3 + rad);
-    ctx.quadraticCurveTo(x2, y3, x2 + rad, y3);
-    ctx.closePath();
-    ctx.fill();
-    ctx.stroke();
-    rects.push({ x: x2, y: y3, w: w3, h: h3, isActive });
-  });
-  return rects;
+function hi(e, s, n, i) {
+  const a = n.width, r = n.height, c = s.map((p) => ui(p, a, r, i)), o = mi(c);
+  return e.fillStyle = "rgba(250, 204, 21, 0.28)", o.forEach((p) => {
+    const l = p.x - 2, m = p.y - 2, h = p.w + 4, _ = p.h + 4;
+    e.beginPath(), e.moveTo(l + 3, m), e.lineTo(l + h - 3, m), e.quadraticCurveTo(l + h, m, l + h, m + 3), e.lineTo(l + h, m + _ - 3), e.quadraticCurveTo(l + h, m + _, l + h - 3, m + _), e.lineTo(l + 3, m + _), e.quadraticCurveTo(l, m + _, l, m + _ - 3), e.lineTo(l, m + 3), e.quadraticCurveTo(l, m, l + 3, m), e.closePath(), e.fill();
+  }), o.map((p, d) => ({ ...p, isActive: d === 0 }));
 }
-function scrollToHighlight(rects, scrollEl) {
-  if (!rects.length || !scrollEl) return;
-  const active = rects.find((r3) => r3.isActive) || rects[0];
-  const wrap = scrollEl.querySelector(".super-pdfv__canvas-wrap");
-  if (!wrap) return;
-  requestAnimationFrame(() => {
-    const sr = scrollEl.getBoundingClientRect();
-    const wr = wrap.getBoundingClientRect();
-    const offX = wr.left - sr.left + scrollEl.scrollLeft;
-    const offY = wr.top - sr.top + scrollEl.scrollTop;
-    scrollEl.scrollTo({
-      left: Math.max(0, offX + active.x + active.w / 2 - scrollEl.clientWidth / 2),
-      top: Math.max(0, offY + active.y + active.h / 2 - scrollEl.clientHeight / 2),
+function _i(e, s) {
+  if (!e.length || !s) return;
+  const n = e.find((a) => a.isActive) || e[0], i = s.querySelector(".super-pdfv__canvas-wrap");
+  i && requestAnimationFrame(() => {
+    const a = s.getBoundingClientRect(), r = i.getBoundingClientRect(), c = r.left - a.left + s.scrollLeft, o = r.top - a.top + s.scrollTop;
+    s.scrollTo({
+      left: Math.max(0, c + n.x + n.w / 2 - s.clientWidth / 2),
+      top: Math.max(0, o + n.y + n.h / 2 - s.clientHeight / 2),
       behavior: "smooth"
     });
   });
 }
-
-// content/evidence-viewers.js
-function parseEvidenceForViewer(ev) {
-  const { sourceType, evidenceId } = ev;
-  const sourceId = ev.sourceId || ev.id || "";
-  const evType = ev.type;
-  if (sourceType === "progress-note" && sourceId) {
-    return { viewerType: "clinical-note", id: sourceId };
-  }
-  if (sourceType === "therapy-doc" && sourceId) {
-    return { viewerType: "therapy-document", id: sourceId };
-  }
-  if (sourceType === "document" && sourceId) {
-    return { viewerType: "document", id: sourceId };
-  }
-  if (evType === "clinical_note" && sourceId) {
-    const noteId = sourceId.replace(/^pcc-prognote-/, "").replace(/^patient-practnote-/, "");
-    return { viewerType: "clinical-note", id: noteId };
-  }
-  if (evType === "therapy_document" && sourceId) {
-    const docId = sourceId.replace(/^therapy-doc-/, "");
-    return { viewerType: "therapy-document", id: docId };
-  }
-  if (evType === "document" && sourceId) {
-    return { viewerType: "document", id: sourceId };
-  }
-  const eid = evidenceId || sourceId;
-  if (eid) {
-    if (eid.startsWith("therapy-doc-")) {
-      return { viewerType: "therapy-document", id: eid.replace("therapy-doc-", "") };
-    }
-    if (eid.startsWith("pcc-prognote-")) {
-      return { viewerType: "clinical-note", id: eid.replace("pcc-prognote-", "") };
-    }
-    if (eid.startsWith("patient-practnote-")) {
-      return { viewerType: "clinical-note", id: eid.replace("patient-practnote-", "") };
-    }
-    if (eid.includes("-chunk-")) {
-      return { viewerType: "document", id: eid.split("-chunk-")[0] };
-    }
+function gi(e) {
+  const { sourceType: s, evidenceId: n } = e, i = e.sourceId || e.id || "", a = e.type;
+  if (s === "progress-note" && i)
+    return { viewerType: "clinical-note", id: i };
+  if (s === "therapy-doc" && i)
+    return { viewerType: "therapy-document", id: i };
+  if (s === "document" && i)
+    return { viewerType: "document", id: i };
+  if (i && i.includes("-chunk-"))
+    return { viewerType: "document", id: i.split("-chunk-")[0], chunk: parseInt(i.split("-chunk-")[1], 10) };
+  if (a === "clinical_note" && i)
+    return { viewerType: "clinical-note", id: i.replace(/^pcc-prognote-/, "").replace(/^patient-practnote-/, "") };
+  if (a === "therapy_document" && i)
+    return { viewerType: "therapy-document", id: i.replace(/^therapy-doc-/, "") };
+  if (a === "document" && i)
+    return { viewerType: "document", id: i };
+  const r = n || i;
+  if (r) {
+    if (r.startsWith("therapy-doc-"))
+      return { viewerType: "therapy-document", id: r.replace("therapy-doc-", "") };
+    if (r.startsWith("pcc-prognote-"))
+      return { viewerType: "clinical-note", id: r.replace("pcc-prognote-", "") };
+    if (r.startsWith("patient-practnote-"))
+      return { viewerType: "clinical-note", id: r.replace("patient-practnote-", "") };
+    if (r.includes("-chunk-"))
+      return { viewerType: "document", id: r.split("-chunk-")[0], chunk: parseInt(r.split("-chunk-")[1], 10) };
   }
   return { viewerType: null, id: null };
 }
-function getModalMountPoint() {
-  const icd10Container = document.querySelector(".icd10-viewer-modal__container");
-  if (icd10Container) return icd10Container;
-  return document.body;
+function Dt() {
+  const e = document.querySelector(".icd10-viewer-modal__container");
+  return e || document.body;
 }
-async function fetchClinicalNote(noteId, params) {
-  const endpoint = `/api/extension/clinical-notes/${noteId}?facilityName=${encodeURIComponent(params.facilityName)}&orgSlug=${params.orgSlug}`;
-  const response = await chrome.runtime.sendMessage({
+async function fi(e, s) {
+  const n = `/api/extension/clinical-notes/${e}?facilityName=${encodeURIComponent(s.facilityName)}&orgSlug=${s.orgSlug}`, i = await chrome.runtime.sendMessage({
     type: "API_REQUEST",
-    endpoint
+    endpoint: n
   });
-  if (!response.success) throw new Error(response.error);
-  return response.data;
+  if (!i.success) throw new Error(i.error);
+  return i.data;
 }
-async function fetchTherapyDocument(therapyDocId, params) {
-  const endpoint = `/api/extension/therapy-documents/${therapyDocId}?facilityName=${encodeURIComponent(params.facilityName)}&orgSlug=${params.orgSlug}`;
-  const response = await chrome.runtime.sendMessage({
+async function yi(e, s) {
+  const n = `/api/extension/therapy-documents/${e}?facilityName=${encodeURIComponent(s.facilityName)}&orgSlug=${s.orgSlug}`, i = await chrome.runtime.sendMessage({
     type: "API_REQUEST",
-    endpoint
+    endpoint: n
   });
-  if (!response.success) throw new Error(response.error);
-  return response.data;
+  if (!i.success) throw new Error(i.error);
+  return i.data;
 }
-async function fetchDocument(documentId, params) {
-  const endpoint = `/api/extension/documents/${documentId}?facilityName=${encodeURIComponent(params.facilityName)}&orgSlug=${params.orgSlug}`;
-  const response = await chrome.runtime.sendMessage({
+async function Ne(e, s) {
+  const n = `/api/extension/documents/${e}?facilityName=${encodeURIComponent(s.facilityName)}&orgSlug=${s.orgSlug}`, i = await chrome.runtime.sendMessage({
     type: "API_REQUEST",
-    endpoint
+    endpoint: n
   });
-  if (!response.success) throw new Error(response.error);
-  return response.data;
+  if (!i.success) throw new Error(i.error);
+  return i.data;
 }
-function escapeHTMLViewer(str) {
-  if (!str) return "";
-  return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+function H(e) {
+  return e ? String(e).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;") : "";
 }
-function formatDateDisplay(dateStr) {
-  if (!dateStr) return "";
+function Be(e) {
+  if (!e) return "";
   try {
-    const date = new Date(dateStr);
-    return date.toLocaleDateString("en-US", {
+    return new Date(e).toLocaleDateString("en-US", {
       month: "short",
       day: "numeric",
       year: "numeric"
     });
   } catch {
-    return dateStr;
+    return e;
   }
 }
-function formatDateTimeDisplay(dateStr) {
-  if (!dateStr) return "";
+function vi(e) {
+  if (!e) return "";
   try {
-    const date = new Date(dateStr);
-    return date.toLocaleDateString("en-US", {
+    return new Date(e).toLocaleDateString("en-US", {
       month: "short",
       day: "numeric",
       year: "numeric",
@@ -6929,94 +6227,76 @@ function formatDateTimeDisplay(dateStr) {
       minute: "2-digit"
     });
   } catch {
-    return dateStr;
+    return e;
   }
 }
-var HIGHLIGHT_DATA_ATTR = "data-evidence-highlight";
-function normalizeText(text) {
-  if (!text) return "";
-  return text.toLowerCase().replace(/\s+/g, " ").trim();
+const Ke = "data-evidence-highlight";
+function Ge(e) {
+  return e ? e.toLowerCase().replace(/\s+/g, " ").trim() : "";
 }
-function textMatchesQuote(fieldText, quoteText) {
-  if (!fieldText || !quoteText) return false;
-  const normalizedField = normalizeText(fieldText);
-  const normalizedQuote = normalizeText(quoteText);
-  if (normalizedField.length < 10 || normalizedQuote.length < 10) return false;
-  return normalizedField.includes(normalizedQuote) || normalizedQuote.includes(normalizedField);
+function Rs(e, s) {
+  if (!e || !s) return !1;
+  const n = Ge(e), i = Ge(s);
+  return n.length < 10 || i.length < 10 ? !1 : n.includes(i) || i.includes(n);
 }
-function textHasWordOverlap(fieldText, quoteText, minWordLength = 4) {
-  if (!fieldText || !quoteText) return false;
-  const normalizedField = normalizeText(fieldText);
-  const normalizedQuote = normalizeText(quoteText);
-  const quoteWords = normalizedQuote.split(/\s+/).filter((word) => word.length >= minWordLength);
-  const matchingWords = quoteWords.filter((word) => normalizedField.includes(word));
-  return matchingWords.length >= 2;
+function Es(e, s, n = 4) {
+  if (!e || !s) return !1;
+  const i = Ge(e);
+  return Ge(s).split(/\s+/).filter((o) => o.length >= n).filter((o) => i.includes(o)).length >= 2;
 }
-function isTextHighlighted(highlightQuote, fieldText) {
-  return textMatchesQuote(fieldText, highlightQuote) || textHasWordOverlap(fieldText, highlightQuote);
+function Ue(e, s) {
+  return Rs(s, e) || Es(s, e);
 }
-function anyTextMatchesQuote(texts, quoteText) {
-  return texts.some((text) => textMatchesQuote(text, quoteText) || textHasWordOverlap(text, quoteText));
+function bi(e, s) {
+  return e.some((n) => Rs(n, s) || Es(n, s));
 }
-function formatSignatureDateTime(dateString) {
-  if (!dateString) return "";
+function Jt(e) {
+  if (!e) return "";
   try {
-    const date = new Date(dateString);
-    if (isNaN(date.getTime())) return dateString;
-    const month = date.getMonth() + 1;
-    const day = date.getDate();
-    const year = date.getFullYear();
-    let hours = date.getHours();
-    const minutes = date.getMinutes().toString().padStart(2, "0");
-    const seconds = date.getSeconds().toString().padStart(2, "0");
-    const ampm = hours >= 12 ? "PM" : "AM";
-    hours = hours % 12 || 12;
-    return `${month}/${day}/${year} ${hours}:${minutes}:${seconds} ${ampm}`;
+    const s = new Date(e);
+    if (isNaN(s.getTime())) return e;
+    const n = s.getMonth() + 1, i = s.getDate(), a = s.getFullYear();
+    let r = s.getHours();
+    const c = s.getMinutes().toString().padStart(2, "0"), o = s.getSeconds().toString().padStart(2, "0"), p = r >= 12 ? "PM" : "AM";
+    return r = r % 12 || 12, `${n}/${i}/${a} ${r}:${c}:${o} ${p}`;
   } catch {
-    return dateString;
+    return e;
   }
 }
-function setupModalCloseHandlers(modal, modalClass) {
-  const isOnBody = !document.querySelector(".icd10-viewer-modal__container");
-  if (isOnBody) document.body.style.overflow = "hidden";
-  const closeModal = () => {
-    if (isOnBody) document.body.style.overflow = "";
-    modal.remove();
+function de(e, s) {
+  const n = !document.querySelector(".icd10-viewer-modal__container");
+  n && (document.body.style.overflow = "hidden");
+  const i = () => {
+    n && (document.body.style.overflow = ""), e.remove();
   };
-  modal.querySelector(`.${modalClass}__close`).addEventListener("click", closeModal);
-  modal.querySelector(`.${modalClass}__backdrop`).addEventListener("click", closeModal);
-  const escHandler = (e3) => {
-    if (e3.key === "Escape") {
-      closeModal();
-      document.removeEventListener("keydown", escHandler);
-    }
+  e.querySelector(`.${s}__close`).addEventListener("click", i), e.querySelector(`.${s}__backdrop`).addEventListener("click", i);
+  const a = (r) => {
+    r.key === "Escape" && (i(), document.removeEventListener("keydown", a));
   };
-  document.addEventListener("keydown", escHandler);
+  document.addEventListener("keydown", a);
 }
-function renderModalError(modal, errorMessage, modalClass) {
-  const body = modal.querySelector(`.${modalClass}__body`);
-  body.innerHTML = `
+function It(e, s, n) {
+  const i = e.querySelector(`.${n}__body`);
+  i.innerHTML = `
     <div class="super-viewer-error">
-      <div class="super-viewer-error__icon">\u26A0\uFE0F</div>
-      <div class="super-viewer-error__message">${escapeHTMLViewer(errorMessage)}</div>
+      <div class="super-viewer-error__icon">⚠️</div>
+      <div class="super-viewer-error__message">${H(s)}</div>
     </div>
   `;
 }
-async function showClinicalNoteModal(noteId) {
-  const params = await window.getCurrentParams();
-  const modal = createNoteModalShell();
-  getModalMountPoint().appendChild(modal);
+async function wi(e) {
+  const s = await window.getCurrentParams(), n = Di();
+  Dt().appendChild(n);
   try {
-    const data = await fetchClinicalNote(noteId, params);
-    renderNoteModalContent(modal, data.note);
-  } catch (error) {
-    renderModalError(modal, error.message, "super-note-modal");
+    const i = await fi(e, s);
+    Ii(n, i.note);
+  } catch (i) {
+    It(n, i.message, "super-note-modal");
   }
 }
-function createNoteModalShell() {
-  const modal = document.createElement("div");
-  modal.className = "super-note-modal";
-  modal.innerHTML = `
+function Di() {
+  const e = document.createElement("div");
+  return e.className = "super-note-modal", e.innerHTML = `
     <div class="super-note-modal__backdrop"></div>
     <div class="super-note-modal__container">
       <div class="super-note-modal__header">
@@ -7032,66 +6312,58 @@ function createNoteModalShell() {
         </div>
       </div>
     </div>
-  `;
-  setupModalCloseHandlers(modal, "super-note-modal");
-  return modal;
+  `, de(e, "super-note-modal"), e;
 }
-function renderNoteModalContent(modal, note) {
-  const container = modal.querySelector(".super-note-modal__container");
-  const noteTypeLabel = note.noteType === "practitioner" ? "Practitioner Note" : "Progress Note";
-  const noteTypeBadgeClass = note.noteType === "practitioner" ? "super-note-badge--practitioner" : "super-note-badge--progress";
-  container.innerHTML = `
+function Ii(e, s) {
+  const n = e.querySelector(".super-note-modal__container"), i = s.noteType === "practitioner" ? "Practitioner Note" : "Progress Note", a = s.noteType === "practitioner" ? "super-note-badge--practitioner" : "super-note-badge--progress";
+  n.innerHTML = `
     <div class="super-note-modal__header">
       <div class="super-note-modal__title-row">
-        <span class="super-note-modal__icon">\u{1F4DD}</span>
+        <span class="super-note-modal__icon">📝</span>
         <div class="super-note-modal__title">
-          <span class="super-note-modal__name">${escapeHTMLViewer(note.department || noteTypeLabel)}</span>
-          <span class="super-note-badge ${noteTypeBadgeClass}">${noteTypeLabel}</span>
+          <span class="super-note-modal__name">${H(s.department || i)}</span>
+          <span class="super-note-badge ${a}">${i}</span>
         </div>
         <button class="super-note-modal__close">&times;</button>
       </div>
-      ${note.provider ? `<div class="super-note-modal__provider">${escapeHTMLViewer(note.provider)}</div>` : ""}
+      ${s.provider ? `<div class="super-note-modal__provider">${H(s.provider)}</div>` : ""}
       <div class="super-note-modal__meta">
-        ${note.effectiveDate ? `<span>${formatDateDisplay(note.effectiveDate)}</span>` : ""}
-        ${note.visitType ? `<span class="super-note-modal__visit-type">${escapeHTMLViewer(note.visitType)}</span>` : ""}
-        ${note.task ? `<span class="super-note-modal__task">${escapeHTMLViewer(note.task)}</span>` : ""}
+        ${s.effectiveDate ? `<span>${Be(s.effectiveDate)}</span>` : ""}
+        ${s.visitType ? `<span class="super-note-modal__visit-type">${H(s.visitType)}</span>` : ""}
+        ${s.task ? `<span class="super-note-modal__task">${H(s.task)}</span>` : ""}
       </div>
     </div>
 
     <div class="super-note-modal__body">
-      <div class="super-note-modal__text">${escapeHTMLViewer(note.noteText || "No note content available.")}</div>
+      <div class="super-note-modal__text">${H(s.noteText || "No note content available.")}</div>
     </div>
 
     <div class="super-note-modal__footer">
-      ${note.signedDate ? `<span class="super-note-modal__signed">Signed: ${formatDateTimeDisplay(note.signedDate)}</span>` : ""}
-      ${note.hasAddendum ? `<span class="super-note-modal__addendum">Has Addendum</span>` : ""}
+      ${s.signedDate ? `<span class="super-note-modal__signed">Signed: ${vi(s.signedDate)}</span>` : ""}
+      ${s.hasAddendum ? '<span class="super-note-modal__addendum">Has Addendum</span>' : ""}
     </div>
-  `;
-  setupModalCloseHandlers(modal, "super-note-modal");
+  `, de(e, "super-note-modal");
 }
-async function showTherapyDocModal(therapyDocId, highlightQuote = null) {
-  const params = await window.getCurrentParams();
-  const modal = createTherapyModalShell();
-  getModalMountPoint().appendChild(modal);
+async function Ci(e, s = null) {
+  const n = await window.getCurrentParams(), i = ki();
+  Dt().appendChild(i);
   try {
-    const data = await fetchTherapyDocument(therapyDocId, params);
-    renderTherapyModalContent(modal, data.therapyDocument, highlightQuote);
-  } catch (error) {
-    renderModalError(modal, error.message, "super-therapy-modal");
+    const a = await yi(e, n);
+    Si(i, a.therapyDocument, s);
+  } catch (a) {
+    It(i, a.message, "super-therapy-modal");
   }
 }
-function createTherapyModalShell() {
-  const modal = document.createElement("div");
-  modal.className = "super-therapy-modal";
-  modal.dataset.zoom = "100";
-  modal.innerHTML = `
+function ki() {
+  const e = document.createElement("div");
+  return e.className = "super-therapy-modal", e.dataset.zoom = "100", e.innerHTML = `
     <div class="super-therapy-modal__backdrop"></div>
     <div class="super-therapy-modal__container">
       <div class="super-therapy-modal__toolbar">
         <div class="super-therapy-modal__toolbar-title">Loading...</div>
         <div class="super-therapy-modal__toolbar-controls">
           <div class="super-therapy-modal__zoom">
-            <button class="super-therapy-modal__zoom-btn" data-zoom-action="out" title="Zoom Out">\u2212</button>
+            <button class="super-therapy-modal__zoom-btn" data-zoom-action="out" title="Zoom Out">−</button>
             <span class="super-therapy-modal__zoom-level">100%</span>
             <button class="super-therapy-modal__zoom-btn" data-zoom-action="in" title="Zoom In">+</button>
           </div>
@@ -7108,160 +6380,114 @@ function createTherapyModalShell() {
         <button class="super-therapy-modal__btn super-therapy-modal__btn--secondary super-therapy-modal__close-btn">Close</button>
       </div>
     </div>
-  `;
-  setupModalCloseHandlers(modal, "super-therapy-modal");
-  setupTherapyZoomHandlers(modal);
-  modal.querySelector(".super-therapy-modal__close-btn")?.addEventListener("click", () => {
-    document.body.style.overflow = "";
-    modal.remove();
-  });
-  return modal;
+  `, de(e, "super-therapy-modal"), _e(e), e.querySelector(".super-therapy-modal__close-btn")?.addEventListener("click", () => {
+    document.body.style.overflow = "", e.remove();
+  }), e;
 }
-function setupTherapyZoomHandlers(modal) {
-  const zoomLevels = [50, 75, 100, 125, 150];
-  modal.querySelectorAll(".super-therapy-modal__zoom-btn").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      const action = btn.dataset.zoomAction;
-      const currentZoom = parseInt(modal.dataset.zoom) || 100;
-      const currentIndex = zoomLevels.indexOf(currentZoom);
-      let newZoom = currentZoom;
-      if (action === "in" && currentIndex < zoomLevels.length - 1) {
-        newZoom = zoomLevels[currentIndex + 1];
-      } else if (action === "out" && currentIndex > 0) {
-        newZoom = zoomLevels[currentIndex - 1];
-      }
-      modal.dataset.zoom = newZoom;
-      const zoomDisplay = modal.querySelector(".super-therapy-modal__zoom-level");
-      if (zoomDisplay) zoomDisplay.textContent = `${newZoom}%`;
-      const doc = modal.querySelector(".super-therapy-doc");
-      if (doc) {
-        doc.style.transform = `scale(${newZoom / 100})`;
-        doc.style.transformOrigin = "top center";
-      }
+function _e(e) {
+  const s = [50, 75, 100, 125, 150];
+  e.querySelectorAll(".super-therapy-modal__zoom-btn").forEach((n) => {
+    n.addEventListener("click", () => {
+      const i = n.dataset.zoomAction, a = parseInt(e.dataset.zoom) || 100, r = s.indexOf(a);
+      let c = a;
+      i === "in" && r < s.length - 1 ? c = s[r + 1] : i === "out" && r > 0 && (c = s[r - 1]), e.dataset.zoom = c;
+      const o = e.querySelector(".super-therapy-modal__zoom-level");
+      o && (o.textContent = `${c}%`);
+      const p = e.querySelector(".super-therapy-doc");
+      p && (p.style.transform = `scale(${c / 100})`, p.style.transformOrigin = "top center");
     });
   });
 }
-function renderTherapyModalContent(modal, doc, highlightQuote = null) {
-  const { documentType } = doc;
-  switch (documentType) {
+function Si(e, s, n = null) {
+  const { documentType: i } = s;
+  switch (i) {
     case "EVAL":
-      renderEvalDocument(modal, doc, highlightQuote);
+      Ai(e, s, n);
       break;
     case "TEN":
-      renderTENDocument(modal, doc, highlightQuote);
+      Ti(e, s, n);
       break;
     case "PR":
-      renderProgressReport(modal, doc, highlightQuote);
+      Mi(e, s, n);
       break;
     case "RECERT":
-      renderRecertDocument(modal, doc, highlightQuote);
+      Li(e, s, n);
       break;
     case "DISCH":
-      renderDischargeDocument(modal, doc, highlightQuote);
+      $i(e, s, n);
       break;
     default:
-      renderGenericTherapyDoc(modal, doc, highlightQuote);
+      Ri(e, s, n);
   }
-  if (highlightQuote) {
-    setTimeout(() => {
-      setupHighlightNavigation(modal);
-    }, 100);
-  }
+  n && setTimeout(() => {
+    Ni(e);
+  }, 100);
 }
-function setupHighlightNavigation(modal) {
-  const highlights = modal.querySelectorAll(`[${HIGHLIGHT_DATA_ATTR}="true"]`);
-  if (highlights.length === 0) return;
-  highlights[0].scrollIntoView({ behavior: "smooth", block: "center" });
-  if (highlights.length === 1) return;
-  const nav = document.createElement("div");
-  nav.className = "super-therapy-highlight-nav";
-  nav.innerHTML = `
+function Ni(e) {
+  const s = e.querySelectorAll(`[${Ke}="true"]`);
+  if (s.length === 0 || (s[0].scrollIntoView({ behavior: "smooth", block: "center" }), s.length === 1)) return;
+  const n = document.createElement("div");
+  n.className = "super-therapy-highlight-nav", n.innerHTML = `
     <button class="super-therapy-highlight-nav__btn" data-action="prev" title="Previous highlight">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <polyline points="15 18 9 12 15 6"></polyline>
       </svg>
     </button>
-    <span class="super-therapy-highlight-nav__count">1 of ${highlights.length}</span>
+    <span class="super-therapy-highlight-nav__count">1 of ${s.length}</span>
     <button class="super-therapy-highlight-nav__btn" data-action="next" title="Next highlight">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <polyline points="9 18 15 12 9 6"></polyline>
       </svg>
     </button>
   `;
-  const modalBody = modal.querySelector(".super-therapy-modal__body");
-  if (modalBody) {
-    modalBody.appendChild(nav);
-  }
-  let currentIndex = 0;
-  const goToHighlight = (index) => {
-    highlights.forEach((h3) => h3.classList.remove("super-therapy-highlight--active"));
-    highlights[index].classList.add("super-therapy-highlight--active");
-    highlights[index].scrollIntoView({ behavior: "smooth", block: "center" });
-    nav.querySelector(".super-therapy-highlight-nav__count").textContent = `${index + 1} of ${highlights.length}`;
+  const i = e.querySelector(".super-therapy-modal__body");
+  i && i.appendChild(n);
+  let a = 0;
+  const r = (c) => {
+    s.forEach((o) => o.classList.remove("super-therapy-highlight--active")), s[c].classList.add("super-therapy-highlight--active"), s[c].scrollIntoView({ behavior: "smooth", block: "center" }), n.querySelector(".super-therapy-highlight-nav__count").textContent = `${c + 1} of ${s.length}`;
   };
-  nav.querySelectorAll(".super-therapy-highlight-nav__btn").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      const action = btn.dataset.action;
-      if (action === "prev") {
-        currentIndex = currentIndex > 0 ? currentIndex - 1 : highlights.length - 1;
-      } else {
-        currentIndex = currentIndex < highlights.length - 1 ? currentIndex + 1 : 0;
-      }
-      goToHighlight(currentIndex);
+  n.querySelectorAll(".super-therapy-highlight-nav__btn").forEach((c) => {
+    c.addEventListener("click", () => {
+      c.dataset.action === "prev" ? a = a > 0 ? a - 1 : s.length - 1 : a = a < s.length - 1 ? a + 1 : 0, r(a);
     });
-  });
-  highlights[0].classList.add("super-therapy-highlight--active");
+  }), s[0].classList.add("super-therapy-highlight--active");
 }
-var DISCIPLINE_NAMES = {
-  "PT": "Physical Therapy",
-  "OT": "Occupational Therapy",
-  "ST": "Speech Therapy"
+const xi = {
+  PT: "Physical Therapy",
+  OT: "Occupational Therapy",
+  ST: "Speech Therapy"
+}, Pi = {
+  EVAL: "Initial Evaluation",
+  TEN: "Treatment Encounter Note(s)",
+  PR: "Progress Report",
+  RECERT: "Recertification",
+  DISCH: "Discharge Summary"
 };
-var DOC_TYPE_TITLES = {
-  "EVAL": "Initial Evaluation",
-  "TEN": "Treatment Encounter Note(s)",
-  "PR": "Progress Report",
-  "RECERT": "Recertification",
-  "DISCH": "Discharge Summary"
-};
-function getField(data, ...keys) {
-  for (const key of keys) {
-    if (data[key] !== void 0) return data[key];
-    const pascal = key.charAt(0).toUpperCase() + key.slice(1);
-    if (data[pascal] !== void 0) return data[pascal];
+function se(e, ...s) {
+  for (const n of s) {
+    if (e[n] !== void 0) return e[n];
+    const i = n.charAt(0).toUpperCase() + n.slice(1);
+    if (e[i] !== void 0) return e[i];
   }
   return null;
 }
-function renderDocumentHeader(doc) {
-  const json = doc.jsonData || {};
-  const params = json.Parameters || json.parameters || {};
-  const discipline = doc.discipline || "";
-  const disciplineName = DISCIPLINE_NAMES[discipline] || discipline || "Therapy";
-  const docType = doc.documentType || "";
-  const docTitle = DOC_TYPE_TITLES[docType] || json.BodyDocumentName || json.bodyDocumentName || docType;
-  const providerName = doc.providerName || getField(params, "ProviderName", "providerName") || getField(json, "HeaderProviderName", "headerProviderName") || "";
-  const patientName = getField(params, "PatientName", "patientName") || getField(json, "HeaderPatientName", "headerPatientName") || getField(json, "BodyPatientName", "bodyPatientName") || "";
+function be(e) {
+  const s = e.jsonData || {}, n = s.Parameters || s.parameters || {}, i = e.discipline || "", a = xi[i] || i || "Therapy", r = e.documentType || "", c = Pi[r] || s.BodyDocumentName || s.bodyDocumentName || r, o = e.providerName || se(n, "ProviderName", "providerName") || se(s, "HeaderProviderName", "headerProviderName") || "", p = se(n, "PatientName", "patientName") || se(s, "HeaderPatientName", "headerPatientName") || se(s, "BodyPatientName", "bodyPatientName") || "";
   return `
     <div class="super-therapy-doc__header">
-      <div class="super-therapy-doc__discipline">${escapeHTMLViewer(disciplineName)}</div>
-      <div class="super-therapy-doc__title">${escapeHTMLViewer(docTitle)}</div>
+      <div class="super-therapy-doc__discipline">${H(a)}</div>
+      <div class="super-therapy-doc__title">${H(c)}</div>
     </div>
     <div class="super-therapy-doc__info-row">
       <div class="super-therapy-doc__provider">
-        <span class="super-therapy-doc__provider-label">Provider: </span>${escapeHTMLViewer(providerName)}
+        <span class="super-therapy-doc__provider-label">Provider: </span>${H(o)}
       </div>
-      <div class="super-therapy-doc__patient">${escapeHTMLViewer(patientName)}</div>
+      <div class="super-therapy-doc__patient">${H(p)}</div>
     </div>
   `;
 }
-function renderIdentificationTable(doc) {
-  const json = doc.jsonData || {};
-  const params = json.Parameters || json.parameters || {};
-  const patientName = getField(params, "PatientName", "patientName") || getField(json, "BodyPatientName", "bodyPatientName") || "";
-  const mrn = getField(params, "MedicalRecordNumber", "medicalRecordNumber") || getField(json, "BodyMRN", "bodyMRN") || "";
-  const dob = getField(params, "DateOfBirth", "dateOfBirth") || getField(json, "BodyDOB", "bodyDOB") || "";
-  const payer = getField(params, "PayerName", "payerName") || "";
-  const startOfCare = getField(params, "StartOfCare", "startOfCare") || "";
+function we(e) {
+  const s = e.jsonData || {}, n = s.Parameters || s.parameters || {}, i = se(n, "PatientName", "patientName") || se(s, "BodyPatientName", "bodyPatientName") || "", a = se(n, "MedicalRecordNumber", "medicalRecordNumber") || se(s, "BodyMRN", "bodyMRN") || "", r = se(n, "DateOfBirth", "dateOfBirth") || se(s, "BodyDOB", "bodyDOB") || "", c = se(n, "PayerName", "payerName") || "", o = se(n, "StartOfCare", "startOfCare") || "";
   return `
     <div class="super-therapy-section">
       <div class="super-therapy-section-header">Identification Information</div>
@@ -7269,26 +6495,24 @@ function renderIdentificationTable(doc) {
         <table class="super-therapy-id-table">
           <tr>
             <td class="super-therapy-id-table__label">Patient:</td>
-            <td class="super-therapy-id-table__value">${escapeHTMLViewer(patientName)}</td>
-            ${dob ? `<td class="super-therapy-id-table__label">DOB:</td><td class="super-therapy-id-table__value">${escapeHTMLViewer(dob)}</td>` : ""}
-            ${startOfCare ? `<td class="super-therapy-id-table__label">Start of Care:</td><td class="super-therapy-id-table__value">${escapeHTMLViewer(startOfCare)}</td>` : ""}
+            <td class="super-therapy-id-table__value">${H(i)}</td>
+            ${r ? `<td class="super-therapy-id-table__label">DOB:</td><td class="super-therapy-id-table__value">${H(r)}</td>` : ""}
+            ${o ? `<td class="super-therapy-id-table__label">Start of Care:</td><td class="super-therapy-id-table__value">${H(o)}</td>` : ""}
           </tr>
           <tr>
-            ${payer ? `<td class="super-therapy-id-table__label">Payer:</td><td class="super-therapy-id-table__value">${escapeHTMLViewer(payer)}</td>` : ""}
+            ${c ? `<td class="super-therapy-id-table__label">Payer:</td><td class="super-therapy-id-table__value">${H(c)}</td>` : ""}
             <td class="super-therapy-id-table__label">MRN:</td>
-            <td class="super-therapy-id-table__value" ${payer ? "" : 'colspan="3"'}>${escapeHTMLViewer(mrn)}</td>
+            <td class="super-therapy-id-table__value" ${c ? "" : 'colspan="3"'}>${H(a)}</td>
           </tr>
         </table>
       </div>
     </div>
   `;
 }
-function renderDiagnosesTable(diagnoses) {
-  if (!diagnoses || diagnoses.length === 0) return "";
-  const medicalDx = diagnoses.filter((d3) => d3.IsMedicalDx || d3.isMedicalDx);
-  const treatmentDx = diagnoses.filter((d3) => d3.IsTreatmentDx || d3.isTreatmentDx);
-  if (medicalDx.length === 0 && treatmentDx.length === 0) return "";
-  return `
+function Je(e) {
+  if (!e || e.length === 0) return "";
+  const s = e.filter((i) => i.IsMedicalDx || i.isMedicalDx), n = e.filter((i) => i.IsTreatmentDx || i.isTreatmentDx);
+  return s.length === 0 && n.length === 0 ? "" : `
     <div class="super-therapy-section">
       <div class="super-therapy-section-header">Diagnoses</div>
       <div class="super-therapy-section__body">
@@ -7302,20 +6526,20 @@ function renderDiagnosesTable(diagnoses) {
             </tr>
           </thead>
           <tbody>
-            ${medicalDx.map((d3) => `
+            ${s.map((i) => `
               <tr>
                 <td>Medical</td>
-                <td class="super-therapy-dx-table__code">${escapeHTMLViewer(d3.Code || d3.code || "")}</td>
-                <td>${escapeHTMLViewer(d3.Description || d3.description || "")}</td>
-                <td>${formatDateDisplay(d3.OnsetDate || d3.onsetDate) || "-"}</td>
+                <td class="super-therapy-dx-table__code">${H(i.Code || i.code || "")}</td>
+                <td>${H(i.Description || i.description || "")}</td>
+                <td>${Be(i.OnsetDate || i.onsetDate) || "-"}</td>
               </tr>
             `).join("")}
-            ${treatmentDx.map((d3) => `
+            ${n.map((i) => `
               <tr>
                 <td>Treatment</td>
-                <td class="super-therapy-dx-table__code">${escapeHTMLViewer(d3.Code || d3.code || "")}</td>
-                <td>${escapeHTMLViewer(d3.Description || d3.description || "")}</td>
-                <td>${formatDateDisplay(d3.OnsetDate || d3.onsetDate) || "-"}</td>
+                <td class="super-therapy-dx-table__code">${H(i.Code || i.code || "")}</td>
+                <td>${H(i.Description || i.description || "")}</td>
+                <td>${Be(i.OnsetDate || i.onsetDate) || "-"}</td>
               </tr>
             `).join("")}
           </tbody>
@@ -7324,131 +6548,105 @@ function renderDiagnosesTable(diagnoses) {
     </div>
   `;
 }
-function renderGoalCard(goal, isLongTerm = false, highlightQuote = null) {
-  const goalType = isLongTerm ? "LTG" : "STG";
-  const goalNum = goal.GoalNum || goal.goalNum || "?";
-  const status = goal.GoalStatus || goal.goalStatus || "Continue";
-  const statusClass = `super-therapy-goal__status--${status.toLowerCase().replace(/\s+/g, "")}`;
-  const goalText = goal.GoalText || goal.goalText || "";
-  const targetDate = goal.TargetDate || goal.targetDate || "";
-  const plofText = goal.GoalPlofText || goal.goalPlofText || "";
-  const baselineText = goal.BaselineValueText || goal.baselineValueText || "";
-  const priorText = goal.PriorValueText || goal.priorValueText || "";
-  const currentText = goal.CurrentValueText || goal.currentValueText || "";
-  const comments = goal.Comments || goal.comments || "";
-  const measurementCaption = goal.MeasurementCaption || goal.measurementCaption || "";
-  const allTexts = [goalText, comments, baselineText, priorText, currentText, plofText];
-  const hasMatch = anyTextMatchesQuote(allTexts, highlightQuote);
-  const highlightAttr = hasMatch ? `${HIGHLIGHT_DATA_ATTR}="true"` : "";
-  const goalTextHighlight = isTextHighlighted(highlightQuote, goalText) ? "super-therapy-highlight" : "";
-  const commentsHighlight = isTextHighlighted(highlightQuote, comments) ? "super-therapy-highlight" : "";
+function Yt(e, s = !1, n = null) {
+  const i = s ? "LTG" : "STG", a = e.GoalNum || e.goalNum || "?", r = e.GoalStatus || e.goalStatus || "Continue", c = `super-therapy-goal__status--${r.toLowerCase().replace(/\s+/g, "")}`, o = e.GoalText || e.goalText || "", p = e.TargetDate || e.targetDate || "", d = e.GoalPlofText || e.goalPlofText || "", u = e.BaselineValueText || e.baselineValueText || "", l = e.PriorValueText || e.priorValueText || "", m = e.CurrentValueText || e.currentValueText || "", h = e.Comments || e.comments || "", _ = e.MeasurementCaption || e.measurementCaption || "", C = bi([o, h, u, l, m, d], n) ? `${Ke}="true"` : "", f = Ue(n, o) ? "super-therapy-highlight" : "", x = Ue(n, h) ? "super-therapy-highlight" : "";
   return `
-    <div class="super-therapy-goal" ${highlightAttr}>
+    <div class="super-therapy-goal" ${C}>
       <div class="super-therapy-goal__header">
-        <div class="super-therapy-goal__title">${goalType} #${goalNum} - ${status}</div>
-        <span class="super-therapy-goal__status ${statusClass}">${status}</span>
+        <div class="super-therapy-goal__title">${i} #${a} - ${r}</div>
+        <span class="super-therapy-goal__status ${c}">${r}</span>
       </div>
       <div class="super-therapy-goal__body">
-        <p class="super-therapy-goal__text ${goalTextHighlight}">${escapeHTMLViewer(goalText)}</p>
-        ${targetDate ? `<p class="super-therapy-goal__target">Target: ${formatDateDisplay(targetDate)}</p>` : ""}
+        <p class="super-therapy-goal__text ${f}">${H(o)}</p>
+        ${p ? `<p class="super-therapy-goal__target">Target: ${Be(p)}</p>` : ""}
       </div>
       <div class="super-therapy-goal__progress">
         <div>
           <div class="super-therapy-goal__progress-item">
             <div class="super-therapy-goal__progress-label">PLOF</div>
-            <div class="super-therapy-goal__progress-value">${escapeHTMLViewer(plofText || "Not specified")}</div>
+            <div class="super-therapy-goal__progress-value">${H(d || "Not specified")}</div>
           </div>
-          ${baselineText ? `
+          ${u ? `
             <div class="super-therapy-goal__progress-item">
-              <div class="super-therapy-goal__progress-label">Baseline${measurementCaption ? ` <span class="super-therapy-goal__progress-sublabel">(${escapeHTMLViewer(measurementCaption)})</span>` : ""}</div>
-              <div class="super-therapy-goal__progress-value">${escapeHTMLViewer(baselineText)}</div>
+              <div class="super-therapy-goal__progress-label">Baseline${_ ? ` <span class="super-therapy-goal__progress-sublabel">(${H(_)})</span>` : ""}</div>
+              <div class="super-therapy-goal__progress-value">${H(u)}</div>
             </div>
           ` : ""}
         </div>
         <div>
-          ${priorText ? `
+          ${l ? `
             <div class="super-therapy-goal__progress-item">
               <div class="super-therapy-goal__progress-label">Previous</div>
-              <div class="super-therapy-goal__progress-value">${escapeHTMLViewer(priorText)}</div>
+              <div class="super-therapy-goal__progress-value">${H(l)}</div>
             </div>
           ` : ""}
-          ${currentText ? `
+          ${m ? `
             <div class="super-therapy-goal__progress-item">
               <div class="super-therapy-goal__progress-label">Current</div>
-              <div class="super-therapy-goal__progress-value">${escapeHTMLViewer(currentText)}</div>
+              <div class="super-therapy-goal__progress-value">${H(m)}</div>
             </div>
           ` : ""}
         </div>
       </div>
-      ${comments ? `
+      ${h ? `
         <div class="super-therapy-goal__comments">
           <span class="super-therapy-goal__comments-label">Comments: </span>
-          <span class="${commentsHighlight}">${escapeHTMLViewer(comments)}</span>
+          <span class="${x}">${H(h)}</span>
         </div>
       ` : ""}
     </div>
   `;
 }
-function renderGoalsSection(goals, highlightQuote = null) {
-  if (!goals || goals.length === 0) return "";
-  const stGoals = goals.filter((g2) => !g2.IsLongTerm && !g2.isLongTerm);
-  const ltGoals = goals.filter((g2) => g2.IsLongTerm || g2.isLongTerm);
+function Ct(e, s = null) {
+  if (!e || e.length === 0) return "";
+  const n = e.filter((a) => !a.IsLongTerm && !a.isLongTerm), i = e.filter((a) => a.IsLongTerm || a.isLongTerm);
   return `
     <div class="super-therapy-section">
       <div class="super-therapy-section-header">Goals</div>
       <div class="super-therapy-section__body">
-        ${ltGoals.length > 0 ? `
+        ${i.length > 0 ? `
           <div class="super-therapy-goals-title">Long-Term Goals</div>
-          ${ltGoals.map((g2) => renderGoalCard(g2, true, highlightQuote)).join("")}
+          ${i.map((a) => Yt(a, !0, s)).join("")}
         ` : ""}
-        ${stGoals.length > 0 ? `
+        ${n.length > 0 ? `
           <div class="super-therapy-goals-title">Short-Term Goals</div>
-          ${stGoals.map((g2) => renderGoalCard(g2, false, highlightQuote)).join("")}
+          ${n.map((a) => Yt(a, !1, s)).join("")}
         ` : ""}
       </div>
     </div>
   `;
 }
-function renderInterventionsSection(approaches) {
-  if (!approaches || approaches.length === 0) return "";
-  return `
+function kt(e) {
+  return !e || e.length === 0 ? "" : `
     <div class="super-therapy-section">
       <div class="super-therapy-section-header">Plan of Treatment - Interventions</div>
       <div class="super-therapy-section__body">
-        ${approaches.map((a3) => `
+        ${e.map((s) => `
           <div class="super-therapy-intervention">
-            <span class="super-therapy-intervention__code">${escapeHTMLViewer(a3.Code || a3.code || "")}</span>
-            - ${escapeHTMLViewer(a3.Description || a3.description || "")}
+            <span class="super-therapy-intervention__code">${H(s.Code || s.code || "")}</span>
+            - ${H(s.Description || s.description || "")}
           </div>
         `).join("")}
       </div>
     </div>
   `;
 }
-function renderAssessmentSections(assessmentLayout, highlightQuote = null) {
-  if (!assessmentLayout || assessmentLayout.length === 0) return "";
-  const sections = {};
-  assessmentLayout.forEach((item) => {
-    const sectionName = item.PrintSectionName || item.printSectionName || item.SectionName || item.sectionName || "Assessment";
-    const groupName = item.PrintGroupName || item.printGroupName || item.GroupName || item.groupName || "";
-    const values = item.GroupValues || item.groupValues || "";
-    if (!sections[sectionName]) {
-      sections[sectionName] = [];
-    }
-    sections[sectionName].push({ groupName, values });
-  });
-  return Object.entries(sections).map(([sectionName, items]) => `
+function Ye(e, s = null) {
+  if (!e || e.length === 0) return "";
+  const n = {};
+  return e.forEach((i) => {
+    const a = i.PrintSectionName || i.printSectionName || i.SectionName || i.sectionName || "Assessment", r = i.PrintGroupName || i.printGroupName || i.GroupName || i.groupName || "", c = i.GroupValues || i.groupValues || "";
+    n[a] || (n[a] = []), n[a].push({ groupName: r, values: c });
+  }), Object.entries(n).map(([i, a]) => `
     <div class="super-therapy-section">
-      <div class="super-therapy-section-header">${escapeHTMLViewer(sectionName)}</div>
+      <div class="super-therapy-section-header">${H(i)}</div>
       <div class="super-therapy-section__body">
-        ${items.map((item) => {
-    const isHighlighted = isTextHighlighted(highlightQuote, item.values);
-    const highlightAttr = isHighlighted ? `${HIGHLIGHT_DATA_ATTR}="true"` : "";
-    const highlightClass = isHighlighted ? "super-therapy-highlight" : "";
+        ${a.map((r) => {
+    const c = Ue(s, r.values), o = c ? `${Ke}="true"` : "", p = c ? "super-therapy-highlight" : "";
     return `
-            <div class="super-therapy-detail-item" ${highlightAttr}>
-              ${item.groupName ? `<div class="super-therapy-detail-item__name">${escapeHTMLViewer(item.groupName)}</div>` : ""}
-              <div class="super-therapy-detail-item__value ${highlightClass}">${escapeHTMLViewer(item.values)}</div>
+            <div class="super-therapy-detail-item" ${o}>
+              ${r.groupName ? `<div class="super-therapy-detail-item__name">${H(r.groupName)}</div>` : ""}
+              <div class="super-therapy-detail-item__value ${p}">${H(r.values)}</div>
             </div>
           `;
   }).join("")}
@@ -7456,12 +6654,10 @@ function renderAssessmentSections(assessmentLayout, highlightQuote = null) {
     </div>
   `).join("");
 }
-function renderServiceMatrix(serviceMatrixData) {
-  if (!serviceMatrixData) return "";
-  const dates = serviceMatrixData.Dates || serviceMatrixData.dates || [];
-  const rows = serviceMatrixData.ServiceRows || serviceMatrixData.serviceRows || [];
-  if (dates.length === 0 || rows.length === 0) return "";
-  return `
+function Os(e) {
+  if (!e) return "";
+  const s = e.Dates || e.dates || [], n = e.ServiceRows || e.serviceRows || [];
+  return s.length === 0 || n.length === 0 ? "" : `
     <div class="super-therapy-section">
       <div class="super-therapy-section-header">Service Matrix</div>
       <div class="super-therapy-section__body">
@@ -7469,61 +6665,57 @@ function renderServiceMatrix(serviceMatrixData) {
           <thead>
             <tr>
               <th class="super-therapy-matrix__service-col">Service</th>
-              ${dates.map((d3) => `<th>${escapeHTMLViewer(d3)}</th>`).join("")}
+              ${s.map((i) => `<th>${H(i)}</th>`).join("")}
             </tr>
           </thead>
           <tbody>
-            ${rows.map((row) => `
+            ${n.map((i) => `
               <tr>
-                <td class="super-therapy-matrix__service-col">${escapeHTMLViewer(row.ServiceCodeAndAbbrev || "")}</td>
-                ${dates.map((d3) => {
-    const mins = row.DurationsByDate?.[d3] || "";
-    return `<td>${mins ? mins + "m" : "-"}</td>`;
+                <td class="super-therapy-matrix__service-col">${H(i.ServiceCodeAndAbbrev || "")}</td>
+                ${s.map((a) => {
+    const r = i.DurationsByDate?.[a] || "";
+    return `<td>${r ? r + "m" : "-"}</td>`;
   }).join("")}
               </tr>
             `).join("")}
           </tbody>
         </table>
-        ${serviceMatrixData.TotalUniqueDays ? `<div style="margin-top: 8px; font-size: 12px; color: #6b7280;">Total Treatment Days: ${serviceMatrixData.TotalUniqueDays}</div>` : ""}
+        ${e.TotalUniqueDays ? `<div style="margin-top: 8px; font-size: 12px; color: #6b7280;">Total Treatment Days: ${e.TotalUniqueDays}</div>` : ""}
       </div>
     </div>
   `;
 }
-function renderSignatureSection(signatures) {
-  if (!signatures) return "";
-  const origSig = signatures.OriginalSignatureText || signatures.originalSignatureText;
-  const origDate = signatures.OriginalSignatureDate || signatures.originalSignatureDate;
-  const coSig = signatures.OriginalCoSignatureText || signatures.originalCoSignatureText;
-  const coDate = signatures.OriginalCosignatureDate || signatures.originalCosignatureDate;
-  if (!origSig && !coSig) return "";
-  return `
+function xe(e) {
+  if (!e) return "";
+  const s = e.OriginalSignatureText || e.originalSignatureText, n = e.OriginalSignatureDate || e.originalSignatureDate, i = e.OriginalCoSignatureText || e.originalCoSignatureText, a = e.OriginalCosignatureDate || e.originalCosignatureDate;
+  return !s && !i ? "" : `
     <div class="super-therapy-signatures">
-      ${origSig ? `
+      ${s ? `
         <div class="super-therapy-signature">
           <div class="super-therapy-signature__line">
             <div class="super-therapy-signature__name-area">
-              <div class="super-therapy-signature__name">${escapeHTMLViewer(origSig)}</div>
+              <div class="super-therapy-signature__name">${H(s)}</div>
               <div class="super-therapy-signature__label">Original Signature:</div>
             </div>
-            ${origDate ? `
+            ${n ? `
               <div class="super-therapy-signature__date-area">
-                <div class="super-therapy-signature__date">${formatSignatureDateTime(origDate)}</div>
+                <div class="super-therapy-signature__date">${Jt(n)}</div>
                 <div class="super-therapy-signature__date-label">Date</div>
               </div>
             ` : ""}
           </div>
         </div>
       ` : ""}
-      ${coSig ? `
+      ${i ? `
         <div class="super-therapy-signature">
           <div class="super-therapy-signature__line">
             <div class="super-therapy-signature__name-area">
-              <div class="super-therapy-signature__name">${escapeHTMLViewer(coSig)}</div>
+              <div class="super-therapy-signature__name">${H(i)}</div>
               <div class="super-therapy-signature__label">Cosignature:</div>
             </div>
-            ${coDate ? `
+            ${a ? `
               <div class="super-therapy-signature__date-area">
-                <div class="super-therapy-signature__date">${formatSignatureDateTime(coDate)}</div>
+                <div class="super-therapy-signature__date">${Jt(a)}</div>
                 <div class="super-therapy-signature__date-label">Date</div>
               </div>
             ` : ""}
@@ -7534,14 +6726,14 @@ function renderSignatureSection(signatures) {
     </div>
   `;
 }
-function renderTherapyToolbar(title, currentZoom = 100) {
+function De(e, s = 100) {
   return `
     <div class="super-therapy-modal__toolbar">
-      <div class="super-therapy-modal__toolbar-title">${escapeHTMLViewer(title)}</div>
+      <div class="super-therapy-modal__toolbar-title">${H(e)}</div>
       <div class="super-therapy-modal__toolbar-controls">
         <div class="super-therapy-modal__zoom">
-          <button class="super-therapy-modal__zoom-btn" data-zoom-action="out" title="Zoom Out">\u2212</button>
-          <span class="super-therapy-modal__zoom-level">${currentZoom}%</span>
+          <button class="super-therapy-modal__zoom-btn" data-zoom-action="out" title="Zoom Out">−</button>
+          <span class="super-therapy-modal__zoom-level">${s}%</span>
           <button class="super-therapy-modal__zoom-btn" data-zoom-action="in" title="Zoom In">+</button>
         </div>
         <button class="super-therapy-modal__close">&times;</button>
@@ -7549,58 +6741,42 @@ function renderTherapyToolbar(title, currentZoom = 100) {
     </div>
   `;
 }
-function renderTENDocument(modal, doc, highlightQuote = null) {
-  const container = modal.querySelector(".super-therapy-modal__container");
-  const json = doc.jsonData || {};
-  const currentZoom = parseInt(modal.dataset.zoom) || 100;
-  const title = doc.displayName || `${doc.discipline} TEN - Treatment Note`;
-  const sections = json.Sections || json.sections || [];
-  const completedDate = getField(json, "CompletedDateFormatted", "completedDateFormatted") || "";
-  const assessmentDate = getField(json, "AssessmentDateFormatted", "assessmentDateFormatted") || completedDate;
-  const signatures = {
-    OriginalSignatureText: json.OriginalSignatureText || json.originalSignatureText,
-    OriginalSignatureDate: json.OriginalSignatureDate || json.originalSignatureDate,
-    OriginalCoSignatureText: json.OriginalCoSignatureText || json.originalCoSignatureText,
-    OriginalCosignatureDate: json.OriginalCosignatureDate || json.originalCosignatureDate
-  };
-  const treatmentDetails = [];
-  const dailyServicesSections = sections[0];
-  if (dailyServicesSections) {
-    const details = dailyServicesSections.Details || dailyServicesSections.details || [];
-    details.forEach((detail) => {
-      treatmentDetails.push({
-        name: detail.PrintGroupName || detail.printGroupName || "",
-        value: detail.GroupValues || detail.groupValues || ""
-      });
+function Ti(e, s, n = null) {
+  const i = e.querySelector(".super-therapy-modal__container"), a = s.jsonData || {}, r = parseInt(e.dataset.zoom) || 100, c = s.displayName || `${s.discipline} TEN - Treatment Note`, o = a.Sections || a.sections || [], p = se(a, "CompletedDateFormatted", "completedDateFormatted") || "", d = se(a, "AssessmentDateFormatted", "assessmentDateFormatted") || p, u = {
+    OriginalSignatureText: a.OriginalSignatureText || a.originalSignatureText,
+    OriginalSignatureDate: a.OriginalSignatureDate || a.originalSignatureDate,
+    OriginalCoSignatureText: a.OriginalCoSignatureText || a.originalCoSignatureText,
+    OriginalCosignatureDate: a.OriginalCosignatureDate || a.originalCosignatureDate
+  }, l = [], m = o[0];
+  m && (m.Details || m.details || []).forEach((_) => {
+    l.push({
+      name: _.PrintGroupName || _.printGroupName || "",
+      value: _.GroupValues || _.groupValues || ""
     });
-  }
-  container.innerHTML = `
-    ${renderTherapyToolbar(title, currentZoom)}
+  }), i.innerHTML = `
+    ${De(c, r)}
     <div class="super-therapy-modal__body">
       <div class="super-therapy-doc">
-        ${renderDocumentHeader(doc)}
-        ${renderIdentificationTable(doc)}
+        ${be(s)}
+        ${we(s)}
 
         <!-- Date of Service box -->
         <div class="super-therapy-dates-box">
-          <div class="super-therapy-dates-box__item">Date of Service: ${escapeHTMLViewer(assessmentDate)}</div>
-          <div class="super-therapy-dates-box__item">Completed Date: ${escapeHTMLViewer(completedDate)}</div>
+          <div class="super-therapy-dates-box__item">Date of Service: ${H(d)}</div>
+          <div class="super-therapy-dates-box__item">Completed Date: ${H(p)}</div>
         </div>
 
         <!-- Summary of Daily Skilled Services -->
-        ${treatmentDetails.length > 0 ? `
+        ${l.length > 0 ? `
           <div class="super-therapy-section">
             <div class="super-therapy-section-header">Summary of Daily Skilled Services</div>
             <div class="super-therapy-section__body">
-              ${treatmentDetails.map((td) => {
-    const isCode = /^\d{5}/.test(td.name);
-    const isHighlighted = isTextHighlighted(highlightQuote, td.value);
-    const highlightAttr = isHighlighted ? `${HIGHLIGHT_DATA_ATTR}="true"` : "";
-    const highlightClass = isHighlighted ? "super-therapy-highlight" : "";
+              ${l.map((h) => {
+    const _ = /^\d{5}/.test(h.name), v = Ue(n, h.value), g = v ? `${Ke}="true"` : "", C = v ? "super-therapy-highlight" : "";
     return `
-                  <div class="super-therapy-detail-item" ${highlightAttr}>
-                    <div class="super-therapy-detail-item__name ${isCode ? "super-therapy-detail-item__name--code" : ""}">${escapeHTMLViewer(td.name)}</div>
-                    <div class="super-therapy-detail-item__value ${highlightClass}">${escapeHTMLViewer(td.value)}</div>
+                  <div class="super-therapy-detail-item" ${g}>
+                    <div class="super-therapy-detail-item__name ${_ ? "super-therapy-detail-item__name--code" : ""}">${H(h.name)}</div>
+                    <div class="super-therapy-detail-item__value ${C}">${H(h.value)}</div>
                   </div>
                 `;
   }).join("")}
@@ -7608,202 +6784,138 @@ function renderTENDocument(modal, doc, highlightQuote = null) {
           </div>
         ` : ""}
 
-        ${renderSignatureSection(signatures)}
+        ${xe(u)}
       </div>
     </div>
     <div class="super-therapy-modal__footer">
       <button class="super-therapy-modal__btn super-therapy-modal__btn--secondary super-therapy-modal__close-btn">Close</button>
     </div>
-  `;
-  setupModalCloseHandlers(modal, "super-therapy-modal");
-  setupTherapyZoomHandlers(modal);
-  modal.querySelector(".super-therapy-modal__close-btn")?.addEventListener("click", () => {
-    document.body.style.overflow = "";
-    modal.remove();
+  `, de(e, "super-therapy-modal"), _e(e), e.querySelector(".super-therapy-modal__close-btn")?.addEventListener("click", () => {
+    document.body.style.overflow = "", e.remove();
   });
 }
-function renderEvalDocument(modal, doc, highlightQuote = null) {
-  const container = modal.querySelector(".super-therapy-modal__container");
-  const json = doc.jsonData || {};
-  const currentZoom = parseInt(modal.dataset.zoom) || 100;
-  const title = doc.displayName || `${doc.discipline} Eval - Initial Evaluation`;
-  const identifierInfo = json.IdentifierInfo || json.identifierInfo || {};
-  const diagnoses = json.Diagnoses || json.diagnoses || [];
-  const goals = json.GoalTargets || json.goalTargets || [];
-  const approaches = json.Approaches || json.approaches || [];
-  const assessment = json.AssessmentLayout || json.assessmentLayout || [];
-  const signatures = json.ESignatures || json.eSignatures || {};
-  const frequency = getField(identifierInfo, "Frequency", "frequency") || "";
-  const duration = getField(identifierInfo, "Duration", "duration") || "";
-  const intensity = getField(identifierInfo, "Intensity", "intensity") || "";
-  const dateRange = getField(identifierInfo, "DateRange", "dateRange") || "";
-  const physicianName = getField(identifierInfo, "PhysicianFullName", "physicianFullName") || "";
-  const physicianNPI = getField(identifierInfo, "NPI", "npi") || "";
-  container.innerHTML = `
-    ${renderTherapyToolbar(title, currentZoom)}
+function Ai(e, s, n = null) {
+  const i = e.querySelector(".super-therapy-modal__container"), a = s.jsonData || {}, r = parseInt(e.dataset.zoom) || 100, c = s.displayName || `${s.discipline} Eval - Initial Evaluation`, o = a.IdentifierInfo || a.identifierInfo || {}, p = a.Diagnoses || a.diagnoses || [], d = a.GoalTargets || a.goalTargets || [], u = a.Approaches || a.approaches || [], l = a.AssessmentLayout || a.assessmentLayout || [], m = a.ESignatures || a.eSignatures || {}, h = se(o, "Frequency", "frequency") || "", _ = se(o, "Duration", "duration") || "", v = se(o, "Intensity", "intensity") || "", g = se(o, "DateRange", "dateRange") || "", C = se(o, "PhysicianFullName", "physicianFullName") || "", f = se(o, "NPI", "npi") || "";
+  i.innerHTML = `
+    ${De(c, r)}
     <div class="super-therapy-modal__body">
       <div class="super-therapy-doc">
-        ${renderDocumentHeader(doc)}
-        ${renderIdentificationTable(doc)}
+        ${be(s)}
+        ${we(s)}
 
         <!-- Treatment Plan Info -->
-        ${frequency || duration || intensity || dateRange ? `
+        ${h || _ || v || g ? `
           <div class="super-therapy-plan-info">
-            ${dateRange ? `<div class="super-therapy-plan-info__item"><span class="super-therapy-plan-info__label">Certification Period: </span>${escapeHTMLViewer(dateRange)}</div>` : ""}
-            ${frequency ? `<div class="super-therapy-plan-info__item"><span class="super-therapy-plan-info__label">Frequency: </span>${escapeHTMLViewer(frequency)}</div>` : ""}
-            ${duration ? `<div class="super-therapy-plan-info__item"><span class="super-therapy-plan-info__label">Duration: </span>${escapeHTMLViewer(duration)}</div>` : ""}
-            ${intensity ? `<div class="super-therapy-plan-info__item"><span class="super-therapy-plan-info__label">Intensity: </span>${escapeHTMLViewer(intensity)}</div>` : ""}
+            ${g ? `<div class="super-therapy-plan-info__item"><span class="super-therapy-plan-info__label">Certification Period: </span>${H(g)}</div>` : ""}
+            ${h ? `<div class="super-therapy-plan-info__item"><span class="super-therapy-plan-info__label">Frequency: </span>${H(h)}</div>` : ""}
+            ${_ ? `<div class="super-therapy-plan-info__item"><span class="super-therapy-plan-info__label">Duration: </span>${H(_)}</div>` : ""}
+            ${v ? `<div class="super-therapy-plan-info__item"><span class="super-therapy-plan-info__label">Intensity: </span>${H(v)}</div>` : ""}
           </div>
         ` : ""}
 
         <!-- Physician Certification -->
-        ${physicianName ? `
+        ${C ? `
           <div class="super-therapy-section">
             <div class="super-therapy-section-header">Physician Certification</div>
             <div class="super-therapy-section__body">
-              <div><strong>Physician:</strong> ${escapeHTMLViewer(physicianName)}</div>
-              ${physicianNPI ? `<div><strong>NPI:</strong> ${escapeHTMLViewer(physicianNPI)}</div>` : ""}
+              <div><strong>Physician:</strong> ${H(C)}</div>
+              ${f ? `<div><strong>NPI:</strong> ${H(f)}</div>` : ""}
             </div>
           </div>
         ` : ""}
 
-        ${renderDiagnosesTable(diagnoses)}
-        ${renderGoalsSection(goals, highlightQuote)}
-        ${renderInterventionsSection(approaches)}
-        ${renderAssessmentSections(assessment, highlightQuote)}
-        ${renderSignatureSection(signatures)}
+        ${Je(p)}
+        ${Ct(d, n)}
+        ${kt(u)}
+        ${Ye(l, n)}
+        ${xe(m)}
       </div>
     </div>
     <div class="super-therapy-modal__footer">
       <button class="super-therapy-modal__btn super-therapy-modal__btn--secondary super-therapy-modal__close-btn">Close</button>
     </div>
-  `;
-  setupModalCloseHandlers(modal, "super-therapy-modal");
-  setupTherapyZoomHandlers(modal);
-  modal.querySelector(".super-therapy-modal__close-btn")?.addEventListener("click", () => {
-    document.body.style.overflow = "";
-    modal.remove();
+  `, de(e, "super-therapy-modal"), _e(e), e.querySelector(".super-therapy-modal__close-btn")?.addEventListener("click", () => {
+    document.body.style.overflow = "", e.remove();
   });
 }
-function renderProgressReport(modal, doc, highlightQuote = null) {
-  const container = modal.querySelector(".super-therapy-modal__container");
-  const json = doc.jsonData || {};
-  const currentZoom = parseInt(modal.dataset.zoom) || 100;
-  const title = doc.displayName || `${doc.discipline} PR - Progress Report`;
-  const diagnoses = json.Diagnoses || json.diagnoses || [];
-  const stGoals = json.AllActiveShortTermGoals || json.allActiveShortTermGoals || [];
-  const ltGoals = json.AllActiveLongTermGoals || json.allActiveLongTermGoals || [];
-  const allGoals = [...stGoals.map((g2) => ({ ...g2, IsLongTerm: false })), ...ltGoals.map((g2) => ({ ...g2, IsLongTerm: true }))];
-  const approaches = json.Approaches || json.approaches || [];
-  const assessment = json.AssessmentLayout || json.assessmentLayout || [];
-  const serviceMatrix = json.ServiceMatrixData || json.serviceMatrixData || {};
-  const signatures = json.ESignatures || json.eSignatures || {};
-  container.innerHTML = `
-    ${renderTherapyToolbar(title, currentZoom)}
+function Mi(e, s, n = null) {
+  const i = e.querySelector(".super-therapy-modal__container"), a = s.jsonData || {}, r = parseInt(e.dataset.zoom) || 100, c = s.displayName || `${s.discipline} PR - Progress Report`, o = a.Diagnoses || a.diagnoses || [], p = a.AllActiveShortTermGoals || a.allActiveShortTermGoals || [], d = a.AllActiveLongTermGoals || a.allActiveLongTermGoals || [], u = [...p.map((v) => ({ ...v, IsLongTerm: !1 })), ...d.map((v) => ({ ...v, IsLongTerm: !0 }))], l = a.Approaches || a.approaches || [], m = a.AssessmentLayout || a.assessmentLayout || [], h = a.ServiceMatrixData || a.serviceMatrixData || {}, _ = a.ESignatures || a.eSignatures || {};
+  i.innerHTML = `
+    ${De(c, r)}
     <div class="super-therapy-modal__body">
       <div class="super-therapy-doc">
-        ${renderDocumentHeader(doc)}
-        ${renderIdentificationTable(doc)}
-        ${renderDiagnosesTable(diagnoses)}
-        ${renderGoalsSection(allGoals, highlightQuote)}
-        ${renderServiceMatrix(serviceMatrix)}
-        ${renderInterventionsSection(approaches)}
-        ${renderAssessmentSections(assessment, highlightQuote)}
-        ${renderSignatureSection(signatures)}
+        ${be(s)}
+        ${we(s)}
+        ${Je(o)}
+        ${Ct(u, n)}
+        ${Os(h)}
+        ${kt(l)}
+        ${Ye(m, n)}
+        ${xe(_)}
       </div>
     </div>
     <div class="super-therapy-modal__footer">
       <button class="super-therapy-modal__btn super-therapy-modal__btn--secondary super-therapy-modal__close-btn">Close</button>
     </div>
-  `;
-  setupModalCloseHandlers(modal, "super-therapy-modal");
-  setupTherapyZoomHandlers(modal);
-  modal.querySelector(".super-therapy-modal__close-btn")?.addEventListener("click", () => {
-    document.body.style.overflow = "";
-    modal.remove();
+  `, de(e, "super-therapy-modal"), _e(e), e.querySelector(".super-therapy-modal__close-btn")?.addEventListener("click", () => {
+    document.body.style.overflow = "", e.remove();
   });
 }
-function renderRecertDocument(modal, doc, highlightQuote = null) {
-  const container = modal.querySelector(".super-therapy-modal__container");
-  const json = doc.jsonData || {};
-  const currentZoom = parseInt(modal.dataset.zoom) || 100;
-  const title = doc.displayName || `${doc.discipline} Recert - Recertification`;
-  const diagnoses = json.Diagnoses || json.diagnoses || [];
-  const goals = json.ProgressGoalTargets || json.progressGoalTargets || [];
-  const approaches = json.Approaches || json.approaches || [];
-  const assessment = json.AssessmentLayout || json.assessmentLayout || [];
-  const serviceMatrix = json.ServiceMatrixData || json.serviceMatrixData || {};
-  const signatures = json.ESignatures || json.eSignatures || {};
-  container.innerHTML = `
-    ${renderTherapyToolbar(title, currentZoom)}
+function Li(e, s, n = null) {
+  const i = e.querySelector(".super-therapy-modal__container"), a = s.jsonData || {}, r = parseInt(e.dataset.zoom) || 100, c = s.displayName || `${s.discipline} Recert - Recertification`, o = a.Diagnoses || a.diagnoses || [], p = a.ProgressGoalTargets || a.progressGoalTargets || [], d = a.Approaches || a.approaches || [], u = a.AssessmentLayout || a.assessmentLayout || [], l = a.ServiceMatrixData || a.serviceMatrixData || {}, m = a.ESignatures || a.eSignatures || {};
+  i.innerHTML = `
+    ${De(c, r)}
     <div class="super-therapy-modal__body">
       <div class="super-therapy-doc">
-        ${renderDocumentHeader(doc)}
-        ${renderIdentificationTable(doc)}
-        ${renderDiagnosesTable(diagnoses)}
-        ${renderGoalsSection(goals, highlightQuote)}
-        ${renderServiceMatrix(serviceMatrix)}
-        ${renderInterventionsSection(approaches)}
-        ${renderAssessmentSections(assessment, highlightQuote)}
-        ${renderSignatureSection(signatures)}
+        ${be(s)}
+        ${we(s)}
+        ${Je(o)}
+        ${Ct(p, n)}
+        ${Os(l)}
+        ${kt(d)}
+        ${Ye(u, n)}
+        ${xe(m)}
       </div>
     </div>
     <div class="super-therapy-modal__footer">
       <button class="super-therapy-modal__btn super-therapy-modal__btn--secondary super-therapy-modal__close-btn">Close</button>
     </div>
-  `;
-  setupModalCloseHandlers(modal, "super-therapy-modal");
-  setupTherapyZoomHandlers(modal);
-  modal.querySelector(".super-therapy-modal__close-btn")?.addEventListener("click", () => {
-    document.body.style.overflow = "";
-    modal.remove();
+  `, de(e, "super-therapy-modal"), _e(e), e.querySelector(".super-therapy-modal__close-btn")?.addEventListener("click", () => {
+    document.body.style.overflow = "", e.remove();
   });
 }
-function renderDischargeDocument(modal, doc, highlightQuote = null) {
-  const container = modal.querySelector(".super-therapy-modal__container");
-  const json = doc.jsonData || {};
-  const currentZoom = parseInt(modal.dataset.zoom) || 100;
-  const title = doc.displayName || `${doc.discipline} Disch - Discharge Summary`;
-  const diagnoses = json.Diagnoses || json.diagnoses || [];
-  const assessment = json.AssessmentLayout || json.assessmentLayout || [];
-  const signatures = json.ESignatures || json.eSignatures || {};
-  container.innerHTML = `
-    ${renderTherapyToolbar(title, currentZoom)}
+function $i(e, s, n = null) {
+  const i = e.querySelector(".super-therapy-modal__container"), a = s.jsonData || {}, r = parseInt(e.dataset.zoom) || 100, c = s.displayName || `${s.discipline} Disch - Discharge Summary`, o = a.Diagnoses || a.diagnoses || [], p = a.AssessmentLayout || a.assessmentLayout || [], d = a.ESignatures || a.eSignatures || {};
+  i.innerHTML = `
+    ${De(c, r)}
     <div class="super-therapy-modal__body">
       <div class="super-therapy-doc">
-        ${renderDocumentHeader(doc)}
-        ${renderIdentificationTable(doc)}
-        ${renderDiagnosesTable(diagnoses)}
-        ${renderAssessmentSections(assessment, highlightQuote)}
-        ${renderSignatureSection(signatures)}
+        ${be(s)}
+        ${we(s)}
+        ${Je(o)}
+        ${Ye(p, n)}
+        ${xe(d)}
       </div>
     </div>
     <div class="super-therapy-modal__footer">
       <button class="super-therapy-modal__btn super-therapy-modal__btn--secondary super-therapy-modal__close-btn">Close</button>
     </div>
-  `;
-  setupModalCloseHandlers(modal, "super-therapy-modal");
-  setupTherapyZoomHandlers(modal);
-  modal.querySelector(".super-therapy-modal__close-btn")?.addEventListener("click", () => {
-    document.body.style.overflow = "";
-    modal.remove();
+  `, de(e, "super-therapy-modal"), _e(e), e.querySelector(".super-therapy-modal__close-btn")?.addEventListener("click", () => {
+    document.body.style.overflow = "", e.remove();
   });
 }
-function renderGenericTherapyDoc(modal, doc, highlightQuote = null) {
-  const container = modal.querySelector(".super-therapy-modal__container");
-  const json = doc.jsonData || {};
-  const currentZoom = parseInt(modal.dataset.zoom) || 100;
-  const title = doc.displayName || "Therapy Document";
-  container.innerHTML = `
-    ${renderTherapyToolbar(title, currentZoom)}
+function Ri(e, s, n = null) {
+  const i = e.querySelector(".super-therapy-modal__container"), a = s.jsonData || {}, r = parseInt(e.dataset.zoom) || 100, c = s.displayName || "Therapy Document";
+  i.innerHTML = `
+    ${De(c, r)}
     <div class="super-therapy-modal__body">
       <div class="super-therapy-doc">
-        ${renderDocumentHeader(doc)}
-        ${renderIdentificationTable(doc)}
+        ${be(s)}
+        ${we(s)}
         <div class="super-therapy-section">
           <div class="super-therapy-section-header">Document Content</div>
           <div class="super-therapy-section__body">
-            <pre class="super-therapy-raw-content">${escapeHTMLViewer(JSON.stringify(json, null, 2))}</pre>
+            <pre class="super-therapy-raw-content">${H(JSON.stringify(a, null, 2))}</pre>
           </div>
         </div>
       </div>
@@ -7811,29 +6923,23 @@ function renderGenericTherapyDoc(modal, doc, highlightQuote = null) {
     <div class="super-therapy-modal__footer">
       <button class="super-therapy-modal__btn super-therapy-modal__btn--secondary super-therapy-modal__close-btn">Close</button>
     </div>
-  `;
-  setupModalCloseHandlers(modal, "super-therapy-modal");
-  setupTherapyZoomHandlers(modal);
-  modal.querySelector(".super-therapy-modal__close-btn")?.addEventListener("click", () => {
-    document.body.style.overflow = "";
-    modal.remove();
+  `, de(e, "super-therapy-modal"), _e(e), e.querySelector(".super-therapy-modal__close-btn")?.addEventListener("click", () => {
+    document.body.style.overflow = "", e.remove();
   });
 }
-async function showDocumentModal(documentId, wordBlocks = null) {
-  const params = await window.getCurrentParams();
-  const modal = createPdfModalShell();
-  getModalMountPoint().appendChild(modal);
+async function Ei(e, s = null) {
+  const n = await window.getCurrentParams(), i = Oi();
+  Dt().appendChild(i);
   try {
-    const data = await fetchDocument(documentId, params);
-    renderPdfModalContent(modal, data.document, wordBlocks);
-  } catch (error) {
-    renderModalError(modal, error.message, "super-pdf-modal");
+    const a = await Ne(e, n);
+    qi(i, a.document, s);
+  } catch (a) {
+    It(i, a.message, "super-pdf-modal");
   }
 }
-function createPdfModalShell() {
-  const modal = document.createElement("div");
-  modal.className = "super-pdf-modal";
-  modal.innerHTML = `
+function Oi() {
+  const e = document.createElement("div");
+  return e.className = "super-pdf-modal", e.innerHTML = `
     <div class="super-pdf-modal__backdrop"></div>
     <div class="super-pdf-modal__container">
       <div class="super-pdf-modal__header">
@@ -7849,2639 +6955,2099 @@ function createPdfModalShell() {
         </div>
       </div>
     </div>
-  `;
-  setupModalCloseHandlers(modal, "super-pdf-modal");
-  return modal;
+  `, de(e, "super-pdf-modal"), e;
 }
-function renderPdfModalContent(modal, doc, wordBlocks = null) {
-  const container = modal.querySelector(".super-pdf-modal__container");
-  const targetPage = wordBlocks && wordBlocks.length > 0 && wordBlocks[0].p ? wordBlocks[0].p : 1;
-  const onClose = () => {
-    document.body.style.overflow = "";
-    modal.remove();
+function qi(e, s, n = null) {
+  const i = e.querySelector(".super-pdf-modal__container"), a = n && n.length > 0 && n[0].p ? n[0].p : 1, r = () => {
+    document.body.style.overflow = "", e.remove();
   };
-  container.innerHTML = `
+  i.innerHTML = `
     <div class="super-pdf-modal__header">
       <div class="super-pdf-modal__title-row">
-        <span class="super-pdf-modal__icon">\u{1F4C4}</span>
+        <span class="super-pdf-modal__icon">📄</span>
         <div class="super-pdf-modal__title">
-          <span class="super-pdf-modal__name">${escapeHTMLViewer(doc.title || "Document")}</span>
-          ${doc.documentType ? `<span class="super-pdf-badge">${escapeHTMLViewer(doc.documentType)}</span>` : ""}
+          <span class="super-pdf-modal__name">${H(s.title || "Document")}</span>
+          ${s.documentType ? `<span class="super-pdf-badge">${H(s.documentType)}</span>` : ""}
         </div>
         <button class="super-pdf-modal__close">&times;</button>
       </div>
     </div>
     <div class="super-pdf-modal__body"></div>
-  `;
-  setupModalCloseHandlers(modal, "super-pdf-modal");
-  const body = modal.querySelector(".super-pdf-modal__body");
-  G(
-    _(PDFViewer, {
-      url: doc.signedUrl || null,
-      wordBlocks: wordBlocks || [],
-      targetPage,
-      title: doc.title || "Document",
-      documentType: doc.documentType,
-      effectiveDate: doc.effectiveDate,
-      fileSize: doc.fileSize,
-      onClose,
-      expiresAt: true,
-      openInNewTabUrl: doc.signedUrl || null
+  `, de(e, "super-pdf-modal");
+  const c = e.querySelector(".super-pdf-modal__body");
+  ys(
+    ps(wt, {
+      url: s.signedUrl || null,
+      wordBlocks: n || [],
+      targetPage: a,
+      title: s.title || "Document",
+      documentType: s.documentType,
+      effectiveDate: s.effectiveDate,
+      fileSize: s.fileSize,
+      onClose: r,
+      expiresAt: !0,
+      openInNewTabUrl: s.signedUrl || null
     }),
-    body
+    c
   );
 }
-window.showClinicalNoteModal = showClinicalNoteModal;
-window.showTherapyDocModal = showTherapyDocModal;
-window.showDocumentModal = showDocumentModal;
-window.parseEvidenceForViewer = parseEvidenceForViewer;
+window.showClinicalNoteModal = wi;
+window.showTherapyDocModal = Ci;
+window.showDocumentModal = Ei;
+window.parseEvidenceForViewer = gi;
 window.SuperDocViewer = {
-  open(evidence) {
-    if (!evidence) return;
-    const type = evidence.sourceType || evidence.type || "";
-    if (type === "clinical_note" || type === "progress_note" || type === "practitioner_note") {
-      const id = evidence.viewerId || evidence.sourceId || evidence.id;
-      window.showClinicalNoteModal(id);
-    } else if (type === "therapy_doc" || type === "therapy") {
-      const id = evidence.viewerId || evidence.sourceId || evidence.id;
-      window.showTherapyDocModal(id, evidence.quote);
-    } else if (type === "pdf" || type === "document") {
-      const id = evidence.viewerId || evidence.sourceId || evidence.id;
-      window.showDocumentModal(id, evidence.wordBlocks || []);
+  open(e) {
+    if (!e) return;
+    const s = e.sourceType || e.type || "";
+    if (s === "clinical_note" || s === "progress_note" || s === "practitioner_note") {
+      const n = e.viewerId || e.sourceId || e.id;
+      window.showClinicalNoteModal(n);
+    } else if (s === "therapy_doc" || s === "therapy") {
+      const n = e.viewerId || e.sourceId || e.id;
+      window.showTherapyDocModal(n, e.quote);
+    } else if (s === "pdf" || s === "document") {
+      const n = e.viewerId || e.sourceId || e.id;
+      window.showDocumentModal(n, e.wordBlocks || []);
     }
   }
 };
-
-// content/modules/mds-command-center/ItemPopover.jsx
-function isOrderEvidence(ev) {
-  return ev.sourceType === "order" || (ev.evidenceId || "").startsWith("order-");
+function qe(e) {
+  return e.sourceType === "order" || (e.evidenceId || "").startsWith("order-");
 }
-function getOrderId(ev) {
-  const id = ev.sourceId || ev.evidenceId || "";
-  return id.replace(/^order-/, "");
+function Hi(e) {
+  return (e.sourceId || e.evidenceId || "").replace(/^order-/, "");
 }
-function isViewableEvidence(ev) {
-  const vt = parseViewer(ev).viewerType;
-  return vt === "document" || vt === "clinical-note" || vt === "therapy-document" || isOrderEvidence(ev);
+function Fi(e) {
+  const s = re(e).viewerType;
+  return s === "document" || s === "clinical-note" || s === "therapy-document" || qe(e);
 }
-function ItemPopover({ item, context, onClose }) {
-  const mdsItem = item?.mdsItem;
-  const categoryKey = item?.categoryKey;
-  const { data, loading, error } = useItemDetail(mdsItem, categoryKey, context);
-  const displayCode = mdsItem?.startsWith("I8000:") ? "I8000" : mdsItem;
-  const [viewingSource, setViewingSource] = d2(null);
-  const docCacheRef = A2(/* @__PURE__ */ new Map());
-  const adminContainerRef = A2(null);
-  const noteContainerRef = A2(null);
-  const allEvidence = getEvidence(data);
-  const viewableEvidence = allEvidence.filter(isViewableEvidence);
-  const viewingOrder = viewingSource && isOrderEvidence(viewingSource.ev);
-  const viewingViewerType = viewingSource ? parseViewer(viewingSource.ev).viewerType : null;
-  const viewingNote = viewingViewerType === "clinical-note";
-  const viewingTherapy = viewingViewerType === "therapy-document";
-  const viewingDoc = viewingSource && !viewingOrder && !viewingNote && !viewingTherapy;
-  const docEvidence = viewableEvidence.filter((ev) => {
-    if (isOrderEvidence(ev)) return false;
-    return parseViewer(ev).viewerType === "document";
-  });
-  y2(() => {
-    if (!data || docEvidence.length === 0) return;
-    const prefetch = async () => {
-      let params;
+function qs({ item: e, context: s, onClose: n }) {
+  const i = e?.mdsItem, a = e?.categoryKey, { data: r, loading: c, error: o } = Ms(i, a, s), p = i?.startsWith("I8000:") ? "I8000" : i, [d, u] = b(null), l = ee(/* @__PURE__ */ new Map()), m = ee(null), h = ee(null), v = Bi(r).filter(Fi), g = d && qe(d.ev), C = d ? re(d.ev).viewerType : null, f = C === "clinical-note", x = C === "therapy-document", k = d && !g && !f && !x, y = v.filter((D) => qe(D) ? !1 : re(D).viewerType === "document");
+  z(() => {
+    if (!r || y.length === 0) return;
+    (async () => {
+      let B;
       try {
-        params = await window.getCurrentParams();
+        B = await window.getCurrentParams();
       } catch {
         return;
       }
-      for (const ev of docEvidence) {
-        const viewer = parseViewer(ev);
-        if (!viewer.id || docCacheRef.current.has(viewer.id)) continue;
-        const promise = fetchDocument(viewer.id, params).then((result) => {
-          const entry = docCacheRef.current.get(viewer.id);
-          if (entry) entry.document = result.document;
-          return result.document;
-        }).catch((err) => {
-          console.warn("[ItemPopover] Prefetch failed for", viewer.id, err);
-          return null;
-        });
-        docCacheRef.current.set(viewer.id, { document: null, promise });
+      for (const $ of y) {
+        const M = re($);
+        if (!M.id || l.current.has(M.id)) continue;
+        const G = Ne(M.id, B).then((K) => {
+          const Q = l.current.get(M.id);
+          return Q && (Q.document = K.document), K.document;
+        }).catch((K) => (console.warn("[ItemPopover] Prefetch failed for", M.id, K), null));
+        l.current.set(M.id, { document: null, promise: G });
       }
-    };
-    prefetch();
-  }, [data]);
-  const [currentDoc, setCurrentDoc] = d2(null);
-  const [docLoading, setDocLoading] = d2(false);
-  y2(() => {
-    if (!viewingSource || viewingOrder || viewingNote || viewingTherapy) {
-      setCurrentDoc(null);
-      setDocLoading(false);
+    })();
+  }, [r]);
+  const [S, E] = b(null), [N, w] = b(!1);
+  z(() => {
+    if (!d || g || f || x) {
+      E(null), w(!1);
       return;
     }
-    const viewer = parseViewer(viewingSource.ev);
-    if (!viewer.id) return;
-    const cached = docCacheRef.current.get(viewer.id);
-    if (cached?.document) {
-      setCurrentDoc(cached.document);
-      setDocLoading(false);
+    const D = re(d.ev);
+    if (!D.id) return;
+    const B = l.current.get(D.id);
+    if (B?.document) {
+      E(B.document), w(!1);
       return;
     }
-    setDocLoading(true);
-    const loadDoc = async () => {
+    w(!0), (async () => {
       try {
-        let doc;
-        if (cached?.promise) {
-          doc = await cached.promise;
-        } else {
-          const params = await window.getCurrentParams();
-          const result = await fetchDocument(viewer.id, params);
-          doc = result.document;
-          docCacheRef.current.set(viewer.id, { document: doc, promise: Promise.resolve(doc) });
+        let M;
+        if (B?.promise)
+          M = await B.promise;
+        else {
+          const G = await window.getCurrentParams();
+          M = (await Ne(D.id, G)).document, l.current.set(D.id, { document: M, promise: Promise.resolve(M) });
         }
-        setCurrentDoc(doc);
-      } catch (err) {
-        console.error("[ItemPopover] Failed to load document:", err);
-        setCurrentDoc(null);
+        E(M);
+      } catch (M) {
+        console.error("[ItemPopover] Failed to load document:", M), E(null);
       } finally {
-        setDocLoading(false);
+        w(!1);
       }
-    };
-    loadDoc();
-  }, [viewingSource, viewingOrder, viewingNote, viewingTherapy]);
-  y2(() => {
-    if (!viewingOrder || !adminContainerRef.current) return;
-    const el = adminContainerRef.current;
-    const orderId = getOrderId(viewingSource.ev);
-    el.innerHTML = '<div class="cc-pop__viewer-loading"><div class="mds-cc__spinner mds-cc__spinner--sm"></div><span>Loading administrations...</span></div>';
-    if (window.renderSplitAdministrations) {
-      const resolveAndRender = async () => {
-        const orgResponse = getOrg();
-        const orgSlug = orgResponse?.org;
-        const facilityName = window.getChatFacilityInfo?.() || "";
-        const params = { assessmentId: context?.assessmentId, orgSlug, facilityName };
-        await window.renderSplitAdministrations(el, orderId, void 0, params);
-      };
-      resolveAndRender().catch((err) => {
-        console.error("[ItemPopover] Failed to load administrations:", err);
-        el.innerHTML = '<div class="cc-pop__viewer-loading"><span>Failed to load administrations</span></div>';
-      });
-    } else {
-      el.innerHTML = '<div class="cc-pop__viewer-loading"><span>Administration viewer not available</span></div>';
-    }
-  }, [viewingSource, viewingOrder]);
-  y2(() => {
-    if (!viewingNote && !viewingTherapy || !noteContainerRef.current) return;
-    const el = noteContainerRef.current;
-    const viewer = parseViewer(viewingSource.ev);
-    const quote = viewingSource.ev.quoteText || viewingSource.ev.quote || viewingSource.ev.snippet || "";
-    el.innerHTML = '<div class="cc-pop__viewer-loading"><div class="mds-cc__spinner mds-cc__spinner--sm"></div><span>Loading...</span></div>';
-    const resolveAndRender = async () => {
-      const orgResponse = getOrg();
-      const orgSlug = orgResponse?.org;
-      const facilityName = window.getChatFacilityInfo?.() || "";
-      const params = { assessmentId: context?.assessmentId, orgSlug, facilityName };
-      if (viewingNote && window.renderSplitNote) {
-        await window.renderSplitNote(el, viewer.id, params);
-      } else if (viewingTherapy && window.renderSplitTherapy) {
-        await window.renderSplitTherapy(el, viewer.id, quote, params);
-      } else {
-        el.innerHTML = '<div class="cc-pop__viewer-loading"><span>Viewer not available</span></div>';
-      }
-    };
-    resolveAndRender().catch((err) => {
-      console.error("[ItemPopover] Failed to load source:", err);
-      el.innerHTML = '<div class="cc-pop__viewer-loading"><span>Failed to load</span></div>';
+    })();
+  }, [d, g, f, x]), z(() => {
+    if (!g || !m.current) return;
+    const D = m.current, B = Hi(d.ev);
+    D.innerHTML = '<div class="cc-pop__viewer-loading"><div class="mds-cc__spinner mds-cc__spinner--sm"></div><span>Loading administrations...</span></div>', window.renderSplitAdministrations ? (async () => {
+      const G = getOrg()?.org, K = window.getChatFacilityInfo?.() || "", Q = { assessmentId: s?.assessmentId, orgSlug: G, facilityName: K };
+      await window.renderSplitAdministrations(D, B, void 0, Q);
+    })().catch((M) => {
+      console.error("[ItemPopover] Failed to load administrations:", M), D.innerHTML = '<div class="cc-pop__viewer-loading"><span>Failed to load administrations</span></div>';
+    }) : D.innerHTML = '<div class="cc-pop__viewer-loading"><span>Administration viewer not available</span></div>';
+  }, [d, g]), z(() => {
+    if (!f && !x || !h.current) return;
+    const D = h.current, B = re(d.ev), $ = d.ev.quoteText || d.ev.quote || d.ev.snippet || "";
+    D.innerHTML = '<div class="cc-pop__viewer-loading"><div class="mds-cc__spinner mds-cc__spinner--sm"></div><span>Loading...</span></div>', (async () => {
+      const K = getOrg()?.org, Q = window.getChatFacilityInfo?.() || "", R = { assessmentId: s?.assessmentId, orgSlug: K, facilityName: Q };
+      f && window.renderSplitNote ? await window.renderSplitNote(D, B.id, R) : x && window.renderSplitTherapy ? await window.renderSplitTherapy(D, B.id, $, R) : D.innerHTML = '<div class="cc-pop__viewer-loading"><span>Viewer not available</span></div>';
+    })().catch((G) => {
+      console.error("[ItemPopover] Failed to load source:", G), D.innerHTML = '<div class="cc-pop__viewer-loading"><span>Failed to load</span></div>';
     });
-  }, [viewingSource, viewingNote, viewingTherapy]);
-  const handleViewSource = q2((ev, index) => {
-    setViewingSource({ ev, index });
-  }, []);
-  const handleBack = q2(() => {
-    setViewingSource(null);
-  }, []);
-  const isSplit = viewingSource !== null;
-  return /* @__PURE__ */ u3("div", { class: "cc-pop__backdrop", onClick: (e3) => {
-    if (e3.target === e3.currentTarget) onClose();
-  }, children: /* @__PURE__ */ u3("div", { class: `cc-pop${isSplit ? " cc-pop--split" : ""}`, onClick: (e3) => e3.stopPropagation(), children: [
-    /* @__PURE__ */ u3("div", { class: "cc-pop__header", children: /* @__PURE__ */ u3("div", { class: "cc-pop__header-top", children: [
-      /* @__PURE__ */ u3("div", { class: "cc-pop__header-left", children: [
-        isSplit && /* @__PURE__ */ u3("button", { class: "cc-pop__back-btn", onClick: handleBack, type: "button", children: [
-          /* @__PURE__ */ u3("svg", { width: "12", height: "12", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": "2.5", "stroke-linecap": "round", "stroke-linejoin": "round", children: /* @__PURE__ */ u3("polyline", { points: "15 18 9 12 15 6" }) }),
+  }, [d, f, x]);
+  const T = X((D, B) => {
+    u({ ev: D, index: B });
+  }, []), F = X(() => {
+    u(null);
+  }, []), V = d !== null;
+  return /* @__PURE__ */ t("div", { class: "cc-pop__backdrop", onClick: (D) => {
+    D.target === D.currentTarget && n();
+  }, children: /* @__PURE__ */ t("div", { class: `cc-pop${V ? " cc-pop--split" : ""}`, onClick: (D) => D.stopPropagation(), children: [
+    /* @__PURE__ */ t("div", { class: "cc-pop__header", children: /* @__PURE__ */ t("div", { class: "cc-pop__header-top", children: [
+      /* @__PURE__ */ t("div", { class: "cc-pop__header-left", children: [
+        V && /* @__PURE__ */ t("button", { class: "cc-pop__back-btn", onClick: F, type: "button", children: [
+          /* @__PURE__ */ t("svg", { width: "12", height: "12", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": "2.5", "stroke-linecap": "round", "stroke-linejoin": "round", children: /* @__PURE__ */ t("polyline", { points: "15 18 9 12 15 6" }) }),
           "Back"
         ] }),
-        /* @__PURE__ */ u3("span", { class: "cc-pop__code", children: displayCode }),
-        /* @__PURE__ */ u3("span", { class: "cc-pop__name", children: item?.itemName || data?.item?.description || "Item Detail" })
+        /* @__PURE__ */ t("span", { class: "cc-pop__code", children: p }),
+        /* @__PURE__ */ t("span", { class: "cc-pop__name", children: e?.itemName || r?.item?.description || "Item Detail" })
       ] }),
-      /* @__PURE__ */ u3("button", { class: "cc-pop__close", onClick: onClose, type: "button", children: "\xD7" })
+      /* @__PURE__ */ t("button", { class: "cc-pop__close", onClick: n, type: "button", children: "×" })
     ] }) }),
-    !isSplit ? /* @__PURE__ */ u3("div", { class: "cc-pop__body", children: [
-      loading && /* @__PURE__ */ u3("div", { class: "cc-pop__loading", children: [
-        /* @__PURE__ */ u3("div", { class: "mds-cc__spinner mds-cc__spinner--sm" }),
-        /* @__PURE__ */ u3("span", { children: "Loading..." })
-      ] }),
-      error && /* @__PURE__ */ u3("div", { class: "cc-pop__error", children: error }),
-      !loading && !error && data && /* @__PURE__ */ u3(
-        ItemDetail,
-        {
-          variant: "compact",
-          data,
-          detectionItem: item,
-          mdsItem,
-          onViewSource: handleViewSource
-        }
-      )
-    ] }) : /* @__PURE__ */ u3("div", { class: "cc-pop__split-body", children: [
-      /* @__PURE__ */ u3("div", { class: "cc-pop__sources", children: [
-        /* @__PURE__ */ u3("div", { class: "cc-pop__sources-label", children: [
+    V ? /* @__PURE__ */ t("div", { class: "cc-pop__split-body", children: [
+      /* @__PURE__ */ t("div", { class: "cc-pop__sources", children: [
+        /* @__PURE__ */ t("div", { class: "cc-pop__sources-label", children: [
           "Sources (",
-          viewableEvidence.length,
+          v.length,
           ")"
         ] }),
-        viewableEvidence.map((ev, i3) => {
-          const isOrder = isOrderEvidence(ev);
-          const sourceType = ev.sourceType || inferSourceType(ev.displayName, ev.evidenceId);
-          const typeLabel = ev.displayName || SOURCE_LABELS[sourceType] || (isOrder ? "Orders" : "Document");
-          const snippet = ev.quoteText || ev.orderDescription || ev.quote || ev.snippet || ev.text || "";
-          const page = ev.wordBlocks?.[0]?.p;
-          const isActive = viewingSource.ev === ev;
-          return /* @__PURE__ */ u3(
+        v.map((D, B) => {
+          const $ = qe(D), M = D.sourceType || vt(D.displayName, D.evidenceId), G = D.displayName || bt[M] || ($ ? "Orders" : "Document"), K = D.quoteText || D.orderDescription || D.quote || D.snippet || D.text || "", Q = D.wordBlocks?.[0]?.p, R = d.ev === D;
+          return /* @__PURE__ */ t(
             "div",
             {
-              class: `cc-pop__source-card${isActive ? " cc-pop__source-card--active" : ""}`,
-              onClick: () => setViewingSource({ ev, index: i3 }),
+              class: `cc-pop__source-card${R ? " cc-pop__source-card--active" : ""}`,
+              onClick: () => u({ ev: D, index: B }),
               role: "button",
               children: [
-                /* @__PURE__ */ u3("div", { class: `cc-pop__source-badge${isOrder ? " cc-pop__source-badge--order" : ""}`, children: typeLabel }),
-                snippet && /* @__PURE__ */ u3("div", { class: "cc-pop__source-snippet", children: snippet }),
-                !isOrder && page && /* @__PURE__ */ u3("div", { class: "cc-pop__source-page", children: [
+                /* @__PURE__ */ t("div", { class: `cc-pop__source-badge${$ ? " cc-pop__source-badge--order" : ""}`, children: G }),
+                K && /* @__PURE__ */ t("div", { class: "cc-pop__source-snippet", children: K }),
+                !$ && Q && /* @__PURE__ */ t("div", { class: "cc-pop__source-page", children: [
                   "Page ",
-                  page
+                  Q
                 ] })
               ]
             },
-            i3
+            B
           );
         })
       ] }),
-      /* @__PURE__ */ u3("div", { class: "cc-pop__viewer", children: [
-        viewingDoc && docLoading && /* @__PURE__ */ u3("div", { class: "cc-pop__viewer-loading", children: [
-          /* @__PURE__ */ u3("div", { class: "mds-cc__spinner mds-cc__spinner--sm" }),
-          /* @__PURE__ */ u3("span", { children: "Loading document..." })
+      /* @__PURE__ */ t("div", { class: "cc-pop__viewer", children: [
+        k && N && /* @__PURE__ */ t("div", { class: "cc-pop__viewer-loading", children: [
+          /* @__PURE__ */ t("div", { class: "mds-cc__spinner mds-cc__spinner--sm" }),
+          /* @__PURE__ */ t("span", { children: "Loading document..." })
         ] }),
-        viewingDoc && !docLoading && currentDoc && /* @__PURE__ */ u3(
-          PDFViewer,
+        k && !N && S && /* @__PURE__ */ t(
+          wt,
           {
-            url: currentDoc.signedUrl || null,
-            wordBlocks: viewingSource.ev.wordBlocks || [],
-            targetPage: viewingSource.ev.wordBlocks?.[0]?.p || 1,
-            title: currentDoc.title || "Document",
-            documentType: currentDoc.documentType,
-            effectiveDate: currentDoc.effectiveDate,
-            fileSize: currentDoc.fileSize,
-            expiresAt: true,
-            openInNewTabUrl: currentDoc.signedUrl || null
+            url: S.signedUrl || null,
+            wordBlocks: d.ev.wordBlocks || [],
+            targetPage: d.ev.wordBlocks?.[0]?.p || 1,
+            title: S.title || "Document",
+            documentType: S.documentType,
+            effectiveDate: S.effectiveDate,
+            fileSize: S.fileSize,
+            expiresAt: !0,
+            openInNewTabUrl: S.signedUrl || null
           }
         ),
-        viewingDoc && !docLoading && !currentDoc && /* @__PURE__ */ u3("div", { class: "cc-pop__viewer-loading", children: /* @__PURE__ */ u3("span", { children: "Failed to load document" }) }),
-        viewingOrder && /* @__PURE__ */ u3("div", { ref: adminContainerRef, class: "cc-pop__admin-viewer" }),
-        (viewingNote || viewingTherapy) && /* @__PURE__ */ u3("div", { ref: noteContainerRef, class: "cc-pop__note-viewer" })
+        k && !N && !S && /* @__PURE__ */ t("div", { class: "cc-pop__viewer-loading", children: /* @__PURE__ */ t("span", { children: "Failed to load document" }) }),
+        g && /* @__PURE__ */ t("div", { ref: m, class: "cc-pop__admin-viewer" }),
+        (f || x) && /* @__PURE__ */ t("div", { ref: h, class: "cc-pop__note-viewer" })
       ] })
+    ] }) : /* @__PURE__ */ t("div", { class: "cc-pop__body", children: [
+      c && /* @__PURE__ */ t("div", { class: "cc-pop__loading", children: [
+        /* @__PURE__ */ t("div", { class: "mds-cc__spinner mds-cc__spinner--sm" }),
+        /* @__PURE__ */ t("span", { children: "Loading..." })
+      ] }),
+      o && /* @__PURE__ */ t("div", { class: "cc-pop__error", children: o }),
+      !c && !o && r && /* @__PURE__ */ t(
+        $s,
+        {
+          variant: "compact",
+          data: r,
+          detectionItem: e,
+          mdsItem: i,
+          onViewSource: T
+        }
+      )
     ] }),
-    isSplit && !loading && !error && data && /* @__PURE__ */ u3("div", { style: { padding: "0 16px 12px", flexShrink: 0, borderTop: "1px solid #e5e7eb" }, children: /* @__PURE__ */ u3("div", { class: "sid__actions", children: [
-      /* @__PURE__ */ u3("button", { class: "sid__btn sid__btn--primary", onClick: () => window.QuerySendModal?.show(data.item || data), type: "button", children: "Query Physician" }),
-      mdsItem && /* @__PURE__ */ u3("button", { class: "sid__btn sid__btn--secondary", onClick: () => window.navigateToMDSItem?.(mdsItem), type: "button", children: [
+    V && !c && !o && r && /* @__PURE__ */ t("div", { style: { padding: "0 16px 12px", flexShrink: 0, borderTop: "1px solid #e5e7eb" }, children: /* @__PURE__ */ t("div", { class: "sid__actions", children: [
+      /* @__PURE__ */ t("button", { class: "sid__btn sid__btn--primary", onClick: () => window.QuerySendModal?.show(r.item || r), type: "button", children: "Query Physician" }),
+      i && /* @__PURE__ */ t("button", { class: "sid__btn sid__btn--secondary", onClick: () => window.navigateToMDSItem?.(i), type: "button", children: [
         "Go to ",
-        displayCode,
-        " \u2197"
+        p,
+        " ↗"
       ] })
     ] }) })
   ] }) });
 }
-function getEvidence(data) {
-  const apiItem = data?.item;
-  if (!apiItem) return [];
-  const isColumnBased = !!apiItem.columns;
-  if (!isColumnBased) return apiItem.evidence || apiItem.queryEvidence || [];
-  const colEvidence = [];
-  const seen = /* @__PURE__ */ new Set();
-  for (const col of Object.values(apiItem.columns || {})) {
-    if (col?.evidence) col.evidence.forEach((ev) => {
-      const k3 = ev.sourceId || ev.quote || JSON.stringify(ev);
-      if (!seen.has(k3)) {
-        seen.add(k3);
-        colEvidence.push(ev);
-      }
+function Bi(e) {
+  const s = e?.item;
+  if (!s) return [];
+  if (!!!s.columns) return s.evidence || s.queryEvidence || [];
+  const i = [], a = /* @__PURE__ */ new Set();
+  for (const r of Object.values(s.columns || {}))
+    r?.evidence && r.evidence.forEach((c) => {
+      const o = c.sourceId || c.quote || JSON.stringify(c);
+      a.has(o) || (a.add(o), i.push(c));
     });
-  }
-  return colEvidence;
+  return i;
 }
-
-// content/modules/mds-command-center/MDSCommandCenter.jsx
-function getUrgency(assessment) {
-  return assessment.deadlines?.urgency || assessment.urgency || "on_track";
+function he(e) {
+  return e.deadlines?.urgency || e.urgency || "on_track";
 }
-function filterAssessments(assessments, payerFilter, classFilter, focusFilter) {
-  let result = assessments;
-  if (payerFilter !== "all") result = result.filter((a3) => a3.payerType === payerFilter);
-  if (classFilter !== "all") result = result.filter((a3) => a3.assessmentClass === classFilter);
-  if (focusFilter === "revenue") result = result.filter((a3) => a3.pdpm?.hasImprovements);
-  if (focusFilter === "issues") result = result.filter((a3) => {
-    const u4 = a3.udaSummary;
-    const hasUda = u4 && (u4.bims === "missing" || u4.bims === "near_miss" || u4.bims === "in_progress" || u4.phq9 === "missing" || u4.phq9 === "near_miss" || u4.phq9 === "in_progress" || u4.gg === "missing" || u4.gg === "near_miss" || u4.gg === "in_progress");
-    const hasOrder = a3.compliance?.checks?.orders ? a3.compliance.checks.orders.status !== "passed" : false;
-    return hasUda || hasOrder;
-  });
-  return result;
+function Gi(e, s, n, i) {
+  let a = e;
+  return s !== "all" && (a = a.filter((r) => r.payerType === s)), n !== "all" && (a = a.filter((r) => r.assessmentClass === n)), i === "revenue" && (a = a.filter((r) => r.pdpm?.hasImprovements)), i === "issues" && (a = a.filter((r) => {
+    const c = r.udaSummary, o = c && (c.bims === "missing" || c.bims === "near_miss" || c.bims === "in_progress" || c.phq9 === "missing" || c.phq9 === "near_miss" || c.phq9 === "in_progress" || c.gg === "missing" || c.gg === "near_miss" || c.gg === "in_progress"), p = r.compliance?.checks?.orders ? r.compliance.checks.orders.status !== "passed" : !1;
+    return o || p;
+  })), a;
 }
-var URGENCY_ORDER = ["overdue", "urgent", "approaching", "on_track", "completed"];
-var URGENCY_META = {
+const Ve = ["overdue", "urgent", "approaching", "on_track", "completed"], Ui = {
   overdue: { label: "OVERDUE", color: "#ef4444" },
   urgent: { label: "URGENT", color: "#f97316" },
   approaching: { label: "APPROACHING", color: "#eab308" },
   on_track: { label: "ON TRACK", color: "#22c55e" },
   completed: { label: "COMPLETED", color: "#6b7280" }
 };
-function groupByUrgency(assessments) {
-  const groups = {};
-  for (const key of URGENCY_ORDER) groups[key] = [];
-  for (const a3 of assessments) {
-    const u4 = getUrgency(a3);
-    if (groups[u4]) groups[u4].push(a3);
-    else groups.on_track.push(a3);
+function Vi(e) {
+  const s = {};
+  for (const n of Ve) s[n] = [];
+  for (const n of e) {
+    const i = he(n);
+    s[i] ? s[i].push(n) : s.on_track.push(n);
   }
-  for (const key of URGENCY_ORDER) {
-    groups[key].sort((a3, b) => {
-      const dA = a3.ardDate ? new Date(a3.ardDate) : /* @__PURE__ */ new Date(0);
-      const dB = b.ardDate ? new Date(b.ardDate) : /* @__PURE__ */ new Date(0);
-      return dA - dB;
+  for (const n of Ve)
+    s[n].sort((i, a) => {
+      const r = i.ardDate ? new Date(i.ardDate) : /* @__PURE__ */ new Date(0), c = a.ardDate ? new Date(a.ardDate) : /* @__PURE__ */ new Date(0);
+      return r - c;
     });
-  }
-  return groups;
+  return s;
 }
-function getGroupSummary(items) {
-  let udasComplete = 0;
-  let revenueOpp = 0;
-  for (const a3 of items) {
-    const u4 = a3.udaSummary;
-    if (u4) {
-      if (u4.bims === "complete" || u4.bims === "locked_in_range") udasComplete++;
-      if (u4.gg === "complete" || u4.gg === "locked_in_range") udasComplete++;
-      if (u4.phq9 === "complete" || u4.phq9 === "locked_in_range") udasComplete++;
-    }
-    if (a3.pdpm?.hasImprovements) revenueOpp++;
+function zi(e) {
+  let s = 0, n = 0;
+  for (const a of e) {
+    const r = a.udaSummary;
+    r && ((r.bims === "complete" || r.bims === "locked_in_range") && s++, (r.gg === "complete" || r.gg === "locked_in_range") && s++, (r.phq9 === "complete" || r.phq9 === "locked_in_range") && s++), a.pdpm?.hasImprovements && n++;
   }
-  const parts = [];
-  if (udasComplete > 0) parts.push(`${udasComplete} UDAs complete`);
-  if (revenueOpp > 0) parts.push(`${revenueOpp} revenue opp.`);
-  return parts.join(" \xB7 ") || `${items.length} assessment${items.length !== 1 ? "s" : ""}`;
+  const i = [];
+  return s > 0 && i.push(`${s} UDAs complete`), n > 0 && i.push(`${n} revenue opp.`), i.join(" · ") || `${e.length} assessment${e.length !== 1 ? "s" : ""}`;
 }
-function priorityScore(a3) {
-  let score = 0;
-  const u4 = getUrgency(a3);
-  if (u4 === "overdue") score += 4;
-  else if (u4 === "urgent") score += 3;
-  else if (u4 === "approaching") score += 2;
-  const delta = getPaymentDeltaNumeric(a3.pdpm?.payment);
-  if (delta > 0) score += 3;
-  if (a3.udaSummary) {
-    if (a3.udaSummary.bims === "missing") score += 1;
-    if (a3.udaSummary.phq9 === "missing") score += 1;
-    if (a3.udaSummary.gg === "missing") score += 1;
-  }
-  return score;
+function Zt(e) {
+  let s = 0;
+  const n = he(e);
+  return n === "overdue" ? s += 4 : n === "urgent" ? s += 3 : n === "approaching" && (s += 2), qn(e.pdpm?.payment) > 0 && (s += 3), e.udaSummary && (e.udaSummary.bims === "missing" && (s += 1), e.udaSummary.phq9 === "missing" && (s += 1), e.udaSummary.gg === "missing" && (s += 1)), s;
 }
-var URGENCY_DOT_COLORS = {
+const ji = {
   overdue: "#ef4444",
   urgent: "#f97316",
   approaching: "#eab308",
   on_track: "#22c55e",
   completed: "#6b7280"
 };
-function buildIssueSummary(a3) {
-  const parts = [];
-  if (a3.sectionProgress?.total > 0) {
-    parts.push(`${a3.sectionProgress.completed}/${a3.sectionProgress.total} sections`);
+function Qi(e) {
+  const s = [];
+  if (e.sectionProgress?.total > 0 && s.push(`${e.sectionProgress.completed}/${e.sectionProgress.total} sections`), e.udaSummary) {
+    const n = [];
+    e.udaSummary.bims === "missing" && n.push("BIMS"), e.udaSummary.phq9 === "missing" && n.push("PHQ-9"), e.udaSummary.gg === "missing" && n.push("GG"), n.length > 0 && s.push(`${n.join(", ")} missing`);
   }
-  if (a3.udaSummary) {
-    const missing = [];
-    if (a3.udaSummary.bims === "missing") missing.push("BIMS");
-    if (a3.udaSummary.phq9 === "missing") missing.push("PHQ-9");
-    if (a3.udaSummary.gg === "missing") missing.push("GG");
-    if (missing.length > 0) parts.push(`${missing.join(", ")} missing`);
-  }
-  return parts.join(" \xB7 ");
+  return s.join(" · ");
 }
-function OverviewView({ assessments, outstandingQueries, onViewChange, onOpenAssessment }) {
-  const counts = T2(() => {
-    let overdue = 0, urgent = 0, hipps = 0;
-    let docRiskTotal = 0, docRiskDx = 0, docRiskTx = 0;
-    for (const a3 of assessments) {
-      const u4 = getUrgency(a3);
-      if (u4 === "overdue") overdue++;
-      if (u4 === "urgent" || u4 === "approaching") urgent++;
-      if (a3.isHippsOpportunityPrimary) hipps++;
-      const dr = a3.detectionSummary?.docRisks;
-      if (dr) {
-        docRiskTotal += dr.total || 0;
-        docRiskDx += dr.diagnosisMissing || 0;
-        docRiskTx += dr.treatmentMissing || 0;
-      }
+function Wi({ assessments: e, outstandingQueries: s, onViewChange: n, onOpenAssessment: i }) {
+  const a = ae(() => {
+    let o = 0, p = 0, d = 0, u = 0, l = 0, m = 0;
+    for (const h of e) {
+      const _ = he(h);
+      _ === "overdue" && o++, (_ === "urgent" || _ === "approaching") && p++, h.isHippsOpportunityPrimary && d++;
+      const v = h.detectionSummary?.docRisks;
+      v && (u += v.total || 0, l += v.diagnosisMissing || 0, m += v.treatmentMissing || 0);
     }
-    return { overdue, urgent, hipps, queries: (outstandingQueries || []).length, docRiskTotal, docRiskDx, docRiskTx };
-  }, [assessments, outstandingQueries]);
-  const priorities = T2(() => {
-    return [...assessments].filter((a3) => {
-      const u4 = getUrgency(a3);
-      return u4 === "overdue" || u4 === "urgent" || u4 === "approaching";
-    }).sort((a3, b) => priorityScore(b) - priorityScore(a3)).slice(0, 8);
-  }, [assessments]);
-  const hippsItems = T2(() => {
-    return assessments.filter((a3) => a3.isHippsOpportunityPrimary).slice(0, 5);
-  }, [assessments]);
-  return /* @__PURE__ */ u3("div", { class: "mds-cc__overview", children: [
-    /* @__PURE__ */ u3("div", { class: "mds-cc__ov-cards", children: [
-      /* @__PURE__ */ u3("div", { class: "mds-cc__ov-card mds-cc__ov-card--red", onClick: () => onViewChange("assessments"), children: [
-        /* @__PURE__ */ u3("div", { class: "mds-cc__ov-card-icon", children: /* @__PURE__ */ u3("svg", { width: "20", height: "20", viewBox: "0 0 24 24", fill: "none", stroke: "#ef4444", "stroke-width": "2", children: [
-          /* @__PURE__ */ u3("circle", { cx: "12", cy: "12", r: "10" }),
-          /* @__PURE__ */ u3("line", { x1: "12", y1: "8", x2: "12", y2: "12" }),
-          /* @__PURE__ */ u3("line", { x1: "12", y1: "16", x2: "12.01", y2: "16" })
+    return { overdue: o, urgent: p, hipps: d, queries: (s || []).length, docRiskTotal: u, docRiskDx: l, docRiskTx: m };
+  }, [e, s]), r = ae(() => [...e].filter((o) => {
+    const p = he(o);
+    return p === "overdue" || p === "urgent" || p === "approaching";
+  }).sort((o, p) => Zt(p) - Zt(o)).slice(0, 8), [e]), c = ae(() => e.filter((o) => o.isHippsOpportunityPrimary).slice(0, 5), [e]);
+  return /* @__PURE__ */ t("div", { class: "mds-cc__overview", children: [
+    /* @__PURE__ */ t("div", { class: "mds-cc__ov-cards", children: [
+      /* @__PURE__ */ t("div", { class: "mds-cc__ov-card mds-cc__ov-card--red", onClick: () => n("assessments"), children: [
+        /* @__PURE__ */ t("div", { class: "mds-cc__ov-card-icon", children: /* @__PURE__ */ t("svg", { width: "20", height: "20", viewBox: "0 0 24 24", fill: "none", stroke: "#ef4444", "stroke-width": "2", children: [
+          /* @__PURE__ */ t("circle", { cx: "12", cy: "12", r: "10" }),
+          /* @__PURE__ */ t("line", { x1: "12", y1: "8", x2: "12", y2: "12" }),
+          /* @__PURE__ */ t("line", { x1: "12", y1: "16", x2: "12.01", y2: "16" })
         ] }) }),
-        /* @__PURE__ */ u3("div", { class: "mds-cc__ov-card-body", children: [
-          /* @__PURE__ */ u3("div", { class: "mds-cc__ov-card-num", children: counts.overdue }),
-          /* @__PURE__ */ u3("div", { class: "mds-cc__ov-card-label", children: "Overdue" })
+        /* @__PURE__ */ t("div", { class: "mds-cc__ov-card-body", children: [
+          /* @__PURE__ */ t("div", { class: "mds-cc__ov-card-num", children: a.overdue }),
+          /* @__PURE__ */ t("div", { class: "mds-cc__ov-card-label", children: "Overdue" })
         ] })
       ] }),
-      /* @__PURE__ */ u3("div", { class: "mds-cc__ov-card mds-cc__ov-card--orange", onClick: () => onViewChange("assessments"), children: [
-        /* @__PURE__ */ u3("div", { class: "mds-cc__ov-card-icon", children: /* @__PURE__ */ u3("svg", { width: "20", height: "20", viewBox: "0 0 24 24", fill: "none", stroke: "#f97316", "stroke-width": "2", children: [
-          /* @__PURE__ */ u3("circle", { cx: "12", cy: "12", r: "10" }),
-          /* @__PURE__ */ u3("polyline", { points: "12 6 12 12 16 14" })
+      /* @__PURE__ */ t("div", { class: "mds-cc__ov-card mds-cc__ov-card--orange", onClick: () => n("assessments"), children: [
+        /* @__PURE__ */ t("div", { class: "mds-cc__ov-card-icon", children: /* @__PURE__ */ t("svg", { width: "20", height: "20", viewBox: "0 0 24 24", fill: "none", stroke: "#f97316", "stroke-width": "2", children: [
+          /* @__PURE__ */ t("circle", { cx: "12", cy: "12", r: "10" }),
+          /* @__PURE__ */ t("polyline", { points: "12 6 12 12 16 14" })
         ] }) }),
-        /* @__PURE__ */ u3("div", { class: "mds-cc__ov-card-body", children: [
-          /* @__PURE__ */ u3("div", { class: "mds-cc__ov-card-num", children: counts.urgent }),
-          /* @__PURE__ */ u3("div", { class: "mds-cc__ov-card-label", children: "Urgent" })
+        /* @__PURE__ */ t("div", { class: "mds-cc__ov-card-body", children: [
+          /* @__PURE__ */ t("div", { class: "mds-cc__ov-card-num", children: a.urgent }),
+          /* @__PURE__ */ t("div", { class: "mds-cc__ov-card-label", children: "Urgent" })
         ] })
       ] }),
-      /* @__PURE__ */ u3("div", { class: "mds-cc__ov-card mds-cc__ov-card--green", onClick: () => onViewChange("assessments"), children: [
-        /* @__PURE__ */ u3("div", { class: "mds-cc__ov-card-icon", children: /* @__PURE__ */ u3("svg", { width: "20", height: "20", viewBox: "0 0 24 24", fill: "none", stroke: "#22c55e", "stroke-width": "2", children: [
-          /* @__PURE__ */ u3("path", { d: "M22 11.08V12a10 10 0 1 1-5.93-9.14" }),
-          /* @__PURE__ */ u3("polyline", { points: "22 4 12 14.01 9 11.01" })
+      /* @__PURE__ */ t("div", { class: "mds-cc__ov-card mds-cc__ov-card--green", onClick: () => n("assessments"), children: [
+        /* @__PURE__ */ t("div", { class: "mds-cc__ov-card-icon", children: /* @__PURE__ */ t("svg", { width: "20", height: "20", viewBox: "0 0 24 24", fill: "none", stroke: "#22c55e", "stroke-width": "2", children: [
+          /* @__PURE__ */ t("path", { d: "M22 11.08V12a10 10 0 1 1-5.93-9.14" }),
+          /* @__PURE__ */ t("polyline", { points: "22 4 12 14.01 9 11.01" })
         ] }) }),
-        /* @__PURE__ */ u3("div", { class: "mds-cc__ov-card-body", children: [
-          /* @__PURE__ */ u3("div", { class: "mds-cc__ov-card-num", children: counts.hipps }),
-          /* @__PURE__ */ u3("div", { class: "mds-cc__ov-card-label", children: "HIPPS Opportunities" })
+        /* @__PURE__ */ t("div", { class: "mds-cc__ov-card-body", children: [
+          /* @__PURE__ */ t("div", { class: "mds-cc__ov-card-num", children: a.hipps }),
+          /* @__PURE__ */ t("div", { class: "mds-cc__ov-card-label", children: "HIPPS Opportunities" })
         ] })
       ] }),
-      /* @__PURE__ */ u3("div", { class: "mds-cc__ov-card mds-cc__ov-card--blue", onClick: () => onViewChange("queries"), children: [
-        /* @__PURE__ */ u3("div", { class: "mds-cc__ov-card-icon", children: /* @__PURE__ */ u3("svg", { width: "20", height: "20", viewBox: "0 0 24 24", fill: "none", stroke: "#6366f1", "stroke-width": "2", children: [
-          /* @__PURE__ */ u3("path", { d: "M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" }),
-          /* @__PURE__ */ u3("polyline", { points: "14 2 14 8 20 8" }),
-          /* @__PURE__ */ u3("line", { x1: "16", y1: "13", x2: "8", y2: "13" }),
-          /* @__PURE__ */ u3("line", { x1: "16", y1: "17", x2: "8", y2: "17" })
+      /* @__PURE__ */ t("div", { class: "mds-cc__ov-card mds-cc__ov-card--blue", onClick: () => n("queries"), children: [
+        /* @__PURE__ */ t("div", { class: "mds-cc__ov-card-icon", children: /* @__PURE__ */ t("svg", { width: "20", height: "20", viewBox: "0 0 24 24", fill: "none", stroke: "#6366f1", "stroke-width": "2", children: [
+          /* @__PURE__ */ t("path", { d: "M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" }),
+          /* @__PURE__ */ t("polyline", { points: "14 2 14 8 20 8" }),
+          /* @__PURE__ */ t("line", { x1: "16", y1: "13", x2: "8", y2: "13" }),
+          /* @__PURE__ */ t("line", { x1: "16", y1: "17", x2: "8", y2: "17" })
         ] }) }),
-        /* @__PURE__ */ u3("div", { class: "mds-cc__ov-card-body", children: [
-          /* @__PURE__ */ u3("div", { class: "mds-cc__ov-card-num", children: counts.queries }),
-          /* @__PURE__ */ u3("div", { class: "mds-cc__ov-card-label", children: "Outstanding Queries" })
+        /* @__PURE__ */ t("div", { class: "mds-cc__ov-card-body", children: [
+          /* @__PURE__ */ t("div", { class: "mds-cc__ov-card-num", children: a.queries }),
+          /* @__PURE__ */ t("div", { class: "mds-cc__ov-card-label", children: "Outstanding Queries" })
         ] })
       ] })
     ] }),
-    counts.docRiskTotal > 0 && /* @__PURE__ */ u3("div", { class: "mds-cc__ov-card mds-cc__ov-card--amber mds-cc__ov-card--full", onClick: () => onViewChange("docRisks"), children: [
-      /* @__PURE__ */ u3("div", { class: "mds-cc__ov-card-icon", children: /* @__PURE__ */ u3("svg", { width: "20", height: "20", viewBox: "0 0 24 24", fill: "none", stroke: "#d97706", "stroke-width": "2", children: [
-        /* @__PURE__ */ u3("path", { d: "M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" }),
-        /* @__PURE__ */ u3("line", { x1: "12", y1: "9", x2: "12", y2: "13" }),
-        /* @__PURE__ */ u3("line", { x1: "12", y1: "17", x2: "12.01", y2: "17" })
+    a.docRiskTotal > 0 && /* @__PURE__ */ t("div", { class: "mds-cc__ov-card mds-cc__ov-card--amber mds-cc__ov-card--full", onClick: () => n("docRisks"), children: [
+      /* @__PURE__ */ t("div", { class: "mds-cc__ov-card-icon", children: /* @__PURE__ */ t("svg", { width: "20", height: "20", viewBox: "0 0 24 24", fill: "none", stroke: "#d97706", "stroke-width": "2", children: [
+        /* @__PURE__ */ t("path", { d: "M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" }),
+        /* @__PURE__ */ t("line", { x1: "12", y1: "9", x2: "12", y2: "13" }),
+        /* @__PURE__ */ t("line", { x1: "12", y1: "17", x2: "12.01", y2: "17" })
       ] }) }),
-      /* @__PURE__ */ u3("div", { class: "mds-cc__ov-card-body", children: [
-        /* @__PURE__ */ u3("div", { class: "mds-cc__ov-card-num", children: counts.docRiskTotal }),
-        /* @__PURE__ */ u3("div", { class: "mds-cc__ov-card-label", children: "Documentation Risks" }),
-        /* @__PURE__ */ u3("div", { class: "mds-cc__ov-card-sublabel", children: [
-          counts.docRiskDx > 0 && /* @__PURE__ */ u3("span", { children: [
-            counts.docRiskDx,
+      /* @__PURE__ */ t("div", { class: "mds-cc__ov-card-body", children: [
+        /* @__PURE__ */ t("div", { class: "mds-cc__ov-card-num", children: a.docRiskTotal }),
+        /* @__PURE__ */ t("div", { class: "mds-cc__ov-card-label", children: "Documentation Risks" }),
+        /* @__PURE__ */ t("div", { class: "mds-cc__ov-card-sublabel", children: [
+          a.docRiskDx > 0 && /* @__PURE__ */ t("span", { children: [
+            a.docRiskDx,
             " missing diagnosis"
           ] }),
-          counts.docRiskDx > 0 && counts.docRiskTx > 0 && /* @__PURE__ */ u3("span", { children: " \xB7 " }),
-          counts.docRiskTx > 0 && /* @__PURE__ */ u3("span", { children: [
-            counts.docRiskTx,
+          a.docRiskDx > 0 && a.docRiskTx > 0 && /* @__PURE__ */ t("span", { children: " · " }),
+          a.docRiskTx > 0 && /* @__PURE__ */ t("span", { children: [
+            a.docRiskTx,
             " missing treatment"
           ] })
         ] })
       ] })
     ] }),
-    priorities.length > 0 && /* @__PURE__ */ u3("div", { class: "mds-cc__ov-section", children: [
-      /* @__PURE__ */ u3("div", { class: "mds-cc__ov-section-header", children: "Needs Attention" }),
-      priorities.map((a3) => {
-        const id = a3.id || a3.assessmentId || a3.externalAssessmentId;
-        const u4 = getUrgency(a3);
-        const delta = formatPaymentDelta(a3.pdpm?.payment);
-        const issues = buildIssueSummary(a3);
-        const type = cleanAssessmentType(a3.assessmentType);
-        return /* @__PURE__ */ u3("div", { class: "mds-cc__ov-priority", onClick: () => onOpenAssessment(a3), children: [
-          /* @__PURE__ */ u3("span", { class: "mds-cc__urgency-dot", style: { background: URGENCY_DOT_COLORS[u4] || "#9ca3af" } }),
-          /* @__PURE__ */ u3("span", { class: "mds-cc__ov-priority-name", children: a3.patientName }),
-          type && /* @__PURE__ */ u3("span", { class: "mds-cc__ov-priority-type", children: type }),
-          a3.pdpm?.currentHipps && /* @__PURE__ */ u3("span", { class: "mds-cc__ov-hipps-code", children: a3.pdpm.currentHipps }),
-          /* @__PURE__ */ u3("span", { class: "mds-cc__ov-priority-issues", children: issues }),
-          delta && /* @__PURE__ */ u3("span", { class: "mds-cc__card-badge--revenue", children: delta })
-        ] }, id);
+    r.length > 0 && /* @__PURE__ */ t("div", { class: "mds-cc__ov-section", children: [
+      /* @__PURE__ */ t("div", { class: "mds-cc__ov-section-header", children: "Needs Attention" }),
+      r.map((o) => {
+        const p = o.id || o.assessmentId || o.externalAssessmentId, d = he(o), u = Se(o.pdpm?.payment), l = Qi(o), m = lt(o.assessmentType);
+        return /* @__PURE__ */ t("div", { class: "mds-cc__ov-priority", onClick: () => i(o), children: [
+          /* @__PURE__ */ t("span", { class: "mds-cc__urgency-dot", style: { background: ji[d] || "#9ca3af" } }),
+          /* @__PURE__ */ t("span", { class: "mds-cc__ov-priority-name", children: o.patientName }),
+          m && /* @__PURE__ */ t("span", { class: "mds-cc__ov-priority-type", children: m }),
+          o.pdpm?.currentHipps && /* @__PURE__ */ t("span", { class: "mds-cc__ov-hipps-code", children: o.pdpm.currentHipps }),
+          /* @__PURE__ */ t("span", { class: "mds-cc__ov-priority-issues", children: l }),
+          u && /* @__PURE__ */ t("span", { class: "mds-cc__card-badge--revenue", children: u })
+        ] }, p);
       })
     ] }),
-    hippsItems.length > 0 && /* @__PURE__ */ u3("div", { class: "mds-cc__ov-section", children: [
-      /* @__PURE__ */ u3("div", { class: "mds-cc__ov-section-header", children: "HIPPS Opportunities" }),
-      hippsItems.map((a3) => {
-        const id = a3.id || a3.assessmentId || a3.externalAssessmentId;
-        const delta = formatPaymentDelta(a3.pdpm?.payment);
-        const type = cleanAssessmentType(a3.assessmentType);
-        return /* @__PURE__ */ u3("div", { class: "mds-cc__ov-hipps-row", onClick: () => onOpenAssessment(a3), children: [
-          /* @__PURE__ */ u3("span", { class: "mds-cc__ov-hipps-name", children: a3.patientName }),
-          type && /* @__PURE__ */ u3("span", { class: "mds-cc__ov-priority-type", children: type }),
-          /* @__PURE__ */ u3("span", { class: "mds-cc__ov-hipps-codes", children: [
-            a3.pdpm?.currentHipps && /* @__PURE__ */ u3("span", { class: "mds-cc__ov-hipps-code", children: a3.pdpm.currentHipps }),
-            a3.pdpm?.potentialHipps && a3.pdpm.potentialHipps !== a3.pdpm.currentHipps && /* @__PURE__ */ u3(k, { children: [
-              /* @__PURE__ */ u3("span", { class: "mds-cc__ov-hipps-arrow", children: "\u2192" }),
-              /* @__PURE__ */ u3("span", { class: "mds-cc__ov-hipps-code mds-cc__ov-hipps-code--improved", children: a3.pdpm.potentialHipps })
+    c.length > 0 && /* @__PURE__ */ t("div", { class: "mds-cc__ov-section", children: [
+      /* @__PURE__ */ t("div", { class: "mds-cc__ov-section-header", children: "HIPPS Opportunities" }),
+      c.map((o) => {
+        const p = o.id || o.assessmentId || o.externalAssessmentId, d = Se(o.pdpm?.payment), u = lt(o.assessmentType);
+        return /* @__PURE__ */ t("div", { class: "mds-cc__ov-hipps-row", onClick: () => i(o), children: [
+          /* @__PURE__ */ t("span", { class: "mds-cc__ov-hipps-name", children: o.patientName }),
+          u && /* @__PURE__ */ t("span", { class: "mds-cc__ov-priority-type", children: u }),
+          /* @__PURE__ */ t("span", { class: "mds-cc__ov-hipps-codes", children: [
+            o.pdpm?.currentHipps && /* @__PURE__ */ t("span", { class: "mds-cc__ov-hipps-code", children: o.pdpm.currentHipps }),
+            o.pdpm?.potentialHipps && o.pdpm.potentialHipps !== o.pdpm.currentHipps && /* @__PURE__ */ t(Y, { children: [
+              /* @__PURE__ */ t("span", { class: "mds-cc__ov-hipps-arrow", children: "→" }),
+              /* @__PURE__ */ t("span", { class: "mds-cc__ov-hipps-code mds-cc__ov-hipps-code--improved", children: o.pdpm.potentialHipps })
             ] })
           ] }),
-          delta && /* @__PURE__ */ u3("span", { class: "mds-cc__card-badge--revenue", children: delta })
-        ] }, id);
+          d && /* @__PURE__ */ t("span", { class: "mds-cc__card-badge--revenue", children: d })
+        ] }, p);
       })
     ] })
   ] });
 }
-function LoadingState() {
-  return /* @__PURE__ */ u3("div", { class: "mds-cc__state-container", children: [
-    /* @__PURE__ */ u3("div", { class: "mds-cc__spinner" }),
-    /* @__PURE__ */ u3("p", { class: "mds-cc__state-text", children: "Loading assessments..." })
+function Hs() {
+  return /* @__PURE__ */ t("div", { class: "mds-cc__state-container", children: [
+    /* @__PURE__ */ t("div", { class: "mds-cc__spinner" }),
+    /* @__PURE__ */ t("p", { class: "mds-cc__state-text", children: "Loading assessments..." })
   ] });
 }
-function ErrorState({ message, onRetry }) {
-  return /* @__PURE__ */ u3("div", { class: "mds-cc__state-container", children: [
-    /* @__PURE__ */ u3("div", { class: "mds-cc__state-icon", children: "\u26A0" }),
-    /* @__PURE__ */ u3("p", { class: "mds-cc__state-text", children: message }),
-    /* @__PURE__ */ u3("button", { class: "mds-cc__retry-btn", onClick: onRetry, children: "Retry" })
+function Ki({ message: e, onRetry: s }) {
+  return /* @__PURE__ */ t("div", { class: "mds-cc__state-container", children: [
+    /* @__PURE__ */ t("div", { class: "mds-cc__state-icon", children: "⚠" }),
+    /* @__PURE__ */ t("p", { class: "mds-cc__state-text", children: e }),
+    /* @__PURE__ */ t("button", { class: "mds-cc__retry-btn", onClick: s, children: "Retry" })
   ] });
 }
-function EmptyState() {
-  return /* @__PURE__ */ u3("div", { class: "mds-cc__state-container", children: [
-    /* @__PURE__ */ u3("div", { class: "mds-cc__state-icon", children: "\u{1F4CB}" }),
-    /* @__PURE__ */ u3("p", { class: "mds-cc__state-text", children: "No assessments found." })
+function Ji() {
+  return /* @__PURE__ */ t("div", { class: "mds-cc__state-container", children: [
+    /* @__PURE__ */ t("div", { class: "mds-cc__state-icon", children: "📋" }),
+    /* @__PURE__ */ t("p", { class: "mds-cc__state-text", children: "No assessments found." })
   ] });
 }
-function formatRelative(dateStr) {
-  if (!dateStr) return "";
-  const days = Math.floor((Date.now() - new Date(dateStr)) / 864e5);
-  if (days === 0) return "today";
-  if (days === 1) return "1d ago";
-  return `${days}d ago`;
+function Yi(e) {
+  if (!e) return "";
+  const s = Math.floor((Date.now() - new Date(e)) / 864e5);
+  return s === 0 ? "today" : s === 1 ? "1d ago" : `${s}d ago`;
 }
-function cleanType(type) {
-  if (!type) return "";
-  return type.replace(/\s*\/\s*/g, " ").replace(/\s{2,}/g, " ").trim();
+function Fs(e) {
+  return e ? e.replace(/\s*\/\s*/g, " ").replace(/\s{2,}/g, " ").trim() : "";
 }
-function ardBadge(q3) {
-  const d3 = q3.ardDaysRemaining;
-  if (d3 == null) return null;
-  let label, cls;
-  if (d3 < 0) {
-    label = `ARD passed ${Math.abs(d3)}d ago`;
-    cls = "mds-cc__ard--critical";
-  } else if (d3 === 0) {
-    label = "ARD today";
-    cls = "mds-cc__ard--critical";
-  } else if (d3 <= 3) {
-    label = `ARD in ${d3}d`;
-    cls = "mds-cc__ard--warn";
-  } else {
-    label = `ARD in ${d3}d`;
-    cls = "mds-cc__ard--neutral";
-  }
-  return /* @__PURE__ */ u3("span", { class: `mds-cc__ard ${cls}`, children: label });
+function Zi(e) {
+  const s = e.ardDaysRemaining;
+  if (s == null) return null;
+  let n, i;
+  return s < 0 ? (n = `ARD passed ${Math.abs(s)}d ago`, i = "mds-cc__ard--critical") : s === 0 ? (n = "ARD today", i = "mds-cc__ard--critical") : s <= 3 ? (n = `ARD in ${s}d`, i = "mds-cc__ard--warn") : (n = `ARD in ${s}d`, i = "mds-cc__ard--neutral"), /* @__PURE__ */ t("span", { class: `mds-cc__ard ${i}`, children: n });
 }
-function sortByArd(queries) {
-  return [...queries].sort((a3, b) => {
-    const aVal = a3.ardDaysRemaining ?? Infinity;
-    const bVal = b.ardDaysRemaining ?? Infinity;
-    return aVal - bVal;
+function Xt(e) {
+  return [...e].sort((s, n) => {
+    const i = s.ardDaysRemaining ?? 1 / 0, a = n.ardDaysRemaining ?? 1 / 0;
+    return i - a;
   });
 }
-function QueryCard({ q: q3, expanded, onToggle, onOpenAssessment, assessmentCtx, isPending }) {
-  const delta = formatPaymentDelta(q3.assessmentPayment);
-  const sentTo = q3.sentTo?.[0] || q3.practitioner;
-  const practName = sentTo ? `${sentTo.firstName || ""} ${sentTo.lastName || ""}`.trim() : null;
-  const practTitle = sentTo?.title;
-  return /* @__PURE__ */ u3("div", { class: `mds-cc__qcard${expanded ? " mds-cc__qcard--open" : ""}`, children: [
-    /* @__PURE__ */ u3("div", { class: "mds-cc__qcard-header", onClick: onToggle, role: "button", tabIndex: 0, children: [
-      /* @__PURE__ */ u3("div", { class: "mds-cc__qcard-left", children: [
-        /* @__PURE__ */ u3("span", { class: "mds-cc__qcard-patient", children: q3.patientName }),
-        /* @__PURE__ */ u3("div", { class: "mds-cc__qcard-diag", children: [
-          /* @__PURE__ */ u3("span", { class: "mds-cc__qcard-code", children: q3.mdsItem }),
-          /* @__PURE__ */ u3("span", { class: "mds-cc__qcard-name", children: q3.mdsItemName })
+function es({ q: e, expanded: s, onToggle: n, onOpenAssessment: i, assessmentCtx: a, isPending: r }) {
+  const c = Se(e.assessmentPayment), o = e.sentTo?.[0] || e.practitioner, p = o ? `${o.firstName || ""} ${o.lastName || ""}`.trim() : null, d = o?.title;
+  return /* @__PURE__ */ t("div", { class: `mds-cc__qcard${s ? " mds-cc__qcard--open" : ""}`, children: [
+    /* @__PURE__ */ t("div", { class: "mds-cc__qcard-header", onClick: n, role: "button", tabIndex: 0, children: [
+      /* @__PURE__ */ t("div", { class: "mds-cc__qcard-left", children: [
+        /* @__PURE__ */ t("span", { class: "mds-cc__qcard-patient", children: e.patientName }),
+        /* @__PURE__ */ t("div", { class: "mds-cc__qcard-diag", children: [
+          /* @__PURE__ */ t("span", { class: "mds-cc__qcard-code", children: e.mdsItem }),
+          /* @__PURE__ */ t("span", { class: "mds-cc__qcard-name", children: e.mdsItemName })
         ] })
       ] }),
-      /* @__PURE__ */ u3("div", { class: "mds-cc__qcard-right", children: [
-        ardBadge(q3),
-        delta && /* @__PURE__ */ u3("span", { class: `mds-cc__qcard-delta${isPending ? " mds-cc__qcard-delta--pending" : ""}`, children: delta }),
-        /* @__PURE__ */ u3("svg", { class: `mds-cc__qcard-chevron${expanded ? " mds-cc__qcard-chevron--open" : ""}`, width: "14", height: "14", viewBox: "0 0 14 14", fill: "none", children: /* @__PURE__ */ u3("path", { d: "M3.5 5.25L7 8.75L10.5 5.25", stroke: "currentColor", "stroke-width": "1.5", "stroke-linecap": "round", "stroke-linejoin": "round" }) })
+      /* @__PURE__ */ t("div", { class: "mds-cc__qcard-right", children: [
+        Zi(e),
+        c && /* @__PURE__ */ t("span", { class: `mds-cc__qcard-delta${r ? " mds-cc__qcard-delta--pending" : ""}`, children: c }),
+        /* @__PURE__ */ t("svg", { class: `mds-cc__qcard-chevron${s ? " mds-cc__qcard-chevron--open" : ""}`, width: "14", height: "14", viewBox: "0 0 14 14", fill: "none", children: /* @__PURE__ */ t("path", { d: "M3.5 5.25L7 8.75L10.5 5.25", stroke: "currentColor", "stroke-width": "1.5", "stroke-linecap": "round", "stroke-linejoin": "round" }) })
       ] })
     ] }),
-    /* @__PURE__ */ u3("div", { class: "mds-cc__qcard-meta", children: [
-      assessmentCtx && /* @__PURE__ */ u3("span", { class: "mds-cc__qcard-ctx", children: assessmentCtx }),
-      /* @__PURE__ */ u3("span", { class: `mds-cc__qcard-status mds-cc__qcard-status--${isPending ? "pending" : "sent"}`, children: isPending ? "Not yet sent" : `Sent ${formatRelative(q3.sentAt)}` }),
-      practName && /* @__PURE__ */ u3("span", { class: "mds-cc__qcard-practitioner", children: [
+    /* @__PURE__ */ t("div", { class: "mds-cc__qcard-meta", children: [
+      a && /* @__PURE__ */ t("span", { class: "mds-cc__qcard-ctx", children: a }),
+      /* @__PURE__ */ t("span", { class: `mds-cc__qcard-status mds-cc__qcard-status--${r ? "pending" : "sent"}`, children: r ? "Not yet sent" : `Sent ${Yi(e.sentAt)}` }),
+      p && /* @__PURE__ */ t("span", { class: "mds-cc__qcard-practitioner", children: [
         "to ",
-        practName,
-        practTitle ? `, ${practTitle}` : ""
+        p,
+        d ? `, ${d}` : ""
       ] })
     ] }),
-    expanded && /* @__PURE__ */ u3("div", { class: "mds-cc__qcard-body", children: /* @__PURE__ */ u3("div", { class: "mds-cc__qcard-actions", children: [
-      /* @__PURE__ */ u3("button", { class: "mds-cc__qcard-btn mds-cc__qcard-btn--primary", onClick: (e3) => {
-        e3.stopPropagation();
-        onOpenAssessment();
+    s && /* @__PURE__ */ t("div", { class: "mds-cc__qcard-body", children: /* @__PURE__ */ t("div", { class: "mds-cc__qcard-actions", children: [
+      /* @__PURE__ */ t("button", { class: "mds-cc__qcard-btn mds-cc__qcard-btn--primary", onClick: (u) => {
+        u.stopPropagation(), i();
       }, children: "Open in PDPM Analyzer" }),
-      !isPending && /* @__PURE__ */ u3("button", { class: "mds-cc__qcard-btn mds-cc__qcard-btn--secondary", onClick: (e3) => {
-        e3.stopPropagation();
-        const btn = e3.currentTarget;
-        btn.textContent = "Sending...";
-        btn.disabled = true;
+      !r && /* @__PURE__ */ t("button", { class: "mds-cc__qcard-btn mds-cc__qcard-btn--secondary", onClick: (u) => {
+        u.stopPropagation();
+        const l = u.currentTarget;
+        l.textContent = "Sending...", l.disabled = !0;
         try {
-          window.QueryAPI.resendQuery(q3.id).then(() => {
-            window.SuperToast?.success?.("SMS resent");
-            btn.textContent = "Sent!";
-          }).catch((err) => {
-            console.error("[Super] Resend failed:", err);
-            window.SuperToast?.error?.("Failed to resend");
-            btn.textContent = "Resend SMS";
-            btn.disabled = false;
+          window.QueryAPI.resendQuery(e.id).then(() => {
+            window.SuperToast?.success?.("SMS resent"), l.textContent = "Sent!";
+          }).catch((m) => {
+            console.error("[Super] Resend failed:", m), window.SuperToast?.error?.("Failed to resend"), l.textContent = "Resend SMS", l.disabled = !1;
           });
-        } catch (err) {
-          console.error("[Super] Resend error:", err);
-          btn.textContent = "Resend SMS";
-          btn.disabled = false;
+        } catch (m) {
+          console.error("[Super] Resend error:", m), l.textContent = "Resend SMS", l.disabled = !1;
         }
       }, children: "Resend SMS" })
     ] }) })
   ] });
 }
-function QueriesView({ outstandingQueries, recentlySigned, assessments, onOpenAssessment }) {
-  const [expandedId, setExpandedId] = d2(null);
-  const pending = sortByArd((outstandingQueries || []).filter((q3) => q3.status === "pending"));
-  const sent = sortByArd((outstandingQueries || []).filter((q3) => q3.status === "sent" || q3.status === "awaiting_response"));
-  function findAssessmentId(q3) {
-    const match = (assessments || []).find((a3) => a3.id === q3.mdsAssessmentId);
-    return match?.externalAssessmentId || match?.assessmentId || match?.id || q3.mdsAssessmentId;
+function Xi({ outstandingQueries: e, recentlySigned: s, assessments: n, onOpenAssessment: i }) {
+  const [a, r] = b(null), c = Xt((e || []).filter((m) => m.status === "pending")), o = Xt((e || []).filter((m) => m.status === "sent" || m.status === "awaiting_response"));
+  function p(m) {
+    const h = (n || []).find((_) => _.id === m.mdsAssessmentId);
+    return h?.externalAssessmentId || h?.assessmentId || h?.id || m.mdsAssessmentId;
   }
-  function findAssessmentContext(q3) {
-    const match = (assessments || []).find((a3) => a3.id === q3.mdsAssessmentId);
-    if (!match) return null;
-    return cleanType(match.assessmentType) || null;
+  function d(m) {
+    const h = (n || []).find((_) => _.id === m.mdsAssessmentId);
+    return h && Fs(h.assessmentType) || null;
   }
-  async function handleViewPdf(queryId) {
+  async function u(m) {
     try {
-      const resp = await fetch(`/api/extension/diagnosis-queries/${queryId}/pdf`);
-      const { pdfUrl } = await resp.json();
-      if (pdfUrl) window.open(pdfUrl, "_blank");
-    } catch (e3) {
-      console.warn("[Super] PDF fetch failed", e3);
+      const h = await fetch(`/api/extension/diagnosis-queries/${m}/pdf`), { pdfUrl: _ } = await h.json();
+      _ && window.open(_, "_blank");
+    } catch (h) {
+      console.warn("[Super] PDF fetch failed", h);
     }
   }
-  const totalOutstanding = pending.length + sent.length;
-  return /* @__PURE__ */ u3("div", { class: "mds-cc__queries-view", children: [
-    sent.length > 0 && /* @__PURE__ */ u3("div", { class: "mds-cc__queries-group", children: [
-      /* @__PURE__ */ u3("div", { class: "mds-cc__queries-group-label", children: [
-        /* @__PURE__ */ u3("span", { class: "mds-cc__queries-group-dot mds-cc__queries-group-dot--sent" }),
+  const l = c.length + o.length;
+  return /* @__PURE__ */ t("div", { class: "mds-cc__queries-view", children: [
+    o.length > 0 && /* @__PURE__ */ t("div", { class: "mds-cc__queries-group", children: [
+      /* @__PURE__ */ t("div", { class: "mds-cc__queries-group-label", children: [
+        /* @__PURE__ */ t("span", { class: "mds-cc__queries-group-dot mds-cc__queries-group-dot--sent" }),
         "Awaiting Doctor",
-        /* @__PURE__ */ u3("span", { class: "mds-cc__queries-group-count", children: sent.length })
+        /* @__PURE__ */ t("span", { class: "mds-cc__queries-group-count", children: o.length })
       ] }),
-      sent.map((q3) => /* @__PURE__ */ u3(
-        QueryCard,
+      o.map((m) => /* @__PURE__ */ t(
+        es,
         {
-          q: q3,
-          expanded: expandedId === q3.id,
-          onToggle: () => setExpandedId(expandedId === q3.id ? null : q3.id),
-          onOpenAssessment: () => onOpenAssessment?.(findAssessmentId(q3)),
-          assessmentCtx: findAssessmentContext(q3),
-          isPending: false
+          q: m,
+          expanded: a === m.id,
+          onToggle: () => r(a === m.id ? null : m.id),
+          onOpenAssessment: () => i?.(p(m)),
+          assessmentCtx: d(m),
+          isPending: !1
         },
-        q3.id
+        m.id
       ))
     ] }),
-    pending.length > 0 && /* @__PURE__ */ u3("div", { class: "mds-cc__queries-group", children: [
-      /* @__PURE__ */ u3("div", { class: "mds-cc__queries-group-label", children: [
-        /* @__PURE__ */ u3("span", { class: "mds-cc__queries-group-dot mds-cc__queries-group-dot--pending" }),
+    c.length > 0 && /* @__PURE__ */ t("div", { class: "mds-cc__queries-group", children: [
+      /* @__PURE__ */ t("div", { class: "mds-cc__queries-group-label", children: [
+        /* @__PURE__ */ t("span", { class: "mds-cc__queries-group-dot mds-cc__queries-group-dot--pending" }),
         "Needs to be Sent",
-        /* @__PURE__ */ u3("span", { class: "mds-cc__queries-group-count", children: pending.length })
+        /* @__PURE__ */ t("span", { class: "mds-cc__queries-group-count", children: c.length })
       ] }),
-      pending.map((q3) => /* @__PURE__ */ u3(
-        QueryCard,
+      c.map((m) => /* @__PURE__ */ t(
+        es,
         {
-          q: q3,
-          expanded: expandedId === q3.id,
-          onToggle: () => setExpandedId(expandedId === q3.id ? null : q3.id),
-          onOpenAssessment: () => onOpenAssessment?.(findAssessmentId(q3)),
-          assessmentCtx: findAssessmentContext(q3),
-          isPending: true
+          q: m,
+          expanded: a === m.id,
+          onToggle: () => r(a === m.id ? null : m.id),
+          onOpenAssessment: () => i?.(p(m)),
+          assessmentCtx: d(m),
+          isPending: !0
         },
-        q3.id
+        m.id
       ))
     ] }),
-    recentlySigned && recentlySigned.length > 0 && /* @__PURE__ */ u3("div", { class: "mds-cc__queries-group", children: [
-      /* @__PURE__ */ u3("div", { class: "mds-cc__queries-group-label", children: [
-        /* @__PURE__ */ u3("span", { class: "mds-cc__queries-group-dot mds-cc__queries-group-dot--signed" }),
+    s && s.length > 0 && /* @__PURE__ */ t("div", { class: "mds-cc__queries-group", children: [
+      /* @__PURE__ */ t("div", { class: "mds-cc__queries-group-label", children: [
+        /* @__PURE__ */ t("span", { class: "mds-cc__queries-group-dot mds-cc__queries-group-dot--signed" }),
         "Recently Signed",
-        /* @__PURE__ */ u3("span", { class: "mds-cc__queries-group-count", children: recentlySigned.length })
+        /* @__PURE__ */ t("span", { class: "mds-cc__queries-group-count", children: s.length })
       ] }),
-      recentlySigned.map((q3) => {
-        const isSigned = q3.status === "signed";
-        const isRejected = q3.status === "rejected";
-        const practitioner = q3.practitioner || q3.sentTo?.[0];
-        return /* @__PURE__ */ u3("div", { class: `mds-cc__qcard mds-cc__qcard--signed${isRejected ? " mds-cc__qcard--rejected" : ""}`, children: [
-          /* @__PURE__ */ u3("div", { class: "mds-cc__qcard-header", onClick: () => setExpandedId(expandedId === q3.id ? null : q3.id), role: "button", tabIndex: 0, children: [
-            /* @__PURE__ */ u3("div", { class: "mds-cc__qcard-left", children: [
-              /* @__PURE__ */ u3("span", { class: "mds-cc__qcard-patient", children: q3.patientName }),
-              /* @__PURE__ */ u3("div", { class: "mds-cc__qcard-diag", children: [
-                /* @__PURE__ */ u3("span", { class: "mds-cc__qcard-code", children: q3.mdsItem }),
-                /* @__PURE__ */ u3("span", { class: "mds-cc__qcard-name", children: q3.mdsItemName })
+      s.map((m) => {
+        const h = m.status === "signed", _ = m.status === "rejected", v = m.practitioner || m.sentTo?.[0];
+        return /* @__PURE__ */ t("div", { class: `mds-cc__qcard mds-cc__qcard--signed${_ ? " mds-cc__qcard--rejected" : ""}`, children: [
+          /* @__PURE__ */ t("div", { class: "mds-cc__qcard-header", onClick: () => r(a === m.id ? null : m.id), role: "button", tabIndex: 0, children: [
+            /* @__PURE__ */ t("div", { class: "mds-cc__qcard-left", children: [
+              /* @__PURE__ */ t("span", { class: "mds-cc__qcard-patient", children: m.patientName }),
+              /* @__PURE__ */ t("div", { class: "mds-cc__qcard-diag", children: [
+                /* @__PURE__ */ t("span", { class: "mds-cc__qcard-code", children: m.mdsItem }),
+                /* @__PURE__ */ t("span", { class: "mds-cc__qcard-name", children: m.mdsItemName })
               ] })
             ] }),
-            /* @__PURE__ */ u3("div", { class: "mds-cc__qcard-right", children: [
-              /* @__PURE__ */ u3("span", { class: `mds-cc__qcard-status-badge mds-cc__qcard-status-badge--${q3.status}`, children: isSigned ? "Signed" : "Rejected" }),
-              /* @__PURE__ */ u3("svg", { class: `mds-cc__qcard-chevron${expandedId === q3.id ? " mds-cc__qcard-chevron--open" : ""}`, width: "14", height: "14", viewBox: "0 0 14 14", fill: "none", children: /* @__PURE__ */ u3("path", { d: "M3.5 5.25L7 8.75L10.5 5.25", stroke: "currentColor", "stroke-width": "1.5", "stroke-linecap": "round", "stroke-linejoin": "round" }) })
+            /* @__PURE__ */ t("div", { class: "mds-cc__qcard-right", children: [
+              /* @__PURE__ */ t("span", { class: `mds-cc__qcard-status-badge mds-cc__qcard-status-badge--${m.status}`, children: h ? "Signed" : "Rejected" }),
+              /* @__PURE__ */ t("svg", { class: `mds-cc__qcard-chevron${a === m.id ? " mds-cc__qcard-chevron--open" : ""}`, width: "14", height: "14", viewBox: "0 0 14 14", fill: "none", children: /* @__PURE__ */ t("path", { d: "M3.5 5.25L7 8.75L10.5 5.25", stroke: "currentColor", "stroke-width": "1.5", "stroke-linecap": "round", "stroke-linejoin": "round" }) })
             ] })
           ] }),
-          /* @__PURE__ */ u3("div", { class: "mds-cc__qcard-meta", children: [
-            practitioner && /* @__PURE__ */ u3("span", { class: "mds-cc__qcard-practitioner", children: [
-              practitioner.firstName,
+          /* @__PURE__ */ t("div", { class: "mds-cc__qcard-meta", children: [
+            v && /* @__PURE__ */ t("span", { class: "mds-cc__qcard-practitioner", children: [
+              v.firstName,
               " ",
-              practitioner.lastName,
-              practitioner.title ? `, ${practitioner.title}` : ""
+              v.lastName,
+              v.title ? `, ${v.title}` : ""
             ] }),
-            isSigned && q3.selectedIcd10Code && /* @__PURE__ */ u3("span", { class: "mds-cc__qcard-icd", children: q3.selectedIcd10Code }),
-            isRejected && q3.rejectionReason && /* @__PURE__ */ u3("span", { class: "mds-cc__qcard-rejection", children: [
-              "\u201C",
-              q3.rejectionReason,
-              "\u201D"
+            h && m.selectedIcd10Code && /* @__PURE__ */ t("span", { class: "mds-cc__qcard-icd", children: m.selectedIcd10Code }),
+            _ && m.rejectionReason && /* @__PURE__ */ t("span", { class: "mds-cc__qcard-rejection", children: [
+              "“",
+              m.rejectionReason,
+              "”"
             ] })
           ] }),
-          expandedId === q3.id && /* @__PURE__ */ u3("div", { class: "mds-cc__qcard-body", children: /* @__PURE__ */ u3("div", { class: "mds-cc__qcard-actions", children: [
-            /* @__PURE__ */ u3("button", { class: "mds-cc__qcard-btn mds-cc__qcard-btn--primary", onClick: (e3) => {
-              e3.stopPropagation();
-              onOpenAssessment?.(findAssessmentId(q3));
+          a === m.id && /* @__PURE__ */ t("div", { class: "mds-cc__qcard-body", children: /* @__PURE__ */ t("div", { class: "mds-cc__qcard-actions", children: [
+            /* @__PURE__ */ t("button", { class: "mds-cc__qcard-btn mds-cc__qcard-btn--primary", onClick: (g) => {
+              g.stopPropagation(), i?.(p(m));
             }, children: "Open in PDPM Analyzer" }),
-            q3.hasPdf && /* @__PURE__ */ u3("button", { class: "mds-cc__qcard-btn mds-cc__qcard-btn--secondary", onClick: (e3) => {
-              e3.stopPropagation();
-              handleViewPdf(q3.id);
+            m.hasPdf && /* @__PURE__ */ t("button", { class: "mds-cc__qcard-btn mds-cc__qcard-btn--secondary", onClick: (g) => {
+              g.stopPropagation(), u(m.id);
             }, children: "View Signed PDF" })
           ] }) })
-        ] }, q3.id || q3.mdsItem);
+        ] }, m.id || m.mdsItem);
       })
     ] }),
-    totalOutstanding === 0 && (!recentlySigned || recentlySigned.length === 0) && /* @__PURE__ */ u3("div", { class: "mds-cc__state-container", children: [
-      /* @__PURE__ */ u3("div", { class: "mds-cc__state-icon", children: "\u2709" }),
-      /* @__PURE__ */ u3("p", { class: "mds-cc__state-text", children: "No outstanding queries." })
+    l === 0 && (!s || s.length === 0) && /* @__PURE__ */ t("div", { class: "mds-cc__state-container", children: [
+      /* @__PURE__ */ t("div", { class: "mds-cc__state-icon", children: "✉" }),
+      /* @__PURE__ */ t("p", { class: "mds-cc__state-text", children: "No outstanding queries." })
     ] })
   ] });
 }
-function DocRisksView({ facilityName, orgSlug }) {
-  const { data, loading, error } = useDocRisks({ facilityName, orgSlug, enabled: true });
-  if (loading) return /* @__PURE__ */ u3(LoadingState, {});
-  if (error) return /* @__PURE__ */ u3("div", { class: "mds-cc__state-container", children: [
-    /* @__PURE__ */ u3("div", { class: "mds-cc__state-icon", children: "\u26A0" }),
-    /* @__PURE__ */ u3("p", { class: "mds-cc__state-text", children: error })
+function ea({ facilityName: e, orgSlug: s }) {
+  const { data: n, loading: i, error: a } = cn({ facilityName: e, orgSlug: s, enabled: !0 });
+  if (i) return /* @__PURE__ */ t(Hs, {});
+  if (a) return /* @__PURE__ */ t("div", { class: "mds-cc__state-container", children: [
+    /* @__PURE__ */ t("div", { class: "mds-cc__state-icon", children: "⚠" }),
+    /* @__PURE__ */ t("p", { class: "mds-cc__state-text", children: a })
   ] });
-  const items = data?.items || [];
-  const summary = data?.summary || {};
-  if (items.length === 0) {
-    return /* @__PURE__ */ u3("div", { class: "mds-cc__state-container", children: [
-      /* @__PURE__ */ u3("div", { class: "mds-cc__state-icon", children: "\u2705" }),
-      /* @__PURE__ */ u3("p", { class: "mds-cc__state-text", children: "No documentation risks found." })
-    ] });
-  }
-  return /* @__PURE__ */ u3("div", { class: "mds-cc__doc-risks-view", children: [
-    /* @__PURE__ */ u3("div", { class: "mds-cc__doc-risks-summary", children: [
-      /* @__PURE__ */ u3("span", { class: "mds-cc__doc-risks-summary-icon", children: "\u26A0" }),
-      /* @__PURE__ */ u3("div", { class: "mds-cc__doc-risks-summary-body", children: [
-        /* @__PURE__ */ u3("div", { class: "mds-cc__doc-risks-summary-title", children: [
-          summary.total || items.length,
+  const r = n?.items || [], c = n?.summary || {};
+  return r.length === 0 ? /* @__PURE__ */ t("div", { class: "mds-cc__state-container", children: [
+    /* @__PURE__ */ t("div", { class: "mds-cc__state-icon", children: "✅" }),
+    /* @__PURE__ */ t("p", { class: "mds-cc__state-text", children: "No documentation risks found." })
+  ] }) : /* @__PURE__ */ t("div", { class: "mds-cc__doc-risks-view", children: [
+    /* @__PURE__ */ t("div", { class: "mds-cc__doc-risks-summary", children: [
+      /* @__PURE__ */ t("span", { class: "mds-cc__doc-risks-summary-icon", children: "⚠" }),
+      /* @__PURE__ */ t("div", { class: "mds-cc__doc-risks-summary-body", children: [
+        /* @__PURE__ */ t("div", { class: "mds-cc__doc-risks-summary-title", children: [
+          c.total || r.length,
           " Documentation Risk",
-          (summary.total || items.length) !== 1 ? "s" : ""
+          (c.total || r.length) !== 1 ? "s" : ""
         ] }),
-        /* @__PURE__ */ u3("div", { class: "mds-cc__doc-risks-summary-detail", children: [
+        /* @__PURE__ */ t("div", { class: "mds-cc__doc-risks-summary-detail", children: [
           "Diagnoses lacking chart documentation support",
-          (summary.diagnosisMissing > 0 || summary.treatmentMissing > 0) && /* @__PURE__ */ u3("span", { children: [
-            " \xB7 ",
-            summary.diagnosisMissing > 0 && `${summary.diagnosisMissing} missing diagnosis`,
-            summary.diagnosisMissing > 0 && summary.treatmentMissing > 0 && " \xB7 ",
-            summary.treatmentMissing > 0 && `${summary.treatmentMissing} missing treatment`
+          (c.diagnosisMissing > 0 || c.treatmentMissing > 0) && /* @__PURE__ */ t("span", { children: [
+            " · ",
+            c.diagnosisMissing > 0 && `${c.diagnosisMissing} missing diagnosis`,
+            c.diagnosisMissing > 0 && c.treatmentMissing > 0 && " · ",
+            c.treatmentMissing > 0 && `${c.treatmentMissing} missing treatment`
           ] })
         ] })
       ] })
     ] }),
-    items.map((item, i3) => /* @__PURE__ */ u3("div", { class: "mds-cc__doc-risk-row", children: [
-      /* @__PURE__ */ u3("div", { class: "mds-cc__doc-risk-row-top", children: [
-        /* @__PURE__ */ u3("span", { class: "mds-cc__query-patient", children: item.patientName }),
-        item.assessmentType && /* @__PURE__ */ u3("span", { class: "mds-cc__ov-priority-type", children: cleanType(item.assessmentType) })
+    r.map((o, p) => /* @__PURE__ */ t("div", { class: "mds-cc__doc-risk-row", children: [
+      /* @__PURE__ */ t("div", { class: "mds-cc__doc-risk-row-top", children: [
+        /* @__PURE__ */ t("span", { class: "mds-cc__query-patient", children: o.patientName }),
+        o.assessmentType && /* @__PURE__ */ t("span", { class: "mds-cc__ov-priority-type", children: Fs(o.assessmentType) })
       ] }),
-      /* @__PURE__ */ u3("div", { class: "mds-cc__doc-risk-row-item", children: [
-        /* @__PURE__ */ u3("span", { class: "mds-cc__query-item-code", children: item.mdsItem }),
-        /* @__PURE__ */ u3("span", { class: "mds-cc__query-item-name", children: [
-          "\xB7 ",
-          item.itemName
+      /* @__PURE__ */ t("div", { class: "mds-cc__doc-risk-row-item", children: [
+        /* @__PURE__ */ t("span", { class: "mds-cc__query-item-code", children: o.mdsItem }),
+        /* @__PURE__ */ t("span", { class: "mds-cc__query-item-name", children: [
+          "· ",
+          o.itemName
         ] }),
-        /* @__PURE__ */ u3("div", { class: "mds-cc__doc-risk-pills", children: [
-          item.missingDiagnosis && /* @__PURE__ */ u3("span", { class: "mds-cc__doc-risk-pill", children: "Diagnosis" }),
-          item.missingTreatment && /* @__PURE__ */ u3("span", { class: "mds-cc__doc-risk-pill", children: "Active Treatment" })
+        /* @__PURE__ */ t("div", { class: "mds-cc__doc-risk-pills", children: [
+          o.missingDiagnosis && /* @__PURE__ */ t("span", { class: "mds-cc__doc-risk-pill", children: "Diagnosis" }),
+          o.missingTreatment && /* @__PURE__ */ t("span", { class: "mds-cc__doc-risk-pill", children: "Active Treatment" })
         ] })
       ] }),
-      item.rationale && /* @__PURE__ */ u3("div", { class: "mds-cc__doc-risk-rationale", children: item.rationale })
-    ] }, i3))
+      o.rationale && /* @__PURE__ */ t("div", { class: "mds-cc__doc-risk-rationale", children: o.rationale })
+    ] }, p))
   ] });
 }
-function UrgencyGroup({ urgencyKey, items, isCollapsed, onToggleCollapse, expandedId, onToggleCard, onOpenAnalyzer, onSelectItem }) {
-  const meta = URGENCY_META[urgencyKey];
-  if (!items || items.length === 0) return null;
-  return /* @__PURE__ */ u3("div", { class: "mds-cc__urgency-group", children: [
-    /* @__PURE__ */ u3(
+function ta({ urgencyKey: e, items: s, isCollapsed: n, onToggleCollapse: i, expandedId: a, onToggleCard: r, onOpenAnalyzer: c, onSelectItem: o }) {
+  const p = Ui[e];
+  return !s || s.length === 0 ? null : /* @__PURE__ */ t("div", { class: "mds-cc__urgency-group", children: [
+    /* @__PURE__ */ t(
       "div",
       {
         class: "mds-cc__urgency-group-header",
-        onClick: () => onToggleCollapse(urgencyKey),
+        onClick: () => i(e),
         role: "button",
         tabIndex: 0,
-        onKeyDown: (e3) => {
-          if (e3.key === "Enter" || e3.key === " ") {
-            e3.preventDefault();
-            onToggleCollapse(urgencyKey);
-          }
+        onKeyDown: (d) => {
+          (d.key === "Enter" || d.key === " ") && (d.preventDefault(), i(e));
         },
         children: [
-          /* @__PURE__ */ u3("span", { class: `mds-cc__urgency-group-arrow${isCollapsed ? "" : " mds-cc__urgency-group-arrow--open"}`, children: "\u203A" }),
-          /* @__PURE__ */ u3("span", { class: "mds-cc__urgency-group-dot", style: { background: meta.color } }),
-          /* @__PURE__ */ u3("span", { class: "mds-cc__urgency-group-label", style: { color: meta.color }, children: meta.label }),
-          /* @__PURE__ */ u3("span", { class: "mds-cc__urgency-group-count", children: [
+          /* @__PURE__ */ t("span", { class: `mds-cc__urgency-group-arrow${n ? "" : " mds-cc__urgency-group-arrow--open"}`, children: "›" }),
+          /* @__PURE__ */ t("span", { class: "mds-cc__urgency-group-dot", style: { background: p.color } }),
+          /* @__PURE__ */ t("span", { class: "mds-cc__urgency-group-label", style: { color: p.color }, children: p.label }),
+          /* @__PURE__ */ t("span", { class: "mds-cc__urgency-group-count", children: [
             "(",
-            items.length,
+            s.length,
             ")"
           ] }),
-          isCollapsed && /* @__PURE__ */ u3("span", { class: "mds-cc__urgency-group-summary", children: getGroupSummary(items) })
+          n && /* @__PURE__ */ t("span", { class: "mds-cc__urgency-group-summary", children: zi(s) })
         ]
       }
     ),
-    !isCollapsed && /* @__PURE__ */ u3("div", { class: "mds-cc__urgency-group-body", children: items.map((assessment) => {
-      const id = assessment.id || assessment.assessmentId || assessment.externalAssessmentId;
-      const isExpanded = expandedId === id;
-      return /* @__PURE__ */ u3("div", { class: "mds-cc__card-wrapper", "data-assessment-id": id, children: [
-        /* @__PURE__ */ u3(
-          AssessmentRow,
+    !n && /* @__PURE__ */ t("div", { class: "mds-cc__urgency-group-body", children: s.map((d) => {
+      const u = d.id || d.assessmentId || d.externalAssessmentId, l = a === u;
+      return /* @__PURE__ */ t("div", { class: "mds-cc__card-wrapper", "data-assessment-id": u, children: [
+        /* @__PURE__ */ t(
+          Un,
           {
-            assessment,
-            isExpanded,
-            onToggle: () => onToggleCard(id),
-            onOpenAnalyzer: () => onOpenAnalyzer(assessment)
+            assessment: d,
+            isExpanded: l,
+            onToggle: () => r(u),
+            onOpenAnalyzer: () => c(d)
           }
         ),
-        isExpanded && /* @__PURE__ */ u3(
-          AssessmentPreview,
+        l && /* @__PURE__ */ t(
+          ti,
           {
-            assessment,
-            onOpenAnalyzer: () => onOpenAnalyzer(assessment),
-            onSelectItem: onSelectItem ? (item) => onSelectItem(item, assessment) : void 0
+            assessment: d,
+            onOpenAnalyzer: () => c(d),
+            onSelectItem: o ? (m) => o(m, d) : void 0
           }
         )
-      ] }, id);
+      ] }, u);
     }) })
   ] });
 }
-function MDSCommandCenter({ facilityName, orgSlug, onClose, initialExpandedId }) {
-  const [activeView, setActiveView] = d2(initialExpandedId ? "assessments" : "overview");
-  const [payerFilter, setPayerFilter] = d2("all");
-  const [classFilter, setClassFilter] = d2("all");
-  const [focusFilter, setFocusFilter] = d2("all");
-  const [urgencyFilter, setUrgencyFilter] = d2("all");
-  const [collapsedGroups, setCollapsedGroups] = d2(/* @__PURE__ */ new Set(["completed"]));
-  const [expandedId, setExpandedId] = d2(initialExpandedId || null);
-  const [selectedItem, setSelectedItem] = d2(null);
-  const { data, loading, error, retry } = useCommandCenter({ facilityName, orgSlug });
-  const { data: certDashboard } = useCertDashboard({ facilityName, orgSlug, enabled: true });
-  const certsEnabled = certDashboard !== null;
-  const certCount = certsEnabled ? (certDashboard?.pending || 0) + (certDashboard?.overdue || 0) : 0;
-  const patientId = typeof window.getChatPatientId === "function" ? window.getChatPatientId() : null;
-  const patientName = typeof window.getPatientNameFromPage === "function" ? window.getPatientNameFromPage() : null;
-  const assessments = data?.assessments || [];
-  const summary = data?.summary || {};
-  const docRiskCount = T2(() => {
-    let total = 0;
-    for (const a3 of assessments) {
-      const dr = a3.detectionSummary?.docRisks;
-      if (dr) total += dr.total || 0;
+function sa({ facilityName: e, orgSlug: s, onClose: n, initialExpandedId: i }) {
+  const [a, r] = b(i ? "assessments" : "overview"), [c, o] = b("all"), [p, d] = b("all"), [u, l] = b("all"), [m, h] = b("all"), [_, v] = b(/* @__PURE__ */ new Set(["completed"])), [g, C] = b(i || null), [f, x] = b(null), { data: k, loading: y, error: S, retry: E } = on({ facilityName: e, orgSlug: s }), { data: N } = dn({ facilityName: e, orgSlug: s, enabled: !0 }), w = N !== null, T = w ? (N?.pending || 0) + (N?.overdue || 0) : 0, F = typeof window.getChatPatientId == "function" ? window.getChatPatientId() : null, V = typeof window.getPatientNameFromPage == "function" ? window.getPatientNameFromPage() : null, D = k?.assessments || [], B = k?.summary || {}, $ = ae(() => {
+    let L = 0;
+    for (const O of D) {
+      const A = O.detectionSummary?.docRisks;
+      A && (L += A.total || 0);
     }
-    return total;
-  }, [assessments]);
-  const urgencyGroups = T2(() => {
-    const filtered = filterAssessments(assessments, payerFilter, classFilter, focusFilter);
-    return groupByUrgency(filtered);
-  }, [assessments, payerFilter, classFilter, focusFilter]);
-  T2(() => {
-    const activeCount = (urgencyGroups.overdue?.length || 0) + (urgencyGroups.urgent?.length || 0) + (urgencyGroups.approaching?.length || 0) + (urgencyGroups.on_track?.length || 0);
-    if (activeCount > 20 && !collapsedGroups.has("on_track")) {
-      setCollapsedGroups((prev) => /* @__PURE__ */ new Set([...prev, "on_track"]));
-    }
-  }, [urgencyGroups]);
-  const didRestoreScroll = A2(false);
-  y2(() => {
-    if (!initialExpandedId || !assessments.length || didRestoreScroll.current) return;
-    didRestoreScroll.current = true;
-    const match = assessments.find(
-      (a3) => (a3.externalAssessmentId || a3.assessmentId || a3.id) === initialExpandedId
+    return L;
+  }, [D]), M = ae(() => {
+    const L = Gi(D, c, p, u);
+    return Vi(L);
+  }, [D, c, p, u]);
+  ae(() => {
+    (M.overdue?.length || 0) + (M.urgent?.length || 0) + (M.approaching?.length || 0) + (M.on_track?.length || 0) > 20 && !_.has("on_track") && v((O) => /* @__PURE__ */ new Set([...O, "on_track"]));
+  }, [M]);
+  const G = ee(!1);
+  z(() => {
+    if (!i || !D.length || G.current) return;
+    G.current = !0;
+    const L = D.find(
+      (O) => (O.externalAssessmentId || O.assessmentId || O.id) === i
     );
-    if (match) {
-      const u4 = getUrgency(match);
-      setCollapsedGroups((prev) => {
-        if (!prev.has(u4)) return prev;
-        const next = new Set(prev);
-        next.delete(u4);
-        return next;
-      });
-      requestAnimationFrame(() => {
-        const el = listRef.current?.querySelector(`[data-assessment-id="${initialExpandedId}"]`);
-        if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
+    if (L) {
+      const O = he(L);
+      v((A) => {
+        if (!A.has(O)) return A;
+        const W = new Set(A);
+        return W.delete(O), W;
+      }), requestAnimationFrame(() => {
+        const A = I.current?.querySelector(`[data-assessment-id="${i}"]`);
+        A && A.scrollIntoView({ behavior: "smooth", block: "center" });
       });
     }
-  }, [assessments, initialExpandedId]);
-  const visibleGroupKeys = T2(() => {
-    if (urgencyFilter === "all") return URGENCY_ORDER;
-    return [urgencyFilter];
-  }, [urgencyFilter]);
-  const totalFiltered = T2(() => {
-    return URGENCY_ORDER.reduce((sum, key) => sum + (urgencyGroups[key]?.length || 0), 0);
-  }, [urgencyGroups]);
-  function handleToggleCollapse(key) {
-    setCollapsedGroups((prev) => {
-      const next = new Set(prev);
-      if (next.has(key)) next.delete(key);
-      else next.add(key);
-      return next;
+  }, [D, i]);
+  const K = ae(() => m === "all" ? Ve : [m], [m]), Q = ae(() => Ve.reduce((L, O) => L + (M[O]?.length || 0), 0), [M]);
+  function R(L) {
+    v((O) => {
+      const A = new Set(O);
+      return A.has(L) ? A.delete(L) : A.add(L), A;
     });
   }
-  function handleToggleCard(id) {
-    setExpandedId((prev) => {
-      const next = prev === id ? null : id;
-      if (next) {
-        requestAnimationFrame(() => {
-          const el = listRef.current?.querySelector(`[data-assessment-id="${next}"]`);
-          if (el) el.scrollIntoView({ behavior: "smooth", block: "nearest" });
-        });
-      }
-      return next;
+  function j(L) {
+    C((O) => {
+      const A = O === L ? null : L;
+      return A && requestAnimationFrame(() => {
+        const W = I.current?.querySelector(`[data-assessment-id="${A}"]`);
+        W && W.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      }), A;
     });
   }
-  const scrollTargetRef = A2(null);
-  const listRef = A2(null);
-  y2(() => {
-    if (activeView === "assessments" && scrollTargetRef.current) {
-      const targetId = scrollTargetRef.current;
-      scrollTargetRef.current = null;
-      requestAnimationFrame(() => {
-        const el = listRef.current?.querySelector(`[data-assessment-id="${targetId}"]`);
-        if (el) {
-          el.scrollIntoView({ behavior: "smooth", block: "center" });
-          el.classList.add("mds-cc__card-wrapper--highlight");
-          setTimeout(() => el.classList.remove("mds-cc__card-wrapper--highlight"), 1500);
-        }
+  const te = ee(null), I = ee(null);
+  z(() => {
+    if (a === "assessments" && te.current) {
+      const L = te.current;
+      te.current = null, requestAnimationFrame(() => {
+        const O = I.current?.querySelector(`[data-assessment-id="${L}"]`);
+        O && (O.scrollIntoView({ behavior: "smooth", block: "center" }), O.classList.add("mds-cc__card-wrapper--highlight"), setTimeout(() => O.classList.remove("mds-cc__card-wrapper--highlight"), 1500));
       });
     }
-  }, [activeView, expandedId]);
-  function navigateToAssessment(assessment) {
-    const id = assessment.id || assessment.assessmentId || assessment.externalAssessmentId;
-    const urgency = getUrgency(assessment);
-    setCollapsedGroups((prev) => {
-      if (!prev.has(urgency)) return prev;
-      const next = new Set(prev);
-      next.delete(urgency);
-      return next;
-    });
-    setExpandedId(id);
-    scrollTargetRef.current = id;
-    setActiveView("assessments");
+  }, [a, g]);
+  function P(L) {
+    const O = L.id || L.assessmentId || L.externalAssessmentId, A = he(L);
+    v((W) => {
+      if (!W.has(A)) return W;
+      const oe = new Set(W);
+      return oe.delete(A), oe;
+    }), C(O), te.current = O, r("assessments");
   }
-  function handleOpenAnalyzer(assessment) {
-    const assessmentId = assessment.externalAssessmentId || assessment.assessmentId || assessment.id;
-    onClose({ hide: true });
-    window.PDPMAnalyzerLauncher?.open({ scope: "mds", assessmentId });
+  function U(L) {
+    const O = L.externalAssessmentId || L.assessmentId || L.id;
+    n({ hide: !0 }), window.PDPMAnalyzerLauncher?.open({ scope: "mds", assessmentId: O });
   }
-  function handleOpenAssessmentById(assessmentId) {
-    onClose({ hide: true });
-    window.PDPMAnalyzerLauncher?.open({ scope: "mds", assessmentId });
+  function q(L) {
+    n({ hide: !0 }), window.PDPMAnalyzerLauncher?.open({ scope: "mds", assessmentId: L });
   }
-  function handleBackdropClick(e3) {
-    if (e3.target === e3.currentTarget) onClose();
+  function Z(L) {
+    L.target === L.currentTarget && n();
   }
-  return /* @__PURE__ */ u3("div", { class: "mds-cc__overlay", onClick: handleBackdropClick, children: /* @__PURE__ */ u3("div", { class: "mds-cc__modal", role: "dialog", "aria-modal": "true", "aria-label": "MDS Command Center", children: [
-    selectedItem && /* @__PURE__ */ u3(
-      ItemPopover,
+  return /* @__PURE__ */ t("div", { class: "mds-cc__overlay", onClick: Z, children: /* @__PURE__ */ t("div", { class: "mds-cc__modal", role: "dialog", "aria-modal": "true", "aria-label": "MDS Command Center", children: [
+    f && /* @__PURE__ */ t(
+      qs,
       {
-        item: selectedItem.item,
-        context: { assessmentId: selectedItem.assessmentId },
-        onClose: () => setSelectedItem(null)
+        item: f.item,
+        context: { assessmentId: f.assessmentId },
+        onClose: () => x(null)
       }
     ),
-    /* @__PURE__ */ u3(
-      CommandCenterHeader,
+    /* @__PURE__ */ t(
+      pn,
       {
-        summary,
-        facilityName,
-        onClose,
-        activeView,
-        onViewChange: setActiveView,
-        queryCount: (data?.outstandingQueries || []).length,
-        certCount,
-        certsEnabled,
-        docRiskCount,
-        payerFilter,
-        onPayerFilterChange: setPayerFilter,
-        classFilter,
-        onClassFilterChange: setClassFilter,
-        focusFilter,
-        onFocusFilterChange: setFocusFilter,
-        urgencyFilter,
-        onUrgencyFilterChange: setUrgencyFilter
+        summary: B,
+        facilityName: e,
+        onClose: n,
+        activeView: a,
+        onViewChange: r,
+        queryCount: (k?.outstandingQueries || []).length,
+        certCount: T,
+        certsEnabled: w,
+        docRiskCount: $,
+        payerFilter: c,
+        onPayerFilterChange: o,
+        classFilter: p,
+        onClassFilterChange: d,
+        focusFilter: u,
+        onFocusFilterChange: l,
+        urgencyFilter: m,
+        onUrgencyFilterChange: h
       }
     ),
-    /* @__PURE__ */ u3("div", { class: "mds-cc__list", ref: listRef, children: [
-      loading && /* @__PURE__ */ u3(LoadingState, {}),
-      !loading && error && /* @__PURE__ */ u3(ErrorState, { message: error, onRetry: retry }),
-      !loading && !error && activeView === "overview" && /* @__PURE__ */ u3(
-        OverviewView,
+    /* @__PURE__ */ t("div", { class: "mds-cc__list", ref: I, children: [
+      y && /* @__PURE__ */ t(Hs, {}),
+      !y && S && /* @__PURE__ */ t(Ki, { message: S, onRetry: E }),
+      !y && !S && a === "overview" && /* @__PURE__ */ t(
+        Wi,
         {
-          assessments,
-          outstandingQueries: data?.outstandingQueries || [],
-          onViewChange: setActiveView,
-          onOpenAssessment: navigateToAssessment
+          assessments: D,
+          outstandingQueries: k?.outstandingQueries || [],
+          onViewChange: r,
+          onOpenAssessment: P
         }
       ),
-      !loading && !error && activeView === "assessments" && /* @__PURE__ */ u3(k, { children: [
-        totalFiltered === 0 && /* @__PURE__ */ u3(EmptyState, {}),
-        totalFiltered > 0 && /* @__PURE__ */ u3("div", { class: "mds-cc__assessments", children: visibleGroupKeys.map((key) => /* @__PURE__ */ u3(
-          UrgencyGroup,
+      !y && !S && a === "assessments" && /* @__PURE__ */ t(Y, { children: [
+        Q === 0 && /* @__PURE__ */ t(Ji, {}),
+        Q > 0 && /* @__PURE__ */ t("div", { class: "mds-cc__assessments", children: K.map((L) => /* @__PURE__ */ t(
+          ta,
           {
-            urgencyKey: key,
-            items: urgencyGroups[key],
-            isCollapsed: collapsedGroups.has(key),
-            onToggleCollapse: handleToggleCollapse,
-            expandedId,
-            onToggleCard: handleToggleCard,
-            onOpenAnalyzer: handleOpenAnalyzer,
-            onSelectItem: (item, assessment) => {
-              const aid = assessment.externalAssessmentId || assessment.assessmentId || assessment.id;
-              setSelectedItem({ item, assessmentId: aid });
+            urgencyKey: L,
+            items: M[L],
+            isCollapsed: _.has(L),
+            onToggleCollapse: R,
+            expandedId: g,
+            onToggleCard: j,
+            onOpenAnalyzer: U,
+            onSelectItem: (O, A) => {
+              const W = A.externalAssessmentId || A.assessmentId || A.id;
+              x({ item: O, assessmentId: W });
             }
           },
-          key
+          L
         )) })
       ] }),
-      !loading && !error && activeView === "queries" && /* @__PURE__ */ u3(
-        QueriesView,
+      !y && !S && a === "queries" && /* @__PURE__ */ t(
+        Xi,
         {
-          outstandingQueries: data?.outstandingQueries || [],
-          recentlySigned: data?.recentlySigned || [],
-          assessments,
-          onOpenAssessment: handleOpenAssessmentById
+          outstandingQueries: k?.outstandingQueries || [],
+          recentlySigned: k?.recentlySigned || [],
+          assessments: D,
+          onOpenAssessment: q
         }
       ),
-      !loading && !error && activeView === "docRisks" && /* @__PURE__ */ u3(DocRisksView, { facilityName, orgSlug }),
-      activeView === "certs" && /* @__PURE__ */ u3(
-        CertsView,
+      !y && !S && a === "docRisks" && /* @__PURE__ */ t(ea, { facilityName: e, orgSlug: s }),
+      a === "certs" && /* @__PURE__ */ t(
+        En,
         {
-          facilityName,
-          orgSlug,
-          patientId,
-          patientName
+          facilityName: e,
+          orgSlug: s,
+          patientId: F,
+          patientName: V
         }
       )
     ] })
   ] }) });
 }
-
-// content/modules/pdpm-analyzer/hooks/usePDPMAnalyzer.js
-function usePDPMAnalyzer(context, selectedAssessmentId) {
-  const [assessments, setAssessments] = d2([]);
-  const [detail, setDetail] = d2(null);
-  const [patientName, setPatientName] = d2("");
-  const [loading, setLoading] = d2(false);
-  const [detailLoading, setDetailLoading] = d2(false);
-  const [error, setError] = d2(null);
-  const [listFetchCount, setListFetchCount] = d2(0);
-  const [detailFetchCount, setDetailFetchCount] = d2(0);
-  const retry = q2(() => {
-    setListFetchCount((n2) => n2 + 1);
+function na(e, s) {
+  const [n, i] = b([]), [a, r] = b(null), [c, o] = b(""), [p, d] = b(!1), [u, l] = b(!1), [m, h] = b(null), [_, v] = b(0), [g, C] = b(0), f = X(() => {
+    v((y) => y + 1);
+  }, []), x = X(() => {
+    C((y) => y + 1);
   }, []);
-  const retryDetail = q2(() => {
-    setDetailFetchCount((n2) => n2 + 1);
-  }, []);
-  async function getApiContext() {
-    const authState = await chrome.runtime.sendMessage({ type: "GET_AUTH_STATE" });
-    if (!authState.authenticated) throw new Error("Please log in to view MDS data");
-    const orgResponse = getOrg();
-    const orgSlug = orgResponse?.org;
-    const facilityName = window.getChatFacilityInfo?.() || "";
-    if (!orgSlug || !facilityName) throw new Error("Could not determine organization or facility");
-    return { orgSlug, facilityName };
+  async function k() {
+    if (!(await chrome.runtime.sendMessage({ type: "GET_AUTH_STATE" })).authenticated) throw new Error("Please log in to view MDS data");
+    const E = getOrg()?.org, N = window.getChatFacilityInfo?.() || "";
+    if (!E || !N) throw new Error("Could not determine organization or facility");
+    return { orgSlug: E, facilityName: N };
   }
-  y2(() => {
-    if (!context) return;
-    let cancelled = false;
-    async function fetchData() {
-      setLoading(true);
-      setError(null);
+  return z(() => {
+    if (!e) return;
+    let y = !1;
+    async function S() {
+      d(!0), h(null);
       try {
-        const { orgSlug, facilityName } = await getApiContext();
-        if (context.scope === "mds" && context.assessmentId) {
-          const params = new URLSearchParams({ externalAssessmentId: context.assessmentId, facilityName, orgSlug });
-          const result = await chrome.runtime.sendMessage({
+        const { orgSlug: E, facilityName: N } = await k();
+        if (e.scope === "mds" && e.assessmentId) {
+          const w = new URLSearchParams({ externalAssessmentId: e.assessmentId, facilityName: N, orgSlug: E }), T = await chrome.runtime.sendMessage({
             type: "API_REQUEST",
-            endpoint: `/api/extension/mds/pdpm-potential?${params}`,
+            endpoint: `/api/extension/mds/pdpm-potential?${w}`,
             options: { method: "GET" }
           });
-          if (!result.success) throw new Error(result.error || "Failed to load MDS data");
-          if (!cancelled) {
-            setDetail(result.data);
-            setPatientName(result.data?.patientName || context.patientName || "");
-            setAssessments([]);
-          }
-        } else if (context.scope === "patient" && context.patientId) {
-          const params = new URLSearchParams({ facilityName, orgSlug });
-          const result = await chrome.runtime.sendMessage({
+          if (!T.success) throw new Error(T.error || "Failed to load MDS data");
+          y || (r(T.data), o(T.data?.patientName || e.patientName || ""), i([]));
+        } else if (e.scope === "patient" && e.patientId) {
+          const w = new URLSearchParams({ facilityName: N, orgSlug: E }), T = await chrome.runtime.sendMessage({
             type: "API_REQUEST",
-            endpoint: `/api/extension/patients/${context.patientId}/assessments?${params}`,
+            endpoint: `/api/extension/patients/${e.patientId}/assessments?${w}`,
             options: { method: "GET" }
           });
-          if (!result.success) throw new Error(result.error || "Failed to load patient data");
-          const responseData = result.data?.data || result.data || result;
-          if (!cancelled) {
-            setAssessments(responseData.assessments || []);
-            setPatientName(responseData.patientName || context.patientName || "Patient");
-            setDetail(null);
-          }
-        } else {
-          if (!cancelled) {
-            setAssessments([]);
-            setDetail(null);
-          }
-        }
-      } catch (err) {
-        if (!cancelled) setError(err.message || "Failed to load data");
+          if (!T.success) throw new Error(T.error || "Failed to load patient data");
+          const F = T.data?.data || T.data || T;
+          y || (i(F.assessments || []), o(F.patientName || e.patientName || "Patient"), r(null));
+        } else
+          y || (i([]), r(null));
+      } catch (E) {
+        y || h(E.message || "Failed to load data");
       } finally {
-        if (!cancelled) setLoading(false);
+        y || d(!1);
       }
     }
-    fetchData();
-    return () => {
-      cancelled = true;
+    return S(), () => {
+      y = !0;
     };
-  }, [context?.scope, context?.assessmentId, context?.patientId, listFetchCount]);
-  y2(() => {
-    if (context?.scope !== "patient" || !selectedAssessmentId) return;
-    let cancelled = false;
-    async function fetchDetail() {
-      setDetailLoading(true);
-      setDetail(null);
+  }, [e?.scope, e?.assessmentId, e?.patientId, _]), z(() => {
+    if (e?.scope !== "patient" || !s) return;
+    let y = !1;
+    async function S() {
+      l(!0), r(null);
       try {
-        const { orgSlug, facilityName } = await getApiContext();
-        const params = new URLSearchParams({ externalAssessmentId: selectedAssessmentId, facilityName, orgSlug });
-        const result = await chrome.runtime.sendMessage({
+        const { orgSlug: E, facilityName: N } = await k(), w = new URLSearchParams({ externalAssessmentId: s, facilityName: N, orgSlug: E }), T = await chrome.runtime.sendMessage({
           type: "API_REQUEST",
-          endpoint: `/api/extension/mds/pdpm-potential?${params}`,
+          endpoint: `/api/extension/mds/pdpm-potential?${w}`,
           options: { method: "GET" }
         });
-        if (!result.success) throw new Error(result.error || "Failed to load assessment data");
-        if (!cancelled) setDetail(result.data);
-      } catch (err) {
-        if (!cancelled) setError(err.message || "Failed to load assessment detail");
+        if (!T.success) throw new Error(T.error || "Failed to load assessment data");
+        y || r(T.data);
+      } catch (E) {
+        y || h(E.message || "Failed to load assessment detail");
       } finally {
-        if (!cancelled) setDetailLoading(false);
+        y || l(!1);
       }
     }
-    fetchDetail();
-    return () => {
-      cancelled = true;
+    return S(), () => {
+      y = !0;
     };
-  }, [context?.scope, selectedAssessmentId, detailFetchCount]);
-  y2(() => {
-    function onItemDecision() {
-      setDetailFetchCount((n2) => n2 + 1);
+  }, [e?.scope, s, g]), z(() => {
+    function y() {
+      C((S) => S + 1);
     }
-    window.addEventListener("super:item-decision", onItemDecision);
-    return () => window.removeEventListener("super:item-decision", onItemDecision);
-  }, []);
-  return { assessments, detail, patientName, loading, detailLoading, error, retry, retryDetail };
+    return window.addEventListener("super:item-decision", y), () => window.removeEventListener("super:item-decision", y);
+  }, []), { assessments: n, detail: a, patientName: c, loading: p, detailLoading: u, error: m, retry: f, retryDetail: x };
 }
-
-// content/modules/pdpm-analyzer/components/ComplianceCard.jsx
-var CHECK_ORDER = ["bims", "phq9", "gg", "orders", "therapyDocs"];
-var CHECK_LABELS = { bims: "BIMS", phq9: "PHQ-9", gg: "GG", orders: "Orders", therapyDocs: "Therapy" };
-var MAX_ORDERS_SHOWN = 6;
-function fmtDate(dateStr) {
-  if (!dateStr) return "";
-  return new Date(dateStr).toLocaleDateString("en-US", { month: "short", day: "numeric" });
+const ts = ["bims", "phq9", "gg", "orders", "therapyDocs"], ss = { bims: "BIMS", phq9: "PHQ-9", gg: "GG", orders: "Orders", therapyDocs: "Therapy" }, pt = 6;
+function fe(e) {
+  return e ? new Date(e).toLocaleDateString("en-US", { month: "short", day: "numeric" }) : "";
 }
-function truncateOrder(name) {
-  if (!name) return "";
-  const line = name.split("\n")[0].trim();
-  return line.length > 80 ? line.slice(0, 77) + "\u2026" : line;
+function ia(e) {
+  if (!e) return "";
+  const s = e.split(`
+`)[0].trim();
+  return s.length > 80 ? s.slice(0, 77) + "…" : s;
 }
-function isInWindow(dateStr, range) {
-  if (!dateStr || !range?.start || !range?.end) return null;
-  const d3 = new Date(dateStr).getTime();
-  return d3 >= new Date(range.start).getTime() && d3 <= new Date(range.end).getTime();
+function aa(e, s) {
+  if (!e || !s?.start || !s?.end) return null;
+  const n = new Date(e).getTime();
+  return n >= new Date(s.start).getTime() && n <= new Date(s.end).getTime();
 }
-function UdaDetail({ check }) {
-  const uda = check?.foundUda;
-  if (!uda) return null;
-  const locked = !!uda.lockedDate;
-  const inWindow = isInWindow(uda.lockedDate || uda.date, check.searchedDateRange);
-  return /* @__PURE__ */ u3("div", { class: "pdpm-an__cc-detail", children: /* @__PURE__ */ u3("div", { class: "pdpm-an__cc-uda-grid", children: [
-    /* @__PURE__ */ u3("span", { class: "pdpm-an__cc-uda-key", children: "Assessment" }),
-    /* @__PURE__ */ u3("span", { class: "pdpm-an__cc-uda-val", children: uda.description }),
-    uda.date && /* @__PURE__ */ u3(k, { children: [
-      /* @__PURE__ */ u3("span", { class: "pdpm-an__cc-uda-key", children: "Completed" }),
-      /* @__PURE__ */ u3("span", { class: "pdpm-an__cc-uda-val", children: fmtDate(uda.date) })
+function ra({ check: e }) {
+  const s = e?.foundUda;
+  if (!s) return null;
+  const n = !!s.lockedDate, i = aa(s.lockedDate || s.date, e.searchedDateRange);
+  return /* @__PURE__ */ t("div", { class: "pdpm-an__cc-detail", children: /* @__PURE__ */ t("div", { class: "pdpm-an__cc-uda-grid", children: [
+    /* @__PURE__ */ t("span", { class: "pdpm-an__cc-uda-key", children: "Assessment" }),
+    /* @__PURE__ */ t("span", { class: "pdpm-an__cc-uda-val", children: s.description }),
+    s.date && /* @__PURE__ */ t(Y, { children: [
+      /* @__PURE__ */ t("span", { class: "pdpm-an__cc-uda-key", children: "Completed" }),
+      /* @__PURE__ */ t("span", { class: "pdpm-an__cc-uda-val", children: fe(s.date) })
     ] }),
-    /* @__PURE__ */ u3("span", { class: "pdpm-an__cc-uda-key", children: "Lock" }),
-    /* @__PURE__ */ u3("span", { class: "pdpm-an__cc-uda-val", children: locked ? /* @__PURE__ */ u3("span", { class: "pdpm-an__cc-lock pdpm-an__cc-lock--yes", children: [
-      /* @__PURE__ */ u3("svg", { width: "12", height: "12", viewBox: "0 0 12 12", fill: "none", children: [
-        /* @__PURE__ */ u3("rect", { x: "2", y: "5", width: "8", height: "6", rx: "1.5", fill: "currentColor" }),
-        /* @__PURE__ */ u3("path", { d: "M4 5V3.5a2 2 0 014 0V5", stroke: "currentColor", "stroke-width": "1.2", fill: "none" })
+    /* @__PURE__ */ t("span", { class: "pdpm-an__cc-uda-key", children: "Lock" }),
+    /* @__PURE__ */ t("span", { class: "pdpm-an__cc-uda-val", children: n ? /* @__PURE__ */ t("span", { class: "pdpm-an__cc-lock pdpm-an__cc-lock--yes", children: [
+      /* @__PURE__ */ t("svg", { width: "12", height: "12", viewBox: "0 0 12 12", fill: "none", children: [
+        /* @__PURE__ */ t("rect", { x: "2", y: "5", width: "8", height: "6", rx: "1.5", fill: "currentColor" }),
+        /* @__PURE__ */ t("path", { d: "M4 5V3.5a2 2 0 014 0V5", stroke: "currentColor", "stroke-width": "1.2", fill: "none" })
       ] }),
-      fmtDate(uda.lockedDate)
-    ] }) : /* @__PURE__ */ u3("span", { class: "pdpm-an__cc-lock pdpm-an__cc-lock--no", children: [
-      /* @__PURE__ */ u3("svg", { width: "12", height: "12", viewBox: "0 0 12 12", fill: "none", children: [
-        /* @__PURE__ */ u3("rect", { x: "2", y: "5", width: "8", height: "6", rx: "1.5", fill: "currentColor" }),
-        /* @__PURE__ */ u3("path", { d: "M4 5V3.5a2 2 0 014 0", stroke: "currentColor", "stroke-width": "1.2", fill: "none" })
+      fe(s.lockedDate)
+    ] }) : /* @__PURE__ */ t("span", { class: "pdpm-an__cc-lock pdpm-an__cc-lock--no", children: [
+      /* @__PURE__ */ t("svg", { width: "12", height: "12", viewBox: "0 0 12 12", fill: "none", children: [
+        /* @__PURE__ */ t("rect", { x: "2", y: "5", width: "8", height: "6", rx: "1.5", fill: "currentColor" }),
+        /* @__PURE__ */ t("path", { d: "M4 5V3.5a2 2 0 014 0", stroke: "currentColor", "stroke-width": "1.2", fill: "none" })
       ] }),
       "Unlocked"
     ] }) }),
-    check.searchedDateRange && /* @__PURE__ */ u3(k, { children: [
-      /* @__PURE__ */ u3("span", { class: "pdpm-an__cc-uda-key", children: "Window" }),
-      /* @__PURE__ */ u3("span", { class: "pdpm-an__cc-uda-val", children: [
-        fmtDate(check.searchedDateRange.start),
+    e.searchedDateRange && /* @__PURE__ */ t(Y, { children: [
+      /* @__PURE__ */ t("span", { class: "pdpm-an__cc-uda-key", children: "Window" }),
+      /* @__PURE__ */ t("span", { class: "pdpm-an__cc-uda-val", children: [
+        fe(e.searchedDateRange.start),
         " ",
-        "\u2013",
+        "–",
         " ",
-        fmtDate(check.searchedDateRange.end),
-        inWindow === true && /* @__PURE__ */ u3("span", { class: "pdpm-an__cc-window pdpm-an__cc-window--in", children: "In range" }),
-        inWindow === false && /* @__PURE__ */ u3("span", { class: "pdpm-an__cc-window pdpm-an__cc-window--out", children: "Outside range" })
+        fe(e.searchedDateRange.end),
+        i === !0 && /* @__PURE__ */ t("span", { class: "pdpm-an__cc-window pdpm-an__cc-window--in", children: "In range" }),
+        i === !1 && /* @__PURE__ */ t("span", { class: "pdpm-an__cc-window pdpm-an__cc-window--out", children: "Outside range" })
       ] })
     ] })
   ] }) });
 }
-function OrdersDetail({ check }) {
-  const orders = check?.unsignedOrders;
-  if (!orders || orders.length === 0) return null;
-  const showing = orders.slice(0, MAX_ORDERS_SHOWN);
-  const remaining = orders.length - MAX_ORDERS_SHOWN;
-  return /* @__PURE__ */ u3("div", { class: "pdpm-an__cc-detail", children: [
-    /* @__PURE__ */ u3("div", { class: "pdpm-an__cc-detail-summary", children: [
-      /* @__PURE__ */ u3("span", { class: "pdpm-an__cc-detail-stat pdpm-an__cc-detail-stat--fail", children: [
-        check.unsignedCount,
+function oa({ check: e }) {
+  const s = e?.unsignedOrders;
+  if (!s || s.length === 0) return null;
+  const n = s.slice(0, pt), i = s.length - pt;
+  return /* @__PURE__ */ t("div", { class: "pdpm-an__cc-detail", children: [
+    /* @__PURE__ */ t("div", { class: "pdpm-an__cc-detail-summary", children: [
+      /* @__PURE__ */ t("span", { class: "pdpm-an__cc-detail-stat pdpm-an__cc-detail-stat--fail", children: [
+        e.unsignedCount,
         " unsigned"
       ] }),
-      /* @__PURE__ */ u3("span", { class: "pdpm-an__cc-detail-stat", children: [
-        check.totalOrders,
+      /* @__PURE__ */ t("span", { class: "pdpm-an__cc-detail-stat", children: [
+        e.totalOrders,
         " total"
       ] })
     ] }),
-    /* @__PURE__ */ u3("div", { class: "pdpm-an__cc-orders", children: [
-      showing.map((o3, i3) => /* @__PURE__ */ u3("div", { class: "pdpm-an__cc-order", children: [
-        /* @__PURE__ */ u3("span", { class: "pdpm-an__cc-order-name", children: truncateOrder(o3.orderName) }),
-        /* @__PURE__ */ u3("span", { class: "pdpm-an__cc-order-meta", children: [
-          o3.category !== "Other" && /* @__PURE__ */ u3("span", { class: "pdpm-an__cc-order-cat", children: o3.category }),
-          o3.startDate && /* @__PURE__ */ u3("span", { children: fmtDate(o3.startDate) })
+    /* @__PURE__ */ t("div", { class: "pdpm-an__cc-orders", children: [
+      n.map((a, r) => /* @__PURE__ */ t("div", { class: "pdpm-an__cc-order", children: [
+        /* @__PURE__ */ t("span", { class: "pdpm-an__cc-order-name", children: ia(a.orderName) }),
+        /* @__PURE__ */ t("span", { class: "pdpm-an__cc-order-meta", children: [
+          a.category !== "Other" && /* @__PURE__ */ t("span", { class: "pdpm-an__cc-order-cat", children: a.category }),
+          a.startDate && /* @__PURE__ */ t("span", { children: fe(a.startDate) })
         ] })
-      ] }, i3)),
-      remaining > 0 && /* @__PURE__ */ u3("span", { class: "pdpm-an__cc-orders-more", children: [
+      ] }, r)),
+      i > 0 && /* @__PURE__ */ t("span", { class: "pdpm-an__cc-orders-more", children: [
         "+",
-        remaining,
+        i,
         " more unsigned"
       ] })
     ] })
   ] });
 }
-function TherapyDetail({ check }) {
-  if (!check) return null;
-  const unsigned = check.unsignedDocs || [];
-  return /* @__PURE__ */ u3("div", { class: "pdpm-an__cc-detail", children: [
-    /* @__PURE__ */ u3("div", { class: "pdpm-an__cc-detail-summary", children: [
-      /* @__PURE__ */ u3("span", { class: "pdpm-an__cc-detail-stat pdpm-an__cc-detail-stat--pass", children: [
-        check.signedDocs,
+function ca({ check: e }) {
+  if (!e) return null;
+  const s = e.unsignedDocs || [];
+  return /* @__PURE__ */ t("div", { class: "pdpm-an__cc-detail", children: [
+    /* @__PURE__ */ t("div", { class: "pdpm-an__cc-detail-summary", children: [
+      /* @__PURE__ */ t("span", { class: "pdpm-an__cc-detail-stat pdpm-an__cc-detail-stat--pass", children: [
+        e.signedDocs,
         " signed"
       ] }),
-      /* @__PURE__ */ u3("span", { class: "pdpm-an__cc-detail-stat", children: [
-        check.totalDocs,
+      /* @__PURE__ */ t("span", { class: "pdpm-an__cc-detail-stat", children: [
+        e.totalDocs,
         " total"
       ] })
     ] }),
-    unsigned.length > 0 && /* @__PURE__ */ u3("div", { class: "pdpm-an__cc-orders", children: unsigned.slice(0, MAX_ORDERS_SHOWN).map((d3, i3) => /* @__PURE__ */ u3("div", { class: "pdpm-an__cc-order", children: [
-      /* @__PURE__ */ u3("span", { class: "pdpm-an__cc-order-name", children: d3.description || d3.name || `Document ${i3 + 1}` }),
-      d3.date && /* @__PURE__ */ u3("span", { class: "pdpm-an__cc-order-meta", children: fmtDate(d3.date) })
-    ] }, i3)) })
+    s.length > 0 && /* @__PURE__ */ t("div", { class: "pdpm-an__cc-orders", children: s.slice(0, pt).map((n, i) => /* @__PURE__ */ t("div", { class: "pdpm-an__cc-order", children: [
+      /* @__PURE__ */ t("span", { class: "pdpm-an__cc-order-name", children: n.description || n.name || `Document ${i + 1}` }),
+      n.date && /* @__PURE__ */ t("span", { class: "pdpm-an__cc-order-meta", children: fe(n.date) })
+    ] }, i)) })
   ] });
 }
-function CheckDetail({ checkKey, check }) {
-  if (checkKey === "orders") return /* @__PURE__ */ u3(OrdersDetail, { check });
-  if (checkKey === "therapyDocs") return /* @__PURE__ */ u3(TherapyDetail, { check });
-  return /* @__PURE__ */ u3(UdaDetail, { check });
+function da({ checkKey: e, check: s }) {
+  return e === "orders" ? /* @__PURE__ */ t(oa, { check: s }) : e === "therapyDocs" ? /* @__PURE__ */ t(ca, { check: s }) : /* @__PURE__ */ t(ra, { check: s });
 }
-function ComplianceCard({ data, collapsed, onToggleCollapse }) {
-  const [expandedKey, setExpandedKey] = d2(null);
-  const compliance = data?.compliance || {};
-  const checks = compliance.checks || {};
-  const passed = compliance.summary?.passed ?? 0;
-  const total = compliance.summary?.total ?? CHECK_ORDER.length;
-  const na = compliance.summary?.notApplicable ?? 0;
-  const effectiveTotal = total - na;
-  const toggleChip = (key) => setExpandedKey(expandedKey === key ? null : key);
-  return /* @__PURE__ */ u3("div", { class: `pdpm-an__card${passed === effectiveTotal ? " pdpm-an__card--success" : " pdpm-an__card--warning"}`, children: [
-    /* @__PURE__ */ u3("div", { class: "pdpm-an__card-header pdpm-an__card-header--collapsible", onClick: onToggleCollapse, role: "button", tabIndex: 0, children: [
-      /* @__PURE__ */ u3("span", { class: "pdpm-an__card-icon", children: "\u2713" }),
-      /* @__PURE__ */ u3("span", { class: "pdpm-an__card-title", children: "Compliance" }),
-      /* @__PURE__ */ u3("span", { class: "pdpm-an__card-badge", children: [
-        passed,
+function la({ data: e, collapsed: s, onToggleCollapse: n }) {
+  const [i, a] = b(null), r = e?.compliance || {}, c = r.checks || {}, o = r.summary?.passed ?? 0, p = r.summary?.total ?? ts.length, d = r.summary?.notApplicable ?? 0, u = p - d, l = (m) => a(i === m ? null : m);
+  return /* @__PURE__ */ t("div", { class: `pdpm-an__card${o === u ? " pdpm-an__card--success" : " pdpm-an__card--warning"}`, children: [
+    /* @__PURE__ */ t("div", { class: "pdpm-an__card-header pdpm-an__card-header--collapsible", onClick: n, role: "button", tabIndex: 0, children: [
+      /* @__PURE__ */ t("span", { class: "pdpm-an__card-icon", children: "✓" }),
+      /* @__PURE__ */ t("span", { class: "pdpm-an__card-title", children: "Compliance" }),
+      /* @__PURE__ */ t("span", { class: "pdpm-an__card-badge", children: [
+        o,
         "/",
-        effectiveTotal
+        u
       ] }),
-      /* @__PURE__ */ u3("svg", { class: `pdpm-an__card-chevron${collapsed ? "" : " pdpm-an__card-chevron--open"}`, width: "12", height: "12", viewBox: "0 0 12 12", fill: "none", children: /* @__PURE__ */ u3("path", { d: "M3 4.5L6 7.5L9 4.5", stroke: "currentColor", "stroke-width": "1.5", "stroke-linecap": "round", "stroke-linejoin": "round" }) })
+      /* @__PURE__ */ t("svg", { class: `pdpm-an__card-chevron${s ? "" : " pdpm-an__card-chevron--open"}`, width: "12", height: "12", viewBox: "0 0 12 12", fill: "none", children: /* @__PURE__ */ t("path", { d: "M3 4.5L6 7.5L9 4.5", stroke: "currentColor", "stroke-width": "1.5", "stroke-linecap": "round", "stroke-linejoin": "round" }) })
     ] }),
-    !collapsed && /* @__PURE__ */ u3("div", { class: "pdpm-an__cc-body", children: [
-      /* @__PURE__ */ u3("div", { class: "pdpm-an__cc-chips", children: CHECK_ORDER.map((key) => {
-        const check = checks[key];
-        if (!check || check.status === "not_applicable") return null;
-        const isPassed = check.status === "passed";
-        const hasDetail = check.foundUda || key === "orders" || key === "therapyDocs";
-        const isActive = expandedKey === key;
-        return /* @__PURE__ */ u3(
+    !s && /* @__PURE__ */ t("div", { class: "pdpm-an__cc-body", children: [
+      /* @__PURE__ */ t("div", { class: "pdpm-an__cc-chips", children: ts.map((m) => {
+        const h = c[m];
+        if (!h || h.status === "not_applicable") return null;
+        const _ = h.status === "passed", v = h.foundUda || m === "orders" || m === "therapyDocs";
+        return /* @__PURE__ */ t(
           "button",
           {
-            class: `pdpm-an__cc-chip${isPassed ? " pdpm-an__cc-chip--pass" : " pdpm-an__cc-chip--fail"}${isActive ? " pdpm-an__cc-chip--active" : ""}`,
-            onClick: hasDetail ? () => toggleChip(key) : void 0,
-            title: check.message || "",
+            class: `pdpm-an__cc-chip${_ ? " pdpm-an__cc-chip--pass" : " pdpm-an__cc-chip--fail"}${i === m ? " pdpm-an__cc-chip--active" : ""}`,
+            onClick: v ? () => l(m) : void 0,
+            title: h.message || "",
             children: [
-              /* @__PURE__ */ u3("span", { class: "pdpm-an__cc-chip-icon", children: isPassed ? "\u2713" : "\u2717" }),
-              CHECK_LABELS[key] || key
+              /* @__PURE__ */ t("span", { class: "pdpm-an__cc-chip-icon", children: _ ? "✓" : "✗" }),
+              ss[m] || m
             ]
           },
-          key
+          m
         );
       }) }),
-      expandedKey && checks[expandedKey] && checks[expandedKey].status !== "not_applicable" && /* @__PURE__ */ u3("div", { class: "pdpm-an__cc-expanded", children: [
-        /* @__PURE__ */ u3("div", { class: "pdpm-an__cc-expanded-label", children: [
-          CHECK_LABELS[expandedKey],
+      i && c[i] && c[i].status !== "not_applicable" && /* @__PURE__ */ t("div", { class: "pdpm-an__cc-expanded", children: [
+        /* @__PURE__ */ t("div", { class: "pdpm-an__cc-expanded-label", children: [
+          ss[i],
           ": ",
-          checks[expandedKey].message
+          c[i].message
         ] }),
-        /* @__PURE__ */ u3(CheckDetail, { checkKey: expandedKey, check: checks[expandedKey] })
+        /* @__PURE__ */ t(da, { checkKey: i, check: c[i] })
       ] })
     ] })
   ] });
 }
-
-// content/modules/pdpm-analyzer/components/ItemDetailView.jsx
-function isOrderEvidence2(ev) {
-  return ev.sourceType === "order" || (ev.evidenceId || "").startsWith("order-");
+function He(e) {
+  return e.sourceType === "order" || e.type === "order" || (e.evidenceId || "").startsWith("order-");
 }
-function getOrderId2(ev) {
-  const id = ev.sourceId || ev.evidenceId || "";
-  return id.replace(/^order-/, "");
+function pa(e) {
+  return (e.sourceId || e.evidenceId || "").replace(/^order-/, "");
 }
-function isViewableEvidence2(ev) {
-  const vt = parseViewer(ev).viewerType;
-  return vt === "document" || vt === "clinical-note" || vt === "therapy-document" || isOrderEvidence2(ev);
+function Bs(e) {
+  return e.type === "medication" || (e.sourceId || "").startsWith("admin-");
 }
-function ItemDetailView({ item, context, onBack, onSplitChange, onDismiss: onDismissComplete }) {
-  const mdsItem = item?.mdsItem;
-  const categoryKey = item?.categoryKey;
-  const { data, loading, error } = useItemDetail(mdsItem, categoryKey, context);
-  const displayCode = mdsItem?.startsWith("I8000:") ? "I8000" : mdsItem;
-  const apiItem = data?.item;
-  const needsQuery = apiItem?.status === "needs_physician_query";
-  const [dismissing, setDismissing] = d2(false);
-  const userDecision = apiItem?.userDecision?.decision;
-  const canDismiss = userDecision !== "disagree" && userDecision !== "agree";
-  const handleDismiss = q2(async (reason) => {
-    setDismissing(true);
+function ua(e) {
+  if (Bs(e)) return !0;
+  const s = re(e).viewerType;
+  return s === "document" || s === "clinical-note" || s === "therapy-document" || s === "order" || He(e);
+}
+function ma({ item: e, context: s, onBack: n, onSplitChange: i, onDismiss: a }) {
+  const r = e?.mdsItem, c = e?.categoryKey, { data: o, loading: p, error: d } = Ms(r, c, s), u = r?.startsWith("I8000:") ? "I8000" : r, l = o?.item, m = l?.status === "needs_physician_query", [h, _] = b(!1), v = l?.userDecision?.decision, g = v !== "disagree" && v !== "agree", C = X(async (I) => {
+    _(!0);
     try {
-      const orgResponse = getOrg();
-      const orgSlug = orgResponse?.org;
-      const facilityName = window.getChatFacilityInfo?.() || "";
-      const apiCode = mdsItem?.includes(":") ? mdsItem.split(":")[0] : mdsItem;
-      const mdsColumn = item?.column || "";
-      const response = await chrome.runtime.sendMessage({
+      const U = getOrg()?.org, q = window.getChatFacilityInfo?.() || "", Z = r?.includes(":") ? r.split(":")[0] : r, L = e?.column || "", O = await chrome.runtime.sendMessage({
         type: "API_REQUEST",
-        endpoint: `/api/extension/mds/items/${encodeURIComponent(apiCode)}/decision`,
+        endpoint: `/api/extension/mds/items/${encodeURIComponent(Z)}/decision`,
         options: {
           method: "POST",
           body: JSON.stringify({
-            externalAssessmentId: context?.assessmentId,
-            facilityName,
-            orgSlug,
+            externalAssessmentId: s?.assessmentId,
+            facilityName: q,
+            orgSlug: U,
             decision: "disagree",
-            note: reason || "",
-            mdsColumn
+            note: I || "",
+            mdsColumn: L
           })
         }
       });
-      if (!response?.success) throw new Error(response?.error || "Failed to save decision");
-      const key = `${apiCode}-${mdsColumn}`;
-      if (window.SuperOverlay?.dismissedItems) {
-        window.SuperOverlay.dismissedItems.add(key);
-        chrome.storage.local.set({ superDismissedItems: Array.from(window.SuperOverlay.dismissedItems) });
-      }
-      window.dispatchEvent(new CustomEvent("super:item-decision", {
-        detail: { mdsItem: apiCode, column: mdsColumn, decision: "disagree" }
-      }));
-      window.SuperToast?.success?.("Item dismissed");
-      onDismissComplete?.();
-    } catch (err) {
-      console.error("[ItemDetailView] Dismiss failed:", err);
-      window.SuperToast?.error?.(err.message || "Failed to dismiss");
-      setDismissing(false);
+      if (!O?.success) throw new Error(O?.error || "Failed to save decision");
+      const A = `${Z}-${L}`;
+      window.SuperOverlay?.dismissedItems && (window.SuperOverlay.dismissedItems.add(A), chrome.storage.local.set({ superDismissedItems: Array.from(window.SuperOverlay.dismissedItems) })), window.dispatchEvent(new CustomEvent("super:item-decision", {
+        detail: { mdsItem: Z, column: L, decision: "disagree" }
+      })), window.SuperToast?.success?.("Item dismissed"), a?.();
+    } catch (P) {
+      console.error("[ItemDetailView] Dismiss failed:", P), window.SuperToast?.error?.(P.message || "Failed to dismiss"), _(!1);
     }
-  }, [mdsItem, item, context, onDismissComplete]);
-  const [viewingSource, setViewingSource] = d2(null);
-  const docCacheRef = A2(/* @__PURE__ */ new Map());
-  const [currentDoc, setCurrentDoc] = d2(null);
-  const [docLoading, setDocLoading] = d2(false);
-  const adminContainerRef = A2(null);
-  const allEvidence = getEvidence2(data);
-  const viewableEvidence = allEvidence.filter(isViewableEvidence2);
-  const isSplit = viewingSource !== null;
-  const viewingOrder = viewingSource && isOrderEvidence2(viewingSource.ev);
-  const viewingViewerType = viewingSource ? parseViewer(viewingSource.ev).viewerType : null;
-  const viewingNote = viewingViewerType === "clinical-note";
-  const viewingTherapy = viewingViewerType === "therapy-document";
-  const viewingDoc = viewingSource && !viewingOrder && !viewingNote && !viewingTherapy;
-  const noteContainerRef = A2(null);
-  y2(() => {
-    onSplitChange?.(isSplit);
-  }, [isSplit]);
-  const docEvidence = viewableEvidence.filter((ev) => {
-    if (isOrderEvidence2(ev)) return false;
-    const vt = parseViewer(ev).viewerType;
-    return vt === "document";
-  });
-  y2(() => {
-    if (!data || docEvidence.length === 0) return;
-    const prefetch = async () => {
-      let params;
+  }, [r, e, s, a]), [f, x] = b(null), k = ee(/* @__PURE__ */ new Map()), [y, S] = b(null), [E, N] = b(!1), w = ee(null), F = ha(o).filter(ua), V = f !== null, D = f && Bs(f.ev), B = f && !D && He(f.ev), $ = f ? re(f.ev).viewerType : null, M = !D && $ === "clinical-note", G = !D && $ === "therapy-document", K = f && !B && !M && !G && !D, Q = ee(null);
+  z(() => {
+    i?.(V);
+  }, [V]);
+  const R = F.filter((I) => He(I) ? !1 : re(I).viewerType === "document");
+  z(() => {
+    if (!o || R.length === 0) return;
+    (async () => {
+      let P;
       try {
-        params = await window.getCurrentParams();
+        P = await window.getCurrentParams();
       } catch {
         return;
       }
-      for (const ev of docEvidence) {
-        const viewer = parseViewer(ev);
-        if (!viewer.id || docCacheRef.current.has(viewer.id)) continue;
-        const promise = fetchDocument(viewer.id, params).then((result) => {
-          const entry = docCacheRef.current.get(viewer.id);
-          if (entry) entry.document = result.document;
-          return result.document;
-        }).catch((err) => {
-          console.warn("[ItemDetailView] Prefetch failed for", viewer.id, err);
-          return null;
-        });
-        docCacheRef.current.set(viewer.id, { document: null, promise });
+      for (const U of R) {
+        const q = re(U);
+        if (!q.id || k.current.has(q.id)) continue;
+        const Z = Ne(q.id, P).then((L) => {
+          const O = k.current.get(q.id);
+          return O && (O.document = L.document), L.document;
+        }).catch((L) => (console.warn("[ItemDetailView] Prefetch failed for", q.id, L), null));
+        k.current.set(q.id, { document: null, promise: Z });
       }
-    };
-    prefetch();
-  }, [data]);
-  y2(() => {
-    if (!viewingSource || viewingOrder || viewingNote || viewingTherapy) {
-      setCurrentDoc(null);
-      setDocLoading(false);
+    })();
+  }, [o]), z(() => {
+    if (!f || B || M || G) {
+      S(null), N(!1);
       return;
     }
-    const viewer = parseViewer(viewingSource.ev);
-    if (!viewer.id) return;
-    const cached = docCacheRef.current.get(viewer.id);
-    if (cached?.document) {
-      setCurrentDoc(cached.document);
-      setDocLoading(false);
+    const I = re(f.ev);
+    if (!I.id) return;
+    const P = k.current.get(I.id);
+    if (P?.document) {
+      S(P.document), N(!1);
       return;
     }
-    setDocLoading(true);
-    const loadDoc = async () => {
+    N(!0), (async () => {
       try {
-        let doc;
-        if (cached?.promise) {
-          doc = await cached.promise;
-        } else {
-          const params = await window.getCurrentParams();
-          const result = await fetchDocument(viewer.id, params);
-          doc = result.document;
-          docCacheRef.current.set(viewer.id, { document: doc, promise: Promise.resolve(doc) });
+        let q;
+        if (P?.promise)
+          q = await P.promise;
+        else {
+          const Z = await window.getCurrentParams();
+          q = (await Ne(I.id, Z)).document, k.current.set(I.id, { document: q, promise: Promise.resolve(q) });
         }
-        setCurrentDoc(doc);
-      } catch (err) {
-        console.error("[ItemDetailView] Failed to load document:", err);
-        setCurrentDoc(null);
+        S(q);
+      } catch (q) {
+        console.error("[ItemDetailView] Failed to load document:", q), S(null);
       } finally {
-        setDocLoading(false);
+        N(!1);
       }
-    };
-    loadDoc();
-  }, [viewingSource, viewingOrder]);
-  y2(() => {
-    if (!viewingOrder || !adminContainerRef.current) return;
-    const el = adminContainerRef.current;
-    const orderId = getOrderId2(viewingSource.ev);
-    el.innerHTML = '<div class="idv__viewer-loading" style="position:static;padding:40px 0"><div class="pdpm-an__spinner"></div><span>Loading administrations...</span></div>';
-    if (window.renderSplitAdministrations) {
-      const resolveAndRender = async () => {
-        const orgResponse = getOrg();
-        const orgSlug = orgResponse?.org;
-        const facilityName = window.getChatFacilityInfo?.() || "";
-        const params = { assessmentId: context?.assessmentId, orgSlug, facilityName };
-        await window.renderSplitAdministrations(el, orderId, void 0, params);
-      };
-      resolveAndRender().catch((err) => {
-        console.error("[ItemDetailView] Failed to load administrations:", err);
-        el.innerHTML = '<div class="idv__viewer-loading" style="position:static;padding:40px 0"><span>Failed to load administrations</span></div>';
-      });
-    } else {
-      el.innerHTML = '<div class="idv__viewer-loading" style="position:static;padding:40px 0"><span>Administration viewer not available</span></div>';
-    }
-  }, [viewingSource, viewingOrder]);
-  y2(() => {
-    if (!viewingNote && !viewingTherapy || !noteContainerRef.current) return;
-    const el = noteContainerRef.current;
-    const viewer = parseViewer(viewingSource.ev);
-    const quote = viewingSource.ev.quoteText || viewingSource.ev.quote || viewingSource.ev.snippet || "";
-    el.innerHTML = '<div class="idv__viewer-loading" style="position:static;padding:40px 0"><div class="pdpm-an__spinner"></div><span>Loading...</span></div>';
-    const resolveAndRender = async () => {
-      const orgResponse = getOrg();
-      const orgSlug = orgResponse?.org;
-      const facilityName = window.getChatFacilityInfo?.() || "";
-      const params = { assessmentId: context?.assessmentId, orgSlug, facilityName };
-      if (viewingNote && window.renderSplitNote) {
-        await window.renderSplitNote(el, viewer.id, params);
-      } else if (viewingTherapy && window.renderSplitTherapy) {
-        await window.renderSplitTherapy(el, viewer.id, quote, params);
-      } else {
-        el.innerHTML = '<div class="idv__viewer-loading" style="position:static;padding:40px 0"><span>Viewer not available</span></div>';
-      }
-    };
-    resolveAndRender().catch((err) => {
-      console.error("[ItemDetailView] Failed to load source:", err);
-      el.innerHTML = '<div class="idv__viewer-loading" style="position:static;padding:40px 0"><span>Failed to load</span></div>';
+    })();
+  }, [f, B]), z(() => {
+    if (!B || !w.current) return;
+    const I = w.current, P = pa(f.ev);
+    I.innerHTML = '<div class="idv__viewer-loading" style="position:static;padding:40px 0"><div class="pdpm-an__spinner"></div><span>Loading administrations...</span></div>', window.renderSplitAdministrations ? (async () => {
+      const Z = getOrg()?.org, L = window.getChatFacilityInfo?.() || "", O = { assessmentId: s?.assessmentId, orgSlug: Z, facilityName: L };
+      await window.renderSplitAdministrations(I, P, void 0, O);
+    })().catch((q) => {
+      console.error("[ItemDetailView] Failed to load administrations:", q), I.innerHTML = '<div class="idv__viewer-loading" style="position:static;padding:40px 0"><span>Failed to load administrations</span></div>';
+    }) : I.innerHTML = '<div class="idv__viewer-loading" style="position:static;padding:40px 0"><span>Administration viewer not available</span></div>';
+  }, [f, B]), z(() => {
+    if (!M && !G || !Q.current) return;
+    const I = Q.current, P = re(f.ev), U = f.ev.quoteText || f.ev.quote || f.ev.snippet || "";
+    I.innerHTML = '<div class="idv__viewer-loading" style="position:static;padding:40px 0"><div class="pdpm-an__spinner"></div><span>Loading...</span></div>', (async () => {
+      const L = getOrg()?.org, O = window.getChatFacilityInfo?.() || "", A = { assessmentId: s?.assessmentId, orgSlug: L, facilityName: O };
+      M && window.renderSplitNote ? await window.renderSplitNote(I, P.id, A) : G && window.renderSplitTherapy ? await window.renderSplitTherapy(I, P.id, U, A) : I.innerHTML = '<div class="idv__viewer-loading" style="position:static;padding:40px 0"><span>Viewer not available</span></div>';
+    })().catch((Z) => {
+      console.error("[ItemDetailView] Failed to load source:", Z), I.innerHTML = '<div class="idv__viewer-loading" style="position:static;padding:40px 0"><span>Failed to load</span></div>';
     });
-  }, [viewingSource, viewingNote, viewingTherapy]);
-  const handleViewSource = q2((ev, index) => {
-    setViewingSource({ ev, index });
+  }, [f, M, G]);
+  const j = X((I, P) => {
+    x({ ev: I, index: P });
+  }, []), te = X(() => {
+    x(null);
   }, []);
-  const handleBackFromSplit = q2(() => {
-    setViewingSource(null);
-  }, []);
-  return /* @__PURE__ */ u3("div", { class: `idv${isSplit ? " idv--split" : ""}`, children: [
-    /* @__PURE__ */ u3("div", { class: "idv__head", children: [
-      /* @__PURE__ */ u3("button", { class: "idv__back", onClick: isSplit ? handleBackFromSplit : onBack, type: "button", children: [
-        /* @__PURE__ */ u3("svg", { width: "14", height: "14", viewBox: "0 0 14 14", fill: "none", children: /* @__PURE__ */ u3("path", { d: "M9 11L5 7l4-4", stroke: "currentColor", "stroke-width": "1.5", "stroke-linecap": "round", "stroke-linejoin": "round" }) }),
+  return /* @__PURE__ */ t("div", { class: `idv${V ? " idv--split" : ""}`, children: [
+    /* @__PURE__ */ t("div", { class: "idv__head", children: [
+      /* @__PURE__ */ t("button", { class: "idv__back", onClick: V ? te : n, type: "button", children: [
+        /* @__PURE__ */ t("svg", { width: "14", height: "14", viewBox: "0 0 14 14", fill: "none", children: /* @__PURE__ */ t("path", { d: "M9 11L5 7l4-4", stroke: "currentColor", "stroke-width": "1.5", "stroke-linecap": "round", "stroke-linejoin": "round" }) }),
         "Back"
       ] }),
-      /* @__PURE__ */ u3("span", { class: "idv__code", children: displayCode }),
-      /* @__PURE__ */ u3("h2", { class: "idv__name", children: apiItem?.description || apiItem?.kbCategory?.categoryName || item?.itemName || "Item Detail" }),
-      needsQuery && /* @__PURE__ */ u3("span", { class: "idv__badge idv__badge--amber", children: "Needs Query" })
+      /* @__PURE__ */ t("span", { class: "idv__code", children: u }),
+      /* @__PURE__ */ t("h2", { class: "idv__name", children: l?.description || l?.kbCategory?.categoryName || e?.itemName || "Item Detail" }),
+      m && /* @__PURE__ */ t("span", { class: "idv__badge idv__badge--amber", children: "Needs Query" })
     ] }),
-    loading && /* @__PURE__ */ u3("div", { class: "pdpm-an__state", children: [
-      /* @__PURE__ */ u3("div", { class: "pdpm-an__spinner" }),
-      /* @__PURE__ */ u3("p", { children: "Loading..." })
+    p && /* @__PURE__ */ t("div", { class: "pdpm-an__state", children: [
+      /* @__PURE__ */ t("div", { class: "pdpm-an__spinner" }),
+      /* @__PURE__ */ t("p", { children: "Loading..." })
     ] }),
-    error && /* @__PURE__ */ u3("div", { class: "pdpm-an__state", children: /* @__PURE__ */ u3("p", { children: error }) }),
-    !loading && !error && data && !isSplit && /* @__PURE__ */ u3("div", { class: "idv__body", children: /* @__PURE__ */ u3(
-      ItemDetail,
+    d && /* @__PURE__ */ t("div", { class: "pdpm-an__state", children: /* @__PURE__ */ t("p", { children: d }) }),
+    !p && !d && o && !V && /* @__PURE__ */ t("div", { class: "idv__body", children: /* @__PURE__ */ t(
+      $s,
       {
         variant: "full",
-        data,
-        detectionItem: item,
-        mdsItem,
-        onViewSource: handleViewSource,
-        onDismiss: canDismiss ? handleDismiss : void 0,
-        dismissing,
-        assessmentId: context?.assessmentId
+        data: o,
+        detectionItem: e,
+        mdsItem: r,
+        onViewSource: j,
+        onDismiss: g ? C : void 0,
+        dismissing: h,
+        assessmentId: s?.assessmentId
       }
     ) }),
-    !loading && !error && data && isSplit && /* @__PURE__ */ u3("div", { class: "idv__split-body", children: [
-      /* @__PURE__ */ u3("div", { class: "idv__sources", children: [
-        /* @__PURE__ */ u3("div", { class: "idv__sources-label", children: [
+    !p && !d && o && V && /* @__PURE__ */ t("div", { class: "idv__split-body", children: [
+      /* @__PURE__ */ t("div", { class: "idv__sources", children: [
+        /* @__PURE__ */ t("div", { class: "idv__sources-label", children: [
           "Sources (",
-          viewableEvidence.length,
+          F.length,
           ")"
         ] }),
-        viewableEvidence.map((ev, i3) => {
-          const isOrder = isOrderEvidence2(ev);
-          const sourceType = ev.sourceType || inferSourceType(ev.displayName, ev.evidenceId);
-          const typeLabel = ev.displayName || SOURCE_LABELS[sourceType] || (isOrder ? "Orders" : "Document");
-          const snippet = ev.quoteText || ev.orderDescription || ev.quote || ev.snippet || ev.text || "";
-          const page = ev.wordBlocks?.[0]?.p;
-          const isActive = viewingSource.ev === ev;
-          return /* @__PURE__ */ u3(
+        F.map((I, P) => {
+          const U = He(I), q = I.sourceType || vt(I.displayName, I.evidenceId), Z = I.displayName || bt[q] || (U ? "Orders" : "Document"), L = I.quoteText || I.orderDescription || I.quote || I.snippet || I.text || "", O = I.wordBlocks?.[0]?.p, A = f.ev === I;
+          return /* @__PURE__ */ t(
             "div",
             {
-              class: `idv__source-card${isActive ? " idv__source-card--active" : ""}`,
-              onClick: () => setViewingSource({ ev, index: i3 }),
+              class: `idv__source-card${A ? " idv__source-card--active" : ""}`,
+              onClick: () => x({ ev: I, index: P }),
               role: "button",
               children: [
-                /* @__PURE__ */ u3("div", { class: `idv__source-badge${isOrder ? " idv__source-badge--order" : ""}`, children: typeLabel }),
-                snippet && /* @__PURE__ */ u3("div", { class: "idv__source-snippet", children: snippet }),
-                !isOrder && page && /* @__PURE__ */ u3("div", { class: "idv__source-page", children: [
+                /* @__PURE__ */ t("div", { class: `idv__source-badge${U ? " idv__source-badge--order" : ""}`, children: Z }),
+                L && /* @__PURE__ */ t("div", { class: "idv__source-snippet", children: L }),
+                !U && O && /* @__PURE__ */ t("div", { class: "idv__source-page", children: [
                   "Page ",
-                  page
+                  O
                 ] })
               ]
             },
-            i3
+            P
           );
         })
       ] }),
-      /* @__PURE__ */ u3("div", { class: "idv__viewer", children: [
-        viewingDoc && docLoading && /* @__PURE__ */ u3("div", { class: "idv__viewer-loading", children: [
-          /* @__PURE__ */ u3("div", { class: "pdpm-an__spinner" }),
-          /* @__PURE__ */ u3("span", { children: "Loading document..." })
+      /* @__PURE__ */ t("div", { class: "idv__viewer", children: [
+        K && E && /* @__PURE__ */ t("div", { class: "idv__viewer-loading", children: [
+          /* @__PURE__ */ t("div", { class: "pdpm-an__spinner" }),
+          /* @__PURE__ */ t("span", { children: "Loading document..." })
         ] }),
-        viewingDoc && !docLoading && currentDoc && /* @__PURE__ */ u3(
-          PDFViewer,
+        K && !E && y && /* @__PURE__ */ t(
+          wt,
           {
-            url: currentDoc.signedUrl || null,
-            wordBlocks: viewingSource.ev.wordBlocks || [],
-            targetPage: viewingSource.ev.wordBlocks?.[0]?.p || 1,
-            title: currentDoc.title || "Document",
-            documentType: currentDoc.documentType,
-            effectiveDate: currentDoc.effectiveDate,
-            fileSize: currentDoc.fileSize,
-            expiresAt: true,
-            openInNewTabUrl: currentDoc.signedUrl || null
+            url: y.signedUrl || null,
+            wordBlocks: f.ev.wordBlocks || [],
+            targetPage: f.ev.wordBlocks?.[0]?.p || 1,
+            title: y.title || "Document",
+            documentType: y.documentType,
+            effectiveDate: y.effectiveDate,
+            fileSize: y.fileSize,
+            expiresAt: !0,
+            openInNewTabUrl: y.signedUrl || null
           }
         ),
-        viewingDoc && !docLoading && !currentDoc && /* @__PURE__ */ u3("div", { class: "idv__viewer-loading", children: /* @__PURE__ */ u3("span", { children: "Failed to load document" }) }),
-        viewingOrder && /* @__PURE__ */ u3("div", { ref: adminContainerRef, class: "idv__admin-viewer" }),
-        (viewingNote || viewingTherapy) && /* @__PURE__ */ u3("div", { ref: noteContainerRef, class: "idv__note-viewer" })
+        K && !E && !y && /* @__PURE__ */ t("div", { class: "idv__viewer-loading", children: /* @__PURE__ */ t("span", { children: "Failed to load document" }) }),
+        B && /* @__PURE__ */ t("div", { ref: w, class: "idv__admin-viewer" }),
+        (M || G) && /* @__PURE__ */ t("div", { ref: Q, class: "idv__note-viewer" }),
+        D && /* @__PURE__ */ t("div", { class: "idv__note-viewer", children: /* @__PURE__ */ t("div", { class: "super-split__content", children: [
+          /* @__PURE__ */ t("div", { class: "super-split__content-header", children: [
+            /* @__PURE__ */ t("h3", { class: "super-split__content-title", children: "Administration Record" }),
+            /* @__PURE__ */ t("span", { class: "super-split__content-badge", children: "Medication" })
+          ] }),
+          f.ev.date && /* @__PURE__ */ t("div", { class: "super-split__content-meta", children: f.ev.date }),
+          /* @__PURE__ */ t("div", { class: "super-split__content-body", children: /* @__PURE__ */ t("pre", { class: "super-split__note-text", children: f.ev.text || f.ev.quote || f.ev.quoteText || "No details available." }) })
+        ] }) })
       ] })
     ] })
   ] });
 }
-function getEvidence2(data) {
-  const apiItem = data?.item;
-  if (!apiItem) return [];
-  const isColumnBased = !!apiItem.columns;
-  if (!isColumnBased) return apiItem.evidence || apiItem.queryEvidence || [];
-  const colEvidence = [];
-  const seen = /* @__PURE__ */ new Set();
-  for (const col of Object.values(apiItem.columns || {})) {
-    if (col?.evidence) col.evidence.forEach((ev) => {
-      const k3 = ev.sourceId || ev.quote || JSON.stringify(ev);
-      if (!seen.has(k3)) {
-        seen.add(k3);
-        colEvidence.push(ev);
-      }
-    });
-  }
-  return colEvidence;
+function ha(e) {
+  const s = e?.item;
+  if (!s) return [];
+  if (!!!s.columns)
+    return [...s.evidence || [], ...s.queryEvidence || []];
+  const i = [], a = /* @__PURE__ */ new Set();
+  for (const r of Object.values(s.columns || {}))
+    for (const c of [...r?.evidence || [], ...r?.queryEvidence || []]) {
+      const o = c.sourceId || c.quote || JSON.stringify(c);
+      a.has(o) || (a.add(o), i.push(c));
+    }
+  return i;
 }
-
-// content/modules/certifications/hooks/useCertsByPatient.js
-function useCertsByPatient(patientId) {
-  const [certs, setCerts] = d2([]);
-  const [loading, setLoading] = d2(false);
-  const [error, setError] = d2(null);
-  const [fetchCount, setFetchCount] = d2(0);
-  const refresh = q2(() => {
-    setFetchCount((n2) => n2 + 1);
+function _a(e) {
+  const [s, n] = b([]), [i, a] = b(!1), [r, c] = b(null), [o, p] = b(0), d = X(() => {
+    p((u) => u + 1);
   }, []);
-  y2(() => {
-    if (!patientId || !window.CertAPI) {
-      setCerts([]);
+  return z(() => {
+    if (!e || !window.CertAPI) {
+      n([]);
       return;
     }
-    let cancelled = false;
-    setLoading(true);
-    setError(null);
-    (async () => {
+    let u = !1;
+    return a(!0), c(null), (async () => {
       try {
-        const orgResponse = getOrg();
-        const orgSlug = orgResponse?.org;
-        const facilityName = window.getChatFacilityInfo?.() || "";
-        if (!orgSlug || !facilityName) {
-          if (!cancelled) {
-            setCerts([]);
-            setLoading(false);
-          }
+        const m = getOrg()?.org, h = window.getChatFacilityInfo?.() || "";
+        if (!m || !h) {
+          u || (n([]), a(!1));
           return;
         }
-        const data = await window.CertAPI.fetchByPatient(facilityName, orgSlug, patientId);
-        if (!cancelled) {
-          setCerts(data || []);
-        }
-      } catch (err) {
-        if (!cancelled) {
-          setCerts([]);
-        }
+        const _ = await window.CertAPI.fetchByPatient(h, m, e);
+        u || n(_ || []);
+      } catch {
+        u || n([]);
       } finally {
-        if (!cancelled) setLoading(false);
+        u || a(!1);
       }
-    })();
-    return () => {
-      cancelled = true;
+    })(), () => {
+      u = !0;
     };
-  }, [patientId, fetchCount]);
-  return { certs, loading, error, refresh };
+  }, [e, o]), { certs: s, loading: i, error: r, refresh: d };
 }
-
-// content/modules/certifications/components/CertChainTimeline.jsx
-var SLOT_ORDER = ["initial", "day_14_recert", "day_30_recert"];
-var SLOT_LABELS = {
+const ga = ["initial", "day_14_recert", "day_30_recert"], fa = {
   initial: "Initial",
   day_14_recert: "Day 14",
   day_30_recert: "Day 30"
 };
-function getDaysUntil5(dateStr) {
-  if (!dateStr) return null;
-  const due = new Date(dateStr);
-  const now = /* @__PURE__ */ new Date();
-  due.setHours(0, 0, 0, 0);
-  now.setHours(0, 0, 0, 0);
-  return Math.floor((due - now) / 864e5);
+function ya(e) {
+  if (!e) return null;
+  const s = new Date(e), n = /* @__PURE__ */ new Date();
+  return s.setHours(0, 0, 0, 0), n.setHours(0, 0, 0, 0), Math.floor((s - n) / 864e5);
 }
-function formatShortDate5(dateStr) {
-  if (!dateStr) return "";
-  const d3 = new Date(dateStr);
-  if (isNaN(d3)) return dateStr;
-  return d3.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+function tt(e) {
+  if (!e) return "";
+  const s = new Date(e);
+  return isNaN(s) ? e : s.toLocaleDateString("en-US", { month: "short", day: "numeric" });
 }
-function getSlotState(cert) {
-  if (!cert) return { variant: "empty", label: "\u2014" };
-  const daysUntil = getDaysUntil5(cert.dueDate);
-  const isOverdue = daysUntil !== null && daysUntil < 0;
-  if (cert.status === "signed") {
-    return {
-      variant: "signed",
-      label: "Signed",
-      detail: formatShortDate5(cert.signedAt),
-      subDetail: cert.signedByName || ""
-    };
-  }
-  if (cert.status === "skipped") {
-    return { variant: "skipped", label: "Skipped", showUnskip: true };
-  }
-  if ((cert.isDelayed || cert.status === "delayed") && isOverdue) {
-    const daysOver = Math.abs(daysUntil);
-    return {
-      variant: "overdue",
-      label: `${daysOver}d overdue`,
-      showSend: true
-    };
-  }
-  if (isOverdue) {
-    const daysOver = Math.abs(daysUntil);
-    return {
-      variant: "overdue",
-      label: `${daysOver}d overdue`,
-      showSend: true
-    };
-  }
-  if (cert.status === "sent") {
-    return {
-      variant: "sent",
-      label: "Awaiting",
-      detail: formatShortDate5(cert.sentAt)
-    };
-  }
-  return {
+function va(e) {
+  if (!e) return { variant: "empty", label: "—" };
+  const s = ya(e.dueDate), n = s !== null && s < 0;
+  return e.status === "signed" ? {
+    variant: "signed",
+    label: "Signed",
+    detail: tt(e.signedAt),
+    subDetail: e.signedByName || ""
+  } : e.status === "skipped" ? { variant: "skipped", label: "Skipped", showUnskip: !0 } : (e.isDelayed || e.status === "delayed") && n ? {
+    variant: "overdue",
+    label: `${Math.abs(s)}d overdue`,
+    showSend: !0
+  } : n ? {
+    variant: "overdue",
+    label: `${Math.abs(s)}d overdue`,
+    showSend: !0
+  } : e.status === "sent" ? {
+    variant: "sent",
+    label: "Awaiting",
+    detail: tt(e.sentAt)
+  } : {
     variant: "pending",
     label: "Pending",
-    detail: cert.dueDate ? `Due ${formatShortDate5(cert.dueDate)}` : "",
-    showSend: true
+    detail: e.dueDate ? `Due ${tt(e.dueDate)}` : "",
+    showSend: !0
   };
 }
-function SlotCard({ type, cert, onAction }) {
-  const state = getSlotState(cert);
-  return /* @__PURE__ */ u3("div", { class: `cert-chain__slot cert-chain__slot--${state.variant}`, children: [
-    /* @__PURE__ */ u3("div", { class: "cert-chain__slot-header", children: /* @__PURE__ */ u3("span", { class: "cert-chain__slot-type", children: SLOT_LABELS[type] }) }),
-    /* @__PURE__ */ u3("div", { class: "cert-chain__slot-status", children: state.label }),
-    state.detail && /* @__PURE__ */ u3("div", { class: "cert-chain__slot-detail", children: state.detail }),
-    state.subDetail && /* @__PURE__ */ u3("div", { class: "cert-chain__slot-sub", children: state.subDetail }),
-    state.showSend && cert && /* @__PURE__ */ u3(
+function ba({ type: e, cert: s, onAction: n }) {
+  const i = va(s);
+  return /* @__PURE__ */ t("div", { class: `cert-chain__slot cert-chain__slot--${i.variant}`, children: [
+    /* @__PURE__ */ t("div", { class: "cert-chain__slot-header", children: /* @__PURE__ */ t("span", { class: "cert-chain__slot-type", children: fa[e] }) }),
+    /* @__PURE__ */ t("div", { class: "cert-chain__slot-status", children: i.label }),
+    i.detail && /* @__PURE__ */ t("div", { class: "cert-chain__slot-detail", children: i.detail }),
+    i.subDetail && /* @__PURE__ */ t("div", { class: "cert-chain__slot-sub", children: i.subDetail }),
+    i.showSend && s && /* @__PURE__ */ t(
       "button",
       {
-        class: `cert-chain__slot-btn cert-chain__slot-btn--${state.variant === "overdue" ? "destructive" : "primary"}`,
-        onClick: (e3) => {
-          e3.stopPropagation();
-          onAction(cert, "send");
+        class: `cert-chain__slot-btn cert-chain__slot-btn--${i.variant === "overdue" ? "destructive" : "primary"}`,
+        onClick: (a) => {
+          a.stopPropagation(), n(s, "send");
         },
         children: "Send"
       }
     ),
-    state.showUnskip && cert && /* @__PURE__ */ u3(
+    i.showUnskip && s && /* @__PURE__ */ t(
       "button",
       {
         class: "cert-chain__slot-btn cert-chain__slot-btn--ghost",
-        onClick: (e3) => {
-          e3.stopPropagation();
-          onAction(cert, "unskip");
+        onClick: (a) => {
+          a.stopPropagation(), n(s, "unskip");
         },
         children: "Unskip"
       }
     )
   ] });
 }
-function StayRow({ certs, onAction }) {
-  const slotMap = {};
-  for (const cert of certs) {
-    slotMap[cert.type] = cert;
-  }
-  return /* @__PURE__ */ u3("div", { class: "cert-chain__stay", children: SLOT_ORDER.map((type, i3) => /* @__PURE__ */ u3("div", { class: "cert-chain__step-wrapper", children: [
-    i3 > 0 && /* @__PURE__ */ u3("div", { class: "cert-chain__connector" }),
-    /* @__PURE__ */ u3(SlotCard, { type, cert: slotMap[type] || null, onAction })
-  ] }, type)) });
+function wa({ certs: e, onAction: s }) {
+  const n = {};
+  for (const i of e)
+    n[i.type] = i;
+  return /* @__PURE__ */ t("div", { class: "cert-chain__stay", children: ga.map((i, a) => /* @__PURE__ */ t("div", { class: "cert-chain__step-wrapper", children: [
+    a > 0 && /* @__PURE__ */ t("div", { class: "cert-chain__connector" }),
+    /* @__PURE__ */ t(ba, { type: i, cert: n[i] || null, onAction: s })
+  ] }, i)) });
 }
-function CertChainTimeline({ certs, onAction }) {
-  const stays = T2(() => {
-    if (!certs || certs.length === 0) return [];
-    const groups = {};
-    for (const cert of certs) {
-      const key = cert.partAStayId || "unknown";
-      if (!groups[key]) groups[key] = [];
-      groups[key].push(cert);
+function Da({ certs: e, onAction: s }) {
+  const n = ae(() => {
+    if (!e || e.length === 0) return [];
+    const i = {};
+    for (const r of e) {
+      const c = r.partAStayId || "unknown";
+      i[c] || (i[c] = []), i[c].push(r);
     }
-    const entries = Object.entries(groups);
-    for (const [, group] of entries) {
-      group.sort((a3, b) => (a3.sequenceNumber || 0) - (b.sequenceNumber || 0));
-    }
-    entries.sort((a3, b) => {
-      const aMax = Math.max(...a3[1].map((c3) => c3.sequenceNumber || 0));
-      const bMax = Math.max(...b[1].map((c3) => c3.sequenceNumber || 0));
-      return bMax - aMax;
-    });
-    return entries;
-  }, [certs]);
-  if (stays.length === 0) return null;
-  return /* @__PURE__ */ u3("div", { class: "cert-chain", children: stays.map(([stayId, group]) => /* @__PURE__ */ u3(StayRow, { certs: group, onAction }, stayId)) });
+    const a = Object.entries(i);
+    for (const [, r] of a)
+      r.sort((c, o) => (c.sequenceNumber || 0) - (o.sequenceNumber || 0));
+    return a.sort((r, c) => {
+      const o = Math.max(...r[1].map((d) => d.sequenceNumber || 0));
+      return Math.max(...c[1].map((d) => d.sequenceNumber || 0)) - o;
+    }), a;
+  }, [e]);
+  return n.length === 0 ? null : /* @__PURE__ */ t("div", { class: "cert-chain", children: n.map(([i, a]) => /* @__PURE__ */ t(wa, { certs: a, onAction: s }, i)) });
 }
-
-// content/modules/certifications/components/CertSection.jsx
-function CertSection({ patientId, collapsed, onToggleCollapse }) {
-  const { certs, loading, refresh } = useCertsByPatient(patientId);
-  const [sendCert, setSendCert] = d2(null);
-  const [skipCert, setSkipCert] = d2(null);
-  const [delayCert, setDelayCert] = d2(null);
-  const [facilityCtx, setFacilityCtx] = d2({ facilityName: "", orgSlug: "" });
-  const ensureFacilityCtx = q2(async () => {
-    if (facilityCtx.facilityName && facilityCtx.orgSlug) return facilityCtx;
-    const orgResponse = getOrg();
-    const orgSlug = orgResponse?.org || "";
-    const facilityName = window.getChatFacilityInfo?.() || "";
-    const ctx = { facilityName, orgSlug };
-    setFacilityCtx(ctx);
-    return ctx;
-  }, [facilityCtx]);
-  const handleAction = q2(async (cert, action) => {
-    if (action === "send") {
-      await ensureFacilityCtx();
-      setSendCert(cert);
-    } else if (action === "skip") {
-      setSkipCert(cert);
-    } else if (action === "delay") {
-      setDelayCert(cert);
-    } else if (action === "unskip") {
+function Ia({ patientId: e, collapsed: s, onToggleCollapse: n }) {
+  const { certs: i, loading: a, refresh: r } = _a(e), [c, o] = b(null), [p, d] = b(null), [u, l] = b(null), [m, h] = b({ facilityName: "", orgSlug: "" }), _ = X(async () => {
+    if (m.facilityName && m.orgSlug) return m;
+    const x = getOrg()?.org || "", y = { facilityName: window.getChatFacilityInfo?.() || "", orgSlug: x };
+    return h(y), y;
+  }, [m]), v = X(async (f, x) => {
+    if (x === "send")
+      await _(), o(f);
+    else if (x === "skip")
+      d(f);
+    else if (x === "delay")
+      l(f);
+    else if (x === "unskip")
       try {
-        await window.CertAPI.unskipCert(cert.id);
-        window.SuperToast?.success?.("Certification restored");
-        refresh();
-      } catch (err) {
-        console.error("[CertSection] Failed to unskip:", err);
-        window.SuperToast?.error?.("Failed to restore certification");
+        await window.CertAPI.unskipCert(f.id), window.SuperToast?.success?.("Certification restored"), r();
+      } catch (k) {
+        console.error("[CertSection] Failed to unskip:", k), window.SuperToast?.error?.("Failed to restore certification");
       }
-    }
-  }, [ensureFacilityCtx, refresh]);
-  async function handleSkipCert(reason) {
-    await window.CertAPI.skipCert(skipCert.id, reason);
-    window.SuperToast?.success?.("Certification skipped");
-    refresh();
+  }, [_, r]);
+  async function g(f) {
+    await window.CertAPI.skipCert(p.id, f), window.SuperToast?.success?.("Certification skipped"), r();
   }
-  async function handleDelayCert(reason) {
-    await window.CertAPI.delayCert(delayCert.id, reason);
-    window.SuperToast?.success?.("Certification marked as delayed");
-    refresh();
+  async function C(f) {
+    await window.CertAPI.delayCert(u.id, f), window.SuperToast?.success?.("Certification marked as delayed"), r();
   }
-  if (loading) {
-    return /* @__PURE__ */ u3("div", { class: "pdpm-an__card", children: [
-      /* @__PURE__ */ u3("div", { class: "pdpm-an__card-header pdpm-an__card-header--collapsible", onClick: onToggleCollapse, role: "button", tabIndex: 0, children: [
-        /* @__PURE__ */ u3("span", { class: "pdpm-an__card-title", children: "Certifications" }),
-        /* @__PURE__ */ u3("svg", { class: `pdpm-an__card-chevron${collapsed ? "" : " pdpm-an__card-chevron--open"}`, width: "12", height: "12", viewBox: "0 0 12 12", fill: "none", children: /* @__PURE__ */ u3("path", { d: "M3 4.5L6 7.5L9 4.5", stroke: "currentColor", "stroke-width": "1.5", "stroke-linecap": "round", "stroke-linejoin": "round" }) })
-      ] }),
-      !collapsed && /* @__PURE__ */ u3("div", { class: "pdpm-an__card-body", style: "padding: 16px; text-align: center; color: #6b7280; font-size: 13px;", children: "Loading certifications..." })
-    ] });
-  }
-  if (!certs || certs.length === 0) return null;
-  return /* @__PURE__ */ u3(k, { children: [
-    /* @__PURE__ */ u3("div", { class: "pdpm-an__card", children: [
-      /* @__PURE__ */ u3("div", { class: "pdpm-an__card-header pdpm-an__card-header--collapsible", onClick: onToggleCollapse, role: "button", tabIndex: 0, children: [
-        /* @__PURE__ */ u3("span", { class: "pdpm-an__card-title", children: "Certifications" }),
-        /* @__PURE__ */ u3("span", { class: "pdpm-an__card-badge", children: certs.length }),
-        /* @__PURE__ */ u3("svg", { class: `pdpm-an__card-chevron${collapsed ? "" : " pdpm-an__card-chevron--open"}`, width: "12", height: "12", viewBox: "0 0 12 12", fill: "none", children: /* @__PURE__ */ u3("path", { d: "M3 4.5L6 7.5L9 4.5", stroke: "currentColor", "stroke-width": "1.5", "stroke-linecap": "round", "stroke-linejoin": "round" }) })
-      ] }),
-      !collapsed && /* @__PURE__ */ u3("div", { class: "pdpm-an__card-body", style: "padding: 8px 12px;", children: /* @__PURE__ */ u3(CertChainTimeline, { certs, onAction: handleAction }) })
+  return a ? /* @__PURE__ */ t("div", { class: "pdpm-an__card", children: [
+    /* @__PURE__ */ t("div", { class: "pdpm-an__card-header pdpm-an__card-header--collapsible", onClick: n, role: "button", tabIndex: 0, children: [
+      /* @__PURE__ */ t("span", { class: "pdpm-an__card-title", children: "Certifications" }),
+      /* @__PURE__ */ t("svg", { class: `pdpm-an__card-chevron${s ? "" : " pdpm-an__card-chevron--open"}`, width: "12", height: "12", viewBox: "0 0 12 12", fill: "none", children: /* @__PURE__ */ t("path", { d: "M3 4.5L6 7.5L9 4.5", stroke: "currentColor", "stroke-width": "1.5", "stroke-linecap": "round", "stroke-linejoin": "round" }) })
     ] }),
-    /* @__PURE__ */ u3(
-      SendCertModal,
+    !s && /* @__PURE__ */ t("div", { class: "pdpm-an__card-body", style: "padding: 16px; text-align: center; color: #6b7280; font-size: 13px;", children: "Loading certifications..." })
+  ] }) : !i || i.length === 0 ? null : /* @__PURE__ */ t(Y, { children: [
+    /* @__PURE__ */ t("div", { class: "pdpm-an__card", children: [
+      /* @__PURE__ */ t("div", { class: "pdpm-an__card-header pdpm-an__card-header--collapsible", onClick: n, role: "button", tabIndex: 0, children: [
+        /* @__PURE__ */ t("span", { class: "pdpm-an__card-title", children: "Certifications" }),
+        /* @__PURE__ */ t("span", { class: "pdpm-an__card-badge", children: i.length }),
+        /* @__PURE__ */ t("svg", { class: `pdpm-an__card-chevron${s ? "" : " pdpm-an__card-chevron--open"}`, width: "12", height: "12", viewBox: "0 0 12 12", fill: "none", children: /* @__PURE__ */ t("path", { d: "M3 4.5L6 7.5L9 4.5", stroke: "currentColor", "stroke-width": "1.5", "stroke-linecap": "round", "stroke-linejoin": "round" }) })
+      ] }),
+      !s && /* @__PURE__ */ t("div", { class: "pdpm-an__card-body", style: "padding: 8px 12px;", children: /* @__PURE__ */ t(Da, { certs: i, onAction: v }) })
+    ] }),
+    /* @__PURE__ */ t(
+      Ns,
       {
-        isOpen: !!sendCert,
-        onClose: () => setSendCert(null),
-        cert: sendCert,
-        facilityName: facilityCtx.facilityName,
-        orgSlug: facilityCtx.orgSlug,
-        onSent: refresh
+        isOpen: !!c,
+        onClose: () => o(null),
+        cert: c,
+        facilityName: m.facilityName,
+        orgSlug: m.orgSlug,
+        onSent: r
       }
     ),
-    /* @__PURE__ */ u3(
-      SkipCertModal,
+    /* @__PURE__ */ t(
+      xs,
       {
-        isOpen: !!skipCert,
-        onClose: () => setSkipCert(null),
-        cert: skipCert,
-        onSkipped: handleSkipCert
+        isOpen: !!p,
+        onClose: () => d(null),
+        cert: p,
+        onSkipped: g
       }
     ),
-    /* @__PURE__ */ u3(
-      DelayCertModal,
+    /* @__PURE__ */ t(
+      Ps,
       {
-        isOpen: !!delayCert,
-        onClose: () => setDelayCert(null),
-        cert: delayCert,
-        onDelayed: handleDelayCert
+        isOpen: !!u,
+        onClose: () => l(null),
+        cert: u,
+        onDelayed: C
       }
     )
   ] });
 }
-
-// content/modules/pdpm-analyzer/PDPMAnalyzer.jsx
-function formatArdDate(ardDate) {
-  if (!ardDate) return "";
-  return new Date(ardDate).toLocaleDateString("en-US", { month: "short", day: "numeric" });
+function Gs(e) {
+  return e ? new Date(e).toLocaleDateString("en-US", { month: "short", day: "numeric" }) : "";
 }
-function cleanAssessmentType2(raw) {
-  if (!raw) return null;
-  return raw.replace(/[\s/]+$/, "").trim() || null;
+function ut(e) {
+  return e && e.replace(/[\s/]+$/, "").trim() || null;
 }
-function AssessmentSelector({ assessments, selectedId, onChange }) {
-  if (!assessments || assessments.length <= 1) return null;
-  const options = assessments.map((a3) => ({
-    value: a3.id,
-    label: cleanAssessmentType2(a3.type) || cleanAssessmentType2(a3.assessmentType) || "Assessment",
-    subtitle: a3.ardDate ? `ARD ${formatArdDate(a3.ardDate)}` : void 0,
-    badge: a3.currentHipps || a3.hipps || void 0
+function Ca({ assessments: e, selectedId: s, onChange: n }) {
+  if (!e || e.length <= 1) return null;
+  const i = e.map((a) => ({
+    value: a.id,
+    label: ut(a.type) || ut(a.assessmentType) || "Assessment",
+    subtitle: a.ardDate ? `ARD ${Gs(a.ardDate)}` : void 0,
+    badge: a.currentHipps || a.hipps || void 0
   }));
-  return /* @__PURE__ */ u3(
-    Selector,
+  return /* @__PURE__ */ t(
+    Oe,
     {
-      options,
-      value: selectedId,
-      onChange,
+      options: i,
+      value: s,
+      onChange: n,
       align: "right",
       ariaLabel: "Select assessment"
     }
   );
 }
-var MDS_ITEM_LABELS = {
-  "K0100": "Swallowing Disorder",
-  "K0200": "Height & Weight",
-  "K0520A": "Nutritional Approach \u2014 Parenteral/IV",
-  "K0520B": "Nutritional Approach \u2014 Feeding Tube",
-  "K0520C": "Nutritional Approach \u2014 Mechanically Altered Diet",
-  "K0710": "Percent Intake by Artificial Route",
-  "B0100": "Comatose",
-  "B0700": "Makes Self Understood",
-  "B0800": "Ability to Understand Others",
-  "C0100": "Should Brief Interview for Mental Status Be Conducted",
-  "C0200": "Repetition of Three Words",
-  "C0300": "Temporal Orientation",
-  "C0400": "Recall",
-  "C0500": "BIMS Summary Score",
-  "C0700": "Short-term Memory OK",
-  "C0800": "Long-term Memory OK",
-  "C0900": "Memory/Recall Ability",
-  "C1000": "Cognitive Skills for Daily Decision Making",
-  "D0100": "Should Resident Mood Interview Be Conducted",
-  "D0200": "Resident Mood Interview (PHQ-2)",
-  "D0300": "PHQ-9 Total Severity Score",
-  "D0350": "Safety Notification \u2014 PHQ",
-  "D0600": "Staff Assessment of Resident Mood (PHQ-9-OV)",
-  "E0100": "Psychosis",
-  "E0200": "Behavioral Symptoms \u2014 Presence & Frequency",
-  "E0800": "Rejection of Care",
-  "E0900": "Wandering",
-  "G0110": "ADL Self-Performance",
-  "G0120": "ADL Support Provided \u2014 Bathing",
-  "G0300": "Balance During Transitions and Walking",
-  "G0400": "Functional Limitation in Range of Motion",
-  "GG0130": "Self-Care \u2014 Admission Performance",
-  "GG0170": "Mobility \u2014 Admission Performance",
-  "H0100": "Appliances \u2014 Indwelling Catheter",
-  "H0200": "Urinary Toileting Program",
-  "H0300": "Urinary Continence",
-  "H0400": "Bowel Continence",
-  "H0500": "Bowel Toileting Program",
-  "H0600": "Appliances \u2014 Ostomy",
-  "I0020": "Indicate Conditions or Diseases \u2014 Cancer",
-  "I0100": "Active Diagnoses \u2014 Cancer",
-  "I0200": "Active Diagnoses \u2014 Anemia",
-  "I0300": "Active Diagnoses \u2014 Atrial Fibrillation",
-  "I0400": "Active Diagnoses \u2014 Coronary Artery Disease",
-  "I0500": "Active Diagnoses \u2014 Deep Venous Thrombosis",
-  "I0600": "Active Diagnoses \u2014 Heart Failure",
-  "I0700": "Active Diagnoses \u2014 Hypertension",
-  "I0900": "Active Diagnoses \u2014 Peripheral Vascular Disease",
-  "I2000": "Active Diagnoses \u2014 Pneumonia",
-  "I2100": "Active Diagnoses \u2014 Septicemia",
-  "I2300": "Active Diagnoses \u2014 Urinary Tract Infection",
-  "I2500": "Active Diagnoses \u2014 Cerebrovascular Accident (CVA)",
-  "I2900": "Active Diagnoses \u2014 Hemiplegia/Hemiparesis",
-  "I3700": "Active Diagnoses \u2014 Anxiety Disorder",
-  "I3800": "Active Diagnoses \u2014 Depression",
-  "I3900": "Active Diagnoses \u2014 Schizophrenia",
-  "I4000": "Active Diagnoses \u2014 Psychotic Disorder",
-  "I4200": "Active Diagnoses \u2014 PTSD",
-  "I4300": "Active Diagnoses \u2014 Tourette Syndrome",
-  "I4400": "Active Diagnoses \u2014 Aphasia",
-  "I4500": "Active Diagnoses \u2014 Cerebral Palsy",
-  "I4900": "Active Diagnoses \u2014 Multi-Drug Resistant Organism",
-  "I5100": "Active Diagnoses \u2014 Quadriplegia",
-  "I5200": "Active Diagnoses \u2014 Additional Diagnosis",
-  "I5250": "Active Diagnoses \u2014 Additional Diagnosis (cont.)",
-  "I5300": "Active Diagnoses \u2014 Additional Diagnosis (cont.)",
-  "I5350": "Active Diagnoses \u2014 Additional Diagnosis (cont.)",
-  "I5400": "Active Diagnoses \u2014 Additional Diagnosis (cont.)",
-  "I5500": "Active Diagnoses \u2014 Additional Diagnosis (cont.)",
-  "I5550": "Active Diagnoses \u2014 Additional Diagnosis (cont.)",
-  "I5600": "Active Diagnoses \u2014 Additional Diagnosis (cont.)",
-  "I5700": "Active Diagnoses \u2014 Additional Diagnosis (cont.)",
-  "I8000": "Active Diagnoses \u2014 Additional Active Diagnosis",
-  "J0100": "Pain Management \u2014 Pain Screening",
-  "J0200": "Pain \u2014 Should Pain Assessment Be Conducted",
-  "J0300": "Pain Presence",
-  "J0400": "Pain Frequency",
-  "J0500": "Pain Effect on Function",
-  "J0600": "Pain Intensity \u2014 Numeric Rating Scale",
-  "J0850": "Pain Intensity \u2014 Verbal Descriptor Scale",
-  "M0100": "Determination of Skin Treatments",
-  "M0150": "Risk of Developing Pressure Ulcers",
-  "M0210": "Unhealed Pressure Ulcer(s)",
-  "M0300": "Current Number of Unhealed Pressure Ulcers",
-  "M0610": "Dimensions of Unhealed Stage 3 or 4 Pressure Ulcers",
-  "M0700": "Most Severe Tissue Type for Any Pressure Ulcer",
-  "M0800": "Worsening in Pressure Ulcer Status Since Prior Assessment",
-  "M0900": "Healed Pressure Ulcers",
-  "M1030": "Number of Venous and Arterial Ulcers",
-  "M1040": "Other Skin Ulcer or Open Lesion",
-  "M1200": "Skin & Ulcer Treatments",
-  "N0415": "High-Risk Drug Classes \u2014 Use & Indication",
-  "O0100": "Special Treatments, Procedures, and Programs",
-  "O0250": "Influenza Vaccine",
-  "O0300": "Pneumococcal Vaccine",
-  "O0400": "Therapies",
-  "O0500": "Restorative Nursing Programs",
-  "O0600": "Physician Examinations",
-  "O0700": "Physician Orders"
+const Me = {
+  K0100: "Swallowing Disorder",
+  K0200: "Height & Weight",
+  K0520A: "Nutritional Approach — Parenteral/IV",
+  K0520B: "Nutritional Approach — Feeding Tube",
+  K0520C: "Nutritional Approach — Mechanically Altered Diet",
+  K0710: "Percent Intake by Artificial Route",
+  B0100: "Comatose",
+  B0700: "Makes Self Understood",
+  B0800: "Ability to Understand Others",
+  C0100: "Should Brief Interview for Mental Status Be Conducted",
+  C0200: "Repetition of Three Words",
+  C0300: "Temporal Orientation",
+  C0400: "Recall",
+  C0500: "BIMS Summary Score",
+  C0700: "Short-term Memory OK",
+  C0800: "Long-term Memory OK",
+  C0900: "Memory/Recall Ability",
+  C1000: "Cognitive Skills for Daily Decision Making",
+  D0100: "Should Resident Mood Interview Be Conducted",
+  D0200: "Resident Mood Interview (PHQ-2)",
+  D0300: "PHQ-9 Total Severity Score",
+  D0350: "Safety Notification — PHQ",
+  D0600: "Staff Assessment of Resident Mood (PHQ-9-OV)",
+  E0100: "Psychosis",
+  E0200: "Behavioral Symptoms — Presence & Frequency",
+  E0800: "Rejection of Care",
+  E0900: "Wandering",
+  G0110: "ADL Self-Performance",
+  G0120: "ADL Support Provided — Bathing",
+  G0300: "Balance During Transitions and Walking",
+  G0400: "Functional Limitation in Range of Motion",
+  GG0130: "Self-Care — Admission Performance",
+  GG0170: "Mobility — Admission Performance",
+  H0100: "Appliances — Indwelling Catheter",
+  H0200: "Urinary Toileting Program",
+  H0300: "Urinary Continence",
+  H0400: "Bowel Continence",
+  H0500: "Bowel Toileting Program",
+  H0600: "Appliances — Ostomy",
+  I0020: "Indicate Conditions or Diseases — Cancer",
+  I0100: "Active Diagnoses — Cancer",
+  I0200: "Active Diagnoses — Anemia",
+  I0300: "Active Diagnoses — Atrial Fibrillation",
+  I0400: "Active Diagnoses — Coronary Artery Disease",
+  I0500: "Active Diagnoses — Deep Venous Thrombosis",
+  I0600: "Active Diagnoses — Heart Failure",
+  I0700: "Active Diagnoses — Hypertension",
+  I0900: "Active Diagnoses — Peripheral Vascular Disease",
+  I2000: "Active Diagnoses — Pneumonia",
+  I2100: "Active Diagnoses — Septicemia",
+  I2300: "Active Diagnoses — Urinary Tract Infection",
+  I2500: "Active Diagnoses — Cerebrovascular Accident (CVA)",
+  I2900: "Active Diagnoses — Hemiplegia/Hemiparesis",
+  I3700: "Active Diagnoses — Anxiety Disorder",
+  I3800: "Active Diagnoses — Depression",
+  I3900: "Active Diagnoses — Schizophrenia",
+  I4000: "Active Diagnoses — Psychotic Disorder",
+  I4200: "Active Diagnoses — PTSD",
+  I4300: "Active Diagnoses — Tourette Syndrome",
+  I4400: "Active Diagnoses — Aphasia",
+  I4500: "Active Diagnoses — Cerebral Palsy",
+  I4900: "Active Diagnoses — Multi-Drug Resistant Organism",
+  I5100: "Active Diagnoses — Quadriplegia",
+  I5200: "Active Diagnoses — Additional Diagnosis",
+  I5250: "Active Diagnoses — Additional Diagnosis (cont.)",
+  I5300: "Active Diagnoses — Additional Diagnosis (cont.)",
+  I5350: "Active Diagnoses — Additional Diagnosis (cont.)",
+  I5400: "Active Diagnoses — Additional Diagnosis (cont.)",
+  I5500: "Active Diagnoses — Additional Diagnosis (cont.)",
+  I5550: "Active Diagnoses — Additional Diagnosis (cont.)",
+  I5600: "Active Diagnoses — Additional Diagnosis (cont.)",
+  I5700: "Active Diagnoses — Additional Diagnosis (cont.)",
+  I8000: "Active Diagnoses — Additional Active Diagnosis",
+  J0100: "Pain Management — Pain Screening",
+  J0200: "Pain — Should Pain Assessment Be Conducted",
+  J0300: "Pain Presence",
+  J0400: "Pain Frequency",
+  J0500: "Pain Effect on Function",
+  J0600: "Pain Intensity — Numeric Rating Scale",
+  J0850: "Pain Intensity — Verbal Descriptor Scale",
+  M0100: "Determination of Skin Treatments",
+  M0150: "Risk of Developing Pressure Ulcers",
+  M0210: "Unhealed Pressure Ulcer(s)",
+  M0300: "Current Number of Unhealed Pressure Ulcers",
+  M0610: "Dimensions of Unhealed Stage 3 or 4 Pressure Ulcers",
+  M0700: "Most Severe Tissue Type for Any Pressure Ulcer",
+  M0800: "Worsening in Pressure Ulcer Status Since Prior Assessment",
+  M0900: "Healed Pressure Ulcers",
+  M1030: "Number of Venous and Arterial Ulcers",
+  M1040: "Other Skin Ulcer or Open Lesion",
+  M1200: "Skin & Ulcer Treatments",
+  N0415: "High-Risk Drug Classes — Use & Indication",
+  O0100: "Special Treatments, Procedures, and Programs",
+  O0250: "Influenza Vaccine",
+  O0300: "Pneumococcal Vaccine",
+  O0400: "Therapies",
+  O0500: "Restorative Nursing Programs",
+  O0600: "Physician Examinations",
+  O0700: "Physician Orders"
 };
-function resolveItemName(name, code) {
-  const baseCode = code?.replace(/\[.*\]$/, "") || "";
-  const baseName = name?.replace(/\[.*\]$/, "") || "";
-  if (name && /^[A-Z]{1,2}\d+[A-Z]?(\[.*\])?$/.test(name)) {
-    return MDS_ITEM_LABELS[baseName] || MDS_ITEM_LABELS[baseCode] || name;
-  }
-  if (name && baseName !== baseCode) return name;
-  return MDS_ITEM_LABELS[baseCode] || MDS_ITEM_LABELS[baseName] || name || code;
+function ve(e, s) {
+  const n = s?.replace(/\[.*\]$/, "") || "", i = e?.replace(/\[.*\]$/, "") || "";
+  return e && /^[A-Z]{1,2}\d+[A-Z]?(\[.*\])?$/.test(e) ? Me[i] || Me[n] || e : e && i !== n ? e : Me[n] || Me[i] || e || s;
 }
-function ntaLevelToTier2(level, payment) {
-  if (!payment?.meta?.ntaTiers) return null;
-  for (const t3 of payment.meta.ntaTiers) {
-    if ((t3.levels || []).includes(level)) return t3.tier;
-  }
+function ns(e, s) {
+  if (!s?.meta?.ntaTiers) return null;
+  for (const n of s.meta.ntaTiers)
+    if ((n.levels || []).includes(e)) return n.tier;
   return null;
 }
-function formatNtaImpact2(nta, payment) {
-  if (payment?.mode === "state_rate") {
-    const curTier = ntaLevelToTier2(nta.currentLevel, payment);
-    const newTier = ntaLevelToTier2(nta.newLevel, payment);
-    if (curTier != null && newTier != null) return `NTA: Tier ${curTier} \u2192 Tier ${newTier}`;
-    return "NTA: tier upgrade";
+function ka(e, s) {
+  if (s?.mode === "state_rate") {
+    const n = ns(e.currentLevel, s), i = ns(e.newLevel, s);
+    return n != null && i != null ? `NTA: Tier ${n} → Tier ${i}` : "NTA: tier upgrade";
   }
-  return `NTA: ${nta.currentLevel} \u2192 ${nta.newLevel}`;
+  return `NTA: ${e.currentLevel} → ${e.newLevel}`;
 }
-function ImpactChips({ impact, payment, variant }) {
-  const chips = [];
-  if (impact?.nta?.wouldChangeLevel)
-    chips.push({ label: "NTA", text: formatNtaImpact2(impact.nta, payment) });
-  if (impact?.nursing?.wouldChangeGroup)
-    chips.push({ label: "Nursing", from: impact.nursing.currentPaymentGroup, to: impact.nursing.newPaymentGroup });
-  if (impact?.slp?.wouldChangeGroup)
-    chips.push({ label: "SLP", from: impact.slp.currentGroup, to: impact.slp.newGroup });
-  if (impact?.ptot?.wouldChangeGroup)
-    chips.push({ label: "PT/OT", from: impact.ptot.currentGroup, to: impact.ptot.newGroup });
-  if (chips.length === 0) return null;
-  const cls = variant === "pending" ? "pdpm-an__impact-chips pdpm-an__impact-chips--pending" : "pdpm-an__impact-chips";
-  return /* @__PURE__ */ u3("div", { class: cls, children: chips.map((c3, i3) => /* @__PURE__ */ u3("span", { class: "pdpm-an__impact-chip", children: [
-    /* @__PURE__ */ u3("span", { class: "pdpm-an__impact-chip-k", children: c3.label }),
-    /* @__PURE__ */ u3("span", { class: "pdpm-an__impact-chip-v", children: c3.text || `${c3.from} \u2192 ${c3.to}` })
-  ] }, i3)) });
+function Us({ impact: e, payment: s, variant: n }) {
+  const i = [];
+  return e?.nta?.wouldChangeLevel && i.push({ label: "NTA", text: ka(e.nta, s) }), e?.nursing?.wouldChangeGroup && i.push({ label: "Nursing", from: e.nursing.currentPaymentGroup, to: e.nursing.newPaymentGroup }), e?.slp?.wouldChangeGroup && i.push({ label: "SLP", from: e.slp.currentGroup, to: e.slp.newGroup }), e?.ptot?.wouldChangeGroup && i.push({ label: "PT/OT", from: e.ptot.currentGroup, to: e.ptot.newGroup }), i.length === 0 ? null : /* @__PURE__ */ t("div", { class: n === "pending" ? "pdpm-an__impact-chips pdpm-an__impact-chips--pending" : "pdpm-an__impact-chips", children: i.map((r, c) => /* @__PURE__ */ t("span", { class: "pdpm-an__impact-chip", children: [
+    /* @__PURE__ */ t("span", { class: "pdpm-an__impact-chip-k", children: r.label }),
+    /* @__PURE__ */ t("span", { class: "pdpm-an__impact-chip-v", children: r.text || `${r.from} → ${r.to}` })
+  ] }, c)) });
 }
-function OpportunityCallout({ data, onItemClick }) {
-  const enhancedDetections = data?.enhancedDetections || [];
-  const payment = data?.payment;
-  const drivers = enhancedDetections.filter(
-    (d3) => d3.wouldChangeHipps && d3.solverStatus !== "query_sent" && d3.solverStatus !== "awaiting_response" && d3.solverStatus !== "dont_code" && d3.userDecision?.decision !== "disagree"
+function Sa({ data: e, onItemClick: s }) {
+  const n = e?.enhancedDetections || [], i = e?.payment, a = n.filter(
+    (r) => r.wouldChangeHipps && r.solverStatus !== "query_sent" && r.solverStatus !== "awaiting_response" && r.solverStatus !== "dont_code" && r.userDecision?.decision !== "disagree"
   );
-  if (drivers.length === 0) return null;
-  return /* @__PURE__ */ u3("div", { class: "pdpm-an__opps", children: drivers.map((d3, i3) => {
-    const displayCode = d3.mdsItem?.startsWith("I8000:") ? "I8000" : d3.mdsItem;
-    return /* @__PURE__ */ u3(
+  return a.length === 0 ? null : /* @__PURE__ */ t("div", { class: "pdpm-an__opps", children: a.map((r, c) => {
+    const o = r.mdsItem?.startsWith("I8000:") ? "I8000" : r.mdsItem;
+    return /* @__PURE__ */ t(
       "div",
       {
         class: "pdpm-an__opp-row",
-        onClick: () => onItemClick && onItemClick(d3),
+        onClick: () => s && s(r),
         role: "button",
         tabIndex: 0,
-        onKeyDown: (e3) => {
-          if (e3.key === "Enter" || e3.key === " ") {
-            e3.preventDefault();
-            onItemClick?.(d3);
-          }
+        onKeyDown: (p) => {
+          (p.key === "Enter" || p.key === " ") && (p.preventDefault(), s?.(r));
         },
         children: [
-          /* @__PURE__ */ u3("span", { class: "pdpm-an__opp-icon", children: "\u26A1" }),
-          /* @__PURE__ */ u3("span", { class: "pdpm-an__opp-code", children: displayCode }),
-          /* @__PURE__ */ u3("span", { class: "pdpm-an__opp-name", children: resolveItemName(d3.itemName, d3.mdsItem) }),
-          /* @__PURE__ */ u3(ImpactChips, { impact: d3.impact, payment }),
-          /* @__PURE__ */ u3("svg", { class: "pdpm-an__opp-go", width: "14", height: "14", viewBox: "0 0 14 14", fill: "none", children: /* @__PURE__ */ u3("path", { d: "M5 3l4 4-4 4", stroke: "currentColor", "stroke-width": "1.3", "stroke-linecap": "round", "stroke-linejoin": "round" }) })
+          /* @__PURE__ */ t("span", { class: "pdpm-an__opp-icon", children: "⚡" }),
+          /* @__PURE__ */ t("span", { class: "pdpm-an__opp-code", children: o }),
+          /* @__PURE__ */ t("span", { class: "pdpm-an__opp-name", children: ve(r.itemName, r.mdsItem) }),
+          /* @__PURE__ */ t(Us, { impact: r.impact, payment: i }),
+          /* @__PURE__ */ t("svg", { class: "pdpm-an__opp-go", width: "14", height: "14", viewBox: "0 0 14 14", fill: "none", children: /* @__PURE__ */ t("path", { d: "M5 3l4 4-4 4", stroke: "currentColor", "stroke-width": "1.3", "stroke-linecap": "round", "stroke-linejoin": "round" }) })
         ]
       },
-      i3
+      c
     );
   }) });
 }
-function DocRisksSection2({ data, onItemClick, collapsed, onToggleCollapse }) {
-  const enhancedDetections = data?.enhancedDetections || [];
-  const risks = enhancedDetections.filter(
-    (d3) => d3.solverStatus === "dont_code" && (d3.diagnosisPassed === false || d3.activeStatusPassed === false) && d3.userDecision?.decision !== "disagree"
+function Na({ data: e, onItemClick: s, collapsed: n, onToggleCollapse: i }) {
+  const r = (e?.enhancedDetections || []).filter(
+    (c) => c.solverStatus === "dont_code" && (c.diagnosisPassed === !1 || c.activeStatusPassed === !1) && c.userDecision?.decision !== "disagree"
   );
-  if (risks.length === 0) return null;
-  return /* @__PURE__ */ u3("div", { class: "pdpm-an__card pdpm-an__card--doc-risk", children: [
-    /* @__PURE__ */ u3("div", { class: "pdpm-an__card-header pdpm-an__card-header--collapsible", onClick: onToggleCollapse, role: "button", tabIndex: 0, children: [
-      /* @__PURE__ */ u3("span", { class: "pdpm-an__card-icon", children: "\u26A0" }),
-      /* @__PURE__ */ u3("span", { class: "pdpm-an__card-title", children: "Documentation Risks" }),
-      /* @__PURE__ */ u3("span", { class: "pdpm-an__card-badge pdpm-an__card-badge--amber", children: risks.length }),
-      /* @__PURE__ */ u3("svg", { class: `pdpm-an__card-chevron${collapsed ? "" : " pdpm-an__card-chevron--open"}`, width: "12", height: "12", viewBox: "0 0 12 12", fill: "none", children: /* @__PURE__ */ u3("path", { d: "M3 4.5L6 7.5L9 4.5", stroke: "currentColor", "stroke-width": "1.5", "stroke-linecap": "round", "stroke-linejoin": "round" }) })
+  return r.length === 0 ? null : /* @__PURE__ */ t("div", { class: "pdpm-an__card pdpm-an__card--doc-risk", children: [
+    /* @__PURE__ */ t("div", { class: "pdpm-an__card-header pdpm-an__card-header--collapsible", onClick: i, role: "button", tabIndex: 0, children: [
+      /* @__PURE__ */ t("span", { class: "pdpm-an__card-icon", children: "⚠" }),
+      /* @__PURE__ */ t("span", { class: "pdpm-an__card-title", children: "Documentation Risks" }),
+      /* @__PURE__ */ t("span", { class: "pdpm-an__card-badge pdpm-an__card-badge--amber", children: r.length }),
+      /* @__PURE__ */ t("svg", { class: `pdpm-an__card-chevron${n ? "" : " pdpm-an__card-chevron--open"}`, width: "12", height: "12", viewBox: "0 0 12 12", fill: "none", children: /* @__PURE__ */ t("path", { d: "M3 4.5L6 7.5L9 4.5", stroke: "currentColor", "stroke-width": "1.5", "stroke-linecap": "round", "stroke-linejoin": "round" }) })
     ] }),
-    !collapsed && /* @__PURE__ */ u3("div", { class: "pdpm-an__doc-risk-list", children: risks.map((d3, i3) => {
-      const displayCode = d3.mdsItem?.startsWith("I8000:") ? "I8000" : d3.mdsItem;
-      const badges = [];
-      if (d3.diagnosisPassed === false) badges.push("No physician diagnosis found");
-      if (d3.activeStatusPassed === false) badges.push("No active treatment order found");
-      return /* @__PURE__ */ u3(
+    !n && /* @__PURE__ */ t("div", { class: "pdpm-an__doc-risk-list", children: r.map((c, o) => {
+      const p = c.mdsItem?.startsWith("I8000:") ? "I8000" : c.mdsItem, d = [];
+      return c.diagnosisPassed === !1 && d.push("No physician diagnosis found"), c.activeStatusPassed === !1 && d.push("No active treatment order found"), /* @__PURE__ */ t(
         "div",
         {
           class: "pdpm-an__doc-risk-item",
-          onClick: () => onItemClick && onItemClick(d3),
+          onClick: () => s && s(c),
           role: "button",
           tabIndex: 0,
-          onKeyDown: (e3) => {
-            if (e3.key === "Enter" || e3.key === " ") {
-              e3.preventDefault();
-              onItemClick && onItemClick(d3);
-            }
+          onKeyDown: (u) => {
+            (u.key === "Enter" || u.key === " ") && (u.preventDefault(), s && s(c));
           },
           children: [
-            /* @__PURE__ */ u3("div", { class: "pdpm-an__doc-risk-top", children: [
-              /* @__PURE__ */ u3("span", { class: "pdpm-an__driver-section", children: displayCode }),
-              /* @__PURE__ */ u3("span", { class: "pdpm-an__driver-text", children: resolveItemName(d3.itemName, d3.mdsItem) })
+            /* @__PURE__ */ t("div", { class: "pdpm-an__doc-risk-top", children: [
+              /* @__PURE__ */ t("span", { class: "pdpm-an__driver-section", children: p }),
+              /* @__PURE__ */ t("span", { class: "pdpm-an__driver-text", children: ve(c.itemName, c.mdsItem) })
             ] }),
-            /* @__PURE__ */ u3("div", { class: "pdpm-an__doc-risk-badges", children: badges.map((b, j3) => /* @__PURE__ */ u3("span", { class: "pdpm-an__doc-risk-badge", children: b }, j3)) }),
-            d3.rationale && /* @__PURE__ */ u3("div", { class: "pdpm-an__doc-risk-rationale", children: d3.rationale })
+            /* @__PURE__ */ t("div", { class: "pdpm-an__doc-risk-badges", children: d.map((u, l) => /* @__PURE__ */ t("span", { class: "pdpm-an__doc-risk-badge", children: u }, l)) }),
+            c.rationale && /* @__PURE__ */ t("div", { class: "pdpm-an__doc-risk-rationale", children: c.rationale })
           ]
         },
-        i3
+        o
       );
     }) })
   ] });
 }
-function relativeDate2(sentAt) {
-  if (!sentAt) return "not yet sent";
-  const days = Math.floor((Date.now() - new Date(sentAt)) / 864e5);
-  return days === 0 ? "sent today" : `sent ${days}d ago`;
+function xa(e) {
+  if (!e) return "not yet sent";
+  const s = Math.floor((Date.now() - new Date(e)) / 864e5);
+  return s === 0 ? "sent today" : `sent ${s}d ago`;
 }
-function PendingQueriesSection({ data, onQueryClick, collapsed, onToggleCollapse }) {
-  const queries = data?.outstandingQueries || [];
-  const payment = data?.payment;
-  const pending = queries.filter(
-    (q3) => q3.status === "sent" || q3.status === "pending" || q3.status === "awaiting_response"
+function Pa({ data: e, onQueryClick: s, collapsed: n, onToggleCollapse: i }) {
+  const a = e?.outstandingQueries || [], r = e?.payment, c = a.filter(
+    (o) => o.status === "sent" || o.status === "pending" || o.status === "awaiting_response"
   );
-  if (pending.length === 0) return null;
-  return /* @__PURE__ */ u3("div", { class: "pdpm-an__card pdpm-an__card--queries", children: [
-    /* @__PURE__ */ u3("div", { class: "pdpm-an__card-header pdpm-an__card-header--collapsible", onClick: onToggleCollapse, role: "button", tabIndex: 0, children: [
-      /* @__PURE__ */ u3("span", { class: "pdpm-an__card-icon", children: "\u2709" }),
-      /* @__PURE__ */ u3("span", { class: "pdpm-an__card-title", children: "Pending Queries" }),
-      /* @__PURE__ */ u3("span", { class: "pdpm-an__card-badge pdpm-an__card-badge--pending", children: pending.length }),
-      /* @__PURE__ */ u3("svg", { class: `pdpm-an__card-chevron${collapsed ? "" : " pdpm-an__card-chevron--open"}`, width: "12", height: "12", viewBox: "0 0 12 12", fill: "none", children: /* @__PURE__ */ u3("path", { d: "M3 4.5L6 7.5L9 4.5", stroke: "currentColor", "stroke-width": "1.5", "stroke-linecap": "round", "stroke-linejoin": "round" }) })
+  return c.length === 0 ? null : /* @__PURE__ */ t("div", { class: "pdpm-an__card pdpm-an__card--queries", children: [
+    /* @__PURE__ */ t("div", { class: "pdpm-an__card-header pdpm-an__card-header--collapsible", onClick: i, role: "button", tabIndex: 0, children: [
+      /* @__PURE__ */ t("span", { class: "pdpm-an__card-icon", children: "✉" }),
+      /* @__PURE__ */ t("span", { class: "pdpm-an__card-title", children: "Pending Queries" }),
+      /* @__PURE__ */ t("span", { class: "pdpm-an__card-badge pdpm-an__card-badge--pending", children: c.length }),
+      /* @__PURE__ */ t("svg", { class: `pdpm-an__card-chevron${n ? "" : " pdpm-an__card-chevron--open"}`, width: "12", height: "12", viewBox: "0 0 12 12", fill: "none", children: /* @__PURE__ */ t("path", { d: "M3 4.5L6 7.5L9 4.5", stroke: "currentColor", "stroke-width": "1.5", "stroke-linecap": "round", "stroke-linejoin": "round" }) })
     ] }),
-    !collapsed && /* @__PURE__ */ u3("ul", { class: "pdpm-an__query-list", children: pending.map((q3, i3) => {
-      const ci = q3.pdpmImpact?.componentImpacts;
-      const impact = ci ? { slp: ci.slp, nta: ci.nta, nursing: ci.nursing, ptot: ci.ptot } : null;
-      const isSent = q3.status === "sent" || q3.status === "awaiting_response";
-      return /* @__PURE__ */ u3(
+    !n && /* @__PURE__ */ t("ul", { class: "pdpm-an__query-list", children: c.map((o, p) => {
+      const d = o.pdpmImpact?.componentImpacts, u = d ? { slp: d.slp, nta: d.nta, nursing: d.nursing, ptot: d.ptot } : null, l = o.status === "sent" || o.status === "awaiting_response";
+      return /* @__PURE__ */ t(
         "li",
         {
           class: "pdpm-an__query-item pdpm-an__query-item--clickable",
-          onClick: () => onQueryClick && onQueryClick(q3),
+          onClick: () => s && s(o),
           role: "button",
           tabIndex: 0,
           children: [
-            /* @__PURE__ */ u3("div", { class: "pdpm-an__query-top", children: [
-              /* @__PURE__ */ u3("div", { class: "pdpm-an__query-main", children: [
-                q3.mdsItem && /* @__PURE__ */ u3("span", { class: "pdpm-an__query-code", children: q3.mdsItem }),
-                /* @__PURE__ */ u3("span", { class: "pdpm-an__query-text", children: resolveItemName(q3.mdsItemName, q3.mdsItem) })
+            /* @__PURE__ */ t("div", { class: "pdpm-an__query-top", children: [
+              /* @__PURE__ */ t("div", { class: "pdpm-an__query-main", children: [
+                o.mdsItem && /* @__PURE__ */ t("span", { class: "pdpm-an__query-code", children: o.mdsItem }),
+                /* @__PURE__ */ t("span", { class: "pdpm-an__query-text", children: ve(o.mdsItemName, o.mdsItem) })
               ] }),
-              /* @__PURE__ */ u3("span", { class: `pdpm-an__query-status-pill${isSent ? "" : " pdpm-an__query-status-pill--draft"}`, children: isSent ? relativeDate2(q3.sentAt) : "draft" })
+              /* @__PURE__ */ t("span", { class: `pdpm-an__query-status-pill${l ? "" : " pdpm-an__query-status-pill--draft"}`, children: l ? xa(o.sentAt) : "draft" })
             ] }),
-            impact && /* @__PURE__ */ u3(ImpactChips, { impact, payment, variant: "pending" })
+            u && /* @__PURE__ */ t(Us, { impact: u, payment: r, variant: "pending" })
           ]
         },
-        i3
+        p
       );
     }) })
   ] });
 }
-function signedRelDate(dateStr) {
-  if (!dateStr) return "";
-  const days = Math.floor((Date.now() - new Date(dateStr)) / 864e5);
-  if (days === 0) return "today";
-  if (days === 1) return "yesterday";
-  return `${days}d ago`;
+function Ta(e) {
+  if (!e) return "";
+  const s = Math.floor((Date.now() - new Date(e)) / 864e5);
+  return s === 0 ? "today" : s === 1 ? "yesterday" : `${s}d ago`;
 }
-function RecentlySignedSection({ data, onQueryClick, collapsed, onToggleCollapse }) {
-  const recentlySigned = data?.recentlySigned || data?.signedQueries || data?.completedQueries || [];
-  const signed = recentlySigned.filter(
-    (q3) => q3.status === "signed" || q3.status === "completed" || q3.status === "resolved" || q3.signedAt
+function Aa({ data: e, onQueryClick: s, collapsed: n, onToggleCollapse: i }) {
+  const r = (e?.recentlySigned || e?.signedQueries || e?.completedQueries || []).filter(
+    (o) => o.status === "signed" || o.status === "completed" || o.status === "resolved" || o.signedAt
   );
-  if (signed.length === 0) return null;
-  const needsCodingCount = signed.filter((q3) => q3.mdsItemCoded === false).length;
-  return /* @__PURE__ */ u3("div", { class: "pdpm-an__card pdpm-an__card--signed", children: [
-    /* @__PURE__ */ u3("div", { class: "pdpm-an__card-header pdpm-an__card-header--collapsible", onClick: onToggleCollapse, role: "button", tabIndex: 0, children: [
-      /* @__PURE__ */ u3("span", { class: "pdpm-an__card-icon", children: "\u2713" }),
-      /* @__PURE__ */ u3("span", { class: "pdpm-an__card-title", children: "Recently Signed" }),
-      /* @__PURE__ */ u3("span", { class: "pdpm-an__card-badge", children: signed.length }),
-      needsCodingCount > 0 && /* @__PURE__ */ u3("span", { class: "pdpm-an__card-badge pdpm-an__card-badge--coding", children: [
-        needsCodingCount,
+  if (r.length === 0) return null;
+  const c = r.filter((o) => o.mdsItemCoded === !1).length;
+  return /* @__PURE__ */ t("div", { class: "pdpm-an__card pdpm-an__card--signed", children: [
+    /* @__PURE__ */ t("div", { class: "pdpm-an__card-header pdpm-an__card-header--collapsible", onClick: i, role: "button", tabIndex: 0, children: [
+      /* @__PURE__ */ t("span", { class: "pdpm-an__card-icon", children: "✓" }),
+      /* @__PURE__ */ t("span", { class: "pdpm-an__card-title", children: "Recently Signed" }),
+      /* @__PURE__ */ t("span", { class: "pdpm-an__card-badge", children: r.length }),
+      c > 0 && /* @__PURE__ */ t("span", { class: "pdpm-an__card-badge pdpm-an__card-badge--coding", children: [
+        c,
         " need coding"
       ] }),
-      /* @__PURE__ */ u3("svg", { class: `pdpm-an__card-chevron${collapsed ? "" : " pdpm-an__card-chevron--open"}`, width: "12", height: "12", viewBox: "0 0 12 12", fill: "none", children: /* @__PURE__ */ u3("path", { d: "M3 4.5L6 7.5L9 4.5", stroke: "currentColor", "stroke-width": "1.5", "stroke-linecap": "round", "stroke-linejoin": "round" }) })
+      /* @__PURE__ */ t("svg", { class: `pdpm-an__card-chevron${n ? "" : " pdpm-an__card-chevron--open"}`, width: "12", height: "12", viewBox: "0 0 12 12", fill: "none", children: /* @__PURE__ */ t("path", { d: "M3 4.5L6 7.5L9 4.5", stroke: "currentColor", "stroke-width": "1.5", "stroke-linecap": "round", "stroke-linejoin": "round" }) })
     ] }),
-    !collapsed && /* @__PURE__ */ u3("ul", { class: "pdpm-an__query-list", children: signed.map((q3, i3) => {
-      const needsCoding = q3.mdsItemCoded === false;
-      const coded = q3.mdsItemCoded === true;
-      const dateStr = signedRelDate(q3.signedAt || q3.completedAt);
-      return /* @__PURE__ */ u3(
+    !n && /* @__PURE__ */ t("ul", { class: "pdpm-an__query-list", children: r.map((o, p) => {
+      const d = o.mdsItemCoded === !1, u = o.mdsItemCoded === !0, l = Ta(o.signedAt || o.completedAt);
+      return /* @__PURE__ */ t(
         "li",
         {
-          class: `pdpm-an__signed-item${needsCoding ? " pdpm-an__signed-item--needs-coding" : ""} pdpm-an__signed-item--clickable`,
-          onClick: () => onQueryClick && onQueryClick(q3),
+          class: `pdpm-an__signed-item${d ? " pdpm-an__signed-item--needs-coding" : ""} pdpm-an__signed-item--clickable`,
+          onClick: () => s && s(o),
           role: "button",
           tabIndex: 0,
           children: [
-            q3.mdsItem && /* @__PURE__ */ u3("span", { class: "pdpm-an__query-code pdpm-an__query-code--signed", children: q3.mdsItem }),
-            /* @__PURE__ */ u3("span", { class: "pdpm-an__query-text", children: resolveItemName(q3.mdsItemName, q3.mdsItem) }),
-            /* @__PURE__ */ u3("div", { class: "pdpm-an__signed-badges", children: [
-              needsCoding && /* @__PURE__ */ u3("span", { class: "pdpm-an__signed-badge pdpm-an__signed-badge--coding", children: "Needs Coding" }),
-              coded && /* @__PURE__ */ u3("span", { class: "pdpm-an__signed-badge pdpm-an__signed-badge--coded", children: "Coded" }),
-              dateStr && /* @__PURE__ */ u3("span", { class: "pdpm-an__query-date", children: dateStr })
+            o.mdsItem && /* @__PURE__ */ t("span", { class: "pdpm-an__query-code pdpm-an__query-code--signed", children: o.mdsItem }),
+            /* @__PURE__ */ t("span", { class: "pdpm-an__query-text", children: ve(o.mdsItemName, o.mdsItem) }),
+            /* @__PURE__ */ t("div", { class: "pdpm-an__signed-badges", children: [
+              d && /* @__PURE__ */ t("span", { class: "pdpm-an__signed-badge pdpm-an__signed-badge--coding", children: "Needs Coding" }),
+              u && /* @__PURE__ */ t("span", { class: "pdpm-an__signed-badge pdpm-an__signed-badge--coded", children: "Coded" }),
+              l && /* @__PURE__ */ t("span", { class: "pdpm-an__query-date", children: l })
             ] })
           ]
         },
-        i3
+        p
       );
     }) })
   ] });
 }
-function NtaLevelTrack({ nta, potentialLevel, payment }) {
-  if (!nta) return null;
-  if (payment?.mode === "state_rate") {
-    if (nta.currentPoints == null || nta.pointsNeeded == null) return null;
-    const currentTier = payment.current?.ntaTier?.tier;
-    const nextTier = currentTier != null ? currentTier - 1 : null;
-    const targetLabel = nextTier != null && nextTier >= 1 ? `Tier ${nextTier}` : null;
-    if (!targetLabel && nta.pointsNeeded <= 0) return null;
-    const total = nta.currentPoints + nta.pointsNeeded;
-    const pct = total > 0 ? Math.round(nta.currentPoints / total * 100) : 0;
-    return /* @__PURE__ */ u3("div", { class: "pdpm-an__nta-inline", children: [
-      /* @__PURE__ */ u3("div", { class: "pdpm-an__nta-sbar", children: /* @__PURE__ */ u3("div", { class: "pdpm-an__nta-sfill", style: { width: `${pct}%` } }) }),
-      /* @__PURE__ */ u3("span", { class: "pdpm-an__nta-slbl", children: [
-        nta.pointsNeeded === 1 ? "1 pt" : `${nta.pointsNeeded} pts`,
+function Ma({ nta: e, potentialLevel: s, payment: n }) {
+  if (!e) return null;
+  if (n?.mode === "state_rate") {
+    if (e.currentPoints == null || e.pointsNeeded == null) return null;
+    const h = n.current?.ntaTier?.tier, _ = h != null ? h - 1 : null, v = _ != null && _ >= 1 ? `Tier ${_}` : null;
+    if (!v && e.pointsNeeded <= 0) return null;
+    const g = e.currentPoints + e.pointsNeeded, C = g > 0 ? Math.round(e.currentPoints / g * 100) : 0;
+    return /* @__PURE__ */ t("div", { class: "pdpm-an__nta-inline", children: [
+      /* @__PURE__ */ t("div", { class: "pdpm-an__nta-sbar", children: /* @__PURE__ */ t("div", { class: "pdpm-an__nta-sfill", style: { width: `${C}%` } }) }),
+      /* @__PURE__ */ t("span", { class: "pdpm-an__nta-slbl", children: [
+        e.pointsNeeded === 1 ? "1 pt" : `${e.pointsNeeded} pts`,
         " away",
-        targetLabel ? ` from ${targetLabel}` : ""
+        v ? ` from ${v}` : ""
       ] })
     ] });
   }
-  const levels = nta.levels;
-  if (!levels || levels.length < 2 || !nta.currentLevel) return null;
-  const currentIdx = levels.findIndex((l3) => l3.code === nta.currentLevel);
-  if (currentIdx === -1) return null;
-  const targetLevel = potentialLevel || nta.nextLevel;
-  const targetIdx = targetLevel ? levels.findIndex((l3) => l3.code === targetLevel) : -1;
-  if (targetIdx <= currentIdx) return null;
-  const lvlPct = (i3) => i3 / (levels.length - 1) * 100;
-  const curPct = Math.max(lvlPct(currentIdx), 4);
-  const tgtPct = lvlPct(targetIdx);
-  const gainPct = tgtPct - curPct;
-  const away = nta.pointsNeeded;
-  const nextLabel = nta.nextLevel;
-  return /* @__PURE__ */ u3("div", { class: "pdpm-an__nta-track", children: [
-    /* @__PURE__ */ u3("div", { class: "pdpm-an__nta-bar", children: [
-      /* @__PURE__ */ u3("div", { class: "pdpm-an__nta-bar-cur", style: { width: `${curPct}%` } }),
-      /* @__PURE__ */ u3("div", { class: "pdpm-an__nta-bar-gain", style: { left: `${curPct}%`, width: `${gainPct}%` } })
+  const i = e.levels;
+  if (!i || i.length < 2 || !e.currentLevel) return null;
+  const a = i.findIndex((h) => h.code === e.currentLevel);
+  if (a === -1) return null;
+  const r = s || e.nextLevel, c = r ? i.findIndex((h) => h.code === r) : -1;
+  if (c <= a) return null;
+  const o = (h) => h / (i.length - 1) * 100, p = Math.max(o(a), 4), u = o(c) - p, l = e.pointsNeeded, m = e.nextLevel;
+  return /* @__PURE__ */ t("div", { class: "pdpm-an__nta-track", children: [
+    /* @__PURE__ */ t("div", { class: "pdpm-an__nta-bar", children: [
+      /* @__PURE__ */ t("div", { class: "pdpm-an__nta-bar-cur", style: { width: `${p}%` } }),
+      /* @__PURE__ */ t("div", { class: "pdpm-an__nta-bar-gain", style: { left: `${p}%`, width: `${u}%` } })
     ] }),
-    /* @__PURE__ */ u3("div", { class: "pdpm-an__nta-lvls", children: levels.map((l3, i3) => /* @__PURE__ */ u3("span", { class: `pdpm-an__nta-lvl${i3 === currentIdx ? " pdpm-an__nta-lvl--cur" : ""}${i3 === targetIdx ? " pdpm-an__nta-lvl--tgt" : ""}`, children: l3.code }, l3.code)) }),
-    away != null && away > 0 && nextLabel && /* @__PURE__ */ u3("span", { class: "pdpm-an__nta-away", children: [
-      away === 1 ? "1 pt" : `${away} pts`,
+    /* @__PURE__ */ t("div", { class: "pdpm-an__nta-lvls", children: i.map((h, _) => /* @__PURE__ */ t("span", { class: `pdpm-an__nta-lvl${_ === a ? " pdpm-an__nta-lvl--cur" : ""}${_ === c ? " pdpm-an__nta-lvl--tgt" : ""}`, children: h.code }, h.code)) }),
+    l != null && l > 0 && m && /* @__PURE__ */ t("span", { class: "pdpm-an__nta-away", children: [
+      l === 1 ? "1 pt" : `${l} pts`,
       " ",
-      "\u2192",
+      "→",
       " ",
-      nextLabel
+      m
     ] })
   ] });
 }
-function SlpTierIndicator({ gap }) {
-  const s3 = gap?.slp;
-  if (!s3 || s3.tier1Met == null && s3.tier2Met == null) return null;
-  const tier2Total = (s3.tier2Met ?? 0) + (s3.tier2Needed ?? 0);
-  return /* @__PURE__ */ u3("div", { class: "pdpm-an__tier-row", children: [
-    s3.tier1Met != null && /* @__PURE__ */ u3("span", { class: "pdpm-an__tier-segment", children: [
+function La({ gap: e }) {
+  const s = e?.slp;
+  if (!s || s.tier1Met == null && s.tier2Met == null) return null;
+  const n = (s.tier2Met ?? 0) + (s.tier2Needed ?? 0);
+  return /* @__PURE__ */ t("div", { class: "pdpm-an__tier-row", children: [
+    s.tier1Met != null && /* @__PURE__ */ t("span", { class: "pdpm-an__tier-segment", children: [
       "Tier 1: ",
-      Array.from({ length: s3.tier1Met }, (_2, i3) => /* @__PURE__ */ u3("span", { class: "pdpm-an__tier-dot pdpm-an__tier-dot--filled", children: "\u25CF" }, i3)),
+      Array.from({ length: s.tier1Met }, (i, a) => /* @__PURE__ */ t("span", { class: "pdpm-an__tier-dot pdpm-an__tier-dot--filled", children: "●" }, a)),
       " ",
-      s3.tier1Met,
+      s.tier1Met,
       " met"
     ] }),
-    (s3.tier2Met != null || s3.tier2Needed != null) && /* @__PURE__ */ u3("span", { class: "pdpm-an__tier-segment", children: [
-      s3.tier1Met != null && /* @__PURE__ */ u3("span", { class: "pdpm-an__tier-sep", children: "\xB7" }),
+    (s.tier2Met != null || s.tier2Needed != null) && /* @__PURE__ */ t("span", { class: "pdpm-an__tier-segment", children: [
+      s.tier1Met != null && /* @__PURE__ */ t("span", { class: "pdpm-an__tier-sep", children: "·" }),
       "Tier 2: ",
-      Array.from({ length: s3.tier2Met ?? 0 }, (_2, i3) => /* @__PURE__ */ u3("span", { class: "pdpm-an__tier-dot pdpm-an__tier-dot--filled", children: "\u25CF" }, `f${i3}`)),
-      Array.from({ length: s3.tier2Needed ?? 0 }, (_2, i3) => /* @__PURE__ */ u3("span", { class: "pdpm-an__tier-dot pdpm-an__tier-dot--empty", children: "\u25CB" }, `e${i3}`)),
+      Array.from({ length: s.tier2Met ?? 0 }, (i, a) => /* @__PURE__ */ t("span", { class: "pdpm-an__tier-dot pdpm-an__tier-dot--filled", children: "●" }, `f${a}`)),
+      Array.from({ length: s.tier2Needed ?? 0 }, (i, a) => /* @__PURE__ */ t("span", { class: "pdpm-an__tier-dot pdpm-an__tier-dot--empty", children: "○" }, `e${a}`)),
       " ",
-      s3.tier2Met ?? 0,
+      s.tier2Met ?? 0,
       "/",
-      tier2Total
+      n
     ] })
   ] });
 }
-function buildCapturedFromCalculation(calc) {
-  const result = { ptot: [], slp: [], nursing: [], nta: [] };
-  if (!calc) return result;
-  if (calc.nta?.contributingConditions) {
-    result.nta = calc.nta.contributingConditions.map((c3) => ({
-      mdsItem: c3.mdsItem,
-      itemName: c3.categoryName,
-      helpText: `+${c3.points} pts (${c3.categoryName})`,
-      pointsAdded: c3.points
+function $a(e) {
+  const s = { ptot: [], slp: [], nursing: [], nta: [] };
+  if (!e) return s;
+  if (e.nta?.contributingConditions && (s.nta = e.nta.contributingConditions.map((n) => ({
+    mdsItem: n.mdsItem,
+    itemName: n.categoryName,
+    helpText: `+${n.points} pts (${n.categoryName})`,
+    pointsAdded: n.points
+  }))), e.slp) {
+    const n = [];
+    if (e.slp.tier2?.hasSwallowingDisorder && n.push({ mdsItem: "K0100A", itemName: "Swallowing Disorder", helpText: "Tier 2: swallowing" }), e.slp.tier2?.hasMechanicallyAlteredDiet && n.push({ mdsItem: "K0520C1", itemName: "Mechanically Altered Diet", helpText: "Tier 2: mechanically altered diet" }), e.slp.comorbidities)
+      for (const i of e.slp.comorbidities)
+        i.isPresent && i.comorbidityNumber <= 100 && n.push({ mdsItem: i.mdsItem, itemName: i.name, helpText: `Tier 1 comorbidity: ${i.name}` });
+    e.slp.tier1?.hasCognitiveImpairment && n.push({ mdsItem: "C0500", itemName: "Cognitive Impairment", helpText: "Tier 1: cognitive impairment" }), e.slp.tier1?.hasAcuteNeuro && n.push({ mdsItem: "I4500", itemName: "Acute Neurological", helpText: "Tier 1: acute neurological condition" }), s.slp = n;
+  }
+  if (e.nursing?.conditionsEvaluated) {
+    const n = { ES: "Extensive Services", SCH: "Special Care High", SCL: "Special Care Low", CC: "Clinically Complex" };
+    s.nursing = e.nursing.conditionsEvaluated.filter((i) => i.isMet).map((i) => ({
+      mdsItem: i.triggeringItems?.[0] || "",
+      itemName: i.subcategoryName,
+      helpText: `${n[i.mainCategory] || i.mainCategory}: ${i.subcategoryName}`
     }));
   }
-  if (calc.slp) {
-    const slpItems = [];
-    if (calc.slp.tier2?.hasSwallowingDisorder) {
-      slpItems.push({ mdsItem: "K0100A", itemName: "Swallowing Disorder", helpText: "Tier 2: swallowing" });
-    }
-    if (calc.slp.tier2?.hasMechanicallyAlteredDiet) {
-      slpItems.push({ mdsItem: "K0520C1", itemName: "Mechanically Altered Diet", helpText: "Tier 2: mechanically altered diet" });
-    }
-    if (calc.slp.comorbidities) {
-      for (const c3 of calc.slp.comorbidities) {
-        if (c3.isPresent && c3.comorbidityNumber <= 100) {
-          slpItems.push({ mdsItem: c3.mdsItem, itemName: c3.name, helpText: `Tier 1 comorbidity: ${c3.name}` });
-        }
-      }
-    }
-    if (calc.slp.tier1?.hasCognitiveImpairment) {
-      slpItems.push({ mdsItem: "C0500", itemName: "Cognitive Impairment", helpText: "Tier 1: cognitive impairment" });
-    }
-    if (calc.slp.tier1?.hasAcuteNeuro) {
-      slpItems.push({ mdsItem: "I4500", itemName: "Acute Neurological", helpText: "Tier 1: acute neurological condition" });
-    }
-    result.slp = slpItems;
-  }
-  if (calc.nursing?.conditionsEvaluated) {
-    const CAT_LABELS = { ES: "Extensive Services", SCH: "Special Care High", SCL: "Special Care Low", CC: "Clinically Complex" };
-    result.nursing = calc.nursing.conditionsEvaluated.filter((c3) => c3.isMet).map((c3) => ({
-      mdsItem: c3.triggeringItems?.[0] || "",
-      itemName: c3.subcategoryName,
-      helpText: `${CAT_LABELS[c3.mainCategory] || c3.mainCategory}: ${c3.subcategoryName}`
-    }));
-  }
-  return result;
+  return s;
 }
-function ComponentBreakdown({ data, payment, onItemClick, collapsed, onToggleCollapse }) {
-  const [expandedKey, setExpandedKey] = d2(null);
-  const gap = data?.gapAnalysis || {};
-  const decoded = data?.hippsDecoded || {};
-  const potentialDecoded = data?.potentialHippsDecoded || {};
-  const allDetections = data?.enhancedDetections || [];
-  const captured = buildCapturedFromCalculation(data?.calculation);
-  const components = [
+function Ra({ data: e, payment: s, onItemClick: n, collapsed: i, onToggleCollapse: a }) {
+  const [r, c] = b(null), o = e?.gapAnalysis || {}, p = e?.hippsDecoded || {}, d = e?.potentialHippsDecoded || {}, u = e?.enhancedDetections || [], l = $a(e?.calculation), m = [
     {
       label: "PT/OT",
       key: "ptot",
-      currentCode: decoded.ptot?.code,
-      potential: potentialDecoded.ptot?.code,
-      name: decoded.ptot?.name,
-      detail: gap.ptot?.clinicalCategoryName,
-      items: gap.ptot?.detectionsToHelp || [],
-      captured: captured.ptot
+      currentCode: p.ptot?.code,
+      potential: d.ptot?.code,
+      name: p.ptot?.name,
+      detail: o.ptot?.clinicalCategoryName,
+      items: o.ptot?.detectionsToHelp || [],
+      captured: l.ptot
     },
     {
       label: "SLP",
       key: "slp",
-      currentCode: decoded.slp?.code,
-      potential: potentialDecoded.slp?.code,
-      name: decoded.slp?.name,
-      detail: gap.slp?.clinicalCategoryName,
-      items: gap.slp?.detectionsToHelp || [],
-      captured: captured.slp
+      currentCode: p.slp?.code,
+      potential: d.slp?.code,
+      name: p.slp?.name,
+      detail: o.slp?.clinicalCategoryName,
+      items: o.slp?.detectionsToHelp || [],
+      captured: l.slp
     },
     {
       label: "Nursing",
       key: "nursing",
-      currentCode: decoded.nursing?.code,
-      potential: potentialDecoded.nursing?.code,
-      name: decoded.nursing?.name,
-      detail: gap.nursing?.qualifyingSubcategoryName,
-      items: gap.nursing?.detectionsToHelp || [],
-      captured: captured.nursing
+      currentCode: p.nursing?.code,
+      potential: d.nursing?.code,
+      name: p.nursing?.name,
+      detail: o.nursing?.qualifyingSubcategoryName,
+      items: o.nursing?.detectionsToHelp || [],
+      captured: l.nursing
     },
     {
       label: "NTA",
       key: "nta",
-      currentCode: payment?.mode === "state_rate" ? payment.current?.ntaTier?.tier != null ? `Tier ${payment.current.ntaTier.tier}` : decoded.nta?.code : decoded.nta?.code,
-      potential: payment?.mode === "state_rate" ? payment.potential?.ntaTier?.tier != null && payment.potential.ntaTier.tier !== payment.current?.ntaTier?.tier ? `Tier ${payment.potential.ntaTier.tier}` : null : potentialDecoded.nta?.code,
-      name: payment?.mode === "state_rate" ? payment.current?.ntaTier?.label || decoded.nta?.name : decoded.nta?.name,
-      detail: payment?.mode === "state_rate" ? payment.current?.ntaTier?.pointRange || gap.nta?.clinicalCategoryName : gap.nta?.clinicalCategoryName,
-      items: gap.nta?.detectionsToHelp || [],
-      captured: captured.nta,
-      ntaProgress: gap.nta
+      currentCode: s?.mode === "state_rate" && s.current?.ntaTier?.tier != null ? `Tier ${s.current.ntaTier.tier}` : p.nta?.code,
+      potential: s?.mode === "state_rate" ? s.potential?.ntaTier?.tier != null && s.potential.ntaTier.tier !== s.current?.ntaTier?.tier ? `Tier ${s.potential.ntaTier.tier}` : null : d.nta?.code,
+      name: s?.mode === "state_rate" && s.current?.ntaTier?.label || p.nta?.name,
+      detail: s?.mode === "state_rate" && s.current?.ntaTier?.pointRange || o.nta?.clinicalCategoryName,
+      items: o.nta?.detectionsToHelp || [],
+      captured: l.nta,
+      ntaProgress: o.nta
     }
   ];
-  const hasAny = components.some((c3) => c3.currentCode || c3.potential);
-  if (!hasAny) return null;
-  return /* @__PURE__ */ u3("div", { class: "pdpm-an__card", children: [
-    /* @__PURE__ */ u3("div", { class: "pdpm-an__card-header pdpm-an__card-header--collapsible", onClick: onToggleCollapse, role: "button", tabIndex: 0, children: [
-      /* @__PURE__ */ u3("span", { class: "pdpm-an__card-icon", children: "\u2630" }),
-      /* @__PURE__ */ u3("span", { class: "pdpm-an__card-title", children: "PDPM Components" }),
-      /* @__PURE__ */ u3("svg", { class: `pdpm-an__card-chevron${collapsed ? "" : " pdpm-an__card-chevron--open"}`, width: "12", height: "12", viewBox: "0 0 12 12", fill: "none", children: /* @__PURE__ */ u3("path", { d: "M3 4.5L6 7.5L9 4.5", stroke: "currentColor", "stroke-width": "1.5", "stroke-linecap": "round", "stroke-linejoin": "round" }) })
+  return m.some((_) => _.currentCode || _.potential) ? /* @__PURE__ */ t("div", { class: "pdpm-an__card", children: [
+    /* @__PURE__ */ t("div", { class: "pdpm-an__card-header pdpm-an__card-header--collapsible", onClick: a, role: "button", tabIndex: 0, children: [
+      /* @__PURE__ */ t("span", { class: "pdpm-an__card-icon", children: "☰" }),
+      /* @__PURE__ */ t("span", { class: "pdpm-an__card-title", children: "PDPM Components" }),
+      /* @__PURE__ */ t("svg", { class: `pdpm-an__card-chevron${i ? "" : " pdpm-an__card-chevron--open"}`, width: "12", height: "12", viewBox: "0 0 12 12", fill: "none", children: /* @__PURE__ */ t("path", { d: "M3 4.5L6 7.5L9 4.5", stroke: "currentColor", "stroke-width": "1.5", "stroke-linecap": "round", "stroke-linejoin": "round" }) })
     ] }),
-    !collapsed && /* @__PURE__ */ u3("div", { class: "pdpm-an__components", children: components.map((comp) => {
-      if (!comp.currentCode && !comp.potential) return null;
-      const improved = comp.potential && comp.currentCode && comp.potential !== comp.currentCode;
-      const hasItems = comp.items.length > 0;
-      const hasCaptured = comp.captured.length > 0;
-      const isExpanded = expandedKey === comp.key;
-      const toggleExpand = () => {
-        if (hasItems || hasCaptured || comp.detail) setExpandedKey(isExpanded ? null : comp.key);
-      };
-      const isClickable = hasItems || hasCaptured || comp.detail;
-      return /* @__PURE__ */ u3(
+    !i && /* @__PURE__ */ t("div", { class: "pdpm-an__components", children: m.map((_) => {
+      if (!_.currentCode && !_.potential) return null;
+      const v = _.potential && _.currentCode && _.potential !== _.currentCode, g = _.items.length > 0, C = _.captured.length > 0, f = r === _.key, x = () => {
+        (g || C || _.detail) && c(f ? null : _.key);
+      }, k = g || C || _.detail;
+      return /* @__PURE__ */ t(
         "div",
         {
-          class: `pdpm-an__comp-row${improved ? " pdpm-an__comp-row--improved" : ""}${isExpanded ? " pdpm-an__comp-row--expanded" : ""}`,
+          class: `pdpm-an__comp-row${v ? " pdpm-an__comp-row--improved" : ""}${f ? " pdpm-an__comp-row--expanded" : ""}`,
           children: [
-            /* @__PURE__ */ u3(
+            /* @__PURE__ */ t(
               "div",
               {
-                class: `pdpm-an__comp-header${isClickable ? " pdpm-an__comp-header--clickable" : ""}`,
-                onClick: isClickable ? toggleExpand : void 0,
-                role: isClickable ? "button" : void 0,
-                tabIndex: isClickable ? 0 : void 0,
-                onKeyDown: isClickable ? (e3) => {
-                  if (e3.key === "Enter" || e3.key === " ") {
-                    e3.preventDefault();
-                    toggleExpand();
-                  }
+                class: `pdpm-an__comp-header${k ? " pdpm-an__comp-header--clickable" : ""}`,
+                onClick: k ? x : void 0,
+                role: k ? "button" : void 0,
+                tabIndex: k ? 0 : void 0,
+                onKeyDown: k ? (y) => {
+                  (y.key === "Enter" || y.key === " ") && (y.preventDefault(), x());
                 } : void 0,
                 children: [
-                  /* @__PURE__ */ u3("span", { class: "pdpm-an__comp-label", children: comp.label }),
-                  /* @__PURE__ */ u3("span", { class: "pdpm-an__comp-name", children: comp.name || "\u2014" }),
-                  comp.currentCode && /* @__PURE__ */ u3("span", { class: "pdpm-an__comp-code", children: comp.currentCode }),
-                  improved && /* @__PURE__ */ u3("span", { class: "pdpm-an__comp-change", children: [
-                    "\u2192",
+                  /* @__PURE__ */ t("span", { class: "pdpm-an__comp-label", children: _.label }),
+                  /* @__PURE__ */ t("span", { class: "pdpm-an__comp-name", children: _.name || "—" }),
+                  _.currentCode && /* @__PURE__ */ t("span", { class: "pdpm-an__comp-code", children: _.currentCode }),
+                  v && /* @__PURE__ */ t("span", { class: "pdpm-an__comp-change", children: [
+                    "→",
                     " ",
-                    comp.potential
+                    _.potential
                   ] }),
-                  isClickable && /* @__PURE__ */ u3("svg", { class: `pdpm-an__comp-chevron${isExpanded ? " pdpm-an__comp-chevron--open" : ""}`, width: "14", height: "14", viewBox: "0 0 14 14", fill: "none", children: /* @__PURE__ */ u3("path", { d: "M4 5.5L7 8.5L10 5.5", stroke: "currentColor", "stroke-width": "1.5", "stroke-linecap": "round", "stroke-linejoin": "round" }) })
+                  k && /* @__PURE__ */ t("svg", { class: `pdpm-an__comp-chevron${f ? " pdpm-an__comp-chevron--open" : ""}`, width: "14", height: "14", viewBox: "0 0 14 14", fill: "none", children: /* @__PURE__ */ t("path", { d: "M4 5.5L7 8.5L10 5.5", stroke: "currentColor", "stroke-width": "1.5", "stroke-linecap": "round", "stroke-linejoin": "round" }) })
                 ]
               }
             ),
-            comp.ntaProgress && /* @__PURE__ */ u3(NtaLevelTrack, { nta: comp.ntaProgress, potentialLevel: comp.potential, payment }),
-            isExpanded && /* @__PURE__ */ u3("div", { class: "pdpm-an__comp-detail", children: [
-              comp.detail && /* @__PURE__ */ u3("div", { class: "pdpm-an__comp-qualifier", children: comp.detail }),
-              comp.key === "slp" && /* @__PURE__ */ u3(SlpTierIndicator, { gap }),
-              hasItems && /* @__PURE__ */ u3(k, { children: [
-                hasCaptured && /* @__PURE__ */ u3("div", { class: "pdpm-an__captured-label pdpm-an__captured-label--opps", children: "Opportunities" }),
-                /* @__PURE__ */ u3("div", { class: "pdpm-an__ci-list", children: comp.items.map((d3, i3) => {
-                  const code = d3.mdsItem?.startsWith("I8000:") ? "I8000" : d3.mdsItem;
-                  const handleClick = (e3) => {
-                    e3.stopPropagation();
-                    if (!onItemClick) return;
-                    const match = allDetections.find((ed) => ed.mdsItem === d3.mdsItem);
-                    if (match) onItemClick(match);
+            _.ntaProgress && /* @__PURE__ */ t(Ma, { nta: _.ntaProgress, potentialLevel: _.potential, payment: s }),
+            f && /* @__PURE__ */ t("div", { class: "pdpm-an__comp-detail", children: [
+              _.detail && /* @__PURE__ */ t("div", { class: "pdpm-an__comp-qualifier", children: _.detail }),
+              _.key === "slp" && /* @__PURE__ */ t(La, { gap: o }),
+              g && /* @__PURE__ */ t(Y, { children: [
+                C && /* @__PURE__ */ t("div", { class: "pdpm-an__captured-label pdpm-an__captured-label--opps", children: "Opportunities" }),
+                /* @__PURE__ */ t("div", { class: "pdpm-an__ci-list", children: _.items.map((y, S) => {
+                  const E = y.mdsItem?.startsWith("I8000:") ? "I8000" : y.mdsItem, N = (w) => {
+                    if (w.stopPropagation(), !n) return;
+                    const T = u.find((F) => F.mdsItem === y.mdsItem);
+                    T && n(T);
                   };
-                  return /* @__PURE__ */ u3(
+                  return /* @__PURE__ */ t(
                     "div",
                     {
                       class: "pdpm-an__ci-row",
-                      onClick: handleClick,
+                      onClick: N,
                       role: "button",
                       tabIndex: 0,
-                      onKeyDown: (e3) => {
-                        if (e3.key === "Enter" || e3.key === " ") {
-                          e3.preventDefault();
-                          handleClick(e3);
-                        }
+                      onKeyDown: (w) => {
+                        (w.key === "Enter" || w.key === " ") && (w.preventDefault(), N(w));
                       },
                       children: [
-                        /* @__PURE__ */ u3("span", { class: "pdpm-an__ci-code", children: code }),
-                        /* @__PURE__ */ u3("div", { class: "pdpm-an__ci-body", children: [
-                          /* @__PURE__ */ u3("span", { class: "pdpm-an__ci-name", children: resolveItemName(d3.itemName, d3.mdsItem) }),
-                          d3.helpText && /* @__PURE__ */ u3("span", { class: "pdpm-an__ci-help", children: d3.helpText })
+                        /* @__PURE__ */ t("span", { class: "pdpm-an__ci-code", children: E }),
+                        /* @__PURE__ */ t("div", { class: "pdpm-an__ci-body", children: [
+                          /* @__PURE__ */ t("span", { class: "pdpm-an__ci-name", children: ve(y.itemName, y.mdsItem) }),
+                          y.helpText && /* @__PURE__ */ t("span", { class: "pdpm-an__ci-help", children: y.helpText })
                         ] }),
-                        d3.pointsAdded != null && /* @__PURE__ */ u3("span", { class: "pdpm-an__ci-impact pdpm-an__ci-impact--pts", children: [
+                        y.pointsAdded != null && /* @__PURE__ */ t("span", { class: "pdpm-an__ci-impact pdpm-an__ci-impact--pts", children: [
                           "+",
-                          d3.pointsAdded,
+                          y.pointsAdded,
                           " pts"
                         ] })
                       ]
                     },
-                    i3
+                    S
                   );
                 }) })
               ] }),
-              hasCaptured && /* @__PURE__ */ u3("div", { class: "pdpm-an__captured", children: [
-                (hasItems || comp.detail) && /* @__PURE__ */ u3("div", { class: "pdpm-an__captured-label", children: "Currently captured" }),
-                /* @__PURE__ */ u3("div", { class: "pdpm-an__ci-list", children: comp.captured.map((d3, i3) => {
-                  const code = d3.mdsItem?.startsWith("I8000:") ? "I8000" : d3.mdsItem;
-                  const handleClick = (e3) => {
-                    e3.stopPropagation();
-                    if (!onItemClick) return;
-                    const match = allDetections.find((ed) => ed.mdsItem === d3.mdsItem);
-                    if (match) onItemClick(match);
+              C && /* @__PURE__ */ t("div", { class: "pdpm-an__captured", children: [
+                (g || _.detail) && /* @__PURE__ */ t("div", { class: "pdpm-an__captured-label", children: "Currently captured" }),
+                /* @__PURE__ */ t("div", { class: "pdpm-an__ci-list", children: _.captured.map((y, S) => {
+                  const E = y.mdsItem?.startsWith("I8000:") ? "I8000" : y.mdsItem, N = (w) => {
+                    if (w.stopPropagation(), !n) return;
+                    const T = u.find((F) => F.mdsItem === y.mdsItem);
+                    T && n(T);
                   };
-                  return /* @__PURE__ */ u3(
+                  return /* @__PURE__ */ t(
                     "div",
                     {
                       class: "pdpm-an__ci-row pdpm-an__ci-row--captured",
-                      onClick: handleClick,
+                      onClick: N,
                       role: "button",
                       tabIndex: 0,
-                      onKeyDown: (e3) => {
-                        if (e3.key === "Enter" || e3.key === " ") {
-                          e3.preventDefault();
-                          handleClick(e3);
-                        }
+                      onKeyDown: (w) => {
+                        (w.key === "Enter" || w.key === " ") && (w.preventDefault(), N(w));
                       },
                       children: [
-                        /* @__PURE__ */ u3("span", { class: "pdpm-an__ci-check", children: "\u2713" }),
-                        /* @__PURE__ */ u3("span", { class: "pdpm-an__ci-code", children: code }),
-                        /* @__PURE__ */ u3("div", { class: "pdpm-an__ci-body", children: [
-                          /* @__PURE__ */ u3("span", { class: "pdpm-an__ci-name", children: resolveItemName(d3.itemName, d3.mdsItem) }),
-                          d3.helpText && /* @__PURE__ */ u3("span", { class: "pdpm-an__ci-help", children: d3.helpText })
+                        /* @__PURE__ */ t("span", { class: "pdpm-an__ci-check", children: "✓" }),
+                        /* @__PURE__ */ t("span", { class: "pdpm-an__ci-code", children: E }),
+                        /* @__PURE__ */ t("div", { class: "pdpm-an__ci-body", children: [
+                          /* @__PURE__ */ t("span", { class: "pdpm-an__ci-name", children: ve(y.itemName, y.mdsItem) }),
+                          y.helpText && /* @__PURE__ */ t("span", { class: "pdpm-an__ci-help", children: y.helpText })
                         ] }),
-                        d3.pointsAdded != null && /* @__PURE__ */ u3("span", { class: "pdpm-an__ci-impact pdpm-an__ci-impact--pts", children: [
+                        y.pointsAdded != null && /* @__PURE__ */ t("span", { class: "pdpm-an__ci-impact pdpm-an__ci-impact--pts", children: [
                           "+",
-                          d3.pointsAdded,
+                          y.pointsAdded,
                           " pts"
                         ] })
                       ]
                     },
-                    `cap-${i3}`
+                    `cap-${S}`
                   );
                 }) })
               ] })
             ] })
           ]
         },
-        comp.key
+        _.key
       );
     }) })
-  ] });
+  ] }) : null;
 }
-var SEVERITY_COLORS = {
+const Ea = {
   // BIMS — lower = worse
-  "Intact": "#059669",
+  Intact: "#059669",
   "Mildly Impaired": "#d97706",
   "Moderately/Severely Impaired": "#ef4444",
   // PHQ-9 — higher = worse
   "None/Minimal": "#059669",
-  "Mild": "#84cc16",
-  "Moderate": "#d97706",
+  Mild: "#84cc16",
+  Moderate: "#d97706",
   "Moderately Severe": "#ea580c",
-  "Severe": "#ef4444",
+  Severe: "#ef4444",
   // NFS
   "Low Needs": "#059669",
   "Medium Needs": "#d97706",
@@ -10489,42 +9055,39 @@ var SEVERITY_COLORS = {
   // PT/OT
   "Fully Independent": "#059669",
   "Moderate/Independent": "#84cc16",
-  "Dependent": "#d97706",
+  Dependent: "#d97706",
   "Most Dependent": "#ef4444"
 };
-function ScoreCard({ value, max, label, severity, impact, extra }) {
-  const color = SEVERITY_COLORS[severity] || "#9ca3af";
-  const pct = value != null && max > 0 ? Math.round(value / max * 100) : 0;
-  const r3 = 20, circ = 2 * Math.PI * r3;
-  const offset = circ - pct / 100 * circ;
-  return /* @__PURE__ */ u3("div", { class: "pdpm-an__sc", title: impact || "", children: [
-    /* @__PURE__ */ u3("div", { class: "pdpm-an__sc-ring", children: [
-      /* @__PURE__ */ u3("svg", { width: "52", height: "52", viewBox: "0 0 52 52", children: [
-        /* @__PURE__ */ u3("circle", { cx: "26", cy: "26", r: r3, fill: "none", stroke: "#f1f5f9", "stroke-width": "4" }),
-        value != null && /* @__PURE__ */ u3(
+function Le({ value: e, max: s, label: n, severity: i, impact: a, extra: r }) {
+  const c = Ea[i] || "#9ca3af", o = e != null && s > 0 ? Math.round(e / s * 100) : 0, p = 20, d = 2 * Math.PI * p, u = d - o / 100 * d;
+  return /* @__PURE__ */ t("div", { class: "pdpm-an__sc", title: a || "", children: [
+    /* @__PURE__ */ t("div", { class: "pdpm-an__sc-ring", children: [
+      /* @__PURE__ */ t("svg", { width: "52", height: "52", viewBox: "0 0 52 52", children: [
+        /* @__PURE__ */ t("circle", { cx: "26", cy: "26", r: p, fill: "none", stroke: "#f1f5f9", "stroke-width": "4" }),
+        e != null && /* @__PURE__ */ t(
           "circle",
           {
             cx: "26",
             cy: "26",
-            r: r3,
+            r: p,
             fill: "none",
-            stroke: color,
+            stroke: c,
             "stroke-width": "4",
-            "stroke-dasharray": circ,
-            "stroke-dashoffset": offset,
+            "stroke-dasharray": d,
+            "stroke-dashoffset": u,
             "stroke-linecap": "round",
             transform: "rotate(-90 26 26)"
           }
         )
       ] }),
-      /* @__PURE__ */ u3("span", { class: "pdpm-an__sc-val", children: value != null ? value : "\u2014" })
+      /* @__PURE__ */ t("span", { class: "pdpm-an__sc-val", children: e ?? "—" })
     ] }),
-    /* @__PURE__ */ u3("span", { class: "pdpm-an__sc-label", children: label }),
-    severity && /* @__PURE__ */ u3("span", { class: "pdpm-an__sc-severity", style: { color }, children: severity }),
-    extra && /* @__PURE__ */ u3("span", { class: "pdpm-an__sc-extra", children: extra })
+    /* @__PURE__ */ t("span", { class: "pdpm-an__sc-label", children: n }),
+    i && /* @__PURE__ */ t("span", { class: "pdpm-an__sc-severity", style: { color: c }, children: i }),
+    r && /* @__PURE__ */ t("span", { class: "pdpm-an__sc-extra", children: r })
   ] });
 }
-var GG_ITEMS = [
+const Oa = [
   { key: "eating", label: "Eating", code: "GG0130A", scope: "both" },
   { key: "oralHygiene", label: "Oral Hygiene", code: "GG0130B", scope: "ptot" },
   { key: "toiletingHygiene", label: "Toileting Hygiene", code: "GG0130C", scope: "both" },
@@ -10536,495 +9099,399 @@ var GG_ITEMS = [
   { key: "walking50", label: "Walking 50ft", code: "GG0170J", scope: "ptot" },
   { key: "walking150", label: "Walking 150ft", code: "GG0170K", scope: "ptot" }
 ];
-function GGBreakdown({ breakdown }) {
-  if (!breakdown) return null;
-  const sc = breakdown.selfCare || {};
-  const mob = breakdown.mobility || {};
-  const all = { ...sc, ...mob };
-  return /* @__PURE__ */ u3("div", { class: "pdpm-an__gg", children: [
-    /* @__PURE__ */ u3("div", { class: "pdpm-an__gg-header", children: [
-      /* @__PURE__ */ u3("span", { class: "pdpm-an__gg-title", children: "GG Functional Items" }),
-      /* @__PURE__ */ u3("span", { class: "pdpm-an__gg-total", children: [
+function qa({ breakdown: e }) {
+  if (!e) return null;
+  const s = e.selfCare || {}, n = e.mobility || {}, i = { ...s, ...n };
+  return /* @__PURE__ */ t("div", { class: "pdpm-an__gg", children: [
+    /* @__PURE__ */ t("div", { class: "pdpm-an__gg-header", children: [
+      /* @__PURE__ */ t("span", { class: "pdpm-an__gg-title", children: "GG Functional Items" }),
+      /* @__PURE__ */ t("span", { class: "pdpm-an__gg-total", children: [
         "Total: ",
-        breakdown.total,
+        e.total,
         "/24"
       ] })
     ] }),
-    /* @__PURE__ */ u3("div", { class: "pdpm-an__gg-grid", children: [
-      /* @__PURE__ */ u3("span", { class: "pdpm-an__gg-th", children: "Item" }),
-      /* @__PURE__ */ u3("span", { class: "pdpm-an__gg-th", children: "Score" }),
-      /* @__PURE__ */ u3("span", { class: "pdpm-an__gg-th", children: "Used In" }),
-      GG_ITEMS.map((item) => {
-        const val = all[item.key];
-        return /* @__PURE__ */ u3(k, { children: [
-          /* @__PURE__ */ u3("span", { class: "pdpm-an__gg-cell", children: item.label }),
-          /* @__PURE__ */ u3("span", { class: "pdpm-an__gg-cell pdpm-an__gg-cell--score", children: val != null ? val : "\u2014" }),
-          /* @__PURE__ */ u3("span", { class: `pdpm-an__gg-cell pdpm-an__gg-scope${item.scope === "ptot" ? " pdpm-an__gg-scope--ptot" : ""}`, children: item.scope === "ptot" ? "PT/OT only" : "Nursing + PT/OT" })
+    /* @__PURE__ */ t("div", { class: "pdpm-an__gg-grid", children: [
+      /* @__PURE__ */ t("span", { class: "pdpm-an__gg-th", children: "Item" }),
+      /* @__PURE__ */ t("span", { class: "pdpm-an__gg-th", children: "Score" }),
+      /* @__PURE__ */ t("span", { class: "pdpm-an__gg-th", children: "Used In" }),
+      Oa.map((a) => {
+        const r = i[a.key];
+        return /* @__PURE__ */ t(Y, { children: [
+          /* @__PURE__ */ t("span", { class: "pdpm-an__gg-cell", children: a.label }),
+          /* @__PURE__ */ t("span", { class: "pdpm-an__gg-cell pdpm-an__gg-cell--score", children: r ?? "—" }),
+          /* @__PURE__ */ t("span", { class: `pdpm-an__gg-cell pdpm-an__gg-scope${a.scope === "ptot" ? " pdpm-an__gg-scope--ptot" : ""}`, children: a.scope === "ptot" ? "PT/OT only" : "Nursing + PT/OT" })
         ] });
       })
     ] }),
-    /* @__PURE__ */ u3("div", { class: "pdpm-an__gg-avgs", children: [
-      mob.bedMobilityAverage != null && /* @__PURE__ */ u3("span", { children: [
+    /* @__PURE__ */ t("div", { class: "pdpm-an__gg-avgs", children: [
+      n.bedMobilityAverage != null && /* @__PURE__ */ t("span", { children: [
         "Bed Mobility Avg: ",
-        mob.bedMobilityAverage
+        n.bedMobilityAverage
       ] }),
-      mob.transferAverage != null && /* @__PURE__ */ u3("span", { children: [
+      n.transferAverage != null && /* @__PURE__ */ t("span", { children: [
         "Transfer Avg: ",
-        mob.transferAverage
+        n.transferAverage
       ] }),
-      mob.walkingAverage != null && /* @__PURE__ */ u3("span", { children: [
+      n.walkingAverage != null && /* @__PURE__ */ t("span", { children: [
         "Walking Avg: ",
-        mob.walkingAverage
+        n.walkingAverage
       ] })
     ] })
   ] });
 }
-function SectionProgressCard({ data, collapsed, onToggleCollapse }) {
-  const sp = data?.sectionProgress;
-  if (!sp || !sp.total) return null;
-  const { sections = {} } = sp;
-  const entries = Object.entries(sections);
-  let done = 0, inProgress = 0, notStarted = 0;
-  for (const [, status] of entries) {
-    if (status === "Complete" || status === "Completed" || status === "Locked") done++;
-    else if (status === "In Progress") inProgress++;
-    else notStarted++;
-  }
-  const total = entries.length || sp.total || 0;
-  const pct = total > 0 ? Math.round(done / total * 100) : 0;
-  return /* @__PURE__ */ u3("div", { class: "pdpm-an__card", children: [
-    /* @__PURE__ */ u3("div", { class: "pdpm-an__card-header pdpm-an__card-header--collapsible", onClick: onToggleCollapse, role: "button", tabIndex: 0, children: [
-      /* @__PURE__ */ u3("span", { class: "pdpm-an__card-icon", children: "\u{1F4CB}" }),
-      /* @__PURE__ */ u3("span", { class: "pdpm-an__card-title", children: "MDS Sections" }),
-      /* @__PURE__ */ u3("span", { class: "pdpm-an__card-badge", children: [
-        pct,
+function Ha({ data: e, collapsed: s, onToggleCollapse: n }) {
+  const i = e?.sectionProgress;
+  if (!i || !i.total) return null;
+  const { sections: a = {} } = i, r = Object.entries(a);
+  let c = 0, o = 0, p = 0;
+  for (const [, l] of r)
+    l === "Complete" || l === "Completed" || l === "Locked" ? c++ : l === "In Progress" ? o++ : p++;
+  const d = r.length || i.total || 0, u = d > 0 ? Math.round(c / d * 100) : 0;
+  return /* @__PURE__ */ t("div", { class: "pdpm-an__card", children: [
+    /* @__PURE__ */ t("div", { class: "pdpm-an__card-header pdpm-an__card-header--collapsible", onClick: n, role: "button", tabIndex: 0, children: [
+      /* @__PURE__ */ t("span", { class: "pdpm-an__card-icon", children: "📋" }),
+      /* @__PURE__ */ t("span", { class: "pdpm-an__card-title", children: "MDS Sections" }),
+      /* @__PURE__ */ t("span", { class: "pdpm-an__card-badge", children: [
+        u,
         "%"
       ] }),
-      /* @__PURE__ */ u3("svg", { class: `pdpm-an__card-chevron${collapsed ? "" : " pdpm-an__card-chevron--open"}`, width: "12", height: "12", viewBox: "0 0 12 12", fill: "none", children: /* @__PURE__ */ u3("path", { d: "M3 4.5L6 7.5L9 4.5", stroke: "currentColor", "stroke-width": "1.5", "stroke-linecap": "round", "stroke-linejoin": "round" }) })
+      /* @__PURE__ */ t("svg", { class: `pdpm-an__card-chevron${s ? "" : " pdpm-an__card-chevron--open"}`, width: "12", height: "12", viewBox: "0 0 12 12", fill: "none", children: /* @__PURE__ */ t("path", { d: "M3 4.5L6 7.5L9 4.5", stroke: "currentColor", "stroke-width": "1.5", "stroke-linecap": "round", "stroke-linejoin": "round" }) })
     ] }),
-    !collapsed && /* @__PURE__ */ u3("div", { class: "pdpm-an__sp-body", children: [
-      /* @__PURE__ */ u3("div", { class: "pdpm-an__sp-bar-row", children: [
-        /* @__PURE__ */ u3("div", { class: "pdpm-an__sp-bar", children: /* @__PURE__ */ u3("div", { class: "pdpm-an__sp-fill", style: { width: `${pct}%` } }) }),
-        /* @__PURE__ */ u3("div", { class: "pdpm-an__sp-counts", children: [
-          done > 0 && /* @__PURE__ */ u3("span", { class: "pdpm-an__sp-count pdpm-an__sp-count--done", children: [
-            done,
+    !s && /* @__PURE__ */ t("div", { class: "pdpm-an__sp-body", children: [
+      /* @__PURE__ */ t("div", { class: "pdpm-an__sp-bar-row", children: [
+        /* @__PURE__ */ t("div", { class: "pdpm-an__sp-bar", children: /* @__PURE__ */ t("div", { class: "pdpm-an__sp-fill", style: { width: `${u}%` } }) }),
+        /* @__PURE__ */ t("div", { class: "pdpm-an__sp-counts", children: [
+          c > 0 && /* @__PURE__ */ t("span", { class: "pdpm-an__sp-count pdpm-an__sp-count--done", children: [
+            c,
             " done"
           ] }),
-          inProgress > 0 && /* @__PURE__ */ u3("span", { class: "pdpm-an__sp-count pdpm-an__sp-count--wip", children: [
-            inProgress,
+          o > 0 && /* @__PURE__ */ t("span", { class: "pdpm-an__sp-count pdpm-an__sp-count--wip", children: [
+            o,
             " in progress"
           ] }),
-          notStarted > 0 && /* @__PURE__ */ u3("span", { class: "pdpm-an__sp-count pdpm-an__sp-count--todo", children: [
-            notStarted,
+          p > 0 && /* @__PURE__ */ t("span", { class: "pdpm-an__sp-count pdpm-an__sp-count--todo", children: [
+            p,
             " not started"
           ] })
         ] })
       ] }),
-      entries.length > 0 && /* @__PURE__ */ u3("div", { class: "pdpm-an__sp-tags", children: entries.map(([code, status]) => {
-        const isDone = status === "Complete" || status === "Completed";
-        const isLocked = status === "Locked";
-        const isWip = status === "In Progress";
-        const cls = isDone || isLocked ? "pdpm-an__sp-tag--done" : isWip ? "pdpm-an__sp-tag--wip" : "pdpm-an__sp-tag--todo";
-        return /* @__PURE__ */ u3("span", { class: `pdpm-an__sp-tag ${cls}`, title: status, children: [
-          (isDone || isLocked) && /* @__PURE__ */ u3("span", { class: "pdpm-an__sp-tag-check", children: "\u2713" }),
-          code
-        ] }, code);
+      r.length > 0 && /* @__PURE__ */ t("div", { class: "pdpm-an__sp-tags", children: r.map(([l, m]) => {
+        const h = m === "Complete" || m === "Completed", _ = m === "Locked";
+        return /* @__PURE__ */ t("span", { class: `pdpm-an__sp-tag ${h || _ ? "pdpm-an__sp-tag--done" : m === "In Progress" ? "pdpm-an__sp-tag--wip" : "pdpm-an__sp-tag--todo"}`, title: m, children: [
+          (h || _) && /* @__PURE__ */ t("span", { class: "pdpm-an__sp-tag-check", children: "✓" }),
+          l
+        ] }, l);
       }) })
     ] })
   ] });
 }
-function ClinicalScores({ data, collapsed, onToggleCollapse }) {
-  const [showGG, setShowGG] = d2(false);
-  const scores = data?.scores;
-  if (!scores) return null;
-  const bims = scores.bims;
-  const phq = scores.phq9;
-  const nfs = scores.nursingFunctionalScore;
-  const ptot = scores.ptotFunctionalScore;
-  const gg = scores.functionalScoreBreakdown;
-  if (!bims && !phq && !nfs && !ptot) return null;
-  const phqVal = phq?.score != null && phq.score !== 99 ? phq.score : phq?.staffAssessmentScore;
-  const phqExtra = (phq?.score == null || phq?.score === 99) && phq?.staffAssessmentScore != null ? "(Staff assessment)" : null;
-  const thresholds = [];
-  if (bims?.meetsImpairmentThreshold) thresholds.push({ color: "#d97706", text: bims.pdpmImpact || "Cognitive impairment detected \u2014 affects SLP and Nursing classification" });
-  if (phq?.meetsDepressionThreshold) thresholds.push({ color: "#ea580c", text: phq.pdpmImpact || "Depression threshold met \u2014 upgrades Nursing payment group" });
-  if (nfs?.meetsBSCPThreshold) thresholds.push({ color: "#6366f1", text: nfs.bscpNote || "NFS \u2265 11 \u2014 BSCP category eligible" });
-  return /* @__PURE__ */ u3("div", { class: "pdpm-an__card", children: [
-    /* @__PURE__ */ u3("div", { class: "pdpm-an__card-header pdpm-an__card-header--collapsible", onClick: onToggleCollapse, role: "button", tabIndex: 0, children: [
-      /* @__PURE__ */ u3("span", { class: "pdpm-an__card-icon", children: "\u{1F9E0}" }),
-      /* @__PURE__ */ u3("span", { class: "pdpm-an__card-title", children: "Clinical Scores" }),
-      /* @__PURE__ */ u3("svg", { class: `pdpm-an__card-chevron${collapsed ? "" : " pdpm-an__card-chevron--open"}`, width: "12", height: "12", viewBox: "0 0 12 12", fill: "none", children: /* @__PURE__ */ u3("path", { d: "M3 4.5L6 7.5L9 4.5", stroke: "currentColor", "stroke-width": "1.5", "stroke-linecap": "round", "stroke-linejoin": "round" }) })
+function Fa({ data: e, collapsed: s, onToggleCollapse: n }) {
+  const [i, a] = b(!1), r = e?.scores;
+  if (!r) return null;
+  const c = r.bims, o = r.phq9, p = r.nursingFunctionalScore, d = r.ptotFunctionalScore, u = r.functionalScoreBreakdown;
+  if (!c && !o && !p && !d) return null;
+  const l = o?.score != null && o.score !== 99 ? o.score : o?.staffAssessmentScore, m = (o?.score == null || o?.score === 99) && o?.staffAssessmentScore != null ? "(Staff assessment)" : null, h = [];
+  return c?.meetsImpairmentThreshold && h.push({ color: "#d97706", text: c.pdpmImpact || "Cognitive impairment detected — affects SLP and Nursing classification" }), o?.meetsDepressionThreshold && h.push({ color: "#ea580c", text: o.pdpmImpact || "Depression threshold met — upgrades Nursing payment group" }), p?.meetsBSCPThreshold && h.push({ color: "#6366f1", text: p.bscpNote || "NFS ≥ 11 — BSCP category eligible" }), /* @__PURE__ */ t("div", { class: "pdpm-an__card", children: [
+    /* @__PURE__ */ t("div", { class: "pdpm-an__card-header pdpm-an__card-header--collapsible", onClick: n, role: "button", tabIndex: 0, children: [
+      /* @__PURE__ */ t("span", { class: "pdpm-an__card-icon", children: "🧠" }),
+      /* @__PURE__ */ t("span", { class: "pdpm-an__card-title", children: "Clinical Scores" }),
+      /* @__PURE__ */ t("svg", { class: `pdpm-an__card-chevron${s ? "" : " pdpm-an__card-chevron--open"}`, width: "12", height: "12", viewBox: "0 0 12 12", fill: "none", children: /* @__PURE__ */ t("path", { d: "M3 4.5L6 7.5L9 4.5", stroke: "currentColor", "stroke-width": "1.5", "stroke-linecap": "round", "stroke-linejoin": "round" }) })
     ] }),
-    !collapsed && /* @__PURE__ */ u3("div", { class: "pdpm-an__scores-body", children: [
-      /* @__PURE__ */ u3("div", { class: "pdpm-an__scores-row", children: [
-        bims && /* @__PURE__ */ u3(ScoreCard, { value: bims.score, max: 15, label: "BIMS", severity: bims.severity, impact: bims.pdpmImpact }),
-        phq && /* @__PURE__ */ u3(ScoreCard, { value: phqVal, max: 27, label: "PHQ-9", severity: phq.severity, impact: phq.pdpmImpact, extra: phqExtra }),
-        nfs && /* @__PURE__ */ u3(ScoreCard, { value: nfs.score, max: 16, label: "NFS", severity: nfs.severity, impact: nfs.pdpmImpact }),
-        ptot && /* @__PURE__ */ u3(ScoreCard, { value: ptot.score, max: 24, label: "PT/OT Func", severity: ptot.severity, impact: ptot.pdpmImpact })
+    !s && /* @__PURE__ */ t("div", { class: "pdpm-an__scores-body", children: [
+      /* @__PURE__ */ t("div", { class: "pdpm-an__scores-row", children: [
+        c && /* @__PURE__ */ t(Le, { value: c.score, max: 15, label: "BIMS", severity: c.severity, impact: c.pdpmImpact }),
+        o && /* @__PURE__ */ t(Le, { value: l, max: 27, label: "PHQ-9", severity: o.severity, impact: o.pdpmImpact, extra: m }),
+        p && /* @__PURE__ */ t(Le, { value: p.score, max: 16, label: "NFS", severity: p.severity, impact: p.pdpmImpact }),
+        d && /* @__PURE__ */ t(Le, { value: d.score, max: 24, label: "PT/OT Func", severity: d.severity, impact: d.pdpmImpact })
       ] }),
-      thresholds.length > 0 && /* @__PURE__ */ u3("div", { class: "pdpm-an__thresholds", children: thresholds.map((t3, i3) => /* @__PURE__ */ u3("div", { class: "pdpm-an__threshold", style: { borderLeftColor: t3.color }, children: t3.text }, i3)) }),
-      gg && /* @__PURE__ */ u3("div", { class: "pdpm-an__gg-toggle-wrap", children: [
-        /* @__PURE__ */ u3("button", { class: "pdpm-an__gg-toggle", onClick: () => setShowGG(!showGG), children: [
-          showGG ? "Hide" : "Show",
+      h.length > 0 && /* @__PURE__ */ t("div", { class: "pdpm-an__thresholds", children: h.map((_, v) => /* @__PURE__ */ t("div", { class: "pdpm-an__threshold", style: { borderLeftColor: _.color }, children: _.text }, v)) }),
+      u && /* @__PURE__ */ t("div", { class: "pdpm-an__gg-toggle-wrap", children: [
+        /* @__PURE__ */ t("button", { class: "pdpm-an__gg-toggle", onClick: () => a(!i), children: [
+          i ? "Hide" : "Show",
           " GG Item Breakdown",
-          /* @__PURE__ */ u3("svg", { class: `pdpm-an__card-chevron${showGG ? " pdpm-an__card-chevron--open" : ""}`, width: "10", height: "10", viewBox: "0 0 12 12", fill: "none", children: /* @__PURE__ */ u3("path", { d: "M3 4.5L6 7.5L9 4.5", stroke: "currentColor", "stroke-width": "1.5", "stroke-linecap": "round", "stroke-linejoin": "round" }) })
+          /* @__PURE__ */ t("svg", { class: `pdpm-an__card-chevron${i ? " pdpm-an__card-chevron--open" : ""}`, width: "10", height: "10", viewBox: "0 0 12 12", fill: "none", children: /* @__PURE__ */ t("path", { d: "M3 4.5L6 7.5L9 4.5", stroke: "currentColor", "stroke-width": "1.5", "stroke-linecap": "round", "stroke-linejoin": "round" }) })
         ] }),
-        showGG && /* @__PURE__ */ u3(GGBreakdown, { breakdown: gg })
+        i && /* @__PURE__ */ t(qa, { breakdown: u })
       ] })
     ] })
   ] });
 }
-function SummaryStrip2({ data }) {
-  if (!data) return null;
-  const summary = data.summary || {};
-  const calculation = data.calculation || {};
-  const payment = data.payment;
-  const cmsHipps = summary.currentHipps || calculation.hippsCode || "?????";
-  const cmsPotential = summary.potentialHippsIfCoded;
-  const isStateRate = payment?.mode === "state_rate";
-  const cleanGroup = (c3) => c3 ? c3.replace(/_/g, "") : null;
-  const currentCode = isStateRate ? cleanGroup(payment.current?.groupCode) || cmsHipps : cmsHipps;
-  const potentialCode = isStateRate ? cleanGroup(payment.potential?.groupCode) ?? currentCode : cmsPotential;
-  const hasImprovement = isStateRate ? potentialCode && potentialCode !== currentCode : summary.hasImprovements && cmsPotential && cmsPotential !== cmsHipps;
-  const rates = formatPaymentRates(payment);
-  const comp = data.compliance?.summary || {};
-  const compPassed = comp.passed ?? 0;
-  const compNa = comp.notApplicable ?? 0;
-  const compTotal = (comp.total ?? 0) - compNa;
-  const sp = data.sectionProgress;
-  let spDone = 0, spTotal = 0;
-  if (sp?.sections) {
-    for (const status of Object.values(sp.sections)) {
-      spTotal++;
-      if (status === "Complete" || status === "Completed" || status === "Locked") spDone++;
-    }
-  }
-  if (!spTotal) spTotal = sp?.total ?? 0;
-  const spPct = spTotal > 0 ? Math.round(spDone / spTotal * 100) : 0;
-  const drivers = (data.enhancedDetections || []).filter(
-    (d3) => d3.wouldChangeHipps && d3.solverStatus !== "query_sent" && d3.solverStatus !== "awaiting_response" && d3.solverStatus !== "dont_code" && d3.userDecision?.decision !== "disagree"
-  ).length;
-  const hasDelta = rates && rates.delta && rates.delta !== "+$0/day" && rates.delta !== "+0";
-  return /* @__PURE__ */ u3("div", { class: "pdpm-an__summary", children: [
-    hasDelta && /* @__PURE__ */ u3("div", { class: "pdpm-an__summary-delta", children: rates.delta }),
-    /* @__PURE__ */ u3("div", { class: "pdpm-an__summary-codes", children: [
-      /* @__PURE__ */ u3("span", { class: "pdpm-an__summary-code", children: currentCode }),
-      hasImprovement && /* @__PURE__ */ u3(k, { children: [
-        /* @__PURE__ */ u3("span", { class: "pdpm-an__summary-arrow", children: "\u2192" }),
-        /* @__PURE__ */ u3("span", { class: "pdpm-an__summary-code pdpm-an__summary-code--green", children: potentialCode })
+function Ba({ data: e }) {
+  if (!e) return null;
+  const s = e.summary || {}, n = e.calculation || {}, i = e.payment, a = s.currentHipps || n.hippsCode || "?????", r = s.potentialHippsIfCoded, c = i?.mode === "state_rate", o = (S) => S ? S.replace(/_/g, "") : null, p = c && o(i.current?.groupCode) || a, d = c ? o(i.potential?.groupCode) ?? p : r, u = c ? d && d !== p : s.hasImprovements && r && r !== a, l = Hn(i), m = e.compliance?.summary || {}, h = m.passed ?? 0, _ = m.notApplicable ?? 0, v = (m.total ?? 0) - _, g = e.sectionProgress;
+  let C = 0, f = 0;
+  if (g?.sections)
+    for (const S of Object.values(g.sections))
+      f++, (S === "Complete" || S === "Completed" || S === "Locked") && C++;
+  f || (f = g?.total ?? 0);
+  const x = f > 0 ? Math.round(C / f * 100) : 0, k = (e.enhancedDetections || []).filter(
+    (S) => S.wouldChangeHipps && S.solverStatus !== "query_sent" && S.solverStatus !== "awaiting_response" && S.solverStatus !== "dont_code" && S.userDecision?.decision !== "disagree"
+  ).length, y = l && l.delta && l.delta !== "+$0/day" && l.delta !== "+0";
+  return /* @__PURE__ */ t("div", { class: "pdpm-an__summary", children: [
+    y && /* @__PURE__ */ t("div", { class: "pdpm-an__summary-delta", children: l.delta }),
+    /* @__PURE__ */ t("div", { class: "pdpm-an__summary-codes", children: [
+      /* @__PURE__ */ t("span", { class: "pdpm-an__summary-code", children: p }),
+      u && /* @__PURE__ */ t(Y, { children: [
+        /* @__PURE__ */ t("span", { class: "pdpm-an__summary-arrow", children: "→" }),
+        /* @__PURE__ */ t("span", { class: "pdpm-an__summary-code pdpm-an__summary-code--green", children: d })
       ] })
     ] }),
-    /* @__PURE__ */ u3("div", { class: "pdpm-an__summary-stats", children: [
-      spTotal > 0 && /* @__PURE__ */ u3("span", { class: "pdpm-an__summary-stat", children: [
-        spPct,
+    /* @__PURE__ */ t("div", { class: "pdpm-an__summary-stats", children: [
+      f > 0 && /* @__PURE__ */ t("span", { class: "pdpm-an__summary-stat", children: [
+        x,
         "% MDS"
       ] }),
-      compTotal > 0 && /* @__PURE__ */ u3("span", { class: "pdpm-an__summary-stat", children: [
-        compPassed,
+      v > 0 && /* @__PURE__ */ t("span", { class: "pdpm-an__summary-stat", children: [
+        h,
         "/",
-        compTotal,
+        v,
         " Compliance"
       ] }),
-      drivers > 0 && /* @__PURE__ */ u3("span", { class: "pdpm-an__summary-stat pdpm-an__summary-stat--green", children: [
-        drivers,
+      k > 0 && /* @__PURE__ */ t("span", { class: "pdpm-an__summary-stat pdpm-an__summary-stat--green", children: [
+        k,
         " Opp",
-        drivers !== 1 ? "s" : ""
+        k !== 1 ? "s" : ""
       ] })
     ] })
   ] });
 }
-function LoadingState2() {
-  return /* @__PURE__ */ u3("div", { class: "pdpm-an__state", children: [
-    /* @__PURE__ */ u3("div", { class: "pdpm-an__spinner" }),
-    /* @__PURE__ */ u3("p", { children: "Loading assessment data\u2026" })
+function Ga() {
+  return /* @__PURE__ */ t("div", { class: "pdpm-an__state", children: [
+    /* @__PURE__ */ t("div", { class: "pdpm-an__spinner" }),
+    /* @__PURE__ */ t("p", { children: "Loading assessment data…" })
   ] });
 }
-function ErrorState2({ message, onRetry }) {
-  return /* @__PURE__ */ u3("div", { class: "pdpm-an__state", children: [
-    /* @__PURE__ */ u3("div", { class: "pdpm-an__state-icon", children: "\u26A0" }),
-    /* @__PURE__ */ u3("p", { children: message }),
-    /* @__PURE__ */ u3("button", { class: "pdpm-an__retry-btn", onClick: onRetry, children: "Retry" })
+function Ua({ message: e, onRetry: s }) {
+  return /* @__PURE__ */ t("div", { class: "pdpm-an__state", children: [
+    /* @__PURE__ */ t("div", { class: "pdpm-an__state-icon", children: "⚠" }),
+    /* @__PURE__ */ t("p", { children: e }),
+    /* @__PURE__ */ t("button", { class: "pdpm-an__retry-btn", onClick: s, children: "Retry" })
   ] });
 }
-function AssessmentView({ assessmentData, onItemClick, onQueryClick, patientId }) {
-  const [collapsed, setCollapsed] = d2({});
-  const toggle = (key) => setCollapsed((prev) => ({ ...prev, [key]: !prev[key] }));
-  if (!assessmentData) {
-    return /* @__PURE__ */ u3("div", { class: "pdpm-an__state", children: /* @__PURE__ */ u3("p", { children: "No assessment data available." }) });
-  }
-  return /* @__PURE__ */ u3("div", { class: "pdpm-an__content", children: [
-    /* @__PURE__ */ u3(SummaryStrip2, { data: assessmentData }),
-    /* @__PURE__ */ u3(OpportunityCallout, { data: assessmentData, onItemClick }),
-    /* @__PURE__ */ u3(PendingQueriesSection, { data: assessmentData, onQueryClick, collapsed: collapsed.queries, onToggleCollapse: () => toggle("queries") }),
-    /* @__PURE__ */ u3(RecentlySignedSection, { data: assessmentData, onQueryClick, collapsed: collapsed.signed, onToggleCollapse: () => toggle("signed") }),
-    /* @__PURE__ */ u3(ComponentBreakdown, { data: assessmentData, payment: assessmentData?.payment, onItemClick, collapsed: collapsed.components, onToggleCollapse: () => toggle("components") }),
-    /* @__PURE__ */ u3(SectionProgressCard, { data: assessmentData, collapsed: collapsed.sections, onToggleCollapse: () => toggle("sections") }),
-    /* @__PURE__ */ u3(DocRisksSection2, { data: assessmentData, onItemClick, collapsed: collapsed.docRisks, onToggleCollapse: () => toggle("docRisks") }),
-    /* @__PURE__ */ u3(ClinicalScores, { data: assessmentData, collapsed: collapsed.scores, onToggleCollapse: () => toggle("scores") }),
-    /* @__PURE__ */ u3(ComplianceCard, { data: assessmentData, collapsed: collapsed.compliance, onToggleCollapse: () => toggle("compliance") }),
-    patientId && /* @__PURE__ */ u3(CertSection, { patientId, collapsed: collapsed.certs, onToggleCollapse: () => toggle("certs") })
-  ] });
+function Va({ assessmentData: e, onItemClick: s, onQueryClick: n, patientId: i }) {
+  const [a, r] = b({}), c = (o) => r((p) => ({ ...p, [o]: !p[o] }));
+  return e ? /* @__PURE__ */ t("div", { class: "pdpm-an__content", children: [
+    /* @__PURE__ */ t(Ba, { data: e }),
+    /* @__PURE__ */ t(Sa, { data: e, onItemClick: s }),
+    /* @__PURE__ */ t(Pa, { data: e, onQueryClick: n, collapsed: a.queries, onToggleCollapse: () => c("queries") }),
+    /* @__PURE__ */ t(Aa, { data: e, onQueryClick: n, collapsed: a.signed, onToggleCollapse: () => c("signed") }),
+    /* @__PURE__ */ t(Ra, { data: e, payment: e?.payment, onItemClick: s, collapsed: a.components, onToggleCollapse: () => c("components") }),
+    /* @__PURE__ */ t(Ha, { data: e, collapsed: a.sections, onToggleCollapse: () => c("sections") }),
+    /* @__PURE__ */ t(Na, { data: e, onItemClick: s, collapsed: a.docRisks, onToggleCollapse: () => c("docRisks") }),
+    /* @__PURE__ */ t(Fa, { data: e, collapsed: a.scores, onToggleCollapse: () => c("scores") }),
+    /* @__PURE__ */ t(la, { data: e, collapsed: a.compliance, onToggleCollapse: () => c("compliance") }),
+    i && /* @__PURE__ */ t(Ia, { patientId: i, collapsed: a.certs, onToggleCollapse: () => c("certs") })
+  ] }) : /* @__PURE__ */ t("div", { class: "pdpm-an__state", children: /* @__PURE__ */ t("p", { children: "No assessment data available." }) });
 }
-function ModeToggleButton({ mode, onToggle }) {
-  const title = mode === "panel" ? "Expand to modal" : "Dock as side panel";
-  return /* @__PURE__ */ u3("button", { class: "pdpm-an__mode-toggle", onClick: onToggle, title, "aria-label": title, children: mode === "panel" ? (
+function za({ mode: e, onToggle: s }) {
+  const n = e === "panel" ? "Expand to modal" : "Dock as side panel";
+  return /* @__PURE__ */ t("button", { class: "pdpm-an__mode-toggle", onClick: s, title: n, "aria-label": n, children: e === "panel" ? (
     // Expand icon (arrows pointing outward)
-    /* @__PURE__ */ u3("svg", { width: "16", height: "16", viewBox: "0 0 16 16", fill: "none", children: /* @__PURE__ */ u3("path", { d: "M5.5 2H3a1 1 0 00-1 1v2.5M10.5 2H13a1 1 0 011 1v2.5M10.5 14H13a1 1 0 001-1v-2.5M5.5 14H3a1 1 0 01-1-1v-2.5", stroke: "currentColor", "stroke-width": "1.5", "stroke-linecap": "round", "stroke-linejoin": "round" }) })
+    /* @__PURE__ */ t("svg", { width: "16", height: "16", viewBox: "0 0 16 16", fill: "none", children: /* @__PURE__ */ t("path", { d: "M5.5 2H3a1 1 0 00-1 1v2.5M10.5 2H13a1 1 0 011 1v2.5M10.5 14H13a1 1 0 001-1v-2.5M5.5 14H3a1 1 0 01-1-1v-2.5", stroke: "currentColor", "stroke-width": "1.5", "stroke-linecap": "round", "stroke-linejoin": "round" }) })
   ) : (
     // Sidebar/panel icon (panel docked right)
-    /* @__PURE__ */ u3("svg", { width: "16", height: "16", viewBox: "0 0 16 16", fill: "none", children: [
-      /* @__PURE__ */ u3("rect", { x: "2", y: "2", width: "12", height: "12", rx: "1.5", stroke: "currentColor", "stroke-width": "1.5" }),
-      /* @__PURE__ */ u3("line", { x1: "10", y1: "2", x2: "10", y2: "14", stroke: "currentColor", "stroke-width": "1.5" })
+    /* @__PURE__ */ t("svg", { width: "16", height: "16", viewBox: "0 0 16 16", fill: "none", children: [
+      /* @__PURE__ */ t("rect", { x: "2", y: "2", width: "12", height: "12", rx: "1.5", stroke: "currentColor", "stroke-width": "1.5" }),
+      /* @__PURE__ */ t("line", { x1: "10", y1: "2", x2: "10", y2: "14", stroke: "currentColor", "stroke-width": "1.5" })
     ] })
   ) });
 }
-function PDPMAnalyzer({ context, onClose, initialMode = "modal" }) {
-  const [selectedAssessmentId, setSelectedAssessmentId] = d2(null);
-  const [detailItem, setDetailItem] = d2(null);
-  const [mode, setMode] = d2(initialMode);
-  const [isSplitView, setIsSplitView] = d2(false);
-  const {
-    assessments,
-    detail,
-    patientName: hookPatientName,
-    loading,
-    detailLoading,
-    error,
-    retry,
-    retryDetail
-  } = usePDPMAnalyzer(context, selectedAssessmentId);
-  const firstId = assessments?.[0]?.id;
-  if (context?.scope === "patient" && firstId && !selectedAssessmentId) {
-    setSelectedAssessmentId(firstId);
+function ja({ context: e, onClose: s, initialMode: n = "modal" }) {
+  const [i, a] = b(null), [r, c] = b(null), [o, p] = b(n), [d, u] = b(!1), {
+    assessments: l,
+    detail: m,
+    patientName: h,
+    loading: _,
+    detailLoading: v,
+    error: g,
+    retry: C,
+    retryDetail: f
+  } = na(e, i), x = l?.[0]?.id;
+  e?.scope === "patient" && x && !i && a(x);
+  const k = o === "panel";
+  function y(M) {
+    k || M.target === M.currentTarget && s();
   }
-  const isPanel = mode === "panel";
-  function handleBackdropClick(e3) {
-    if (isPanel) return;
-    if (e3.target === e3.currentTarget) onClose();
+  function S() {
+    s(), typeof MDSCommandCenterLauncher < "u" && MDSCommandCenterLauncher.open();
   }
-  function openCommandCenter() {
-    onClose();
-    if (typeof MDSCommandCenterLauncher !== "undefined") {
-      MDSCommandCenterLauncher.open();
-    }
+  function E() {
+    p((M) => M === "modal" ? "panel" : "modal");
   }
-  function toggleMode() {
-    setMode((prev) => prev === "modal" ? "panel" : "modal");
-  }
-  const patientName = hookPatientName || context?.patientName || "";
-  const assessmentData = detail || null;
-  const selectedSummary = assessments.find((a3) => a3.id === selectedAssessmentId);
-  const assessmentLabel = cleanAssessmentType2(
-    assessmentData?.assessmentType || assessmentData?.type || selectedSummary?.type
-  ) || "";
-  const ardDate = assessmentData?.ardDate || selectedSummary?.ardDate ? formatArdDate(assessmentData?.ardDate || selectedSummary?.ardDate) : "";
-  const isLoading = loading || detailLoading;
-  const backdropClass = isPanel ? "pdpm-an__panel-backdrop" : "pdpm-an__overlay";
-  const containerClass = (isPanel ? "pdpm-an__panel" : "pdpm-an__modal") + (isSplitView ? " pdpm-an--split" : "");
-  return /* @__PURE__ */ u3("div", { class: backdropClass, onClick: handleBackdropClick, children: /* @__PURE__ */ u3("div", { class: containerClass, role: "dialog", "aria-modal": isPanel ? "false" : "true", "aria-label": "PDPM Analyzer", children: [
-    /* @__PURE__ */ u3("div", { class: "pdpm-an__header", children: [
-      /* @__PURE__ */ u3("div", { class: "pdpm-an__header-left", children: [
-        /* @__PURE__ */ u3("button", { class: "pdpm-an__back-btn", onClick: openCommandCenter, children: [
-          "\u2190",
+  const N = h || e?.patientName || "", w = m || null, T = l.find((M) => M.id === i), F = ut(
+    w?.assessmentType || w?.type || T?.type
+  ) || "", V = w?.ardDate || T?.ardDate ? Gs(w?.ardDate || T?.ardDate) : "", D = _ || v, B = k ? "pdpm-an__panel-backdrop" : "pdpm-an__overlay", $ = (k ? "pdpm-an__panel" : "pdpm-an__modal") + (d ? " pdpm-an--split" : "");
+  return /* @__PURE__ */ t("div", { class: B, onClick: y, children: /* @__PURE__ */ t("div", { class: $, role: "dialog", "aria-modal": k ? "false" : "true", "aria-label": "PDPM Analyzer", children: [
+    /* @__PURE__ */ t("div", { class: "pdpm-an__header", children: [
+      /* @__PURE__ */ t("div", { class: "pdpm-an__header-left", children: [
+        /* @__PURE__ */ t("button", { class: "pdpm-an__back-btn", onClick: S, children: [
+          "←",
           " Command Center"
         ] }),
-        /* @__PURE__ */ u3("div", { class: "pdpm-an__patient-info", children: [
-          patientName && /* @__PURE__ */ u3("span", { class: "pdpm-an__patient-name", children: patientName }),
-          assessmentLabel && /* @__PURE__ */ u3("span", { class: "pdpm-an__assessment-label", children: assessmentLabel }),
-          ardDate && /* @__PURE__ */ u3("span", { class: "pdpm-an__ard-date", children: [
+        /* @__PURE__ */ t("div", { class: "pdpm-an__patient-info", children: [
+          N && /* @__PURE__ */ t("span", { class: "pdpm-an__patient-name", children: N }),
+          F && /* @__PURE__ */ t("span", { class: "pdpm-an__assessment-label", children: F }),
+          V && /* @__PURE__ */ t("span", { class: "pdpm-an__ard-date", children: [
             "ARD ",
-            ardDate
+            V
           ] })
         ] })
       ] }),
-      /* @__PURE__ */ u3("div", { class: "pdpm-an__header-right", children: [
-        /* @__PURE__ */ u3(
-          AssessmentSelector,
+      /* @__PURE__ */ t("div", { class: "pdpm-an__header-right", children: [
+        /* @__PURE__ */ t(
+          Ca,
           {
-            assessments,
-            selectedId: selectedAssessmentId,
-            onChange: (id) => {
-              setSelectedAssessmentId(id);
-              setDetailItem(null);
+            assessments: l,
+            selectedId: i,
+            onChange: (M) => {
+              a(M), c(null);
             }
           }
         ),
-        /* @__PURE__ */ u3(ModeToggleButton, { mode, onToggle: toggleMode }),
-        /* @__PURE__ */ u3("button", { class: "pdpm-an__close-btn", onClick: onClose, "aria-label": "Close", children: "\u2715" })
+        /* @__PURE__ */ t(za, { mode: o, onToggle: E }),
+        /* @__PURE__ */ t("button", { class: "pdpm-an__close-btn", onClick: s, "aria-label": "Close", children: "✕" })
       ] })
     ] }),
-    /* @__PURE__ */ u3("div", { class: "pdpm-an__body", children: [
-      isLoading && /* @__PURE__ */ u3(LoadingState2, {}),
-      !isLoading && error && /* @__PURE__ */ u3(ErrorState2, { message: error, onRetry: detail ? retryDetail : retry }),
-      !isLoading && !error && (detailItem ? /* @__PURE__ */ u3(
-        ItemDetailView,
+    /* @__PURE__ */ t("div", { class: "pdpm-an__body", children: [
+      D && /* @__PURE__ */ t(Ga, {}),
+      !D && g && /* @__PURE__ */ t(Ua, { message: g, onRetry: m ? f : C }),
+      !D && !g && (r ? /* @__PURE__ */ t(
+        ma,
         {
-          item: detailItem.item,
-          context: { ...context, assessmentId: selectedAssessmentId || context?.assessmentId, patientName },
+          item: r.item,
+          context: { ...e, assessmentId: i || e?.assessmentId, patientName: N },
           onBack: () => {
-            setDetailItem(null);
-            setIsSplitView(false);
+            c(null), u(!1);
           },
-          onSplitChange: setIsSplitView,
+          onSplitChange: u,
           onDismiss: () => {
-            setDetailItem(null);
-            setIsSplitView(false);
+            c(null), u(!1);
           }
         }
-      ) : /* @__PURE__ */ u3(
-        AssessmentView,
+      ) : /* @__PURE__ */ t(
+        Va,
         {
-          assessmentData,
-          patientId: context?.patientId,
-          onItemClick: (d3) => setDetailItem({ type: "detection", item: d3 }),
-          onQueryClick: (q3) => {
-            const enriched = {
-              ...q3,
-              patientName: q3.patientName || patientName,
-              locationName: q3.locationName || context?.facilityName || ""
+          assessmentData: w,
+          patientId: e?.patientId,
+          onItemClick: (M) => c({ type: "detection", item: M }),
+          onQueryClick: (M) => {
+            const G = {
+              ...M,
+              patientName: M.patientName || N,
+              locationName: M.locationName || e?.facilityName || ""
             };
-            window.QueryDetailModal?.show(enriched, null, { showPdfButton: q3.hasPdf ?? false });
+            window.QueryDetailModal?.show(G, null, { showPdfButton: M.hasPdf ?? !1 });
           }
         }
       ))
     ] })
   ] }) });
 }
-
-// demo/components/DemoQueryModal.jsx
-function DemoQueryModal({ queryData, onClose }) {
-  const [step, setStep] = d2(1);
-  const [loading, setLoading] = d2(true);
-  const [noteText, setNoteText] = d2("");
-  const [icd10Options, setIcd10Options] = d2([]);
-  const [selectedIcd10, setSelectedIcd10] = d2("");
-  const [practitioners, setPractitioners] = d2([]);
-  const [selectedPractitioner, setSelectedPractitioner] = d2(null);
-  const [practSearch, setPractSearch] = d2("");
-  const [sending, setSending] = d2(false);
-  const [success, setSuccess] = d2(false);
-  const [context, setContext] = d2(null);
-  const backdropRef = A2(null);
-  const mdsItem = queryData?.mdsItem || "";
-  const description = queryData?.description || queryData?.aiAnswer?.itemName || "Unknown";
-  y2(() => {
+function Qa({ queryData: e, onClose: s }) {
+  const [n, i] = b(1), [a, r] = b(!0), [c, o] = b(""), [p, d] = b([]), [u, l] = b(""), [m, h] = b([]), [_, v] = b(null), [g, C] = b(""), [f, x] = b(!1), [k, y] = b(!1), [S, E] = b(null), N = ee(null), w = e?.mdsItem || "", T = e?.description || e?.aiAnswer?.itemName || "Unknown";
+  z(() => {
     (async () => {
       try {
-        const ctx = await window.getCurrentParams?.() || {
+        const D = await window.getCurrentParams?.() || {
           facilityName: "SUNNY MEADOWS DEMO FACILITY",
           orgSlug: "demo-org",
           assessmentId: "4860265"
         };
-        ctx.patientName = window.getPatientNameFromPage?.() || "Doe, Jane";
-        ctx.patientId = window.getChatPatientId?.() || "2657226";
-        setContext(ctx);
-        const practs = await window.QueryAPI?.fetchPractitioners?.(ctx.facilityName, ctx.orgSlug) || [];
-        setPractitioners(practs);
-        const noteData = await window.QueryAPI?.generateNote?.(mdsItem, queryData?.aiAnswer || queryData) || {};
-        setNoteText(noteData.note || `Please review the clinical evidence for potential ${description}. See supporting documentation below.`);
-        setIcd10Options(noteData.icd10Options || []);
-        setSelectedIcd10(noteData.preferredIcd10?.code || noteData.icd10Options?.[0]?.code || "");
-      } catch (e3) {
-        console.error("[DemoQueryModal] Load failed:", e3);
+        D.patientName = window.getPatientNameFromPage?.() || "Doe, Jane", D.patientId = window.getChatPatientId?.() || "2657226", E(D);
+        const B = await window.QueryAPI?.fetchPractitioners?.(D.facilityName, D.orgSlug) || [];
+        h(B);
+        const $ = await window.QueryAPI?.generateNote?.(w, e?.aiAnswer || e) || {};
+        o($.note || `Please review the clinical evidence for potential ${T}. See supporting documentation below.`), d($.icd10Options || []), l($.preferredIcd10?.code || $.icd10Options?.[0]?.code || "");
+      } catch (D) {
+        console.error("[DemoQueryModal] Load failed:", D);
       } finally {
-        setLoading(false);
+        r(!1);
       }
     })();
   }, []);
-  const handleSend = async () => {
-    if (!selectedPractitioner) return;
-    setSending(true);
-    try {
-      const { query } = await window.QueryAPI.createQuery({
-        patientId: context?.patientId,
-        facilityName: context?.facilityName,
-        orgSlug: context?.orgSlug,
-        mdsAssessmentId: context?.assessmentId,
-        mdsItem,
-        mdsItemName: description,
-        aiGeneratedNote: noteText
-      });
-      await window.QueryAPI.sendQuery(query.id, [selectedPractitioner.id], noteText);
-      setSuccess(true);
-      setTimeout(() => {
-        onClose();
-        window.SuperToast?.success?.("Query sent successfully");
-      }, 1200);
-    } catch (e3) {
-      console.error("[DemoQueryModal] Send failed:", e3);
-      window.SuperToast?.error?.(`Failed to send: ${e3.message}`);
-      setSending(false);
+  const F = async () => {
+    if (_) {
+      x(!0);
+      try {
+        const { query: D } = await window.QueryAPI.createQuery({
+          patientId: S?.patientId,
+          facilityName: S?.facilityName,
+          orgSlug: S?.orgSlug,
+          mdsAssessmentId: S?.assessmentId,
+          mdsItem: w,
+          mdsItemName: T,
+          aiGeneratedNote: c
+        });
+        await window.QueryAPI.sendQuery(D.id, [_.id], c), y(!0), setTimeout(() => {
+          s(), window.SuperToast?.success?.("Query sent successfully");
+        }, 1200);
+      } catch (D) {
+        console.error("[DemoQueryModal] Send failed:", D), window.SuperToast?.error?.(`Failed to send: ${D.message}`), x(!1);
+      }
     }
-  };
-  const filteredPractitioners = practitioners.filter((p3) => {
-    if (!practSearch) return true;
-    const name = (p3.name || `${p3.firstName} ${p3.lastName}`).toLowerCase();
-    return name.includes(practSearch.toLowerCase());
-  });
-  if (success) {
-    return /* @__PURE__ */ u3("div", { class: "dqm__backdrop", ref: backdropRef, children: /* @__PURE__ */ u3("div", { class: "dqm__modal dqm__modal--success", children: /* @__PURE__ */ u3("div", { class: "dqm__success", children: [
-      /* @__PURE__ */ u3("div", { class: "dqm__success-icon", children: "\u2713" }),
-      /* @__PURE__ */ u3("div", { class: "dqm__success-text", children: "Query Sent!" }),
-      /* @__PURE__ */ u3("div", { class: "dqm__success-sub", children: [
-        "Sent to ",
-        selectedPractitioner?.name || `${selectedPractitioner?.firstName} ${selectedPractitioner?.lastName}`
-      ] })
-    ] }) }) });
-  }
-  return /* @__PURE__ */ u3("div", { class: "dqm__backdrop", ref: backdropRef, onClick: (e3) => {
-    if (e3.target === backdropRef.current) onClose();
-  }, children: /* @__PURE__ */ u3("div", { class: "dqm__modal", onClick: (e3) => e3.stopPropagation(), children: [
-    /* @__PURE__ */ u3("div", { class: "dqm__header", children: [
-      /* @__PURE__ */ u3("div", { class: "dqm__header-left", children: [
-        /* @__PURE__ */ u3("span", { class: "dqm__header-icon", children: "?" }),
-        /* @__PURE__ */ u3("span", { class: "dqm__header-title", children: "Send Diagnosis Query" }),
-        mdsItem && /* @__PURE__ */ u3("span", { class: "dqm__header-badge", children: mdsItem })
+  }, V = m.filter((D) => g ? (D.name || `${D.firstName} ${D.lastName}`).toLowerCase().includes(g.toLowerCase()) : !0);
+  return k ? /* @__PURE__ */ t("div", { class: "dqm__backdrop", ref: N, children: /* @__PURE__ */ t("div", { class: "dqm__modal dqm__modal--success", children: /* @__PURE__ */ t("div", { class: "dqm__success", children: [
+    /* @__PURE__ */ t("div", { class: "dqm__success-icon", children: "✓" }),
+    /* @__PURE__ */ t("div", { class: "dqm__success-text", children: "Query Sent!" }),
+    /* @__PURE__ */ t("div", { class: "dqm__success-sub", children: [
+      "Sent to ",
+      _?.name || `${_?.firstName} ${_?.lastName}`
+    ] })
+  ] }) }) }) : /* @__PURE__ */ t("div", { class: "dqm__backdrop", ref: N, onClick: (D) => {
+    D.target === N.current && s();
+  }, children: /* @__PURE__ */ t("div", { class: "dqm__modal", onClick: (D) => D.stopPropagation(), children: [
+    /* @__PURE__ */ t("div", { class: "dqm__header", children: [
+      /* @__PURE__ */ t("div", { class: "dqm__header-left", children: [
+        /* @__PURE__ */ t("span", { class: "dqm__header-icon", children: "?" }),
+        /* @__PURE__ */ t("span", { class: "dqm__header-title", children: "Send Diagnosis Query" }),
+        w && /* @__PURE__ */ t("span", { class: "dqm__header-badge", children: w })
       ] }),
-      /* @__PURE__ */ u3("button", { class: "dqm__close", onClick: onClose, type: "button", children: "\xD7" })
+      /* @__PURE__ */ t("button", { class: "dqm__close", onClick: s, type: "button", children: "×" })
     ] }),
-    /* @__PURE__ */ u3("div", { class: "dqm__progress", children: [
-      /* @__PURE__ */ u3("div", { class: `dqm__step ${step >= 1 ? "dqm__step--active" : ""} ${step > 1 ? "dqm__step--done" : ""}`, children: [
-        /* @__PURE__ */ u3("span", { class: "dqm__step-num", children: step > 1 ? "\u2713" : "1" }),
-        /* @__PURE__ */ u3("span", { class: "dqm__step-label", children: "Review" })
+    /* @__PURE__ */ t("div", { class: "dqm__progress", children: [
+      /* @__PURE__ */ t("div", { class: `dqm__step ${n >= 1 ? "dqm__step--active" : ""} ${n > 1 ? "dqm__step--done" : ""}`, children: [
+        /* @__PURE__ */ t("span", { class: "dqm__step-num", children: n > 1 ? "✓" : "1" }),
+        /* @__PURE__ */ t("span", { class: "dqm__step-label", children: "Review" })
       ] }),
-      /* @__PURE__ */ u3("div", { class: `dqm__step-line ${step > 1 ? "dqm__step-line--active" : ""}` }),
-      /* @__PURE__ */ u3("div", { class: `dqm__step ${step >= 2 ? "dqm__step--active" : ""}`, children: [
-        /* @__PURE__ */ u3("span", { class: "dqm__step-num", children: "2" }),
-        /* @__PURE__ */ u3("span", { class: "dqm__step-label", children: "Send" })
+      /* @__PURE__ */ t("div", { class: `dqm__step-line ${n > 1 ? "dqm__step-line--active" : ""}` }),
+      /* @__PURE__ */ t("div", { class: `dqm__step ${n >= 2 ? "dqm__step--active" : ""}`, children: [
+        /* @__PURE__ */ t("span", { class: "dqm__step-num", children: "2" }),
+        /* @__PURE__ */ t("span", { class: "dqm__step-label", children: "Send" })
       ] })
     ] }),
-    /* @__PURE__ */ u3("div", { class: "dqm__body", children: loading ? /* @__PURE__ */ u3("div", { class: "dqm__loading", children: [
-      /* @__PURE__ */ u3("div", { class: "mds-cc__spinner mds-cc__spinner--sm" }),
-      /* @__PURE__ */ u3("span", { children: "Loading query details..." })
-    ] }) : step === 1 ? (
+    /* @__PURE__ */ t("div", { class: "dqm__body", children: a ? /* @__PURE__ */ t("div", { class: "dqm__loading", children: [
+      /* @__PURE__ */ t("div", { class: "mds-cc__spinner mds-cc__spinner--sm" }),
+      /* @__PURE__ */ t("span", { children: "Loading query details..." })
+    ] }) : n === 1 ? (
       /* ── Step 1: Review ── */
-      /* @__PURE__ */ u3("div", { class: "dqm__step-content", children: [
-        /* @__PURE__ */ u3("div", { class: "dqm__info-card", children: [
-          /* @__PURE__ */ u3("div", { class: "dqm__info-row", children: [
-            /* @__PURE__ */ u3("span", { class: "dqm__patient-name", children: context?.patientName || "Patient" }),
-            /* @__PURE__ */ u3("span", { class: "dqm__facility", children: context?.facilityName || "" })
+      /* @__PURE__ */ t("div", { class: "dqm__step-content", children: [
+        /* @__PURE__ */ t("div", { class: "dqm__info-card", children: [
+          /* @__PURE__ */ t("div", { class: "dqm__info-row", children: [
+            /* @__PURE__ */ t("span", { class: "dqm__patient-name", children: S?.patientName || "Patient" }),
+            /* @__PURE__ */ t("span", { class: "dqm__facility", children: S?.facilityName || "" })
           ] }),
-          /* @__PURE__ */ u3("div", { class: "dqm__diagnosis-row", children: [
-            /* @__PURE__ */ u3("span", { class: "dqm__diag-code", children: mdsItem }),
-            /* @__PURE__ */ u3("span", { class: "dqm__diag-name", children: description })
+          /* @__PURE__ */ t("div", { class: "dqm__diagnosis-row", children: [
+            /* @__PURE__ */ t("span", { class: "dqm__diag-code", children: w }),
+            /* @__PURE__ */ t("span", { class: "dqm__diag-name", children: T })
           ] })
         ] }),
-        icd10Options.length > 0 && /* @__PURE__ */ u3("div", { class: "dqm__field", children: [
-          /* @__PURE__ */ u3("label", { class: "dqm__label", children: "ICD-10 Code" }),
-          /* @__PURE__ */ u3("select", { class: "dqm__select", value: selectedIcd10, onChange: (e3) => setSelectedIcd10(e3.target.value), children: icd10Options.map((opt) => /* @__PURE__ */ u3("option", { value: opt.code, children: [
-            opt.code,
-            opt.description ? ` \u2014 ${opt.description}` : ""
-          ] }, opt.code)) })
+        p.length > 0 && /* @__PURE__ */ t("div", { class: "dqm__field", children: [
+          /* @__PURE__ */ t("label", { class: "dqm__label", children: "ICD-10 Code" }),
+          /* @__PURE__ */ t("select", { class: "dqm__select", value: u, onChange: (D) => l(D.target.value), children: p.map((D) => /* @__PURE__ */ t("option", { value: D.code, children: [
+            D.code,
+            D.description ? ` — ${D.description}` : ""
+          ] }, D.code)) })
         ] }),
-        /* @__PURE__ */ u3("div", { class: "dqm__field", children: [
-          /* @__PURE__ */ u3("label", { class: "dqm__label", children: "Note for Physician" }),
-          /* @__PURE__ */ u3(
+        /* @__PURE__ */ t("div", { class: "dqm__field", children: [
+          /* @__PURE__ */ t("label", { class: "dqm__label", children: "Note for Physician" }),
+          /* @__PURE__ */ t(
             "textarea",
             {
               class: "dqm__textarea",
               rows: "5",
-              value: noteText,
-              onInput: (e3) => setNoteText(e3.target.value),
+              value: c,
+              onInput: (D) => o(D.target.value),
               placeholder: "Enter note for physician..."
             }
           )
@@ -11032,67 +9499,62 @@ function DemoQueryModal({ queryData, onClose }) {
       ] })
     ) : (
       /* ── Step 2: Send ── */
-      /* @__PURE__ */ u3("div", { class: "dqm__step-content", children: [
-        /* @__PURE__ */ u3("div", { class: "dqm__info-card", children: [
-          /* @__PURE__ */ u3("div", { class: "dqm__info-row", children: [
-            /* @__PURE__ */ u3("span", { class: "dqm__patient-name", children: context?.patientName || "Patient" }),
-            /* @__PURE__ */ u3("span", { class: "dqm__facility", children: context?.facilityName || "" })
+      /* @__PURE__ */ t("div", { class: "dqm__step-content", children: [
+        /* @__PURE__ */ t("div", { class: "dqm__info-card", children: [
+          /* @__PURE__ */ t("div", { class: "dqm__info-row", children: [
+            /* @__PURE__ */ t("span", { class: "dqm__patient-name", children: S?.patientName || "Patient" }),
+            /* @__PURE__ */ t("span", { class: "dqm__facility", children: S?.facilityName || "" })
           ] }),
-          /* @__PURE__ */ u3("div", { class: "dqm__diagnosis-row", children: [
-            /* @__PURE__ */ u3("span", { class: "dqm__diag-code", children: mdsItem }),
-            /* @__PURE__ */ u3("span", { class: "dqm__diag-name", children: description })
+          /* @__PURE__ */ t("div", { class: "dqm__diagnosis-row", children: [
+            /* @__PURE__ */ t("span", { class: "dqm__diag-code", children: w }),
+            /* @__PURE__ */ t("span", { class: "dqm__diag-name", children: T })
           ] })
         ] }),
-        /* @__PURE__ */ u3("div", { class: "dqm__field", children: [
-          /* @__PURE__ */ u3("label", { class: "dqm__label", children: "Send to Physician" }),
-          /* @__PURE__ */ u3(
+        /* @__PURE__ */ t("div", { class: "dqm__field", children: [
+          /* @__PURE__ */ t("label", { class: "dqm__label", children: "Send to Physician" }),
+          /* @__PURE__ */ t(
             "input",
             {
               type: "text",
               class: "dqm__search",
               placeholder: "Search practitioners...",
-              value: practSearch,
-              onInput: (e3) => setPractSearch(e3.target.value)
+              value: g,
+              onInput: (D) => C(D.target.value)
             }
           ),
-          /* @__PURE__ */ u3("div", { class: "dqm__pract-list", children: filteredPractitioners.map((p3) => {
-            const name = p3.name || `${p3.firstName} ${p3.lastName}`;
-            const isSelected = selectedPractitioner?.id === p3.id;
-            return /* @__PURE__ */ u3(
+          /* @__PURE__ */ t("div", { class: "dqm__pract-list", children: V.map((D) => {
+            const B = D.name || `${D.firstName} ${D.lastName}`, $ = _?.id === D.id;
+            return /* @__PURE__ */ t(
               "div",
               {
-                class: `dqm__pract-item ${isSelected ? "dqm__pract-item--selected" : ""}`,
-                onClick: () => setSelectedPractitioner(p3),
+                class: `dqm__pract-item ${$ ? "dqm__pract-item--selected" : ""}`,
+                onClick: () => v(D),
                 children: [
-                  /* @__PURE__ */ u3("div", { class: "dqm__pract-avatar", children: (p3.firstName?.[0] || name[0]).toUpperCase() }),
-                  /* @__PURE__ */ u3("div", { class: "dqm__pract-info", children: [
-                    /* @__PURE__ */ u3("div", { class: "dqm__pract-name", children: name }),
-                    p3.title && /* @__PURE__ */ u3("div", { class: "dqm__pract-title", children: p3.title })
+                  /* @__PURE__ */ t("div", { class: "dqm__pract-avatar", children: (D.firstName?.[0] || B[0]).toUpperCase() }),
+                  /* @__PURE__ */ t("div", { class: "dqm__pract-info", children: [
+                    /* @__PURE__ */ t("div", { class: "dqm__pract-name", children: B }),
+                    D.title && /* @__PURE__ */ t("div", { class: "dqm__pract-title", children: D.title })
                   ] }),
-                  isSelected && /* @__PURE__ */ u3("span", { class: "dqm__pract-check", children: "\u2713" })
+                  $ && /* @__PURE__ */ t("span", { class: "dqm__pract-check", children: "✓" })
                 ]
               },
-              p3.id
+              D.id
             );
           }) }),
-          /* @__PURE__ */ u3("div", { class: "dqm__hint", children: "They will be notified via SMS" })
+          /* @__PURE__ */ t("div", { class: "dqm__hint", children: "They will be notified via SMS" })
         ] })
       ] })
     ) }),
-    /* @__PURE__ */ u3("div", { class: "dqm__footer", children: step === 1 ? /* @__PURE__ */ u3(k, { children: [
-      /* @__PURE__ */ u3("button", { class: "dqm__btn dqm__btn--secondary", onClick: onClose, type: "button", children: "Cancel" }),
-      /* @__PURE__ */ u3("button", { class: "dqm__btn dqm__btn--primary", onClick: () => setStep(2), disabled: loading, type: "button", children: "Next" })
-    ] }) : /* @__PURE__ */ u3(k, { children: [
-      /* @__PURE__ */ u3("button", { class: "dqm__btn dqm__btn--secondary", onClick: () => setStep(1), disabled: sending, type: "button", children: "Back" }),
-      /* @__PURE__ */ u3("button", { class: "dqm__btn dqm__btn--primary", onClick: handleSend, disabled: !selectedPractitioner || sending, type: "button", children: sending ? "Sending..." : "Send Query" })
+    /* @__PURE__ */ t("div", { class: "dqm__footer", children: n === 1 ? /* @__PURE__ */ t(Y, { children: [
+      /* @__PURE__ */ t("button", { class: "dqm__btn dqm__btn--secondary", onClick: s, type: "button", children: "Cancel" }),
+      /* @__PURE__ */ t("button", { class: "dqm__btn dqm__btn--primary", onClick: () => i(2), disabled: a, type: "button", children: "Next" })
+    ] }) : /* @__PURE__ */ t(Y, { children: [
+      /* @__PURE__ */ t("button", { class: "dqm__btn dqm__btn--secondary", onClick: () => i(1), disabled: f, type: "button", children: "Back" }),
+      /* @__PURE__ */ t("button", { class: "dqm__btn dqm__btn--primary", onClick: F, disabled: !_ || f, type: "button", children: f ? "Sending..." : "Send Query" })
     ] }) })
   ] }) });
 }
-
-// demo/components/PCCDemoApp.jsx
-var FACILITY_NAME = "SUNNY MEADOWS DEMO FACILITY";
-var ORG_SLUG = "demo-org";
-var BADGE_DEFS = {
+const is = "SUNNY MEADOWS DEMO FACILITY", Wa = "demo-org", Ka = {
   I0100: { status: "match", label: "+ Super: No" },
   I0200: { status: "match", label: "+ Super: Yes" },
   I0300: { status: "match", label: "+ Super: No" },
@@ -11133,16 +9595,15 @@ var BADGE_DEFS = {
   I7900: { status: "match", label: "+ Super: No" },
   I8000: { status: "match", label: "+ Super: None" }
 };
-function Toast({ toast, onDismiss }) {
-  if (!toast) return null;
-  const colors = {
+function Ja({ toast: e, onDismiss: s }) {
+  if (!e) return null;
+  const n = {
     success: { bg: "#ecfdf5", border: "#6ee7b7", text: "#065f46" },
     error: { bg: "#fef2f2", border: "#fca5a5", text: "#991b1b" },
     info: { bg: "#eff6ff", border: "#93c5fd", text: "#1e40af" },
     warning: { bg: "#fffbeb", border: "#fcd34d", text: "#92400e" }
-  };
-  const c3 = colors[toast.type] || colors.info;
-  return /* @__PURE__ */ u3(
+  }, i = n[e.type] || n.info;
+  return /* @__PURE__ */ t(
     "div",
     {
       style: {
@@ -11154,28 +9615,22 @@ function Toast({ toast, onDismiss }) {
         borderRadius: "8px",
         fontSize: "13px",
         fontWeight: 500,
-        background: c3.bg,
-        color: c3.text,
-        border: `1px solid ${c3.border}`,
+        background: i.bg,
+        color: i.text,
+        border: `1px solid ${i.border}`,
         boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
         maxWidth: "340px",
         animation: "fadeInUp 0.2s ease"
       },
-      onClick: onDismiss,
-      children: toast.message
+      onClick: s,
+      children: e.message
     }
   );
 }
-function PCCDemoApp() {
-  const [overlay, setOverlay] = d2(null);
-  const [popoverItem, setPopoverItem] = d2(null);
-  const [pdpmContext, setPdpmContext] = d2(null);
-  const [toast, setToast] = d2(null);
-  const [queryData, setQueryData] = d2(null);
-  const toastTimer = A2(null);
-  const injectedBadges = A2([]);
-  y2(() => {
-    const selectors = [
+function Ya() {
+  const [e, s] = b(null), [n, i] = b(null), [a, r] = b(null), [c, o] = b(null), [p, d] = b(null), u = ee(null), l = ee([]);
+  z(() => {
+    [
       "#superPanel",
       "#superPopover",
       "#superModal",
@@ -11191,200 +9646,144 @@ function PCCDemoApp() {
       ".super-chat-panel",
       "#notesModal",
       ".super-modal"
-    ];
-    selectors.forEach((sel) => {
-      document.querySelectorAll(sel).forEach((el) => {
-        el.style.display = "none";
+    ].forEach((C) => {
+      document.querySelectorAll(C).forEach((f) => {
+        f.style.display = "none";
       });
     });
-  }, []);
-  y2(() => {
-    function handleBadgeClick(e3) {
-      const code = e3.detail?.code;
-      if (!code) return;
-      setOverlay("itemPopover");
-      setPopoverItem({
-        mdsItem: code,
-        categoryKey: code,
-        itemName: getItemLabel(code)
-      });
+  }, []), z(() => {
+    function g(C) {
+      const f = C.detail?.code;
+      f && (s("itemPopover"), i({
+        mdsItem: f,
+        categoryKey: f,
+        itemName: Za(f)
+      }));
     }
-    window.addEventListener("demo:badge-click", handleBadgeClick);
-    return () => window.removeEventListener("demo:badge-click", handleBadgeClick);
-  }, []);
-  y2(() => {
-    document.querySelectorAll(".super-badge").forEach((b) => b.remove());
-    const badges = [];
-    for (const [code, def] of Object.entries(BADGE_DEFS)) {
-      const wrapper = document.getElementById(`${code}_wrapper`);
-      if (!wrapper) continue;
-      const label = wrapper.querySelector(".question_label");
-      if (!label) continue;
-      if (label.querySelector(".super-badge")) continue;
-      const badge = document.createElement("span");
-      badge.className = `super-badge super-badge--${def.status}`;
-      badge.textContent = def.label;
-      badge.setAttribute("data-mds-item", code);
-      badge.style.cssText = `
+    return window.addEventListener("demo:badge-click", g), () => window.removeEventListener("demo:badge-click", g);
+  }, []), z(() => {
+    document.querySelectorAll(".super-badge").forEach((C) => C.remove());
+    const g = [];
+    for (const [C, f] of Object.entries(Ka)) {
+      const x = document.getElementById(`${C}_wrapper`);
+      if (!x) continue;
+      const k = x.querySelector(".question_label");
+      if (!k || k.querySelector(".super-badge")) continue;
+      const y = document.createElement("span");
+      y.className = `super-badge super-badge--${f.status}`, y.textContent = f.label, y.setAttribute("data-mds-item", C), y.style.cssText = `
         display: inline-flex; align-items: center; gap: 4px;
         padding: 3px 8px; border-radius: 4px; font-size: 11px;
         font-weight: 600; cursor: pointer; margin-left: 8px;
         font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
         transition: transform 0.15s ease, box-shadow 0.15s ease;
         vertical-align: middle;
-      `;
-      if (def.status === "match") {
-        badge.style.background = "#dcfce7";
-        badge.style.color = "#166534";
-        badge.style.border = "1px solid #86efac";
-      } else if (def.status === "mismatch") {
-        badge.style.background = "#fee2e2";
-        badge.style.color = "#991b1b";
-        badge.style.border = "1px solid #fca5a5";
-      } else if (def.status === "review") {
-        badge.style.background = "#fef3c7";
-        badge.style.color = "#92400e";
-        badge.style.border = "1px solid #fcd34d";
-      }
-      badge.addEventListener("click", (e3) => {
-        e3.stopPropagation();
-        e3.preventDefault();
-        window.dispatchEvent(new CustomEvent("demo:badge-click", { detail: { code } }));
+      `, f.status === "match" ? (y.style.background = "#dcfce7", y.style.color = "#166534", y.style.border = "1px solid #86efac") : f.status === "mismatch" ? (y.style.background = "#fee2e2", y.style.color = "#991b1b", y.style.border = "1px solid #fca5a5") : f.status === "review" && (y.style.background = "#fef3c7", y.style.color = "#92400e", y.style.border = "1px solid #fcd34d"), y.addEventListener("click", (E) => {
+        E.stopPropagation(), E.preventDefault(), window.dispatchEvent(new CustomEvent("demo:badge-click", { detail: { code: C } }));
+      }), y.addEventListener("mouseenter", () => {
+        y.style.transform = "translateY(-1px)", y.style.boxShadow = "0 2px 6px rgba(0,0,0,0.12)";
+      }), y.addEventListener("mouseleave", () => {
+        y.style.transform = "", y.style.boxShadow = "";
       });
-      badge.addEventListener("mouseenter", () => {
-        badge.style.transform = "translateY(-1px)";
-        badge.style.boxShadow = "0 2px 6px rgba(0,0,0,0.12)";
-      });
-      badge.addEventListener("mouseleave", () => {
-        badge.style.transform = "";
-        badge.style.boxShadow = "";
-      });
-      const bTag = label.querySelector(":scope > b");
-      if (bTag) {
-        bTag.appendChild(badge);
-      } else {
-        label.appendChild(badge);
-      }
-      badges.push(badge);
+      const S = k.querySelector(":scope > b");
+      S ? S.appendChild(y) : k.appendChild(y), g.push(y);
     }
-    injectedBadges.current = badges;
-    console.log(`[PCCDemoApp] Injected ${badges.length} Super badges into PCC form`);
-    return () => {
-      badges.forEach((b) => b.remove());
+    return l.current = g, console.log(`[PCCDemoApp] Injected ${g.length} Super badges into PCC form`), () => {
+      g.forEach((C) => C.remove());
     };
-  }, []);
-  y2(() => {
-    function handleOpenPdpm(e3) {
-      const opts = e3.detail;
-      setPdpmContext({
-        scope: opts?.scope || "mds",
-        assessmentId: opts?.assessmentId || "4860265",
-        facilityName: FACILITY_NAME
-      });
-      setOverlay("pdpmMds");
+  }, []), z(() => {
+    function g(C) {
+      const f = C.detail;
+      r({
+        scope: f?.scope || "mds",
+        assessmentId: f?.assessmentId || "4860265",
+        facilityName: is
+      }), s("pdpmMds");
     }
-    window.addEventListener("demo:open-pdpm", handleOpenPdpm);
-    return () => window.removeEventListener("demo:open-pdpm", handleOpenPdpm);
-  }, []);
-  y2(() => {
-    function handleToast(e3) {
-      const { type, message } = e3.detail || {};
-      setToast({ type: type || "info", message: message || "" });
-      clearTimeout(toastTimer.current);
-      toastTimer.current = setTimeout(() => setToast(null), 3e3);
+    return window.addEventListener("demo:open-pdpm", g), () => window.removeEventListener("demo:open-pdpm", g);
+  }, []), z(() => {
+    function g(C) {
+      const { type: f, message: x } = C.detail || {};
+      o({ type: f || "info", message: x || "" }), clearTimeout(u.current), u.current = setTimeout(() => o(null), 3e3);
     }
-    window.addEventListener("demo:toast", handleToast);
-    return () => {
-      window.removeEventListener("demo:toast", handleToast);
-      clearTimeout(toastTimer.current);
+    return window.addEventListener("demo:toast", g), () => {
+      window.removeEventListener("demo:toast", g), clearTimeout(u.current);
     };
-  }, []);
-  y2(() => {
+  }, []), z(() => {
     window.QuerySendModal = {
-      show(opts) {
-        if (opts && !opts.aiAnswer && (opts.keyFindings || opts.evidence || opts.rationale || opts.status)) {
-          opts = { mdsItem: opts.mdsItem, description: opts.description, aiAnswer: opts };
-        }
-        setQueryData(opts);
+      show(g) {
+        g && !g.aiAnswer && (g.keyFindings || g.evidence || g.rationale || g.status) && (g = { mdsItem: g.mdsItem, description: g.description, aiAnswer: g }), d(g);
       }
     };
   }, []);
-  const handleClose = q2(() => {
-    setOverlay(null);
-    setPopoverItem(null);
-    setPdpmContext(null);
+  const m = X(() => {
+    s(null), i(null), r(null);
+  }, []), h = X((g) => {
+    g?.hide || s(null);
+  }, []), _ = X(() => {
+    s(null), i(null);
+  }, []), v = X(() => {
+    s("commandCenter");
   }, []);
-  const handleCommandCenterClose = q2((opts) => {
-    if (opts?.hide) return;
-    setOverlay(null);
-  }, []);
-  const handlePopoverClose = q2(() => {
-    setOverlay(null);
-    setPopoverItem(null);
-  }, []);
-  const handleFabClick = q2(() => {
-    setOverlay("commandCenter");
-  }, []);
-  return /* @__PURE__ */ u3(k, { children: [
-    overlay === "commandCenter" && /* @__PURE__ */ u3(
-      MDSCommandCenter,
+  return /* @__PURE__ */ t(Y, { children: [
+    e === "commandCenter" && /* @__PURE__ */ t(
+      sa,
       {
-        facilityName: FACILITY_NAME,
-        orgSlug: ORG_SLUG,
-        onClose: handleCommandCenterClose
+        facilityName: is,
+        orgSlug: Wa,
+        onClose: h
       }
     ),
-    overlay === "pdpmMds" && pdpmContext && /* @__PURE__ */ u3("div", { style: pdpmWrapperStyle, children: [
-      /* @__PURE__ */ u3("div", { style: pdpmHeaderStyle, children: [
-        /* @__PURE__ */ u3("span", { style: { fontWeight: 600 }, children: "PDPM Analyzer" }),
-        /* @__PURE__ */ u3("button", { onClick: handleClose, style: closeButtonStyle, children: "\xD7" })
+    e === "pdpmMds" && a && /* @__PURE__ */ t("div", { style: er, children: [
+      /* @__PURE__ */ t("div", { style: tr, children: [
+        /* @__PURE__ */ t("span", { style: { fontWeight: 600 }, children: "PDPM Analyzer" }),
+        /* @__PURE__ */ t("button", { onClick: m, style: sr, children: "×" })
       ] }),
-      /* @__PURE__ */ u3("div", { style: { flex: 1, overflow: "auto" }, children: /* @__PURE__ */ u3(
-        PDPMAnalyzer,
+      /* @__PURE__ */ t("div", { style: { flex: 1, overflow: "auto" }, children: /* @__PURE__ */ t(
+        ja,
         {
-          context: pdpmContext,
-          onClose: handleClose
+          context: a,
+          onClose: m
         }
       ) })
     ] }),
-    overlay === "itemPopover" && popoverItem && /* @__PURE__ */ u3(
-      ItemPopover,
+    e === "itemPopover" && n && /* @__PURE__ */ t(
+      qs,
       {
-        item: popoverItem,
+        item: n,
         context: { assessmentId: "4860265" },
-        onClose: handlePopoverClose
+        onClose: _
       }
     ),
-    /* @__PURE__ */ u3(
+    /* @__PURE__ */ t(
       "button",
       {
         class: "super-demo-fab",
-        onClick: handleFabClick,
+        onClick: v,
         title: "Open Super Command Center",
-        style: fabStyle,
+        style: Xa,
         children: [
-          /* @__PURE__ */ u3("svg", { width: "22", height: "22", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": "2", "stroke-linecap": "round", "stroke-linejoin": "round", children: [
-            /* @__PURE__ */ u3("rect", { x: "3", y: "3", width: "7", height: "7" }),
-            /* @__PURE__ */ u3("rect", { x: "14", y: "3", width: "7", height: "7" }),
-            /* @__PURE__ */ u3("rect", { x: "3", y: "14", width: "7", height: "7" }),
-            /* @__PURE__ */ u3("rect", { x: "14", y: "14", width: "7", height: "7" })
+          /* @__PURE__ */ t("svg", { width: "22", height: "22", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": "2", "stroke-linecap": "round", "stroke-linejoin": "round", children: [
+            /* @__PURE__ */ t("rect", { x: "3", y: "3", width: "7", height: "7" }),
+            /* @__PURE__ */ t("rect", { x: "14", y: "3", width: "7", height: "7" }),
+            /* @__PURE__ */ t("rect", { x: "3", y: "14", width: "7", height: "7" }),
+            /* @__PURE__ */ t("rect", { x: "14", y: "14", width: "7", height: "7" })
           ] }),
-          /* @__PURE__ */ u3("span", { style: { marginLeft: "8px", fontSize: "13px", fontWeight: 600 }, children: "Super" })
+          /* @__PURE__ */ t("span", { style: { marginLeft: "8px", fontSize: "13px", fontWeight: 600 }, children: "Super" })
         ]
       }
     ),
-    queryData && /* @__PURE__ */ u3(
-      DemoQueryModal,
+    p && /* @__PURE__ */ t(
+      Qa,
       {
-        queryData,
-        onClose: () => setQueryData(null)
+        queryData: p,
+        onClose: () => d(null)
       }
     ),
-    /* @__PURE__ */ u3(Toast, { toast, onDismiss: () => setToast(null) })
+    /* @__PURE__ */ t(Ja, { toast: c, onDismiss: () => o(null) })
   ] });
 }
-function getItemLabel(code) {
-  const labels = {
+function Za(e) {
+  return {
     I0100: "Cancer",
     I0200: "Anemia",
     I0300: "Atrial Fibrillation / Dysrhythmias",
@@ -11424,10 +9823,9 @@ function getItemLabel(code) {
     I6500: "Seizure / Epilepsy",
     I7900: "None of the Above",
     I8000: "Additional Diagnoses"
-  };
-  return labels[code] || `MDS Item ${code}`;
+  }[e] || `MDS Item ${e}`;
 }
-var fabStyle = {
+const Xa = {
   position: "fixed",
   bottom: "24px",
   left: "24px",
@@ -11443,8 +9841,7 @@ var fabStyle = {
   boxShadow: "0 4px 14px rgba(99,102,241,0.4)",
   transition: "transform 0.15s ease, box-shadow 0.15s ease",
   fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif'
-};
-var pdpmWrapperStyle = {
+}, er = {
   position: "fixed",
   inset: "20px",
   zIndex: 1e5,
@@ -11454,8 +9851,7 @@ var pdpmWrapperStyle = {
   display: "flex",
   flexDirection: "column",
   overflow: "hidden"
-};
-var pdpmHeaderStyle = {
+}, tr = {
   padding: "12px 16px",
   borderBottom: "1px solid #e5e7eb",
   display: "flex",
@@ -11463,8 +9859,7 @@ var pdpmHeaderStyle = {
   alignItems: "center",
   background: "#f9fafb",
   flexShrink: 0
-};
-var closeButtonStyle = {
+}, sr = {
   background: "transparent",
   border: "none",
   fontSize: "22px",
@@ -11473,23 +9868,11 @@ var closeButtonStyle = {
   padding: "0 4px",
   lineHeight: 1
 };
-
-// demo/pcc-demo-entry.jsx
-createMockChrome();
-installGlobalMocks();
-window.__DEMO_MODE = true;
-function boot() {
-  let root = document.getElementById("super-demo-root");
-  if (!root) {
-    root = document.createElement("div");
-    root.id = "super-demo-root";
-    document.body.appendChild(root);
-  }
-  G(/* @__PURE__ */ u3(PCCDemoApp, {}), root);
-  console.log("[PCC Demo] PCCDemoApp mounted");
+tn();
+sn();
+window.__DEMO_MODE = !0;
+function as() {
+  let e = document.getElementById("super-demo-root");
+  e || (e = document.createElement("div"), e.id = "super-demo-root", document.body.appendChild(e)), ys(/* @__PURE__ */ t(Ya, {}), e), console.log("[PCC Demo] PCCDemoApp mounted");
 }
-if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", boot);
-} else {
-  boot();
-}
+document.readyState === "loading" ? document.addEventListener("DOMContentLoaded", as) : as();

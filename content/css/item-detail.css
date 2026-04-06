@@ -85,6 +85,72 @@
   line-height: 1.4;
 }
 
+/* ── Care Plan section (Section I) ── */
+.sid__careplan {
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.sid__careplan-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 10px 16px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.12s;
+}
+.sid__careplan-toggle:hover { background: #f9fafb; }
+
+.sid__careplan-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.sid__careplan-dot--on  { background: #22c55e; }
+.sid__careplan-dot--off { background: #ef4444; }
+
+.sid__careplan-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.sid__careplan-status {
+  font-size: 11px;
+  color: #6b7280;
+  margin-left: auto;
+  margin-right: 4px;
+}
+
+.sid__careplan-items {
+  list-style: none;
+  margin: 0;
+  padding: 0 16px 10px 32px;
+}
+.sid__careplan-items li {
+  position: relative;
+  font-size: 12px;
+  color: #374151;
+  line-height: 1.4;
+  padding: 3px 0;
+  border-bottom: 1px solid #f3f4f6;
+}
+.sid__careplan-items li:last-child { border-bottom: none; }
+.sid__careplan-items li::before {
+  content: '';
+  position: absolute;
+  left: -14px;
+  top: 11px;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #d1d5db;
+}
+
 /* ── Rationale block (non-Section-I) ── */
 .sid__rationale {
   padding: 12px 16px;
@@ -168,6 +234,41 @@
   text-transform: uppercase;
   letter-spacing: 0.04em;
   margin-bottom: 8px;
+}
+
+.sid__ev-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.sid__ev-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--super-gray-600, #6b7280);
+  background: var(--super-gray-100, #f3f4f6);
+  border: 1px solid var(--super-gray-200, #e5e7eb);
+  border-radius: 16px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.sid__ev-chip:hover {
+  background: var(--super-gray-200, #e5e7eb);
+}
+
+.sid__ev-chip--active {
+  color: #fff;
+  background: #374151;
+  border-color: #374151;
+}
+
+.sid__ev-chip--active:hover {
+  background: #1f2937;
 }
 
 .sid__ev-list {

@@ -1245,7 +1245,11 @@ export const DEMO_API_RESPONSES = {
         ]
       },
       diagnosisSummary: 'Nutrition assessment from 1/22 documents moderate protein-calorie malnutrition: 12.6% weight loss in 3 months, PO intake <50%, albumin 2.9, prealbumin 12. No malnutrition ICD-10 code on active problem list.',
-      treatmentSummary: 'Ensure Plus 8oz BID, fortified cereal 6oz QD, pureed diet with nectar thick liquids, weekly weights, dietitian follow-up.'
+      treatmentSummary: 'Ensure Plus 8oz BID, fortified cereal 6oz QD, pureed diet with nectar thick liquids, weekly weights, dietitian follow-up.',
+      carePlan: {
+        onCarePlan: true,
+        items: ['Ensure Plus 8oz BID between meals', 'Weekly weights every Monday AM', 'Dietitian follow-up monthly', 'Calorie count x 3 days if intake worsens']
+      }
     },
 
     'I4300': {
@@ -1296,7 +1300,11 @@ export const DEMO_API_RESPONSES = {
         ]
       },
       diagnosisSummary: 'Diabetes well documented with medications and lab monitoring. PVD symptoms noted in progress notes but no specific ICD-10 code on problem list.',
-      treatmentSummary: 'Metformin 500mg BID, blood glucose monitoring AC & HS, vascular checks per protocol.'
+      treatmentSummary: 'Metformin 500mg BID, blood glucose monitoring AC & HS, vascular checks per protocol.',
+      carePlan: {
+        onCarePlan: true,
+        items: ['Blood glucose monitoring AC and HS', 'Diabetic foot care and vascular checks', 'Consistent carbohydrate meal plan']
+      }
     },
 
     'O0400A3': {
@@ -1363,7 +1371,8 @@ export const DEMO_API_RESPONSES = {
         ]
       },
       diagnosisSummary: 'PHQ-9 not completed during lookback period. Multiple medications on profile (beta-blockers, opioids) associated with depressive side effects. Nursing notes mention low mood.',
-      treatmentSummary: 'No active antidepressant therapy. No mental health referral on file.'
+      treatmentSummary: 'No active antidepressant therapy. No mental health referral on file.',
+      carePlan: { onCarePlan: false }
     },
 
     'I5100': {
@@ -1396,7 +1405,11 @@ export const DEMO_API_RESPONSES = {
         ]
       },
       diagnosisSummary: 'Left hemiparesis following CVA well documented across PT, OT, and physician notes.',
-      treatmentSummary: 'Receiving PT 5x/week and OT 5x/week for functional mobility and ADL training.'
+      treatmentSummary: 'Receiving PT 5x/week and OT 5x/week for functional mobility and ADL training.',
+      carePlan: {
+        onCarePlan: true,
+        items: ['PT 5x/week for functional mobility', 'OT 5x/week for ADL training', 'Fall prevention and safety awareness', 'Transfer training with progressive assist reduction']
+      }
     },
 
     'K0510A': {
@@ -1439,7 +1452,8 @@ export const DEMO_API_RESPONSES = {
         keyFindings: ['History of BCC excised 2019 — no recurrence', 'Dermatology follow-up clear 06/2025']
       },
       diagnosisSummary: 'No active cancer diagnosis found. History of basal cell carcinoma excised in 2019 with no recurrence documented.',
-      treatmentSummary: 'No active cancer treatment. Routine dermatology follow-up only.'
+      treatmentSummary: 'No active cancer treatment. Routine dermatology follow-up only.',
+      carePlan: { onCarePlan: false }
     },
 
     'I0200': {
@@ -1459,7 +1473,11 @@ export const DEMO_API_RESPONSES = {
         keyFindings: ['Hgb 9.8, Hct 29.4%, Ferritin 12 — iron deficiency anemia', 'Ferrous sulfate 325mg TID active on MAR']
       },
       diagnosisSummary: 'Iron deficiency anemia documented with ICD-10 D50.9. Lab values confirm: Hgb 9.8, Ferritin 12.',
-      treatmentSummary: 'Ferrous sulfate 325mg TID. Follow-up labs ordered in 4 weeks.'
+      treatmentSummary: 'Ferrous sulfate 325mg TID. Follow-up labs ordered in 4 weeks.',
+      carePlan: {
+        onCarePlan: true,
+        items: ['Iron supplementation with meals', 'CBC and iron panel recheck in 4 weeks', 'Monitor for signs of GI bleeding']
+      }
     },
 
     'I0300': {
@@ -1476,7 +1494,8 @@ export const DEMO_API_RESPONSES = {
         keyFindings: ['Normal sinus rhythm on ECG', 'Holter monitor 2025 — no arrhythmias']
       },
       diagnosisSummary: 'No atrial fibrillation or dysrhythmia documented. ECG shows normal sinus rhythm. Holter monitor negative.',
-      treatmentSummary: 'No antiarrhythmic therapy required.'
+      treatmentSummary: 'No antiarrhythmic therapy required.',
+      carePlan: { onCarePlan: false }
     },
 
     'I0500': {
@@ -1493,7 +1512,8 @@ export const DEMO_API_RESPONSES = {
         keyFindings: ['Duplex US 11/2025 negative for DVT', 'LE edema attributed to venous insufficiency']
       },
       diagnosisSummary: 'No DVT documented. Duplex ultrasound 11/2025 negative. Lower extremity edema from venous insufficiency.',
-      treatmentSummary: 'No anticoagulation for DVT. Compression stockings for venous insufficiency only.'
+      treatmentSummary: 'No anticoagulation for DVT. Compression stockings for venous insufficiency only.',
+      carePlan: { onCarePlan: false }
     },
 
     'I0600': {
@@ -1513,7 +1533,8 @@ export const DEMO_API_RESPONSES = {
         keyFindings: ['Echo LVEF 58% — normal', 'BNP 45 pg/mL — normal', 'No signs of fluid overload']
       },
       diagnosisSummary: 'No heart failure documented. Echo shows preserved EF at 58%. BNP within normal limits.',
-      treatmentSummary: 'No heart failure therapy. Current cardiac medications for HTN/CAD only.'
+      treatmentSummary: 'No heart failure therapy. Current cardiac medications for HTN/CAD only.',
+      carePlan: { onCarePlan: false }
     },
 
     'I0800': {
@@ -1530,7 +1551,8 @@ export const DEMO_API_RESPONSES = {
         keyFindings: ['Orthostatic vitals negative — no significant BP drop', 'No symptoms of dizziness on standing']
       },
       diagnosisSummary: 'No orthostatic hypotension documented. Orthostatic vital signs within normal parameters.',
-      treatmentSummary: 'No specific orthostatic hypotension treatment. Fall precautions in place for general safety.'
+      treatmentSummary: 'No specific orthostatic hypotension treatment. Fall precautions in place for general safety.',
+      carePlan: { onCarePlan: false }
     },
 
     'I1100': {
@@ -1547,7 +1569,8 @@ export const DEMO_API_RESPONSES = {
         keyFindings: ['LFTs all within normal limits', 'No hepatic dysfunction documented']
       },
       diagnosisSummary: 'No cirrhosis documented. Liver function tests all within normal range.',
-      treatmentSummary: 'No hepatic disease management required.'
+      treatmentSummary: 'No hepatic disease management required.',
+      carePlan: { onCarePlan: false }
     },
 
     'I1200': {
@@ -1567,7 +1590,11 @@ export const DEMO_API_RESPONSES = {
         keyFindings: ['GERD on active problem list with ICD-10 K21.0', 'Omeprazole 20mg daily — well controlled']
       },
       diagnosisSummary: 'GERD well documented on problem list. Active PPI therapy with good symptom control.',
-      treatmentSummary: 'Omeprazole 20mg daily. Dietary modifications — elevated HOB, no late meals.'
+      treatmentSummary: 'Omeprazole 20mg daily. Dietary modifications — elevated HOB, no late meals.',
+      carePlan: {
+        onCarePlan: true,
+        items: ['PPI administered 30 min before breakfast', 'HOB elevated 30 degrees at night', 'Avoid late meals — nothing 3 hours before bed']
+      }
     },
 
     'I2100': {
@@ -1587,7 +1614,11 @@ export const DEMO_API_RESPONSES = {
         keyFindings: ['TSH 6.8 — suboptimally controlled hypothyroidism', 'Levothyroxine 75mcg daily active on MAR']
       },
       diagnosisSummary: 'Hypothyroidism documented with ICD-10 E03.9. TSH 6.8 on latest labs — dose adjustment may be needed.',
-      treatmentSummary: 'Levothyroxine 75mcg daily. TSH recheck ordered in 6 weeks.'
+      treatmentSummary: 'Levothyroxine 75mcg daily. TSH recheck ordered in 6 weeks.',
+      carePlan: {
+        onCarePlan: true,
+        items: ['Levothyroxine on empty stomach at 0630', 'TSH recheck in 6 weeks', 'Hold calcium/iron 4 hours after dose']
+      }
     },
 
     'I2300': {
@@ -1604,7 +1635,8 @@ export const DEMO_API_RESPONSES = {
         keyFindings: ['Glucose elevations managed under DM (I2000)', 'No separate hyperglycemia diagnosis']
       },
       diagnosisSummary: 'No separate hyperglycemia diagnosis. Blood glucose elevations managed under diabetes mellitus (I2000).',
-      treatmentSummary: 'Glucose management covered under DM treatment plan — metformin, sliding scale, monitoring.'
+      treatmentSummary: 'Glucose management covered under DM treatment plan — metformin, sliding scale, monitoring.',
+      carePlan: { onCarePlan: false }
     },
 
     'I4200': {
@@ -1624,7 +1656,11 @@ export const DEMO_API_RESPONSES = {
         keyFindings: ['ESBL-producing E. coli in urine culture', 'Contact precautions initiated', 'Treated with nitrofurantoin 100mg BID']
       },
       diagnosisSummary: 'MDRO infection documented: ESBL-producing E. coli UTI confirmed by culture 01/10/2026.',
-      treatmentSummary: 'Nitrofurantoin 100mg BID x 7 days. Contact precautions per infection control protocol.'
+      treatmentSummary: 'Nitrofurantoin 100mg BID x 7 days. Contact precautions per infection control protocol.',
+      carePlan: {
+        onCarePlan: true,
+        items: ['Contact precautions per infection control', 'Antibiotic with food to reduce GI upset', 'Repeat urine culture after antibiotics complete', 'Monitor for C. diff symptoms']
+      }
     },
 
     'I4400': {
@@ -1641,7 +1677,8 @@ export const DEMO_API_RESPONSES = {
         keyFindings: ['Lungs CTA bilaterally', 'CXR 01/05 — no infiltrates', 'No respiratory symptoms']
       },
       diagnosisSummary: 'No pneumonia documented. Chest X-ray clear, lungs clear on exam, no respiratory symptoms.',
-      treatmentSummary: 'No pneumonia treatment. Pneumococcal and influenza vaccines up to date.'
+      treatmentSummary: 'No pneumonia treatment. Pneumococcal and influenza vaccines up to date.',
+      carePlan: { onCarePlan: false }
     },
 
     'I4500': {
@@ -1658,7 +1695,8 @@ export const DEMO_API_RESPONSES = {
         keyFindings: ['Blood cultures negative at 5 days', 'WBC, lactate, procalcitonin all normal']
       },
       diagnosisSummary: 'No septicemia documented. Blood cultures negative, inflammatory markers normal.',
-      treatmentSummary: 'No sepsis treatment. UTI treated with targeted antibiotics only.'
+      treatmentSummary: 'No sepsis treatment. UTI treated with targeted antibiotics only.',
+      carePlan: { onCarePlan: false }
     },
 
     'I4900': {
@@ -1675,7 +1713,8 @@ export const DEMO_API_RESPONSES = {
         keyFindings: ['Psychiatric evaluation negative for psychotic disorders', 'No antipsychotic medications on profile']
       },
       diagnosisSummary: 'No schizophrenia documented. Psychiatric evaluation negative for psychotic symptoms.',
-      treatmentSummary: 'No antipsychotic medications prescribed.'
+      treatmentSummary: 'No antipsychotic medications prescribed.',
+      carePlan: { onCarePlan: false }
     },
 
     'I5200': {
@@ -1692,7 +1731,8 @@ export const DEMO_API_RESPONSES = {
         keyFindings: ['Bilateral LE function preserved', 'Ambulates with walker and min assist']
       },
       diagnosisSummary: 'No paraplegia documented. Left hemiparesis (I5100) but both lower extremities functional.',
-      treatmentSummary: 'PT 5x/week for mobility. No paraplegia-specific treatment needed.'
+      treatmentSummary: 'PT 5x/week for mobility. No paraplegia-specific treatment needed.',
+      carePlan: { onCarePlan: false }
     },
 
     'I5250': {
@@ -1709,7 +1749,8 @@ export const DEMO_API_RESPONSES = {
         keyFindings: ['Right side full strength 5/5', 'Left side weakness from CVA only — not quadriplegia']
       },
       diagnosisSummary: 'No quadriplegia documented. Right-sided extremities with full strength. Left hemiparesis only.',
-      treatmentSummary: 'No quadriplegia-specific interventions. PT/OT for left-sided weakness.'
+      treatmentSummary: 'No quadriplegia-specific interventions. PT/OT for left-sided weakness.',
+      carePlan: { onCarePlan: false }
     },
 
     'I5300': {
@@ -1726,7 +1767,8 @@ export const DEMO_API_RESPONSES = {
         keyFindings: ['No aphasia documented in clinical records', 'Communication abilities intact per SLP evaluation']
       },
       diagnosisSummary: 'No aphasia documented. SLP evaluation focused on swallowing/dysphagia only.',
-      treatmentSummary: 'No aphasia-specific therapy. SLP treating dysphagia only.'
+      treatmentSummary: 'No aphasia-specific therapy. SLP treating dysphagia only.',
+      carePlan: { onCarePlan: false }
     },
 
     'I5350': {
@@ -1743,7 +1785,8 @@ export const DEMO_API_RESPONSES = {
         keyFindings: ['MMSE 22/30 — mild cognitive impairment', 'CVA-related, not dementia per neurology', 'Reassess in 3 months']
       },
       diagnosisSummary: 'No non-Alzheimer dementia documented. Mild cognitive impairment from CVA — does not meet dementia criteria per neurology.',
-      treatmentSummary: 'Cognitive stimulation activities. Neurology follow-up in 3 months for reassessment.'
+      treatmentSummary: 'Cognitive stimulation activities. Neurology follow-up in 3 months for reassessment.',
+      carePlan: { onCarePlan: false }
     },
 
     'I5400': {
@@ -1760,7 +1803,8 @@ export const DEMO_API_RESPONSES = {
         keyFindings: ['Cognitive changes acute post-CVA, not progressive', 'No Alzheimer features per neurology']
       },
       diagnosisSummary: 'No Alzheimer disease documented. Cognitive impairment attributed to CVA, not neurodegenerative disease.',
-      treatmentSummary: 'No Alzheimer-specific medications. No cholinesterase inhibitors or memantine.'
+      treatmentSummary: 'No Alzheimer-specific medications. No cholinesterase inhibitors or memantine.',
+      carePlan: { onCarePlan: false }
     },
 
     'I5500': {
@@ -1777,7 +1821,8 @@ export const DEMO_API_RESPONSES = {
         keyFindings: ['MRI — old infarct, no MS-type white matter lesions', 'Weakness from stroke, not demyelination']
       },
       diagnosisSummary: 'No multiple sclerosis documented. MRI shows old infarct only, no demyelinating lesions.',
-      treatmentSummary: 'No MS disease-modifying therapy. Neurological deficits managed as CVA sequelae.'
+      treatmentSummary: 'No MS disease-modifying therapy. Neurological deficits managed as CVA sequelae.',
+      carePlan: { onCarePlan: false }
     },
 
     'I5700': {
@@ -1794,7 +1839,8 @@ export const DEMO_API_RESPONSES = {
         keyFindings: ['No psychotic features on mental status exam', 'Thought process linear and goal-directed']
       },
       diagnosisSummary: 'No schizophrenia. Psychiatric evaluation negative — no psychotic symptoms.',
-      treatmentSummary: 'No antipsychotic medications. No psychiatric treatment for psychosis.'
+      treatmentSummary: 'No antipsychotic medications. No psychiatric treatment for psychosis.',
+      carePlan: { onCarePlan: false }
     },
 
     'I5800': {
@@ -1811,7 +1857,8 @@ export const DEMO_API_RESPONSES = {
         keyFindings: ['GAD-7 score 4 — minimal anxiety', 'No panic attacks or avoidance behaviors']
       },
       diagnosisSummary: 'No anxiety disorder documented. GAD-7 score 4 — minimal, subclinical anxiety only.',
-      treatmentSummary: 'No anxiolytic medications. Supportive counseling available PRN.'
+      treatmentSummary: 'No anxiolytic medications. Supportive counseling available PRN.',
+      carePlan: { onCarePlan: false }
     },
 
     'I5900': {
@@ -1828,7 +1875,8 @@ export const DEMO_API_RESPONSES = {
         keyFindings: ['PC-PTSD-5 screen negative', 'No trauma history, nightmares, or flashbacks']
       },
       diagnosisSummary: 'No PTSD documented. Screening negative — no traumatic stress symptoms.',
-      treatmentSummary: 'No PTSD-specific treatment or trauma-focused therapy.'
+      treatmentSummary: 'No PTSD-specific treatment or trauma-focused therapy.',
+      carePlan: { onCarePlan: false }
     },
 
     'I5950': {
@@ -1845,7 +1893,8 @@ export const DEMO_API_RESPONSES = {
         keyFindings: ['No hallucinations or delusions', 'Reality testing intact']
       },
       diagnosisSummary: 'No psychotic disorder documented. Psychiatric evaluation — no hallucinations, delusions, or disorganized thinking.',
-      treatmentSummary: 'No antipsychotic medications. No psychosis treatment.'
+      treatmentSummary: 'No antipsychotic medications. No psychosis treatment.',
+      carePlan: { onCarePlan: false }
     },
 
     'I6000': {
@@ -1865,7 +1914,8 @@ export const DEMO_API_RESPONSES = {
         keyFindings: ['Lungs CTA — no wheezing or rhonchi', 'SpO2 97% on room air', 'CXR — no hyperinflation or chronic changes']
       },
       diagnosisSummary: 'No asthma, COPD, or chronic lung disease documented. Lungs clear, SpO2 97%, imaging normal.',
-      treatmentSummary: 'No bronchodilators or inhaled corticosteroids. No supplemental oxygen.'
+      treatmentSummary: 'No bronchodilators or inhaled corticosteroids. No supplemental oxygen.',
+      carePlan: { onCarePlan: false }
     },
 
     'I6100': {
@@ -1882,7 +1932,8 @@ export const DEMO_API_RESPONSES = {
         keyFindings: ['SpO2 97% on room air — no supplemental O2', 'No respiratory distress or failure']
       },
       diagnosisSummary: 'No respiratory failure documented. Oxygenation adequate on room air.',
-      treatmentSummary: 'No supplemental oxygen. No respiratory support devices.'
+      treatmentSummary: 'No supplemental oxygen. No respiratory support devices.',
+      carePlan: { onCarePlan: false }
     },
 
     'I6200': {
@@ -1923,7 +1974,8 @@ export const DEMO_API_RESPONSES = {
         keyFindings: ['No seizure history', 'No prophylactic anticonvulsants indicated post-CVA', 'No witnessed seizure activity']
       },
       diagnosisSummary: 'No seizure disorder or epilepsy documented. Neurology evaluation negative.',
-      treatmentSummary: 'No anticonvulsant medications. No seizure precautions beyond standard post-CVA monitoring.'
+      treatmentSummary: 'No anticonvulsant medications. No seizure precautions beyond standard post-CVA monitoring.',
+      carePlan: { onCarePlan: false }
     },
 
     'I7900': {
@@ -1951,7 +2003,8 @@ export const DEMO_API_RESPONSES = {
         keyFindings: ['All Section I diagnoses captured above', 'CKD Stage 3, Obesity, Chronic pain on problem list — not Section I items']
       },
       diagnosisSummary: 'No additional Section I diagnoses to capture. Other active conditions (CKD, obesity, chronic pain) not reportable here.',
-      treatmentSummary: 'All active treatments documented under their respective Section I items.'
+      treatmentSummary: 'All active treatments documented under their respective Section I items.',
+      carePlan: { onCarePlan: false }
     }
   },
 

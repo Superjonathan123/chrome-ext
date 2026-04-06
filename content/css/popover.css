@@ -219,6 +219,41 @@
   margin-bottom: 8px;
 }
 
+.super-ev-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.super-ev-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--super-gray-600);
+  background: var(--super-gray-100);
+  border: 1px solid var(--super-gray-200);
+  border-radius: 16px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.super-ev-chip:hover {
+  background: var(--super-gray-200);
+}
+
+.super-ev-chip--active {
+  color: #fff;
+  background: #374151;
+  border-color: #374151;
+}
+
+.super-ev-chip--active:hover {
+  background: #1f2937;
+}
+
 .super-evidence-list {
   display: flex;
   flex-direction: column;

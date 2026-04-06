@@ -26,6 +26,34 @@ const ArrowIcon = () => (
   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
 );
 
+/* ── Evidence categorization ── */
+
+function getEvidenceCategory(ev) {
+  const sourceType = ev.sourceType || ev.type || '';
+  const evidenceId = ev.evidenceId || ev.sourceId || '';
+
+  // Orders / MAR / admin
+  if (sourceType === 'order' || sourceType === 'mar' || sourceType === 'medication' ||
+      evidenceId.startsWith('order-') || evidenceId.startsWith('admin-') || evidenceId.startsWith('mar-')) {
+    return 'orders';
+  }
+  // Notes (progress notes, nursing notes, clinical notes)
+  if (sourceType === 'progress-note' || sourceType === 'nursing-note' || sourceType === 'clinical_note' ||
+      ev.type === 'clinical_note' || evidenceId.startsWith('pcc-prognote-') || evidenceId.startsWith('patient-practnote-')) {
+    return 'notes';
+  }
+  // Documents / PDFs / therapy docs
+  if (sourceType === 'document' || sourceType === 'therapy-doc' || ev.type === 'document' ||
+      ev.type === 'therapy_document' || evidenceId.startsWith('therapy-doc-') || evidenceId.includes('-chunk-')) {
+    return 'documents';
+  }
+  // Fallback
+  if (sourceType) return 'other';
+  return 'documents'; // default
+}
+
+const CATEGORY_LABELS = { orders: 'Orders', notes: 'Notes', documents: 'Documents', other: 'Other' };
+
 /* ── Sub-components ── */
 
 function FallCard({ fall }) {
@@ -157,6 +185,35 @@ function RationaleBlock({ rationale }) {
   );
 }
 
+function CarePlanSection({ carePlan }) {
+  if (!carePlan) return null;
+  const [expanded, setExpanded] = useState(false);
+  const onPlan = carePlan.onCarePlan;
+  const items = carePlan.items || [];
+
+  return (
+    <div class="sid__careplan">
+      <button
+        class="sid__careplan-toggle"
+        type="button"
+        onClick={() => items.length > 0 && setExpanded(!expanded)}
+      >
+        <span class={`sid__careplan-dot ${onPlan ? 'sid__careplan-dot--on' : 'sid__careplan-dot--off'}`} />
+        <span class="sid__careplan-title">Care Plan</span>
+        <span class="sid__careplan-status">{onPlan ? 'On Care Plan' : 'Not on Care Plan'}</span>
+        {items.length > 0 && (
+          <span class={`sid__findings-arrow ${expanded ? 'sid__findings-arrow--open' : ''}`}>&#9654;</span>
+        )}
+      </button>
+      {expanded && items.length > 0 && (
+        <ul class="sid__careplan-items">
+          {items.map((it, i) => <li key={i}>{it}</li>)}
+        </ul>
+      )}
+    </div>
+  );
+}
+
 /* ── Main component ── */
 
 /**
@@ -200,7 +257,19 @@ export function ItemDetail({ variant = 'compact', data, detectionItem, mdsItem, 
   const evidence = isDiag ? diagEvidence : colEvidence;
 
   const [showAllEv, setShowAllEv] = useState(false);
-  const visibleEvidence = showAllEv ? evidence : evidence.slice(0, 4);
+  const [evFilter, setEvFilter] = useState(null); // null = show all
+
+  // Categorize evidence for filter chips
+  const evCategories = {};
+  evidence.forEach(ev => {
+    const cat = getEvidenceCategory(ev);
+    evCategories[cat] = (evCategories[cat] || 0) + 1;
+  });
+  const categoryKeys = Object.keys(evCategories).sort();
+  const showFilterChips = categoryKeys.length > 1;
+
+  const filteredEvidence = evFilter ? evidence.filter(ev => getEvidenceCategory(ev) === evFilter) : evidence;
+  const visibleEvidence = showAllEv ? filteredEvidence : filteredEvidence.slice(0, 4);
 
   // Key findings
   const keyFindings = apiItem?.keyFindings || [];
@@ -238,6 +307,11 @@ export function ItemDetail({ variant = 'compact', data, detectionItem, mdsItem, 
           treatmentSummary={data.treatmentSummary}
           validation={apiItem?.validation}
         />
+      )}
+
+      {/* ── Care Plan (Section I) ── */}
+      {hasSectionISteps && data?.carePlan && (
+        <CarePlanSection carePlan={data.carePlan} />
       )}
 
       {!hasSectionISteps && isColumnBased && activeColData && (
@@ -325,12 +399,29 @@ export function ItemDetail({ variant = 'compact', data, detectionItem, mdsItem, 
       {evidence.length > 0 && (
         <div class="sid__evidence">
           <div class="sid__ev-label">Evidence ({evidence.length})</div>
+          {showFilterChips && (
+            <div class="sid__ev-filters">
+              <button
+                type="button"
+                class={`sid__ev-chip ${evFilter === null ? 'sid__ev-chip--active' : ''}`}
+                onClick={() => { setEvFilter(null); setShowAllEv(false); }}
+              >All ({evidence.length})</button>
+              {categoryKeys.map(cat => (
+                <button
+                  key={cat}
+                  type="button"
+                  class={`sid__ev-chip ${evFilter === cat ? 'sid__ev-chip--active' : ''}`}
+                  onClick={() => { setEvFilter(evFilter === cat ? null : cat); setShowAllEv(false); }}
+                >{CATEGORY_LABELS[cat] || cat} ({evCategories[cat]})</button>
+              ))}
+            </div>
+          )}
           <div class="sid__ev-list">
             {visibleEvidence.map((ev, i) => <EvidenceCard key={i} ev={ev} index={i} onViewSource={onViewSource} />)}
           </div>
-          {evidence.length > 4 && !showAllEv && (
+          {filteredEvidence.length > 4 && !showAllEv && (
             <button class="sid__ev-show-more" type="button" onClick={() => setShowAllEv(true)}>
-              Show all {evidence.length} &darr;
+              Show all {filteredEvidence.length} &darr;
             </button>
           )}
         </div>

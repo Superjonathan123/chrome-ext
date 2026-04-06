@@ -848,18 +848,53 @@ function renderEvidenceCard(ev, evIdx) {
   `;
 }
 
+function getEvidenceCategoryOverlay(ev) {
+  const sourceType = ev.sourceType || ev.type || inferSourceType(ev.displayName, ev.evidenceId);
+  const evidenceId = ev.evidenceId || ev.sourceId || '';
+  if (sourceType === 'order' || sourceType === 'mar' || evidenceId.startsWith('order-') || evidenceId.startsWith('admin-') || evidenceId.startsWith('mar-')) return 'orders';
+  if (sourceType === 'progress-note' || sourceType === 'nursing-note' || sourceType === 'clinical_note' || evidenceId.startsWith('pcc-prognote-') || evidenceId.startsWith('patient-practnote-')) return 'notes';
+  if (sourceType === 'document' || sourceType === 'therapy-doc' || evidenceId.startsWith('therapy-doc-') || evidenceId.includes('-chunk-')) return 'documents';
+  if (sourceType) return 'other';
+  return 'documents';
+}
+
+const OVERLAY_CATEGORY_LABELS = { orders: 'Orders', notes: 'Notes', documents: 'Documents', other: 'Other' };
+
 function renderEvidence(evidence) {
   if (!evidence || evidence.length === 0) {
     return '';
   }
 
-  const cards = evidence.map((ev, evIdx) => renderEvidenceCard(ev, evIdx)).filter(c => c).join('');
+  // Categorize
+  const categories = {};
+  evidence.forEach(ev => {
+    const cat = getEvidenceCategoryOverlay(ev);
+    categories[cat] = (categories[cat] || 0) + 1;
+  });
+  const catKeys = Object.keys(categories).sort();
+  const showChips = catKeys.length > 1;
+
+  // Tag each card with its category
+  const cards = evidence.map((ev, evIdx) => {
+    const card = renderEvidenceCard(ev, evIdx);
+    if (!card) return '';
+    const cat = getEvidenceCategoryOverlay(ev);
+    return card.replace('<div class="super-evidence-card', `<div data-ev-cat="${cat}" class="super-evidence-card`);
+  }).filter(c => c).join('');
 
   if (!cards) return '';
+
+  const chipsHTML = showChips ? `
+    <div class="super-ev-filters">
+      <button class="super-ev-chip super-ev-chip--active" data-ev-filter="all">All (${evidence.length})</button>
+      ${catKeys.map(cat => `<button class="super-ev-chip" data-ev-filter="${cat}">${OVERLAY_CATEGORY_LABELS[cat] || cat} (${categories[cat]})</button>`).join('')}
+    </div>
+  ` : '';
 
   return `
     <div class="super-evidence-section">
       <div class="super-evidence-section__label">Evidence (${evidence.length})</div>
+      ${chipsHTML}
       <div class="super-evidence-list">${cards}</div>
     </div>
   `;
@@ -1496,6 +1531,9 @@ function setupPopoverListeners(popover, result) {
   // Order evidence click handlers for viewing administrations
   setupAdministrationViewers(popover);
 
+  // Evidence filter chips (if rendered statically)
+  setupEvidenceFilters(popover);
+
   // Falls click handlers (if falls are already rendered from transformer data)
   setupFallClickHandlers(popover);
 
@@ -1560,8 +1598,37 @@ function setupPopoverListeners(popover, result) {
         const label = popover.querySelector('.super-evidence-section__label');
         if (label) label.textContent = `Evidence (${allEvidence.length})`;
 
-        // Re-attach viewers + prefetch PDFs
+        // Add filter chips if multiple categories
+        const categories = {};
+        allEvidence.forEach(ev => {
+          const cat = getEvidenceCategoryOverlay(ev);
+          categories[cat] = (categories[cat] || 0) + 1;
+        });
+        const catKeys = Object.keys(categories).sort();
+        if (catKeys.length > 1) {
+          const section = popover.querySelector('.super-evidence-section');
+          if (section && !section.querySelector('.super-ev-filters')) {
+            const chipsDiv = document.createElement('div');
+            chipsDiv.className = 'super-ev-filters';
+            chipsDiv.innerHTML = `
+              <button class="super-ev-chip super-ev-chip--active" data-ev-filter="all">All (${allEvidence.length})</button>
+              ${catKeys.map(cat => `<button class="super-ev-chip" data-ev-filter="${cat}">${OVERLAY_CATEGORY_LABELS[cat] || cat} (${categories[cat]})</button>`).join('')}
+            `;
+            const evList = section.querySelector('.super-evidence-list');
+            section.insertBefore(chipsDiv, evList);
+          }
+        }
+
+        // Tag cards with categories
+        evidenceContainer.querySelectorAll('.super-evidence-card').forEach((card, i) => {
+          if (allEvidence[i]) {
+            card.setAttribute('data-ev-cat', getEvidenceCategoryOverlay(allEvidence[i]));
+          }
+        });
+
+        // Re-attach viewers + prefetch PDFs + filters
         setupAdministrationViewers(popover);
+        setupEvidenceFilters(popover);
         prefetchDocuments(popover);
       }).catch(err => {
         console.error('[Super LTC] Failed to load evidence:', err);
@@ -1569,6 +1636,30 @@ function setupPopoverListeners(popover, result) {
       });
     }
   }
+}
+
+function setupEvidenceFilters(container) {
+  container.querySelectorAll('.super-ev-chip').forEach(chip => {
+    chip.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const filter = chip.dataset.evFilter;
+      const section = chip.closest('.super-evidence-section');
+      if (!section) return;
+
+      // Update active chip
+      section.querySelectorAll('.super-ev-chip').forEach(c => c.classList.remove('super-ev-chip--active'));
+      chip.classList.add('super-ev-chip--active');
+
+      // Show/hide cards
+      section.querySelectorAll('.super-evidence-card').forEach(card => {
+        if (filter === 'all' || card.dataset.evCat === filter) {
+          card.style.display = '';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    });
+  });
 }
 
 function setupAdministrationViewers(popover) {

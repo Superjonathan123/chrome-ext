@@ -1624,6 +1624,25 @@
   vertical-align: middle;
 }
 
+.icd10-viewer__push-btn {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #fff;
+  background: #16a34a;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+  white-space: nowrap;
+}
+
+.icd10-viewer__push-btn:hover {
+  background: #15803d;
+}
+
 /* ============================================
    Diagnosis Confirmation Dialog
    ============================================ */
