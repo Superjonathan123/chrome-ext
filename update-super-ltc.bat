@@ -4,7 +4,8 @@ echo   Super LTC Extension Updater
 echo ============================================
 echo.
 
-set INSTALL_DIR=%USERPROFILE%\super-ltc-extension
+for /f "delims=" %%i in ('powershell -Command "[Environment]::GetFolderPath('Desktop')"') do set DESKTOP=%%i
+set INSTALL_DIR=%DESKTOP%\super-ltc-extension
 set ZIP_URL=https://github.com/Superjonathan123/chrome-ext/releases/latest/download/super-ltc-extension.zip
 set ZIP_FILE=%TEMP%\super-ltc-extension.zip
 

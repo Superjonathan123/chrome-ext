@@ -11,6 +11,7 @@ import './css/item-detail.css';
 import './css/pdf-viewer.css';
 import './css/ai-chat.css';
 import './css/certifications.css';
+import './css/care-plan-coverage.css';
 
 // 2. Import vanilla utilities (order matters - matches current manifest.json order)
 import './mockData.js';

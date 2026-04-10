@@ -16,6 +16,9 @@ import { AssessmentRow, cleanAssessmentType } from './AssessmentRow.jsx';
 import { AssessmentPreview } from './AssessmentPreview.jsx';
 import { ItemPopover } from './ItemPopover.jsx';
 import { formatPaymentDelta, getPaymentDeltaNumeric } from '../../utils/payment.js';
+import { useComplianceDashboard } from '../care-plan-coverage/hooks/useComplianceDashboard.js';
+import { useTrending } from '../care-plan-coverage/hooks/useTrending.js';
+import { ComplianceView } from '../care-plan-coverage/ComplianceView.jsx';
 
 // ── Helpers ──
 
@@ -711,6 +714,18 @@ export function MDSCommandCenter({ facilityName, orgSlug, onClose, initialExpand
   const certsEnabled = certDashboard !== null;
   const certCount = certsEnabled ? (certDashboard?.pending || 0) + (certDashboard?.overdue || 0) : 0;
 
+  // Compliance dashboard (care plan coverage)
+  const {
+    data: complianceData,
+    loading: complianceLoading,
+    error: complianceError,
+    retry: complianceRetry
+  } = useComplianceDashboard({ facilityName, orgSlug, enabled: true });
+  const complianceGaps = complianceData?.summary?.totalGaps || 0;
+
+  // Trending data for compliance chart
+  const { data: trendingData } = useTrending({ facilityName, orgSlug, enabled: true });
+
   // Patient context for cert auto-filtering
   const patientId = typeof window.getChatPatientId === 'function' ? window.getChatPatientId() : null;
   const patientName = typeof window.getPatientNameFromPage === 'function' ? window.getPatientNameFromPage() : null;
@@ -882,6 +897,7 @@ export function MDSCommandCenter({ facilityName, orgSlug, onClose, initialExpand
           certCount={certCount}
           certsEnabled={certsEnabled}
           docRiskCount={docRiskCount}
+          complianceGaps={complianceGaps}
           payerFilter={payerFilter}
           onPayerFilterChange={setPayerFilter}
           classFilter={classFilter}
@@ -955,6 +971,19 @@ export function MDSCommandCenter({ facilityName, orgSlug, onClose, initialExpand
               orgSlug={orgSlug}
               patientId={patientId}
               patientName={patientName}
+            />
+          )}
+
+          {/* Compliance */}
+          {activeView === 'compliance' && (
+            <ComplianceView
+              data={complianceData}
+              loading={complianceLoading}
+              error={complianceError}
+              retry={complianceRetry}
+              trendingData={trendingData}
+              facilityName={facilityName}
+              orgSlug={orgSlug}
             />
           )}
         </div>

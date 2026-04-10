@@ -36,6 +36,7 @@ export function CommandCenterHeader({
   certCount,
   certsEnabled,
   docRiskCount,
+  complianceGaps,
   payerFilter,
   onPayerFilterChange,
   classFilter,
@@ -133,6 +134,13 @@ export function CommandCenterHeader({
             <span class="mds-cc__view-tab-badge mds-cc__view-tab-badge--amber">{docRiskCount}</span>
           </button>
         )}
+        <button
+          class={`mds-cc__view-tab${activeView === 'compliance' ? ' mds-cc__view-tab--active' : ''}`}
+          onClick={() => onViewChange('compliance')}
+        >
+          Compliance
+          {complianceGaps > 0 && <span class="mds-cc__view-tab-badge mds-cc__view-tab-badge--amber">{complianceGaps}</span>}
+        </button>
       </div>
 
       {/* ── Assessments filter row ── */}

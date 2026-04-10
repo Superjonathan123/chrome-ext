@@ -20,6 +20,11 @@ function createBubbles() {
       </svg>
       <span class="super-dial__action-badge" id="super-mds-badge" style="display:none;"></span>
     </button>
+    <button id="super-coverage-action" class="super-dial__action super-dial__action--coverage" aria-label="Care Plan Coverage" style="display:none;">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+      </svg>
+    </button>
     <button id="super-patient-action" class="super-dial__action super-dial__action--patient" aria-label="Open Patient" style="display:none;">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
@@ -58,6 +63,18 @@ function createBubbles() {
         }
       };
       document.addEventListener('click', onOutside, true);
+    }
+  });
+
+  // Coverage button → toggles Care Plan Coverage panel
+  const coverageAction = document.getElementById('super-coverage-action');
+  coverageAction.addEventListener('click', (e) => {
+    e.stopPropagation();
+    container.classList.remove('super-dial--open');
+    if (CoveragePanelLauncher.isOpen()) {
+      CoveragePanelLauncher.close();
+    } else {
+      CoveragePanelLauncher.open();
     }
   });
 
@@ -107,6 +124,9 @@ function updateBubblesContext() {
   const isPatientPage = context.scope === 'patient' || context.scope === 'mds';
 
   patientAction.style.display = isPatientPage ? '' : 'none';
+
+  const coverageAction = document.getElementById('super-coverage-action');
+  if (coverageAction) coverageAction.style.display = isPatientPage ? '' : 'none';
 }
 
 // Module-level hasDragged so the main button click handler can read it
@@ -164,6 +184,135 @@ const ChatOverlayLauncher = {
   }
 };
 
+// Care Plan Coverage Launcher — dynamic import pattern (same as ChatOverlayLauncher)
+const CoveragePanelLauncher = {
+  _overlayEl: null,
+  _preactUnmount: null,
+
+  async open() {
+    if (this._overlayEl) return;
+
+    // Resolve patient ID and context
+    const context = getMDSContext();
+    const patientId = window.SuperOverlay?.patientId || context.patientId;
+    if (!patientId) {
+      console.warn('[CoveragePanel] No patient ID available');
+      return;
+    }
+
+    let facilityName, orgSlug;
+    try {
+      const orgResponse = getOrg();
+      orgSlug = orgResponse?.org;
+      facilityName = getChatFacilityInfo();
+    } catch (e) {
+      console.error('[CoveragePanel] Could not get org/facility:', e);
+    }
+
+    const overlayEl = document.createElement('div');
+    overlayEl.id = 'care-plan-coverage-overlay';
+    document.body.appendChild(overlayEl);
+    this._overlayEl = overlayEl;
+
+    // Escape key to close
+    this._escapeHandler = (e) => {
+      if (e.key === 'Escape') this.close();
+    };
+    document.addEventListener('keydown', this._escapeHandler);
+
+    try {
+      const [{ render, h }, { CoveragePanel }] = await Promise.all([
+        import('preact'),
+        import('../modules/care-plan-coverage/CoveragePanel.jsx')
+      ]);
+
+      render(
+        h(CoveragePanel, {
+          patientId,
+          patientName: context.patientName || '',
+          facilityName: facilityName || '',
+          orgSlug: orgSlug || '',
+          onClose: () => this.close()
+        }),
+        overlayEl
+      );
+
+      this._preactUnmount = () => render(null, overlayEl);
+    } catch (err) {
+      console.error('[CoveragePanel] Failed to load module:', err);
+      overlayEl.remove();
+      this._overlayEl = null;
+    }
+  },
+
+  close() {
+    if (this._escapeHandler) {
+      document.removeEventListener('keydown', this._escapeHandler);
+      this._escapeHandler = null;
+    }
+    if (this._preactUnmount) {
+      this._preactUnmount();
+      this._preactUnmount = null;
+    }
+    if (this._overlayEl) {
+      this._overlayEl.remove();
+      this._overlayEl = null;
+    }
+  },
+
+  /** Open for a specific patient (called from compliance view) */
+  async openForPatient(patientId, patientName) {
+    if (this._overlayEl) this.close();
+
+    let facilityName, orgSlug;
+    try {
+      const orgResponse = getOrg();
+      orgSlug = orgResponse?.org;
+      facilityName = getChatFacilityInfo();
+    } catch (e) {
+      console.error('[CoveragePanel] Could not get org/facility:', e);
+    }
+
+    const overlayEl = document.createElement('div');
+    overlayEl.id = 'care-plan-coverage-overlay';
+    document.body.appendChild(overlayEl);
+    this._overlayEl = overlayEl;
+
+    this._escapeHandler = (e) => {
+      if (e.key === 'Escape') this.close();
+    };
+    document.addEventListener('keydown', this._escapeHandler);
+
+    try {
+      const [{ render, h }, { CoveragePanel }] = await Promise.all([
+        import('preact'),
+        import('../modules/care-plan-coverage/CoveragePanel.jsx')
+      ]);
+
+      render(
+        h(CoveragePanel, {
+          patientId,
+          patientName: patientName || '',
+          facilityName: facilityName || '',
+          orgSlug: orgSlug || '',
+          onClose: () => this.close()
+        }),
+        overlayEl
+      );
+
+      this._preactUnmount = () => render(null, overlayEl);
+    } catch (err) {
+      console.error('[CoveragePanel] Failed to load module:', err);
+      overlayEl.remove();
+      this._overlayEl = null;
+    }
+  },
+
+  isOpen() {
+    return !!this._overlayEl;
+  }
+};
+
 function openChatOverlay() {
   if (ChatOverlayLauncher.isOpen()) {
     ChatOverlayLauncher.close();
@@ -172,22 +321,53 @@ function openChatOverlay() {
   }
 }
 
+function resetBubblesPosition(container) {
+  container.style.left = '';
+  container.style.top = '';
+  container.style.right = '24px';
+  container.style.bottom = '24px';
+}
+
+function isBubbleVisible(container) {
+  const rect = container.getBoundingClientRect();
+  // Ensure the entire container (including the main button at the bottom) is on screen
+  return rect.top >= 0 && rect.left >= 0 &&
+         rect.bottom <= window.innerHeight &&
+         rect.right <= window.innerWidth;
+}
+
 function loadBubblesPosition(container) {
   try {
     const saved = localStorage.getItem(FAB_POSITION_KEY);
     if (saved) {
       const pos = JSON.parse(saved);
-      const maxX = window.innerWidth - 70;
-      const maxY = window.innerHeight - 120;
-      const x = Math.max(0, Math.min(pos.x, maxX));
-      const y = Math.max(0, Math.min(pos.y, maxY));
+      // Apply position first so we can measure actual container height
       container.style.right = 'auto';
       container.style.bottom = 'auto';
-      container.style.left = `${x}px`;
-      container.style.top = `${y}px`;
+      container.style.left = `${pos.x}px`;
+      container.style.top = `${pos.y}px`;
+
+      // Clamp after layout so we know the real container size
+      requestAnimationFrame(() => {
+        const h = container.offsetHeight || 160;
+        const w = container.offsetWidth || 70;
+        const maxX = window.innerWidth - w - 10;
+        const maxY = window.innerHeight - h - 10;
+        const x = Math.max(10, Math.min(pos.x, maxX));
+        const y = Math.max(10, Math.min(pos.y, maxY));
+        container.style.left = `${x}px`;
+        container.style.top = `${y}px`;
+
+        if (!isBubbleVisible(container)) {
+          console.warn('Super Menu: FAB was off-screen, resetting to default position');
+          resetBubblesPosition(container);
+          try { localStorage.removeItem(FAB_POSITION_KEY); } catch (_) {}
+        }
+      });
     }
   } catch (e) {
-    console.warn('Super Menu: Failed to load bubble position:', e);
+    console.warn('Super Menu: Failed to load bubble position, using default:', e);
+    resetBubblesPosition(container);
   }
 }
 
@@ -243,8 +423,10 @@ function setupBubblesDraggable(container) {
     let newX = startLeft + deltaX;
     let newY = startTop + deltaY;
 
-    const maxX = window.innerWidth - 70;
-    const maxY = window.innerHeight - 120;
+    const h = container.offsetHeight || 160;
+    const w = container.offsetWidth || 70;
+    const maxX = window.innerWidth - w - 10;
+    const maxY = window.innerHeight - h - 10;
     newX = Math.max(0, Math.min(newX, maxX));
     newY = Math.max(0, Math.min(newY, maxY));
 
@@ -285,15 +467,9 @@ function setupBubblesDraggable(container) {
   document.addEventListener('touchend', onEnd);
 
   window.addEventListener('resize', () => {
-    const rect = container.getBoundingClientRect();
-    const maxX = window.innerWidth - 70;
-    const maxY = window.innerHeight - 120;
-    if (rect.left > maxX || rect.top > maxY) {
-      const newX = Math.min(rect.left, maxX);
-      const newY = Math.min(rect.top, maxY);
-      container.style.left = `${newX}px`;
-      container.style.top = `${newY}px`;
-      saveBubblesPosition(newX, newY);
+    if (!isBubbleVisible(container)) {
+      resetBubblesPosition(container);
+      try { localStorage.removeItem(FAB_POSITION_KEY); } catch (_) {}
     }
   });
 }
@@ -356,3 +532,4 @@ window.updateMDSBadge = updateMDSBadge;
 window.updateMenuBadge = updateMenuBadge;
 window.updateBubblesContext = updateBubblesContext;
 window.ChatOverlayLauncher = ChatOverlayLauncher;
+window.CoveragePanelLauncher = CoveragePanelLauncher;

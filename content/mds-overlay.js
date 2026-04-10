@@ -19,6 +19,98 @@ const SuperOverlay = {
   patientId: null  // Stored from API response for diagnosis queries
 };
 
+// ============================================
+// Care Plan Coverage Dots (Section I)
+// ============================================
+const CarePlanDots = {
+  _data: null,
+  _fetched: false,
+  _patientId: null,
+
+  async fetch(patientId, facilityName, orgSlug) {
+    // Reset cache if patient changed
+    if (this._patientId && this._patientId !== patientId) {
+      this._data = null;
+      this._fetched = false;
+    }
+    this._patientId = patientId;
+    if (this._fetched) return this._data;
+    try {
+      const params = new URLSearchParams({ facilityName: facilityName || '', orgSlug: orgSlug || '' });
+      const endpoint = `/api/extension/patients/${patientId}/mds-coverage?${params}`;
+      const result = await chrome.runtime.sendMessage({ type: 'API_REQUEST', endpoint });
+      if (result.success) this._data = result.data;
+      this._fetched = true;
+    } catch (err) {
+      console.warn('[CarePlanDots] fetch failed:', err);
+    }
+    return this._data;
+  },
+
+  getItem(mdsItem) {
+    return this._data?.items?.[mdsItem] || null;
+  }
+};
+window.CarePlanDots = CarePlanDots;
+
+// ============================================
+// Loading Status Toast
+// ============================================
+const SuperLoadingStatus = {
+  _el: null,
+  _tasks: new Map(), // key → { label, done }
+
+  show() {
+    if (this._el) return;
+    const el = document.createElement('div');
+    el.id = 'super-loading-status';
+    el.innerHTML = `<div class="super-loading-status__spinner"></div><span class="super-loading-status__text">Loading...</span>`;
+    document.body.appendChild(el);
+    this._el = el;
+  },
+
+  addTask(key, label) {
+    this._tasks.set(key, { label, done: false });
+    this.show();
+    this._render();
+  },
+
+  completeTask(key) {
+    const task = this._tasks.get(key);
+    if (task) task.done = true;
+    this._render();
+    // If all done, fade out
+    const allDone = [...this._tasks.values()].every(t => t.done);
+    if (allDone) {
+      setTimeout(() => this.hide(), 600);
+    }
+  },
+
+  _render() {
+    if (!this._el) return;
+    const pending = [...this._tasks.values()].filter(t => !t.done);
+    const done = [...this._tasks.values()].filter(t => t.done);
+    const text = pending.length > 0
+      ? pending[0].label + (pending.length > 1 ? ` (+${pending.length - 1} more)` : '')
+      : 'Done';
+    const textEl = this._el.querySelector('.super-loading-status__text');
+    if (textEl) textEl.textContent = text;
+    // Update spinner visibility
+    const spinner = this._el.querySelector('.super-loading-status__spinner');
+    if (spinner) spinner.style.display = pending.length > 0 ? '' : 'none';
+  },
+
+  hide() {
+    if (this._el) {
+      this._el.classList.add('super-loading-status--out');
+      setTimeout(() => {
+        if (this._el) { this._el.remove(); this._el = null; }
+        this._tasks.clear();
+      }, 200);
+    }
+  }
+};
+
 // Evidence cache — keyed by "section:itemCode", stores fetched evidence data
 const EvidenceCache = new Map();
 
@@ -201,9 +293,11 @@ async function initSuperOverlay() {
 
     // Fetch section data and decisions in parallel
     console.log('Super LTC: Fetching section data and decisions from API...');
+    SuperLoadingStatus.addTask('mds', 'Loading MDS analysis...');
+    SuperLoadingStatus.addTask('decisions', 'Loading decisions...');
     const [apiResponse, decisions] = await Promise.all([
-      fetchSectionData(params),
-      fetchDecisions(params)
+      fetchSectionData(params).then(r => { SuperLoadingStatus.completeTask('mds'); return r; }),
+      fetchDecisions(params).then(r => { SuperLoadingStatus.completeTask('decisions'); return r; })
     ]);
     console.log('Super LTC: API response:', apiResponse);
     console.log('Super LTC: Decisions:', decisions);
@@ -238,7 +332,21 @@ async function initSuperOverlay() {
     console.log('Super LTC: Overlay initialized with', data.items.length, 'items');
 
     // Load queries for this assessment (async, non-blocking)
-    loadAssessmentQueries(params.assessmentId, params.facilityName, params.orgSlug);
+    SuperLoadingStatus.addTask('queries', 'Loading queries...');
+    const queriesPromise = loadAssessmentQueries(params.assessmentId, params.facilityName, params.orgSlug);
+    if (queriesPromise && queriesPromise.then) {
+      queriesPromise.then(() => SuperLoadingStatus.completeTask('queries')).catch(() => SuperLoadingStatus.completeTask('queries'));
+    } else {
+      SuperLoadingStatus.completeTask('queries');
+    }
+
+    // Care plan coverage dots for Section I (async, non-blocking)
+    if (params.section === 'I' && SuperOverlay.patientId) {
+      SuperLoadingStatus.addTask('careplan', 'Loading care plan coverage...');
+      CarePlanDots.fetch(SuperOverlay.patientId, params.facilityName, params.orgSlug)
+        .then(() => { injectCarePlanDots(); SuperLoadingStatus.completeTask('careplan'); })
+        .catch(() => SuperLoadingStatus.completeTask('careplan'));
+    }
 
   } catch (error) {
     console.error('Super LTC: Failed to fetch section data:', error);
@@ -563,6 +671,172 @@ function injectBadge(questionEl, result) {
 }
 
 // ============================================
+// Care Plan Dots — Injection (Section I)
+// ============================================
+
+/**
+ * Extract ICD-10 code from an I8000 question element's displayed value.
+ * DOM shows e.g. "K62.1    RECTAL POLYP" or "{blank}".
+ */
+function extractIcd10FromElement(questionEl) {
+  const val = questionEl.querySelector('.readonlyquestionvalue')?.textContent?.trim();
+  if (!val || val === '{blank}') return null;
+  const match = val.match(/^([A-Z]\d[\dA-Z]*\.?\d*)/i);
+  return match ? match[1] : null;
+}
+
+/**
+ * Find a matching diagnosis for an ICD-10 code across I8000 items AND otherDiagnoses.
+ */
+function findI8000Match(icd10) {
+  if (!CarePlanDots._data) return null;
+  // Check I8000 matchedDiagnoses first
+  const i8000 = CarePlanDots.getItem('I8000');
+  if (i8000) {
+    const match = i8000.matchedDiagnoses.find(d => d.code === icd10);
+    if (match) return match;
+  }
+  // Then check otherDiagnoses
+  const others = CarePlanDots._data.otherDiagnoses || [];
+  const otherMatch = others.find(d => d.code === icd10);
+  if (otherMatch) return otherMatch;
+  return null;
+}
+
+/**
+ * Append a care plan shield dot to a target element.
+ */
+function appendShieldDot(targetEl, dotStatus, clickData) {
+  // Remove existing
+  const existing = targetEl.querySelector('.super-careplan-dot');
+  if (existing) existing.remove();
+
+  const shieldColor = dotStatus === 'covered' ? '#22c55e' : dotStatus === 'partial' ? '#f59e0b' : '#ef4444';
+  const dot = document.createElement('span');
+  dot.className = `super-careplan-dot super-careplan-dot--${dotStatus}`;
+  dot.title = `Care Plan: ${dotStatus}`;
+  dot.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="${shieldColor}" stroke="${shieldColor}" stroke-width="1"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>`;
+
+  dot.addEventListener('click', (e) => {
+    e.stopPropagation();
+    toggleCarePlanInline(dot, clickData);
+  });
+
+  targetEl.appendChild(dot);
+}
+
+/**
+ * Inject care plan dots on all Section I items after coverage data loads.
+ */
+function injectCarePlanDots() {
+  if (!CarePlanDots._data) return;
+
+  // 1. Standard Section I items (have solver badges in SuperOverlay.results)
+  SuperOverlay.results.forEach(result => {
+    if (!result.mdsItem || !result.mdsItem.startsWith('I')) return;
+    if (result.mdsItem.startsWith('I8000')) return; // handled below
+
+    const questionEl = result.element;
+    if (!questionEl) return;
+
+    const mainBadge = questionEl.querySelector('.super-badge');
+    if (!mainBadge || !mainBadge.parentElement) return;
+
+    const coverage = CarePlanDots.getItem(result.mdsItem);
+    if (!coverage) return;
+
+    appendShieldDot(mainBadge.parentElement, coverage.overallStatus, {
+      diagnoses: coverage.matchedDiagnoses,
+      label: `${result.mdsItem} \u2014 ${coverage.label || ''}`,
+      unchecked: coverage.unchecked || false
+    });
+  });
+
+  // 2. I8000 items — scan DOM directly (may not have solver badges)
+  const i8000Wrappers = document.querySelectorAll('[id^="I8000"][id$="_wrapper"]');
+  i8000Wrappers.forEach(questionEl => {
+    const icd10 = extractIcd10FromElement(questionEl);
+    if (!icd10) return; // blank slot
+
+    const match = findI8000Match(icd10);
+    if (!match) return;
+
+    const status = match.carePlanStatus || 'missing';
+
+    // Find where to append — after badge if exists, else after question_label
+    let targetEl = questionEl.querySelector('.super-badge')?.parentElement;
+    if (!targetEl) {
+      targetEl = questionEl.querySelector('.question_label');
+    }
+    if (!targetEl) return;
+
+    appendShieldDot(targetEl, status, {
+      diagnoses: [match],
+      label: `I8000 \u2014 ${icd10}`
+    });
+  });
+}
+
+/**
+ * Toggle an inline detail panel for a care plan dot.
+ * Simplified: shows status + focus name + short reason. No ICD-10 clutter.
+ */
+function toggleCarePlanInline(dot, data) {
+  const parent = dot.parentElement;
+  const existingPanel = parent.querySelector('.super-careplan-inline');
+  if (existingPanel) {
+    existingPanel.remove();
+    return;
+  }
+
+  const panel = document.createElement('div');
+  panel.className = 'super-careplan-inline';
+
+  const statusLabels = { covered: 'Care Planned', partial: 'Partially Care Planned', missing: 'Not Care Planned' };
+  const statusColors = { covered: '#16a34a', partial: '#d97706', missing: '#dc2626' };
+
+  // Handle unchecked items (coded on MDS but never AI-analyzed)
+  if (data.unchecked) {
+    panel.innerHTML = `
+      <div style="border-left: 3px solid #dc2626; padding: 8px 10px; border-radius: 4px; background: #fff;">
+        <div style="font-size: 13px; font-weight: 700; color: #dc2626; margin-bottom: 3px;">Not Care Planned</div>
+        <div style="font-size: 12px; color: #475569; line-height: 1.5;">This diagnosis is coded on the MDS but has not been evaluated for care plan coverage yet.</div>
+      </div>`;
+    parent.appendChild(panel);
+    return;
+  }
+
+  (data.diagnoses || []).forEach(d => {
+    const status = d.carePlanStatus || d.status || 'missing';
+    const color = statusColors[status] || '#64748b';
+    const label = statusLabels[status] || status;
+
+    let focusName = '';
+    if (d.matchedFocus) {
+      focusName = d.matchedFocus.split('\n')[0].split('--')[0].trim();
+      focusName = focusName.replace(/\s+AEB\s*$/i, '').trim();
+    }
+
+    let html = `
+      <div style="border-left: 3px solid ${color}; padding: 6px 10px; margin-bottom: 6px; border-radius: 4px; background: #fff;">
+        <div style="font-size: 12px; font-weight: 700; color: ${color}; margin-bottom: 2px;">${label}</div>`;
+
+    if (focusName) {
+      html += `<div style="font-size: 12px; color: #334155; line-height: 1.4;">${escapeHTML(focusName)}</div>`;
+    }
+
+    if (d.reason) {
+      html += `<div style="font-size: 12px; color: #64748b; line-height: 1.5; margin-top: 4px;">${escapeHTML(d.reason)}</div>`;
+    }
+
+    html += `</div>`;
+    panel.innerHTML += html;
+  });
+
+  parent.appendChild(panel);
+}
+
+// ============================================
 // Popover Component
 // ============================================
 function showPopover(anchorEl, result) {
@@ -596,6 +870,70 @@ function showPopover(anchorEl, result) {
 
   // Prefetch all PDF documents
   prefetchDocuments(popover);
+}
+
+/**
+ * Build care plan coverage HTML for popover (Section I items only).
+ */
+function renderCarePlanCoverage(result) {
+  if (!result.mdsItem || !result.mdsItem.startsWith('I') || !CarePlanDots._data) return '';
+
+  let coverage = null;
+  let diagnoses = [];
+
+  if (result.mdsItem.startsWith('I8000')) {
+    const icd10 = extractIcd10FromElement(result.element);
+    if (!icd10) return '';
+    const i8000 = CarePlanDots.getItem('I8000');
+    if (!i8000) return '';
+    const match = i8000.matchedDiagnoses.find(d => d.code === icd10);
+    if (!match) return '';
+    diagnoses = [match];
+    coverage = { overallStatus: match.carePlanStatus };
+  } else {
+    coverage = CarePlanDots.getItem(result.mdsItem);
+    if (!coverage) return '';
+    diagnoses = coverage.matchedDiagnoses || [];
+  }
+
+  const status = coverage.overallStatus;
+  const statusColors = { covered: '#22c55e', partial: '#f59e0b', missing: '#ef4444' };
+  const statusLabels = { covered: 'Care Planned', partial: 'Partially Care Planned', missing: 'Not Care Planned' };
+  const color = statusColors[status] || '#9ca3af';
+  const label = statusLabels[status] || status;
+
+  // Build detail content (hidden by default)
+  let detailHTML = '';
+  if (coverage.unchecked) {
+    detailHTML = `<div style="font-size: 12px; color: #475569; line-height: 1.5;">Coded on MDS but not yet evaluated for care plan coverage.</div>`;
+  } else {
+  diagnoses.forEach(d => {
+    let focusName = '';
+    if (d.matchedFocus) {
+      focusName = d.matchedFocus.split('\n')[0].split('--')[0].trim().replace(/\s+AEB\s*$/i, '').trim();
+    }
+    if (focusName) {
+      detailHTML += `<div style="font-size: 12px; color: #334155; line-height: 1.4; margin-bottom: 2px;">
+        <strong>Focus:</strong> ${escapeHTML(focusName)}
+      </div>`;
+    }
+    if (d.reason) {
+      detailHTML += `<div style="font-size: 12px; color: #475569; line-height: 1.5; margin-top: 4px;">${escapeHTML(d.reason)}</div>`;
+    }
+  });
+  } // end else (not unchecked)
+
+  let html = `
+    <div class="super-careplan-popover-section" style="margin: 10px 0; padding: 8px 12px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; border-left: 3px solid ${color}; cursor: pointer;"
+         onclick="var d=this.querySelector('.super-careplan-popover-detail');var a=this.querySelector('.super-careplan-popover-chevron');if(d.style.display==='none'){d.style.display='block';a.textContent='\\u25BC'}else{d.style.display='none';a.textContent='\\u25B6'}">
+      <div style="display: flex; align-items: center; gap: 6px;">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="${color}" stroke="${color}" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        <span style="font-size: 12px; font-weight: 700; color: ${color};">${label}</span>
+        <span class="super-careplan-popover-chevron" style="font-size: 9px; color: #94a3b8; margin-left: auto;">&#9654;</span>
+      </div>
+      <div class="super-careplan-popover-detail" style="display: none; margin-top: 6px;">${detailHTML}</div>
+    </div>`;
+  return html;
 }
 
 function buildPopoverHTML(result) {
@@ -677,6 +1015,8 @@ function buildPopoverHTML(result) {
         ` : ''}
       </div>
       ` : ''}
+
+      ${renderCarePlanCoverage(result)}
 
       <div class="super-rationale super-rationale--collapsed">
         <div class="super-rationale__label" onclick="this.parentElement.classList.toggle('super-rationale--collapsed')">Rationale <span class="super-rationale__chevron">&#9660;</span></div>

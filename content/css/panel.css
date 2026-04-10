@@ -267,7 +267,7 @@
 #super-bubbles-container {
   position: fixed; bottom: 24px; right: 24px;
   display: flex; flex-direction: column; align-items: center; gap: 10px;
-  z-index: 99998;
+  z-index: 2147483647;
 }
 .super-dial__action {
   width: 40px; height: 40px; border-radius: 50%; border: none; cursor: pointer;
@@ -279,6 +279,7 @@
 .super-dial__action--patient { background: #10b981; color: #fff; }
 .super-dial__action--mds  { background: #6366f1; color: #fff; }
 .super-dial__action--chat { background: #fff; color: #6366f1; border: 1.5px solid #e5e7eb; }
+.super-dial__action--coverage { background: #06b6d4; color: #fff; }
 #super-bubbles-container.super-dial--open .super-dial__action {
   opacity: 1; transform: scale(1) translateY(0); pointer-events: auto;
 }
