@@ -11,50 +11,29 @@ import { formatPaymentDelta, isPaymentApplicable } from '../../utils/payment.js'
 
 // ── helpers ──
 
-function ntaLevelToTier(level, payment) {
-  if (!payment?.meta?.ntaTiers) return null;
-  for (const t of payment.meta.ntaTiers) {
-    if ((t.levels || []).includes(level)) return t.tier;
-  }
-  return null;
+// Plain-English impact summary — one short phrase per item.
+// Replaces the technical "NTA: NE → ND" / "SLP: SA → SD" notation with
+// "raises nursing payment" / "raises speech therapy" etc.
+function plainImpact(d) {
+  const parts = [];
+  if (d.impact?.nursing?.wouldChangeGroup) parts.push('raises nursing');
+  if (d.impact?.ptot?.wouldChangeGroup) parts.push('raises PT/OT');
+  if (d.impact?.slp?.wouldChangeGroup) parts.push('raises speech therapy');
+  if (d.impact?.nta?.wouldChangeLevel) parts.push('raises NTA tier');
+  if (parts.length === 0) return '';
+  return parts.join(' \u00B7 ');
 }
 
-function formatNtaImpact(nta, payment) {
-  if (payment?.mode === 'state_rate') {
-    const curTier = ntaLevelToTier(nta.currentLevel, payment);
-    const newTier = ntaLevelToTier(nta.newLevel, payment);
-    if (curTier != null && newTier != null) return `NTA: Tier ${curTier}\u2009\u2192\u2009Tier ${newTier}`;
-    return 'NTA: tier upgrade';
-  }
-  return `NTA: ${nta.currentLevel}\u2009\u2192\u2009${nta.newLevel}`;
-}
-
-function buildImpacts(d, payment) {
-  const impacts = [];
-  if (d.impact?.slp?.wouldChangeGroup)
-    impacts.push(`SLP: ${d.impact.slp.currentGroup}\u2009\u2192\u2009${d.impact.slp.newGroup}`);
-  if (d.impact?.nta?.wouldChangeLevel)
-    impacts.push(formatNtaImpact(d.impact.nta, payment));
-  if (d.impact?.nursing?.wouldChangeGroup)
-    impacts.push(`Nursing: ${d.impact.nursing.currentPaymentGroup}\u2009\u2192\u2009${d.impact.nursing.newPaymentGroup}`);
-  if (d.impact?.ptot?.wouldChangeGroup)
-    impacts.push(`PT/OT: ${d.impact.ptot.currentGroup}\u2009\u2192\u2009${d.impact.ptot.newGroup}`);
-  return impacts;
-}
-
-function buildQueryImpacts(q, payment) {
+function plainQueryImpact(q) {
   const ci = q.pdpmImpact?.componentImpacts;
-  if (!ci) return [];
-  const impacts = [];
-  if (ci.slp?.wouldChangeGroup)
-    impacts.push(`SLP: ${ci.slp.currentGroup}\u2009\u2192\u2009${ci.slp.newGroup}`);
-  if (ci.nta?.wouldChangeLevel)
-    impacts.push(formatNtaImpact(ci.nta, payment));
-  if (ci.nursing?.wouldChangeGroup)
-    impacts.push(`Nursing: ${ci.nursing.currentPaymentGroup}\u2009\u2192\u2009${ci.nursing.newPaymentGroup}`);
-  if (ci.ptot?.wouldChangeGroup)
-    impacts.push(`PT/OT: ${ci.ptot.currentGroup}\u2009\u2192\u2009${ci.ptot.newGroup}`);
-  return impacts;
+  if (!ci) return '';
+  const parts = [];
+  if (ci.nursing?.wouldChangeGroup) parts.push('raises nursing');
+  if (ci.ptot?.wouldChangeGroup) parts.push('raises PT/OT');
+  if (ci.slp?.wouldChangeGroup) parts.push('raises speech therapy');
+  if (ci.nta?.wouldChangeLevel) parts.push('raises NTA tier');
+  if (parts.length === 0) return '';
+  return parts.join(' \u00B7 ');
 }
 
 function relativeDate(sentAt) {
@@ -125,25 +104,19 @@ function SummaryStrip({ pdpm, detailData, payment, sectionProgress, compliance, 
 
 function RevenueSection({ detailData, onSelectItem }) {
   const detections = detailData?.enhancedDetections || [];
-  const payment = detailData?.payment;
   const drivers = detections.filter(
     d => d.wouldChangeHipps && d.solverStatus !== 'query_sent' && d.solverStatus !== 'awaiting_response' && d.solverStatus !== 'dont_code'
   );
   if (drivers.length === 0) return null;
 
-  const currentHipps = detailData?.currentHipps;
-  const potentialHipps = detailData?.potentialHipps;
-  const hippsNote = potentialHipps && potentialHipps !== currentHipps
-    ? ` (${currentHipps} \u2192 ${potentialHipps})`
-    : '';
-
   return (
     <div class="mds-cc__ps">
-      <div class="mds-cc__ps-header">{drivers.length} {drivers.length === 1 ? 'item' : 'items'} would change HIPPS{hippsNote}</div>
+      <div class="mds-cc__ps-header">
+        {drivers.length} revenue {drivers.length === 1 ? 'opportunity' : 'opportunities'}
+      </div>
       <div class="mds-cc__ps-items">
         {drivers.map((d, i) => {
-          const code = d.mdsItem?.startsWith('I8000:') ? 'I8000' : d.mdsItem;
-          const impacts = buildImpacts(d, payment);
+          const impactText = plainImpact(d);
           return (
             <div
               key={i}
@@ -152,13 +125,8 @@ function RevenueSection({ detailData, onSelectItem }) {
               role="button"
               title="View evidence"
             >
-              <div class="mds-cc__ps-item-top">
-                <span class="mds-cc__ps-item-name">{d.itemName}</span>
-                <span class="mds-cc__ps-item-code">{code}</span>
-              </div>
-              {impacts.length > 0 && (
-                <div class="mds-cc__ps-item-detail">Would change {impacts.join(', ')}</div>
-              )}
+              <span class="mds-cc__ps-item-name">{d.itemName}</span>
+              {impactText && <span class="mds-cc__ps-item-impact">&mdash; {impactText}</span>}
             </div>
           );
         })}
@@ -200,55 +168,6 @@ function DocRisksSection({ detailData }) {
   );
 }
 
-function QueriesSection({ detailData, querySummary, assessmentClass }) {
-  const queries = detailData?.outstandingQueries || [];
-  const payment = detailData?.payment;
-  const pending = queries.filter(
-    q => q.status === 'sent' || q.status === 'pending' || q.status === 'awaiting_response'
-  );
-
-  if (pending.length > 0) {
-    return (
-      <div class="mds-cc__ps">
-        <div class="mds-cc__ps-header">{pending.length} pending {pending.length === 1 ? 'query' : 'queries'}</div>
-        <div class="mds-cc__ps-items">
-          {pending.map((q, i) => {
-            const impacts = buildQueryImpacts(q, payment);
-            return (
-              <div key={i} class="mds-cc__ps-item">
-                <div class="mds-cc__ps-item-top">
-                  <span class="mds-cc__ps-item-name">{q.mdsItemName}</span>
-                  {q.mdsItem && <span class="mds-cc__ps-item-code">{q.mdsItem}</span>}
-                  <span class="mds-cc__ps-item-meta">{relativeDate(q.sentAt)}</span>
-                </div>
-                {impacts.length > 0 && (
-                  <div class="mds-cc__ps-item-detail">Would change {impacts.join(', ')}</div>
-                )}
-              </div>
-            );
-          })}
-        </div>
-      </div>
-    );
-  }
-
-  // Fallback: simple counts from dashboard data
-  if (assessmentClass !== 'pps_payment' || !querySummary) return null;
-  const { pending: pendCount = 0, sent = 0 } = querySummary;
-  if (pendCount === 0 && sent === 0) return null;
-
-  const parts = [];
-  if (pendCount > 0) parts.push(`${pendCount} pending`);
-  if (sent > 0) parts.push(`${sent} sent, awaiting response`);
-
-  return (
-    <div class="mds-cc__ps">
-      <div class="mds-cc__ps-header">Outstanding queries</div>
-      <div class="mds-cc__ps-item-detail" style={{ paddingLeft: '0' }}>{parts.join(' \u00B7 ')}</div>
-    </div>
-  );
-}
-
 function ComplianceIssues({ compliance }) {
   const failed = getFailedChecks(compliance);
   if (failed.length === 0) return null;
@@ -280,10 +199,121 @@ function DetailError({ message }) {
   );
 }
 
+// ── Blockers (combined "what needs attention") ──
+//
+// Shows everything actionable in one place: missing UDAs, pending queries,
+// failed compliance checks, and doc risks. Rendered at the top of the
+// assessment detail view so the coordinator sees "what needs to happen"
+// before anything else.
+
+const UDA_OWNER = {
+  bims: 'nursing or social services',
+  phq9: 'nursing',
+  gg: 'therapy',
+};
+
+const UDA_LABEL = {
+  bims: 'BIMS',
+  phq9: 'PHQ-9',
+  gg: 'GG',
+};
+
+function getMissingUdas(udaSummary) {
+  if (!udaSummary) return [];
+  const out = [];
+  for (const key of ['bims', 'phq9', 'gg']) {
+    const status = udaSummary[key];
+    if (status === 'missing' || status === 'not_created') {
+      out.push({ key, label: UDA_LABEL[key], owner: UDA_OWNER[key], severity: 'missing' });
+    } else if (status === 'near_miss' || status === 'out_of_range') {
+      out.push({ key, label: UDA_LABEL[key], owner: UDA_OWNER[key], severity: 'out_of_range' });
+    }
+  }
+  return out;
+}
+
+function BlockersSection({ assessment, detailData }) {
+  const missingUdas = getMissingUdas(assessment.udaSummary);
+  const failedChecks = getFailedChecks(assessment.compliance);
+
+  const pendingQueries = (detailData?.outstandingQueries || []).filter(
+    q => q.status === 'sent' || q.status === 'pending' || q.status === 'awaiting_response'
+  );
+
+  const docRisks = (detailData?.enhancedDetections || []).filter(
+    d => d.solverStatus === 'dont_code' && (d.diagnosisPassed === false || d.activeStatusPassed === false)
+  );
+
+  const hasAnything = missingUdas.length > 0 || failedChecks.length > 0 || pendingQueries.length > 0 || docRisks.length > 0;
+  if (!hasAnything) return null;
+
+  const totalCount = missingUdas.length + failedChecks.length + pendingQueries.length + docRisks.length;
+
+  return (
+    <div class="mds-cc__blockers">
+      <div class="mds-cc__blockers-header">
+        {'\u26A0'} {totalCount} {totalCount === 1 ? 'blocker' : 'blockers'}
+      </div>
+
+      {missingUdas.length > 0 && (
+        <div class="mds-cc__blockers-group">
+          {missingUdas.map(u => (
+            <div key={u.key} class="mds-cc__blocker mds-cc__blocker--uda">
+              <span class="mds-cc__blocker-label">{u.label}</span>
+              <span class="mds-cc__blocker-status">
+                {u.severity === 'missing' ? 'Not completed' : 'Outside window'}
+              </span>
+              <span class="mds-cc__blocker-owner">{'\u2192'} {u.owner}</span>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {pendingQueries.length > 0 && (
+        <div class="mds-cc__blockers-group">
+          {pendingQueries.map((q, i) => (
+            <div key={i} class="mds-cc__blocker mds-cc__blocker--query">
+              <span class="mds-cc__blocker-label">{q.mdsItem || 'Query'}: {q.mdsItemName}</span>
+              <span class="mds-cc__blocker-status">{relativeDate(q.sentAt)}</span>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {docRisks.length > 0 && (
+        <div class="mds-cc__blockers-group">
+          {docRisks.map((d, i) => {
+            const code = d.mdsItem?.startsWith('I8000:') ? 'I8000' : d.mdsItem;
+            const reasons = [];
+            if (d.diagnosisPassed === false) reasons.push('no dx');
+            if (d.activeStatusPassed === false) reasons.push('no active tx');
+            return (
+              <div key={i} class="mds-cc__blocker mds-cc__blocker--risk">
+                <span class="mds-cc__blocker-label">{code}: {d.itemName}</span>
+                <span class="mds-cc__blocker-status">{reasons.join(' \u00B7 ')}</span>
+              </div>
+            );
+          })}
+        </div>
+      )}
+
+      {failedChecks.length > 0 && (
+        <div class="mds-cc__blockers-group">
+          {failedChecks.map((msg, i) => (
+            <div key={i} class="mds-cc__blocker mds-cc__blocker--compliance">
+              <span class="mds-cc__blocker-label">{msg}</span>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 // ── Main Preview ──
 
 export function AssessmentPreview({ assessment, onOpenAnalyzer, onSelectItem }) {
-  const { pdpm, sectionProgress, compliance, querySummary } = assessment;
+  const { pdpm, sectionProgress, compliance } = assessment;
   const assessmentId = assessment.externalAssessmentId || assessment.assessmentId;
   const isEndOfStay = assessment.assessmentClass === 'end_of_stay';
 
@@ -292,6 +322,10 @@ export function AssessmentPreview({ assessment, onOpenAnalyzer, onSelectItem }) 
 
   return (
     <div class="mds-cc__preview" onClick={(e) => e.stopPropagation()}>
+      {/* Blockers first — what needs attention */}
+      <BlockersSection assessment={assessment} detailData={detailData} />
+
+      {/* Progress — section + summary */}
       <SummaryStrip
         pdpm={pdpm}
         detailData={detailData}
@@ -304,20 +338,10 @@ export function AssessmentPreview({ assessment, onOpenAnalyzer, onSelectItem }) 
       {detailLoading && <DetailLoading />}
       {!detailLoading && detailError && <DetailError message={detailError} />}
 
+      {/* Revenue — only if there's an opportunity */}
       {!detailLoading && detailData && (
-        <>
-          <RevenueSection detailData={detailData} onSelectItem={onSelectItem} />
-          <DocRisksSection detailData={detailData} />
-        </>
+        <RevenueSection detailData={detailData} onSelectItem={onSelectItem} />
       )}
-
-      <QueriesSection
-        detailData={detailLoading ? null : detailData}
-        querySummary={querySummary}
-        assessmentClass={assessment.assessmentClass}
-      />
-
-      <ComplianceIssues compliance={compliance} />
 
       <div class="mds-cc__prev-actions">
         <button class="mds-cc__action-btn mds-cc__action-btn--primary" onClick={onOpenAnalyzer}>

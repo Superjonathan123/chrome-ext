@@ -31,6 +31,13 @@
   flex-direction: column;
   overflow: hidden;
   animation: mds-cc-slide-up 0.18s ease-out;
+  transition: width 0.15s ease-out, height 0.15s ease-out, max-width 0.15s ease-out, border-radius 0.15s ease-out;
+}
+.mds-cc__modal--fullscreen {
+  width: 100vw;
+  height: 100vh;
+  max-width: 100vw;
+  border-radius: 0;
 }
 
 @keyframes mds-cc-slide-up {
@@ -86,6 +93,28 @@
   transition: var(--super-transition, all 0.15s ease-in-out);
 }
 .mds-cc__close-btn:hover {
+  color: var(--super-gray-800, #1f2937);
+  background: var(--super-gray-100, #f3f4f6);
+}
+
+.mds-cc__title-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.mds-cc__icon-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--super-gray-500, #6b7280);
+  padding: 4px;
+  border-radius: var(--super-radius-sm, 4px);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.mds-cc__icon-btn:hover {
   color: var(--super-gray-800, #1f2937);
   background: var(--super-gray-100, #f3f4f6);
 }
@@ -230,6 +259,7 @@
 .mds-cc__urgency-pill--active {
   border-color: transparent;
   color: #fff;
+  background: var(--super-gray-700, #374151);
 }
 
 .mds-cc__urgency-pill-dot {
@@ -270,6 +300,7 @@
   flex: 1;
   overflow-y: auto;
   padding: 0;
+  position: relative;
 }
 
 /* ============================================================
@@ -550,11 +581,16 @@
   background: #fff;
   cursor: pointer;
   user-select: none;
-  transition: background 0.1s, box-shadow 0.1s;
+  transition: background 0.1s, box-shadow 0.1s, transform 0.05s;
 }
 .mds-cc__card:hover {
   background: var(--super-gray-50, #f9fafb);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  transform: translateX(1px);
+}
+.mds-cc__card:hover .mds-cc__chevron {
+  color: var(--super-primary, #6366f1);
+  transform: translateX(2px);
 }
 .mds-cc__card--expanded {
   background: var(--super-gray-50, #f9fafb);
@@ -565,7 +601,821 @@
   outline-offset: -2px;
 }
 
-/* Line 1: name + badges */
+/* ─── View mode toggle (List / Calendar) ─── */
+.mds-cc__viewmode-toggle {
+  display: inline-flex;
+  margin-left: auto;
+  border: 1px solid var(--super-gray-200, #e5e7eb);
+  border-radius: 6px;
+  overflow: hidden;
+  background: #fff;
+}
+.mds-cc__viewmode-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 500;
+  background: transparent;
+  border: none;
+  color: var(--super-gray-600, #4b5563);
+  cursor: pointer;
+  transition: background 0.1s;
+}
+.mds-cc__viewmode-btn:hover {
+  background: var(--super-gray-50, #f9fafb);
+}
+.mds-cc__viewmode-btn--active {
+  background: var(--super-primary, #6366f1);
+  color: #fff;
+}
+.mds-cc__viewmode-btn--active:hover {
+  background: var(--super-primary, #6366f1);
+}
+.mds-cc__viewmode-btn + .mds-cc__viewmode-btn {
+  border-left: 1px solid var(--super-gray-200, #e5e7eb);
+}
+.mds-cc__viewmode-btn--active + .mds-cc__viewmode-btn,
+.mds-cc__viewmode-btn + .mds-cc__viewmode-btn--active {
+  border-left-color: var(--super-primary, #6366f1);
+}
+
+/* ─── Calendar ─── */
+.mds-cc__cal {
+  padding: 0 4px 12px;
+  position: relative;
+  min-height: 100%;
+}
+
+/* Layer toggles (Assessments / Queries / Certs) */
+.mds-cc__cal-layers {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 4px 10px;
+  flex-wrap: wrap;
+}
+.mds-cc__cal-layer {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border: 1px solid var(--super-gray-200, #e5e7eb);
+  background: #fff;
+  border-radius: 14px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--super-gray-400, #9ca3af);
+  cursor: pointer;
+  transition: background 0.1s, border-color 0.1s, color 0.1s;
+}
+.mds-cc__cal-layer:hover {
+  background: var(--super-gray-50, #f9fafb);
+}
+.mds-cc__cal-layer--active {
+  background: #fff;
+  font-weight: 600;
+}
+.mds-cc__cal-layer-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+.mds-cc__cal-layer-count {
+  font-size: 11px;
+  opacity: 0.7;
+  margin-left: 2px;
+}
+
+/* Banner — "N overdue items outside this view" */
+.mds-cc__cal-banner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  background: #fef3c7;
+  border: 1px solid #fde68a;
+  border-left: 3px solid #f59e0b;
+  border-radius: 6px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  transition: background 0.1s;
+  font-size: 13px;
+  color: #78350f;
+}
+.mds-cc__cal-banner:hover {
+  background: #fde68a;
+}
+.mds-cc__cal-banner-icon {
+  font-size: 16px;
+}
+.mds-cc__cal-banner-action {
+  margin-left: auto;
+  font-weight: 600;
+  color: #92400e;
+}
+.mds-cc__cal-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 4px 12px;
+  gap: 12px;
+}
+.mds-cc__cal-nav {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.mds-cc__cal-nav-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border: 1px solid var(--super-gray-200, #e5e7eb);
+  background: #fff;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  color: var(--super-gray-700, #374151);
+}
+.mds-cc__cal-nav-btn:hover {
+  background: var(--super-gray-50, #f9fafb);
+}
+.mds-cc__cal-today-btn {
+  padding: 4px 10px;
+  border: 1px solid var(--super-gray-200, #e5e7eb);
+  background: #fff;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  color: var(--super-gray-700, #374151);
+}
+.mds-cc__cal-today-btn:hover {
+  background: var(--super-gray-50, #f9fafb);
+}
+.mds-cc__cal-label {
+  margin-left: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--super-gray-900, #111827);
+}
+.mds-cc__cal-mode {
+  display: inline-flex;
+  border: 1px solid var(--super-gray-200, #e5e7eb);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.mds-cc__cal-mode-btn {
+  padding: 4px 12px;
+  background: #fff;
+  border: none;
+  font-size: 12px;
+  cursor: pointer;
+  color: var(--super-gray-600, #4b5563);
+}
+.mds-cc__cal-mode-btn--active {
+  background: var(--super-primary, #6366f1);
+  color: #fff;
+}
+
+/* Month view */
+.mds-cc__cal-month {
+  background: #fff;
+  border: 1px solid var(--super-gray-200, #e5e7eb);
+  border-radius: 6px;
+  overflow: hidden;
+}
+.mds-cc__cal-weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  background: var(--super-gray-50, #f9fafb);
+  border-bottom: 1px solid var(--super-gray-200, #e5e7eb);
+}
+.mds-cc__cal-weekday {
+  padding: 6px 8px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--super-gray-500, #6b7280);
+  text-align: center;
+}
+.mds-cc__cal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  grid-auto-rows: 48px;
+}
+.mds-cc__cal-day {
+  border-right: 1px solid var(--super-gray-100, #f3f4f6);
+  border-bottom: 1px solid var(--super-gray-100, #f3f4f6);
+  padding: 4px 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  background: #fff;
+  cursor: default;
+  transition: background 0.1s;
+}
+.mds-cc__cal-day--out {
+  background: #fafafa;
+  color: var(--super-gray-400, #9ca3af);
+}
+.mds-cc__cal-day--today {
+  background: #eef2ff;
+}
+.mds-cc__cal-day--has-items {
+  cursor: pointer;
+}
+.mds-cc__cal-day--has-items:hover {
+  background: var(--super-gray-50, #f9fafb);
+}
+.mds-cc__cal-day--today.mds-cc__cal-day--has-items:hover {
+  background: #e0e7ff;
+}
+.mds-cc__cal-day--selected {
+  background: #e0e7ff !important;
+  box-shadow: inset 0 0 0 2px var(--super-primary, #6366f1);
+}
+.mds-cc__cal-day-num {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--super-gray-700, #374151);
+}
+.mds-cc__cal-day--out .mds-cc__cal-day-num {
+  color: var(--super-gray-400, #9ca3af);
+}
+.mds-cc__cal-day--today .mds-cc__cal-day-num {
+  color: var(--super-primary, #6366f1);
+}
+.mds-cc__cal-day-dots {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+  align-items: center;
+}
+.mds-cc__cal-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+.mds-cc__cal-day-overflow {
+  font-size: 9px;
+  color: var(--super-gray-500, #6b7280);
+  margin-left: 2px;
+}
+
+/* Week view */
+.mds-cc__cal-week {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+  min-height: 320px;
+}
+.mds-cc__cal-week-col {
+  background: #fff;
+  border: 1px solid var(--super-gray-200, #e5e7eb);
+  border-radius: 6px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.mds-cc__cal-week-col--today {
+  border-color: var(--super-primary, #6366f1);
+  box-shadow: 0 0 0 1px var(--super-primary, #6366f1);
+}
+.mds-cc__cal-week-header {
+  padding: 6px 8px;
+  background: var(--super-gray-50, #f9fafb);
+  border-bottom: 1px solid var(--super-gray-200, #e5e7eb);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.mds-cc__cal-week-col--today .mds-cc__cal-week-header {
+  background: #eef2ff;
+}
+.mds-cc__cal-week-dow {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--super-gray-500, #6b7280);
+}
+.mds-cc__cal-week-date {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--super-gray-900, #111827);
+}
+.mds-cc__cal-week-body {
+  flex: 1;
+  padding: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  overflow-y: auto;
+}
+.mds-cc__cal-week-empty {
+  color: var(--super-gray-300, #d1d5db);
+  text-align: center;
+  padding: 12px 0;
+  font-size: 14px;
+}
+.mds-cc__cal-week-item {
+  padding: 4px 6px;
+  border-left: 3px solid #9ca3af;
+  background: var(--super-gray-50, #f9fafb);
+  border-radius: 3px;
+  font-size: 11px;
+  line-height: 1.3;
+  transition: background 0.1s, transform 0.05s;
+}
+.mds-cc__cal-week-item--clickable {
+  cursor: pointer;
+}
+.mds-cc__cal-week-item--clickable:hover {
+  background: var(--super-gray-100, #f3f4f6);
+  transform: translateX(1px);
+}
+.mds-cc__cal-week-item--upcoming {
+  background: repeating-linear-gradient(
+    -45deg,
+    #fafafa,
+    #fafafa 4px,
+    #fff 4px,
+    #fff 8px
+  );
+}
+.mds-cc__cal-week-patient {
+  font-weight: 600;
+  color: var(--super-gray-900, #111827);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.mds-cc__cal-week-type {
+  color: var(--super-gray-500, #6b7280);
+  font-size: 10px;
+}
+
+/* ─── Day detail slide-in panel (replaces the old popover) ─── */
+.mds-cc__cal-panel-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.25);
+  z-index: 10;
+  animation: mds-cc-fade-in 0.15s ease-out;
+}
+.mds-cc__cal-panel {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: min(440px, 80%);
+  background: #fff;
+  box-shadow: -4px 0 16px rgba(0, 0, 0, 0.12);
+  z-index: 11;
+  display: flex;
+  flex-direction: column;
+  animation: mds-cc-slide-in 0.2s ease-out;
+}
+@keyframes mds-cc-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes mds-cc-slide-in {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+.mds-cc__cal-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--super-gray-200, #e5e7eb);
+  background: var(--super-gray-50, #f9fafb);
+}
+.mds-cc__cal-panel-date {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--super-gray-900, #111827);
+}
+.mds-cc__cal-panel-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  border: none;
+  padding: 4px 8px 4px 4px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--super-primary, #6366f1);
+  cursor: pointer;
+  border-radius: 4px;
+}
+.mds-cc__cal-panel-back:hover {
+  background: var(--super-gray-100, #f3f4f6);
+}
+.mds-cc__cal-panel-close {
+  background: transparent;
+  border: none;
+  padding: 4px;
+  cursor: pointer;
+  color: var(--super-gray-500, #6b7280);
+  display: inline-flex;
+  border-radius: 4px;
+}
+.mds-cc__cal-panel-close:hover {
+  background: var(--super-gray-100, #f3f4f6);
+  color: var(--super-gray-900, #111827);
+}
+.mds-cc__cal-panel-count {
+  padding: 8px 16px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--super-gray-500, #6b7280);
+}
+.mds-cc__cal-panel-items {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0 12px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.mds-cc__cal-panel-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 10px 12px;
+  background: var(--super-gray-50, #f9fafb);
+  border: 1px solid var(--super-gray-100, #f3f4f6);
+  border-left: 3px solid #9ca3af;
+  border-radius: 4px;
+  transition: background 0.1s, transform 0.05s;
+  position: relative;
+}
+.mds-cc__cal-panel-item-top {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.mds-cc__cal-panel-item-layer {
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 1px 5px;
+  border-radius: 3px;
+  line-height: 1.4;
+}
+.mds-cc__cal-panel-item-layer--assessments {
+  background: #eef2ff;
+  color: #4338ca;
+}
+.mds-cc__cal-panel-item-layer--queries {
+  background: #faf5ff;
+  color: #7e22ce;
+}
+.mds-cc__cal-panel-item-layer--certs {
+  background: #ecfeff;
+  color: #0e7490;
+}
+.mds-cc__cal-panel-item-chevron {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.mds-cc__cal-panel-item--clickable {
+  cursor: pointer;
+}
+.mds-cc__cal-panel-item--clickable:hover {
+  background: var(--super-gray-100, #f3f4f6);
+  transform: translateX(1px);
+}
+.mds-cc__cal-panel-item-patient {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--super-gray-900, #111827);
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.mds-cc__cal-panel-item-meta {
+  font-size: 12px;
+  color: var(--super-gray-500, #6b7280);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.mds-cc__cal-panel-item-badge {
+  background: #fef3c7;
+  color: #92400e;
+  padding: 1px 6px;
+  border-radius: 10px;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+.mds-cc__cal-panel-item-chevron {
+  color: var(--super-gray-400, #9ca3af);
+  font-size: 18px;
+  line-height: 1;
+}
+
+/* Detail mode — assessment preview embedded in the panel */
+.mds-cc__cal-panel--detail .mds-cc__cal-panel-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px 16px 16px;
+}
+.mds-cc__cal-panel-detail-title {
+  padding: 8px 16px 12px;
+  border-bottom: 1px solid var(--super-gray-100, #f3f4f6);
+}
+.mds-cc__cal-panel-detail-patient {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--super-gray-900, #111827);
+}
+.mds-cc__cal-panel-detail-type {
+  font-size: 12px;
+  color: var(--super-gray-500, #6b7280);
+  margin-top: 2px;
+}
+.mds-cc__cal-daypop-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  background: var(--super-gray-50, #f9fafb);
+  border-bottom: 1px solid var(--super-gray-200, #e5e7eb);
+}
+.mds-cc__cal-daypop-date {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--super-gray-900, #111827);
+}
+.mds-cc__cal-daypop-close {
+  background: transparent;
+  border: none;
+  padding: 4px;
+  cursor: pointer;
+  color: var(--super-gray-500, #6b7280);
+  display: inline-flex;
+}
+.mds-cc__cal-daypop-close:hover {
+  color: var(--super-gray-900, #111827);
+}
+.mds-cc__cal-daypop-items {
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-height: 240px;
+  overflow-y: auto;
+}
+.mds-cc__cal-daypop-item {
+  padding: 6px 10px;
+  border-left: 3px solid #9ca3af;
+  background: var(--super-gray-50, #f9fafb);
+  border-radius: 3px;
+  transition: background 0.1s;
+}
+.mds-cc__cal-daypop-item--clickable {
+  cursor: pointer;
+}
+.mds-cc__cal-daypop-item--clickable:hover {
+  background: var(--super-gray-100, #f3f4f6);
+}
+.mds-cc__cal-daypop-jump {
+  color: var(--super-primary, #6366f1);
+  font-weight: 600;
+}
+.mds-cc__cal-daypop-item--upcoming {
+  background: repeating-linear-gradient(
+    -45deg,
+    #fafafa,
+    #fafafa 4px,
+    #fff 4px,
+    #fff 8px
+  );
+}
+.mds-cc__cal-daypop-item-patient {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--super-gray-900, #111827);
+}
+.mds-cc__cal-daypop-item-meta {
+  font-size: 11px;
+  color: var(--super-gray-500, #6b7280);
+}
+.mds-cc__cal-daypop-upcoming {
+  color: #92400e;
+  font-style: italic;
+}
+
+/* Blockers section — prominent "what needs attention" block at top of detail view */
+.mds-cc__blockers {
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+  border-left: 3px solid #f59e0b;
+  border-radius: 6px;
+  padding: 10px 12px;
+  margin-bottom: 10px;
+}
+.mds-cc__blockers-header {
+  font-size: 12px;
+  font-weight: 600;
+  color: #92400e;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  margin-bottom: 6px;
+}
+.mds-cc__blockers-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.mds-cc__blockers-group + .mds-cc__blockers-group {
+  margin-top: 6px;
+  padding-top: 6px;
+  border-top: 1px dashed #fde68a;
+}
+.mds-cc__blocker {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px;
+  font-size: 13px;
+  color: #1f2937;
+}
+.mds-cc__blocker-label {
+  font-weight: 600;
+}
+.mds-cc__blocker-status {
+  color: #6b7280;
+  font-size: 12px;
+}
+.mds-cc__blocker-owner {
+  color: #92400e;
+  font-size: 12px;
+  font-style: italic;
+}
+
+/* Flat assessment list — no group headers, just rows sorted by urgency */
+.mds-cc__assessments--flat {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* Same-patient grouping — middle/last rows tuck under the first */
+.mds-cc__card-wrapper--group-first {
+  margin-bottom: 0;
+}
+.mds-cc__card-wrapper--group-first .mds-cc__card {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.mds-cc__card-wrapper--group-middle {
+  margin-top: 0;
+  margin-bottom: 0;
+  padding-left: 16px;
+}
+.mds-cc__card-wrapper--group-middle .mds-cc__card {
+  border-radius: 0;
+  border-top: 1px solid var(--super-gray-100, #f3f4f6);
+}
+.mds-cc__card-wrapper--group-last {
+  margin-top: 0;
+  padding-left: 16px;
+}
+.mds-cc__card-wrapper--group-last .mds-cc__card {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  border-top: 1px solid var(--super-gray-100, #f3f4f6);
+}
+.mds-cc__card-name--hidden {
+  /* Same-patient continuation row — keep name visible but dimmed so the
+     connection to the patient above is obvious without being repetitive */
+  color: var(--super-gray-300, #d1d5db);
+  font-weight: 400;
+}
+
+/* ARD → Complete by label */
+.mds-cc__card-ard-arrow {
+  color: var(--super-gray-400, #9ca3af);
+  margin: 0 2px;
+}
+.mds-cc__card-complete-date {
+  color: var(--super-gray-600, #4b5563);
+  font-weight: 500;
+}
+
+/* Flat list: remove gap for grouped rows so they visually connect */
+.mds-cc__assessments--flat .mds-cc__card-wrapper--group-first,
+.mds-cc__assessments--flat .mds-cc__card-wrapper--group-middle {
+  margin-bottom: -6px;
+}
+
+/* Upcoming (not yet opened) variant — no interactions, distinct background */
+.mds-cc__card--upcoming {
+  cursor: default;
+  background: repeating-linear-gradient(
+    -45deg,
+    #fafafa,
+    #fafafa 6px,
+    #fff 6px,
+    #fff 12px
+  );
+  border-top: 1px dashed var(--super-gray-200, #e5e7eb);
+  border-right: 1px dashed var(--super-gray-200, #e5e7eb);
+  border-bottom: 1px dashed var(--super-gray-200, #e5e7eb);
+}
+.mds-cc__card--upcoming:hover {
+  background: repeating-linear-gradient(
+    -45deg,
+    #f5f5f5,
+    #f5f5f5 6px,
+    #fafafa 6px,
+    #fafafa 12px
+  );
+  box-shadow: none;
+}
+.mds-cc__card-upcoming-badge {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--super-gray-600, #4b5563);
+  background: var(--super-gray-100, #f3f4f6);
+  padding: 2px 8px;
+  border-radius: 10px;
+}
+
+/* ── New 3-row layout (Round 4 redesign) ── */
+.mds-cc__card {
+  padding: 12px 16px;
+  gap: 4px;
+}
+
+.mds-cc__card-row1 {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 22px;
+}
+.mds-cc__card-row2 {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.mds-cc__card-row3 {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 2px;
+}
+.mds-cc__card-row3-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Urgency text on row 1 — visually co-equal with patient name */
+.mds-cc__card-urgency {
+  font-size: 13px;
+  font-weight: 700;
+  font-family: var(--super-font, sans-serif);
+  white-space: nowrap;
+  text-transform: none;
+  margin-left: auto;
+}
+.mds-cc__card-urgency--overdue     { color: #dc2626; }
+.mds-cc__card-urgency--urgent      { color: #ea580c; }
+.mds-cc__card-urgency--approaching { color: #d97706; }
+.mds-cc__card-urgency--ok          { color: var(--super-gray-400, #9ca3af); font-weight: 500; }
+.mds-cc__card-urgency--done        { color: #16a34a; }
+.mds-cc__card-urgency--na          { color: var(--super-gray-400, #9ca3af); }
+
+/* Progress bar subtle mode (on-track rows) — no text, thin line */
+.mds-cc__card-progress--subtle .mds-cc__card-progress-bar {
+  opacity: 0.5;
+}
+
+/* Legacy: Line 1 + line 2 (kept for any references still using it, will be
+   cleaned up once we're sure nothing references these) */
 .mds-cc__card-line1 {
   display: flex;
   align-items: center;

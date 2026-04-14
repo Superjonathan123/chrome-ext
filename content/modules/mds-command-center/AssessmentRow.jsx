@@ -47,45 +47,71 @@ export function cleanAssessmentType(type) {
     .trim() || type;
 }
 
+function shortDateStr(d) {
+  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+}
+
+// Returns { dateText, completionText, deadlineText, cls, isCompleted }
+//
+// - dateText: ARD date ("Mar 14")
+// - completionText: completion deadline date ("Mar 28") — ARD + 14 days
+// - deadlineText: urgency text ("12d overdue", "Due today", "5d left")
+// - cls: 'overdue' | 'urgent' | 'approaching' | 'ok' | 'done' | 'na'
+// - isCompleted: true if the assessment is already finalized
 export function computeArdContext(ardDate, deadlines) {
-  if (!ardDate) return { dateText: '', deadlineText: '', cls: 'na' };
+  if (!ardDate) return { dateText: '', completionText: '', deadlineText: '', cls: 'na', isCompleted: false };
 
   const d = new Date(ardDate);
-  if (isNaN(d)) return { dateText: '', deadlineText: '', cls: 'na' };
-  const dateText = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  if (isNaN(d)) return { dateText: '', completionText: '', deadlineText: '', cls: 'na', isCompleted: false };
+  const dateText = shortDateStr(d);
+
+  // Always compute the completion date (ARD + 14)
+  const completionDate = new Date(d);
+  completionDate.setDate(completionDate.getDate() + 14);
+  const completionText = shortDateStr(completionDate);
 
   const urgency = deadlines?.urgency || 'on_track';
 
   if (urgency === 'completed') {
-    return { dateText, deadlineText: '', cls: 'done' };
+    return { dateText, completionText, deadlineText: '', cls: 'done', isCompleted: true };
   }
 
-  // Use completion deadline from backend (ARD + 14 days)
-  const daysLeft = deadlines?.completionDaysRemaining;
+  // Use completion days remaining from backend (ARD + 14 days - today)
+  const daysLeft = deadlines?.completionDaysRemaining ?? Math.round((completionDate - todayMidnight()) / 86400000);
 
-  if (daysLeft != null) {
-    if (daysLeft < 0) return { dateText, deadlineText: `${Math.abs(daysLeft)}d overdue`, cls: 'overdue' };
-    if (daysLeft === 0) return { dateText, deadlineText: 'Due today', cls: 'urgent' };
-    if (daysLeft <= 3) return { dateText, deadlineText: `${daysLeft}d left`, cls: 'urgent' };
-    if (daysLeft <= 7) return { dateText, deadlineText: `${daysLeft}d left`, cls: 'approaching' };
-    return { dateText, deadlineText: `${daysLeft}d left`, cls: 'ok' };
-  }
+  let deadlineText, cls;
+  if (daysLeft < 0) { deadlineText = `${Math.abs(daysLeft)}d overdue`; cls = 'overdue'; }
+  else if (daysLeft === 0) { deadlineText = 'Due today'; cls = 'urgent'; }
+  else if (daysLeft <= 3) { deadlineText = `${daysLeft}d left`; cls = 'urgent'; }
+  else if (daysLeft <= 7) { deadlineText = `${daysLeft}d left`; cls = 'approaching'; }
+  else { deadlineText = `${daysLeft}d left`; cls = 'ok'; }
 
-  // Fallback: compute from ARD + 14 days
-  const now = new Date();
-  now.setHours(0, 0, 0, 0);
-  const completionDate = new Date(d);
-  completionDate.setDate(completionDate.getDate() + 14);
-  const diffDays = Math.round((completionDate - now) / 86400000);
-
-  if (diffDays < 0) return { dateText, deadlineText: `${Math.abs(diffDays)}d overdue`, cls: 'overdue' };
-  if (diffDays === 0) return { dateText, deadlineText: 'Due today', cls: 'urgent' };
-  if (diffDays <= 3) return { dateText, deadlineText: `${diffDays}d left`, cls: 'urgent' };
-  if (diffDays <= 7) return { dateText, deadlineText: `${diffDays}d left`, cls: 'approaching' };
-  return { dateText, deadlineText: `${diffDays}d left`, cls: 'ok' };
+  return { dateText, completionText, deadlineText, cls, isCompleted: false };
 }
 
-export function AssessmentRow({ assessment, isExpanded, onToggle, onOpenAnalyzer }) {
+function todayMidnight() {
+  const d = new Date();
+  d.setHours(0, 0, 0, 0);
+  return d;
+}
+
+// Only show a UDA chip if something is actually wrong with it.
+// If all three are complete, we hide them entirely — a clean row means fine.
+function udaNeedsAttention(status) {
+  if (!status) return false;
+  return status === 'missing' || status === 'not_created'
+    || status === 'near_miss' || status === 'out_of_range'
+    || status === 'in_progress';
+}
+
+export function AssessmentRow({ assessment, isExpanded, onToggle, onOpenAnalyzer, groupPosition = 'single' }) {
+  // Lightweight "upcoming not yet opened" variant — no section data, no UDAs,
+  // no PDPM. Just patient, type, due date, urgency. Clicking does nothing
+  // useful yet (there's no assessment to expand).
+  if (assessment.isUpcoming) {
+    return <UpcomingRow assessment={assessment} groupPosition={groupPosition} />;
+  }
+
   const {
     patientName, assessmentType, ardDate, pdpm,
     assessmentClass, sectionProgress, udaSummary, querySummary,
@@ -97,10 +123,30 @@ export function AssessmentRow({ assessment, isExpanded, onToggle, onOpenAnalyzer
   const delta = hideRevenue ? null : formatPaymentDelta(pdpm?.payment, 'short');
   const ard = computeArdContext(ardDate, deadlines);
 
+  // Patient name is repeated across same-patient group rows — only show on the first
+  const showPatientName = groupPosition === 'single' || groupPosition === 'first';
+
   const sectionsDone = sectionProgress?.total > 0
     && sectionProgress.completed === sectionProgress.total;
+  const sectionsPercent = sectionProgress?.total > 0
+    ? Math.round((sectionProgress.completed / sectionProgress.total) * 100)
+    : 0;
 
   const pendingQueries = (querySummary?.pending || 0) + (querySummary?.sent || 0);
+
+  // UDA chips: only show when something needs attention
+  const anyUdaIssue = udaNeedsAttention(udaSummary?.bims)
+    || udaNeedsAttention(udaSummary?.gg)
+    || udaNeedsAttention(udaSummary?.phq9);
+
+  // De-emphasize progress bar on on-track rows — show a thin bar only, no text
+  const progressSubtle = urgency === 'on_track' || urgency === 'completed';
+
+  // Determine what the urgency text should read
+  const urgencyText = ard.isCompleted
+    ? '\u2713 Completed'
+    : (ard.deadlineText || '');
+  const urgencyCls = ard.isCompleted ? 'done' : ard.cls;
 
   return (
     <div
@@ -113,23 +159,61 @@ export function AssessmentRow({ assessment, isExpanded, onToggle, onOpenAnalyzer
         if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onToggle(); }
       }}
     >
-      {/* Line 1: Name + right zone badges */}
-      <div class="mds-cc__card-line1">
-        <span class="mds-cc__card-name">{patientName || 'Unknown'}</span>
-        <span class="mds-cc__card-badges">
-          <UdaBadge label="BIM" status={udaSummary?.bims} />
-          <UdaBadge label="GG" status={udaSummary?.gg} />
-          <UdaBadge label="PHQ" status={udaSummary?.phq9} />
+      {/* Line 1: Patient name + urgency status (the most important info) */}
+      <div class="mds-cc__card-row1">
+        <span class={`mds-cc__card-name${!showPatientName ? ' mds-cc__card-name--hidden' : ''}`}>
+          {patientName || 'Unknown'}
+        </span>
+        {urgencyText && (
+          <span class={`mds-cc__card-urgency mds-cc__card-urgency--${urgencyCls}`}>
+            {urgencyText}
+          </span>
+        )}
+        <span class={`mds-cc__chevron${isExpanded ? ' mds-cc__chevron--open' : ''}`}>&rsaquo;</span>
+      </div>
+
+      {/* Line 2: Assessment type + dates */}
+      <div class="mds-cc__card-row2">
+        <span class="mds-cc__card-type">{cleanAssessmentType(assessmentType)}</span>
+        {ard.dateText && (
+          <>
+            <span class="mds-cc__card-meta-sep">&middot;</span>
+            <span class="mds-cc__card-ard-date">ARD {ard.dateText}</span>
+            {ard.completionText && !ard.isCompleted && (
+              <>
+                <span class="mds-cc__card-ard-arrow">&rarr;</span>
+                <span class="mds-cc__card-complete-date">Complete by {ard.completionText}</span>
+              </>
+            )}
+          </>
+        )}
+      </div>
+
+      {/* Line 3: Blockers / metrics (only shown if there's something to show) */}
+      {(anyUdaIssue || sectionProgress?.total > 0 || delta || pendingQueries > 0) && (
+        <div class="mds-cc__card-row3">
+          {anyUdaIssue && (
+            <span class="mds-cc__card-row3-group">
+              <UdaBadge label="BIM" status={udaSummary?.bims} />
+              <UdaBadge label="GG" status={udaSummary?.gg} />
+              <UdaBadge label="PHQ" status={udaSummary?.phq9} />
+            </span>
+          )}
           {sectionProgress?.total > 0 && (
-            <span class={`mds-cc__card-progress${sectionsDone ? ' mds-cc__card-progress--done' : ''}`}>
+            <span class={`mds-cc__card-progress${sectionsDone ? ' mds-cc__card-progress--done' : ''}${progressSubtle ? ' mds-cc__card-progress--subtle' : ''}`}>
               <span class="mds-cc__card-progress-bar">
                 <span
                   class="mds-cc__card-progress-fill"
-                  style={{ width: `${Math.round((sectionProgress.completed / sectionProgress.total) * 100)}%` }}
+                  style={{ width: `${sectionsPercent}%` }}
                 />
               </span>
-              <span class="mds-cc__card-progress-text">{sectionProgress.completed}/{sectionProgress.total}</span>
+              {!progressSubtle && (
+                <span class="mds-cc__card-progress-text">{sectionProgress.completed}/{sectionProgress.total}</span>
+              )}
             </span>
+          )}
+          {pendingQueries > 0 && (
+            <span class="mds-cc__card-queries">{pendingQueries} pending {pendingQueries === 1 ? 'query' : 'queries'}</span>
           )}
           {delta && (
             <span
@@ -139,29 +223,70 @@ export function AssessmentRow({ assessment, isExpanded, onToggle, onOpenAnalyzer
               role={onOpenAnalyzer ? 'button' : undefined}
             >{delta}</span>
           )}
-          {pendingQueries > 0 && (
-            <span class="mds-cc__card-queries">{pendingQueries}Q</span>
-          )}
-          <span class={`mds-cc__chevron${isExpanded ? ' mds-cc__chevron--open' : ''}`}>&rsaquo;</span>
-        </span>
-      </div>
+        </div>
+      )}
+    </div>
+  );
+}
 
-      {/* Line 2: Type · ARD date · deadline context */}
-      <div class="mds-cc__card-line2">
-        <span class="mds-cc__card-type">{cleanAssessmentType(assessmentType)}</span>
-        {ard.dateText && (
+// ── Upcoming (not yet opened) row variant ──
+//
+// Used for assessments from the schedule API where isOpened=false.
+// Shows patient, due date, and a clear "Not opened" indicator so the
+// coordinator knows they need to open this assessment in PCC.
+function UpcomingRow({ assessment, groupPosition = 'single' }) {
+  const { patientName, assessmentType, dueDate, daysUntilDue } = assessment;
+  const urgency = assessment.deadlines?.urgency || 'on_track';
+  const accent = URGENCY_ACCENT[urgency] || '#9ca3af';
+
+  const dateText = dueDate ? formatShortDate(dueDate) : '';
+  const deadline = formatDeadline(daysUntilDue);
+  const showPatientName = groupPosition === 'single' || groupPosition === 'first';
+
+  return (
+    <div
+      class="mds-cc__card mds-cc__card--upcoming"
+      style={{ borderLeftColor: accent }}
+      role="article"
+    >
+      {/* Line 1: Patient name + deadline */}
+      <div class="mds-cc__card-row1">
+        <span class={`mds-cc__card-name${!showPatientName ? ' mds-cc__card-name--hidden' : ''}`}>
+          {patientName || 'Unknown'}
+        </span>
+        {deadline && (
+          <span class={`mds-cc__card-urgency mds-cc__card-urgency--${deadline.cls}`}>{deadline.text}</span>
+        )}
+      </div>
+      {/* Line 2: Type + due date */}
+      <div class="mds-cc__card-row2">
+        <span class="mds-cc__card-type">{assessmentType}</span>
+        {dateText && (
           <>
             <span class="mds-cc__card-meta-sep">&middot;</span>
-            <span class="mds-cc__card-ard-date">ARD {ard.dateText}</span>
+            <span class="mds-cc__card-ard-date">Due {dateText}</span>
           </>
         )}
-        {ard.deadlineText && (
-          <>
-            <span class="mds-cc__card-meta-sep">&middot;</span>
-            <span class={`mds-cc__card-ard mds-cc__card-ard--${ard.cls}`}>{ard.deadlineText}</span>
-          </>
-        )}
+      </div>
+      {/* Line 3: Not-opened badge */}
+      <div class="mds-cc__card-row3">
+        <span class="mds-cc__card-upcoming-badge">Not opened in PCC</span>
       </div>
     </div>
   );
+}
+
+function formatShortDate(isoDate) {
+  const d = new Date(isoDate);
+  if (isNaN(d)) return isoDate;
+  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+}
+
+function formatDeadline(daysUntilDue) {
+  if (daysUntilDue == null) return null;
+  if (daysUntilDue < 0) return { text: `${Math.abs(daysUntilDue)}d overdue`, cls: 'overdue' };
+  if (daysUntilDue === 0) return { text: 'Due today', cls: 'urgent' };
+  if (daysUntilDue <= 3) return { text: `${daysUntilDue}d left`, cls: 'urgent' };
+  if (daysUntilDue <= 7) return { text: `${daysUntilDue}d left`, cls: 'approaching' };
+  return { text: `${daysUntilDue}d left`, cls: 'ok' };
 }
