@@ -131,8 +131,25 @@ async function fetchItemEvidence(section, itemCode) {
   if (!response.success) throw new Error(response.error || 'Failed to fetch evidence');
 
   const item = response.data?.item || {};
+
+  // Section O stores evidence per-column (item.columns.A.evidence, item.columns.B.evidence)
+  // rather than at the item top-level. Build a column-keyed map so callers can pick the
+  // right column's evidence, and expose a flat merged array as a fallback.
+  const evidenceByColumn = {};
+  if (item.columns && typeof item.columns === 'object') {
+    Object.entries(item.columns).forEach(([col, colData]) => {
+      if (colData && Array.isArray(colData.evidence) && colData.evidence.length > 0) {
+        evidenceByColumn[col] = colData.evidence;
+      }
+    });
+  }
+  const flatEvidence = item.evidence && item.evidence.length
+    ? item.evidence
+    : Object.values(evidenceByColumn).flat();
+
   const result = {
-    evidence: item.evidence || [],
+    evidence: flatEvidence,
+    evidenceByColumn,
     queryEvidence: item.queryEvidence || [],
     validation: item.validation || {},
     columns: item.columns || null,
@@ -1922,11 +1939,14 @@ function setupPopoverListeners(popover, result) {
     const totalCount = (result.aiAnswer.evidenceCount || 0) + (result.aiAnswer.queryEvidenceCount || 0);
     if (totalCount > 0) {
       fetchItemEvidence(SuperOverlay.section, result.mdsItem).then(data => {
-        const allEvidence = [...(data.evidence || []), ...(data.queryEvidence || [])];
+        // Prefer per-column evidence when available (Section O nests evidence inside columns.A/B)
+        const columnEvidence = (result.column && data.evidenceByColumn?.[result.column]) || null;
+        const baseEvidence = columnEvidence || data.evidence || [];
+        const allEvidence = [...baseEvidence, ...(data.queryEvidence || [])];
         popover._evidence = allEvidence;
 
         // Backfill onto aiAnswer for query modal
-        result.aiAnswer.evidence = data.evidence || [];
+        result.aiAnswer.evidence = baseEvidence;
         result.aiAnswer.queryEvidence = data.queryEvidence || [];
         if (data.validation) result.aiAnswer.validation = data.validation;
 
@@ -3587,11 +3607,14 @@ function renderQueryModalContent(modal, result, context, practitioners) {
   // Lazy-load evidence if not already loaded
   if (!alreadyLoaded && totalCount > 0) {
     fetchItemEvidence(SuperOverlay.section, result.mdsItem).then(data => {
-      result.aiAnswer.evidence = data.evidence || [];
+      // Prefer per-column evidence for Section O (evidence nested in columns.A/B)
+      const columnEvidence = (result.column && data.evidenceByColumn?.[result.column]) || null;
+      const baseEvidence = columnEvidence || data.evidence || [];
+      result.aiAnswer.evidence = baseEvidence;
       result.aiAnswer.queryEvidence = data.queryEvidence || [];
       const evidenceContainer = modal.querySelector('.super-query-evidence-content');
       if (evidenceContainer) {
-        const merged = (data.queryEvidence?.length > 0 ? data.queryEvidence : data.evidence) || [];
+        const merged = (data.queryEvidence?.length > 0 ? data.queryEvidence : baseEvidence) || [];
         evidenceContainer.innerHTML = buildQueryEvidenceHTML(merged);
         // Update count in accordion summary
         const toggle = modal.querySelector('.super-query-evidence-toggle');
