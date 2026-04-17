@@ -70,6 +70,92 @@ function injectAICodeButton() {
   }
 }
 
+// Inject "est" links on the MDS list page (cp_mds.jsp) for 5-Day assessments
+function injectMdsEstimateLinks() {
+  if (!window.location.href.includes('cp_mds.jsp')) return;
+
+  const patientId = new URLSearchParams(window.location.search).get('ESOLclientid');
+  if (!patientId) return;
+
+  // Find all assessment rows in the MDS table
+  const rows = document.querySelectorAll('tr[bgcolor] td:first-child');
+  rows.forEach(td => {
+    // Check if this row is a 5-Day assessment by looking at the description cell
+    const descCell = td.parentElement?.querySelector('td:nth-child(3)');
+    const desc = descCell?.textContent?.trim() || '';
+    const is5Day = desc.toLowerCase().includes('5 day') || desc.toLowerCase().includes('5-day');
+    if (!is5Day) return;
+
+    // Extract assessment ID from the edit/view link
+    const editLink = td.querySelector('a[href*="ESOLassessid"]');
+    if (!editLink) return;
+    const match = editLink.href.match(/ESOLassessid=(\d+)/);
+    if (!match) return;
+    const assessmentId = match[1];
+
+    // Don't inject twice
+    if (td.querySelector('.super-est-link')) return;
+
+    const link = document.createElement('a');
+    link.className = 'listbutton super-est-link';
+    link.href = 'javascript:void(0)';
+    link.textContent = 'est';
+    link.title = 'PDPM Estimate & ARD Recommendation';
+    link.style.cssText = 'color:#4f46e5;font-weight:600;';
+    link.addEventListener('click', async (e) => {
+      e.preventDefault();
+      try {
+        const [{ render, h }, { ArdEstimator }] = await Promise.all([
+          import('preact'),
+          import('../modules/ard-estimator/ArdEstimator.jsx')
+        ]);
+
+        // Create overlay
+        let overlay = document.getElementById('ard-estimator-overlay');
+        if (overlay) overlay.remove();
+        overlay = document.createElement('div');
+        overlay.id = 'ard-estimator-overlay';
+        overlay.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;z-index:999980;background:rgba(0,0,0,0.5);display:flex;justify-content:center;align-items:center;';
+        document.body.appendChild(overlay);
+
+        const container = document.createElement('div');
+        container.style.cssText = 'width:90vw;max-width:750px;height:85vh;border-radius:12px;overflow:hidden;box-shadow:0 25px 50px rgba(0,0,0,0.25);display:flex;flex-direction:column;transition:max-width 0.25s ease,height 0.15s ease;';
+        overlay.appendChild(container);
+
+        const orgResponse = typeof getOrg === 'function' ? getOrg() : null;
+        const facilityName = typeof getChatFacilityInfo === 'function' ? getChatFacilityInfo() : '';
+
+        const closeOverlay = () => {
+          render(null, container);
+          overlay.remove();
+        };
+
+        overlay.addEventListener('click', (ev) => {
+          if (ev.target === overlay) closeOverlay();
+        });
+
+        render(
+          h(ArdEstimator, {
+            patientId,
+            facilityName: facilityName || '',
+            orgSlug: orgResponse?.org || '',
+            assessmentId,
+            onBack: closeOverlay,
+            onClose: closeOverlay
+          }),
+          container
+        );
+      } catch (err) {
+        console.error('[Super] Failed to open ARD Estimator:', err);
+      }
+    });
+
+    // Add after the last link
+    td.appendChild(document.createTextNode('\u00a0\u00a0'));
+    td.appendChild(link);
+  });
+}
+
 /**
  * Check if we're in test/dev mode
  */
@@ -389,6 +475,9 @@ function initSuperChat() {
   // Inject AI Code button on Med Diag pages
   injectAICodeButton();
 
+  // Inject ARD Estimate links on MDS list page
+  injectMdsEstimateLinks();
+
   // Restore Command Center or auto-open PDPM Analyzer on MDS pages
   try {
     const restore = sessionStorage.getItem('super_cc_restore');
@@ -411,18 +500,11 @@ function initSuperChat() {
         }, 800);
       }
     } else {
-      // Auto-open PDPM Analyzer panel on MDS section pages
+      // Show edge tab on MDS section pages (user can click to open analyzer)
       setTimeout(() => {
         const context = getMDSContext();
         if (context.scope === 'mds' && context.assessmentId) {
-          const dismissed = sessionStorage.getItem('super_analyzer_dismissed');
-          if (dismissed !== context.assessmentId) {
-            // Not dismissed — auto-open
-            PDPMAnalyzerLauncher.open(context, { mode: 'panel' });
-          } else {
-            // Was dismissed — show the edge tab so user can easily reopen
-            PDPMAnalyzerLauncher._showEdgeTab(context);
-          }
+          PDPMAnalyzerLauncher._showEdgeTab(context);
         }
       }, 800);
     }

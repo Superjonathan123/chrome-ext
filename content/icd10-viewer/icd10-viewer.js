@@ -212,6 +212,15 @@ const ICD10Viewer = {
             <span class="icd10-viewer__patient-info">${this._escapeHtml(this.patientName)}</span>
           </div>
           <div class="icd10-viewer__header-actions">
+            <button class="icd10-viewer__estimate-btn" title="PDPM Estimate & ARD Recommendation">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+              </svg>
+              PDPM Estimate
+            </button>
             <button class="icd10-viewer__next-btn" title="Review Query Items">
               Next
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -267,7 +276,7 @@ const ICD10Viewer = {
 
     // Back button - context-aware
     this.modal.querySelector('.icd10-viewer__back-btn').addEventListener('click', () => {
-      if (this._currentView === 'queryItems') {
+      if (this._currentView === 'queryItems' || this._currentView === 'ardEstimator') {
         this.showICD10View();
       } else {
         this._handleExitAttempt(() => this.close());
@@ -277,6 +286,11 @@ const ICD10Viewer = {
     // Next button - go to Query Items
     this.modal.querySelector('.icd10-viewer__next-btn').addEventListener('click', () => {
       this._handleExitAttempt(() => this.showQueryItems());
+    });
+
+    // PDPM Estimate button - go to ARD Estimator
+    this.modal.querySelector('.icd10-viewer__estimate-btn').addEventListener('click', () => {
+      this._handleExitAttempt(() => this.showArdEstimator());
     });
 
     // Backdrop click
@@ -819,6 +833,70 @@ const ICD10Viewer = {
   },
 
   /**
+   * Show the ARD Estimator (PDPM Estimate & ARD Recommendation).
+   * Dynamically imports Preact + ArdEstimator and replaces the body content.
+   */
+  async showArdEstimator() {
+    if (this._currentView === 'ardEstimator') return;
+    this._currentView = 'ardEstimator';
+
+    // Update header
+    const titleText = this.modal.querySelector('.icd10-viewer__title-text');
+    if (titleText) titleText.textContent = 'PDPM Estimate & ARD';
+
+    // Hide Next + Estimate buttons
+    const nextBtn = this.modal.querySelector('.icd10-viewer__next-btn');
+    if (nextBtn) nextBtn.style.display = 'none';
+    const estimateBtn = this.modal.querySelector('.icd10-viewer__estimate-btn');
+    if (estimateBtn) estimateBtn.style.display = 'none';
+
+    // Get the body element and switch to single-panel layout
+    const body = this.modal.querySelector('.icd10-viewer__body');
+    body.classList.add('icd10-viewer__body--single-panel');
+    body.innerHTML = '<div class="ard-estimator-mount"></div>';
+    const mountEl = body.querySelector('.ard-estimator-mount');
+
+    // Try to get assessment ID from URL (PCC pattern)
+    if (!this._assessmentId) {
+      const urlParams = new URLSearchParams(window.location.search);
+      this._assessmentId = urlParams.get('ESOLassessid') ||
+                           window.SuperOverlay?.assessmentId || null;
+    }
+
+    try {
+      const [{ render, h }, { ArdEstimator }] = await Promise.all([
+        import('preact'),
+        import('../modules/ard-estimator/ArdEstimator.jsx')
+      ]);
+
+      render(
+        h(ArdEstimator, {
+          patientId: this.patientId,
+          patientName: this.patientName,
+          facilityName: this.facilityName,
+          orgSlug: this.orgSlug,
+          assessmentId: this._assessmentId,
+          onBack: () => this.showICD10View(),
+          onClose: () => this.close()
+        }),
+        mountEl
+      );
+
+      this._preactUnmount = () => {
+        render(null, mountEl);
+      };
+    } catch (err) {
+      console.error('[ICD10Viewer] Failed to load ARD Estimator:', err);
+      mountEl.innerHTML = `
+        <div class="icd10-viewer__error">
+          <p class="icd10-viewer__error-text">Failed to load PDPM Estimator: ${this._escapeHtml(err.message)}</p>
+          <button class="icd10-viewer__error-retry" onclick="ICD10Viewer.showICD10View()">Go Back</button>
+        </div>
+      `;
+    }
+  },
+
+  /**
    * Switch back to ICD-10 view from Query Items
    * Unmounts Preact and restores the 3-panel layout
    */
@@ -836,9 +914,11 @@ const ICD10Viewer = {
     const titleText = this.modal.querySelector('.icd10-viewer__title-text');
     if (titleText) titleText.textContent = 'ICD-10 Viewer';
 
-    // Show Next button again
+    // Show Next + Estimate buttons again
     const nextBtn = this.modal.querySelector('.icd10-viewer__next-btn');
     if (nextBtn) nextBtn.style.display = '';
+    const estimateBtn = this.modal.querySelector('.icd10-viewer__estimate-btn');
+    if (estimateBtn) estimateBtn.style.display = '';
 
     // Restore 3-panel body structure
     const body = this.modal.querySelector('.icd10-viewer__body');

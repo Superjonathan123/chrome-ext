@@ -48,6 +48,32 @@
 .icd10-viewer__next-btn:hover svg { transform: translateX(2px); }
 
 /* ============================================
+   PDPM Estimate Button (in ICD-10 header)
+   ============================================ */
+
+.icd10-viewer__estimate-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: linear-gradient(135deg, rgba(52, 211, 153, 0.25), rgba(16, 185, 129, 0.2));
+  border: 1px solid rgba(52, 211, 153, 0.5);
+  color: #a7f3d0;
+  padding: 7px 14px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: inherit;
+}
+
+.icd10-viewer__estimate-btn:hover {
+  background: linear-gradient(135deg, rgba(52, 211, 153, 0.35), rgba(16, 185, 129, 0.3));
+  border-color: rgba(52, 211, 153, 0.7);
+  color: #ecfdf5;
+}
+
+/* ============================================
    Root
    ============================================ */
 

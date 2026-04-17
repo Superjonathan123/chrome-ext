@@ -242,6 +242,11 @@ const QuerySendModal = {
       QueryBadges.updateAllBadges();
       QueryPanel.updatePanel();
 
+      // Notify listeners (e.g., ARD Estimator) that a query was sent
+      window.dispatchEvent(new CustomEvent('super:query-sent', {
+        detail: { mdsItem: this._state.result?.mdsItem }
+      }));
+
     } catch (error) {
       console.error('Super LTC: Failed to send query', error);
       SuperToast.error(`Failed to send: ${error.message}`);
