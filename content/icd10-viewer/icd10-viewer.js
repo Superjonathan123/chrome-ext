@@ -864,10 +864,18 @@ const ICD10Viewer = {
     }
 
     try {
-      const [{ render, h }, { ArdEstimator }] = await Promise.all([
-        import('preact'),
-        import('../modules/ard-estimator/ArdEstimator.jsx')
-      ]);
+      let render, h, ArdEstimator;
+      if (window.__preact && window.__ArdEstimator) {
+        ({ render, h } = window.__preact);
+        ArdEstimator = window.__ArdEstimator;
+      } else {
+        const [preactMod, ardMod] = await Promise.all([
+          import('preact'),
+          import('../modules/ard-estimator/ArdEstimator.jsx')
+        ]);
+        ({ render, h } = preactMod);
+        ({ ArdEstimator } = ardMod);
+      }
 
       render(
         h(ArdEstimator, {

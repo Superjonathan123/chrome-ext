@@ -1,0 +1,966 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MDS Planner — Harmony Care at Stamford</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+
+/* ─── tokens ─────────────────────────────────────────────── */
+
+:root {
+  --paper:        #fbf8f0;
+  --paper-raised: #ffffff;
+  --rule:         #e8e1d0;
+  --rule-strong:  #cdc3ac;
+
+  --ink:          #1c1916;
+  --ink-body:     #3a342c;
+  --ink-muted:    #7a6f5f;
+  --ink-dim:      #b0a894;
+
+  /* event categories — a single dot/bar, not a pill bg */
+  --c-admit:    #b45309;   /* amber */
+  --c-sig:      #c2410c;   /* dark amber */
+  --c-cp:       #be185d;   /* pink */
+  --c-query:    #1d4ed8;   /* blue */
+  --c-cert:     #6d28d9;   /* violet */
+  --c-dc:       #475569;   /* slate */
+  --c-urgent:   #b91c1c;   /* red */
+
+  --font-display: 'Fraunces', Georgia, serif;
+  --font-body:    'Atkinson Hyperlegible', ui-sans-serif, system-ui, sans-serif;
+  --font-mono:    'JetBrains Mono', ui-monospace, monospace;
+}
+
+/* ─── base ───────────────────────────────────────────────── */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body {
+  margin: 0; padding: 0;
+  background: var(--paper);
+  color: var(--ink-body);
+  font-family: var(--font-body);
+  font-size: 14.5px;
+  line-height: 1.45;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+.page {
+  max-width: 1060px;
+  margin: 0 auto;
+  padding: 26px 28px 60px;
+}
+
+/* ─── masthead ───────────────────────────────────────────── */
+
+.masthead {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: end;
+  gap: 24px;
+  padding-bottom: 14px;
+  margin-bottom: 24px;
+  border-bottom: 1px solid var(--rule-strong);
+}
+
+.masthead__left h1 {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 30px;
+  line-height: 1;
+  letter-spacing: -0.015em;
+  color: var(--ink);
+  margin: 0;
+  font-variation-settings: "opsz" 96, "SOFT" 30;
+}
+
+.masthead__left p {
+  margin: 6px 0 0;
+  font-size: 13px;
+  color: var(--ink-muted);
+  letter-spacing: 0.01em;
+}
+
+.week-nav {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  font-family: var(--font-display);
+  font-variation-settings: "opsz" 48;
+  font-size: 15px;
+  color: var(--ink);
+}
+
+.week-nav__label {
+  font-style: italic;
+  font-weight: 500;
+}
+
+.week-nav__label b {
+  font-style: normal;
+  font-weight: 600;
+}
+
+.week-nav button {
+  border: 1px solid var(--rule-strong);
+  background: var(--paper-raised);
+  width: 26px; height: 26px;
+  border-radius: 50%;
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--ink-muted);
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+}
+
+.week-nav button:hover {
+  color: var(--ink);
+  border-color: var(--ink);
+}
+
+/* ─── section wrappers ───────────────────────────────────── */
+
+.section {
+  margin-bottom: 28px;
+}
+
+.section__label {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  padding-bottom: 8px;
+  margin-bottom: 12px;
+  border-bottom: 1px solid var(--rule);
+}
+
+.section__label .meta {
+  font-weight: 400;
+  font-family: var(--font-body);
+  font-style: italic;
+  text-transform: none;
+  letter-spacing: 0.02em;
+  color: var(--ink-dim);
+  font-size: 11px;
+}
+
+/* ─── calendar ───────────────────────────────────────────── */
+
+.week {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 1px;
+  background: var(--rule);
+  border: 1px solid var(--rule-strong);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.day {
+  background: var(--paper-raised);
+  min-height: 165px;
+  padding: 10px 12px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  position: relative;
+}
+
+.day__head {
+  display: flex;
+  align-items: baseline;
+  gap: 7px;
+  margin-bottom: 5px;
+}
+
+.day__dow {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+}
+
+.day__num {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--ink);
+  line-height: 1;
+  font-variation-settings: "opsz" 48;
+}
+
+.day--today .day__num {
+  color: var(--c-urgent);
+  position: relative;
+}
+
+.day--today .day__num::after {
+  content: "";
+  position: absolute;
+  bottom: -4px; left: 0; right: 0;
+  height: 2px;
+  background: var(--c-urgent);
+  border-radius: 2px;
+}
+
+/* event row — no pill, just a left-bar + text */
+.evt {
+  display: grid;
+  grid-template-columns: 3px 1fr;
+  gap: 7px;
+  padding: 1px 0 1px 0;
+  font-size: 12.5px;
+  line-height: 1.3;
+  cursor: pointer;
+  color: var(--ink-body);
+  align-items: stretch;
+  transition: color 120ms;
+}
+
+.evt:hover { color: var(--ink); }
+
+.evt__bar {
+  background: var(--ink-dim);
+  border-radius: 1px;
+}
+
+.evt__text {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 6px;
+  align-items: baseline;
+}
+
+.evt__who {
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.evt__tag {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  text-transform: lowercase;
+  letter-spacing: 0.01em;
+  color: var(--ink-muted);
+  font-weight: 400;
+}
+
+.evt--admit  .evt__bar { background: var(--c-admit); }
+.evt--sig    .evt__bar { background: var(--c-sig); }
+.evt--cp     .evt__bar { background: var(--c-cp); }
+.evt--query  .evt__bar { background: var(--c-query); }
+.evt--cert   .evt__bar { background: var(--c-cert); }
+.evt--dc     .evt__bar { background: var(--c-dc); }
+.evt--urgent .evt__bar { background: var(--c-urgent); }
+.evt--urgent .evt__who { color: var(--c-urgent); }
+
+/* ─── to-do ──────────────────────────────────────────────── */
+
+.todo {
+  background: var(--paper-raised);
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.todo__input {
+  display: grid;
+  grid-template-columns: 16px 1fr;
+  gap: 10px;
+  align-items: center;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--rule);
+  background: var(--paper);
+}
+
+.todo__input span {
+  width: 14px; height: 14px;
+  border: 1.5px dashed var(--rule-strong);
+  border-radius: 3px;
+}
+
+.todo__input input {
+  border: 0;
+  background: transparent;
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-style: italic;
+  color: var(--ink);
+  outline: none;
+  padding: 0;
+  height: 20px;
+}
+
+.todo__input input::placeholder {
+  color: var(--ink-dim);
+  font-style: italic;
+}
+
+.todo__item {
+  display: grid;
+  grid-template-columns: 16px 1fr auto;
+  gap: 10px;
+  align-items: center;
+  padding: 9px 16px;
+  border-bottom: 1px solid var(--rule);
+  font-size: 14px;
+  color: var(--ink-body);
+  transition: background 100ms;
+  cursor: pointer;
+}
+
+.todo__item:hover { background: var(--paper); }
+
+.todo__group {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 12px 16px 6px;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  background: var(--paper);
+  border-bottom: 1px solid var(--rule);
+}
+
+.todo__group:first-of-type {
+  border-top: 1px solid var(--rule);
+}
+
+.todo__group .label { display: inline-flex; align-items: baseline; gap: 8px; }
+
+.todo__group .label b {
+  font-family: var(--font-display);
+  font-variation-settings: "opsz" 36;
+  font-weight: 600;
+  font-size: 13px;
+  text-transform: none;
+  letter-spacing: -0.005em;
+  color: var(--ink);
+}
+
+.todo__group .count {
+  font-family: var(--font-mono);
+  font-weight: 400;
+  font-size: 10.5px;
+  color: var(--ink-dim);
+  letter-spacing: 0.04em;
+}
+
+.todo__group--muted {
+  cursor: pointer;
+  color: var(--ink-dim);
+}
+
+.todo__group--muted:hover { color: var(--ink); }
+
+.todo__group--muted .arrow {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 13px;
+  font-weight: 500;
+  text-transform: none;
+  letter-spacing: 0;
+  color: currentColor;
+}
+
+.todo__check {
+  width: 14px; height: 14px;
+  border: 1.5px solid var(--rule-strong);
+  border-radius: 3px;
+  position: relative;
+  cursor: pointer;
+  background: var(--paper-raised);
+  flex-shrink: 0;
+}
+
+.todo__check--done {
+  background: var(--ink);
+  border-color: var(--ink);
+}
+
+.todo__check--done::after {
+  content: "";
+  position: absolute;
+  left: 3px; top: -1px;
+  width: 4px; height: 8px;
+  border-right: 2px solid #fff;
+  border-bottom: 2px solid #fff;
+  transform: rotate(45deg);
+}
+
+.todo__text { line-height: 1.4; }
+
+.todo__item--done .todo__text {
+  text-decoration: line-through;
+  color: var(--ink-dim);
+}
+
+/* Inline urgent chip — sits right next to the text */
+.todo__text .urgent {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--c-urgent);
+  margin-left: 8px;
+  padding: 1px 6px;
+  background: #fef2f2;
+  border-radius: 2px;
+  vertical-align: 1px;
+}
+
+.todo__meta {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--ink-dim);
+  white-space: nowrap;
+}
+
+/* ─── open-full link ─────────────────────────────────────── */
+
+.open-full {
+  display: none;
+  justify-content: flex-end;
+  margin-top: -14px;
+  padding-right: 2px;
+}
+
+.open-full a {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--ink);
+  text-decoration: none;
+  border-bottom: 1px solid var(--rule-strong);
+  padding-bottom: 2px;
+  transition: border-color 120ms;
+  cursor: pointer;
+}
+
+.open-full a:hover { border-color: var(--ink); }
+
+.open-full .arrow {
+  font-family: var(--font-display);
+  margin-left: 4px;
+  font-weight: 400;
+}
+
+/* ─── preview toggle (mock-only) ─────────────────────────── */
+
+.preview-toggle {
+  display: inline-flex;
+  background: var(--ink);
+  border-radius: 999px;
+  overflow: hidden;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  box-shadow: 0 2px 10px rgba(28, 25, 22, 0.15);
+  margin-bottom: 18px;
+  align-self: flex-start;
+}
+
+.preview-toggle-wrap {
+  display: flex;
+  justify-content: flex-end;
+  padding: 18px 28px 0;
+  max-width: 1060px;
+  margin: 0 auto;
+}
+
+.preview-toggle button {
+  border: 0;
+  background: transparent;
+  color: #cbc3ad;
+  padding: 6px 13px;
+  font-family: var(--font-body);
+  font-weight: 700;
+  cursor: pointer;
+  letter-spacing: 0.1em;
+}
+
+.preview-toggle button:hover { color: #fff; }
+.preview-toggle button.active {
+  background: #fef3c7;
+  color: var(--ink);
+}
+
+/* ─── compact mode ───────────────────────────────────────── */
+
+body.is-compact .section--queues { display: none; }
+body.is-compact .admin { display: none; }
+body.is-compact .open-full { display: flex; }
+
+/* ─── expanded-mode queue cards (stub; same as earlier mock) ── */
+
+.queues {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.card {
+  background: var(--paper-raised);
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.card__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 11px 14px 9px;
+  border-bottom: 1px solid var(--rule);
+}
+
+.card__title {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 14px;
+  margin: 0;
+  color: var(--ink);
+  font-variation-settings: "opsz" 36;
+}
+
+.card__count {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--ink-muted);
+}
+
+.card__count--hot { color: var(--c-urgent); font-weight: 500; }
+
+.row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px;
+  padding: 7px 14px;
+  font-size: 13.5px;
+  border-bottom: 1px solid var(--rule);
+}
+.row:last-child { border-bottom: 0; }
+.row:hover { background: var(--paper); }
+.row__name { color: var(--ink); font-weight: 700; }
+.row__meta { color: var(--ink-muted); font-weight: 400; margin-left: 4px; font-size: 12px; }
+.row__date { font-family: var(--font-mono); font-size: 11px; color: var(--ink-body); }
+.row__date--over { color: var(--c-urgent); }
+
+/* admin strip */
+.admin {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 12px 14px;
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  background: var(--paper-raised);
+}
+.admin__label {
+  font-size: 10.5px; font-weight: 700; letter-spacing: 0.18em;
+  text-transform: uppercase; color: var(--ink-muted);
+  margin-right: 4px;
+}
+.admin__chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 12px; color: var(--ink-body);
+  padding: 4px 10px; border: 1px solid var(--rule-strong);
+  border-radius: 999px; background: var(--paper);
+}
+.admin__chip--done { color: var(--ink-dim); text-decoration: line-through; }
+.admin__chip--due  { color: var(--c-urgent); border-color: var(--c-urgent); font-weight: 700; }
+.admin__dot { width: 6px; height: 6px; border-radius: 50%; background: var(--rule-strong); }
+.admin__chip--done .admin__dot { background: #86efac; }
+.admin__chip--due  .admin__dot { background: var(--c-urgent); }
+
+</style>
+</head>
+<body class="is-compact">
+
+<div class="preview-toggle-wrap">
+  <div class="preview-toggle" role="tablist">
+    <button type="button" class="active" data-mode="compact">Modal</button>
+    <button type="button" data-mode="full">Fullscreen</button>
+  </div>
+</div>
+
+<main class="page">
+
+  <!-- ── masthead ───────────────────────────────────────── -->
+  <header class="masthead">
+    <div class="masthead__left">
+      <h1>MDS Planner</h1>
+      <p>Harmony Care at Stamford</p>
+    </div>
+    <div class="week-nav">
+      <button type="button" aria-label="Previous week">&lsaquo;</button>
+      <span class="week-nav__label">Week of <b>Apr 20 &ndash; 26</b></span>
+      <button type="button" aria-label="Next week">&rsaquo;</button>
+    </div>
+  </header>
+
+  <!-- ── CALENDAR ───────────────────────────────────────── -->
+  <section class="section">
+    <div class="section__label">
+      <span>Calendar</span>
+      <span class="meta">13 events this week</span>
+    </div>
+    <div class="week">
+
+      <div class="day day--today">
+        <div class="day__head">
+          <span class="day__dow">Mon</span>
+          <span class="day__num">20</span>
+        </div>
+        <div class="evt evt--urgent">
+          <span class="evt__bar"></span>
+          <span class="evt__text">
+            <span class="evt__who">Coble, G</span>
+            <span class="evt__tag">cert 32d overdue</span>
+          </span>
+        </div>
+        <div class="evt evt--cp">
+          <span class="evt__bar"></span>
+          <span class="evt__text">
+            <span class="evt__who">Hagerich</span>
+            <span class="evt__tag">cp review</span>
+          </span>
+        </div>
+        <div class="evt evt--query">
+          <span class="evt__bar"></span>
+          <span class="evt__text">
+            <span class="evt__who">Saffle</span>
+            <span class="evt__tag">mc review</span>
+          </span>
+        </div>
+      </div>
+
+      <div class="day">
+        <div class="day__head">
+          <span class="day__dow">Tue</span>
+          <span class="day__num">21</span>
+        </div>
+        <div class="evt evt--admit">
+          <span class="evt__bar"></span>
+          <span class="evt__text">
+            <span class="evt__who">Clark, T</span>
+            <span class="evt__tag">admit</span>
+          </span>
+        </div>
+        <div class="evt evt--sig">
+          <span class="evt__bar"></span>
+          <span class="evt__text">
+            <span class="evt__who">Clasper</span>
+            <span class="evt__tag">sig/adm</span>
+          </span>
+        </div>
+        <div class="evt evt--cp">
+          <span class="evt__bar"></span>
+          <span class="evt__text">
+            <span class="evt__who">Packoski</span>
+            <span class="evt__tag">cp review</span>
+          </span>
+        </div>
+      </div>
+
+      <div class="day">
+        <div class="day__head">
+          <span class="day__dow">Wed</span>
+          <span class="day__num">22</span>
+        </div>
+        <div class="evt evt--sig">
+          <span class="evt__bar"></span>
+          <span class="evt__text">
+            <span class="evt__who">Stamper</span>
+            <span class="evt__tag">sig/adm</span>
+          </span>
+        </div>
+        <div class="evt evt--query">
+          <span class="evt__bar"></span>
+          <span class="evt__text">
+            <span class="evt__who">Schmalzriedt</span>
+            <span class="evt__tag">query sent</span>
+          </span>
+        </div>
+        <div class="evt evt--query">
+          <span class="evt__bar"></span>
+          <span class="evt__text">
+            <span class="evt__who">Nugent</span>
+            <span class="evt__tag">query sent</span>
+          </span>
+        </div>
+      </div>
+
+      <div class="day">
+        <div class="day__head">
+          <span class="day__dow">Thu</span>
+          <span class="day__num">23</span>
+        </div>
+        <div class="evt evt--query">
+          <span class="evt__bar"></span>
+          <span class="evt__text">
+            <span class="evt__who">Bruton</span>
+            <span class="evt__tag">query due</span>
+          </span>
+        </div>
+        <div class="evt evt--cp">
+          <span class="evt__bar"></span>
+          <span class="evt__text">
+            <span class="evt__who">Henstreet</span>
+            <span class="evt__tag">cp review</span>
+          </span>
+        </div>
+      </div>
+
+      <div class="day">
+        <div class="day__head">
+          <span class="day__dow">Fri</span>
+          <span class="day__num">24</span>
+        </div>
+        <div class="evt evt--dc">
+          <span class="evt__bar"></span>
+          <span class="evt__text">
+            <span class="evt__who">M. Watkins</span>
+            <span class="evt__tag">discharge</span>
+          </span>
+        </div>
+        <div class="evt evt--cp">
+          <span class="evt__bar"></span>
+          <span class="evt__text">
+            <span class="evt__who">McCants</span>
+            <span class="evt__tag">cp review</span>
+          </span>
+        </div>
+        <div class="evt evt--cert">
+          <span class="evt__bar"></span>
+          <span class="evt__text">
+            <span class="evt__who">Clappor, B</span>
+            <span class="evt__tag">cert day 14</span>
+          </span>
+        </div>
+      </div>
+
+      <div class="day">
+        <div class="day__head">
+          <span class="day__dow">Sat</span>
+          <span class="day__num">25</span>
+        </div>
+        <div class="evt evt--query">
+          <span class="evt__bar"></span>
+          <span class="evt__text">
+            <span class="evt__who">Ashley, J</span>
+            <span class="evt__tag">query</span>
+          </span>
+        </div>
+        <div class="evt evt--query">
+          <span class="evt__bar"></span>
+          <span class="evt__text">
+            <span class="evt__who">Hoffie</span>
+            <span class="evt__tag">iron infusion</span>
+          </span>
+        </div>
+        <div class="evt evt--query">
+          <span class="evt__bar"></span>
+          <span class="evt__text">
+            <span class="evt__who">Rogers, W</span>
+            <span class="evt__tag">query</span>
+          </span>
+        </div>
+        <div class="evt evt--query">
+          <span class="evt__bar"></span>
+          <span class="evt__text">
+            <span class="evt__who">Smith, B</span>
+            <span class="evt__tag">IV therapy</span>
+          </span>
+        </div>
+      </div>
+
+      <div class="day">
+        <div class="day__head">
+          <span class="day__dow">Sun</span>
+          <span class="day__num">26</span>
+        </div>
+        <div class="evt evt--cert">
+          <span class="evt__bar"></span>
+          <span class="evt__text">
+            <span class="evt__who">Saffle, E.</span>
+            <span class="evt__tag">cert day 14</span>
+          </span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── TO-DO ──────────────────────────────────────────── -->
+  <section class="section">
+    <div class="section__label">
+      <span>To-Do</span>
+      <span class="meta">7 open &middot; 2 done</span>
+    </div>
+    <div class="todo">
+
+      <div class="todo__input">
+        <span></span>
+        <input type="text" placeholder="jot a note&hellip;">
+      </div>
+
+      <div class="todo__group">
+        <span class="label"><b>Today</b> <span class="count">&middot; Apr 21</span></span>
+        <span class="count">4 open</span>
+      </div>
+      <div class="todo__item">
+        <span class="todo__check"></span>
+        <span class="todo__text">Call Dr. Nguyen re: Clark T setup in-house <span class="urgent">urgent</span></span>
+        <span class="todo__meta"></span>
+      </div>
+      <div class="todo__item">
+        <span class="todo__check"></span>
+        <span class="todo__text">Coble cert &mdash; call Dr. Patel <span class="urgent">32d overdue</span></span>
+        <span class="todo__meta"></span>
+      </div>
+      <div class="todo__item">
+        <span class="todo__check"></span>
+        <span class="todo__text">Order pain interview for today's infusion (1000)</span>
+        <span class="todo__meta"></span>
+      </div>
+      <div class="todo__item">
+        <span class="todo__check"></span>
+        <span class="todo__text">Stamp Hagerich care plan w/ DON</span>
+        <span class="todo__meta"></span>
+      </div>
+
+      <div class="todo__group">
+        <span class="label"><b>Tomorrow</b> <span class="count">&middot; Apr 22</span></span>
+        <span class="count">1 open</span>
+      </div>
+      <div class="todo__item">
+        <span class="todo__check"></span>
+        <span class="todo__text">Check GG for Simmons before ARD passes <span class="urgent">urgent</span></span>
+        <span class="todo__meta"></span>
+      </div>
+
+      <div class="todo__group todo__group--muted">
+        <span class="label"><b>Later this week</b></span>
+        <span class="count">2 open <span class="arrow">&rsaquo; show</span></span>
+      </div>
+
+      <div class="todo__group todo__group--muted">
+        <span class="label"><b>Done recently</b></span>
+        <span class="count">2 done <span class="arrow">&rsaquo; show</span></span>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── open full planner (compact only) ───────────────── -->
+  <div class="open-full">
+    <a href="#" onclick="document.querySelector('.preview-toggle [data-mode=full]').click(); return false;">
+      Open full planner <span class="arrow">&rsaquo;</span>
+    </a>
+  </div>
+
+  <!-- ── expanded-mode queue section (hidden in compact) ─ -->
+  <section class="section section--queues">
+    <div class="section__label">
+      <span>Queues</span>
+      <span class="meta">auto-populated from your data</span>
+    </div>
+    <div class="queues">
+
+      <div class="card">
+        <div class="card__head">
+          <h3 class="card__title">MDS Due</h3>
+          <span class="card__count card__count--hot">5 open</span>
+        </div>
+        <div class="row"><span><span class="row__name">Clark, T</span><span class="row__meta">admit</span></span><span class="row__date row__date--over">ARD unset</span></div>
+        <div class="row"><span><span class="row__name">Jesse Jesse</span><span class="row__meta">5-Day</span></span><span class="row__date">ARD Apr 22</span></div>
+        <div class="row"><span><span class="row__name">Mary Smith</span><span class="row__meta">Quarterly</span></span><span class="row__date">ARD Apr 23</span></div>
+        <div class="row"><span><span class="row__name">Mohmood, M</span><span class="row__meta">Quarterly</span></span><span class="row__date">ARD Apr 19</span></div>
+      </div>
+
+      <div class="card">
+        <div class="card__head">
+          <h3 class="card__title">Care Plans to Review</h3>
+          <span class="card__count">6 open</span>
+        </div>
+        <div class="row"><span class="row__name">Hagerich</span><span class="row__date row__date--over">Due 4/20</span></div>
+        <div class="row"><span class="row__name">Hallop</span><span class="row__date row__date--over">Due 4/20</span></div>
+        <div class="row"><span class="row__name">Snelsrod</span><span class="row__date row__date--over">Due 4/20</span></div>
+        <div class="row"><span class="row__name">Packoski</span><span class="row__date">Due 4/21</span></div>
+        <div class="row"><span class="row__name">Henstreet</span><span class="row__date">Due 4/23</span></div>
+      </div>
+
+      <div class="card">
+        <div class="card__head">
+          <h3 class="card__title">Queries Outstanding</h3>
+          <span class="card__count">8 open</span>
+        </div>
+        <div class="row"><span><span class="row__name">Ashley, J</span><span class="row__meta">I5100</span></span><span class="row__date">Sent 2d</span></div>
+        <div class="row"><span><span class="row__name">Hoffie</span><span class="row__meta">I2900</span></span><span class="row__date">Sent 3d</span></div>
+        <div class="row"><span><span class="row__name">Rogers, W</span><span class="row__meta">J1550</span></span><span class="row__date">Sent 1d</span></div>
+        <div class="row"><span><span class="row__name">Bruton</span><span class="row__meta">I1100</span></span><span class="row__date row__date--over">ARD in 2d</span></div>
+      </div>
+
+      <div class="card">
+        <div class="card__head">
+          <h3 class="card__title">Medicare Certs</h3>
+          <span class="card__count">4 open</span>
+        </div>
+        <div class="row"><span><span class="row__name">Coble, G</span><span class="row__meta">Day 14</span></span><span class="row__date row__date--over">Due 3/19</span></div>
+        <div class="row"><span><span class="row__name">Clappor, B</span><span class="row__meta">Day 14</span></span><span class="row__date">Due 4/24</span></div>
+        <div class="row"><span><span class="row__name">Saffle, Elinor</span><span class="row__meta">Day 14</span></span><span class="row__date">Due 4/26</span></div>
+        <div class="row"><span><span class="row__name">Stamper, Bill</span><span class="row__meta">Initial</span></span><span class="row__date">Sent 4/18</span></div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── admin strip (expanded only) ────────────────────── -->
+  <div class="admin">
+    <span class="admin__label">Weekly admin</span>
+    <span class="admin__chip admin__chip--done"><span class="admin__dot"></span>LTCMI Trans</span>
+    <span class="admin__chip admin__chip--due"><span class="admin__dot"></span>iQIES transmission</span>
+    <span class="admin__chip"><span class="admin__dot"></span>QRS &#37;</span>
+    <span class="admin__chip"><span class="admin__dot"></span>QIPP Report</span>
+    <span class="admin__chip"><span class="admin__dot"></span>D/C PU</span>
+  </div>
+
+</main>
+
+<script>
+  const body = document.body;
+  document.querySelectorAll('.preview-toggle button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.preview-toggle button').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      if (btn.dataset.mode === 'compact') body.classList.add('is-compact');
+      else body.classList.remove('is-compact');
+    });
+  });
+</script>
+
+</body>
+</html>

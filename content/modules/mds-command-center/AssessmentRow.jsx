@@ -104,14 +104,7 @@ function udaNeedsAttention(status) {
     || status === 'in_progress';
 }
 
-export function AssessmentRow({ assessment, isExpanded, onToggle, onOpenAnalyzer, groupPosition = 'single' }) {
-  // Lightweight "upcoming not yet opened" variant — no section data, no UDAs,
-  // no PDPM. Just patient, type, due date, urgency. Clicking does nothing
-  // useful yet (there's no assessment to expand).
-  if (assessment.isUpcoming) {
-    return <UpcomingRow assessment={assessment} groupPosition={groupPosition} />;
-  }
-
+export function AssessmentRow({ assessment, isExpanded, onToggle, onOpenAnalyzer }) {
   const {
     patientName, assessmentType, ardDate, pdpm,
     assessmentClass, sectionProgress, udaSummary, querySummary,
@@ -122,9 +115,6 @@ export function AssessmentRow({ assessment, isExpanded, onToggle, onOpenAnalyzer
   const hideRevenue = assessmentClass === 'end_of_stay';
   const delta = hideRevenue ? null : formatPaymentDelta(pdpm?.payment, 'short');
   const ard = computeArdContext(ardDate, deadlines);
-
-  // Patient name is repeated across same-patient group rows — only show on the first
-  const showPatientName = groupPosition === 'single' || groupPosition === 'first';
 
   const sectionsDone = sectionProgress?.total > 0
     && sectionProgress.completed === sectionProgress.total;
@@ -161,7 +151,7 @@ export function AssessmentRow({ assessment, isExpanded, onToggle, onOpenAnalyzer
     >
       {/* Line 1: Patient name + urgency status (the most important info) */}
       <div class="mds-cc__card-row1">
-        <span class={`mds-cc__card-name${!showPatientName ? ' mds-cc__card-name--hidden' : ''}`}>
+        <span class="mds-cc__card-name">
           {patientName || 'Unknown'}
         </span>
         {urgencyText && (
@@ -181,7 +171,7 @@ export function AssessmentRow({ assessment, isExpanded, onToggle, onOpenAnalyzer
             <span class="mds-cc__card-ard-date">ARD {ard.dateText}</span>
             {ard.completionText && !ard.isCompleted && (
               <>
-                <span class="mds-cc__card-ard-arrow">&rarr;</span>
+                <span class="mds-cc__card-meta-sep">&middot;</span>
                 <span class="mds-cc__card-complete-date">Complete by {ard.completionText}</span>
               </>
             )}
@@ -229,64 +219,3 @@ export function AssessmentRow({ assessment, isExpanded, onToggle, onOpenAnalyzer
   );
 }
 
-// ── Upcoming (not yet opened) row variant ──
-//
-// Used for assessments from the schedule API where isOpened=false.
-// Shows patient, due date, and a clear "Not opened" indicator so the
-// coordinator knows they need to open this assessment in PCC.
-function UpcomingRow({ assessment, groupPosition = 'single' }) {
-  const { patientName, assessmentType, dueDate, daysUntilDue } = assessment;
-  const urgency = assessment.deadlines?.urgency || 'on_track';
-  const accent = URGENCY_ACCENT[urgency] || '#9ca3af';
-
-  const dateText = dueDate ? formatShortDate(dueDate) : '';
-  const deadline = formatDeadline(daysUntilDue);
-  const showPatientName = groupPosition === 'single' || groupPosition === 'first';
-
-  return (
-    <div
-      class="mds-cc__card mds-cc__card--upcoming"
-      style={{ borderLeftColor: accent }}
-      role="article"
-    >
-      {/* Line 1: Patient name + deadline */}
-      <div class="mds-cc__card-row1">
-        <span class={`mds-cc__card-name${!showPatientName ? ' mds-cc__card-name--hidden' : ''}`}>
-          {patientName || 'Unknown'}
-        </span>
-        {deadline && (
-          <span class={`mds-cc__card-urgency mds-cc__card-urgency--${deadline.cls}`}>{deadline.text}</span>
-        )}
-      </div>
-      {/* Line 2: Type + due date */}
-      <div class="mds-cc__card-row2">
-        <span class="mds-cc__card-type">{assessmentType}</span>
-        {dateText && (
-          <>
-            <span class="mds-cc__card-meta-sep">&middot;</span>
-            <span class="mds-cc__card-ard-date">Due {dateText}</span>
-          </>
-        )}
-      </div>
-      {/* Line 3: Not-opened badge */}
-      <div class="mds-cc__card-row3">
-        <span class="mds-cc__card-upcoming-badge">Not opened in PCC</span>
-      </div>
-    </div>
-  );
-}
-
-function formatShortDate(isoDate) {
-  const d = new Date(isoDate);
-  if (isNaN(d)) return isoDate;
-  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-}
-
-function formatDeadline(daysUntilDue) {
-  if (daysUntilDue == null) return null;
-  if (daysUntilDue < 0) return { text: `${Math.abs(daysUntilDue)}d overdue`, cls: 'overdue' };
-  if (daysUntilDue === 0) return { text: 'Due today', cls: 'urgent' };
-  if (daysUntilDue <= 3) return { text: `${daysUntilDue}d left`, cls: 'urgent' };
-  if (daysUntilDue <= 7) return { text: `${daysUntilDue}d left`, cls: 'approaching' };
-  return { text: `${daysUntilDue}d left`, cls: 'ok' };
-}

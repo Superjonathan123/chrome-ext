@@ -13,6 +13,9 @@ import './css/ai-chat.css';
 import './css/certifications.css';
 import './css/care-plan-coverage.css';
 import './css/ard-estimator.css';
+import './css/mds-planner.css';
+import './css/uda-modal.css';
+import './css/qm-board.css';
 
 // 2. Import vanilla utilities (order matters - matches current manifest.json order)
 import './mockData.js';
@@ -70,8 +73,18 @@ window.pdfjsLib = pdfjsLib;
 pdfjsLib.GlobalWorkerOptions.workerSrc = chrome.runtime.getURL('lib/pdf.worker.min.js');
 
 // 7. Mount Preact app
+import * as preact from 'preact';
 import { render, h } from 'preact';
 import { App } from './components/App.jsx';
+import { Sidebar as ICD10SidebarComponent } from './modules/icd10-sidebar/Sidebar.jsx';
+import { ArdEstimator } from './modules/ard-estimator/ArdEstimator.jsx';
+
+// Expose Preact + ICD-10 Sidebar + ARD Estimator so the vanilla shims can
+// mount the Preact trees synchronously (and the demo works without dynamic
+// JSX imports that would fail against static bundles).
+if (!window.__preact) window.__preact = preact;
+window.__ICD10SidebarComponent = ICD10SidebarComponent;
+window.__ArdEstimator = ArdEstimator;
 
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', initPreactApp);

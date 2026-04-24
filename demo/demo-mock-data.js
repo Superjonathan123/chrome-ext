@@ -1055,6 +1055,18 @@ export const DEMO_API_RESPONSES = {
         },
         evidence: [
           {
+            evidenceId: 'uda-demo-nutrition-v3',
+            sourceType: 'uda',
+            sourceId: 'demo-nutrition-v3',
+            displayName: 'Nutrition Assessment - V 3 (2/27/2026)',
+            effectiveDate: '2026-02-27',
+            date: '2026-02-27',
+            quote: 'Existing diagnosis of Protein/Calorie Malnutrition? (NTA point): Yes',
+            quoteText: 'Existing diagnosis of Protein/Calorie Malnutrition? (NTA point): Yes',
+            rationale: 'Dietitian-signed nutrition assessment documents existing protein/calorie malnutrition.',
+            evidenceRole: 'supporting'
+          },
+          {
             sourceType: 'progress-note',
             sourceId: 'doc-nutr-001',
             documentName: 'Nutrition Progress Note',
@@ -2202,5 +2214,199 @@ export const DEMO_API_RESPONSES = {
       name: 'Jane Specialist, NP',
       phone: '555-0103'
     }
-  ]
+  ],
+
+  // ════════════════════════════════════════════
+  // ARD RECOMMENDATION (useArdEstimator)
+  // 5-Day PPS scenario for Doe, Jane. Day 5 is the recommended ARD,
+  // Day 3 drops NTA because a look-back-limited dx wasn't captured yet.
+  // ════════════════════════════════════════════
+  ardRecommendation: {
+    success: true,
+    externalAssessmentId: '4860265',
+    admissionDate: '2026-01-10',
+    recommendedDayNumber: 5,
+    potentialPpd: 612,
+    scores: [
+      {
+        dayNumber: 1,
+        dayDate: '2026-01-10',
+        hippsCode: 'HBC11',
+        estimatedPpd: 498,
+        nursingMainCategory: 'CDE',
+        nursingPaymentGroup: 'CBC1',
+        ntaLevel: 'NE',
+        ntaPoints: 4,
+        slpGroup: 'SB',
+        ptotGroup: 'TB'
+      },
+      {
+        dayNumber: 2,
+        dayDate: '2026-01-11',
+        hippsCode: 'HBC11',
+        estimatedPpd: 498,
+        nursingMainCategory: 'CDE',
+        nursingPaymentGroup: 'CBC1',
+        ntaLevel: 'NE',
+        ntaPoints: 4,
+        slpGroup: 'SB',
+        ptotGroup: 'TB'
+      },
+      {
+        dayNumber: 3,
+        dayDate: '2026-01-12',
+        hippsCode: 'HBC11',
+        estimatedPpd: 498,
+        nursingMainCategory: 'CDE',
+        nursingPaymentGroup: 'CBC1',
+        ntaLevel: 'NE',
+        ntaPoints: 4,
+        slpGroup: 'SB',
+        ptotGroup: 'TB'
+      },
+      {
+        dayNumber: 4,
+        dayDate: '2026-01-13',
+        hippsCode: 'HDC21',
+        estimatedPpd: 556,
+        nursingMainCategory: 'CDE',
+        nursingPaymentGroup: 'CBC2',
+        ntaLevel: 'ND',
+        ntaPoints: 7,
+        slpGroup: 'SC',
+        ptotGroup: 'TB'
+      },
+      {
+        dayNumber: 5,
+        dayDate: '2026-01-14',
+        hippsCode: 'HDE21',
+        estimatedPpd: 589,
+        nursingMainCategory: 'CDE',
+        nursingPaymentGroup: 'CBC2',
+        ntaLevel: 'NC',
+        ntaPoints: 10,
+        slpGroup: 'SC',
+        ptotGroup: 'TB'
+      }
+    ],
+    classifiedItems: [
+      {
+        mdsItem: 'I4300',
+        mdsColumn: '',
+        description: 'Aphasia',
+        classification: 'time_sensitive_captured',
+        ntaPoints: 0,
+        pdpmComponents: ['slp'],
+        nursingInfo: null,
+        queryStatus: null,
+        capturedOnDays: [1, 2, 3, 4, 5],
+        solverAnswer: 'yes',
+        queryPdpmImpact: ''
+      },
+      {
+        mdsItem: 'K0510',
+        mdsColumn: 'B1',
+        description: 'Mechanically altered diet',
+        classification: 'time_sensitive_captured',
+        ntaPoints: 0,
+        pdpmComponents: ['slp'],
+        nursingInfo: null,
+        queryStatus: null,
+        capturedOnDays: [1, 2, 3, 4, 5],
+        solverAnswer: 'yes',
+        queryPdpmImpact: ''
+      },
+      {
+        mdsItem: 'I2900',
+        mdsColumn: '',
+        description: 'Diabetes mellitus',
+        classification: 'time_sensitive_at_risk',
+        ntaPoints: 2,
+        pdpmComponents: ['nta'],
+        nursingInfo: null,
+        queryStatus: null,
+        capturedOnDays: [4, 5],
+        solverAnswer: 'yes',
+        queryPdpmImpact: 'Captured only on Days 4–5 — earlier ARD loses 2 NTA points.'
+      },
+      {
+        mdsItem: 'I2100',
+        mdsColumn: '',
+        description: 'Septicemia',
+        classification: 'item_to_query',
+        ntaPoints: 3,
+        pdpmComponents: ['nta'],
+        nursingInfo: null,
+        queryStatus: null,
+        capturedOnDays: [],
+        solverAnswer: 'needs_review',
+        queryPdpmImpact: 'Hospital notes reference sepsis — confirm diagnosis for +3 NTA.'
+      },
+      {
+        mdsItem: 'I2000',
+        mdsColumn: '',
+        description: 'Pneumonia',
+        classification: 'item_to_query',
+        ntaPoints: 2,
+        pdpmComponents: ['nta'],
+        nursingInfo: null,
+        queryStatus: null,
+        capturedOnDays: [],
+        solverAnswer: 'needs_review',
+        queryPdpmImpact: 'Chest imaging suggests infiltrate — confirm for +2 NTA.'
+      },
+      {
+        mdsItem: 'O0110',
+        mdsColumn: 'A1',
+        description: 'IV medications',
+        classification: 'item_to_query',
+        ntaPoints: 5,
+        pdpmComponents: ['nta'],
+        nursingInfo: null,
+        queryStatus: 'sent',
+        capturedOnDays: [],
+        solverAnswer: 'needs_review',
+        queryPdpmImpact: 'Query sent — awaiting response.'
+      },
+      {
+        mdsItem: 'GG0170',
+        mdsColumn: 'C1',
+        description: 'Functional mobility — bed mobility',
+        classification: 'always_captured',
+        ntaPoints: 0,
+        pdpmComponents: ['ptot', 'nursing'],
+        nursingInfo: { category: 'CDE' },
+        queryStatus: null,
+        capturedOnDays: [1, 2, 3, 4, 5],
+        solverAnswer: 'coded',
+        queryPdpmImpact: ''
+      },
+      {
+        mdsItem: 'B0700',
+        mdsColumn: '',
+        description: 'Makes self understood',
+        classification: 'needs_review',
+        ntaPoints: 0,
+        pdpmComponents: ['slp'],
+        nursingInfo: null,
+        queryStatus: null,
+        capturedOnDays: [],
+        solverAnswer: 'needs_review',
+        queryPdpmImpact: 'Documentation is ambiguous — review with SLP.'
+      },
+      {
+        mdsItem: 'N0415',
+        mdsColumn: 'H1',
+        description: 'Anticoagulant',
+        classification: 'always_captured',
+        ntaPoints: 1,
+        pdpmComponents: ['nta'],
+        nursingInfo: null,
+        queryStatus: null,
+        capturedOnDays: [1, 2, 3, 4, 5],
+        solverAnswer: 'coded',
+        queryPdpmImpact: ''
+      }
+    ]
+  }
 };

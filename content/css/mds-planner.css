@@ -1,0 +1,1126 @@
+/* ============================================================
+   MDS Planner — matches Command Center design language.
+   Two-column layout: calendar left, queue tables right.
+   BEM scope: mds-pl__
+   ============================================================ */
+
+.mds-pl {
+  --pl-bg:          #fff;
+  --pl-surface:     #fff;
+  --pl-surface-2:   #f9fafb;
+  --pl-surface-3:   #f3f4f6;
+  --pl-rule:        #e5e7eb;
+  --pl-rule-strong: #d1d5db;
+
+  --pl-ink:         #111827;
+  --pl-ink-body:    #374151;
+  --pl-ink-muted:   #6b7280;
+  --pl-ink-dim:     #9ca3af;
+
+  --pl-accent:      #6366f1;
+  --pl-selected-bg: #eef2ff;
+
+  --pl-c-admit:     #d97706;
+  --pl-c-sig:       #ea580c;
+  --pl-c-cp:        #db2777;
+  --pl-c-query:     #2563eb;
+  --pl-c-cert:      #7c3aed;
+  --pl-c-dc:        #64748b;
+
+  --pl-c-overdue:   #ef4444;
+  --pl-c-urgent:    #f97316;
+  --pl-c-approach:  #eab308;
+  --pl-c-ok:        #22c55e;
+
+  background: var(--pl-bg);
+  color: var(--pl-ink-body);
+  font-family: var(--super-font, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif);
+  font-size: 13px;
+  line-height: 1.45;
+  padding: 14px 18px 20px;
+  min-height: 100%;
+}
+
+.mds-pl *, .mds-pl *::before, .mds-pl *::after { box-sizing: border-box; }
+
+/* ─── Top bar ──────────────────────────────────────────── */
+
+.mds-pl__nav-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding-bottom: 10px;
+  margin-bottom: 12px;
+  border-bottom: 1px solid var(--pl-rule);
+}
+
+.mds-pl__week-nav {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--pl-ink);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.mds-pl__week-label { font-variant-numeric: tabular-nums; }
+
+.mds-pl__week-nav button {
+  border: 1px solid var(--pl-rule-strong);
+  background: var(--pl-surface);
+  width: 26px; height: 26px;
+  border-radius: 50%;
+  font-size: 14px;
+  color: var(--pl-ink-muted);
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+  transition: color 120ms, border-color 120ms;
+}
+.mds-pl__week-nav button:hover { color: var(--pl-ink); border-color: var(--pl-ink-muted); }
+
+.mds-pl__today-btn {
+  width: auto !important;
+  height: 26px;
+  padding: 0 12px !important;
+  border-radius: 14px !important;
+  font-size: 12px !important;
+  font-weight: 600;
+}
+
+.mds-pl__nav-right {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.mds-pl__event-count {
+  font-size: 12px;
+  color: var(--pl-ink-muted);
+}
+
+.mds-pl__focus-mode-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  border: 1px solid var(--pl-rule-strong);
+  background: var(--pl-surface);
+  color: var(--pl-ink-body);
+  font-size: 11.5px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 14px;
+  cursor: pointer;
+  white-space: nowrap;
+  font-family: inherit;
+  line-height: 1.3;
+  transition: color 120ms, border-color 120ms, background 120ms;
+}
+.mds-pl__focus-mode-toggle:hover {
+  color: var(--pl-ink);
+  border-color: var(--pl-ink-muted);
+  background: var(--pl-surface-2);
+}
+.mds-pl__focus-mode-toggle--active {
+  color: #fff;
+  background: var(--pl-accent);
+  border-color: var(--pl-accent);
+}
+.mds-pl__focus-mode-toggle--active:hover {
+  background: #4f46e5;
+  border-color: #4f46e5;
+  color: #fff;
+}
+
+.mds-pl__hint {
+  color: var(--pl-ink-dim);
+  font-style: italic;
+}
+
+/* ─── Body grid ────────────────────────────────────────── */
+
+.mds-pl__body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(360px, 1fr);
+  gap: 18px;
+  align-items: start;
+}
+
+.mds-pl--full .mds-pl__body {
+  grid-template-columns: minmax(0, 1fr) minmax(480px, 1.1fr);
+  gap: 24px;
+}
+
+.mds-pl__left { min-width: 0; }
+
+.mds-pl__right {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: calc(85vh - 200px);
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.mds-pl--full .mds-pl__right {
+  max-height: calc(100vh - 200px);
+}
+
+/* Two-col queue layout in fullscreen to use the extra space */
+.mds-pl--full .mds-pl__queues {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+/* ─── Week calendar ────────────────────────────────────── */
+
+.mds-pl__week {
+  display: flex;
+  flex-direction: column;
+  background: var(--pl-surface);
+  border: 1px solid var(--pl-rule);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.mds-pl__day {
+  display: grid;
+  grid-template-columns: 68px minmax(0, 1fr);
+  gap: 0;
+  align-items: stretch;
+  border-bottom: 1px solid var(--pl-rule);
+  background: var(--pl-surface);
+  transition: background 120ms;
+  min-width: 0;
+}
+
+.mds-pl__day:last-child { border-bottom: none; }
+
+/* Stronger left "day strip" — own background + vertical rule so events clearly belong to this row */
+.mds-pl__day-head {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 2px;
+  padding: 10px 10px 10px 12px;
+  background: var(--pl-surface-2);
+  border-right: 1px solid var(--pl-rule);
+  min-width: 0;
+}
+
+.mds-pl__day-dow {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--pl-ink-muted);
+}
+
+.mds-pl__day-num {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--pl-ink);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.mds-pl__day--today .mds-pl__day-head {
+  background: var(--pl-selected-bg);
+  border-right-color: var(--pl-accent);
+}
+.mds-pl__day--today .mds-pl__day-dow,
+.mds-pl__day--today .mds-pl__day-num {
+  color: var(--pl-accent);
+}
+
+.mds-pl__day--clickable { cursor: pointer; }
+.mds-pl__day--clickable:hover { background: var(--pl-surface-2); }
+.mds-pl__day--clickable:hover .mds-pl__day-head { background: var(--pl-surface-3); }
+
+.mds-pl__day--selected {
+  background: var(--pl-selected-bg);
+  box-shadow: inset 3px 0 0 0 var(--pl-accent);
+}
+
+.mds-pl__day--empty .mds-pl__day-events { color: var(--pl-ink-dim); }
+
+.mds-pl__day-events {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+  padding: 10px 12px;
+}
+
+.mds-pl__day-quiet {
+  font-size: 12px;
+  color: var(--pl-ink-dim);
+  font-style: italic;
+}
+
+/* Event row — bar encodes URGENCY (red/amber/grey); icon encodes TYPE; tag echoes it as text */
+.mds-pl__evt {
+  display: grid;
+  grid-template-columns: 3px 12px minmax(0, 1fr);
+  gap: 8px;
+  padding: 2px 0;
+  font-size: 13px;
+  line-height: 1.35;
+  color: var(--pl-ink-body);
+  align-items: center;
+  min-width: 0;
+}
+
+.mds-pl__evt-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--pl-ink-muted);
+  flex: none;
+}
+.mds-pl__evt--u-overdue .mds-pl__evt-icon { color: var(--pl-c-overdue); }
+.mds-pl__evt--u-warning .mds-pl__evt-icon { color: #b45309; }
+
+.mds-pl__evt--clickable { cursor: pointer; }
+.mds-pl__evt--clickable:hover .mds-pl__evt-who { text-decoration: underline; }
+
+.mds-pl__evt-bar {
+  background: var(--pl-ink-dim);
+  border-radius: 1px;
+  min-height: 16px;
+}
+
+.mds-pl__evt-text {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 7px;
+  align-items: baseline;
+  min-width: 0;
+}
+
+.mds-pl__evt-who {
+  font-weight: 600;
+  color: var(--pl-ink);
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mds-pl__evt-tag {
+  font-size: 11px;
+  color: var(--pl-ink-muted);
+  font-weight: 400;
+  text-transform: lowercase;
+}
+
+/* Urgency-colored bar — this is the scan-at-a-glance cue */
+.mds-pl__evt--u-ok       .mds-pl__evt-bar { background: var(--pl-rule-strong); }
+.mds-pl__evt--u-warning  .mds-pl__evt-bar { background: var(--pl-c-approach); }
+.mds-pl__evt--u-overdue  .mds-pl__evt-bar { background: var(--pl-c-overdue); }
+.mds-pl__evt--u-overdue  .mds-pl__evt-who { color: var(--pl-c-overdue); }
+
+/* Anchor events (MDS ARD + admit) are always important markers — even at u-ok
+   urgency they get a type-colored bar + bolder icon so they don't disappear
+   into the grey noise of the calendar. */
+.mds-pl__evt--t-mds.mds-pl__evt--u-ok .mds-pl__evt-bar { background: var(--pl-accent); }
+.mds-pl__evt--t-mds .mds-pl__evt-icon { color: var(--pl-accent); }
+.mds-pl__evt--t-mds .mds-pl__evt-tag { color: var(--pl-accent); font-weight: 600; }
+
+.mds-pl__evt--t-admit.mds-pl__evt--u-ok .mds-pl__evt-bar { background: #059669; }
+.mds-pl__evt--t-admit .mds-pl__evt-icon { color: #059669; }
+.mds-pl__evt--t-admit .mds-pl__evt-tag { color: #047857; font-weight: 600; }
+
+.mds-pl__evt--t-dc.mds-pl__evt--u-ok .mds-pl__evt-bar { background: var(--pl-ink-muted); }
+.mds-pl__evt--t-dc .mds-pl__evt-icon { color: var(--pl-ink-muted); }
+
+/* Proxy (cp_completion_due where MDS is still open → estimated deadline) gets a dashed bar */
+.mds-pl__evt--proxy .mds-pl__evt-bar {
+  background: transparent;
+  border-left: 3px dashed var(--pl-c-approach);
+  border-radius: 0;
+  margin-left: -3px;
+}
+
+/* ─── Day view (replaces week when selected) ──────────── */
+
+.mds-pl__dv {
+  background: var(--pl-surface);
+  border: 1px solid var(--pl-rule);
+  border-radius: 8px;
+  overflow: hidden;
+  min-height: 130px;
+}
+
+.mds-pl__dv-top {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  background: var(--pl-surface-2);
+  border-bottom: 1px solid var(--pl-rule);
+}
+
+.mds-pl__dv-back {
+  border: 1px solid var(--pl-rule-strong);
+  background: var(--pl-surface);
+  padding: 4px 10px 4px 8px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--pl-ink-body);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.mds-pl__dv-back:hover {
+  border-color: var(--pl-ink-muted);
+  color: var(--pl-ink);
+}
+
+.mds-pl__dv-title {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  flex: 1;
+}
+
+.mds-pl__dv-title-date {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--pl-ink);
+}
+
+.mds-pl__dv-title-count {
+  font-size: 12px;
+  color: var(--pl-ink-muted);
+}
+
+.mds-pl__dv-empty {
+  padding: 28px 16px;
+  text-align: center;
+  color: var(--pl-ink-dim);
+  font-style: italic;
+}
+
+.mds-pl__dv-list { display: flex; flex-direction: column; }
+
+.mds-pl__dv-row {
+  display: grid;
+  grid-template-columns: 3px 1fr auto;
+  gap: 12px;
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--pl-rule);
+  align-items: center;
+}
+.mds-pl__dv-row:last-child { border-bottom: 0; }
+
+.mds-pl__dv-row--clickable { cursor: pointer; }
+.mds-pl__dv-row--clickable:hover { background: var(--pl-surface-2); }
+
+.mds-pl__dv-bar {
+  align-self: stretch;
+  background: var(--pl-ink-dim);
+  border-radius: 2px;
+}
+
+.mds-pl__dv-row--u-ok      .mds-pl__dv-bar { background: var(--pl-rule-strong); }
+.mds-pl__dv-row--u-warning .mds-pl__dv-bar { background: var(--pl-c-approach); }
+.mds-pl__dv-row--u-overdue .mds-pl__dv-bar { background: var(--pl-c-overdue); }
+.mds-pl__dv-row--u-overdue .mds-pl__dv-name { color: var(--pl-c-overdue); }
+
+.mds-pl__dv-body { min-width: 0; }
+
+.mds-pl__dv-header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 10px;
+  align-items: baseline;
+  margin-bottom: 2px;
+}
+
+.mds-pl__dv-name {
+  font-weight: 600;
+  color: var(--pl-ink);
+  font-size: 13.5px;
+}
+
+.mds-pl__dv-type { font-size: 12px; color: var(--pl-ink-body); }
+
+.mds-pl__dv-urgency {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 1px 6px;
+  border-radius: 3px;
+}
+.mds-pl__dv-urgency--overdue { color: #991b1b; background: #fee2e2; }
+.mds-pl__dv-urgency--warning { color: #854d0e; background: #fef9c3; }
+
+.mds-pl__dv-meta { font-size: 11px; color: var(--pl-ink-muted); }
+
+.mds-pl__dv-arrow {
+  font-size: 16px;
+  color: var(--pl-ink-dim);
+  line-height: 1;
+  font-weight: 400;
+}
+.mds-pl__dv-row--clickable:hover .mds-pl__dv-arrow { color: var(--pl-ink); }
+
+/* ─── Queue tables (right column) ──────────────────────── */
+
+.mds-pl__queues {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.mds-pl__q {
+  background: var(--pl-surface);
+  border: 1px solid var(--pl-rule);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.mds-pl__q-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--pl-rule);
+  background: var(--pl-surface-2);
+}
+
+.mds-pl__q-title {
+  font-size: 12.5px;
+  font-weight: 600;
+  margin: 0;
+  color: var(--pl-ink);
+  letter-spacing: -0.005em;
+}
+
+.mds-pl__q-count {
+  font-size: 11px;
+  color: var(--pl-ink-muted);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+
+.mds-pl__q-count-overdue {
+  color: var(--pl-c-overdue);
+  font-weight: 700;
+}
+.mds-pl__q-count-rest {
+  color: var(--pl-ink-muted);
+}
+.mds-pl__q-count-done {
+  color: #059669;
+  font-weight: 600;
+}
+.mds-pl__q-count-sep {
+  color: var(--pl-ink-dim);
+}
+
+.mds-pl__q-empty {
+  padding: 12px 14px;
+  color: var(--pl-ink-dim);
+  font-style: italic;
+  font-size: 12px;
+}
+
+.mds-pl__q-footer {
+  padding: 6px 12px;
+  border-top: 1px solid var(--pl-rule);
+  background: var(--pl-surface-2);
+}
+
+.mds-pl__q-link {
+  border: 0;
+  background: transparent;
+  padding: 0;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--pl-accent);
+  cursor: pointer;
+}
+.mds-pl__q-link:hover { text-decoration: underline; }
+
+/* Tables inside queue cards — each queue picks its own layout */
+.mds-pl__t {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+.mds-pl__t th {
+  text-align: left;
+  font-weight: 600;
+  font-size: 10.5px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--pl-ink-muted);
+  padding: 6px 12px;
+  border-bottom: 1px solid var(--pl-rule);
+  background: var(--pl-surface);
+}
+
+.mds-pl__t td {
+  padding: 7px 12px;
+  border-bottom: 1px solid var(--pl-rule);
+  vertical-align: middle;
+}
+
+.mds-pl__t tr:last-child td { border-bottom: 0; }
+.mds-pl__t tr:hover td { background: var(--pl-surface-2); }
+
+/* Clickable rows — entire row opens the thing in PCC */
+.mds-pl__t tr.mds-pl__trow--clickable { cursor: pointer; }
+.mds-pl__t tr.mds-pl__trow--clickable:hover td { background: var(--pl-surface-3); }
+.mds-pl__t tr.mds-pl__trow--clickable.mds-pl__trow--overdue:hover td { background: #fee2e2; }
+.mds-pl__t tr.mds-pl__trow--clickable.mds-pl__trow--warning:hover td { background: #fef3c7; }
+
+.mds-pl__t-name {
+  color: var(--pl-ink);
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.mds-pl__t-name-main {
+  color: var(--pl-ink);
+  font-weight: 600;
+}
+
+.mds-pl__t-name-sub {
+  font-size: 10.5px;
+  font-weight: 500;
+  color: var(--pl-ink-muted);
+  margin-top: 1px;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.mds-pl__t-type-main {
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.mds-pl__t-type-sub {
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--pl-ink-muted);
+  margin-top: 1px;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.mds-pl__t-date {
+  font-size: 11.5px;
+  color: var(--pl-ink-body);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.mds-pl__t-date--over {
+  color: var(--pl-c-overdue);
+  font-weight: 600;
+}
+
+/* Per-queue column widths */
+.mds-pl__t--coding th:nth-child(2),
+.mds-pl__t--coding td:nth-child(2) { width: 60px; }
+.mds-pl__t--coding th:nth-child(3),
+.mds-pl__t--coding td:nth-child(3) { width: 130px; }
+.mds-pl__t--coding th:nth-child(4),
+.mds-pl__t--coding td:nth-child(4) { width: 74px; text-align: right; }
+
+.mds-pl__t-progress {
+  white-space: nowrap;
+  line-height: 1;
+}
+
+.mds-pl__t--cpopen th:nth-child(2),
+.mds-pl__t--cpopen td:nth-child(2),
+.mds-pl__t--cpopen th:nth-child(3),
+.mds-pl__t--cpopen td:nth-child(3) { width: 56px; }
+
+.mds-pl__t--cpreview th:nth-child(2),
+.mds-pl__t--cpreview td:nth-child(2) { width: 56px; }
+.mds-pl__t--cpreview th:nth-child(3),
+.mds-pl__t--cpreview td:nth-child(3) { width: 80px; }
+
+/* Progress bar inside MDS Coding table — color encodes time-at-risk, not just % */
+.mds-pl__bar {
+  display: inline-block;
+  width: 60px;
+  height: 7px;
+  background: var(--pl-rule);
+  border-radius: 3px;
+  overflow: hidden;
+  vertical-align: middle;
+  margin-right: 7px;
+}
+.mds-pl__bar-fill {
+  display: block;
+  height: 100%;
+  background: var(--pl-accent);
+}
+.mds-pl__bar-label {
+  font-size: 10.5px;
+  color: var(--pl-ink-muted);
+  font-variant-numeric: tabular-nums;
+}
+.mds-pl__bar--pace-ok     .mds-pl__bar-fill { background: #10b981; }
+.mds-pl__bar--pace-behind .mds-pl__bar-fill { background: #f59e0b; }
+.mds-pl__bar--pace-over   .mds-pl__bar-fill { background: var(--pl-c-overdue); }
+
+/* Row-level urgency — yells as loud as the calendar does for overdue events */
+.mds-pl__t tr.mds-pl__trow--overdue td {
+  background: #fef2f2;
+  box-shadow: inset 3px 0 0 0 var(--pl-c-overdue);
+}
+.mds-pl__t tr.mds-pl__trow--overdue:hover td { background: #fee2e2; }
+.mds-pl__t tr.mds-pl__trow--warning td {
+  background: #fffbeb;
+  box-shadow: inset 3px 0 0 0 #f59e0b;
+}
+.mds-pl__t tr.mds-pl__trow--warning:hover td { background: #fef3c7; }
+
+/* State chip (expected / in_progress / overdue) */
+.mds-pl__chip {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  padding: 1px 6px;
+  border-radius: 3px;
+  text-transform: capitalize;
+}
+.mds-pl__chip--expected     { color: #374151; background: #f3f4f6; }
+.mds-pl__chip--in_progress  { color: #7c3aed; background: #ede9fe; }
+.mds-pl__chip--overdue      { color: #991b1b; background: #fee2e2; }
+
+/* Split cards (Queries, Certs) */
+.mds-pl__q-split {
+  display: flex;
+  gap: 1px;
+  background: var(--pl-rule);
+}
+.mds-pl__q-split-item {
+  flex: 1;
+  padding: 10px 12px;
+  background: var(--pl-surface);
+}
+.mds-pl__q-split-num {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--pl-ink);
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+}
+.mds-pl__q-split-label {
+  font-size: 11px;
+  color: var(--pl-ink-muted);
+  margin-top: 2px;
+}
+
+/* Skilled census roster */
+.mds-pl__q-roster {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background: var(--pl-rule);
+}
+.mds-pl__q-roster-col {
+  background: var(--pl-surface);
+  padding: 8px 12px;
+}
+.mds-pl__q-roster-head {
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--pl-ink-muted);
+  margin-bottom: 4px;
+}
+.mds-pl__q-roster-name {
+  font-size: 12px;
+  color: var(--pl-ink);
+  padding: 2px 0;
+}
+.mds-pl__q-roster-name--clickable {
+  cursor: pointer;
+  transition: color 120ms;
+}
+.mds-pl__q-roster-name--clickable:hover {
+  color: var(--pl-accent);
+  text-decoration: underline;
+}
+
+/* Status pill (MDS Coding) */
+.mds-pl__pill {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  padding: 2px 7px;
+  border-radius: 10px;
+  text-transform: none;
+  white-space: nowrap;
+}
+.mds-pl__pill--open     { color: #1e40af; background: #dbeafe; }
+.mds-pl__pill--progress { color: #7c3aed; background: #ede9fe; }
+
+/* Interviews queue */
+.mds-pl__q-chips {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--pl-rule);
+  background: var(--pl-surface);
+}
+.mds-pl__chip--gg   { color: #065f46; background: #d1fae5; }
+.mds-pl__chip--bims { color: #1e40af; background: #dbeafe; }
+.mds-pl__chip--phq  { color: #7c3aed; background: #ede9fe; }
+
+.mds-pl__t-type {
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--pl-ink-muted);
+}
+
+/* Flat status icons (interview state) */
+.mds-pl__sicon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px; height: 18px;
+  line-height: 1;
+}
+.mds-pl__sicon--idle     { color: var(--pl-ink-dim); }
+.mds-pl__sicon--progress { color: var(--pl-accent); }
+.mds-pl__sicon--overdue  { color: var(--pl-c-overdue); }
+
+.mds-pl__t-status { text-align: center; }
+.mds-pl__t-status-head { text-align: center; }
+
+.mds-pl__t--interviews th:nth-child(2),
+.mds-pl__t--interviews td:nth-child(2) { width: 50px; }
+.mds-pl__t--interviews th:nth-child(3),
+.mds-pl__t--interviews td:nth-child(3) { width: 66px; }
+.mds-pl__t--interviews th:nth-child(4),
+.mds-pl__t--interviews td:nth-child(4) { width: 54px; }
+
+/* ─── Recently-done collapsible footer ────────────────── */
+/* Shows completed work so Anna sees green "proof of work" instead of
+   having finished items vanish from her queues. 7-day window per queue. */
+
+.mds-pl__done {
+  border-top: 1px solid var(--pl-rule);
+  background: #f0fdf4;
+}
+.mds-pl__done--open {
+  background: #f0fdf4;
+}
+
+.mds-pl__done-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 7px 12px;
+  border: 0;
+  background: transparent;
+  color: #047857;
+  font-family: inherit;
+  font-size: 11.5px;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: left;
+  transition: background 120ms;
+}
+.mds-pl__done-toggle:hover { background: #dcfce7; }
+
+.mds-pl__done-check {
+  color: #059669;
+  flex: 0 0 auto;
+}
+
+.mds-pl__done-label {
+  flex: 1;
+}
+
+.mds-pl__done-chev {
+  color: #059669;
+  font-size: 10px;
+}
+
+.mds-pl__done-body {
+  border-top: 1px solid #bbf7d0;
+  background: #f0fdf4;
+}
+
+.mds-pl__done-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, auto) auto;
+  gap: 8px;
+  padding: 6px 12px;
+  font-size: 11.5px;
+  color: #064e3b;
+  border-bottom: 1px solid #d1fae5;
+  cursor: pointer;
+  align-items: baseline;
+}
+.mds-pl__done-row:last-child { border-bottom: 0; }
+.mds-pl__done-row:hover { background: #dcfce7; }
+
+.mds-pl__done-row-name {
+  font-weight: 600;
+  color: #065f46;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.mds-pl__done-row-sub {
+  font-size: 10.5px;
+  color: #047857;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.mds-pl__done-row-date {
+  font-size: 10.5px;
+  color: #059669;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* ─── Today's Focus strip — cross-queue hot list ────────── */
+
+.mds-pl__focus {
+  background: var(--pl-surface);
+  border: 1px solid var(--pl-rule);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.mds-pl__focus--empty .mds-pl__focus-head {
+  border-bottom: none;
+}
+
+.mds-pl__focus-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 8px 12px;
+  background: var(--pl-surface-2);
+  border-bottom: 1px solid var(--pl-rule);
+}
+
+.mds-pl__focus-title {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--pl-ink);
+  letter-spacing: -0.005em;
+}
+
+.mds-pl__focus-right {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.mds-pl__focus-summary {
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+}
+
+.mds-pl__focus-count--overdue { color: var(--pl-c-overdue); font-weight: 600; }
+.mds-pl__focus-count--warning { color: #b45309; font-weight: 600; }
+.mds-pl__focus-sep { color: var(--pl-ink-dim); }
+
+.mds-pl__focus-clear {
+  font-size: 11.5px;
+  color: #059669;
+  font-weight: 600;
+}
+
+.mds-pl__focus-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.mds-pl__focus-row {
+  display: grid;
+  grid-template-columns: 16px minmax(0, 1fr) auto 12px;
+  gap: 10px;
+  align-items: center;
+  padding: 6px 12px;
+  border: 0;
+  border-bottom: 1px solid var(--pl-rule);
+  background: var(--pl-surface);
+  text-align: left;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 120ms;
+  color: var(--pl-ink-body);
+  min-height: 34px;
+}
+
+.mds-pl__focus-chev {
+  font-size: 16px;
+  line-height: 1;
+  color: var(--pl-ink-dim);
+  opacity: 0;
+  transition: opacity 120ms, transform 120ms;
+}
+.mds-pl__focus-row:hover .mds-pl__focus-chev {
+  opacity: 1;
+  transform: translateX(2px);
+}
+.mds-pl__focus-row:last-of-type { border-bottom: 0; }
+
+/* Border carries severity; bg is a quiet base, hover reveals the red tint.
+   Prevents the "solid wall of red" effect when several overdue rows stack. */
+.mds-pl__focus-row--overdue {
+  background: var(--pl-surface);
+  box-shadow: inset 3px 0 0 0 var(--pl-c-overdue);
+}
+.mds-pl__focus-row--overdue:hover { background: #fef2f2; }
+
+.mds-pl__focus-row--warning {
+  background: var(--pl-surface);
+  box-shadow: inset 3px 0 0 0 #f59e0b;
+}
+.mds-pl__focus-row--warning:hover { background: #fffbeb; }
+
+.mds-pl__focus-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.mds-pl__focus-row--overdue .mds-pl__focus-icon { color: var(--pl-c-overdue); }
+.mds-pl__focus-row--warning .mds-pl__focus-icon { color: #b45309; }
+
+/* Single-line layout: bold patient + muted label, inline */
+.mds-pl__focus-main {
+  min-width: 0;
+  font-size: 12.5px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.mds-pl__focus-patient {
+  font-weight: 600;
+  color: var(--pl-ink);
+}
+
+.mds-pl__focus-label {
+  color: var(--pl-ink-muted);
+}
+
+.mds-pl__focus-detail {
+  font-size: 11px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.mds-pl__focus-row--overdue .mds-pl__focus-detail { color: var(--pl-c-overdue); }
+.mds-pl__focus-row--warning .mds-pl__focus-detail { color: #b45309; }
+
+.mds-pl__focus-more {
+  display: block;
+  width: 100%;
+  padding: 7px 12px;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--pl-accent);
+  border: 0;
+  border-top: 1px solid var(--pl-rule);
+  background: var(--pl-surface-2);
+  cursor: pointer;
+  text-align: left;
+  font-family: inherit;
+}
+.mds-pl__focus-more:hover { background: var(--pl-surface-3); }
+
+/* ─── Jump-chip bar + Expand queues button ─────────────── */
+
+.mds-pl__queues-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+}
+
+.mds-pl__expand-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  border: 1px solid var(--pl-rule-strong);
+  background: var(--pl-surface);
+  color: var(--pl-ink-muted);
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 10px;
+  cursor: pointer;
+  white-space: nowrap;
+  flex: none;
+  line-height: 1.4;
+}
+.mds-pl__expand-btn:hover { color: var(--pl-ink); border-color: var(--pl-ink-muted); background: var(--pl-surface-2); }
+
+/* Queues-expanded state: hide calendar, give right column full width */
+.mds-pl--queues-expanded .mds-pl__body {
+  grid-template-columns: 1fr;
+}
+.mds-pl--queues-expanded .mds-pl__queues {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.mds-pl--queues-expanded .mds-pl__right { max-height: none; }
+
+/* ─── Loading / error ──────────────────────────────────── */
+
+.mds-pl__state {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--pl-ink-muted);
+}
+.mds-pl__state p { margin: 8px 0 16px; }
+.mds-pl__state-icon { font-size: 22px; margin-bottom: 6px; }
+
+.mds-pl__spinner {
+  display: inline-block;
+  width: 22px; height: 22px;
+  border: 2px solid var(--pl-rule-strong);
+  border-top-color: var(--pl-ink);
+  border-radius: 50%;
+  animation: mds-pl-spin 0.8s linear infinite;
+  margin-bottom: 8px;
+}
+@keyframes mds-pl-spin { to { transform: rotate(360deg); } }
+
+.mds-pl__retry {
+  border: 1px solid var(--pl-rule-strong);
+  background: var(--pl-surface);
+  padding: 6px 14px;
+  border-radius: 6px;
+  font-size: 12.5px;
+  color: var(--pl-ink);
+  cursor: pointer;
+}
+.mds-pl__retry:hover { border-color: var(--pl-ink); }
+
+/* ─── Compact-mode density tweaks ─────────────────────── */
+
+.mds-pl--compact .mds-pl__day-head { padding: 8px 8px 8px 10px; }
+.mds-pl--compact .mds-pl__day-events { padding: 8px 10px; }
+.mds-pl--compact .mds-pl__day-num { font-size: 16px; }

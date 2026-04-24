@@ -21,6 +21,7 @@ import { formatPaymentDelta } from '../../utils/payment.js';
 import { useComplianceDashboard } from '../care-plan-coverage/hooks/useComplianceDashboard.js';
 import { useTrending } from '../care-plan-coverage/hooks/useTrending.js';
 import { ComplianceView } from '../care-plan-coverage/ComplianceView.jsx';
+import { MdsPlanner } from '../mds-planner/MdsPlanner.jsx';
 
 // ── Helpers ──
 
@@ -46,87 +47,6 @@ function filterAssessments(assessments, payerFilter, classFilter, focusFilter) {
     return hasUda || hasOrder;
   });
   return result;
-}
-
-// ── Merge dashboard assessments with schedule items ──
-//
-// The dashboard API returns assessments already opened in PCC (with full
-// clinical data — sections, UDAs, queries, PDPM). The schedule API returns
-// every active patient's next OBRA quarterly/annual/admission due date,
-// with a flag indicating whether the assessment has already been opened.
-//
-// Merge rules:
-// - Schedule item isOpened=true → we already have the rich dashboard record, skip
-//   (the dashboard row takes precedence; matched by openedAssessmentId)
-// - Schedule item isOpened=false + daysUntilDue ≤ UPCOMING_WINDOW_DAYS →
-//   add as a lightweight "upcoming" row so the coordinator sees it in the list
-// - Schedule item isOpened=false + daysUntilDue > window → excluded from list
-//   (still available via the full schedule data for the calendar view)
-// - Dashboard assessment not in schedule (admissions, 5-Days, sig changes) →
-//   keep as-is; schedule only tracks quarterlies/annuals/admissions
-
-const UPCOMING_WINDOW_DAYS = 14;
-
-function mergeAssessments(dashboardAssessments, scheduleItems) {
-  const openedDashboardIds = new Set(
-    (dashboardAssessments || []).map(a => a.id || a.assessmentId)
-  );
-
-  const upcomingRows = [];
-  for (const item of scheduleItems || []) {
-    if (item.isOpened) {
-      // Dashboard already has the rich row; skip the schedule copy
-      continue;
-    }
-    if (item.daysUntilDue == null || item.daysUntilDue > UPCOMING_WINDOW_DAYS) {
-      // Too far out — calendar only, not in the list
-      continue;
-    }
-    // Build a lightweight upcoming row that mimics dashboard shape where possible
-    upcomingRows.push({
-      id: `upcoming-${item.patientId}-${item.assessmentType}-${item.dueDate}`,
-      isUpcoming: true, // marker for row rendering
-      patientId: item.patientId,
-      patientName: item.patientName,
-      assessmentType: upcomingTypeLabel(item.assessmentType),
-      ardDate: item.dueDate, // present as ARD so existing row code renders the date
-      dueDate: item.dueDate,
-      daysUntilDue: item.daysUntilDue,
-      basedOnArd: item.basedOnArd,
-      basedOnDescription: item.basedOnDescription,
-      deadlines: {
-        urgency: mapScheduleUrgency(item.urgency),
-        completionDeadline: item.dueDate,
-        completionDaysRemaining: item.daysUntilDue,
-      },
-      // No clinical data — this assessment doesn't exist yet
-      sectionProgress: null,
-      udaSummary: null,
-      pdpm: null,
-      querySummary: null,
-      compliance: null,
-      detectionSummary: null,
-      assessmentClass: 'obra_cmi', // quarterlies/annuals are OBRA
-      payerType: null,
-    });
-  }
-
-  return [...(dashboardAssessments || []), ...upcomingRows];
-}
-
-function upcomingTypeLabel(scheduleType) {
-  if (scheduleType === 'quarterly') return 'Quarterly';
-  if (scheduleType === 'annual') return 'Annual';
-  if (scheduleType === 'admission') return 'Admission';
-  return scheduleType;
-}
-
-// Map schedule API urgency → dashboard urgency
-// Schedule uses 'overdue' | 'urgent' | 'approaching' | 'on_track' | 'far_out'
-// Dashboard uses 'overdue' | 'urgent' | 'approaching' | 'on_track' | 'completed'
-function mapScheduleUrgency(u) {
-  if (u === 'far_out') return 'on_track';
-  return u || 'on_track';
 }
 
 // ── Urgency grouping ──
@@ -447,7 +367,7 @@ function QueriesView({ outstandingQueries, recentlySigned, assessments, onOpenAs
 // ── Main Component ──
 
 export function MDSCommandCenter({ facilityName, orgSlug, onClose, initialExpandedId }) {
-  const [activeView, setActiveView] = useState('assessments');
+  const [activeView, setActiveView] = useState('planner');
   const [viewMode, setViewMode] = useState('list'); // 'list' | 'calendar' (assessments tab only)
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [payerFilter, setPayerFilter] = useState('all');
@@ -489,39 +409,22 @@ export function MDSCommandCenter({ facilityName, orgSlug, onClose, initialExpand
   const assessments = data?.assessments || [];
   const summary = data?.summary || {};
 
-  // Merge dashboard assessments with upcoming-but-not-opened schedule items
-  const mergedAssessments = useMemo(() => {
-    return mergeAssessments(assessments, scheduleData?.schedule);
-  }, [assessments, scheduleData]);
-
-  // Group assessments by urgency
+  // Group assessments by urgency. Upcoming-but-not-opened schedule items are
+  // shown on the calendar view only — the list is dashboard (opened) rows.
   const urgencyGroups = useMemo(() => {
-    const filtered = filterAssessments(mergedAssessments, payerFilter, classFilter, focusFilter);
+    const filtered = filterAssessments(assessments, payerFilter, classFilter, focusFilter);
     return groupByUrgency(filtered);
-  }, [mergedAssessments, payerFilter, classFilter, focusFilter]);
+  }, [assessments, payerFilter, classFilter, focusFilter]);
 
-  // Flatten urgency groups into a single sorted list and tag each row with
-  // its same-patient group position (first/middle/last/single) so consecutive
-  // rows for the same patient can be visually clustered.
+  // Flatten urgency groups into a single sorted list. Same-patient rows still
+  // cluster adjacent because groupByUrgency sorts by patientId within a group,
+  // but there's no visual grouping treatment — uniform rows, simpler scan.
   const flatList = useMemo(() => {
     const keysToInclude = urgencyFilter === 'all' ? URGENCY_ORDER : [urgencyFilter];
     const rows = [];
     for (const key of keysToInclude) {
       const group = urgencyGroups[key] || [];
       for (const a of group) rows.push(a);
-    }
-    // Tag same-patient groupings based on list order
-    for (let i = 0; i < rows.length; i++) {
-      const prev = rows[i - 1];
-      const next = rows[i + 1];
-      const samePrev = prev && prev.patientId && prev.patientId === rows[i].patientId;
-      const sameNext = next && next.patientId && next.patientId === rows[i].patientId;
-      let pos;
-      if (samePrev && sameNext) pos = 'middle';
-      else if (samePrev) pos = 'last';
-      else if (sameNext) pos = 'first';
-      else pos = 'single';
-      rows[i] = { ...rows[i], __groupPosition: pos };
     }
     return rows;
   }, [urgencyGroups, urgencyFilter]);
@@ -640,11 +543,10 @@ export function MDSCommandCenter({ facilityName, orgSlug, onClose, initialExpand
                   {flatList.map(assessment => {
                     const id = assessment.id || assessment.assessmentId || assessment.externalAssessmentId;
                     const isExpanded = expandedId === id;
-                    const groupPos = assessment.__groupPosition || 'single';
                     return (
                       <div
                         key={id}
-                        class={`mds-cc__card-wrapper mds-cc__card-wrapper--group-${groupPos}`}
+                        class="mds-cc__card-wrapper"
                         data-assessment-id={id}
                       >
                         <AssessmentRow
@@ -652,9 +554,8 @@ export function MDSCommandCenter({ facilityName, orgSlug, onClose, initialExpand
                           isExpanded={isExpanded}
                           onToggle={() => handleToggleCard(id)}
                           onOpenAnalyzer={() => handleOpenAnalyzer(assessment)}
-                          groupPosition={groupPos}
                         />
-                        {isExpanded && !assessment.isUpcoming && (
+                        {isExpanded && (
                           <AssessmentPreview
                             assessment={assessment}
                             onOpenAnalyzer={() => handleOpenAnalyzer(assessment)}
@@ -715,6 +616,16 @@ export function MDSCommandCenter({ facilityName, orgSlug, onClose, initialExpand
               trendingData={trendingData}
               facilityName={facilityName}
               orgSlug={orgSlug}
+            />
+          )}
+
+          {/* Planner */}
+          {activeView === 'planner' && (
+            <MdsPlanner
+              facilityName={facilityName}
+              orgSlug={orgSlug}
+              isFullscreen={isFullscreen}
+              onOpenTab={setActiveView}
             />
           )}
         </div>

@@ -1,0 +1,1036 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>QM Board mock — real modal size + extension style</title>
+<style>
+  :root {
+    --super-primary: #6366f1;
+    --super-primary-dark: #4f46e5;
+
+    --super-match: #22c55e;
+    --super-match-bg: #dcfce7;
+    --super-mismatch: #ef4444;
+    --super-mismatch-bg: #fee2e2;
+    --super-review: #f59e0b;
+    --super-review-bg: #fef3c7;
+
+    --super-gray-50: #f9fafb;
+    --super-gray-100: #f3f4f6;
+    --super-gray-200: #e5e7eb;
+    --super-gray-300: #d1d5db;
+    --super-gray-400: #9ca3af;
+    --super-gray-500: #6b7280;
+    --super-gray-600: #4b5563;
+    --super-gray-700: #374151;
+    --super-gray-800: #1f2937;
+    --super-gray-900: #111827;
+
+    --super-font: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    --super-font-mono: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+
+    --super-radius-sm: 4px;
+    --super-radius: 6px;
+    --super-radius-md: 8px;
+    --super-radius-lg: 12px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+
+  html, body {
+    margin: 0; padding: 0;
+    background: rgba(0, 0, 0, 0.55);
+    font-family: var(--super-font);
+    font-size: 14px;
+    color: var(--super-gray-800);
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* simulate the real Command Center modal dims */
+  .modal {
+    width: 80vw; max-width: 1100px;
+    height: 85vh;
+    background: #fff;
+    border-radius: var(--super-radius-lg);
+    box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.2);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  /* ─── header (matches .mds-cc__header) ─────────────────── */
+  .hdr {
+    flex-shrink: 0;
+    padding: 16px 20px 0;
+    border-bottom: 1px solid var(--super-gray-200);
+  }
+  .hdr__title-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+  .hdr__title-group {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+  }
+  .hdr__title {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--super-gray-900);
+    margin: 0;
+  }
+  .hdr__facility {
+    font-size: 13px;
+    color: var(--super-gray-500);
+  }
+  .hdr__close {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--super-gray-500);
+    padding: 4px;
+    border-radius: 4px;
+    font-size: 20px;
+    line-height: 1;
+  }
+  .hdr__close:hover { color: var(--super-gray-800); background: var(--super-gray-100); }
+
+  .hdr__tabs {
+    display: flex;
+    gap: 4px;
+    margin-left: -4px;
+  }
+  .tab {
+    background: transparent;
+    border: none;
+    padding: 8px 12px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--super-gray-500);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+  }
+  .tab:hover { color: var(--super-gray-800); }
+  .tab.is-active {
+    color: var(--super-gray-900);
+    border-bottom-color: var(--super-primary);
+    font-weight: 600;
+  }
+
+  /* ─── body ─────────────────────────────────────────────── */
+  .body {
+    flex: 1;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+
+  /* summary strip */
+  .summary {
+    display: flex;
+    gap: 24px;
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--super-gray-200);
+    background: var(--super-gray-50);
+    flex-shrink: 0;
+  }
+  .stat {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .stat__num {
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 1;
+    color: var(--super-gray-900);
+  }
+  .stat__num--urgent { color: var(--super-mismatch); }
+  .stat__num--soon   { color: var(--super-review); }
+  .stat__num--alert  { color: var(--super-primary); }
+  .stat__label {
+    font-size: 11px;
+    color: var(--super-gray-500);
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    font-weight: 600;
+  }
+
+  /* split layout */
+  .layout {
+    flex: 1;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 320px;
+    overflow: hidden;
+    min-height: 0;
+  }
+  .layout__left {
+    overflow: auto;
+    padding: 16px 20px 24px;
+    border-right: 1px solid var(--super-gray-200);
+  }
+  .layout__right {
+    overflow: auto;
+    padding: 16px 16px 24px;
+    background: var(--super-gray-50);
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  /* section label */
+  .slabel {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--super-gray-500);
+    margin-bottom: 10px;
+  }
+  .slabel__meta {
+    font-weight: 400;
+    text-transform: none;
+    letter-spacing: 0;
+    color: var(--super-gray-400);
+    font-size: 11px;
+  }
+
+  /* back bar (measure detail / full-list views) */
+  .backbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 14px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--super-gray-200);
+  }
+  .backbar__btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: transparent;
+    border: none;
+    color: var(--super-gray-600);
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 4px 6px;
+    border-radius: 4px;
+  }
+  .backbar__btn:hover { background: var(--super-gray-100); color: var(--super-gray-900); }
+  .backbar__title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--super-gray-900);
+  }
+  .backbar__sub {
+    margin-left: 8px;
+    font-size: 12px;
+    color: var(--super-gray-500);
+    font-weight: 400;
+  }
+
+  /* ─── tiles ────────────────────────────────────────────── */
+  .tiles {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 10px;
+  }
+  .tile {
+    background: #fff;
+    border: 1px solid var(--super-gray-200);
+    border-left: 3px solid var(--super-gray-300);
+    border-radius: var(--super-radius);
+    padding: 12px 14px 10px;
+    cursor: pointer;
+    min-height: 104px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: background 80ms, border-color 80ms;
+  }
+  .tile:hover {
+    background: var(--super-gray-50);
+    border-color: var(--super-gray-300);
+  }
+  .tile--hot     { border-left-color: var(--super-mismatch); }
+  .tile--warn    { border-left-color: var(--super-review); }
+  .tile--alert   { border-left-color: var(--super-primary); }
+  .tile--clean   { border-left-color: var(--super-match); opacity: 0.85; }
+  .tile--skipped { border-left-color: var(--super-gray-300); opacity: 0.6; }
+
+  .tile__label {
+    font-size: 11px;
+    color: var(--super-gray-600);
+    font-weight: 600;
+    line-height: 1.3;
+    min-height: 28px;
+  }
+  .tile__num {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--super-gray-900);
+    line-height: 1;
+  }
+  .tile--hot .tile__num { color: var(--super-mismatch); }
+  .tile--clean .tile__num { color: var(--super-match); font-size: 20px; }
+  .tile__sub {
+    font-size: 11px;
+    color: var(--super-gray-500);
+    margin-top: 2px;
+  }
+  .tile__foot {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 11px;
+    font-family: var(--super-font-mono);
+    color: var(--super-gray-500);
+    margin-top: 8px;
+  }
+  .tile__alert { color: var(--super-primary); font-weight: 600; }
+  .tile__trend--up   { color: var(--super-mismatch); }
+  .tile__trend--down { color: var(--super-match); }
+  .tile__trend--flat { color: var(--super-gray-400); }
+
+  /* ─── measure detail (replaces tiles on click) ─────────── */
+  .rows {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  .row {
+    display: grid;
+    grid-template-columns: 10px 1fr 130px 180px 70px;
+    gap: 12px;
+    align-items: center;
+    padding: 10px 8px;
+    border-bottom: 1px solid var(--super-gray-200);
+    font-size: 13px;
+    cursor: pointer;
+  }
+  .row:hover { background: var(--super-gray-50); }
+  .row__dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--super-gray-400);
+    justify-self: center;
+  }
+  .row--soon   .row__dot { background: var(--super-review); }
+  .row--urgent .row__dot { background: var(--super-mismatch); }
+  .row__name { color: var(--super-gray-900); font-weight: 600; }
+  .row__meta { margin-left: 6px; color: var(--super-gray-500); font-weight: 400; font-size: 12px; }
+  .row__ard, .row__clear {
+    font-family: var(--super-font-mono);
+    font-size: 12px;
+    color: var(--super-gray-700);
+  }
+  .row__clear--soon { color: var(--super-review); font-weight: 600; }
+  .row__clear--urgent { color: var(--super-mismatch); font-weight: 700; }
+  .row__action {
+    font-size: 12px;
+    color: var(--super-primary);
+    text-align: right;
+    font-weight: 600;
+  }
+
+  /* ─── right-rail panels ────────────────────────────────── */
+  .panel {
+    background: #fff;
+    border: 1px solid var(--super-gray-200);
+    border-radius: var(--super-radius);
+    overflow: hidden;
+  }
+  .panel__head {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--super-gray-200);
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+  .panel__title {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--super-gray-900);
+    margin: 0;
+  }
+  .panel__count {
+    font-size: 11px;
+    color: var(--super-gray-500);
+    font-family: var(--super-font-mono);
+  }
+  .panel__count--hot   { color: var(--super-mismatch); font-weight: 600; }
+  .panel__count--alert { color: var(--super-primary); font-weight: 600; }
+
+  .qrow {
+    display: grid;
+    grid-template-columns: 6px 1fr auto;
+    gap: 8px;
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--super-gray-200);
+    font-size: 12.5px;
+    cursor: pointer;
+    align-items: baseline;
+  }
+  .qrow:last-of-type { border-bottom: 0; }
+  .qrow:hover { background: var(--super-gray-50); }
+  .qrow__dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--super-gray-400);
+    margin-top: 4px;
+  }
+  .qrow__dot--soon { background: var(--super-review); }
+  .qrow__dot--urgent { background: var(--super-mismatch); }
+  .qrow__dot--alert {
+    background: transparent;
+    border: 1.5px dashed var(--super-primary);
+    width: 7px; height: 7px;
+  }
+  .qrow__name { color: var(--super-gray-900); font-weight: 600; }
+  .qrow__meta {
+    display: block;
+    color: var(--super-gray-500);
+    font-size: 11px;
+    line-height: 1.3;
+    margin-top: 2px;
+  }
+  .qrow__date {
+    font-family: var(--super-font-mono);
+    font-size: 11px;
+    color: var(--super-gray-700);
+    white-space: nowrap;
+  }
+  .qrow__date--soon { color: var(--super-review); font-weight: 600; }
+  .qrow__date--urgent { color: var(--super-mismatch); font-weight: 700; }
+
+  .panel__foot {
+    padding: 8px 12px;
+    background: var(--super-gray-50);
+    text-align: center;
+    cursor: pointer;
+    color: var(--super-primary);
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .panel__foot:hover { background: var(--super-gray-100); }
+
+  /* ─── full-panel takeover (clearing-all, headsup-all, alert-detail) ─ */
+  .takeover {
+    padding: 16px 20px 24px;
+  }
+
+  .chart-stub {
+    background: var(--super-gray-50);
+    border: 1px solid var(--super-gray-200);
+    border-radius: var(--super-radius);
+    padding: 16px;
+    margin-top: 12px;
+  }
+  .chart-stub__title {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--super-gray-800);
+    margin: 0 0 8px;
+  }
+  .chart-stub__svg {
+    width: 100%;
+    height: 180px;
+    display: block;
+  }
+  .chart-stub__table {
+    width: 100%;
+    font-size: 12px;
+    border-collapse: collapse;
+    margin-top: 12px;
+  }
+  .chart-stub__table th,
+  .chart-stub__table td {
+    padding: 6px 8px;
+    text-align: left;
+    border-bottom: 1px solid var(--super-gray-200);
+  }
+  .chart-stub__table th {
+    font-weight: 600;
+    color: var(--super-gray-600);
+    background: #fff;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .chart-stub__table td.mono {
+    font-family: var(--super-font-mono);
+    color: var(--super-gray-700);
+  }
+
+  .pill {
+    display: inline-block;
+    padding: 2px 8px;
+    background: var(--super-review-bg);
+    color: var(--super-review);
+    border-radius: 10px;
+    font-size: 11px;
+    font-weight: 600;
+    margin-left: 6px;
+  }
+  .pill--alert { background: #eef2ff; color: var(--super-primary); }
+  .pill--match { background: var(--super-match-bg); color: #15803d; }
+
+  .hidden { display: none !important; }
+</style>
+</head>
+<body>
+
+<div class="modal">
+
+  <!-- header matches Command Center -->
+  <div class="hdr">
+    <div class="hdr__title-row">
+      <div class="hdr__title-group">
+        <h2 class="hdr__title">QM Board</h2>
+        <span class="hdr__facility">Heritage Convalescent Center</span>
+      </div>
+      <button class="hdr__close" title="Close">&times;</button>
+    </div>
+    <div class="hdr__tabs">
+      <button class="tab">Overview</button>
+      <button class="tab">Assessments</button>
+      <button class="tab">Queries</button>
+      <button class="tab">Certs</button>
+      <button class="tab">Compliance</button>
+      <button class="tab">Planner</button>
+      <button class="tab is-active">QM Board</button>
+    </div>
+  </div>
+
+  <div class="body">
+
+    <!-- summary strip -->
+    <div class="summary">
+      <div class="stat"><span class="stat__num">36</span><span class="stat__label">Triggering</span></div>
+      <div class="stat"><span class="stat__num stat__num--soon">12</span><span class="stat__label">Clearing &le; 7d</span></div>
+      <div class="stat"><span class="stat__num stat__num--urgent">2</span><span class="stat__label">Overdue</span></div>
+      <div class="stat"><span class="stat__num stat__num--alert">52</span><span class="stat__label">Heads-up</span></div>
+    </div>
+
+    <!-- split layout -->
+    <div class="layout" id="layout">
+
+      <!-- LEFT: dashboard (tiles) — default view -->
+      <div class="layout__left" id="leftPane">
+        <div id="view-dashboard">
+          <div class="slabel">
+            <span>Measures</span>
+            <span class="slabel__meta">14 measures · click any tile to drill in</span>
+          </div>
+
+          <div class="tiles">
+            <div class="tile tile--hot" data-measure="adl">
+              <div class="tile__label">ADL Decline</div>
+              <div><div class="tile__num">12</div><div class="tile__sub">triggering</div></div>
+              <div class="tile__foot"><span class="tile__alert">⚡ 44</span><span class="tile__trend--up">▲ 3 vs 30d</span></div>
+            </div>
+            <div class="tile tile--hot" data-measure="lri">
+              <div class="tile__label">Low-Risk Incontinence</div>
+              <div><div class="tile__num">18</div><div class="tile__sub">triggering</div></div>
+              <div class="tile__foot"><span>·</span><span class="tile__trend--up">▲ 2</span></div>
+            </div>
+            <div class="tile tile--warn" data-measure="weight">
+              <div class="tile__label">Weight Loss</div>
+              <div><div class="tile__num">2</div><div class="tile__sub">triggering</div></div>
+              <div class="tile__foot"><span class="tile__alert">⚡ 5</span><span class="tile__trend--flat">→ 0</span></div>
+            </div>
+            <div class="tile tile--warn" data-measure="pu-long">
+              <div class="tile__label">Pressure Ulcer (long)</div>
+              <div><div class="tile__num">2</div><div class="tile__sub">triggering</div></div>
+              <div class="tile__foot"><span>·</span><span class="tile__trend--down">▼ 1</span></div>
+            </div>
+            <div class="tile tile--warn" data-measure="falls">
+              <div class="tile__label">Falls w/ Major Injury</div>
+              <div><div class="tile__num">1</div><div class="tile__sub">triggering</div></div>
+              <div class="tile__foot"><span>·</span><span class="tile__trend--flat">→ 0</span></div>
+            </div>
+            <div class="tile tile--warn" data-measure="flu">
+              <div class="tile__label">Influenza Vaccination</div>
+              <div><div class="tile__num">1</div><div class="tile__sub">triggering</div></div>
+              <div class="tile__foot"><span>·</span><span class="tile__trend--flat">→ 0</span></div>
+            </div>
+            <div class="tile tile--alert" data-measure="uti">
+              <div class="tile__label">UTI (I2300)</div>
+              <div><div class="tile__num">0</div><div class="tile__sub">triggering</div></div>
+              <div class="tile__foot"><span class="tile__alert">⚡ 1</span><span class="tile__trend--flat">→ 0</span></div>
+            </div>
+            <div class="tile tile--alert" data-measure="cath">
+              <div class="tile__label">Indwelling Catheter</div>
+              <div><div class="tile__num">0</div><div class="tile__sub">triggering</div></div>
+              <div class="tile__foot"><span class="tile__alert">⚡ 1</span><span class="tile__trend--flat">→ 0</span></div>
+            </div>
+            <div class="tile tile--clean">
+              <div class="tile__label">Antipsychotic (long)</div>
+              <div><div class="tile__num">0</div><div class="tile__sub">✓ clean</div></div>
+              <div class="tile__foot"><span>·</span><span class="tile__trend--flat">→ 0</span></div>
+            </div>
+            <div class="tile tile--clean">
+              <div class="tile__label">Antipsychotic (new)</div>
+              <div><div class="tile__num">0</div><div class="tile__sub">✓ clean</div></div>
+              <div class="tile__foot"><span>·</span><span class="tile__trend--flat">→ 0</span></div>
+            </div>
+            <div class="tile tile--clean">
+              <div class="tile__label">Depression (PHQ-9)</div>
+              <div><div class="tile__num">0</div><div class="tile__sub">✓ clean</div></div>
+              <div class="tile__foot"><span>·</span><span class="tile__trend--down">▼ 1</span></div>
+            </div>
+            <div class="tile tile--clean">
+              <div class="tile__label">Physical Restraints</div>
+              <div><div class="tile__num">0</div><div class="tile__sub">✓ clean</div></div>
+              <div class="tile__foot"><span>·</span><span class="tile__trend--flat">→ 0</span></div>
+            </div>
+            <div class="tile tile--clean">
+              <div class="tile__label">Pressure Ulcer (short)</div>
+              <div><div class="tile__num">0</div><div class="tile__sub">✓ clean</div></div>
+              <div class="tile__foot"><span>·</span><span class="tile__trend--flat">→ 0</span></div>
+            </div>
+            <div class="tile tile--skipped">
+              <div class="tile__label">Discharge Function</div>
+              <div><div class="tile__num" style="font-size:16px;color:var(--super-gray-400);">—</div><div class="tile__sub">risk-adj pending</div></div>
+              <div class="tile__foot"><span>·</span><span style="color:var(--super-gray-400);">n/a</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Measure detail (filled dynamically when a tile is clicked) -->
+        <div id="view-measure" class="hidden"></div>
+
+        <!-- Full-panel takeover for "View all" and alert detail -->
+        <div id="view-takeover" class="hidden"></div>
+      </div>
+
+      <!-- RIGHT rail: action queues -->
+      <div class="layout__right" id="rightPane">
+
+        <div class="panel">
+          <div class="panel__head">
+            <h3 class="panel__title">Clearing soon</h3>
+            <span class="panel__count panel__count--hot">2 overdue · 12 this week</span>
+          </div>
+          <div class="qrow" data-kind="clear">
+            <span class="qrow__dot qrow__dot--urgent"></span>
+            <span>
+              <span class="qrow__name">FELDMAN, R.</span>
+              <span class="qrow__meta">ADL Decline · schedule SCSA</span>
+            </span>
+            <span class="qrow__date qrow__date--urgent">OVERDUE</span>
+          </div>
+          <div class="qrow" data-kind="clear">
+            <span class="qrow__dot qrow__dot--urgent"></span>
+            <span>
+              <span class="qrow__name">PEREZ, D.</span>
+              <span class="qrow__meta">Low-Risk Incontinence · ARD past</span>
+            </span>
+            <span class="qrow__date qrow__date--urgent">OVERDUE</span>
+          </div>
+          <div class="qrow" data-kind="clear">
+            <span class="qrow__dot qrow__dot--soon"></span>
+            <span>
+              <span class="qrow__name">GARCIA, M.</span>
+              <span class="qrow__meta">ADL Decline</span>
+            </span>
+            <span class="qrow__date qrow__date--soon">in 4d</span>
+          </div>
+          <div class="qrow" data-kind="clear">
+            <span class="qrow__dot qrow__dot--soon"></span>
+            <span>
+              <span class="qrow__name">KOZLOWSKI, E.</span>
+              <span class="qrow__meta">Weight Loss</span>
+            </span>
+            <span class="qrow__date qrow__date--soon">in 6d</span>
+          </div>
+          <div class="panel__foot" data-view="clearing-all">View all 14 ›</div>
+        </div>
+
+        <div class="panel">
+          <div class="panel__head">
+            <h3 class="panel__title">Heads-up</h3>
+            <span class="panel__count panel__count--alert">52 incoming</span>
+          </div>
+          <div class="qrow" data-alert="bacon-gg">
+            <span class="qrow__dot qrow__dot--alert"></span>
+            <span>
+              <span class="qrow__name">BACON, SUZANNE</span>
+              <span class="qrow__meta">GG Eating 3 → 1.9 → ADL Decline</span>
+            </span>
+            <span class="qrow__date">4/22</span>
+          </div>
+          <div class="qrow" data-alert="bacon-weight">
+            <span class="qrow__dot qrow__dot--alert"></span>
+            <span>
+              <span class="qrow__name">BACON, SUZANNE</span>
+              <span class="qrow__meta">Weight −6.8% / 30d → Weight Loss</span>
+            </span>
+            <span class="qrow__date">4/06</span>
+          </div>
+          <div class="qrow" data-alert="rivera-ua">
+            <span class="qrow__dot qrow__dot--alert"></span>
+            <span>
+              <span class="qrow__name">RIVERA, M.</span>
+              <span class="qrow__meta">UA ordered + abx started → UTI</span>
+            </span>
+            <span class="qrow__date">4/22</span>
+          </div>
+          <div class="qrow" data-alert="fry-foley">
+            <span class="qrow__dot qrow__dot--alert"></span>
+            <span>
+              <span class="qrow__name">FRY, MARIA</span>
+              <span class="qrow__meta">Foley order → Catheter (excluded N31.8)</span>
+            </span>
+            <span class="qrow__date">4/25</span>
+          </div>
+          <div class="panel__foot" data-view="headsup-all">View all 52 ›</div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+  // ───────── Stub data ─────────
+  const MEASURES = {
+    adl: {
+      title: 'ADL Decline',
+      sub: '12 triggering · 44 heads-up · ▲ 3 vs 30d',
+      rows: [
+        { cls: 'urgent', name: 'FELDMAN, R.',  meta: 'OBRA Annual',      ard: 'ARD 2/01', clear: 'OVERDUE · sched SCSA',     clearCls: 'urgent' },
+        { cls: 'soon',   name: 'GARCIA, M.',   meta: 'OBRA Quarterly',   ard: 'ARD 3/14', clear: 'clears next OBRA · in 4d', clearCls: 'soon' },
+        { cls: '',       name: 'BOYD, NANCY',  meta: 'OBRA Sig Change',  ard: 'ARD 2/20', clear: 'clears next OBRA',         clearCls: '' },
+        { cls: '',       name: 'SMITH, JOHN',  meta: 'OBRA Quarterly',   ard: 'ARD 3/11', clear: 'clears next OBRA',         clearCls: '' },
+        { cls: '',       name: 'RIVERA, J.',   meta: 'OBRA Quarterly',   ard: 'ARD 3/20', clear: 'clears next OBRA',         clearCls: '' },
+      ],
+      more: 7,
+      headsup: [
+        { name: 'BACON, SUZANNE', meta: 'GG Eating 3 → 1.9 (moderate)', date: '4/22', alert: 'bacon-gg' },
+        { name: 'HARDESTY, L.',   meta: 'GG Walk 50ft 4 → 2 (severe)',  date: '4/21', alert: 'hardesty-gg' },
+      ],
+      headsupMore: 42
+    },
+    lri:  { title: 'Low-Risk Incontinence', sub: '18 triggering · ▲ 2', rows: [
+      { cls: 'urgent', name: 'PEREZ, D.',     meta: 'OBRA Annual',    ard: 'ARD 1/28', clear: 'OVERDUE',            clearCls: 'urgent' },
+      { cls: '',       name: 'HAMILTON, G.',  meta: 'OBRA Quarterly', ard: 'ARD 3/02', clear: 'clears next OBRA',   clearCls: '' },
+    ], more: 16, headsup: [], headsupMore: 0 },
+    weight: { title: 'Weight Loss', sub: '2 triggering · 5 heads-up', rows: [
+      { cls: 'soon', name: 'KOZLOWSKI, E.', meta: 'OBRA Quarterly', ard: 'ARD 4/05', clear: 'clears next OBRA · in 6d', clearCls: 'soon' },
+      { cls: '',     name: 'NGUYEN, L.',    meta: 'OBRA Annual',    ard: 'ARD 2/28', clear: 'clears next OBRA',         clearCls: '' },
+    ], more: 0, headsup: [
+      { name: 'BACON, SUZANNE', meta: '−6.8% in 30d (103.6 vs 111.2 lb on 3/6)', date: '4/06', alert: 'bacon-weight' },
+    ], headsupMore: 4 },
+    'pu-long': { title: 'Pressure Ulcer (long)', sub: '2 triggering · ▼ 1', rows: [
+      { cls: '', name: 'ELLIS, R.',    meta: 'OBRA Quarterly', ard: 'ARD 4/02', clear: 'clears next OBRA', clearCls: '' },
+      { cls: '', name: 'JIMENEZ, T.',  meta: 'OBRA Annual',    ard: 'ARD 2/18', clear: 'clears next OBRA', clearCls: '' },
+    ], more: 0, headsup: [], headsupMore: 0 },
+    falls: { title: 'Falls w/ Major Injury', sub: '1 triggering', rows: [
+      { cls: '', name: 'BOYD, NANCY',  meta: '275d time-scan', ard: 'fall 2/20', clear: 'rolls off 11/23 · in 214d', clearCls: '' },
+    ], more: 0, headsup: [], headsupMore: 0 },
+    flu: { title: 'Influenza Vaccination', sub: '1 triggering', rows: [
+      { cls: '', name: 'CHEN, P.',     meta: 'PPS 5-Day',      ard: 'ARD 4/14', clear: 'stay-locked · next admit', clearCls: '' },
+    ], more: 0, headsup: [], headsupMore: 0 },
+    uti:  { title: 'UTI (I2300)', sub: '0 triggering · 1 heads-up', rows: [], more: 0, headsup: [
+      { name: 'RIVERA, M.', meta: 'UA ordered 4/22 · abx 4/23', date: '4/22', alert: 'rivera-ua' },
+    ], headsupMore: 0 },
+    cath: { title: 'Indwelling Catheter', sub: '0 triggering · 1 heads-up (excluded)', rows: [], more: 0, headsup: [
+      { name: 'FRY, MARIA', meta: 'Foley order · N31.8 coded (excluded)', date: '4/25', alert: 'fry-foley' },
+    ], headsupMore: 0 },
+  };
+
+  // Heads-up details (richer content for GG + weight)
+  const ALERTS = {
+    'bacon-gg': {
+      name: 'BACON, SUZANNE', label: 'GG Eating — functional decline detected',
+      qm: 'ADL Decline', urgency: 'moderate',
+      summary: 'Baseline 3 (04. Supervision) → worst shift 1.9 across 1 shift. Next OBRA will reflect this unless therapy intervention reverses.',
+      chart: 'eating',
+      table: [
+        { date: '4/22', shift: 'NOC', value: 2 },
+        { date: '4/22', shift: 'EVE', value: 2 },
+        { date: '4/22', shift: 'DAY', value: 4 },
+        { date: '4/21', shift: 'NOC', value: 2 },
+        { date: '4/21', shift: 'EVE', value: 3 },
+        { date: '4/21', shift: 'DAY', value: 3 },
+        { date: '4/20', shift: 'NOC', value: 3 },
+        { date: '4/20', shift: 'EVE', value: 3 },
+      ],
+    },
+    'hardesty-gg': {
+      name: 'HARDESTY, L.', label: 'GG Walk 50ft — severe decline',
+      qm: 'ADL Decline', urgency: 'severe',
+      summary: 'Baseline 4 → worst 1.8. Consider SCSA after therapy intervention.',
+      chart: 'walk',
+      table: [
+        { date: '4/21', shift: 'NOC', value: 1 },
+        { date: '4/21', shift: 'EVE', value: 2 },
+        { date: '4/21', shift: 'DAY', value: 2 },
+        { date: '4/20', shift: 'NOC', value: 2 },
+        { date: '4/20', shift: 'EVE', value: 3 },
+      ],
+    },
+    'bacon-weight': {
+      name: 'BACON, SUZANNE', label: 'Weight loss crossed K0300 threshold',
+      qm: 'Weight Loss', urgency: 'high',
+      summary: '6.8% weight loss in 30d (103.6 lb today vs 111.2 lb on 3/6). K0300 5%/30d threshold met; initiate nutrition consult.',
+      chart: 'weight',
+      table: [
+        { date: '4/06', shift: '—', value: '103.6 lb' },
+        { date: '3/20', shift: '—', value: '105.4 lb' },
+        { date: '3/06', shift: '—', value: '111.2 lb' },
+        { date: '2/20', shift: '—', value: '111.0 lb' },
+        { date: '2/06', shift: '—', value: '112.1 lb' },
+      ],
+    },
+    'rivera-ua': {
+      name: 'RIVERA, M.', label: 'UA ordered + antibiotic started',
+      qm: 'UTI', urgency: 'medium',
+      summary: 'UA ordered 4/22, antibiotic started 4/23. If I2300 is coded on next MDS this will trigger UTI QM. Review evidence before coding.',
+      chart: null, table: [],
+    },
+    'fry-foley': {
+      name: 'FRY, MARIA', label: 'Foley order — exclusion applies',
+      qm: 'Catheter', urgency: 'low',
+      summary: 'Change Foley Catheter Q30d using 16F. N31.8 already coded (neurogenic bladder) so this will NOT trigger the Catheter QM — confirm H0100A on next MDS.',
+      chart: null, table: [],
+    },
+  };
+
+  // ───────── Navigation ─────────
+  const leftPane = document.getElementById('leftPane');
+  const rightPane = document.getElementById('rightPane');
+  const vDashboard = document.getElementById('view-dashboard');
+  const vMeasure   = document.getElementById('view-measure');
+  const vTakeover  = document.getElementById('view-takeover');
+
+  function showView(which) {
+    vDashboard.classList.toggle('hidden', which !== 'dashboard');
+    vMeasure.classList.toggle('hidden', which !== 'measure');
+    vTakeover.classList.toggle('hidden', which !== 'takeover');
+    // The right rail stays in place when we drill into a measure; but for
+    // a full-panel takeover (View all), we hide it so the list uses the whole width.
+    rightPane.style.display = (which === 'takeover') ? 'none' : '';
+    document.querySelector('.layout').style.gridTemplateColumns =
+      (which === 'takeover') ? 'minmax(0, 1fr)' : 'minmax(0, 1fr) 320px';
+    leftPane.scrollTop = 0;
+  }
+
+  function backToDashboard() { showView('dashboard'); }
+
+  // ───────── Measure detail view ─────────
+  function renderMeasure(id) {
+    const m = MEASURES[id];
+    if (!m) return;
+    let rowsHtml = '';
+    for (const r of m.rows) {
+      const rc = r.clearCls ? `row__clear row__clear--${r.clearCls}` : 'row__clear';
+      rowsHtml += `
+        <div class="row ${r.cls ? 'row--' + r.cls : ''}">
+          <span class="row__dot"></span>
+          <span><span class="row__name">${r.name}</span><span class="row__meta">${r.meta}</span></span>
+          <span class="row__ard">${r.ard}</span>
+          <span class="${rc}">${r.clear}</span>
+          <span class="row__action">view ›</span>
+        </div>`;
+    }
+    if (m.more) rowsHtml += `<div style="padding:10px 8px;color:var(--super-gray-500);font-style:italic;font-size:12px;">… ${m.more} more</div>`;
+
+    let headsHtml = '';
+    if (m.headsup.length) {
+      headsHtml = `
+        <div class="slabel" style="margin-top:22px;"><span>Heads-up on this measure</span>
+          <span class="slabel__meta">${m.headsup.length + (m.headsupMore || 0)} incoming signals</span>
+        </div>`;
+      for (const h of m.headsup) {
+        headsHtml += `
+          <div class="row" data-alert="${h.alert}" style="grid-template-columns: 10px 1fr 100px 70px;">
+            <span class="row__dot" style="background:transparent;border:1.5px dashed var(--super-primary);width:7px;height:7px;"></span>
+            <span><span class="row__name">${h.name}</span><span class="row__meta">${h.meta}</span></span>
+            <span class="row__ard">${h.date}</span>
+            <span class="row__action">view ›</span>
+          </div>`;
+      }
+      if (m.headsupMore) headsHtml += `<div style="padding:10px 8px;color:var(--super-gray-500);font-style:italic;font-size:12px;">… ${m.headsupMore} more heads-up</div>`;
+    }
+
+    vMeasure.innerHTML = `
+      <div class="backbar">
+        <div>
+          <button class="backbar__btn" data-back>‹ Back to measures</button>
+          <span class="backbar__title">${m.title}</span>
+          <span class="backbar__sub">${m.sub}</span>
+        </div>
+        <a class="backbar__btn" href="#" onclick="alert('Would open full residents page'); return false;">Open full page ↗</a>
+      </div>
+      <div class="rows">${rowsHtml || '<div style="padding:20px 8px;color:var(--super-gray-500);font-style:italic;">No currently-triggering residents.</div>'}</div>
+      ${headsHtml}
+    `;
+    showView('measure');
+  }
+
+  // ───────── Full takeover: View all clearing / all heads-up / alert detail ─────────
+  function renderClearingAll() {
+    vTakeover.innerHTML = `
+      <div class="takeover">
+        <div class="backbar">
+          <div>
+            <button class="backbar__btn" data-back>‹ Back</button>
+            <span class="backbar__title">Clearing soon</span>
+            <span class="backbar__sub">14 residents — flat list across all measures</span>
+          </div>
+          <a class="backbar__btn" href="#" onclick="alert('Would open full page in new tab'); return false;">Open full page ↗</a>
+        </div>
+        <div class="rows">
+          ${clearingAll.map(r => `
+            <div class="row row--${r.cls}">
+              <span class="row__dot"></span>
+              <span><span class="row__name">${r.name}</span><span class="row__meta">${r.meta}</span></span>
+              <span class="row__ard">${r.ard}</span>
+              <span class="row__clear row__clear--${r.clearCls || ''}">${r.clear}</span>
+              <span class="row__action">view ›</span>
+            </div>`).join('')}
+        </div>
+      </div>`;
+    showView('takeover');
+  }
+  function renderHeadsupAll() {
+    vTakeover.innerHTML = `
+      <div class="takeover">
+        <div class="backbar">
+          <div>
+            <button class="backbar__btn" data-back>‹ Back</button>
+            <span class="backbar__title">Heads-up</span>
+            <span class="backbar__sub">52 incoming signals — grouped by source</span>
+          </div>
+          <a class="backbar__btn" href="#" onclick="alert('Would open full page in new tab'); return false;">Open full page ↗</a>
+        </div>
+        <div class="rows">
+          ${Object.entries(ALERTS).map(([id, a]) => `
+            <div class="row" data-alert="${id}">
+              <span class="row__dot" style="background:transparent;border:1.5px dashed var(--super-primary);width:7px;height:7px;"></span>
+              <span><span class="row__name">${a.name}</span><span class="row__meta">${a.label} <span class="pill">${a.qm}</span></span></span>
+              <span class="row__ard">${a.urgency}</span>
+              <span class="row__clear"></span>
+              <span class="row__action">view ›</span>
+            </div>`).join('')}
+        </div>
+      </div>`;
+    showView('takeover');
+  }
+  function renderAlert(id) {
+    const a = ALERTS[id];
+    if (!a) return;
+    const chartSvg = a.chart ? renderChartSvg(a.chart, a.table) : '';
+    const tableHtml = a.table && a.table.length ? `
+      <table class="chart-stub__table">
+        <thead><tr><th>Date</th><th>Shift</th><th>Value</th></tr></thead>
+        <tbody>
+          ${a.table.map(r => `<tr><td>${r.date}</td><td>${r.shift}</td><td class="mono">${r.value}</td></tr>`).join('')}
+        </tbody>
+      </table>` : '';
+
+    vTakeover.innerHTML = `
+      <div class="takeover">
+        <div class="backbar">
+          <div>
+            <button class="backbar__btn" data-back>‹ Back</button>
+            <span class="backbar__title">${a.name}</span>
+            <span class="backbar__sub">${a.label} <span class="pill pill--alert">${a.qm}</span> <span class="pill">${a.urgency}</span></span>
+          </div>
+          <div>
+            <button class="backbar__btn" onclick="alert('Snooze 7d (stub)'); return false;">Snooze 7d</button>
+            <button class="backbar__btn" onclick="alert('Would deep-link into PCC'); return false;">Open in PCC ↗</button>
+          </div>
+        </div>
+        <p style="color:var(--super-gray-700);margin:0 0 12px;">${a.summary}</p>
+        ${chartSvg ? `<div class="chart-stub"><h4 class="chart-stub__title">Recent scores</h4>${chartSvg}${tableHtml}</div>` : ''}
+      </div>`;
+    showView('takeover');
+  }
+
+  // Tiny inline SVG sparkline, just to show "a chart goes here"
+  function renderChartSvg(kind, rows) {
+    const values = rows.map(r => {
+      const v = typeof r.value === 'string' ? parseFloat(r.value) : r.value;
+      return isNaN(v) ? 0 : v;
+    }).reverse();
+    if (!values.length) return '';
+    const W = 600, H = 160, P = 20;
+    const max = Math.max(...values) * 1.15;
+    const min = Math.min(...values) * 0.85;
+    const range = Math.max(max - min, 1);
+    const dx = (W - P * 2) / Math.max(values.length - 1, 1);
+    const pts = values.map((v, i) => {
+      const x = P + dx * i;
+      const y = H - P - ((v - min) / range) * (H - P * 2);
+      return [x, y];
+    });
+    const line = pts.map((p, i) => (i ? 'L' : 'M') + p.join(' ')).join(' ');
+    const dots = pts.map(p => `<circle cx="${p[0]}" cy="${p[1]}" r="3" fill="var(--super-primary)"/>`).join('');
+    return `<svg class="chart-stub__svg" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">
+      <rect x="0" y="0" width="${W}" height="${H}" fill="white" stroke="var(--super-gray-200)"/>
+      <path d="${line}" fill="none" stroke="var(--super-primary)" stroke-width="2"/>
+      ${dots}
+    </svg>`;
+  }
+
+  // fake "all clearing" dataset
+  const clearingAll = [
+    { cls: 'urgent', name: 'FELDMAN, R.',   meta: 'ADL Decline',           ard: 'ARD 2/01', clear: 'OVERDUE · sched SCSA', clearCls: 'urgent' },
+    { cls: 'urgent', name: 'PEREZ, D.',     meta: 'Low-Risk Incontinence', ard: 'ARD 1/28', clear: 'OVERDUE',              clearCls: 'urgent' },
+    { cls: 'soon',   name: 'GARCIA, M.',    meta: 'ADL Decline',           ard: 'ARD 3/14', clear: 'in 4d',                clearCls: 'soon' },
+    { cls: 'soon',   name: 'KOZLOWSKI, E.', meta: 'Weight Loss',           ard: 'ARD 4/05', clear: 'in 6d',                clearCls: 'soon' },
+    { cls: 'soon',   name: 'ELLIS, R.',     meta: 'Pressure Ulcer (long)', ard: 'ARD 4/02', clear: 'in 7d',                clearCls: 'soon' },
+    { cls: 'soon',   name: 'HAMILTON, G.',  meta: 'Low-Risk Incontinence', ard: 'ARD 3/02', clear: 'in 7d',                clearCls: 'soon' },
+    { cls: '',       name: 'SMITH, JOHN',   meta: 'ADL Decline',           ard: 'ARD 3/11', clear: 'in 12d',               clearCls: '' },
+    { cls: '',       name: 'BOYD, NANCY',   meta: 'ADL Decline',           ard: 'ARD 2/20', clear: 'in 18d',               clearCls: '' },
+  ];
+
+  // ───────── Event wiring ─────────
+  document.addEventListener('click', (e) => {
+    // Back buttons
+    if (e.target.matches('[data-back]')) { backToDashboard(); return; }
+
+    // Tiles
+    const tile = e.target.closest('.tile[data-measure]');
+    if (tile) { renderMeasure(tile.dataset.measure); return; }
+
+    // Right-rail "view all"
+    const viewAll = e.target.closest('[data-view]');
+    if (viewAll) {
+      if (viewAll.dataset.view === 'clearing-all') renderClearingAll();
+      else if (viewAll.dataset.view === 'headsup-all') renderHeadsupAll();
+      return;
+    }
+
+    // Alert rows (right rail, headsup-all list, inside measure detail)
+    const alertRow = e.target.closest('[data-alert]');
+    if (alertRow) { renderAlert(alertRow.dataset.alert); return; }
+
+    // Clearing queue (right rail) — open the related measure
+    const clearRow = e.target.closest('[data-kind="clear"]');
+    if (clearRow) {
+      const meta = clearRow.querySelector('.qrow__meta').textContent;
+      const match = /ADL Decline|Low-Risk Incontinence|Weight Loss|Pressure Ulcer|Falls|Influenza|UTI|Catheter/.exec(meta);
+      const map = { 'ADL Decline': 'adl', 'Low-Risk Incontinence': 'lri', 'Weight Loss': 'weight', 'Pressure Ulcer': 'pu-long', 'Falls': 'falls', 'Influenza': 'flu', 'UTI': 'uti', 'Catheter': 'cath' };
+      if (match && map[match[0]]) renderMeasure(map[match[0]]);
+    }
+  });
+</script>
+
+</body>
+</html>

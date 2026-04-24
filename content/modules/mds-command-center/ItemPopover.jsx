@@ -56,7 +56,8 @@ export function ItemPopover({ item, context, onClose }) {
   const viewingViewerType = viewingSource ? parseViewer(viewingSource.ev).viewerType : null;
   const viewingNote = viewingViewerType === 'clinical-note';
   const viewingTherapy = viewingViewerType === 'therapy-document';
-  const viewingDoc = viewingSource && !viewingOrder && !viewingNote && !viewingTherapy;
+  const viewingUda = viewingViewerType === 'uda';
+  const viewingDoc = viewingSource && !viewingOrder && !viewingNote && !viewingTherapy && !viewingUda;
 
   // Prefetch PDF documents only (skip orders, notes, therapy)
   const docEvidence = viewableEvidence.filter(ev => {
@@ -100,7 +101,7 @@ export function ItemPopover({ item, context, onClose }) {
   const [docLoading, setDocLoading] = useState(false);
 
   useEffect(() => {
-    if (!viewingSource || viewingOrder || viewingNote || viewingTherapy) {
+    if (!viewingSource || viewingOrder || viewingNote || viewingTherapy || viewingUda) {
       setCurrentDoc(null);
       setDocLoading(false);
       return;
@@ -139,7 +140,7 @@ export function ItemPopover({ item, context, onClose }) {
     };
 
     loadDoc();
-  }, [viewingSource, viewingOrder, viewingNote, viewingTherapy]);
+  }, [viewingSource, viewingOrder, viewingNote, viewingTherapy, viewingUda]);
 
   // Render admin (MAR/TAR) grid when viewing an order source
   useEffect(() => {
@@ -197,6 +198,30 @@ export function ItemPopover({ item, context, onClose }) {
       el.innerHTML = '<div class="cc-pop__viewer-loading"><span>Failed to load</span></div>';
     });
   }, [viewingSource, viewingNote, viewingTherapy]);
+
+  // Render UDA structured assessment via vanilla renderer
+  useEffect(() => {
+    if (!viewingUda || !noteContainerRef.current) return;
+
+    const el = noteContainerRef.current;
+    const viewer = parseViewer(viewingSource.ev);
+    const quote = viewingSource.ev.quoteText || viewingSource.ev.quote || viewingSource.ev.snippet || '';
+
+    el.innerHTML = '<div class="cc-pop__viewer-loading"><div class="mds-cc__spinner mds-cc__spinner--sm"></div><span>Loading assessment...</span></div>';
+
+    const run = async () => {
+      if (window.renderSplitUda) {
+        await window.renderSplitUda(el, viewer.id, quote);
+      } else {
+        el.innerHTML = '<div class="cc-pop__viewer-loading"><span>UDA viewer not available</span></div>';
+      }
+    };
+
+    run().catch(err => {
+      console.error('[ItemPopover] Failed to load UDA:', err);
+      el.innerHTML = '<div class="cc-pop__viewer-loading"><span>Failed to load</span></div>';
+    });
+  }, [viewingSource, viewingUda]);
 
   const handleViewSource = useCallback((ev, index) => {
     setViewingSource({ ev, index });
@@ -309,8 +334,8 @@ export function ItemPopover({ item, context, onClose }) {
                 <div ref={adminContainerRef} class="cc-pop__admin-viewer" />
               )}
 
-              {/* Clinical note / therapy doc viewer — rendered by vanilla renderers */}
-              {(viewingNote || viewingTherapy) && (
+              {/* Clinical note / therapy doc / UDA viewer — rendered by vanilla renderers */}
+              {(viewingNote || viewingTherapy || viewingUda) && (
                 <div ref={noteContainerRef} class="cc-pop__note-viewer" />
               )}
             </div>

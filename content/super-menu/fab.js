@@ -20,15 +20,15 @@ function createBubbles() {
       </svg>
       <span class="super-dial__action-badge" id="super-mds-badge" style="display:none;"></span>
     </button>
+    <button id="super-qm-action" class="super-dial__action super-dial__action--qm" aria-label="QM Board">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M9 11l3 3L22 4"/>
+        <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+      </svg>
+    </button>
     <button id="super-coverage-action" class="super-dial__action super-dial__action--coverage" aria-label="Care Plan Coverage" style="display:none;">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-      </svg>
-    </button>
-    <button id="super-patient-action" class="super-dial__action super-dial__action--patient" aria-label="Open Patient" style="display:none;">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-        <circle cx="12" cy="7" r="4"/>
       </svg>
     </button>
     <button id="super-bubble-main" class="super-bubble__main" aria-label="Super">S</button>
@@ -46,7 +46,7 @@ function createBubbles() {
   const mainBtn = document.getElementById('super-bubble-main');
   const mdsAction = document.getElementById('super-mds-action');
   const chatAction = document.getElementById('super-chat-action');
-  const patientAction = document.getElementById('super-patient-action');
+  const qmAction = document.getElementById('super-qm-action');
 
   mainBtn.addEventListener('click', () => {
     if (hasDragged) {
@@ -78,20 +78,14 @@ function createBubbles() {
     }
   });
 
-  // Patient button → toggles PDPM Analyzer (panel on MDS pages, modal otherwise)
-  patientAction.addEventListener('click', (e) => {
+  // QM Board button → toggles QM Board modal
+  qmAction.addEventListener('click', (e) => {
     e.stopPropagation();
     container.classList.remove('super-dial--open');
-    if (typeof PDPMAnalyzerLauncher === 'undefined') return;
-    // Toggle: if already open, close it; otherwise open
-    if (PDPMAnalyzerLauncher.isOpen()) {
-      PDPMAnalyzerLauncher.close();
+    if (QMBoardLauncher.isOpen()) {
+      QMBoardLauncher.close();
     } else {
-      const context = getMDSContext();
-      // Clear any dismissal so it opens fresh
-      try { sessionStorage.removeItem('super_analyzer_dismissed'); } catch (_) {}
-      const mode = context.scope === 'mds' ? 'panel' : 'modal';
-      PDPMAnalyzerLauncher.open(context, { mode });
+      QMBoardLauncher.open();
     }
   });
 
@@ -115,15 +109,10 @@ function createBubbles() {
   updateMDSBadge();
 }
 
-// Show or hide the patient action button based on whether we're on a patient page
+// Show or hide patient-scoped action buttons based on whether we're on a patient page
 function updateBubblesContext() {
-  const patientAction = document.getElementById('super-patient-action');
-  if (!patientAction) return;
-
   const context = getMDSContext();
   const isPatientPage = context.scope === 'patient' || context.scope === 'mds';
-
-  patientAction.style.display = isPatientPage ? '' : 'none';
 
   const coverageAction = document.getElementById('super-coverage-action');
   if (coverageAction) coverageAction.style.display = isPatientPage ? '' : 'none';
@@ -311,6 +300,72 @@ const CoveragePanelLauncher = {
   isOpen() {
     return !!this._overlayEl;
   }
+};
+
+// QM Board Launcher — dynamic import pattern (same as ChatOverlayLauncher)
+const QMBoardLauncher = {
+  _overlayEl: null,
+  _preactUnmount: null,
+
+  async open() {
+    if (this._overlayEl) return;
+
+    let facilityName, orgSlug;
+    try {
+      const orgResponse = getOrg();
+      orgSlug = orgResponse?.org;
+      facilityName = getChatFacilityInfo();
+    } catch (e) {
+      console.error('[QMBoard] Could not get org/facility:', e);
+    }
+
+    const overlayEl = document.createElement('div');
+    overlayEl.id = 'qm-board-overlay';
+    document.body.appendChild(overlayEl);
+    this._overlayEl = overlayEl;
+
+    this._escapeHandler = (e) => { if (e.key === 'Escape') this.close(); };
+    document.addEventListener('keydown', this._escapeHandler);
+
+    try {
+      const [{ render, h }, { QMBoard }] = await Promise.all([
+        import('preact'),
+        import('../modules/qm-board/QMBoard.jsx')
+      ]);
+
+      render(
+        h(QMBoard, {
+          facilityName: facilityName || '',
+          orgSlug: orgSlug || '',
+          onClose: () => this.close()
+        }),
+        overlayEl
+      );
+
+      this._preactUnmount = () => render(null, overlayEl);
+    } catch (err) {
+      console.error('[QMBoard] Failed to load module:', err);
+      overlayEl.remove();
+      this._overlayEl = null;
+    }
+  },
+
+  close() {
+    if (this._escapeHandler) {
+      document.removeEventListener('keydown', this._escapeHandler);
+      this._escapeHandler = null;
+    }
+    if (this._preactUnmount) {
+      this._preactUnmount();
+      this._preactUnmount = null;
+    }
+    if (this._overlayEl) {
+      this._overlayEl.remove();
+      this._overlayEl = null;
+    }
+  },
+
+  isOpen() { return !!this._overlayEl; }
 };
 
 function openChatOverlay() {
@@ -533,3 +588,4 @@ window.updateMenuBadge = updateMenuBadge;
 window.updateBubblesContext = updateBubblesContext;
 window.ChatOverlayLauncher = ChatOverlayLauncher;
 window.CoveragePanelLauncher = CoveragePanelLauncher;
+window.QMBoardLauncher = QMBoardLauncher;

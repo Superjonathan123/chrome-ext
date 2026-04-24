@@ -51,6 +51,10 @@ export function parseViewer(ev) {
   if (sourceType === 'progress-note' && sourceId) return { viewerType: 'clinical-note', id: sourceId };
   if (sourceType === 'therapy-doc' && sourceId) return { viewerType: 'therapy-document', id: sourceId };
   if (sourceType === 'document' && sourceId) return { viewerType: 'document', id: sourceId };
+  if (sourceType === 'uda') {
+    const udaId = (sourceId || evidenceId || '').replace(/^uda-/, '');
+    if (udaId) return { viewerType: 'uda', id: udaId };
+  }
 
   // queryEvidence format
   if (evType === 'clinical_note' && sourceId) {
@@ -68,6 +72,7 @@ export function parseViewer(ev) {
     if (evidenceId.startsWith('pcc-prognote-')) return { viewerType: 'clinical-note', id: evidenceId.replace('pcc-prognote-', '') };
     if (evidenceId.startsWith('patient-practnote-')) return { viewerType: 'clinical-note', id: evidenceId.replace('patient-practnote-', '') };
     if (evidenceId.includes('-chunk-')) return { viewerType: 'document', id: evidenceId.split('-chunk-')[0], chunk: parseInt(evidenceId.split('-chunk-')[1], 10) };
+    if (evidenceId.startsWith('uda-')) return { viewerType: 'uda', id: evidenceId.replace('uda-', '') };
   }
   return { viewerType: null, id: null };
 }
@@ -85,6 +90,9 @@ export function openEvidence(ev) {
   if (viewer.viewerType === 'document' && viewer.id) {
     return window.showDocumentModal?.(viewer.id, ev.wordBlocks || []);
   }
+  if (viewer.viewerType === 'uda' && viewer.id) {
+    return window.showUdaModal?.(viewer.id, quote, ev.patientId || null);
+  }
   // Order evidence — show administrations
   const orderId = ev.sourceId || ev.evidenceId || '';
   if ((ev.sourceType === 'order' || orderId.startsWith('order-')) && window.showAdministrationModal) {
@@ -100,5 +108,6 @@ export function getActionText(ev) {
   if (viewer.viewerType === 'therapy-document') return 'View Document';
   if (viewer.viewerType === 'clinical-note') return 'View Note';
   if (viewer.viewerType === 'document') return 'View PDF';
+  if (viewer.viewerType === 'uda') return 'View Assessment';
   return null;
 }

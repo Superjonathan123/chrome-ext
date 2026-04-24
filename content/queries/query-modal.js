@@ -416,6 +416,10 @@ const EvidenceModal = {
             const wordBlocks = wordBlocksStr ? JSON.parse(wordBlocksStr) : null;
             await showDocumentModal(viewerId, wordBlocks);
           }
+        } else if (viewerType === 'uda' && viewerId) {
+          if (typeof window.showUdaModal === 'function') {
+            await window.showUdaModal(viewerId, quote || null);
+          }
         } else {
           console.error('EvidenceModal: No valid viewer type found on card');
         }
@@ -602,6 +606,7 @@ const EvidenceModal = {
       else if (viewerType === 'therapy-document') actionText = 'View Document';
       else if (viewerType === 'clinical-note') actionText = 'View Note';
       else if (viewerType === 'document') actionText = 'View PDF';
+      else if (viewerType === 'uda') actionText = 'View Assessment';
 
       const actionHTML = isViewable ? `
         <div class="super-evidence-card__action">

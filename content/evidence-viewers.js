@@ -9,6 +9,7 @@
 
 import { render, h } from 'preact';
 import { PDFViewer } from './components/PDFViewer.jsx';
+import { UdaViewer } from './modules/uda-viewer/UdaViewer.jsx';
 
 // =============================================================================
 // EVIDENCE DETECTION
@@ -35,6 +36,10 @@ function parseEvidenceForViewer(ev) {
   }
   if (sourceType === 'document' && sourceId) {
     return { viewerType: 'document', id: sourceId };
+  }
+  if (sourceType === 'uda') {
+    const udaId = (sourceId || evidenceId || '').replace(/^uda-/, '');
+    if (udaId) return { viewerType: 'uda', id: udaId };
   }
 
   // Early check: if sourceId contains -chunk-, it's a document regardless of type label
@@ -72,6 +77,9 @@ function parseEvidenceForViewer(ev) {
     if (eid.includes('-chunk-')) {
       // Document chunks: "abc123-chunk-1" -> "abc123"
       return { viewerType: 'document', id: eid.split('-chunk-')[0], chunk: parseInt(eid.split('-chunk-')[1], 10) };
+    }
+    if (eid.startsWith('uda-')) {
+      return { viewerType: 'uda', id: eid.replace('uda-', '') };
     }
   }
 
@@ -136,6 +144,37 @@ export async function fetchDocument(documentId, params) {
   });
   if (!response.success) throw new Error(response.error);
   return response.data;
+}
+
+export async function fetchUda(udaId, patientId, params, quoteText = null) {
+  let endpoint = `/api/extension/patients/${patientId}/uda/${udaId}?` +
+    `facilityName=${encodeURIComponent(params.facilityName)}` +
+    `&orgSlug=${params.orgSlug}`;
+
+  if (quoteText) {
+    endpoint += `&quote=${encodeURIComponent(quoteText)}`;
+  }
+
+  const response = await chrome.runtime.sendMessage({
+    type: 'API_REQUEST',
+    endpoint
+  });
+  if (!response.success) throw new Error(response.error);
+  return response.data;
+}
+
+function resolvePatientIdForUda() {
+  if (typeof window !== 'undefined') {
+    const fromOverlay = window.SuperOverlay?.patientId;
+    if (fromOverlay) return fromOverlay;
+    try {
+      const fromUrl = new URL(window.location.href).searchParams.get('ESOLclientid');
+      if (fromUrl) return fromUrl;
+    } catch {
+      /* ignore */
+    }
+  }
+  return null;
 }
 
 // =============================================================================
@@ -1410,9 +1449,72 @@ function renderPdfModalContent(modal, doc, wordBlocks = null) {
 
 // Old vanilla PDF rendering functions removed — now handled by Preact PDFViewer component
 
+// =============================================================================
+// UDA MODAL
+// =============================================================================
+
+function createUdaModalShell() {
+  const modal = document.createElement('div');
+  modal.className = 'super-uda-modal';
+  modal.innerHTML = `
+    <div class="super-uda-modal__backdrop"></div>
+    <div class="super-uda-modal__container">
+      <div class="super-uda-modal__loading">
+        <div class="super-uda-modal__loading-spinner"></div>
+        <span>Loading assessment...</span>
+      </div>
+    </div>
+  `;
+  return modal;
+}
+
+async function showUdaModal(udaId, quoteText = null, patientIdOverride = null) {
+  const params = await window.getCurrentParams();
+  const patientId = patientIdOverride || resolvePatientIdForUda();
+
+  const modal = createUdaModalShell();
+  const isOnBody = !document.querySelector('.icd10-viewer-modal__container');
+  getModalMountPoint().appendChild(modal);
+  if (isOnBody) document.body.style.overflow = 'hidden';
+
+  const container = modal.querySelector('.super-uda-modal__container');
+
+  const onClose = () => {
+    if (isOnBody) document.body.style.overflow = '';
+    document.removeEventListener('keydown', escHandler);
+    modal.remove();
+  };
+
+  const escHandler = (e) => {
+    if (e.key === 'Escape') onClose();
+  };
+  document.addEventListener('keydown', escHandler);
+  modal.querySelector('.super-uda-modal__backdrop').addEventListener('click', onClose);
+
+  if (!patientId) {
+    container.innerHTML = `<div class="super-uda-modal__error">Missing patient context — open this from a patient page.</div>`;
+    return;
+  }
+
+  try {
+    const data = await fetchUda(udaId, patientId, params, quoteText);
+    const uda = data.uda;
+    const matchKeys = new Set(data.matchKeys || []);
+
+    container.innerHTML = '';
+    render(
+      h(UdaViewer, { uda, matchKeys, quoteText, onClose }),
+      container
+    );
+  } catch (error) {
+    container.innerHTML = `<div class="super-uda-modal__error">${escapeHTMLViewer(error.message || 'Failed to load UDA')}</div>`;
+  }
+}
+
 window.showClinicalNoteModal = showClinicalNoteModal;
 window.showTherapyDocModal = showTherapyDocModal;
 window.showDocumentModal = showDocumentModal;
+window.showUdaModal = showUdaModal;
 window.parseEvidenceForViewer = parseEvidenceForViewer;
 
 window.SuperDocViewer = {
@@ -1428,6 +1530,12 @@ window.SuperDocViewer = {
     } else if (type === 'pdf' || type === 'document') {
       const id = evidence.viewerId || evidence.sourceId || evidence.id;
       window.showDocumentModal(id, evidence.wordBlocks || []);
+    } else if (type === 'uda') {
+      const rawId = evidence.viewerId || evidence.sourceId || evidence.evidenceId || evidence.id || '';
+      const id = String(rawId).replace(/^uda-/, '');
+      const quote = evidence.quoteText || evidence.quote || '';
+      const patientId = evidence.patientId || null;
+      if (id) window.showUdaModal(id, quote, patientId);
     }
   }
 };

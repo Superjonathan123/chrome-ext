@@ -30,11 +30,23 @@ import '../content/css/pdf-modal.css';
 import '../content/css/sections.css';
 import '../content/css/certifications.css';
 import '../content/css/admin-modal.css';
+import '../content/css/mds-planner.css';
+import '../content/css/uda-modal.css';
+import '../content/css/ard-estimator.css';
 import './pcc-demo-overrides.css';
 
 // ── Step 3: Mount PCCDemoApp ──
+import * as preact from 'preact';
 import { render } from 'preact';
 import { PCCDemoApp } from './components/PCCDemoApp.jsx';
+import { Sidebar as ICD10SidebarComponent } from '../content/modules/icd10-sidebar/Sidebar.jsx';
+import { ArdEstimator } from '../content/modules/ard-estimator/ArdEstimator.jsx';
+
+// Expose preact + components globally so the vanilla icd10-viewer.js can
+// mount Preact trees without dynamic JSX imports in the classic-script load path.
+window.__preact = preact;
+window.__ICD10SidebarComponent = ICD10SidebarComponent;
+window.__ArdEstimator = ArdEstimator;
 
 function boot() {
   let root = document.getElementById('super-demo-root');

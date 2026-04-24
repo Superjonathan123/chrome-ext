@@ -30,6 +30,7 @@ import '../content/css/evidence-viewer.css';
 import '../content/css/pdf-viewer.css';
 import '../content/css/pdf-modal.css';
 import '../content/css/sections.css';
+import '../content/css/ard-estimator.css';
 import '../content/css/ai-chat.css';
 import './demo-chat.css';
 import './demo-document-viewer.css';
@@ -42,10 +43,15 @@ import * as preact from 'preact';
 import { render } from 'preact';
 import { DemoApp } from './components/DemoApp.jsx';
 import { QueryItemsPage } from '../content/modules/query-items/QueryItemsPage.jsx';
+import { Sidebar as ICD10SidebarComponent } from '../content/modules/icd10-sidebar/Sidebar.jsx';
+import { ArdEstimator } from '../content/modules/ard-estimator/ArdEstimator.jsx';
 
-// Expose preact + QueryItemsPage globally so icd10-viewer.js dynamic imports work in demo
+// Expose preact + components globally so icd10-viewer.js uses synchronous
+// globals instead of dynamic JSX imports (which would 404 against static bundles).
 window.__preact = preact;
 window.__QueryItemsPage = QueryItemsPage;
+window.__ICD10SidebarComponent = ICD10SidebarComponent;
+window.__ArdEstimator = ArdEstimator;
 
 function boot() {
   let root = document.getElementById('super-demo-root');

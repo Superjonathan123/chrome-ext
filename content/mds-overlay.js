@@ -4,7 +4,8 @@
 
 import { render, h } from 'preact';
 import { PDFViewer } from './components/PDFViewer.jsx';
-import { fetchDocument, fetchClinicalNote, fetchTherapyDocument, formatDateDisplay, formatDateTimeDisplay } from './evidence-viewers.js';
+import { fetchDocument, fetchClinicalNote, fetchTherapyDocument, fetchUda, formatDateDisplay, formatDateTimeDisplay } from './evidence-viewers.js';
+import { UdaViewer } from './modules/uda-viewer/UdaViewer.jsx';
 
 // ============================================
 // State Management
@@ -168,6 +169,7 @@ window.showIncidentDetailModal = showIncidentDetailModal;
 window.renderSplitAdministrations = renderSplitAdministrations;
 window.renderSplitNote = renderSplitNote;
 window.renderSplitTherapy = renderSplitTherapy;
+window.renderSplitUda = renderSplitUda;
 
 // ============================================
 // Message Listener (existing functionality)
@@ -1180,6 +1182,7 @@ function renderEvidenceCard(ev, evIdx) {
   else if (viewerType === 'therapy-document') actionText = 'View Document';
   else if (viewerType === 'clinical-note') actionText = 'View Note';
   else if (viewerType === 'document') actionText = 'View PDF';
+  else if (viewerType === 'uda') actionText = 'View Assessment';
 
   const actionHTML = isViewable ? `
     <div class="super-evidence-card__action">
@@ -2145,6 +2148,7 @@ function getViewerLabel(viewerType) {
     case 'clinical-note': return 'Note';
     case 'therapy-document': return 'Therapy';
     case 'order': return 'Orders';
+    case 'uda': return 'Assessment';
     default: return 'Source';
   }
 }
@@ -2314,6 +2318,8 @@ async function renderSplitContent(popover, viewerEl, viewerType, viewerId, extra
       await renderSplitAdministrations(viewerEl, viewerId);
     } else if (viewerType === 'incident') {
       await renderSplitIncident(viewerEl, viewerId);
+    } else if (viewerType === 'uda') {
+      await renderSplitUda(viewerEl, viewerId, extra.quote);
     } else {
       viewerEl.innerHTML = `<div class="super-split__viewer-loading"><span>Unknown source type</span></div>`;
     }
@@ -2477,6 +2483,35 @@ async function renderSplitTherapy(viewerEl, therapyDocId, highlightQuote, overri
       }
     }
   }
+}
+
+/** Render UDA (structured assessment) inline in split viewer */
+async function renderSplitUda(viewerEl, udaId, quoteText) {
+  const params = await window.getCurrentParams();
+  const patientId = window.SuperOverlay?.patientId
+    || (() => {
+      try { return new URL(window.location.href).searchParams.get('ESOLclientid'); }
+      catch { return null; }
+    })();
+
+  if (!patientId) {
+    viewerEl.innerHTML = `<div class="super-split__viewer-loading"><span>Missing patient context</span></div>`;
+    return;
+  }
+
+  const data = await fetchUda(udaId, patientId, params, quoteText || null);
+  const uda = data.uda;
+  const matchKeys = new Set(data.matchKeys || []);
+
+  viewerEl.innerHTML = '';
+  const container = document.createElement('div');
+  container.style.cssText = 'width:100%;height:100%;display:flex;flex-direction:column;min-height:0;';
+  viewerEl.appendChild(container);
+
+  render(
+    h(UdaViewer, { uda, matchKeys, quoteText: quoteText || null }),
+    container
+  );
 }
 
 /** Render administration (MAR/TAR) records inline in split viewer */

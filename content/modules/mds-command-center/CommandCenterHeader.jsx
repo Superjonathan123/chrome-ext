@@ -67,18 +67,21 @@ export function CommandCenterHeader({
         <div class="mds-cc__title-actions">
           {onToggleFullscreen && (
             <button
-              class="mds-cc__icon-btn"
+              class={`mds-cc__icon-btn${isFullscreen ? ' mds-cc__icon-btn--exit' : ''}`}
               onClick={onToggleFullscreen}
               aria-label={isFullscreen ? 'Exit fullscreen' : 'Enter fullscreen'}
               title={isFullscreen ? 'Exit fullscreen' : 'Fullscreen'}
             >
               {isFullscreen ? (
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M8 3v3a2 2 0 0 1-2 2H3" />
-                  <path d="M21 8h-3a2 2 0 0 1-2-2V3" />
-                  <path d="M3 16h3a2 2 0 0 1 2 2v3" />
-                  <path d="M16 21v-3a2 2 0 0 1 2-2h3" />
-                </svg>
+                <>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M8 3v3a2 2 0 0 1-2 2H3" />
+                    <path d="M21 8h-3a2 2 0 0 1-2-2V3" />
+                    <path d="M3 16h3a2 2 0 0 1 2 2v3" />
+                    <path d="M16 21v-3a2 2 0 0 1 2-2h3" />
+                  </svg>
+                  <span>Exit fullscreen</span>
+                </>
               ) : (
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <path d="M3 3h6" />
@@ -102,26 +105,34 @@ export function CommandCenterHeader({
         </div>
       </div>
 
-      {/* ── Stats strip ── */}
-      <div class="mds-cc__stats-strip">
-        <StatPill value={total} label="assessments" />
-        <span class="mds-cc__stats-sep">|</span>
-        <StatPill value={urgentCount} label="urgent" highlight={urgentCount > 0} />
-        {revenuePerDay > 0 && (
-          <>
-            <span class="mds-cc__stats-sep">|</span>
-            <span class="mds-cc__stat mds-cc__stat--revenue">
-              <strong>${Math.round(revenuePerDay)}/day available</strong>
-              {hippsCount > 0 && <span class="mds-cc__stat-sub"> across {hippsCount} improvements</span>}
-            </span>
-          </>
-        )}
-        <span class="mds-cc__stats-sep">|</span>
-        <StatPill value={pendingQueryCount} label="pending queries" highlight={pendingQueryCount > 0} />
-      </div>
+      {/* ── Stats strip (hidden on Planner — Today's Focus is its own summary) ── */}
+      {activeView !== 'planner' && (
+        <div class="mds-cc__stats-strip">
+          <StatPill value={total} label="assessments" />
+          <span class="mds-cc__stats-sep">|</span>
+          <StatPill value={urgentCount} label="urgent" highlight={urgentCount > 0} />
+          {revenuePerDay > 0 && (
+            <>
+              <span class="mds-cc__stats-sep">|</span>
+              <span class="mds-cc__stat mds-cc__stat--revenue">
+                <strong>${Math.round(revenuePerDay)}/day available</strong>
+                {hippsCount > 0 && <span class="mds-cc__stat-sub"> across {hippsCount} improvements</span>}
+              </span>
+            </>
+          )}
+          <span class="mds-cc__stats-sep">|</span>
+          <StatPill value={pendingQueryCount} label="pending queries" highlight={pendingQueryCount > 0} />
+        </div>
+      )}
 
       {/* ── View switcher ── */}
       <div class="mds-cc__view-switcher">
+        <button
+          class={`mds-cc__view-tab${activeView === 'planner' ? ' mds-cc__view-tab--active' : ''}`}
+          onClick={() => onViewChange('planner')}
+        >
+          Planner
+        </button>
         <button
           class={`mds-cc__view-tab${activeView === 'assessments' ? ' mds-cc__view-tab--active' : ''}`}
           onClick={() => onViewChange('assessments')}

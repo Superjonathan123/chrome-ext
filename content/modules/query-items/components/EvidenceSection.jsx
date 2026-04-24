@@ -13,6 +13,7 @@ const SOURCE_TYPE_LABELS = {
   'nursing-note': 'Nursing Note',
   'vital-signs': 'Vitals',
   'mar': 'MAR',
+  'uda': 'Assessment',
   'document': 'Document'
 };
 
@@ -24,6 +25,7 @@ function inferSourceType(ev) {
   if (eid.startsWith('order-')) return 'order';
   if (eid.startsWith('lab-')) return 'lab-result';
   if (eid.startsWith('mar-')) return 'mar';
+  if (eid.startsWith('uda-')) return 'uda';
   const name = (ev.displayName || '').toLowerCase();
   if (name.includes('therapy') || name.includes('eval') || name.includes('recert')) return 'therapy-doc';
   if (name.includes('lab')) return 'lab-result';
@@ -50,6 +52,8 @@ function handleEvidenceClick(ev) {
       window.showTherapyDocModal(id, quote);
     } else if (viewerType === 'document' && typeof window.showDocumentModal === 'function') {
       window.showDocumentModal(id, wordBlocks);
+    } else if (viewerType === 'uda' && typeof window.showUdaModal === 'function') {
+      window.showUdaModal(id, quote, ev.patientId || null);
     }
   }
 }

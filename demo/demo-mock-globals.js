@@ -7,6 +7,21 @@
 
 // Import mock data so CertAPI methods can access cert list
 import { DEMO_API_RESPONSES } from './demo-mock-data.js';
+import { render, h } from 'preact';
+import { UdaViewer } from '../content/modules/uda-viewer/UdaViewer.jsx';
+
+async function fetchUdaViaMock(udaId, quote) {
+  const patientId = window.SuperOverlay?.patientId || '2657226';
+  const params = new URLSearchParams({
+    facilityName: window.SuperOverlay?.facilityName || 'SUNNY MEADOWS DEMO FACILITY',
+    orgSlug: 'demo-org',
+  });
+  if (quote) params.set('quote', quote);
+  const endpoint = `/api/extension/patients/${patientId}/uda/${udaId}?${params.toString()}`;
+  const response = await chrome.runtime.sendMessage({ type: 'API_REQUEST', endpoint });
+  if (!response?.success) throw new Error(response?.error || 'Failed to load UDA');
+  return response.data;
+}
 
 export function installGlobalMocks() {
   // Make cert data available to CertAPI mock methods
@@ -586,6 +601,70 @@ export function installGlobalMocks() {
           <div style="font-size:11px;color:#92400e;">Documented by <strong>Jane Specialist, PT, DPT</strong> on 01/20/2026 at 11:15</div>
         </div>
       </div>`;
+  };
+
+  // ── UDA viewers — render the real UdaViewer inline using the mocked API ──
+  window.renderSplitUda = async (container, udaId, quoteText) => {
+    try {
+      const { uda, matchKeys } = await fetchUdaViaMock(udaId, quoteText || null);
+      container.innerHTML = '';
+      const inner = document.createElement('div');
+      inner.style.cssText = 'width:100%;height:100%;display:flex;flex-direction:column;min-height:0;';
+      container.appendChild(inner);
+      render(
+        h(UdaViewer, {
+          uda,
+          matchKeys: new Set(matchKeys || []),
+          quoteText: quoteText || null,
+        }),
+        inner
+      );
+    } catch (err) {
+      console.error('[DemoMock] renderSplitUda failed:', err);
+      container.innerHTML = `<div class="cc-pop__viewer-loading"><span>Failed to load: ${err.message}</span></div>`;
+    }
+  };
+
+  window.showUdaModal = async (udaId, quoteText) => {
+    const modal = document.createElement('div');
+    modal.className = 'super-uda-modal';
+    modal.innerHTML = `
+      <div class="super-uda-modal__backdrop"></div>
+      <div class="super-uda-modal__container">
+        <div class="super-uda-modal__loading">
+          <div class="super-uda-modal__loading-spinner"></div>
+          <span>Loading assessment...</span>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(modal);
+    document.body.style.overflow = 'hidden';
+
+    const container = modal.querySelector('.super-uda-modal__container');
+    const onClose = () => {
+      document.body.style.overflow = '';
+      document.removeEventListener('keydown', escHandler);
+      modal.remove();
+    };
+    const escHandler = (e) => { if (e.key === 'Escape') onClose(); };
+    document.addEventListener('keydown', escHandler);
+    modal.querySelector('.super-uda-modal__backdrop').addEventListener('click', onClose);
+
+    try {
+      const { uda, matchKeys } = await fetchUdaViaMock(udaId, quoteText || null);
+      container.innerHTML = '';
+      render(
+        h(UdaViewer, {
+          uda,
+          matchKeys: new Set(matchKeys || []),
+          quoteText: quoteText || null,
+          onClose,
+        }),
+        container
+      );
+    } catch (err) {
+      container.innerHTML = `<div class="super-uda-modal__error">${err.message || 'Failed to load UDA'}</div>`;
+    }
   };
 
   // ── QuerySendModal — stub; PCCDemoApp overrides this with Preact modal ──

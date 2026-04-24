@@ -19,6 +19,7 @@ function inferSourceType(ev) {
   if (eid.startsWith('order-')) return 'order';
   if (eid.startsWith('lab-')) return 'lab-result';
   if (eid.startsWith('mar-')) return 'mar';
+  if (eid.startsWith('uda-')) return 'uda';
   // Check ev.type (queryEvidence format)
   const evType = ev.type || '';
   if (evType === 'clinical_note') return 'progress-note';
@@ -41,6 +42,7 @@ const SOURCE_TYPE_LABELS = {
   'nursing-note': 'Nursing Note',
   'vital-signs': 'Vitals',
   'mar': 'MAR',
+  'uda': 'Assessment',
   'document': 'Document'
 };
 
@@ -72,6 +74,8 @@ function openEvidenceViewer(ev) {
     window.showTherapyDocModal(id, quote);
   } else if (viewerType === 'document' && typeof window.showDocumentModal === 'function') {
     window.showDocumentModal(id, wordBlocks);
+  } else if (viewerType === 'uda' && typeof window.showUdaModal === 'function') {
+    window.showUdaModal(id, quote, ev.patientId || null);
   }
 }
 

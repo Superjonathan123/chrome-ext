@@ -61,6 +61,10 @@ function serveCapturedAssets() {
   };
 }
 
+// DEMO_ENTRY=legacy rebuilds demo-entry.built.{js,css} (used by
+// medical-diagnosis.html, index.html, mds-summary.html). Default is pcc.
+const entryKey = process.env.DEMO_ENTRY === 'legacy' ? 'demo-entry' : 'pcc-demo-entry';
+
 export default defineConfig(({ command }) => ({
   plugins: [
     serveCapturedAssets(),
@@ -71,13 +75,13 @@ export default defineConfig(({ command }) => ({
     outDir: 'demo',
     emptyOutDir: false,
     lib: {
-      entry: 'demo/pcc-demo-entry.jsx',
+      entry: `demo/${entryKey}.jsx`,
       formats: ['es'],
-      fileName: () => 'pcc-demo-entry.built.js',
+      fileName: () => `${entryKey}.built.js`,
     },
     rollupOptions: {
       output: {
-        assetFileNames: 'pcc-demo-entry.built[extname]',
+        assetFileNames: `${entryKey}.built[extname]`,
       }
     },
     cssCodeSplit: false,

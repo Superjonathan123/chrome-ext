@@ -34,4 +34,4 @@ rm super-ltc-extension.zip
 
 echo ""
 echo "Done! Published ${TAG}"
-echo "Tell her to double-click update-super-ltc.bat"
+echo "Tell her to double-click update-super-ltc.bat (Windows) or update-super-ltc.command (Mac)"
