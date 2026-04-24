@@ -26,6 +26,7 @@ function createBubbles() {
         <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
       </svg>
     </button>
+    <button id="super-24hr-action" class="super-dial__action super-dial__action--24hr" aria-label="24-Hour Report">24H</button>
     <button id="super-coverage-action" class="super-dial__action super-dial__action--coverage" aria-label="Care Plan Coverage" style="display:none;">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
@@ -89,6 +90,18 @@ function createBubbles() {
     }
   });
 
+  // 24-Hour Report button → toggles report panel
+  const twentyFourHrAction = document.getElementById('super-24hr-action');
+  twentyFourHrAction.addEventListener('click', (e) => {
+    e.stopPropagation();
+    container.classList.remove('super-dial--open');
+    if (TwentyFourHourReportLauncher.isOpen()) {
+      TwentyFourHourReportLauncher.close();
+    } else {
+      TwentyFourHourReportLauncher.open();
+    }
+  });
+
   // Dashboard button → always opens MDS Command Center
   mdsAction.addEventListener('click', (e) => {
     e.stopPropagation();
@@ -107,6 +120,48 @@ function createBubbles() {
 
   // Load badge count
   updateMDSBadge();
+
+  // If we just came back from a "open in PCC" click inside the 24-hour panel,
+  // re-open the panel at the same date scrolled to the same finding.
+  hydrateTwentyFourHourRestore();
+}
+
+async function hydrateTwentyFourHourRestore() {
+  try {
+    const raw = sessionStorage.getItem('super:24hr:restore');
+    if (!raw) return;
+    const payload = JSON.parse(raw);
+    if (!payload || payload.version !== 1) {
+      sessionStorage.removeItem('super:24hr:restore');
+      return;
+    }
+    if (!Number.isFinite(payload.expiresAt) || Date.now() > payload.expiresAt) {
+      sessionStorage.removeItem('super:24hr:restore');
+      return;
+    }
+    // Verify facility match — if the user landed on a different org / facility
+    // than where the handoff happened, silently drop the payload.
+    let facilityName, orgSlug;
+    try {
+      const orgResponse = getOrg();
+      orgSlug = orgResponse?.org;
+      facilityName = getChatFacilityInfo();
+    } catch (_) {
+      /* fall through */
+    }
+    if (!facilityName || !orgSlug ||
+        facilityName !== payload.facilityName ||
+        orgSlug !== payload.orgSlug) {
+      sessionStorage.removeItem('super:24hr:restore');
+      return;
+    }
+    // Clear before opening so a failure in open() can't retry-loop.
+    sessionStorage.removeItem('super:24hr:restore');
+    TwentyFourHourReportLauncher.open({ restore: payload });
+  } catch (err) {
+    console.warn('[24HR] hydrate failed', err);
+    try { sessionStorage.removeItem('super:24hr:restore'); } catch (_) {}
+  }
 }
 
 // Show or hide patient-scoped action buttons based on whether we're on a patient page
@@ -368,6 +423,83 @@ const QMBoardLauncher = {
   isOpen() { return !!this._overlayEl; }
 };
 
+// 24-Hour Report Launcher — dynamic import pattern (same as QMBoardLauncher)
+const TwentyFourHourReportLauncher = {
+  _overlayEl: null,
+  _preactUnmount: null,
+
+  async open({ restore } = {}) {
+    if (this._overlayEl) return;
+
+    let facilityName, orgSlug;
+    try {
+      const orgResponse = getOrg();
+      orgSlug = orgResponse?.org;
+      facilityName = getChatFacilityInfo();
+    } catch (e) {
+      console.error('[24HR] Could not get org/facility:', e);
+    }
+
+    if (!facilityName || !orgSlug) {
+      if (typeof SuperToast?.show === 'function') {
+        SuperToast.show({
+          message: 'Could not detect facility — open a PointClickCare facility page first.',
+          type: 'error'
+        });
+      }
+      return;
+    }
+
+    const overlayEl = document.createElement('div');
+    overlayEl.id = 'twenty-four-hour-report-overlay';
+    document.body.appendChild(overlayEl);
+    this._overlayEl = overlayEl;
+
+    this._escapeHandler = (e) => { if (e.key === 'Escape') this.close(); };
+    document.addEventListener('keydown', this._escapeHandler);
+
+    try {
+      const [{ render, h }, { TwentyFourHourReport }] = await Promise.all([
+        import('preact'),
+        import('../modules/twenty-four-hour-report/TwentyFourHourReport.jsx')
+      ]);
+
+      render(
+        h(TwentyFourHourReport, {
+          facilityName: facilityName || '',
+          orgSlug: orgSlug || '',
+          restore: restore || null,
+          onClose: () => this.close()
+        }),
+        overlayEl
+      );
+
+      this._preactUnmount = () => render(null, overlayEl);
+    } catch (err) {
+      console.error('[24HR] Failed to load module:', err);
+      overlayEl.remove();
+      this._overlayEl = null;
+    }
+  },
+
+  close() {
+    if (this._escapeHandler) {
+      document.removeEventListener('keydown', this._escapeHandler);
+      this._escapeHandler = null;
+    }
+    if (this._preactUnmount) {
+      this._preactUnmount();
+      this._preactUnmount = null;
+    }
+    if (this._overlayEl) {
+      this._overlayEl.remove();
+      this._overlayEl = null;
+    }
+  },
+
+  isOpen() { return !!this._overlayEl; }
+};
+
 function openChatOverlay() {
   if (ChatOverlayLauncher.isOpen()) {
     ChatOverlayLauncher.close();
@@ -589,3 +721,4 @@ window.updateBubblesContext = updateBubblesContext;
 window.ChatOverlayLauncher = ChatOverlayLauncher;
 window.CoveragePanelLauncher = CoveragePanelLauncher;
 window.QMBoardLauncher = QMBoardLauncher;
+window.TwentyFourHourReportLauncher = TwentyFourHourReportLauncher;

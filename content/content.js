@@ -16,6 +16,7 @@ import './css/ard-estimator.css';
 import './css/mds-planner.css';
 import './css/uda-modal.css';
 import './css/qm-board.css';
+import './css/24hr-report.css';
 
 // 2. Import vanilla utilities (order matters - matches current manifest.json order)
 import './mockData.js';
