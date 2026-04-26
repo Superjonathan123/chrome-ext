@@ -18,8 +18,9 @@
  *   'headsup'   — full-width takeover: flat "Heads-up" list
  *   'alert'     — full-width takeover: single alert detail (GG chart if applicable)
  */
-import { useState, useMemo, useCallback } from 'preact/hooks';
+import { useState, useMemo, useCallback, useEffect } from 'preact/hooks';
 import { useQmBoard } from './hooks/useQmBoard.js';
+import { track } from '../../utils/analytics.js';
 import { Tile } from './components/Tile.jsx';
 import { ActionRail } from './components/ActionRail.jsx';
 import { MeasureDetail } from './components/MeasureDetail.jsx';
@@ -34,6 +35,10 @@ export function QMBoard({ facilityName, orgSlug, onClose }) {
   // dashboard is always at the bottom of the stack.
   const [history, setHistory] = useState([{ kind: 'dashboard' }]);
   const view = history[history.length - 1];
+
+  useEffect(() => {
+    track('qm_board_opened', { source: 'fab' });
+  }, []);
 
   const push = useCallback((v) => setHistory(h => [...h, v]), []);
   const pop = useCallback(() => setHistory(h => h.length > 1 ? h.slice(0, -1) : h), []);
@@ -88,7 +93,7 @@ export function QMBoard({ facilityName, orgSlug, onClose }) {
               <h2 className="qmb__title" id="qmb-title">QM Board</h2>
               {facilityName && <span className="qmb__facility">{facilityName}</span>}
             </div>
-            <button type="button" className="qmb__close" onClick={onClose} aria-label="Close">
+            <button type="button" className="qmb__close" onClick={onClose} aria-label="Close"> {/* NO_TRACK */}
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <line x1="18" y1="6" x2="6" y2="18"></line>
                 <line x1="6" y1="6" x2="18" y2="18"></line>
@@ -110,7 +115,7 @@ export function QMBoard({ facilityName, orgSlug, onClose }) {
           <div className="qmb__error">
             <div>Failed to load QM data</div>
             <div className="qmb__error-detail">{error}</div>
-            <button type="button" className="qmb__retry" onClick={retry}>Retry</button>
+            <button type="button" className="qmb__retry" onClick={retry}>Retry</button> {/* NO_TRACK */}
           </div>
         ) : (
           <div className={`qmb__body ${isTakeover ? 'qmb__body--takeover' : ''}`}>

@@ -3,6 +3,7 @@ import { GgDeclineDetail } from './GgDeclineDetail.jsx';
 import { SnoozeControls } from './GgDeclineDetail.jsx';
 import { shortLabel, formatShortDate } from '../utils/derive.js';
 import { unwrap } from '../utils/api.js';
+import { track } from '../../../utils/analytics.js';
 
 /**
  * AlertDetail — dispatches based on alert type:
@@ -15,6 +16,10 @@ import { unwrap } from '../utils/api.js';
  *   - source=vitals → text only
  */
 export function AlertDetail({ alert, facilityName, orgSlug, onBack }) {
+  useEffect(() => {
+    track('qm_evidence_opened', { measure_code: alert.qmId || alert.alertId || 'unknown' });
+  }, [alert.qmId, alert.alertId]);
+
   if (alert.alertId === 'gg_decline_canary') {
     return (
       <GgDeclineDetail
@@ -48,7 +53,7 @@ function GenericAlertDetail({ alert, facilityName, orgSlug, onBack }) {
     <div className="qmb-detail">
       <div className="qmb-backbar">
         <div className="qmb-backbar__left">
-          <button type="button" className="qmb-backbar__btn" onClick={onBack}>‹ Back</button>
+          <button type="button" className="qmb-backbar__btn" onClick={onBack}>‹ Back</button> {/* NO_TRACK */}
           <span className="qmb-backbar__title">{alert.name}</span>
           {alert.urgency && <span className={severityCls}>{alert.urgency}</span>}
           <div className="qmb-backbar__subline">
@@ -62,6 +67,7 @@ function GenericAlertDetail({ alert, facilityName, orgSlug, onBack }) {
             snooze={alert.snooze}
             kind="alert"
             alertId={alert.alertId}
+            measureCode={alert.qmId}
             facilityName={facilityName}
             orgSlug={orgSlug}
           />

@@ -8,7 +8,7 @@ export function HeadsUpAllView({ alerts, onBack, onAlertClick }) {
     <div className="qmb-detail">
       <div className="qmb-backbar">
         <div>
-          <button type="button" className="qmb-backbar__btn" onClick={onBack}>‹ Back</button>
+          <button type="button" className="qmb-backbar__btn" onClick={onBack}>‹ Back</button> {/* NO_TRACK */}
           <span className="qmb-backbar__title">Heads-up</span>
           <span className="qmb-backbar__sub">
             {alerts.length} incoming signal{alerts.length === 1 ? '' : 's'}
@@ -26,6 +26,9 @@ export function HeadsUpAllView({ alerts, onBack, onAlertClick }) {
                 key={`${a.patientId}-${a.alertId}`}
                 className="qmb-row qmb-row--alert"
                 onClick={() => onAlertClick(a)}
+                data-track="qm_drill_in"
+                data-track-prop-measure-code={a.qmId || 'unknown'}
+                data-track-prop-view="alerts"
               >
                 <span className="qmb-row__dot qmb-row__dot--alert"></span>
                 <span className="qmb-row__name">

@@ -1,3 +1,5 @@
+import { TrackedButton } from '../../../components/TrackedButton.jsx';
+
 /**
  * QM tile — single measure at-a-glance card.
  */
@@ -5,7 +7,9 @@ export function Tile({ tile, onClick }) {
   const { status, label, triggering, alerts } = tile;
 
   return (
-    <button
+    <TrackedButton
+      track="qm_tile_clicked"
+      trackProps={{ measure_code: tile.id }}
       className={`qmb-tile qmb-tile--${status}`}
       onClick={() => onClick(tile.id)}
       type="button"
@@ -21,6 +25,6 @@ export function Tile({ tile, onClick }) {
         {alerts > 0 ? <span className="qmb-tile__alert">⚡ {alerts}</span> : <span>·</span>}
         <span className="qmb-tile__trend qmb-tile__trend--flat">→</span>
       </div>
-    </button>
+    </TrackedButton>
   );
 }

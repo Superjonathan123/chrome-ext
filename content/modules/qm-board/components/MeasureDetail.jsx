@@ -43,7 +43,7 @@ export function MeasureDetail({
     <div className="qmb-detail">
       <div className="qmb-backbar">
         <div>
-          <button type="button" className="qmb-backbar__btn" onClick={onBack}>‹ Back to measures</button>
+          <button type="button" className="qmb-backbar__btn" onClick={onBack}>‹ Back to measures</button> {/* NO_TRACK */}
           <span className="qmb-backbar__title">{title}</span>
           <span className="qmb-backbar__sub">
             {summary ? `${summary.triggering} triggering · ${summary.applicable} applicable` : ''}
@@ -64,6 +64,9 @@ export function MeasureDetail({
                 key={`${r.patientId}-${r.measureId}`}
                 className={`qmb-row qmb-row--${r.urgency === 'overdue' ? 'urgent' : r.urgency === 'soon' ? 'soon' : 'stable'} ${why ? 'qmb-row--with-why' : ''}`}
                 onClick={() => onRowClick(r)}
+                data-track="qm_drill_in"
+                data-track-prop-measure-code={r.measureId}
+                data-track-prop-view="triggers"
               >
                 <span className="qmb-row__dot"></span>
                 <span className="qmb-row__name">{r.name}</span>
@@ -98,6 +101,9 @@ export function MeasureDetail({
                   key={`${a.patientId}-${a.alertId}`}
                   className="qmb-row qmb-row--alert"
                   onClick={() => onAlertClick(a)}
+                  data-track="qm_drill_in"
+                  data-track-prop-measure-code={a.qmId || 'unknown'}
+                  data-track-prop-view="alerts"
                 >
                   <span className="qmb-row__dot qmb-row__dot--alert"></span>
                   <span className="qmb-row__name">{a.name}</span>

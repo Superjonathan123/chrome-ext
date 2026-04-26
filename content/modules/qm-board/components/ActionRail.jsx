@@ -40,6 +40,9 @@ export function ActionRail({
               key={`${r.patientId}-${r.measureId}`}
               className="qmb-qrow"
               onClick={() => onRowClick(r)}
+              data-track="qm_drill_in"
+              data-track-prop-measure-code={r.measureId}
+              data-track-prop-view="triggers"
             >
               <span className={`qmb-qrow__dot qmb-qrow__dot--${r.urgency === 'overdue' ? 'urgent' : r.urgency === 'soon' ? 'soon' : 'stable'}`}></span>
               <span className="qmb-qrow__body">
@@ -54,7 +57,13 @@ export function ActionRail({
         })}
 
         {sortedRows.length > 5 && (
-          <button type="button" className="qmb-panel__foot" onClick={onViewAllClearing}>
+          <button
+            type="button"
+            className="qmb-panel__foot"
+            onClick={onViewAllClearing}
+            data-track="qm_drill_in"
+            data-track-prop-view="triggers"
+          >
             View all {sortedRows.length} ›
           </button>
         )}
@@ -77,6 +86,9 @@ export function ActionRail({
               key={`${a.patientId}-${a.alertId}`}
               className="qmb-qrow"
               onClick={() => onAlertClick(a)}
+              data-track="qm_drill_in"
+              data-track-prop-measure-code={a.qmId || 'unknown'}
+              data-track-prop-view="alerts"
             >
               <span className="qmb-qrow__dot qmb-qrow__dot--alert"></span>
               <span className="qmb-qrow__body">
@@ -92,7 +104,13 @@ export function ActionRail({
         })}
 
         {alerts.length > 5 && (
-          <button type="button" className="qmb-panel__foot" onClick={onViewAllHeadsUp}>
+          <button
+            type="button"
+            className="qmb-panel__foot"
+            onClick={onViewAllHeadsUp}
+            data-track="qm_drill_in"
+            data-track-prop-view="alerts"
+          >
             View all {alerts.length} ›
           </button>
         )}

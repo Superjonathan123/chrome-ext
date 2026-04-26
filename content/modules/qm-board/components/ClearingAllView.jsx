@@ -12,7 +12,7 @@ export function ClearingAllView({ currentlyTriggering, onBack, onRowClick }) {
     <div className="qmb-detail">
       <div className="qmb-backbar">
         <div>
-          <button type="button" className="qmb-backbar__btn" onClick={onBack}>‹ Back</button>
+          <button type="button" className="qmb-backbar__btn" onClick={onBack}>‹ Back</button> {/* NO_TRACK */}
           <span className="qmb-backbar__title">Clearing soon</span>
           <span className="qmb-backbar__sub">
             {sorted.length} residents — flat list across all measures
@@ -30,6 +30,9 @@ export function ClearingAllView({ currentlyTriggering, onBack, onRowClick }) {
                 key={`${r.patientId}-${r.measureId}`}
                 className={`qmb-row qmb-row--${r.urgency === 'overdue' ? 'urgent' : r.urgency === 'soon' ? 'soon' : 'stable'}`}
                 onClick={() => onRowClick(r)}
+                data-track="qm_drill_in"
+                data-track-prop-measure-code={r.measureId}
+                data-track-prop-view="triggers"
               >
                 <span className="qmb-row__dot"></span>
                 <span className="qmb-row__name">

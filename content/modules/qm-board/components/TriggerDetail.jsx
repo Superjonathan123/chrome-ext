@@ -1,5 +1,6 @@
-import { useMemo } from 'preact/hooks';
+import { useMemo, useEffect } from 'preact/hooks';
 import { shortLabel, clearLabel, alertCta, formatShortDate, summarizeEvidence, flattenAlerts } from '../utils/derive.js';
+import { track } from '../../../utils/analytics.js';
 
 /**
  * TriggerDetail — full-width detail view for one (patient × measure)
@@ -30,6 +31,10 @@ const GG_ITEM_NAMES = {
 };
 
 export function TriggerDetail({ row, preventableAlerts, onBack, onAlertClick }) {
+  useEffect(() => {
+    track('qm_evidence_opened', { measure_code: row.measureId });
+  }, [row.measureId]);
+
   const summaryText = useMemo(() => summarizeEvidence(row.measureId, row.evidence), [row]);
 
   // Related heads-up for the same patient × QM
@@ -45,7 +50,7 @@ export function TriggerDetail({ row, preventableAlerts, onBack, onAlertClick }) 
     <div className="qmb-detail">
       <div className="qmb-backbar">
         <div className="qmb-backbar__left">
-          <button type="button" className="qmb-backbar__btn" onClick={onBack}>‹ Back</button>
+          <button type="button" className="qmb-backbar__btn" onClick={onBack}>‹ Back</button> {/* NO_TRACK */}
           <span className="qmb-backbar__title">{row.name}</span>
           <span className={urgencyPillClass}>{row.urgency || 'triggering'}</span>
           <div className="qmb-backbar__subline">
@@ -113,6 +118,9 @@ export function TriggerDetail({ row, preventableAlerts, onBack, onAlertClick }) 
                   key={`${a.patientId}-${a.alertId}`}
                   className="qmb-row qmb-row--alert"
                   onClick={() => onAlertClick(a)}
+                  data-track="qm_drill_in"
+                  data-track-prop-measure-code={a.qmId || row.measureId || 'unknown'}
+                  data-track-prop-view="alerts"
                 >
                   <span className="qmb-row__dot qmb-row__dot--alert"></span>
                   <span className="qmb-row__name">{a.label}</span>

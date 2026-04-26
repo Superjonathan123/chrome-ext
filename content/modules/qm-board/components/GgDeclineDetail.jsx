@@ -1,8 +1,9 @@
-import { useState, useMemo } from 'preact/hooks';
+import { useState, useMemo, useEffect } from 'preact/hooks';
 import { useGgDetail } from '../hooks/useGgDetail.js';
 import { useSnooze } from '../hooks/useSnooze.js';
 import { GgItemChart } from './GgItemChart.jsx';
 import { formatShortDate } from '../utils/derive.js';
+import { track } from '../../../utils/analytics.js';
 
 /**
  * GgDeclineDetail — rich GG decline view matching the web app modal.
@@ -38,6 +39,10 @@ const SEVERITY_PILL_CLASS = {
 };
 
 export function GgDeclineDetail({ alert, facilityName, orgSlug, onBack }) {
+  useEffect(() => {
+    track('qm_drill_in', { measure_code: alert.qmId || 'gg_decline', view: 'gg_chart' });
+  }, [alert.qmId]);
+
   const { data: gg, loading, error } = useGgDetail({
     patientId: alert.patientId,
     facilityName, orgSlug,
@@ -131,12 +136,13 @@ function GgDeclineLoaded({ alert, gg, facilityName, orgSlug, onBack }) {
     <div className="qmb-detail">
       <div className="qmb-backbar">
         <div className="qmb-backbar__left">
-          <button type="button" className="qmb-backbar__btn" onClick={onBack}>‹ Back</button>
+          <button type="button" className="qmb-backbar__btn" onClick={onBack}>‹ Back</button> {/* NO_TRACK */}
           <span className="qmb-backbar__title">{alert.name}</span>
           {severity && <span className={severityClass}>{severity}</span>}
           <div className="qmb-backbar__subline">
             <span>{decline.locationName}</span>
             {decline.mdsArdDate && (
+              // NO_TRACK
               <button
                 type="button"
                 className="qmb-baselines-toggle"
@@ -151,6 +157,7 @@ function GgDeclineLoaded({ alert, gg, facilityName, orgSlug, onBack }) {
           patientId={alert.patientId}
           snooze={gg.snooze}
           kind="gg"
+          measureCode={alert.qmId || 'gg'}
           facilityName={facilityName}
           orgSlug={orgSlug}
         />
@@ -179,13 +186,15 @@ function GgDeclineLoaded({ alert, gg, facilityName, orgSlug, onBack }) {
         })}
       </div>
 
-      {/* View controls */}
+      {/* View controls — NO_TRACK: pure UI sub-elements of GG drill-in */}
       <div className="qmb-view-controls">
         <div className="qmb-seg">
+          {/* NO_TRACK */}
           <button type="button"
             className={`qmb-seg__btn ${viewMode === 'charts' ? 'is-active' : ''}`}
             onClick={() => setViewMode('charts')}
           >📊 Charts</button>
+          {/* NO_TRACK */}
           <button type="button"
             className={`qmb-seg__btn ${viewMode === 'table' ? 'is-active' : ''}`}
             onClick={() => setViewMode('table')}
@@ -195,6 +204,7 @@ function GgDeclineLoaded({ alert, gg, facilityName, orgSlug, onBack }) {
         {viewMode === 'charts' && (
           <div className="qmb-seg">
             {SHIFTS.map(s => (
+              // NO_TRACK
               <button
                 key={s.key}
                 type="button"
@@ -233,7 +243,7 @@ function SimpleHeader({ alert, onBack }) {
   return (
     <div className="qmb-backbar">
       <div>
-        <button type="button" className="qmb-backbar__btn" onClick={onBack}>‹ Back</button>
+        <button type="button" className="qmb-backbar__btn" onClick={onBack}>‹ Back</button> {/* NO_TRACK */}
         <span className="qmb-backbar__title">{alert.name}</span>
       </div>
     </div>
@@ -259,10 +269,11 @@ function BaselinesPanel({ baselines }) {
   );
 }
 
-export function SnoozeControls({ patientId, snooze, kind, alertId, facilityName, orgSlug }) {
+export function SnoozeControls({ patientId, snooze, kind, alertId, measureCode, facilityName, orgSlug }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const { snoozeGg, unsnoozeGg, snoozeAlert, unsnoozeAlert, pending } =
     useSnooze({ facilityName, orgSlug });
+  const trackMeasure = measureCode || (kind === 'gg' ? 'gg' : 'unknown');
 
   if (snooze) {
     const until = snooze.snoozedUntil
@@ -272,6 +283,9 @@ export function SnoozeControls({ patientId, snooze, kind, alertId, facilityName,
       <button
         type="button"
         className="qmb-snooze-btn qmb-snooze-btn--active"
+        data-track="qm_action_clicked"
+        data-track-prop-measure-code={trackMeasure}
+        data-track-prop-action="unsnooze"
         onClick={async () => {
           try {
             if (kind === 'gg') await unsnoozeGg(patientId, snooze.id);
@@ -295,6 +309,7 @@ export function SnoozeControls({ patientId, snooze, kind, alertId, facilityName,
 
   return (
     <div className="qmb-snooze-wrap">
+      {/* NO_TRACK: pure UI menu toggle; the day-pick buttons fire the real action */}
       <button
         type="button"
         className="qmb-snooze-btn"
@@ -305,9 +320,9 @@ export function SnoozeControls({ patientId, snooze, kind, alertId, facilityName,
       </button>
       {menuOpen && (
         <div className="qmb-snooze-menu">
-          <button type="button" onClick={() => doSnooze(1)}>1 day</button>
-          <button type="button" onClick={() => doSnooze(7)}>7 days</button>
-          <button type="button" onClick={() => doSnooze(30)}>30 days</button>
+          <button type="button" data-track="qm_action_clicked" data-track-prop-measure-code={trackMeasure} data-track-prop-action="snooze_1d" onClick={() => doSnooze(1)}>1 day</button>
+          <button type="button" data-track="qm_action_clicked" data-track-prop-measure-code={trackMeasure} data-track-prop-action="snooze_7d" onClick={() => doSnooze(7)}>7 days</button>
+          <button type="button" data-track="qm_action_clicked" data-track-prop-measure-code={trackMeasure} data-track-prop-action="snooze_30d" onClick={() => doSnooze(30)}>30 days</button>
         </div>
       )}
     </div>
