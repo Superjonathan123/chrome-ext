@@ -113,3 +113,7 @@ startPccNavObserver();
 // 10. Install global delegated click listener for [data-track] elements
 import { startTrackDelegate } from './utils/track-delegate.js';
 startTrackDelegate();
+
+// 11. Fire extension_loaded once at content script bootstrap
+import { track } from './utils/analytics.js';
+track('extension_loaded');

@@ -1,10 +1,13 @@
-import { useState, useEffect } from 'preact/hooks';
+import { useState, useEffect, useRef } from 'preact/hooks';
 import { UpdateChecker } from '../utils/update-checker.js';
+import { track } from '../utils/analytics.js';
+import { TrackedButton } from './TrackedButton.jsx';
 
 export function UpdateBanner() {
   const [status, setStatus] = useState(null);
   const [hidden, setHidden] = useState(false);
   const [step, setStep] = useState('ready'); // 'ready' | 'instructions' | 'opened'
+  const shownFiredRef = useRef(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -25,6 +28,17 @@ export function UpdateBanner() {
     };
   }, []);
 
+  // Fire update_banner_shown once when banner first becomes visible.
+  useEffect(() => {
+    if (status && !hidden && !shownFiredRef.current) {
+      shownFiredRef.current = true;
+      track('update_banner_shown', {
+        current_version: String(status.runningVersion || ''),
+        latest_version: String(status.diskVersion || status.latestVersion || ''),
+      });
+    }
+  }, [status, hidden]);
+
   if (!status || hidden) return null;
 
   const handleShowHow = () => setStep('instructions');
@@ -41,7 +55,9 @@ export function UpdateBanner() {
   if (step === 'instructions' || step === 'opened') {
     return (
       <div className="super-update-banner super-update-banner--instructions" role="status">
-        <button
+        <TrackedButton
+          track="update_banner_clicked"
+          trackProps={{ action: 'dismiss' }}
           type="button"
           className="super-update-banner__dismiss super-update-banner__dismiss--top"
           onClick={handleDismiss}
@@ -49,7 +65,7 @@ export function UpdateBanner() {
           title="Dismiss"
         >
           ×
-        </button>
+        </TrackedButton>
 
         <div className="super-update-banner__instr-title">
           <ReloadIcon />
@@ -109,20 +125,24 @@ export function UpdateBanner() {
         </div>
 
         {step === 'instructions' ? (
-          <button
+          <TrackedButton
+            track="update_banner_clicked"
+            trackProps={{ action: 'reload' }}
             type="button"
             className="super-update-banner__reload super-update-banner__reload--full"
             onClick={handleOpenExtensions}
           >
             Open Extensions Page
-          </button>
+          </TrackedButton>
         ) : (
           <>
             <div className="super-update-banner__opened-hint">
               ✓ Opened in a new tab. Click the ↻ icon there, then come back and
               reload this page.
             </div>
-            <button
+            <TrackedButton
+              track="update_banner_clicked"
+              trackProps={{ action: 'reload' }}
               type="button"
               className="super-update-banner__reload super-update-banner__reload--full"
               onClick={() => {
@@ -138,7 +158,7 @@ export function UpdateBanner() {
               }}
             >
               Reload this page
-            </button>
+            </TrackedButton>
           </>
         )}
       </div>
@@ -155,15 +175,19 @@ export function UpdateBanner() {
           v{status.runningVersion} → v{status.diskVersion}
         </span>
       </div>
-      <button
+      <TrackedButton
+        track="update_banner_clicked"
+        trackProps={{ action: 'reload' }}
         type="button"
         className="super-update-banner__reload"
         onClick={handleShowHow}
         title={status.notes ? `What's new:\n${status.notes}` : 'Show how to apply the update'}
       >
         Show me how
-      </button>
-      <button
+      </TrackedButton>
+      <TrackedButton
+        track="update_banner_clicked"
+        trackProps={{ action: 'dismiss' }}
         type="button"
         className="super-update-banner__dismiss"
         onClick={handleDismiss}
@@ -171,7 +195,7 @@ export function UpdateBanner() {
         title="Dismiss"
       >
         ×
-      </button>
+      </TrackedButton>
     </div>
   );
 }

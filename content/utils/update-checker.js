@@ -10,6 +10,8 @@
 // The Windows scheduled-task updater is responsible for pulling files from
 // GitHub → disk. The extension never downloads files itself.
 
+import { track } from './analytics.js';
+
 const GITHUB_API = 'https://api.github.com/repos/Superjonathan123/chrome-ext/releases/latest';
 const DISK_CHECK_INTERVAL_MS = 5 * 60 * 1000;  // 5 min — cheap, local read
 const GITHUB_CHECK_INTERVAL_MS = 60 * 60 * 1000; // 1 hour — rate-limited
@@ -73,6 +75,9 @@ export const UpdateChecker = {
       };
     } catch (err) {
       console.warn('[UpdateChecker] github fetch failed:', err);
+      track('update_check_failed', {
+        error_code: String(err?.code || err?.name || 'fetch_failed'),
+      });
       return null;
     }
   },
