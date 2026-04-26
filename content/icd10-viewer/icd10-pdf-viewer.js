@@ -98,6 +98,11 @@ const ICD10PDFViewer = {
 
     } catch (error) {
       console.error('ICD10PDFViewer: Failed to load PDF:', error);
+      _track('error_shown', {
+        surface: 'icd10_pdf_viewer',
+        error_code: window.SuperAnalytics?.toErrorCode?.(error) || 'unknown',
+        error_type: 'api_error',
+      });
       this._renderError(`Failed to load PDF: ${error.message}`);
     }
   },

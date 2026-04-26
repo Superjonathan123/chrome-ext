@@ -46,6 +46,11 @@ const ICD10Viewer = {
     const context = await this._gatherContext();
     if (!context.patientId) {
       console.error('ICD10Viewer: Could not determine patient ID');
+      window.SuperAnalytics?.track?.('error_shown', {
+        surface: 'icd10_viewer',
+        error_code: 'no_patient_context',
+        error_type: 'validation',
+      });
       this._showError('Could not determine patient information');
       return;
     }
@@ -368,6 +373,11 @@ const ICD10Viewer = {
 
     } catch (error) {
       console.error('ICD10Viewer: Failed to load data:', error);
+      window.SuperAnalytics?.track?.('error_shown', {
+        surface: 'icd10_viewer',
+        error_code: window.SuperAnalytics.toErrorCode(error),
+        error_type: 'api_error',
+      });
       this._showError(`Failed to load ICD-10 data: ${error.message}`);
     }
   },
@@ -520,6 +530,11 @@ const ICD10Viewer = {
 
     } catch (error) {
       console.error('[ICD10Viewer] Failed to load document:', error);
+      window.SuperAnalytics?.track?.('error_shown', {
+        surface: 'icd10_pdf_viewer',
+        error_code: window.SuperAnalytics.toErrorCode(error),
+        error_type: 'api_error',
+      });
       ICD10PDFViewer._renderError('Failed to load document: ' + error.message);
     }
   },
@@ -867,6 +882,11 @@ const ICD10Viewer = {
       };
     } catch (err) {
       console.error('[ICD10Viewer] Failed to load Query Items:', err);
+      window.SuperAnalytics?.track?.('error_shown', {
+        surface: 'query_items_load',
+        error_code: window.SuperAnalytics.toErrorCode(err),
+        error_type: 'api_error',
+      });
       mountEl.innerHTML = `
         <div class="icd10-viewer__error">
           <p class="icd10-viewer__error-text">Failed to load Query Items: ${this._escapeHtml(err.message)}</p>
@@ -940,6 +960,11 @@ const ICD10Viewer = {
       };
     } catch (err) {
       console.error('[ICD10Viewer] Failed to load ARD Estimator:', err);
+      window.SuperAnalytics?.track?.('error_shown', {
+        surface: 'ard_estimator_load',
+        error_code: window.SuperAnalytics.toErrorCode(err),
+        error_type: 'api_error',
+      });
       mountEl.innerHTML = `
         <div class="icd10-viewer__error">
           <p class="icd10-viewer__error-text">Failed to load PDPM Estimator: ${this._escapeHtml(err.message)}</p>

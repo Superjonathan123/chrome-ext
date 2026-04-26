@@ -147,6 +147,10 @@ function injectMdsEstimateLinks() {
         );
       } catch (err) {
         console.error('[Super] Failed to open ARD Estimator:', err);
+        window.SuperAnalytics?.track?.('error_caught', {
+          surface: 'ard_estimator_open',
+          error_code: window.SuperAnalytics.toErrorCode(err),
+        });
       }
     });
 
@@ -308,12 +312,22 @@ function _showTestAddCodeDialog() {
         confirmBtn.textContent = 'Done';
         setTimeout(() => { dialog.remove(); backdrop.remove(); }, 2000);
       } else {
+        window.SuperAnalytics?.track?.('error_shown', {
+          surface: 'icd10_add_pcc',
+          error_code: window.SuperAnalytics.toErrorCode(result.error),
+          error_type: 'api_error',
+        });
         statusEl.textContent = `Failed: ${result.error}`;
         statusEl.style.color = '#c62828';
         confirmBtn.disabled = false;
         confirmBtn.textContent = 'Add to PCC';
       }
     } catch (err) {
+      window.SuperAnalytics?.track?.('error_shown', {
+        surface: 'icd10_add_pcc',
+        error_code: window.SuperAnalytics.toErrorCode(err),
+        error_type: 'api_error',
+      });
       statusEl.textContent = `Error: ${err.message}`;
       statusEl.style.color = '#c62828';
       confirmBtn.disabled = false;

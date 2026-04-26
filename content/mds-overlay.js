@@ -3873,6 +3873,11 @@ function setupQueryModalListeners(modal, result, context) {
     const selectedIcd10 = modal.querySelector('#super-query-icd10')?.value || '';
 
     if (!practitionerId) {
+      window.SuperAnalytics?.track?.('error_shown', {
+        surface: 'mds_overlay_query_send',
+        error_code: 'no_practitioner',
+        error_type: 'validation',
+      });
       alert('Please select a practitioner');
       return;
     }
@@ -3880,6 +3885,11 @@ function setupQueryModalListeners(modal, result, context) {
     // Guard: evidence may still be loading
     const ai_ = result.aiAnswer;
     if (!Array.isArray(ai_.evidence) && !Array.isArray(ai_.queryEvidence)) {
+      window.SuperAnalytics?.track?.('error_shown', {
+        surface: 'mds_overlay_query_send',
+        error_code: 'evidence_loading',
+        error_type: 'validation',
+      });
       alert('Evidence is still loading. Please wait a moment.');
       return;
     }
@@ -3918,6 +3928,11 @@ function setupQueryModalListeners(modal, result, context) {
 
     } catch (error) {
       console.error('Super LTC: Failed to send query', error);
+      window.SuperAnalytics?.track?.('error_shown', {
+        surface: 'mds_overlay_query_send',
+        error_code: window.SuperAnalytics.toErrorCode(error),
+        error_type: 'api_error',
+      });
       sendBtn.disabled = false;
       sendBtn.textContent = 'Send Query';
       alert(`Failed to send query: ${error.message}`);
@@ -4173,6 +4188,11 @@ async function handleAction(action, result) {
       console.log(`Super LTC: User agreed with ${result.mdsItem} Column ${result.column}, selected solver answer`);
     } catch (err) {
       console.error('Super LTC: Failed to save agree decision:', err);
+      window.SuperAnalytics?.track?.('error_shown', {
+        surface: 'mds_item_decision',
+        error_code: window.SuperAnalytics.toErrorCode(err),
+        error_type: 'api_error',
+      });
       showPopoverError(popover, err.message || 'Failed to save decision');
       btns.forEach(b => b.disabled = false);
       if (agreeBtn) agreeBtn.innerHTML = '&#10003; Agree';
@@ -4333,6 +4353,11 @@ async function submitDisagreeFeedback(result, reason) {
     console.log(`Super LTC: User disagreed with ${result.mdsItem} Column ${result.column}`, { reason });
   } catch (err) {
     console.error('Super LTC: Failed to save disagree decision:', err);
+    window.SuperAnalytics?.track?.('error_shown', {
+      surface: 'mds_item_decision',
+      error_code: window.SuperAnalytics.toErrorCode(err),
+      error_type: 'api_error',
+    });
     showPopoverError(popover, err.message || 'Failed to save decision');
     btns.forEach(b => b.disabled = false);
     if (submitBtn) submitBtn.innerHTML = 'Submit';

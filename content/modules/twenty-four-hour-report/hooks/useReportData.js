@@ -116,6 +116,11 @@ export function useReportData({ facilityName, orgSlug, initialDate = null }) {
       setCurrentReport(report);
     } catch (err) {
       console.error('[24HR] day fetch failed', err);
+      window.SuperAnalytics?.track?.('error_shown', {
+        surface: 'report_24hr',
+        error_code: window.SuperAnalytics.toErrorCode(err),
+        error_type: 'api_error',
+      });
       setError(err.message || 'Failed to load report');
       setCurrentReport(undefined);
     } finally {

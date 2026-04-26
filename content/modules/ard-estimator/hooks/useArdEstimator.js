@@ -49,6 +49,11 @@ export function useArdEstimator({ patientId, facilityName, orgSlug, assessmentId
       }
     } catch (err) {
       console.error('[ArdEstimator] Fetch error:', err);
+      window.SuperAnalytics?.track?.('error_shown', {
+        surface: 'ard_estimator',
+        error_code: window.SuperAnalytics.toErrorCode(err),
+        error_type: 'api_error',
+      });
       setError(err.message || 'Failed to load ARD recommendation');
     } finally {
       setLoading(false);

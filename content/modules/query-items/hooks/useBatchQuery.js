@@ -97,6 +97,11 @@ export function useBatchQuery({ patientId, facilityName, orgSlug, assessmentId, 
       }
     } catch (err) {
       console.error('[BatchQuery] Generation failed:', err);
+      window.SuperAnalytics?.track?.('error_shown', {
+        surface: 'batch_query_generate',
+        error_code: window.SuperAnalytics.toErrorCode(err),
+        error_type: 'api_error',
+      });
       setError(err.message);
       setState('idle');
     }
@@ -176,6 +181,10 @@ export function useBatchQuery({ patientId, facilityName, orgSlug, assessmentId, 
           sentQueries.push({ ...query, mdsItem: item.mdsItem });
         } catch (err) {
           console.error(`[BatchQuery] Failed to create/send query for ${item.mdsItem}:`, err);
+          window.SuperAnalytics?.track?.('error_caught', {
+            surface: 'batch_query_send_item',
+            error_code: window.SuperAnalytics.toErrorCode(err),
+          });
         }
       }
 
@@ -193,6 +202,11 @@ export function useBatchQuery({ patientId, facilityName, orgSlug, assessmentId, 
       }
     } catch (err) {
       console.error('[BatchQuery] Send failed:', err);
+      window.SuperAnalytics?.track?.('error_shown', {
+        surface: 'batch_query_send',
+        error_code: window.SuperAnalytics.toErrorCode(err),
+        error_type: 'api_error',
+      });
       setError(err.message);
       setState('reviewing');
     }

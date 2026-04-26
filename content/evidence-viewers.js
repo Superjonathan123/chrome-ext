@@ -10,7 +10,7 @@
 import { render, h } from 'preact';
 import { PDFViewer } from './components/PDFViewer.jsx';
 import { UdaViewer } from './modules/uda-viewer/UdaViewer.jsx';
-import { track } from './utils/analytics.js';
+import { track, toErrorCode } from './utils/analytics.js';
 
 // Idempotent close-tracker: reads viewer type + open timestamp stashed on the
 // modal element by show*Modal, fires evidence_viewer_closed once per modal.
@@ -1629,6 +1629,7 @@ async function showUdaModal(udaId, quoteText = null, patientIdOverride = null, s
   modal.querySelector('.super-uda-modal__backdrop').addEventListener('click', onClose);
 
   if (!patientId) {
+    track('error_shown', { surface: 'evidence_viewer', error_code: 'no_patient_context', error_type: 'validation' });
     container.innerHTML = `<div class="super-uda-modal__error">Missing patient context — open this from a patient page.</div>`;
     return;
   }
@@ -1644,6 +1645,7 @@ async function showUdaModal(udaId, quoteText = null, patientIdOverride = null, s
       container
     );
   } catch (error) {
+    track('error_shown', { surface: 'evidence_viewer', error_code: toErrorCode(error), error_type: 'api_error' });
     container.innerHTML = `<div class="super-uda-modal__error">${escapeHTMLViewer(error.message || 'Failed to load UDA')}</div>`;
   }
 }

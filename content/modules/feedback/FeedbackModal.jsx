@@ -111,6 +111,7 @@ export const FeedbackModal = ({ onClose, initialScreenshot = null }) => {
 
   const handleSubmit = async () => {
     if (!message.trim()) {
+      track('error_shown', { surface: 'feedback_submit', error_code: 'empty_message', error_type: 'validation' });
       setError('Please add a message before submitting.');
       return;
     }
@@ -151,6 +152,7 @@ export const FeedbackModal = ({ onClose, initialScreenshot = null }) => {
       setTimeout(onClose, 1500);
     } catch (e) {
       track('feedback_submit_failed', { error_code: toErrorCode(e) });
+      track('error_shown', { surface: 'feedback_submit', error_code: toErrorCode(e), error_type: 'api_error' });
       console.error('[Feedback] submit failed', e);
       setError(e.message || 'Could not send feedback');
     } finally {

@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'preact/hooks';
-import { track } from '../../utils/analytics.js';
+import { track, toErrorCode } from '../../utils/analytics.js';
 
 /**
  * Diagnosis Confirmation Dialog
@@ -118,6 +118,7 @@ export function DiagnosisConfirmationDialog({ stagedCodes, defaultDate, patientI
       });
       setResults(batchResults);
     } catch (err) {
+      track('error_shown', { surface: 'dx_confirmation', error_code: toErrorCode(err), error_type: 'api_error' });
       setError(err.message);
       setSubmitting(false);
     }

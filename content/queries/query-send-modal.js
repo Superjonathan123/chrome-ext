@@ -121,6 +121,7 @@ const QuerySendModal = {
 
     } catch (error) {
       console.error('Super LTC: Failed to load send modal data', error);
+      track('error_shown', { surface: 'query_send_modal_load', error_code: toErrorCode(error), error_type: 'api_error' });
       SuperModal.showError(`Failed to load: ${error.message}`);
       SuperModal.updateActions([{
         label: 'Close',
@@ -221,6 +222,7 @@ const QuerySendModal = {
    */
   async _handleSend(btn) {
     if (!this._state.selectedPractitionerId) {
+      track('error_shown', { surface: 'query_send', error_code: 'no_practitioner', error_type: 'validation' });
       SuperToast.warning('Please select a practitioner');
       return;
     }
@@ -298,6 +300,7 @@ const QuerySendModal = {
 
     } catch (error) {
       track('query_send_failed', { error_code: toErrorCode(error) });
+      track('error_shown', { surface: 'query_send', error_code: toErrorCode(error), error_type: 'api_error' });
       console.error('Super LTC: Failed to send query', error);
       SuperToast.error(`Failed to send: ${error.message}`);
       btn.textContent = originalText;

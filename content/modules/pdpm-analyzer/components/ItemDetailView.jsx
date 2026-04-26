@@ -95,6 +95,11 @@ export function ItemDetailView({ item, context, onBack, onSplitChange, onDismiss
       onDismissComplete?.();
     } catch (err) {
       console.error('[ItemDetailView] Dismiss failed:', err);
+      window.SuperAnalytics?.track?.('error_shown', {
+        surface: 'pdpm_item_dismiss',
+        error_code: window.SuperAnalytics.toErrorCode(err),
+        error_type: 'api_error',
+      });
       window.SuperToast?.error?.(err.message || 'Failed to dismiss');
       setDismissing(false);
     }

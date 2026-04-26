@@ -1,7 +1,7 @@
 // Query Detail Modal for Super LTC Chrome Extension
 // Shows query details and actions (resend, view PDF)
 
-import { track } from '../utils/analytics.js';
+import { track, toErrorCode } from '../utils/analytics.js';
 
 const QueryDetailModal = {
   /**
@@ -250,6 +250,7 @@ const QueryDetailModal = {
 
     } catch (error) {
       console.error('Super LTC: Failed to resend query', error);
+      track('error_shown', { surface: 'query_resend', error_code: toErrorCode(error), error_type: 'api_error' });
       SuperToast.error(`Failed to resend: ${error.message}`);
       btn.textContent = originalText;
       btn.disabled = false;
@@ -280,6 +281,7 @@ const QueryDetailModal = {
 
     } catch (error) {
       console.error('Super LTC: Failed to get PDF', error);
+      track('error_shown', { surface: 'query_pdf_load', error_code: toErrorCode(error), error_type: 'api_error' });
       SuperToast.error(`Failed to load PDF: ${error.message}`);
       btn.textContent = originalText;
       btn.disabled = false;

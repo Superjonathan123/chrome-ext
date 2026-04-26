@@ -35,6 +35,11 @@ export function useCertifications({ facilityName, orgSlug, status, patientId }) 
       setCerts(result.data?.certifications || []);
     } catch (err) {
       console.error('[Certifications] Failed to fetch certifications:', err);
+      window.SuperAnalytics?.track?.('error_shown', {
+        surface: 'cert_view',
+        error_code: window.SuperAnalytics.toErrorCode(err),
+        error_type: 'api_error',
+      });
       setError(err.message || 'Failed to load certifications');
     } finally {
       setLoading(false);

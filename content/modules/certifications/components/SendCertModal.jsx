@@ -33,7 +33,13 @@ export function SendCertModal({ isOpen, onClose, cert, facilityName, orgSlug, on
     setPractitionersLoading(true);
     window.CertAPI.fetchPractitioners(facilityName, orgSlug)
       .then(practs => setPractitioners(practs))
-      .catch(err => console.error('[Certifications] Failed to load practitioners:', err))
+      .catch(err => {
+        console.error('[Certifications] Failed to load practitioners:', err);
+        window.SuperAnalytics?.track?.('error_caught', {
+          surface: 'cert_practitioners_load',
+          error_code: window.SuperAnalytics.toErrorCode(err),
+        });
+      })
       .finally(() => setPractitionersLoading(false));
   }, [isOpen, cert?.id]);
 
@@ -62,6 +68,11 @@ export function SendCertModal({ isOpen, onClose, cert, facilityName, orgSlug, on
       })
       .catch(err => {
         console.error('[Certifications] Failed to send:', err);
+        window.SuperAnalytics?.track?.('error_shown', {
+          surface: 'cert_send',
+          error_code: window.SuperAnalytics.toErrorCode(err),
+          error_type: 'api_error',
+        });
         window.SuperToast?.error?.('Failed to send certification');
       })
       .finally(() => setSending(false));

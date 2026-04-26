@@ -64,6 +64,7 @@ export function useChat() {
     try {
       context = await getAuthAndContext();
     } catch (e) {
+      track('error_shown', { surface: 'chat_auth', error_code: toErrorCode(e), error_type: 'permission' });
       setError(e.message);
       return;
     }
@@ -80,6 +81,7 @@ export function useChat() {
         setConversationId(convId);
       } catch (e) {
         console.error('[AI Chat] Failed to create conversation:', e);
+        track('error_shown', { surface: 'chat_conversation_create', error_code: toErrorCode(e), error_type: 'api_error' });
         setError('Failed to start conversation. Please try again.');
         return;
       }
@@ -166,6 +168,7 @@ export function useChat() {
           funnelClosed = true;
           track('chat_stream_failed', { error_code: toErrorCode(msg.error) });
         }
+        track('error_shown', { surface: 'chat_stream', error_code: toErrorCode(msg.error), error_type: 'api_error' });
         setStatus('ready');
         portRef.current = null;
         setMessages(prev => {

@@ -105,6 +105,11 @@ export function useQueryItems({ patientId, facilityName, orgSlug, assessmentId }
       });
     } catch (err) {
       console.error('[QueryItems] Failed to fetch data:', err);
+      window.SuperAnalytics?.track?.('error_shown', {
+        surface: 'query_items',
+        error_code: window.SuperAnalytics.toErrorCode(err),
+        error_type: 'api_error',
+      });
       setError(err.message);
     } finally {
       setLoading(false);

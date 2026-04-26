@@ -37,6 +37,11 @@ export function useSnooze({ facilityName, orgSlug }) {
       return unwrap(res.data);
     } catch (err) {
       console.error('[QMBoard] snooze mutation failed', err);
+      window.SuperAnalytics?.track?.('error_shown', {
+        surface: 'qm_snooze',
+        error_code: window.SuperAnalytics.toErrorCode(err),
+        error_type: 'api_error',
+      });
       setError(err.message || 'Mutation failed');
       throw err;
     } finally {

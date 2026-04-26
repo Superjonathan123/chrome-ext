@@ -360,6 +360,11 @@ const DashboardView = {
       }
     } catch (err) {
       console.error('Super Menu: Failed to resend query:', err);
+      window.SuperAnalytics?.track?.('error_shown', {
+        surface: 'dashboard_resend',
+        error_code: window.SuperAnalytics.toErrorCode(err),
+        error_type: 'api_error',
+      });
       if (window.SuperToast) {
         window.SuperToast.show(err.message || 'Failed to resend SMS', 'error');
       }
@@ -384,6 +389,11 @@ const DashboardView = {
       }
     } catch (err) {
       console.error('Super Menu: Failed to get PDF:', err);
+      window.SuperAnalytics?.track?.('error_shown', {
+        surface: 'dashboard_pdf_load',
+        error_code: window.SuperAnalytics.toErrorCode(err),
+        error_type: 'api_error',
+      });
       if (window.SuperToast) {
         window.SuperToast.show(err.message || 'Failed to load PDF', 'error');
       }
