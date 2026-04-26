@@ -83,6 +83,10 @@ export default defineConfig(({ mode }) => {
       // Replaced at build time in background.js
       // dev → true (localhost), prod → false (superltc.com)
       __DEV_MODE__: isDev,
+      // PostHog public project key. The placeholder disables PostHog in
+      // analytics.js so builds work before the real key is provisioned.
+      // Wire via POSTHOG_KEY env var or replace string here once BAA is signed.
+      __POSTHOG_KEY__: JSON.stringify(process.env.POSTHOG_KEY || 'phc_PLACEHOLDER'),
     },
     build: {
       outDir,
