@@ -6,20 +6,20 @@ function createBubbles() {
   const container = document.createElement('div');
   container.id = 'super-bubbles-container';
   container.innerHTML = `
-    <button id="super-feedback-action" class="super-dial__action super-dial__action--feedback" aria-label="Send Feedback">?</button>
-    <button id="super-chat-action" class="super-dial__action super-dial__action--chat" aria-label="Open Chat">
+    <button id="super-feedback-action" class="super-dial__action super-dial__action--feedback" aria-label="Send Feedback" data-track="fab_clicked" data-track-prop-fab="feedback">?</button>
+    <button id="super-chat-action" class="super-dial__action super-dial__action--chat" aria-label="Open Chat" data-track="fab_clicked" data-track-prop-fab="chat">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
       </svg>
     </button>
-    <button id="super-qm-action" class="super-dial__action super-dial__action--qm" aria-label="QM Board">QM</button>
-    <button id="super-24hr-action" class="super-dial__action super-dial__action--24hr" aria-label="24-Hour Report">24H</button>
-    <button id="super-coverage-action" class="super-dial__action super-dial__action--coverage" aria-label="Care Plan Coverage" style="display:none;">
+    <button id="super-qm-action" class="super-dial__action super-dial__action--qm" aria-label="QM Board" data-track="fab_clicked" data-track-prop-fab="qm_board">QM</button>
+    <button id="super-24hr-action" class="super-dial__action super-dial__action--24hr" aria-label="24-Hour Report" data-track="fab_clicked" data-track-prop-fab="24hr">24H</button>
+    <button id="super-coverage-action" class="super-dial__action super-dial__action--coverage" aria-label="Care Plan Coverage" style="display:none;" data-track="fab_clicked" data-track-prop-fab="coverage">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
       </svg>
     </button>
-    <button id="super-mds-action" class="super-dial__action super-dial__action--mds" aria-label="Open Dashboard">
+    <button id="super-mds-action" class="super-dial__action super-dial__action--mds" aria-label="Open Dashboard" data-track="fab_clicked" data-track-prop-fab="mds">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <rect x="3" y="3" width="7" height="7"/>
         <rect x="14" y="3" width="7" height="7"/>
@@ -28,7 +28,7 @@ function createBubbles() {
       </svg>
       <span class="super-dial__action-badge" id="super-mds-badge" style="display:none;"></span>
     </button>
-    <button id="super-bubble-main" class="super-bubble__main" aria-label="Super">S</button>
+    <button id="super-bubble-main" class="super-bubble__main" aria-label="Super" data-track="fab_clicked" data-track-prop-fab="main">S</button>
   `;
 
   document.body.appendChild(container);
