@@ -4,6 +4,7 @@
 
 // 1. Import global config
 import '../config.js';
+import './utils/analytics.js'; // initializes PostHog, sets super-properties, bootstraps auth
 import './css/selector.css';
 import './css/mds-command-center.css';
 import './css/pdpm-analyzer.css';
