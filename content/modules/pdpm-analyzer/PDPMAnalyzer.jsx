@@ -7,13 +7,14 @@
  *
  * Layout: ~700px centered overlay.
  */
-import { useState } from 'preact/hooks';
+import { useState, useEffect, useRef } from 'preact/hooks';
 import { usePDPMAnalyzer } from './hooks/usePDPMAnalyzer.js';
 import { ComplianceCard } from './components/ComplianceCard.jsx';
 import { ItemDetailView } from './components/ItemDetailView.jsx';
 import { CertSection } from '../certifications/components/CertSection.jsx';
 import { Selector } from '../../components/Selector.jsx';
 import { formatPaymentRates } from '../../utils/payment.js';
+import { track } from '../../utils/analytics.js';
 
 // ─── Assessment selector (patient scope — multiple assessments) ────────────────
 
@@ -609,6 +610,17 @@ function buildCapturedFromCalculation(calc) {
 
 function ComponentBreakdown({ data, payment, onItemClick, collapsed, onToggleCollapse }) {
   const [expandedKey, setExpandedKey] = useState(null);
+
+  // Track when a component breakdown is opened. Component keys (ptot/slp/nursing/nta)
+  // are categorical reference data — no PHI.
+  const prevExpandedRef = useRef(null);
+  useEffect(() => {
+    if (expandedKey && expandedKey !== prevExpandedRef.current) {
+      track('pdpm_breakdown_viewed', { component: expandedKey });
+    }
+    prevExpandedRef.current = expandedKey;
+  }, [expandedKey]);
+
   const gap = data?.gapAnalysis || {};
   const decoded = data?.hippsDecoded || {};
   const potentialDecoded = data?.potentialHippsDecoded || {};
@@ -1190,6 +1202,11 @@ export function PDPMAnalyzer({ context, onClose, initialMode = 'modal' }) {
   const [mode, setMode] = useState(initialMode);
   const [isSplitView, setIsSplitView] = useState(false);
 
+  // Mount-only: fire pdpm_analyzer_opened exactly once.
+  useEffect(() => {
+    track('pdpm_analyzer_opened', { source: 'fab' });
+  }, []);
+
   const {
     assessments, detail, patientName: hookPatientName,
     loading, detailLoading, error, retry, retryDetail
@@ -1280,7 +1297,14 @@ export function PDPMAnalyzer({ context, onClose, initialMode = 'modal' }) {
               : <AssessmentView
                   assessmentData={assessmentData}
                   patientId={context?.patientId}
-                  onItemClick={(d) => setDetailItem({ type: 'detection', item: d })}
+                  onItemClick={(d) => {
+                    if (d?.mdsItem) {
+                      // Strip optional ":suffix" so I8000:rare → I8000 (categorical reference data, no PHI).
+                      const itemCode = d.mdsItem.includes(':') ? d.mdsItem.split(':')[0] : d.mdsItem;
+                      track('pdpm_item_drilled_in', { item_code: itemCode });
+                    }
+                    setDetailItem({ type: 'detection', item: d });
+                  }}
                   onQueryClick={(q) => {
                     const enriched = {
                       ...q,

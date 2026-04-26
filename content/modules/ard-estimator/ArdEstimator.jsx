@@ -6,7 +6,7 @@
  *
  * Mounted inside the ICD-10 viewer body or as a standalone overlay.
  */
-import { useState, useCallback, useMemo } from 'preact/hooks';
+import { useState, useCallback, useMemo, useEffect, useRef } from 'preact/hooks';
 import { useArdEstimator } from './hooks/useArdEstimator.js';
 import { DayPicker } from './components/DayPicker.jsx';
 import { RecommendationText } from './components/RecommendationText.jsx';
@@ -15,6 +15,7 @@ import { CollapsibleSection } from './components/CollapsibleSection.jsx';
 import { useBatchQuery } from '../query-items/hooks/useBatchQuery.js';
 import { BatchReviewPage } from '../query-items/components/BatchReviewModal.jsx';
 import { ItemDetailView } from '../pdpm-analyzer/components/ItemDetailView.jsx';
+import { track } from '../../utils/analytics.js';
 
 // ─── Icons (inline SVGs to avoid lucide dependency) ──────────────────────────
 
@@ -144,6 +145,27 @@ export function ArdEstimator({
   const [successInfo, setSuccessInfo] = useState(null);
   const [viewingItem, setViewingItem] = useState(null); // { item } — ItemDetailView fetches its own data
   const [activeItemKey, setActiveItemKey] = useState(null);
+
+  // Mount-only: fire ard_estimator_opened exactly once.
+  useEffect(() => {
+    track('ard_estimator_opened', { source: 'fab' });
+  }, []);
+
+  // Estimation timing: capture mount time, fire ard_estimator_estimated when
+  // the result lands (loading false → result populated, or error). The page
+  // auto-fetches on mount, so "estimate complete" = first loading→done transition.
+  const estimateStartRef = useRef(Date.now());
+  const estimateFiredRef = useRef(false);
+  useEffect(() => {
+    if (estimateFiredRef.current) return;
+    if (loading) return;
+    if (!result && !error) return;
+    estimateFiredRef.current = true;
+    track('ard_estimator_estimated', {
+      duration_ms: Date.now() - estimateStartRef.current,
+      has_recommendation: !!result?.recommendedDayNumber,
+    });
+  }, [loading, result, error]);
 
   // Resolved assessment ID (prop or from API response)
   const resolvedAssessmentId = assessmentId || result?.externalAssessmentId;
