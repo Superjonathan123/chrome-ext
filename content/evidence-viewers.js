@@ -10,6 +10,18 @@
 import { render, h } from 'preact';
 import { PDFViewer } from './components/PDFViewer.jsx';
 import { UdaViewer } from './modules/uda-viewer/UdaViewer.jsx';
+import { track } from './utils/analytics.js';
+
+// Idempotent close-tracker: reads viewer type + open timestamp stashed on the
+// modal element by show*Modal, fires evidence_viewer_closed once per modal.
+function trackEvidenceClose(modal) {
+  if (!modal || modal.dataset.evClosed === '1') return;
+  modal.dataset.evClosed = '1';
+  const type = modal.dataset.evType;
+  const openTs = parseInt(modal.dataset.evOpenTs, 10);
+  if (!type || !openTs) return;
+  track('evidence_viewer_closed', { type, duration_ms: Date.now() - openTs });
+}
 
 // =============================================================================
 // EVIDENCE DETECTION
@@ -349,6 +361,7 @@ function setupModalCloseHandlers(modal, modalClass) {
   // Restore body scroll when modal closes
   const closeModal = () => {
     if (isOnBody) document.body.style.overflow = '';
+    trackEvidenceClose(modal);
     modal.remove();
   };
 
@@ -382,12 +395,15 @@ function renderModalError(modal, errorMessage, modalClass) {
 // CLINICAL NOTES MODAL
 // =============================================================================
 
-async function showClinicalNoteModal(noteId, highlightQuote = null) {
+async function showClinicalNoteModal(noteId, highlightQuote = null, source = 'unknown') {
   console.log('[NoteHighlight] showClinicalNoteModal noteId=', noteId, 'quote?', !!highlightQuote, 'quoteLen=', highlightQuote ? highlightQuote.length : 0);
   // Get params from content.js (exposed on window)
   const params = await window.getCurrentParams();
 
   const modal = createNoteModalShell();
+  modal.dataset.evType = 'clinical_notes';
+  modal.dataset.evOpenTs = String(Date.now());
+  track('evidence_viewer_opened', { type: 'clinical_notes', source });
   getModalMountPoint().appendChild(modal);
 
   try {
@@ -410,7 +426,8 @@ function createNoteModalShell() {
         <div class="super-note-modal__title">
           <span class="super-note-modal__name">Loading...</span>
         </div>
-        <button class="super-note-modal__close">&times;</button>
+        <button class="super-note-modal__close">&times;</button> <!-- NO_TRACK -->
+
       </div>
       <div class="super-note-modal__body">
         <div class="super-viewer-loading">
@@ -520,7 +537,8 @@ function renderNoteModalContent(modal, note, highlightQuote = null) {
           <span class="super-note-modal__name">${escapeHTMLViewer(note.department || noteTypeLabel)}</span>
           <span class="super-note-badge ${noteTypeBadgeClass}">${noteTypeLabel}</span>
         </div>
-        <button class="super-note-modal__close">&times;</button>
+        <button class="super-note-modal__close">&times;</button> <!-- NO_TRACK -->
+
       </div>
       ${note.provider ? `<div class="super-note-modal__provider">${escapeHTMLViewer(note.provider)}</div>` : ''}
       <div class="super-note-modal__meta">
@@ -557,10 +575,13 @@ function renderNoteModalContent(modal, note, highlightQuote = null) {
 // THERAPY DOCUMENTS MODAL
 // =============================================================================
 
-async function showTherapyDocModal(therapyDocId, highlightQuote = null) {
+async function showTherapyDocModal(therapyDocId, highlightQuote = null, source = 'unknown') {
   const params = await window.getCurrentParams();
 
   const modal = createTherapyModalShell();
+  modal.dataset.evType = 'therapy';
+  modal.dataset.evOpenTs = String(Date.now());
+  track('evidence_viewer_opened', { type: 'therapy', source });
   getModalMountPoint().appendChild(modal);
 
   try {
@@ -582,11 +603,11 @@ function createTherapyModalShell() {
         <div class="super-therapy-modal__toolbar-title">Loading...</div>
         <div class="super-therapy-modal__toolbar-controls">
           <div class="super-therapy-modal__zoom">
-            <button class="super-therapy-modal__zoom-btn" data-zoom-action="out" title="Zoom Out">−</button>
+            <button class="super-therapy-modal__zoom-btn" data-zoom-action="out" title="Zoom Out">−</button> <!-- NO_TRACK -->
             <span class="super-therapy-modal__zoom-level">100%</span>
-            <button class="super-therapy-modal__zoom-btn" data-zoom-action="in" title="Zoom In">+</button>
+            <button class="super-therapy-modal__zoom-btn" data-zoom-action="in" title="Zoom In">+</button> <!-- NO_TRACK -->
           </div>
-          <button class="super-therapy-modal__close">&times;</button>
+          <button class="super-therapy-modal__close">&times;</button> <!-- NO_TRACK -->
         </div>
       </div>
       <div class="super-therapy-modal__body">
@@ -596,7 +617,7 @@ function createTherapyModalShell() {
         </div>
       </div>
       <div class="super-therapy-modal__footer">
-        <button class="super-therapy-modal__btn super-therapy-modal__btn--secondary super-therapy-modal__close-btn">Close</button>
+        <button class="super-therapy-modal__btn super-therapy-modal__btn--secondary super-therapy-modal__close-btn">Close</button> <!-- NO_TRACK -->
       </div>
     </div>
   `;
@@ -607,6 +628,7 @@ function createTherapyModalShell() {
   // Also set up close for the footer button
   modal.querySelector('.super-therapy-modal__close-btn')?.addEventListener('click', () => {
     document.body.style.overflow = '';
+    trackEvidenceClose(modal);
     modal.remove();
   });
 
@@ -691,13 +713,13 @@ function setupHighlightNavigation(modal) {
   const nav = document.createElement('div');
   nav.className = 'super-therapy-highlight-nav';
   nav.innerHTML = `
-    <button class="super-therapy-highlight-nav__btn" data-action="prev" title="Previous highlight">
+    <button class="super-therapy-highlight-nav__btn" data-action="prev" title="Previous highlight"> <!-- NO_TRACK -->
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <polyline points="15 18 9 12 15 6"></polyline>
       </svg>
     </button>
     <span class="super-therapy-highlight-nav__count">1 of ${highlights.length}</span>
-    <button class="super-therapy-highlight-nav__btn" data-action="next" title="Next highlight">
+    <button class="super-therapy-highlight-nav__btn" data-action="next" title="Next highlight"> <!-- NO_TRACK -->
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <polyline points="9 18 15 12 9 6"></polyline>
       </svg>
@@ -1143,11 +1165,11 @@ function renderTherapyToolbar(title, currentZoom = 100) {
       <div class="super-therapy-modal__toolbar-title">${escapeHTMLViewer(title)}</div>
       <div class="super-therapy-modal__toolbar-controls">
         <div class="super-therapy-modal__zoom">
-          <button class="super-therapy-modal__zoom-btn" data-zoom-action="out" title="Zoom Out">−</button>
+          <button class="super-therapy-modal__zoom-btn" data-zoom-action="out" title="Zoom Out">−</button> <!-- NO_TRACK -->
           <span class="super-therapy-modal__zoom-level">${currentZoom}%</span>
-          <button class="super-therapy-modal__zoom-btn" data-zoom-action="in" title="Zoom In">+</button>
+          <button class="super-therapy-modal__zoom-btn" data-zoom-action="in" title="Zoom In">+</button> <!-- NO_TRACK -->
         </div>
-        <button class="super-therapy-modal__close">&times;</button>
+        <button class="super-therapy-modal__close">&times;</button> <!-- NO_TRACK -->
       </div>
     </div>
   `;
@@ -1223,7 +1245,7 @@ function renderTENDocument(modal, doc, highlightQuote = null) {
       </div>
     </div>
     <div class="super-therapy-modal__footer">
-      <button class="super-therapy-modal__btn super-therapy-modal__btn--secondary super-therapy-modal__close-btn">Close</button>
+      <button class="super-therapy-modal__btn super-therapy-modal__btn--secondary super-therapy-modal__close-btn">Close</button> <!-- NO_TRACK -->
     </div>
   `;
 
@@ -1231,6 +1253,7 @@ function renderTENDocument(modal, doc, highlightQuote = null) {
   setupTherapyZoomHandlers(modal);
   modal.querySelector('.super-therapy-modal__close-btn')?.addEventListener('click', () => {
     document.body.style.overflow = '';
+    trackEvidenceClose(modal);
     modal.remove();
   });
 }
@@ -1294,7 +1317,7 @@ function renderEvalDocument(modal, doc, highlightQuote = null) {
       </div>
     </div>
     <div class="super-therapy-modal__footer">
-      <button class="super-therapy-modal__btn super-therapy-modal__btn--secondary super-therapy-modal__close-btn">Close</button>
+      <button class="super-therapy-modal__btn super-therapy-modal__btn--secondary super-therapy-modal__close-btn">Close</button> <!-- NO_TRACK -->
     </div>
   `;
 
@@ -1302,6 +1325,7 @@ function renderEvalDocument(modal, doc, highlightQuote = null) {
   setupTherapyZoomHandlers(modal);
   modal.querySelector('.super-therapy-modal__close-btn')?.addEventListener('click', () => {
     document.body.style.overflow = '';
+    trackEvidenceClose(modal);
     modal.remove();
   });
 }
@@ -1337,7 +1361,7 @@ function renderProgressReport(modal, doc, highlightQuote = null) {
       </div>
     </div>
     <div class="super-therapy-modal__footer">
-      <button class="super-therapy-modal__btn super-therapy-modal__btn--secondary super-therapy-modal__close-btn">Close</button>
+      <button class="super-therapy-modal__btn super-therapy-modal__btn--secondary super-therapy-modal__close-btn">Close</button> <!-- NO_TRACK -->
     </div>
   `;
 
@@ -1345,6 +1369,7 @@ function renderProgressReport(modal, doc, highlightQuote = null) {
   setupTherapyZoomHandlers(modal);
   modal.querySelector('.super-therapy-modal__close-btn')?.addEventListener('click', () => {
     document.body.style.overflow = '';
+    trackEvidenceClose(modal);
     modal.remove();
   });
 }
@@ -1378,7 +1403,7 @@ function renderRecertDocument(modal, doc, highlightQuote = null) {
       </div>
     </div>
     <div class="super-therapy-modal__footer">
-      <button class="super-therapy-modal__btn super-therapy-modal__btn--secondary super-therapy-modal__close-btn">Close</button>
+      <button class="super-therapy-modal__btn super-therapy-modal__btn--secondary super-therapy-modal__close-btn">Close</button> <!-- NO_TRACK -->
     </div>
   `;
 
@@ -1386,6 +1411,7 @@ function renderRecertDocument(modal, doc, highlightQuote = null) {
   setupTherapyZoomHandlers(modal);
   modal.querySelector('.super-therapy-modal__close-btn')?.addEventListener('click', () => {
     document.body.style.overflow = '';
+    trackEvidenceClose(modal);
     modal.remove();
   });
 }
@@ -1413,7 +1439,7 @@ function renderDischargeDocument(modal, doc, highlightQuote = null) {
       </div>
     </div>
     <div class="super-therapy-modal__footer">
-      <button class="super-therapy-modal__btn super-therapy-modal__btn--secondary super-therapy-modal__close-btn">Close</button>
+      <button class="super-therapy-modal__btn super-therapy-modal__btn--secondary super-therapy-modal__close-btn">Close</button> <!-- NO_TRACK -->
     </div>
   `;
 
@@ -1421,6 +1447,7 @@ function renderDischargeDocument(modal, doc, highlightQuote = null) {
   setupTherapyZoomHandlers(modal);
   modal.querySelector('.super-therapy-modal__close-btn')?.addEventListener('click', () => {
     document.body.style.overflow = '';
+    trackEvidenceClose(modal);
     modal.remove();
   });
 }
@@ -1447,7 +1474,7 @@ function renderGenericTherapyDoc(modal, doc, highlightQuote = null) {
       </div>
     </div>
     <div class="super-therapy-modal__footer">
-      <button class="super-therapy-modal__btn super-therapy-modal__btn--secondary super-therapy-modal__close-btn">Close</button>
+      <button class="super-therapy-modal__btn super-therapy-modal__btn--secondary super-therapy-modal__close-btn">Close</button> <!-- NO_TRACK -->
     </div>
   `;
 
@@ -1455,6 +1482,7 @@ function renderGenericTherapyDoc(modal, doc, highlightQuote = null) {
   setupTherapyZoomHandlers(modal);
   modal.querySelector('.super-therapy-modal__close-btn')?.addEventListener('click', () => {
     document.body.style.overflow = '';
+    trackEvidenceClose(modal);
     modal.remove();
   });
 }
@@ -1463,10 +1491,13 @@ function renderGenericTherapyDoc(modal, doc, highlightQuote = null) {
 // PDF DOCUMENT MODAL
 // =============================================================================
 
-async function showDocumentModal(documentId, wordBlocks = null) {
+async function showDocumentModal(documentId, wordBlocks = null, source = 'unknown') {
   const params = await window.getCurrentParams();
 
   const modal = createPdfModalShell();
+  modal.dataset.evType = 'pdf';
+  modal.dataset.evOpenTs = String(Date.now());
+  track('evidence_viewer_opened', { type: 'pdf', source });
   getModalMountPoint().appendChild(modal);
 
   try {
@@ -1487,7 +1518,7 @@ function createPdfModalShell() {
         <div class="super-pdf-modal__title">
           <span class="super-pdf-modal__name">Loading...</span>
         </div>
-        <button class="super-pdf-modal__close">&times;</button>
+        <button class="super-pdf-modal__close">&times;</button> <!-- NO_TRACK -->
       </div>
       <div class="super-pdf-modal__body">
         <div class="super-viewer-loading">
@@ -1510,6 +1541,7 @@ function renderPdfModalContent(modal, doc, wordBlocks = null) {
   // Close handler removes modal and restores body scroll
   const onClose = () => {
     document.body.style.overflow = '';
+    trackEvidenceClose(modal);
     modal.remove();
   };
 
@@ -1521,7 +1553,7 @@ function renderPdfModalContent(modal, doc, wordBlocks = null) {
           <span class="super-pdf-modal__name">${escapeHTMLViewer(doc.title || 'Document')}</span>
           ${doc.documentType ? `<span class="super-pdf-badge">${escapeHTMLViewer(doc.documentType)}</span>` : ''}
         </div>
-        <button class="super-pdf-modal__close">&times;</button>
+        <button class="super-pdf-modal__close">&times;</button> <!-- NO_TRACK --> <!-- NO_TRACK -->
       </div>
     </div>
     <div class="super-pdf-modal__body"></div>
@@ -1569,11 +1601,14 @@ function createUdaModalShell() {
   return modal;
 }
 
-async function showUdaModal(udaId, quoteText = null, patientIdOverride = null) {
+async function showUdaModal(udaId, quoteText = null, patientIdOverride = null, source = 'unknown') {
   const params = await window.getCurrentParams();
   const patientId = patientIdOverride || resolvePatientIdForUda();
 
   const modal = createUdaModalShell();
+  modal.dataset.evType = 'uda';
+  modal.dataset.evOpenTs = String(Date.now());
+  track('evidence_viewer_opened', { type: 'uda', source });
   const isOnBody = !document.querySelector('.icd10-viewer-modal__container');
   getModalMountPoint().appendChild(modal);
   if (isOnBody) document.body.style.overflow = 'hidden';
@@ -1583,6 +1618,7 @@ async function showUdaModal(udaId, quoteText = null, patientIdOverride = null) {
   const onClose = () => {
     if (isOnBody) document.body.style.overflow = '';
     document.removeEventListener('keydown', escHandler);
+    trackEvidenceClose(modal);
     modal.remove();
   };
 
