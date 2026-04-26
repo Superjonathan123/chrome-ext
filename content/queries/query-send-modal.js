@@ -1,7 +1,21 @@
 // Two-Step Query Send Modal for Super LTC Chrome Extension
 // Step 1: Review query details, Step 2: Select practitioner and send
 
-import { track } from '../utils/analytics.js';
+import { track, toErrorCode } from '../utils/analytics.js';
+
+// Map a free-text practitioner title/specialty to a categorical role.
+// Keep the bucket list small so PostHog values stay clean.
+function deriveRecipientRole(practitioner) {
+  if (!practitioner) return 'unknown';
+  const raw = `${practitioner.title || ''} ${practitioner.specialty || ''}`.toLowerCase();
+  if (!raw.trim()) return 'unknown';
+  if (/\bnp\b|nurse practitioner/.test(raw)) return 'np';
+  if (/\bpa\b|physician assistant/.test(raw)) return 'pa';
+  if (/\brn\b|registered nurse/.test(raw)) return 'rn';
+  if (/\blpn\b|licensed practical/.test(raw)) return 'lpn';
+  if (/\bmd\b|\bdo\b|physician|doctor/.test(raw)) return 'physician';
+  return 'other';
+}
 
 const QuerySendModal = {
   // Current state
@@ -215,6 +229,15 @@ const QuerySendModal = {
     btn.textContent = 'Sending...';
     btn.disabled = true;
 
+    const sendStart = Date.now();
+    const selectedPractitioner = this._state.practitioners.find(
+      p => p.id === this._state.selectedPractitionerId
+    );
+    track('query_send_started', {
+      item_code: this._state.result?.mdsItem || this._state.existingQuery?.mdsItem || '',
+      recipient_role: deriveRecipientRole(selectedPractitioner),
+    });
+
     try {
       let queryId = this._state.existingQuery?.id;
 
@@ -252,6 +275,8 @@ const QuerySendModal = {
         this._state.noteText
       );
 
+      track('query_send_succeeded', { duration_ms: Date.now() - sendStart });
+
       // Close modal and show success
       this._closeFired = true;
       track('query_modal_closed', { reason: 'submit' });
@@ -272,6 +297,7 @@ const QuerySendModal = {
       }));
 
     } catch (error) {
+      track('query_send_failed', { error_code: toErrorCode(error) });
       console.error('Super LTC: Failed to send query', error);
       SuperToast.error(`Failed to send: ${error.message}`);
       btn.textContent = originalText;

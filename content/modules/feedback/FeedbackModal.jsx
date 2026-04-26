@@ -1,7 +1,15 @@
 import { useState, useEffect, useRef } from 'preact/hooks';
 import { Modal } from '../../components/Modal.jsx';
-import { track } from '../../utils/analytics.js';
+import { track, toErrorCode } from '../../utils/analytics.js';
 import { selectRegion, cropDataUrl, drawHighlightOnDataUrl } from './region-selector.js';
+
+// Bucket free-text length so we never ship the message itself.
+function messageLengthBucket(text) {
+  const len = (text || '').length;
+  if (len <= 100) return 'short';
+  if (len <= 500) return 'medium';
+  return 'long';
+}
 
 export const FeedbackModal = ({ onClose, initialScreenshot = null }) => {
   const [message, setMessage] = useState('');
@@ -121,16 +129,28 @@ export const FeedbackModal = ({ onClose, initialScreenshot = null }) => {
       submittedAt: new Date().toISOString(),
     };
 
+    // Modal does not currently collect sentiment (no thumbs / faces) — emit
+    // 'neutral' so the funnel still has a categorical value. If sentiment UI
+    // gets added later, swap in the user's selection here.
+    const submitStart = Date.now();
+    track('feedback_submit_started', {
+      sentiment: 'neutral',
+      has_screenshot: !!screenshot,
+      message_length_bucket: messageLengthBucket(message),
+    });
+
     try {
       const res = await chrome.runtime.sendMessage({ type: 'SUBMIT_FEEDBACK', payload });
       if (!res?.success) {
         throw new Error(res?.error || 'Submit failed');
       }
+      track('feedback_submit_succeeded', { duration_ms: Date.now() - submitStart });
       setSuccess(true);
       // Submit succeeded — the auto-close below is NOT a dismissal.
       dismissTrackingRef.current = false;
       setTimeout(onClose, 1500);
     } catch (e) {
+      track('feedback_submit_failed', { error_code: toErrorCode(e) });
       console.error('[Feedback] submit failed', e);
       setError(e.message || 'Could not send feedback');
     } finally {

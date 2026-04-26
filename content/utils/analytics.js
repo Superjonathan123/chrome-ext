@@ -71,6 +71,42 @@ if (ENABLED) {
   });
 }
 
+// Map a thrown error to a SHORT TOKEN for `error_code` props. NEVER returns
+// the raw error message — that path can leak PHI / response text. Recognizes
+// the `apiRequest` background-script convention `Error("API error: 404")`.
+export function toErrorCode(e) {
+  if (!e) return 'unknown';
+  if (typeof e === 'string') {
+    const m = e.match(/API error:\s*(\d{3})/);
+    if (m) return `http_${m[1]}`;
+    return 'unknown';
+  }
+  if (typeof e.status === 'number') return `http_${e.status}`;
+  if (e.code) return String(e.code);
+  if (typeof e.message === 'string') {
+    const m = e.message.match(/API error:\s*(\d{3})/);
+    if (m) return `http_${m[1]}`;
+    if (/not authenticated/i.test(e.message)) return 'not_authenticated';
+    if (/network|offline|fetch/i.test(e.message)) return 'network_error';
+    if (/timeout/i.test(e.message)) return 'timeout';
+  }
+  if (e.name) return String(e.name);
+  return 'unknown';
+}
+
+// Parse numeric HTTP status out of an error if present (for api_request_failed).
+// Returns null when no status can be safely inferred.
+export function toHttpStatus(e) {
+  if (!e) return null;
+  if (typeof e.status === 'number') return e.status;
+  const msg = typeof e === 'string' ? e : e.message;
+  if (typeof msg === 'string') {
+    const m = msg.match(/API error:\s*(\d{3})/);
+    if (m) return Number(m[1]);
+  }
+  return null;
+}
+
 export function track(eventName, props = {}) {
   if (!ENABLED) return;
 
@@ -159,5 +195,5 @@ if (ENABLED && typeof chrome !== 'undefined' && chrome.storage) {
 // can't ES-import this module) can still emit events. Demos that don't bundle
 // analytics simply leave window.SuperAnalytics undefined → callers no-op.
 if (typeof window !== 'undefined') {
-  window.SuperAnalytics = { track, identify, reset, setPccContext };
+  window.SuperAnalytics = { track, identify, reset, setPccContext, toErrorCode, toHttpStatus };
 }

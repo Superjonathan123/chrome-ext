@@ -1,6 +1,18 @@
 // Query API Layer for Super LTC Chrome Extension
 // Handles all API calls related to diagnosis queries
 
+// Fire api_request_failed when an API_REQUEST returns { success: false }.
+// `endpoint` MUST be a sanitized template (with `:id` placeholders) — never the
+// raw URL with patient/query IDs. Vanilla file → uses window.SuperAnalytics.
+function _trackApiFail(endpoint, response) {
+  try {
+    const sa = window.SuperAnalytics;
+    if (!sa) return;
+    const status = sa.toHttpStatus ? sa.toHttpStatus({ message: response?.error }) : null;
+    sa.track('api_request_failed', { endpoint, status });
+  } catch (_) { /* analytics never breaks callers */ }
+}
+
 const QueryAPI = {
   /**
    * Fetch queries for a specific MDS assessment
@@ -24,6 +36,7 @@ const QueryAPI = {
     });
 
     if (!response.success) {
+      _trackApiFail('/api/extension/diagnosis-queries/by-assessment', response);
       throw new Error(response.error || 'Failed to fetch assessment queries');
     }
 
@@ -47,6 +60,7 @@ const QueryAPI = {
     });
 
     if (!response.success) {
+      _trackApiFail('/api/extension/diagnosis-queries/dashboard', response);
       throw new Error(response.error || 'Failed to fetch dashboard queries');
     }
 
@@ -78,6 +92,7 @@ const QueryAPI = {
     });
 
     if (!response.success) {
+      _trackApiFail('/api/extension/diagnosis-queries/:id/resend', response);
       throw new Error(response.error || 'Failed to resend query');
     }
 
@@ -101,6 +116,7 @@ const QueryAPI = {
     });
 
     if (!response.success) {
+      _trackApiFail('/api/extension/diagnosis-queries/:id/pdf', response);
       throw new Error(response.error || 'Failed to get PDF URL');
     }
 
@@ -128,6 +144,7 @@ const QueryAPI = {
     });
 
     if (!response.success) {
+      _trackApiFail('/api/extension/diagnosis-queries', response);
       throw new Error(response.error || 'Failed to create query');
     }
 
@@ -159,6 +176,7 @@ const QueryAPI = {
     });
 
     if (!response.success) {
+      _trackApiFail('/api/extension/diagnosis-queries/:id/send', response);
       throw new Error(response.error || 'Failed to send query');
     }
 
@@ -184,6 +202,7 @@ const QueryAPI = {
     });
 
     if (!response.success || !response.data?.note) {
+      _trackApiFail('/api/extension/diagnosis-queries/generate-note', response);
       throw new Error(response.error || 'Failed to generate note');
     }
 
@@ -209,6 +228,7 @@ const QueryAPI = {
     });
 
     if (!response.success) {
+      _trackApiFail('/api/extension/practitioners', response);
       throw new Error(response.error || 'Failed to fetch practitioners');
     }
 
@@ -229,6 +249,7 @@ const QueryAPI = {
     });
 
     if (!response.success) {
+      _trackApiFail('/api/extension/diagnosis-queries/:id', response);
       throw new Error(response.error || 'Failed to fetch query');
     }
 

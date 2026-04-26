@@ -3,6 +3,7 @@
 import { useState, useRef, useCallback, useEffect } from 'preact/hooks';
 import { parseStreamBuffer, processStreamEvent } from '../lib/stream-parser.js';
 import { createConversation, saveMessage, generateTitle } from '../lib/chat-history-api.js';
+import { track, toErrorCode } from '../../../utils/analytics.js';
 
 export function useChat() {
   const [messages, setMessages] = useState([]);
@@ -112,6 +113,8 @@ export function useChat() {
 
     let buffer = '';
     const isFirstTurn = turnCountRef.current === 1;
+    const streamStart = Date.now();
+    let funnelClosed = false; // guard against firing completed/failed twice
 
     port.onMessage.addListener((msg) => {
       if (msg.type === 'CHUNK') {
@@ -132,6 +135,10 @@ export function useChat() {
       }
 
       if (msg.type === 'DONE') {
+        if (!funnelClosed) {
+          funnelClosed = true;
+          track('chat_stream_completed', { duration_ms: Date.now() - streamStart });
+        }
         setStatus('ready');
         portRef.current = null;
         setMessages(prev => [...prev]);
@@ -155,6 +162,10 @@ export function useChat() {
       }
 
       if (msg.type === 'ERROR') {
+        if (!funnelClosed) {
+          funnelClosed = true;
+          track('chat_stream_failed', { error_code: toErrorCode(msg.error) });
+        }
         setStatus('ready');
         portRef.current = null;
         setMessages(prev => {
@@ -175,6 +186,7 @@ export function useChat() {
       }
     });
 
+    track('chat_stream_started');
     port.postMessage({
       type: 'START_STREAM',
       messages: messagesToSend,

@@ -3,6 +3,18 @@
  * Handles all API calls for ICD-10 annotations, diagnoses, documents, and word blocks
  */
 
+// Fire api_request_failed when an API_REQUEST returns { success: false }.
+// Vanilla file → uses window.SuperAnalytics. Endpoints MUST be sanitized
+// templates with ':id' placeholders, never raw URLs with patient/document IDs.
+function _trackIcd10ApiFail(endpoint, response) {
+  try {
+    const sa = window.SuperAnalytics;
+    if (!sa) return;
+    const status = sa.toHttpStatus ? sa.toHttpStatus({ message: response?.error }) : null;
+    sa.track('api_request_failed', { endpoint, status });
+  } catch (_) { /* analytics never breaks callers */ }
+}
+
 const ICD10API = {
   // Cache for word blocks (keyed by document ID)
   wordBlocksCache: new Map(),
@@ -41,6 +53,7 @@ const ICD10API = {
     });
 
     if (!response.success) {
+      _trackIcd10ApiFail('/api/extension/icd10-annotations', response);
       throw new Error(response.error || 'Failed to fetch annotations');
     }
 
@@ -120,6 +133,7 @@ const ICD10API = {
     });
 
     if (!response.success) {
+      _trackIcd10ApiFail('/api/extension/patients/:id/diagnoses', response);
       throw new Error(response.error || 'Failed to fetch diagnoses');
     }
 
@@ -167,6 +181,7 @@ const ICD10API = {
     });
 
     if (!response.success) {
+      _trackIcd10ApiFail('/api/extension/documents/:id', response);
       throw new Error(response.error || 'Failed to fetch document');
     }
 
@@ -222,6 +237,7 @@ const ICD10API = {
     });
 
     if (!response.success) {
+      _trackIcd10ApiFail('/api/extension/documents/:id/word-blocks', response);
       throw new Error(response.error || 'Failed to fetch word blocks');
     }
 
@@ -290,6 +306,7 @@ const ICD10API = {
     });
 
     if (!response.success) {
+      _trackIcd10ApiFail('/api/extension/patients/:id/diagnoses', response);
       throw new Error(response.error || 'Failed to approve diagnosis');
     }
 
@@ -376,6 +393,7 @@ const ICD10API = {
     });
 
     if (!response.success) {
+      _trackIcd10ApiFail('/api/extension/icd10-annotations/summary', response);
       throw new Error(response.error || 'Failed to fetch evidence summary');
     }
 
