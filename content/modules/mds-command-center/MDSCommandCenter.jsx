@@ -22,6 +22,8 @@ import { useComplianceDashboard } from '../care-plan-coverage/hooks/useComplianc
 import { useTrending } from '../care-plan-coverage/hooks/useTrending.js';
 import { ComplianceView } from '../care-plan-coverage/ComplianceView.jsx';
 import { MdsPlanner } from '../mds-planner/MdsPlanner.jsx';
+import { track } from '../../utils/analytics.js';
+import { TrackedButton } from '../../components/TrackedButton.jsx';
 
 // ── Helpers ──
 
@@ -92,6 +94,7 @@ function ErrorState({ message, onRetry }) {
     <div class="mds-cc__state-container">
       <div class="mds-cc__state-icon">{'\u26A0'}</div>
       <p class="mds-cc__state-text">{message}</p>
+      {/* NO_TRACK: error-state retry */}
       <button class="mds-cc__retry-btn" onClick={onRetry}>Retry</button>
     </div>
   );
@@ -190,11 +193,20 @@ function QueryCard({ q, expanded, onToggle, onOpenAssessment, assessmentCtx, isP
       {expanded && (
         <div class="mds-cc__qcard-body">
           <div class="mds-cc__qcard-actions">
-            <button class="mds-cc__qcard-btn mds-cc__qcard-btn--primary" onClick={(e) => { e.stopPropagation(); onOpenAssessment(); }}>
+            <TrackedButton
+              track="mds_cc_item_actioned"
+              trackProps={{ item_code: (q.mdsItem || '').includes(':') ? q.mdsItem.split(':')[0] : (q.mdsItem || ''), action: 'open_in_analyzer' }}
+              class="mds-cc__qcard-btn mds-cc__qcard-btn--primary"
+              onClick={(e) => { e.stopPropagation(); onOpenAssessment(); }}
+            >
               Open in PDPM Analyzer
-            </button>
+            </TrackedButton>
             {!isPending && (
-              <button class="mds-cc__qcard-btn mds-cc__qcard-btn--secondary" onClick={(e) => {
+              <TrackedButton
+                track="mds_cc_item_actioned"
+                trackProps={{ item_code: (q.mdsItem || '').includes(':') ? q.mdsItem.split(':')[0] : (q.mdsItem || ''), action: 'resend_query_sms' }}
+                class="mds-cc__qcard-btn mds-cc__qcard-btn--secondary"
+                onClick={(e) => {
                 e.stopPropagation();
                 const btn = e.currentTarget;
                 btn.textContent = 'Sending...';
@@ -210,7 +222,7 @@ function QueryCard({ q, expanded, onToggle, onOpenAssessment, assessmentCtx, isP
                 }
               }}>
                 Resend SMS
-              </button>
+              </TrackedButton>
             )}
           </div>
         </div>
@@ -337,13 +349,23 @@ function QueriesView({ outstandingQueries, recentlySigned, assessments, onOpenAs
                 {expandedId === q.id && (
                   <div class="mds-cc__qcard-body">
                     <div class="mds-cc__qcard-actions">
-                      <button class="mds-cc__qcard-btn mds-cc__qcard-btn--primary" onClick={(e) => { e.stopPropagation(); onOpenAssessment?.(findAssessmentId(q)); }}>
+                      <TrackedButton
+                        track="mds_cc_item_actioned"
+                        trackProps={{ item_code: (q.mdsItem || '').includes(':') ? q.mdsItem.split(':')[0] : (q.mdsItem || ''), action: 'open_in_analyzer' }}
+                        class="mds-cc__qcard-btn mds-cc__qcard-btn--primary"
+                        onClick={(e) => { e.stopPropagation(); onOpenAssessment?.(findAssessmentId(q)); }}
+                      >
                         Open in PDPM Analyzer
-                      </button>
+                      </TrackedButton>
                       {q.hasPdf && (
-                        <button class="mds-cc__qcard-btn mds-cc__qcard-btn--secondary" onClick={(e) => { e.stopPropagation(); handleViewPdf(q.id); }}>
+                        <TrackedButton
+                          track="mds_cc_item_actioned"
+                          trackProps={{ item_code: (q.mdsItem || '').includes(':') ? q.mdsItem.split(':')[0] : (q.mdsItem || ''), action: 'view_signed_pdf' }}
+                          class="mds-cc__qcard-btn mds-cc__qcard-btn--secondary"
+                          onClick={(e) => { e.stopPropagation(); handleViewPdf(q.id); }}
+                        >
                           View Signed PDF
-                        </button>
+                        </TrackedButton>
                       )}
                     </div>
                   </div>
@@ -376,6 +398,29 @@ export function MDSCommandCenter({ facilityName, orgSlug, onClose, initialExpand
   const [urgencyFilter, setUrgencyFilter] = useState('all');
   const [expandedId, setExpandedId] = useState(initialExpandedId || null);
   const [selectedItem, setSelectedItem] = useState(null); // { item, assessmentId }
+
+  // Mount-only: fire mds_command_center_opened exactly once.
+  useEffect(() => {
+    track('mds_command_center_opened', { source: 'fab' });
+  }, []);
+
+  const handleViewChange = useCallback((next) => {
+    setActiveView(prev => {
+      if (prev !== next) {
+        track('mds_cc_view_switched', { from_view: prev, to_view: next });
+      }
+      return next;
+    });
+  }, []);
+
+  const handleItemSelect = useCallback((item, assessmentId) => {
+    if (item?.mdsItem) {
+      // Strip optional ":suffix" so I8000:rare → I8000 (categorical reference data, no PHI).
+      const itemCode = item.mdsItem.includes(':') ? item.mdsItem.split(':')[0] : item.mdsItem;
+      track('mds_cc_item_popover_opened', { item_code: itemCode });
+    }
+    setSelectedItem({ item, assessmentId });
+  }, []);
 
   const { data, loading, error, retry } = useCommandCenter({ facilityName, orgSlug });
 
@@ -511,7 +556,7 @@ export function MDSCommandCenter({ facilityName, orgSlug, onClose, initialExpand
           facilityName={facilityName}
           onClose={onClose}
           activeView={activeView}
-          onViewChange={setActiveView}
+          onViewChange={handleViewChange}
           viewMode={viewMode}
           onViewModeChange={setViewMode}
           isFullscreen={isFullscreen}
@@ -561,7 +606,7 @@ export function MDSCommandCenter({ facilityName, orgSlug, onClose, initialExpand
                             onOpenAnalyzer={() => handleOpenAnalyzer(assessment)}
                             onSelectItem={(item) => {
                               const aid = assessment.externalAssessmentId || assessment.assessmentId || assessment.id;
-                              setSelectedItem({ item, assessmentId: aid });
+                              handleItemSelect(item, aid);
                             }}
                           />
                         )}
@@ -625,7 +670,7 @@ export function MDSCommandCenter({ facilityName, orgSlug, onClose, initialExpand
               facilityName={facilityName}
               orgSlug={orgSlug}
               isFullscreen={isFullscreen}
-              onOpenTab={setActiveView}
+              onOpenTab={handleViewChange}
             />
           )}
         </div>

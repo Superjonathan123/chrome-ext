@@ -121,6 +121,8 @@ export function EventRow({ event, interactive = false }) {
       ].filter(Boolean).join(' ')}
       onClick={clickable ? (e) => { e.stopPropagation(); openEventAction(event); } : undefined}
       title={clickable ? 'Open in PCC' : undefined}
+      data-track={clickable ? 'mds_planner_event_clicked' : undefined}
+      data-track-prop-event-type={clickable ? (event.type || '') : undefined}
     >
       <span class="mds-pl__evt-bar" />
       <span class="mds-pl__evt-icon" aria-hidden="true">{TYPE_ICON[event.type]}</span>

@@ -242,6 +242,7 @@ export function ItemPopover({ item, context, onClose }) {
           <div class="cc-pop__header-top">
             <div class="cc-pop__header-left">
               {isSplit && (
+                /* NO_TRACK: split-view back nav */
                 <button class="cc-pop__back-btn" onClick={handleBack} type="button">
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6" /></svg>
                   Back
@@ -250,6 +251,7 @@ export function ItemPopover({ item, context, onClose }) {
               <span class="cc-pop__code">{displayCode}</span>
               <span class="cc-pop__name">{item?.itemName || data?.item?.description || 'Item Detail'}</span>
             </div>
+            {/* NO_TRACK: close-X */}
             <button class="cc-pop__close" onClick={onClose} type="button">&times;</button>
           </div>
         </div>
@@ -347,11 +349,11 @@ export function ItemPopover({ item, context, onClose }) {
         {isSplit && !loading && !error && data && (
           <div style={{ padding: '0 16px 12px', flexShrink: 0, borderTop: '1px solid #e5e7eb' }}>
             <div class="sid__actions">
-              <button class="sid__btn sid__btn--primary" onClick={() => window.QuerySendModal?.show(data.item || data)} type="button">
+              <button data-track="mds_cc_item_actioned" data-track-prop-item-code={displayCode || ''} data-track-prop-action="query_physician" class="sid__btn sid__btn--primary" onClick={() => window.QuerySendModal?.show(data.item || data)} type="button">
                 Query Physician
               </button>
               {mdsItem && (
-                <button class="sid__btn sid__btn--secondary" onClick={() => window.navigateToMDSItem?.(mdsItem)} type="button">
+                <button data-track="mds_cc_item_actioned" data-track-prop-item-code={displayCode || ''} data-track-prop-action="go_to_mds_item" class="sid__btn sid__btn--secondary" onClick={() => window.navigateToMDSItem?.(mdsItem)} type="button">
                   Go to {displayCode} &#x2197;
                 </button>
               )}

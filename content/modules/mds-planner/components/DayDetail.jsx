@@ -100,6 +100,8 @@ function EventRowDetail({ event }) {
       onClick={clickable ? () => openEventAction(event) : undefined}
       role={clickable ? 'button' : undefined}
       tabIndex={clickable ? 0 : undefined}
+      data-track={clickable ? 'mds_planner_event_clicked' : undefined}
+      data-track-prop-event-type={clickable ? (event.type || '') : undefined}
     >
       <span class="mds-pl__detail-bar" />
       <div class="mds-pl__detail-body">
@@ -134,6 +136,7 @@ export function DayDetail({ date, events, onClose }) {
         <span class="mds-pl__detail-head-count">
           {events.length} {events.length === 1 ? 'event' : 'events'}
         </span>
+        {/* NO_TRACK: close-X */}
         <button class="mds-pl__detail-close" onClick={onClose} aria-label="Close day detail">&times;</button>
       </div>
       {events.length === 0 ? (

@@ -12,11 +12,12 @@
  *   Left column  — week calendar, swaps to Day view when a day is clicked
  *   Right column — queue tables (always visible, scrolls if overflow)
  */
-import { useMemo, useState } from 'preact/hooks';
+import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
 import { useMdsPlanner } from './hooks/useMdsPlanner.js';
 import { WeekCalendar } from './components/WeekCalendar.jsx';
 import { QueueCards } from './components/QueueCards.jsx';
 import { DayView } from './components/DayView.jsx';
+import { track } from '../../utils/analytics.js';
 
 // Only date-locked events go on the calendar. Care plan work is weekly, not
 // day-specific, so it lives in the queue tables instead.
@@ -49,6 +50,7 @@ function ErrorState({ message, onRetry }) {
     <div class="mds-pl__state">
       <div class="mds-pl__state-icon">{'⚠'}</div>
       <p>{message || 'Failed to load planner.'}</p>
+      {/* NO_TRACK: error-state retry */}
       <button class="mds-pl__retry" onClick={onRetry}>Retry</button>
     </div>
   );
@@ -64,6 +66,32 @@ export function MdsPlanner({ facilityName, orgSlug, isFullscreen, onOpenTab }) {
 
   const [selectedDay, setSelectedDay] = useState(null);
   const [queuesExpanded, setQueuesExpanded] = useState(false);
+
+  // Mount-only: fire mds_planner_opened exactly once.
+  useEffect(() => {
+    track('mds_planner_opened', { source: 'fab' });
+  }, []);
+
+  // View name derived from current state. Track switches between named views.
+  // Names are categorical reference data (no PHI).
+  const currentView = queuesExpanded ? 'focus' : (selectedDay ? 'day' : 'week');
+  const prevViewRef = useRef(currentView);
+  useEffect(() => {
+    if (prevViewRef.current !== currentView) {
+      track('mds_planner_view_switched', { from_view: prevViewRef.current, to_view: currentView });
+      prevViewRef.current = currentView;
+    }
+  }, [currentView]);
+
+  // Wrap setSelectedDay to fire mds_planner_event_clicked when a day is opened
+  // (each day-open is effectively clicking that day's stack of events).
+  const handleSelectDay = (day) => {
+    if (day && day !== selectedDay) {
+      // Day-level open is a coarse click; we can't tag a specific event_type here.
+      // Per-event clicks are tracked via openEventAction in EventRow / DayView.
+    }
+    setSelectedDay(day);
+  };
 
   const calendarEvents = useMemo(
     () => (events || []).filter(e => CALENDAR_EVENT_TYPES.has(e.type)),
@@ -84,9 +112,12 @@ export function MdsPlanner({ facilityName, orgSlug, isFullscreen, onOpenTab }) {
       {/* ── Top bar ── */}
       <div class="mds-pl__nav-bar">
         <div class="mds-pl__week-nav">
+          {/* NO_TRACK: pure-UI week nav */}
           <button type="button" onClick={goPrevWeek} aria-label="Previous week">&lsaquo;</button>
           <span class="mds-pl__week-label">{rangeLabel}</span>
+          {/* NO_TRACK: pure-UI week nav */}
           <button type="button" onClick={goNextWeek} aria-label="Next week">&rsaquo;</button>
+          {/* NO_TRACK: pure-UI week nav */}
           <button type="button" class="mds-pl__today-btn" onClick={goThisWeek}>Today</button>
         </div>
         <div class="mds-pl__nav-right">
@@ -133,14 +164,14 @@ export function MdsPlanner({ facilityName, orgSlug, isFullscreen, onOpenTab }) {
                 <DayView
                   date={selectedDay}
                   events={dayEvents}
-                  onBack={() => setSelectedDay(null)}
+                  onBack={() => handleSelectDay(null)}
                 />
               ) : (
                 <WeekCalendar
                   events={calendarEvents}
                   weekStart={weekStart}
                   selectedDay={null}
-                  onSelectDay={setSelectedDay}
+                  onSelectDay={handleSelectDay}
                 />
               )}
             </section>

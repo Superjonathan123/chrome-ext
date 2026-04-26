@@ -344,11 +344,12 @@ export function AssessmentPreview({ assessment, onOpenAnalyzer, onSelectItem }) 
       )}
 
       <div class="mds-cc__prev-actions">
-        <button class="mds-cc__action-btn mds-cc__action-btn--primary" onClick={onOpenAnalyzer}>
+        <button data-track="mds_cc_item_actioned" data-track-prop-action="open_full_analyzer" class="mds-cc__action-btn mds-cc__action-btn--primary" onClick={onOpenAnalyzer}>
           Open Full Analyzer
         </button>
         {assessmentId && (
           <button
+            data-track="mds_cc_item_actioned" data-track-prop-action="go_to_mds_in_pcc"
             class="mds-cc__action-btn mds-cc__action-btn--secondary"
             onClick={() => {
               try {

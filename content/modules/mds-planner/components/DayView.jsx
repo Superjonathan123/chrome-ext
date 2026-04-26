@@ -63,6 +63,8 @@ function Row({ event }) {
       onClick={clickable ? () => openEventAction(event) : undefined}
       role={clickable ? 'button' : undefined}
       tabIndex={clickable ? 0 : undefined}
+      data-track={clickable ? 'mds_planner_event_clicked' : undefined}
+      data-track-prop-event-type={clickable ? (event.type || '') : undefined}
     >
       <span class="mds-pl__dv-bar" />
       <div class="mds-pl__dv-body">
@@ -93,6 +95,7 @@ export function DayView({ date, events, onBack }) {
   return (
     <div class="mds-pl__dv">
       <div class="mds-pl__dv-top">
+        {/* NO_TRACK: back nav */}
         <button class="mds-pl__dv-back" onClick={onBack}>
           <span aria-hidden="true">&lsaquo;</span> Back to week
         </button>

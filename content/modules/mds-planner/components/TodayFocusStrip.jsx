@@ -217,6 +217,8 @@ export function TodayFocusStrip({ summary }) {
             class={`mds-pl__focus-row mds-pl__focus-row--${item.urgency}`}
             onClick={() => activateFocusItem(item)}
             title={item.event ? `Open ${item.patient || item.label} in PCC` : `Jump to ${item.label}`}
+            data-track="mds_planner_event_clicked"
+            data-track-prop-event-type={item.event?.type || item.kind || ''}
           >
             <span class="mds-pl__focus-icon">{KIND_ICON[item.kind]}</span>
             <span class="mds-pl__focus-main">

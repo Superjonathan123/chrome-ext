@@ -179,6 +179,8 @@ function MdsCodingTable({ data }) {
                   class={`${rowClass} mds-pl__trow--clickable`.trim()}
                   onClick={makeRowClickHandler(event)}
                   title={`Open ${p.patientName} MDS in PCC`}
+                  data-track="mds_planner_event_clicked"
+                  data-track-prop-event-type="mds_ard"
                 >
                   <td class="mds-pl__t-name">
                     <div class="mds-pl__t-name-main">{p.patientName}</div>
@@ -215,6 +217,8 @@ function MdsCodingTable({ data }) {
               class="mds-pl__done-row"
               onClick={makeRowClickHandler(event)}
               title={`Open ${p.patientName} MDS in PCC`}
+              data-track="mds_planner_event_clicked"
+              data-track-prop-event-type="mds_ard"
             >
               <span class="mds-pl__done-row-name">{p.patientName}</span>
               {p.description && <span class="mds-pl__done-row-sub">{shortenDescription(p.description)}</span>}
@@ -270,6 +274,8 @@ function CarePlansToOpenTable({ data }) {
                   class={`${rowClass} mds-pl__trow--clickable`.trim()}
                   onClick={makeRowClickHandler(event)}
                   title={`Open new care plan for ${p.patientName}`}
+                  data-track="mds_planner_event_clicked"
+                  data-track-prop-event-type="cp_open_needed"
                 >
                   <td class="mds-pl__t-name">{p.patientName}</td>
                   <td class="mds-pl__t-date">{formatShortDate(p.admitDate)}</td>
@@ -295,6 +301,8 @@ function CarePlansToOpenTable({ data }) {
               class="mds-pl__done-row"
               onClick={makeRowClickHandler(event)}
               title={`Open care plan for ${p.patientName}`}
+              data-track="mds_planner_event_clicked"
+              data-track-prop-event-type="cp_review_in_progress"
             >
               <span class="mds-pl__done-row-name">{p.patientName}</span>
               <span class="mds-pl__done-row-date">opened {formatShortDate(p.carePlanOpenedAt)}</span>
@@ -350,6 +358,8 @@ function CarePlansToReviewTable({ data }) {
                   class={`${rowClass} mds-pl__trow--clickable`.trim()}
                   onClick={makeRowClickHandler(event)}
                   title={`Open care plan for ${p.patientName}`}
+                  data-track="mds_planner_event_clicked"
+                  data-track-prop-event-type={evType}
                 >
                   <td class="mds-pl__t-name">{p.patientName}</td>
                   <td class={`mds-pl__t-date${overdue ? ' mds-pl__t-date--over' : ''}`}>{formatShortDate(p.expectedDate)}</td>
@@ -375,6 +385,8 @@ function CarePlansToReviewTable({ data }) {
               class="mds-pl__done-row"
               onClick={makeRowClickHandler(event)}
               title={`Open care plan for ${p.patientName}`}
+              data-track="mds_planner_event_clicked"
+              data-track-prop-event-type="cp_review_in_progress"
             >
               <span class="mds-pl__done-row-name">{p.patientName}</span>
               <span class="mds-pl__done-row-date">reviewed {formatShortDate(p.reviewCompletedAt)}</span>
@@ -399,6 +411,7 @@ function QueriesSummary({ data, onOpenQueriesTab }) {
       doneCount={doneCount}
       anchor="queries"
       footer={onOpenQueriesTab && (
+        /* NO_TRACK: tab nav — covered by mds_cc_view_switched in parent */
         <button class="mds-pl__q-link" onClick={onOpenQueriesTab}>Open Queries tab &rsaquo;</button>
       )}
     >
@@ -443,6 +456,7 @@ function CertsSummary({ data, onOpenCertsTab }) {
       doneCount={doneCount}
       anchor="certs"
       footer={onOpenCertsTab && (
+        /* NO_TRACK: tab nav — covered by mds_cc_view_switched in parent */
         <button class="mds-pl__q-link" onClick={onOpenCertsTab}>Open Certs tab &rsaquo;</button>
       )}
     >
@@ -573,6 +587,8 @@ function InterviewsQueue({ data }) {
                     class={`${rowClass} mds-pl__trow--clickable`.trim()}
                     onClick={makeRowClickHandler(event)}
                     title={`Open ${p.patientName} MDS in PCC`}
+                    data-track="mds_planner_event_clicked"
+                    data-track-prop-event-type="mds_ard"
                   >
                     <td class="mds-pl__t-name">{p.patientName}</td>
                     <td class="mds-pl__t-type">
@@ -607,6 +623,8 @@ function InterviewsQueue({ data }) {
               class="mds-pl__done-row"
               onClick={makeRowClickHandler(event)}
               title={`Open ${p.patientName} MDS in PCC`}
+              data-track="mds_planner_event_clicked"
+              data-track-prop-event-type="mds_ard"
             >
               <span class="mds-pl__done-row-name">{p.patientName}</span>
               <span class="mds-pl__done-row-sub">
@@ -643,6 +661,8 @@ function SkilledRoster({ mcr, managed }) {
                 meta: {},
               }) : undefined}
               title={p.patientExternalId ? `Open ${p.patientName} in PCC` : undefined}
+              data-track={p.patientExternalId ? 'mds_planner_event_clicked' : undefined}
+              data-track-prop-event-type={p.patientExternalId ? 'admit' : undefined}
             >
               {p.patientName}
             </div>
@@ -661,6 +681,8 @@ function SkilledRoster({ mcr, managed }) {
                 meta: {},
               }) : undefined}
               title={p.patientExternalId ? `Open ${p.patientName} in PCC` : undefined}
+              data-track={p.patientExternalId ? 'mds_planner_event_clicked' : undefined}
+              data-track-prop-event-type={p.patientExternalId ? 'admit' : undefined}
             >
               {p.patientName}
             </div>

@@ -351,6 +351,7 @@ function DayDetailPanel({ dayKey, items, onClose, onOpenAnalyzer }) {
               </svg>
               {label}
             </button>
+            {/* NO_TRACK: close-X */}
             <button class="mds-cc__cal-panel-close" onClick={onClose} aria-label="Close">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <line x1="18" y1="6" x2="6" y2="18" />
@@ -380,6 +381,7 @@ function DayDetailPanel({ dayKey, items, onClose, onOpenAnalyzer }) {
       <div class="mds-cc__cal-panel">
         <div class="mds-cc__cal-panel-header">
           <span class="mds-cc__cal-panel-date">{label}</span>
+          {/* NO_TRACK: close-X */}
           <button class="mds-cc__cal-panel-close" onClick={onClose} aria-label="Close">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <line x1="18" y1="6" x2="6" y2="18" />
@@ -582,8 +584,11 @@ export function CalendarView({
     <div class="mds-cc__cal">
       <div class="mds-cc__cal-toolbar">
         <div class="mds-cc__cal-nav">
+          {/* NO_TRACK: pure-UI nav */}
           <button class="mds-cc__cal-nav-btn" onClick={handlePrev} aria-label="Previous">&lsaquo;</button>
+          {/* NO_TRACK: pure-UI nav */}
           <button class="mds-cc__cal-today-btn" onClick={handleToday}>Today</button>
+          {/* NO_TRACK: pure-UI nav */}
           <button class="mds-cc__cal-nav-btn" onClick={handleNext} aria-label="Next">&rsaquo;</button>
           <span class="mds-cc__cal-label">{headerLabel}</span>
         </div>
