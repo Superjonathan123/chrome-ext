@@ -105,3 +105,7 @@ function initPreactApp() {
 // 8. Start update checker (polls GitHub Releases on this repo)
 import { UpdateChecker } from './utils/update-checker.js';
 UpdateChecker.startPolling();
+
+// 9. Start PCC SPA navigation observer (fires pcc_page_viewed on path change)
+import { startPccNavObserver } from './utils/pcc-nav-observer.js';
+startPccNavObserver();
