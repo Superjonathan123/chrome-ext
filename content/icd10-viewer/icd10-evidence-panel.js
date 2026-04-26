@@ -3,6 +3,14 @@
  * Middle panel showing document-grouped evidence for selected diagnoses
  */
 
+// Tracking helper — uses window.SuperAnalytics.track when available so this
+// file works both bundled (extension) and as a classic <script> (demo HTMLs).
+function _track(event, props) {
+  try {
+    window.SuperAnalytics?.track?.(event, props || {});
+  } catch (e) { /* swallow */ }
+}
+
 const ICD10EvidencePanel = {
   // State
   selectedItemId: null,
@@ -79,6 +87,11 @@ const ICD10EvidencePanel = {
     docGroups.forEach(dg => this.expandedDocuments.add(dg.documentId));
 
     this.render();
+
+    // Track evidence-opened for the selected diagnosis code (reference data, safe).
+    if (this.selectedCode && this.items.length > 0) {
+      _track('icd10_evidence_opened', { code: this.selectedCode });
+    }
 
     // Auto-select first item if requested and items exist
     if (autoSelect && this.items.length > 0) {
@@ -293,6 +306,7 @@ const ICD10EvidencePanel = {
     let approveHtml = '';
     if (this.isApproved) {
       approveHtml = `
+        <!-- NO_TRACK: disabled state — no click handler, post-add display only -->
         <button class="icd10-evidence-panel__approve icd10-evidence-panel__approve--approved" disabled>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <polyline points="20 6 9 17 4 12"></polyline>
@@ -302,6 +316,7 @@ const ICD10EvidencePanel = {
       `;
     } else if (this.approveLoading) {
       approveHtml = `
+        <!-- NO_TRACK: disabled loading state — no click handler -->
         <button class="icd10-evidence-panel__approve icd10-evidence-panel__approve--loading" disabled>
           <span class="icd10-evidence-panel__approve-spinner"></span>
           Adding...
@@ -309,6 +324,7 @@ const ICD10EvidencePanel = {
       `;
     } else {
       approveHtml = `
+        <!-- NO_TRACK: dx_confirmed event fires from the confirmation flow on commit -->
         <button class="icd10-evidence-panel__approve" data-action="approve">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <polyline points="20 6 9 17 4 12"></polyline>
@@ -386,11 +402,13 @@ const ICD10EvidencePanel = {
             <div class="icd10-evidence-panel__doc-items">
               ${visibleItems.map((item, index) => this._renderEvidenceItem(item, index + 1)).join('')}
               ${!showAll && hiddenCount > 0 ? `
+                <!-- NO_TRACK: pure UI expand/collapse, no engagement event needed -->
                 <button class="icd10-evidence-panel__show-more-items" data-action="show-more-items" data-doc-id="${docGroup.documentId}">
                   + ${hiddenCount} more
                 </button>
               ` : ''}
               ${showAll && hiddenCount > 0 ? `
+                <!-- NO_TRACK: pure UI expand/collapse, no engagement event needed -->
                 <button class="icd10-evidence-panel__show-more-items" data-action="show-fewer-items" data-doc-id="${docGroup.documentId}">
                   Show less
                 </button>
@@ -606,6 +624,8 @@ const ICD10EvidencePanel = {
     this.selectedCode = code;
     this.selectedDescription = description;
     this.codeDropdownOpen = false;
+    // Code is ICD-10 reference data — safe categorical value.
+    _track('icd10_code_clicked', { code, source: 'evidence' });
     this.render();
   },
 

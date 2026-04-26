@@ -154,3 +154,10 @@ if (ENABLED && typeof chrome !== 'undefined' && chrome.storage) {
     }
   });
 }
+
+// Expose globally so vanilla scripts loaded as classic <script> tags (which
+// can't ES-import this module) can still emit events. Demos that don't bundle
+// analytics simply leave window.SuperAnalytics undefined → callers no-op.
+if (typeof window !== 'undefined') {
+  window.SuperAnalytics = { track, identify, reset, setPccContext };
+}

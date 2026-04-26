@@ -1,5 +1,6 @@
 import { h } from 'preact';
 import { useState, useEffect, useMemo, useRef } from 'preact/hooks';
+import { track } from '../../utils/analytics.js';
 
 const BASE_CODE_DESCRIPTIONS = {
   'I69': 'Sequelae of cerebrovascular disease',
@@ -247,7 +248,11 @@ export function Sidebar({ topRanked = [], approved = [], annotations = [], onSel
   const handleClick = (key) => {
     setSelectedKey(key);
     const row = allRows(sections).find(r => r.key === key);
-    if (row && onSelect) onSelect(buildSelectionPayload(row));
+    if (row) {
+      // ICD-10 code is reference data — safe categorical value, never PHI.
+      track('icd10_code_clicked', { code: row.code, source: 'sidebar' });
+      if (onSelect) onSelect(buildSelectionPayload(row));
+    }
   };
 
   const showApproved = sections.approved.length > 0;

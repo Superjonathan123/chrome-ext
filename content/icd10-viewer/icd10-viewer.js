@@ -3,6 +3,14 @@
  * Full-screen modal with three-panel ICD-10 coding interface
  */
 
+// Tracking helper — uses window.SuperAnalytics.track when available so this
+// file works both bundled (extension) and as a classic <script> (demo HTMLs).
+function _track(event, props) {
+  try {
+    window.SuperAnalytics?.track?.(event, props || {});
+  } catch (e) { /* swallow */ }
+}
+
 const ICD10Viewer = {
   // State
   isOpen: false,
@@ -52,6 +60,9 @@ const ICD10Viewer = {
     // Create and show modal
     this._createModal();
     this.isOpen = true;
+
+    // Fire mount-only opened event (once per open).
+    _track('icd10_viewer_opened', { source: 'fab' });
 
     // Load data
     await this._loadData();
@@ -200,6 +211,7 @@ const ICD10Viewer = {
       <div class="icd10-viewer-modal__backdrop"></div>
       <div class="icd10-viewer-modal__container">
         <div class="icd10-viewer__header">
+          <!-- NO_TRACK: pure UI back/close button -->
           <button class="icd10-viewer__back-btn" title="Close">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <line x1="19" y1="12" x2="5" y2="12"></line>
@@ -212,6 +224,7 @@ const ICD10Viewer = {
             <span class="icd10-viewer__patient-info">${this._escapeHtml(this.patientName)}</span>
           </div>
           <div class="icd10-viewer__header-actions">
+            <!-- NO_TRACK: navigates to ARD Estimator which fires ard_estimator_opened on mount -->
             <button class="icd10-viewer__estimate-btn" title="PDPM Estimate & ARD Recommendation">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
@@ -221,6 +234,7 @@ const ICD10Viewer = {
               </svg>
               PDPM Estimate
             </button>
+            <!-- NO_TRACK: navigates to Query Items which fires query_items_opened on mount -->
             <button class="icd10-viewer__next-btn" title="Review Query Items">
               Next
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -228,6 +242,7 @@ const ICD10Viewer = {
                 <polyline points="12 5 19 12 12 19"></polyline>
               </svg>
             </button>
+            <!-- NO_TRACK: pure UI close-X -->
             <button class="icd10-viewer__close-btn" title="Close">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -449,6 +464,10 @@ const ICD10Viewer = {
       ICD10PDFViewer.render(); // Show empty state
       return;
     }
+
+    // Stash the ICD-10 code on the PDF viewer so its analytics events
+    // (icd10_pdf_opened / icd10_pdf_page_changed) can carry the code context.
+    ICD10PDFViewer.currentCode = item.icd10Code || null;
 
     // Show loading state
     ICD10PDFViewer._renderLoading();
@@ -851,6 +870,7 @@ const ICD10Viewer = {
       mountEl.innerHTML = `
         <div class="icd10-viewer__error">
           <p class="icd10-viewer__error-text">Failed to load Query Items: ${this._escapeHtml(err.message)}</p>
+          <!-- NO_TRACK: error-recovery navigation back to ICD-10 view -->
           <button class="icd10-viewer__error-retry" onclick="ICD10Viewer.showICD10View()">Go Back</button>
         </div>
       `;
@@ -923,6 +943,7 @@ const ICD10Viewer = {
       mountEl.innerHTML = `
         <div class="icd10-viewer__error">
           <p class="icd10-viewer__error-text">Failed to load PDPM Estimator: ${this._escapeHtml(err.message)}</p>
+          <!-- NO_TRACK: error-recovery navigation back to ICD-10 view -->
           <button class="icd10-viewer__error-retry" onclick="ICD10Viewer.showICD10View()">Go Back</button>
         </div>
       `;
@@ -1001,6 +1022,7 @@ const ICD10Viewer = {
           </svg>
         </div>
         <p class="icd10-viewer__error-text">${this._escapeHtml(message)}</p>
+        <!-- NO_TRACK: error-recovery retry button -->
         <button class="icd10-viewer__error-retry" onclick="ICD10Viewer._loadData()">
           Retry
         </button>

@@ -5,6 +5,14 @@
  * Auto-corrects sideways pages + manual rotate button
  */
 
+// Tracking helper — uses window.SuperAnalytics.track when available so this
+// file works both bundled (extension) and as a classic <script> (demo HTMLs).
+function _track(event, props) {
+  try {
+    window.SuperAnalytics?.track?.(event, props || {});
+  } catch (e) { /* swallow */ }
+}
+
 const ICD10PDFViewer = {
   // State
   pdfDoc: null,
@@ -18,6 +26,7 @@ const ICD10PDFViewer = {
   manualRotation: 0, // user-applied rotation (0, 90, 180, 270)
   pageRotations: {},  // cached per-page inherent rotations
   currentDocName: '', // display name of current document
+  currentCode: null,  // ICD-10 code currently driving the viewer (analytics context)
 
   init(container) {
     this.container = container;
@@ -81,6 +90,12 @@ const ICD10PDFViewer = {
       this._renderPDFContainer();
       await this._renderPage(this.currentPage);
 
+      // Track PDF open (new document only). page_count is integer, code is reference data — safe.
+      _track('icd10_pdf_opened', {
+        code: this.currentCode || 'unknown',
+        page_count: this.totalPages,
+      });
+
     } catch (error) {
       console.error('ICD10PDFViewer: Failed to load PDF:', error);
       this._renderError(`Failed to load PDF: ${error.message}`);
@@ -104,6 +119,7 @@ const ICD10PDFViewer = {
     this.container.innerHTML = `
       <div class="icd10-pdf-viewer__controls">
         <div class="icd10-pdf-viewer__page-nav">
+          <!-- NO_TRACK: page nav fires icd10_pdf_page_changed explicitly from the click handler -->
           <button class="icd10-pdf-viewer__nav-btn" data-action="prev" title="Previous page">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <polyline points="15 18 9 12 15 6"></polyline>
@@ -114,6 +130,7 @@ const ICD10PDFViewer = {
             /
             <span class="icd10-pdf-viewer__page-total">${this.totalPages}</span>
           </span>
+          <!-- NO_TRACK: page nav fires icd10_pdf_page_changed explicitly from the click handler -->
           <button class="icd10-pdf-viewer__nav-btn" data-action="next" title="Next page">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <polyline points="9 18 15 12 9 6"></polyline>
@@ -128,12 +145,14 @@ const ICD10PDFViewer = {
           <span>${docName}</span>
         </div>` : ''}
         <div class="icd10-pdf-viewer__zoom">
+          <!-- NO_TRACK: pure UI rotate, no engagement event needed -->
           <button class="icd10-pdf-viewer__nav-btn" data-action="rotate" title="Rotate 90°">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <polyline points="1 4 1 10 7 10"></polyline>
               <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
             </svg>
           </button>
+          <!-- NO_TRACK: pure UI zoom-out -->
           <button class="icd10-pdf-viewer__zoom-btn" data-action="zoom-out" title="Zoom out">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <circle cx="11" cy="11" r="8"></circle>
@@ -142,6 +161,7 @@ const ICD10PDFViewer = {
             </svg>
           </button>
           <span class="icd10-pdf-viewer__zoom-level">${this.currentZoom}%</span>
+          <!-- NO_TRACK: pure UI zoom-in -->
           <button class="icd10-pdf-viewer__zoom-btn" data-action="zoom-in" title="Zoom in">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <circle cx="11" cy="11" r="8"></circle>
@@ -467,10 +487,20 @@ const ICD10PDFViewer = {
 
   _attachControlListeners() {
     this.container.querySelector('[data-action="prev"]')?.addEventListener('click', () => {
-      if (this.currentPage > 1) this._renderPage(this.currentPage - 1);
+      if (this.currentPage > 1) {
+        const from = this.currentPage;
+        const to = from - 1;
+        _track('icd10_pdf_page_changed', { code: this.currentCode || 'unknown', from_page: from, to_page: to });
+        this._renderPage(to);
+      }
     });
     this.container.querySelector('[data-action="next"]')?.addEventListener('click', () => {
-      if (this.currentPage < this.totalPages) this._renderPage(this.currentPage + 1);
+      if (this.currentPage < this.totalPages) {
+        const from = this.currentPage;
+        const to = from + 1;
+        _track('icd10_pdf_page_changed', { code: this.currentCode || 'unknown', from_page: from, to_page: to });
+        this._renderPage(to);
+      }
     });
     this.container.querySelector('[data-action="zoom-out"]')?.addEventListener('click', () => {
       this._changeZoom(-1);
@@ -498,6 +528,13 @@ const ICD10PDFViewer = {
 
   goToPage(pageNum) {
     if (this.pdfDoc && pageNum >= 1 && pageNum <= this.totalPages) {
+      if (pageNum !== this.currentPage) {
+        _track('icd10_pdf_page_changed', {
+          code: this.currentCode || 'unknown',
+          from_page: this.currentPage,
+          to_page: pageNum,
+        });
+      }
       this._renderPage(pageNum);
     }
   },
@@ -672,10 +709,12 @@ const ICD10PDFViewer = {
       <div class="icd10-pdf-viewer__demo-document">
         <div class="icd10-pdf-viewer__demo-toolbar">
           <div class="icd10-pdf-viewer__demo-nav">
+            <!-- NO_TRACK: demo-only placeholder UI, never reached in production -->
             <button class="icd10-pdf-viewer__demo-nav-btn" data-action="prev-page" ${currentPage <= 1 ? 'disabled' : ''}>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
             </button>
             <span class="icd10-pdf-viewer__demo-page-info">Page ${currentPage} of ${totalPages}</span>
+            <!-- NO_TRACK: demo-only placeholder UI, never reached in production -->
             <button class="icd10-pdf-viewer__demo-nav-btn" data-action="next-page" ${currentPage >= totalPages ? 'disabled' : ''}>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
             </button>
@@ -731,6 +770,7 @@ const ICD10PDFViewer = {
     this.pageRotations = {};
     this._contentRotationCache = {};
     this.currentDocName = '';
+    this.currentCode = null;
     this.render();
   }
 };
