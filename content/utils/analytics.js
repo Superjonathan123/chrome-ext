@@ -1,0 +1,156 @@
+// PostHog wrapper with PHI guardrails. Single entry point for all events.
+//
+// - PostHog inits once on module import. The placeholder key disables PostHog
+//   so builds work before the real key is provisioned.
+// - Auth is bootstrapped from chrome.storage.local.user; identity transitions
+//   are observed via chrome.storage.onChanged.
+// - Unknown event names log a dev warning; unknown properties strip silently.
+//   PHI-shaped string values drop and emit a phi_guardrail_tripped event
+//   without the offending value.
+
+import posthog from 'posthog-js';
+import {
+  EVENT_SCHEMA,
+  FORBIDDEN_PROP_SUFFIXES,
+  ALLOWED_NAME_LIKE_SUFFIXES,
+} from './analytics-schema.js';
+
+const KEY = __POSTHOG_KEY__;
+const ENABLED = KEY && KEY !== 'phc_PLACEHOLDER';
+
+const PHI_PATTERNS = [
+  { name: 'digits_6plus', re: /\b\d{6,}\b/ },                    // potential MRN
+  { name: 'mm_dd_yyyy', re: /\b\d{2}\/\d{2}\/\d{4}\b/ },         // DOB
+  { name: 'iso_date', re: /\b\d{4}-\d{2}-\d{2}\b/ },             // DOB-ish
+  { name: 'two_capitalized', re: /\b[A-Z][a-z]+\s+[A-Z][a-z]+\b/ }, // FirstLast
+];
+
+function isForbiddenPropName(name) {
+  if (ALLOWED_NAME_LIKE_SUFFIXES.some(s => name.endsWith(s))) return false;
+  if (FORBIDDEN_PROP_SUFFIXES.some(s => name.endsWith(s))) return true;
+  if (name === 'name' || name === 'patient_name') return true;
+  if (name.endsWith('_name')) return true;
+  return false;
+}
+
+function scanForPhi(value) {
+  if (typeof value !== 'string') return null;
+  for (const { name, re } of PHI_PATTERNS) {
+    if (re.test(value)) return name;
+  }
+  return null;
+}
+
+function sanitizeProperties(props) {
+  if (!props) return props;
+  delete props.$current_url;
+  delete props.$pathname;
+  delete props.$referrer;
+  delete props.$host;
+  return props;
+}
+
+if (ENABLED) {
+  posthog.init(KEY, {
+    api_host: 'https://us.i.posthog.com',
+    autocapture: false,
+    capture_pageview: false,
+    capture_pageleave: false,
+    disable_session_recording: true,
+    capture_performance: false,
+    mask_all_text: true,
+    mask_all_element_attributes: true,
+    property_blacklist: ['$current_url', '$pathname', '$referrer', '$host'],
+    sanitize_properties: sanitizeProperties,
+    persistence: 'localStorage',
+    advanced_disable_decide: true,
+  });
+  posthog.register({
+    surface: 'extension',
+    ext_version: chrome?.runtime?.getManifest?.().version || 'unknown',
+  });
+}
+
+export function track(eventName, props = {}) {
+  if (!ENABLED) return;
+
+  const schema = EVENT_SCHEMA[eventName];
+  if (!schema) {
+    if (__DEV_MODE__) console.warn(`[analytics] Unknown event: ${eventName}`);
+    return;
+  }
+
+  const sanitized = {};
+  for (const [k, v] of Object.entries(props)) {
+    if (!schema.includes(k)) continue;
+    if (isForbiddenPropName(k)) {
+      posthog.capture('phi_guardrail_tripped', {
+        event_name: eventName,
+        prop_name: k,
+        pattern: 'forbidden_suffix',
+      });
+      continue;
+    }
+    const phiPattern = scanForPhi(v);
+    if (phiPattern) {
+      posthog.capture('phi_guardrail_tripped', {
+        event_name: eventName,
+        prop_name: k,
+        pattern: phiPattern,
+      });
+      continue;
+    }
+    sanitized[k] = v;
+  }
+
+  posthog.capture(eventName, sanitized);
+}
+
+export function identify(user) {
+  if (!ENABLED || !user?.id) return;
+  posthog.identify(user.id, {
+    email: user.email,
+    role: user.role,
+  });
+  if (user.facilityId) {
+    posthog.group('facility', user.facilityId, { name: user.facilityName });
+  }
+}
+
+export function reset() {
+  if (!ENABLED) return;
+  posthog.reset();
+}
+
+export function setPccContext({ pageType, section, hasPatientContext }) {
+  if (!ENABLED) return;
+  posthog.register({
+    pcc_page_type: pageType || 'unknown',
+    pcc_section: section || null,
+    pcc_has_patient_context: !!hasPatientContext,
+  });
+}
+
+async function bootstrapAuth() {
+  try {
+    const { user } = await chrome.storage.local.get('user');
+    if (user) identify(user);
+  } catch (e) {
+    if (__DEV_MODE__) console.warn('[analytics] auth bootstrap failed', e);
+  }
+}
+
+if (ENABLED && typeof chrome !== 'undefined' && chrome.storage) {
+  bootstrapAuth();
+  chrome.storage.onChanged.addListener((changes, area) => {
+    if (area !== 'local' || !changes.user) return;
+    const next = changes.user.newValue;
+    if (next) {
+      identify(next);
+      track('user_logged_in', { method: 'oauth_extension' });
+    } else {
+      track('user_logged_out');
+      reset();
+    }
+  });
+}
