@@ -45,6 +45,7 @@ const DashboardView = {
       <div class="super-menu-error">
         <div class="super-menu-error__icon">&#9888;</div>
         <div class="super-menu-error__text">${this._escapeHtml(DashboardState.error)}</div>
+        <!-- NO_TRACK: vestigial — dashboard panel removed (overlay architecture) -->
         <button class="super-menu-error__retry" id="super-menu-retry">Try Again</button>
       </div>
     `;
@@ -153,6 +154,7 @@ const DashboardView = {
           ${actions.length > 0 ? `
             <div class="super-menu-query__actions">
               ${actions.map(action => `
+                <!-- NO_TRACK: vestigial — dashboard panel removed (overlay architecture) -->
                 <button class="super-menu-query__action" data-action="${action.action}" data-query-id="${query.id}" title="${action.label}">
                   ${action.icon}
                 </button>

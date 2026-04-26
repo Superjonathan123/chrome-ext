@@ -193,6 +193,7 @@ function renderMDSError(error, context) {
     <div class="super-mds-error">
       <div class="super-mds-error__icon">&#9888;</div>
       <div class="super-mds-error__text">${escapeHtml(error)}</div>
+      <!-- NO_TRACK: vestigial — MDS panel removed (overlay architecture); MDSCommandCenterLauncher is the live entry point -->
       <button class="super-mds-error__retry" onclick="renderMDSView(true)">Retry</button>
     </div>
   `;
@@ -244,6 +245,7 @@ function renderMDSContent(data, context) {
           <div class="super-mds-error">
             <div class="super-mds-error__icon">&#9888;</div>
             <div class="super-mds-error__text">Unable to load MDS analysis</div>
+            <!-- NO_TRACK: vestigial — MDS panel removed (overlay architecture) -->
             <button class="super-mds-error__retry" onclick="renderMDSView(true)">Retry</button>
           </div>
         </div>
@@ -301,6 +303,7 @@ function renderMDSContent(data, context) {
     return `
       ${breadcrumb}
       <div class="super-mds-global-actions">
+        <!-- NO_TRACK: vestigial — global MDS panel removed; FAB launches MDS Command Center directly -->
         <button class="mds-cc__launch-btn" id="mds-command-center-btn">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <rect x="3" y="3" width="7" height="7"/>
@@ -333,6 +336,7 @@ function renderMDSBreadcrumb(data, context) {
     const patientName = data?.patientName || context.patientName || 'Patient';
     return `
       <div class="super-nav-header">
+        <!-- NO_TRACK: vestigial — MDS panel removed (overlay architecture) -->
         <button class="super-nav-header__back" data-scope="global" title="Back to Dashboard">
           <span class="super-nav-header__back-arrow">&#8592;</span>
           <span class="super-nav-header__back-label">Dashboard</span>
@@ -354,6 +358,7 @@ function renderMDSBreadcrumb(data, context) {
     if (MDSViewState.cameFromDashboard) {
       // Came from facility dashboard - back goes to dashboard
       backButton = `
+        <!-- NO_TRACK: vestigial — MDS panel removed (overlay architecture) -->
         <button class="super-mds-nav-header__back" data-action="back-to-dashboard" title="Back to Dashboard">
           &#8592; Dashboard
         </button>
@@ -361,6 +366,7 @@ function renderMDSBreadcrumb(data, context) {
     } else {
       // Normal flow - back goes to patient
       backButton = `
+        <!-- NO_TRACK: vestigial — MDS panel removed (overlay architecture) -->
         <button class="super-mds-nav-header__back" data-scope="patient" data-patient-id="${patientId || ''}" title="Back to ${escapeHtml(patientName)}">
           &#8592; ${escapeHtml(patientName)}
         </button>
@@ -370,9 +376,11 @@ function renderMDSBreadcrumb(data, context) {
     // "Open in PCC" buttons
     const pccButtons = `
       <div class="super-mds-nav-header__actions">
+        <!-- NO_TRACK: vestigial — MDS panel removed (overlay architecture) -->
         <button class="super-mds-nav-header__pcc-btn" data-action="open-patient" data-patient-id="${patientId || ''}" title="Open patient in PCC">
           &#128100;
         </button>
+        <!-- NO_TRACK: vestigial — MDS panel removed (overlay architecture) -->
         <button class="super-mds-nav-header__pcc-btn" data-action="open-mds" data-assessment-id="${assessmentId || ''}" title="Open MDS in PCC">
           &#128203;
         </button>
@@ -487,7 +495,7 @@ function renderComplianceCard(data) {
         <span class="super-mds-compliance-item__label">${checkLabels[key]}</span>
         <span class="super-mds-compliance-item__detail">${escapeHtml(detailText)}</span>
         ${dateText ? `<span class="super-mds-compliance-item__date">${dateText}</span>` : ''}
-        ${showViewBtn ? `<button class="super-mds-compliance-item__btn" data-action="view-${key}">View</button>` : ''}
+        ${showViewBtn ? `<!-- NO_TRACK: vestigial — MDS panel removed (overlay architecture) --><button class="super-mds-compliance-item__btn" data-action="view-${key}">View</button>` : ''}
       </div>
     `;
   }).join('');

@@ -46,6 +46,7 @@ const FacilityDashboardView = {
       <div class="super-menu-error">
         <div class="super-menu-error__icon">&#9888;</div>
         <div class="super-menu-error__text">${this._escapeHtml(FacilityDashboardState.error)}</div>
+        <!-- NO_TRACK: vestigial — facility dashboard panel removed (overlay architecture) -->
         <button class="super-menu-error__retry" id="super-facility-retry">Try Again</button>
       </div>
     `;
@@ -70,6 +71,7 @@ const FacilityDashboardView = {
       const isMuted = count === 0 && tab.key !== 'all';
 
       return `
+        <!-- NO_TRACK: vestigial — facility dashboard panel removed (overlay architecture) -->
         <button class="super-tab ${isActive ? 'super-tab--active' : ''} ${isMuted ? 'super-tab--muted' : ''}"
                 data-tab="${tab.key}">
           <span class="super-tab__label">${tab.label}</span>
@@ -119,6 +121,7 @@ const FacilityDashboardView = {
       const isActive = currentSubTab === sub.key;
 
       return `
+        <!-- NO_TRACK: vestigial — facility dashboard panel removed (overlay architecture) -->
         <button class="super-subtab ${isActive ? 'super-subtab--active' : ''}"
                 data-maintab="${currentTab}" data-subtab="${sub.key}">
           ${sub.label}
@@ -143,10 +146,12 @@ const FacilityDashboardView = {
 
     return `
       <div class="super-subtabs">
+        <!-- NO_TRACK: vestigial — facility dashboard panel removed (overlay architecture) -->
         <button class="super-subtab ${currentFilter === 'needs_attention' ? 'super-subtab--active' : ''}"
                 data-filter="needs_attention">
           Needs Attention
         </button>
+        <!-- NO_TRACK: vestigial — facility dashboard panel removed (overlay architecture) -->
         <button class="super-subtab ${currentFilter === 'all' ? 'super-subtab--active' : ''}"
                 data-filter="all">
           All Open
