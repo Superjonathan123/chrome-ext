@@ -88,6 +88,7 @@ export function PractitionerWorkloadView({ practitionerId, onBack }) {
     return (
       <div class="cert__workload">
         <div class="cert__workload-header">
+          {/* NO_TRACK */}
           <button class="cert__workload-back" onClick={onBack}>{'\u2190'} Back to Certs</button>
         </div>
         <div class="mds-cc__state-container">
@@ -102,11 +103,13 @@ export function PractitionerWorkloadView({ practitionerId, onBack }) {
     return (
       <div class="cert__workload">
         <div class="cert__workload-header">
+          {/* NO_TRACK */}
           <button class="cert__workload-back" onClick={onBack}>{'\u2190'} Back to Certs</button>
         </div>
         <div class="mds-cc__state-container">
           <div class="mds-cc__state-icon">{'\u26A0'}</div>
           <p class="mds-cc__state-text">{error}</p>
+          {/* NO_TRACK */}
           <button class="mds-cc__retry-btn" onClick={retry}>Retry</button>
         </div>
       </div>
@@ -120,6 +123,7 @@ export function PractitionerWorkloadView({ practitionerId, onBack }) {
   return (
     <div class="cert__workload">
       <div class="cert__workload-header">
+        {/* NO_TRACK */}
         <button class="cert__workload-back" onClick={onBack}>{'\u2190'} Back to Certs</button>
       </div>
 

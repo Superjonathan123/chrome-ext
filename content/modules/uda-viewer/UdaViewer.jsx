@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'preact/hooks';
+import { track } from '../../utils/analytics.js';
 
 function formatDate(dateStr) {
   if (!dateStr) return '';
@@ -16,6 +17,12 @@ function formatDate(dateStr) {
 export function UdaViewer({ uda, matchKeys, quoteText, onClose }) {
   const matches = matchKeys instanceof Set ? matchKeys : new Set(matchKeys || []);
   const firstMatchRef = useRef(null);
+
+  // Mount-only open event. The UDA viewer surface is launched from evidence
+  // viewers / mds-overlay; we treat each mount as one "viewer opened".
+  useEffect(() => {
+    track('uda_viewer_opened', { source: 'evidence' });
+  }, []);
 
   useEffect(() => {
     if (firstMatchRef.current) {
@@ -62,6 +69,7 @@ export function UdaViewer({ uda, matchKeys, quoteText, onClose }) {
           )}
         </div>
         {onClose && (
+          // NO_TRACK
           <button
             type="button"
             className="super-uda-viewer__close"

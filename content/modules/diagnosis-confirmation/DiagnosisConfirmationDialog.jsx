@@ -1,4 +1,5 @@
-import { useState, useEffect, useCallback } from 'preact/hooks';
+import { useState, useEffect, useCallback, useRef } from 'preact/hooks';
+import { track } from '../../utils/analytics.js';
 
 /**
  * Diagnosis Confirmation Dialog
@@ -20,6 +21,19 @@ export function DiagnosisConfirmationDialog({ stagedCodes, defaultDate, patientI
   const [rankLoading, setRankLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // Tally of user-rejected (removed) codes across the dialog lifecycle.
+  // This is the rejected_count in dx_confirmation_completed.
+  const rejectedCountRef = useRef(0);
+  const initialDxCountRef = useRef(stagedCodes.length);
+
+  // Mount-only open event. The dialog is launched from the ICD-10 viewer.
+  useEffect(() => {
+    track('dx_confirmation_opened', {
+      source: 'icd10',
+      dx_count: initialDxCountRef.current,
+    });
+  }, []);
+
   useEffect(() => {
     if (typeof PCCDiagnosisClient === 'undefined') {
       setRankLoading(false);
@@ -38,6 +52,10 @@ export function DiagnosisConfirmationDialog({ stagedCodes, defaultDate, patientI
   }, [patientId]);
 
   const removeCode = useCallback((icd10Code) => {
+    // The UI doesn't expose a reason picker; the only user signal is "remove".
+    // Use the schema-allowed bucket 'other'. icd10Code is reference data (safe).
+    track('dx_rejected', { code: icd10Code, reason: 'other' });
+    rejectedCountRef.current += 1;
     setCodes(prev => prev.filter(c => c.icd10Code !== icd10Code));
   }, []);
 
@@ -86,6 +104,18 @@ export function DiagnosisConfirmationDialog({ stagedCodes, defaultDate, patientI
         // Pass per-code dates map
         Object.fromEntries(codesWithDates.map(c => [c.icd10Code, c.pccDate]))
       );
+      // Fire one dx_confirmed per successful PCC add (code is reference data).
+      let confirmedCount = 0;
+      for (const r of batchResults || []) {
+        if (r?.success) {
+          track('dx_confirmed', { code: r.icd10Code });
+          confirmedCount += 1;
+        }
+      }
+      track('dx_confirmation_completed', {
+        confirmed_count: confirmedCount,
+        rejected_count: rejectedCountRef.current,
+      });
       setResults(batchResults);
     } catch (err) {
       setError(err.message);
@@ -137,6 +167,7 @@ export function DiagnosisConfirmationDialog({ stagedCodes, defaultDate, patientI
               <p class="dx-confirm__subtitle">{codes.length} code{codes.length !== 1 ? 's' : ''} to add to PCC</p>
             </div>
           </div>
+          {/* NO_TRACK */}
           <button class="dx-confirm__close" onClick={handleDismiss} disabled={submitting} aria-label="Close">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
@@ -177,6 +208,7 @@ export function DiagnosisConfirmationDialog({ stagedCodes, defaultDate, patientI
               ))}
             </div>
             <div class="dx-confirm__footer">
+              {/* NO_TRACK */}
               <button class="dx-confirm__btn dx-confirm__btn--primary dx-confirm__btn--full" onClick={handleDone}>Done</button>
             </div>
           </div>
@@ -220,6 +252,7 @@ export function DiagnosisConfirmationDialog({ stagedCodes, defaultDate, patientI
                       {hasCustom && (
                         <span class="dx-confirm__code-custom-date-tag">{formatDisplayDate(c.customDate)}</span>
                       )}
+                      {/* NO_TRACK */}
                       <button
                         class={`dx-confirm__code-date-toggle ${hasCustom ? 'dx-confirm__code-date-toggle--active' : ''}`}
                         onClick={() => toggleExpanded(c.icd10Code)}
@@ -230,6 +263,8 @@ export function DiagnosisConfirmationDialog({ stagedCodes, defaultDate, patientI
                           <rect x="3" y="4" width="18" height="18" rx="2" ry="2" /><line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" />
                         </svg>
                       </button>
+                      {/* removeCode fires dx_rejected explicitly */}
+                      {/* NO_TRACK */}
                       <button
                         class="dx-confirm__code-remove"
                         onClick={() => removeCode(c.icd10Code)}
@@ -253,6 +288,7 @@ export function DiagnosisConfirmationDialog({ stagedCodes, defaultDate, patientI
                             disabled={submitting}
                           />
                           {hasCustom && (
+                            // NO_TRACK
                             <button
                               class="dx-confirm__code-date-reset"
                               onClick={() => clearCodeDate(c.icd10Code)}
@@ -283,10 +319,12 @@ export function DiagnosisConfirmationDialog({ stagedCodes, defaultDate, patientI
             )}
 
             <div class="dx-confirm__footer">
+              {/* NO_TRACK */}
               <button class="dx-confirm__btn dx-confirm__btn--ghost" onClick={handleDismiss} disabled={submitting}>
                 Cancel
               </button>
               {onDiscardAndExit && (
+                // NO_TRACK
                 <button
                   class="dx-confirm__btn dx-confirm__btn--ghost"
                   onClick={onDiscardAndExit}
@@ -296,6 +334,8 @@ export function DiagnosisConfirmationDialog({ stagedCodes, defaultDate, patientI
                   Discard & Exit
                 </button>
               )}
+              {/* handleApply emits dx_confirmed + dx_confirmation_completed */}
+              {/* NO_TRACK */}
               <button
                 class="dx-confirm__btn dx-confirm__btn--primary"
                 onClick={handleApply}

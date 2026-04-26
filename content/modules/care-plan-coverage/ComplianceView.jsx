@@ -146,11 +146,13 @@ function AttentionGroup({ label, accent, patients, histories, historiesLoading, 
                 ))}
               </div>
               {!expanded && remaining > 0 && (
+                // NO_TRACK
                 <button class="cpc-cv__view-more" onClick={(e) => { e.stopPropagation(); setExpanded(true); }}>
                   View {remaining} more
                 </button>
               )}
               {expanded && patients.length > ATTENTION_PREVIEW && (
+                // NO_TRACK
                 <button class="cpc-cv__view-more" onClick={(e) => { e.stopPropagation(); setExpanded(false); }}>
                   Show less
                 </button>
@@ -225,9 +227,15 @@ function PatientRow({ patient, sparklineScores, onOpenCoverage }) {
 
 function DetailItem({ item, expanded, onToggle }) {
   const isDx = item.type === 'diagnosis';
+  const gapType = isDx ? 'diagnosis' : 'order';
   return (
     <div class={`cpd__item ${expanded ? 'cpd__item--open' : ''}`}>
-      <div class="cpd__item-row" onClick={onToggle}>
+      <div
+        class="cpd__item-row"
+        onClick={onToggle}
+        data-track="care_plan_gap_clicked"
+        data-track-prop-gap-type={gapType}
+      >
         <span class={`cpd__item-dot cpd__item-dot--${item.status}`} />
         <div class="cpd__item-main">
           {item.code && <span class="cpd__item-code">{item.code}</span>}
@@ -302,6 +310,7 @@ function PatientDetail({ patient, facilityName, orgSlug, onBack }) {
     <div class="cpd">
       {/* ── Top bar ── */}
       <div class="cpd__topbar">
+        {/* NO_TRACK */}
         <button class="cpd__back" onClick={onBack} title="Back to all patients">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
             <path d="M19 12H5M12 19l-7-7 7-7" />
@@ -310,6 +319,7 @@ function PatientDetail({ patient, facilityName, orgSlug, onBack }) {
         </button>
         <div class="cpd__topbar-actions">
           {summary?.stale && <span class="cpd__stale">Stale</span>}
+          {/* NO_TRACK */}
           <button class={`cpd__refresh ${refreshing ? 'cpd__refresh--spin' : ''}`} onClick={refresh} disabled={refreshing}>
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <polyline points="23 4 23 10 17 10" /><polyline points="1 20 1 14 7 14" />
@@ -317,6 +327,7 @@ function PatientDetail({ patient, facilityName, orgSlug, onBack }) {
             </svg>
             {refreshing ? 'Checking...' : 'Re-check'}
           </button>
+          {/* NO_TRACK */}
           <button class="cpd__pcc-link" onClick={() => navigateToPatient(patient.externalPatientId || patient.patientId)} title="Open in PCC">
             Open in PCC
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -353,7 +364,7 @@ function PatientDetail({ patient, facilityName, orgSlug, onBack }) {
         <div class="cpc__loading"><div class="cpc__spinner" /><span class="cpc__loading-text">Loading coverage...</span></div>
       )}
       {covError && !covLoading && (
-        <div class="cpc__error"><div class="cpc__error-text">{covError}</div><button class="cpc__retry-btn" onClick={covRetry}>Try Again</button></div>
+        <div class="cpc__error"><div class="cpc__error-text">{covError}</div>{/* NO_TRACK */}<button class="cpc__retry-btn" onClick={covRetry}>Try Again</button></div>
       )}
       {neverChecked && !covLoading && !covError && (
         <div class="cpd__empty-state">
@@ -507,6 +518,7 @@ export function ComplianceView({ data, loading, error, retry, trendingData, faci
     return (
       <div class="cpc__error">
         <div class="cpc__error-text">{error}</div>
+        {/* NO_TRACK */}
         <button class="cpc__retry-btn" onClick={retry}>Try Again</button>
       </div>
     );
@@ -582,6 +594,7 @@ export function ComplianceView({ data, loading, error, retry, trendingData, faci
           { value: 'unchecked', label: `Unchecked (${uncheckedCount})` },
           ...(staleCount > 0 ? [{ value: 'stale', label: `Stale (${staleCount})` }] : []),
         ].map(f => (
+          // NO_TRACK
           <button
             key={f.value}
             class={`cpc-cv__filter-pill${filter === f.value ? ' cpc-cv__filter-pill--active' : ''}`}

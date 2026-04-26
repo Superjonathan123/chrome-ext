@@ -34,6 +34,7 @@ export function CertModal({ isOpen, onClose, title, subtitle, children, actions 
             <h2 class="cm__title">{title}</h2>
             {subtitle && <span class="cm__subtitle">{subtitle}</span>}
           </div>
+          {/* NO_TRACK */}
           <button class="cm__close" onClick={onClose} aria-label="Close">
             <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
               <path d="M1 1l12 12M13 1L1 13" />

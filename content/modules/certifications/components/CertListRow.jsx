@@ -152,12 +152,15 @@ export function CertListRow({ cert, compact, onSend, onSkip, onUnskip, onDelay, 
             <button
               class={`cert__row-action cert__row-action--${primaryAction.variant}`}
               onClick={handlePrimaryClick}
+              data-track="cert_clicked"
+              data-track-prop-cert-type={cert.type}
             >
               {primaryAction.label}
             </button>
           )}
           {(showSkip || showDelay || showEditReason) && (
             <div class="cert__row-menu-container" ref={menuRef}>
+              {/* NO_TRACK */}
               <button
                 class="cert__row-menu-btn"
                 onClick={(e) => { e.stopPropagation(); setMenuOpen(!menuOpen); }}
@@ -172,16 +175,19 @@ export function CertListRow({ cert, compact, onSend, onSkip, onUnskip, onDelay, 
               {menuOpen && (
                 <div class="cert__row-menu">
                   {showSkip && (
+                    // NO_TRACK
                     <button class="cert__row-menu-item" onClick={() => handleMenuAction('skip')}>
                       Skip Certification
                     </button>
                   )}
                   {showDelay && (
+                    // NO_TRACK
                     <button class="cert__row-menu-item" onClick={() => handleMenuAction('delay')}>
                       Mark as Delayed
                     </button>
                   )}
                   {showEditReason && (
+                    // NO_TRACK
                     <button class="cert__row-menu-item" onClick={() => handleMenuAction('editReason')}>
                       Edit Clinical Reason
                     </button>

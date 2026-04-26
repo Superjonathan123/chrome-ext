@@ -5,10 +5,17 @@ import { useChatHistory } from './hooks/useChatHistory.js';
 import { MessageList } from './components/MessageList.jsx';
 import { ChatInput } from './components/ChatInput.jsx';
 import { ChatHistoryDrawer } from './components/ChatHistoryDrawer.jsx';
+import { track } from '../../utils/analytics.js';
 
 export function AIChatOverlay({ onClose }) {
   const { messages, status, error, conversationId, send, clear, stop, setMessages, loadConversation } = useChat();
   const [showHistory, setShowHistory] = useState(false);
+
+  // Mount-only open event. AI chat overlay is launched from the FAB.
+  // The async funnel (chat_stream_*) is deferred to Task 22.
+  useEffect(() => {
+    track('chat_opened', { source: 'fab' });
+  }, []);
 
   const {
     conversations, loading: historyLoading,
@@ -34,6 +41,7 @@ export function AIChatOverlay({ onClose }) {
   }, [onClose, showHistory]);
 
   const handleNewChat = useCallback(() => {
+    track('chat_session_cleared');
     clear();
     setShowHistory(false);
   }, [clear]);
@@ -75,6 +83,7 @@ export function AIChatOverlay({ onClose }) {
             <span class="super-chat-overlay__header-title">AI Assistant</span>
           </div>
           <div class="super-chat-overlay__header-actions">
+            {/* NO_TRACK */}
             <button
               class={`super-chat-overlay__header-btn ${showHistory ? 'super-chat-overlay__header-btn--active' : ''}`}
               onClick={toggleHistory}
@@ -85,6 +94,8 @@ export function AIChatOverlay({ onClose }) {
                 <polyline points="12 6 12 12 16 14" />
               </svg>
             </button>
+            {/* handleNewChat fires chat_session_cleared explicitly */}
+            {/* NO_TRACK */}
             <button
               class="super-chat-overlay__header-btn"
               onClick={handleNewChat}
@@ -95,6 +106,7 @@ export function AIChatOverlay({ onClose }) {
                 <line x1="5" y1="12" x2="19" y2="12" />
               </svg>
             </button>
+            {/* NO_TRACK */}
             <button
               class="super-chat-overlay__header-btn"
               onClick={onClose}

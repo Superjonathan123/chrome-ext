@@ -2,11 +2,13 @@
  * CoveragePanel — root Preact component for care plan coverage overlay.
  * Launched from FAB via CoveragePanelLauncher.
  */
+import { useEffect } from 'preact/hooks';
 import { useCoverage } from './hooks/useCoverage.js';
 import { ScoreBar } from './components/ScoreBar.jsx';
 import { ChangesList } from './components/ChangesList.jsx';
 import { GapsList } from './components/GapsList.jsx';
 import { CoveredList } from './components/CoveredList.jsx';
+import { track } from '../../utils/analytics.js';
 
 const RefreshIcon = () => (
   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -23,6 +25,11 @@ export function CoveragePanel({ patientId, patientName, facilityName, orgSlug, o
     facilityName,
     orgSlug
   });
+
+  // Mount-only open event. CoveragePanel is launched from the FAB.
+  useEffect(() => {
+    track('care_plan_coverage_opened', { source: 'fab' });
+  }, []);
 
   const handleBackdropClick = (e) => {
     if (e.target === e.currentTarget) onClose();
@@ -56,6 +63,7 @@ export function CoveragePanel({ patientId, patientName, facilityName, orgSlug, o
             </div>
             <div class="cpc__header-actions">
               {summary?.stale && <span class="cpc__stale-badge">Stale</span>}
+              {/* NO_TRACK */}
               <button
                 class={`cpc__refresh-btn ${refreshing ? 'cpc__refresh-btn--spinning' : ''}`}
                 onClick={refresh}
@@ -65,6 +73,7 @@ export function CoveragePanel({ patientId, patientName, facilityName, orgSlug, o
                 <RefreshIcon />
                 {refreshing ? 'Checking...' : 'Refresh'}
               </button>
+              {/* NO_TRACK */}
               <button class="cpc__close-btn" onClick={onClose} title="Close">&times;</button>
             </div>
           </div>
@@ -101,6 +110,7 @@ export function CoveragePanel({ patientId, patientName, facilityName, orgSlug, o
           {error && !loading && (
             <div class="cpc__error">
               <div class="cpc__error-text">{error}</div>
+              {/* NO_TRACK */}
               <button class="cpc__retry-btn" onClick={retry}>Try Again</button>
             </div>
           )}

@@ -60,10 +60,18 @@ export function GapsList({ gaps }) {
 function CoverageItem({ item }) {
   const [expanded, setExpanded] = useState(false);
   const isMissing = item.status === 'missing';
+  // gap_type is categorical: 'diagnosis' | 'order' (item.type may be 'diagnosis'
+  // or anything else, which we bucket as 'order' in this surface).
+  const gapType = item.type === 'diagnosis' ? 'diagnosis' : 'order';
 
   return (
     <div class="cpc__item">
-      <div class="cpc__item-row" onClick={() => setExpanded(!expanded)}>
+      <div
+        class="cpc__item-row"
+        onClick={() => setExpanded(!expanded)}
+        data-track="care_plan_gap_clicked"
+        data-track-prop-gap-type={gapType}
+      >
         <span class={`cpc__dot cpc__dot--${item.status}`} />
         {item.code && <span class="cpc__item-code">{item.code}</span>}
         <span class="cpc__item-desc">{humanize(item.description)}</span>

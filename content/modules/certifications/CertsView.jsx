@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback } from 'preact/hooks';
+import { useState, useMemo, useCallback, useEffect } from 'preact/hooks';
 import { useCertifications } from './hooks/useCertifications.js';
 import { StayGroupCard } from './components/StayGroupCard.jsx';
 import { SendCertModal } from './components/SendCertModal.jsx';
@@ -6,6 +6,7 @@ import { SkipCertModal } from './components/SkipCertModal.jsx';
 import { EditClinicalReasonModal } from './components/EditClinicalReasonModal.jsx';
 import { DelayCertModal } from './components/DelayCertModal.jsx';
 import { PractitionerWorkloadView } from './components/PractitionerWorkloadView.jsx';
+import { track } from '../../utils/analytics.js';
 
 /**
  * CertsView — main tab content for the Certs tab in MDS Command Center.
@@ -54,6 +55,11 @@ function matchesStayType(cert, filter) {
 export function CertsView({ facilityName, orgSlug, patientId, patientName }) {
   const [activeSubTab, setActiveSubTab] = useState('action');
   const [stayTypeFilter, setStayTypeFilter] = useState('all');
+
+  // Mount-only open event. CertsView renders inside MDS Command Center.
+  useEffect(() => {
+    track('cert_view_opened', { source: 'mds_cc' });
+  }, []);
 
   // Workload view state
   const [workloadPractitionerId, setWorkloadPractitionerId] = useState(null);
@@ -242,6 +248,7 @@ export function CertsView({ facilityName, orgSlug, patientId, patientName }) {
       <div class="cert__filters">
         <div class="cert__stay-type-filter">
           {STAY_TYPES.map(t => (
+            // NO_TRACK
             <button
               key={t.id}
               class={`cert__stay-type-pill${stayTypeFilter === t.id ? ' cert__stay-type-pill--active' : ''}`}
@@ -256,6 +263,7 @@ export function CertsView({ facilityName, orgSlug, patientId, patientName }) {
         </div>
         <div class="cert__sub-tabs">
           {SUB_TABS.map(tab => (
+            // NO_TRACK
             <button
               key={tab.id}
               class={`cert__sub-tab${activeSubTab === tab.id ? ' cert__sub-tab--active' : ''}`}
@@ -283,6 +291,7 @@ export function CertsView({ facilityName, orgSlug, patientId, patientName }) {
           <div class="mds-cc__state-container">
             <div class="mds-cc__state-icon">{'\u26A0'}</div>
             <p class="mds-cc__state-text">{activeError}</p>
+            {/* NO_TRACK */}
             <button class="mds-cc__retry-btn" onClick={refetchAll}>Retry</button>
           </div>
         )}
