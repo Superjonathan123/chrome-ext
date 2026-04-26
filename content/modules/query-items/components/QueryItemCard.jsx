@@ -109,6 +109,7 @@ export const QueryItemCard = ({ item, isSelected, onToggle, onDismiss, isDismiss
             </div>
             <div className="query-items__card-header-right">
               <StatusBadge status={item.solverStatus} />
+              {/* NO_TRACK */}
               <button
                 className="query-items__dismiss-btn"
                 onClick={handleDismiss}
@@ -164,7 +165,13 @@ export const QueryItemCard = ({ item, isSelected, onToggle, onDismiss, isDismiss
 
           {/* Row 4: Evidence toggle */}
           {evidenceCount > 0 && (
-            <button className="query-items__evidence-toggle" onClick={toggleEvidence}>
+            <button
+              className="query-items__evidence-toggle"
+              onClick={toggleEvidence}
+              data-track="query_evidence_opened"
+              data-track-prop-item-code={item.mdsItem}
+              data-track-prop-evidence-type="card_summary"
+            >
               <svg
                 className={`query-items__evidence-toggle-icon${evidenceOpen ? ' query-items__evidence-toggle-icon--open' : ''}`}
                 width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"

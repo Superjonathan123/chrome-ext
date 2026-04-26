@@ -1,6 +1,8 @@
 // Query Detail Modal for Super LTC Chrome Extension
 // Shows query details and actions (resend, view PDF)
 
+import { track } from '../utils/analytics.js';
+
 const QueryDetailModal = {
   /**
    * Show the query detail modal
@@ -13,6 +15,11 @@ const QueryDetailModal = {
     const content = this._buildContent(query, options);
     const actions = this._buildActions(query, result, options);
 
+    // Track open + dismiss-via-X/ESC/backdrop. Other close paths fire their own
+    // close events with appropriate reasons.
+    track('query_modal_opened');
+    this._closeFired = false;
+
     SuperModal.show({
       title: 'Diagnosis Query',
       icon: statusDisplay.icon,
@@ -20,7 +27,13 @@ const QueryDetailModal = {
       content,
       actions,
       size: 'medium',
-      className: 'super-query-detail-modal'
+      className: 'super-query-detail-modal',
+      onClose: () => {
+        if (!this._closeFired) {
+          this._closeFired = true;
+          track('query_modal_closed', { reason: 'dismiss' });
+        }
+      }
     });
   },
 
@@ -140,6 +153,8 @@ const QueryDetailModal = {
           label: 'Send Query',
           variant: 'primary',
           action: () => {
+            this._closeFired = true;
+            track('query_modal_closed', { reason: 'submit' });
             SuperModal.close();
             QuerySendModal.show(result, query);
           }
@@ -173,6 +188,8 @@ const QueryDetailModal = {
             label: `Go to Section ${sectionCode}`,
             variant: 'secondary',
             action: () => {
+              this._closeFired = true;
+              track('query_modal_closed', { reason: 'cancel' });
               SuperModal.close();
               this._navigateToSection(externalAssessmentId, sectionCode);
             }
@@ -187,6 +204,8 @@ const QueryDetailModal = {
             label: 'Create New Query',
             variant: 'primary',
             action: () => {
+              this._closeFired = true;
+              track('query_modal_closed', { reason: 'submit' });
               SuperModal.close();
               QuerySendModal.show(result);
             }
@@ -199,7 +218,11 @@ const QueryDetailModal = {
     actions.unshift({
       label: 'Close',
       variant: 'secondary',
-      action: () => SuperModal.close()
+      action: () => {
+        this._closeFired = true;
+        track('query_modal_closed', { reason: 'cancel' });
+        SuperModal.close();
+      }
     });
 
     return actions;
@@ -217,6 +240,8 @@ const QueryDetailModal = {
 
     try {
       const result = await QueryAPI.resendQuery(query.id);
+      this._closeFired = true;
+      track('query_modal_closed', { reason: 'submit' });
       SuperModal.close();
 
       // Show success toast
@@ -246,6 +271,8 @@ const QueryDetailModal = {
 
       if (pdfUrl) {
         window.open(pdfUrl, '_blank');
+        this._closeFired = true;
+        track('query_modal_closed', { reason: 'submit' });
         SuperModal.close();
       } else {
         throw new Error('No PDF URL returned');

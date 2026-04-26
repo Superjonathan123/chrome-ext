@@ -19,7 +19,10 @@ const SidebarItem = ({ item, isActive, isChecked, onSelect, onToggleCheck }) => 
     <div
       className={`qi-sidebar__item${isActive ? ' qi-sidebar__item--active' : ''}${isQueryRecommended ? ' qi-sidebar__item--query' : ''}`}
       onClick={() => onSelect(item.mdsItem)}
+      data-track="query_item_clicked"
+      data-track-prop-item-code={item.mdsItem}
     >
+      {/* NO_TRACK */}
       <div className="qi-sidebar__item-check" onClick={handleCheck}>
         <input
           type="checkbox"

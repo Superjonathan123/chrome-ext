@@ -1,5 +1,6 @@
 import { StatusBadge } from './StatusBadge.jsx';
 import { PdpmImpactBadge } from './PdpmImpactBadge.jsx';
+import { track } from '../../../utils/analytics.js';
 
 /**
  * Get displayable quote from evidence object
@@ -82,17 +83,27 @@ function openEvidenceViewer(ev) {
 /**
  * Single evidence card in the detail panel
  */
-const EvidenceCard = ({ ev }) => {
+const EvidenceCard = ({ ev, itemCode }) => {
   const sourceType = inferSourceType(ev);
   const label = ev.displayName || SOURCE_TYPE_LABELS[sourceType] || 'Evidence';
   const quote = getQuoteText(ev);
   const viewable = isViewable(ev);
   const date = ev.date || ev.serviceDate || '';
 
+  const handleClick = viewable
+    ? () => {
+        track('query_evidence_opened', {
+          item_code: itemCode,
+          evidence_type: sourceType.replace(/-/g, '_'),
+        });
+        openEvidenceViewer(ev);
+      }
+    : undefined;
+
   return (
     <div
       className={`qi-detail__evidence-card${viewable ? ' qi-detail__evidence-card--viewable' : ''}`}
-      onClick={viewable ? () => openEvidenceViewer(ev) : undefined}
+      onClick={handleClick}
     >
       <div className="qi-detail__evidence-card-header">
         <span className={`qi-detail__evidence-type qi-detail__evidence-type--${sourceType}`}>
@@ -236,7 +247,7 @@ export const EvidenceDetailPanel = ({ item }) => {
               <span className="qi-detail__section-count">{queryEvidence.length}</span>
             </div>
             {queryEvidence.map((ev, i) => (
-              <EvidenceCard key={i} ev={ev} />
+              <EvidenceCard key={i} ev={ev} itemCode={item.mdsItem} />
             ))}
           </div>
         )}
@@ -254,7 +265,7 @@ export const EvidenceDetailPanel = ({ item }) => {
                     <span className="qi-detail__section-count">{evs.length}</span>
                   </div>
                   {evs.map((ev, i) => (
-                    <EvidenceCard key={i} ev={ev} />
+                    <EvidenceCard key={i} ev={ev} itemCode={item.mdsItem} />
                   ))}
                 </div>
               );
@@ -266,7 +277,7 @@ export const EvidenceDetailPanel = ({ item }) => {
                 <div key={role} className="qi-detail__evidence-group">
                   <div className="qi-detail__section-label">{role}</div>
                   {evidenceByRole[role].map((ev, i) => (
-                    <EvidenceCard key={i} ev={ev} />
+                    <EvidenceCard key={i} ev={ev} itemCode={item.mdsItem} />
                   ))}
                 </div>
               ))

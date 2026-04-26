@@ -30,10 +30,12 @@ export const BatchActionBar = ({
               <span>{selectedCount}</span> of {selectableCount} items selected
             </span>
             {selectedCount > 0 ? (
+              /* NO_TRACK */
               <button className="query-items__select-all-btn" onClick={onDeselectAll}>
                 Deselect all
               </button>
             ) : (
+              /* NO_TRACK */
               <button className="query-items__select-all-btn" onClick={onSelectAll}>
                 Select all queryable
               </button>
@@ -61,6 +63,7 @@ export const BatchActionBar = ({
             className="query-items__generate-btn"
             disabled={selectedCount === 0}
             onClick={onGenerate}
+            data-track="query_modal_opened"
           >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M22 2L11 13" />

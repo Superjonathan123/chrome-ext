@@ -4,6 +4,7 @@
  * shows keyFindings + queryEvidence for 'needs_physician_query' items.
  * Evidence cards are clickable — dispatches to existing vanilla evidence viewers.
  */
+import { track } from '../../../utils/analytics.js';
 
 const SOURCE_TYPE_LABELS = {
   'progress-note': 'Progress Note',
@@ -66,16 +67,26 @@ function isViewable(ev) {
   return false;
 }
 
-const EvidenceCard = ({ ev }) => {
+const EvidenceCard = ({ ev, itemCode }) => {
   const sourceType = inferSourceType(ev);
   const label = ev.displayName || SOURCE_TYPE_LABELS[sourceType] || 'Evidence';
   const quote = getQuoteText(ev);
   const viewable = isViewable(ev);
 
+  const onClick = viewable
+    ? () => {
+        track('query_evidence_opened', {
+          item_code: itemCode,
+          evidence_type: sourceType.replace(/-/g, '_'),
+        });
+        handleEvidenceClick(ev);
+      }
+    : undefined;
+
   return (
     <div
       className={`query-items__evidence-card${viewable ? '' : ''}`}
-      onClick={viewable ? () => handleEvidenceClick(ev) : undefined}
+      onClick={onClick}
       style={viewable ? { cursor: 'pointer' } : { cursor: 'default' }}
     >
       <span className={`query-items__evidence-type query-items__evidence-type--${sourceType}`}>
@@ -126,7 +137,7 @@ export const EvidenceSection = ({ item }) => {
             <div className="query-items__evidence-group">
               <div className="query-items__evidence-group-title">Supporting Evidence</div>
               {queryEvidence.map((ev, i) => (
-                <EvidenceCard key={i} ev={ev} />
+                <EvidenceCard key={i} ev={ev} itemCode={item.mdsItem} />
               ))}
             </div>
           )}
@@ -135,7 +146,7 @@ export const EvidenceSection = ({ item }) => {
             <div className="query-items__evidence-group">
               <div className="query-items__evidence-group-title">Clinical Evidence</div>
               {evidence.map((ev, i) => (
-                <EvidenceCard key={i} ev={ev} />
+                <EvidenceCard key={i} ev={ev} itemCode={item.mdsItem} />
               ))}
             </div>
           )}
@@ -171,7 +182,7 @@ export const EvidenceSection = ({ item }) => {
             <div key={role} className="query-items__evidence-group">
               <div className="query-items__evidence-group-title">{roleLabels[role] || role}</div>
               {evs.map((ev, i) => (
-                <EvidenceCard key={i} ev={ev} />
+                <EvidenceCard key={i} ev={ev} itemCode={item.mdsItem} />
               ))}
             </div>
           );
@@ -183,7 +194,7 @@ export const EvidenceSection = ({ item }) => {
             <div key={role} className="query-items__evidence-group">
               <div className="query-items__evidence-group-title">{role}</div>
               {groups[role].map((ev, i) => (
-                <EvidenceCard key={i} ev={ev} />
+                <EvidenceCard key={i} ev={ev} itemCode={item.mdsItem} />
               ))}
             </div>
           ))

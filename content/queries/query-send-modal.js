@@ -1,6 +1,8 @@
 // Two-Step Query Send Modal for Super LTC Chrome Extension
 // Step 1: Review query details, Step 2: Select practitioner and send
 
+import { track } from '../utils/analytics.js';
+
 const QuerySendModal = {
   // Current state
   _state: {
@@ -41,6 +43,17 @@ const QuerySendModal = {
       noteText: ''
     };
 
+    // Track open + track dismissed-via-X/ESC/backdrop close path. _suppressClose
+    // flips to true when an explicit close path (Cancel / submit) already fired.
+    track('query_modal_opened');
+    this._closeFired = false;
+    const fireDismiss = () => {
+      if (!this._closeFired) {
+        this._closeFired = true;
+        track('query_modal_closed', { reason: 'dismiss' });
+      }
+    };
+
     // Show modal with loading state
     SuperModal.show({
       title: 'Send Diagnosis Query',
@@ -49,7 +62,8 @@ const QuerySendModal = {
       content: this._buildLoadingContent(),
       actions: [],
       size: 'large',
-      className: 'super-query-send-modal'
+      className: 'super-query-send-modal',
+      onClose: fireDismiss
     });
 
     // Load data
@@ -97,7 +111,11 @@ const QuerySendModal = {
       SuperModal.updateActions([{
         label: 'Close',
         variant: 'secondary',
-        action: () => SuperModal.close()
+        action: () => {
+          this._closeFired = true;
+          track('query_modal_closed', { reason: 'dismiss' });
+          SuperModal.close();
+        }
       }]);
     }
   },
@@ -113,7 +131,11 @@ const QuerySendModal = {
       {
         label: 'Cancel',
         variant: 'secondary',
-        action: () => SuperModal.close()
+        action: () => {
+          this._closeFired = true;
+          track('query_modal_closed', { reason: 'cancel' });
+          SuperModal.close();
+        }
       },
       {
         label: 'Next',
@@ -231,6 +253,8 @@ const QuerySendModal = {
       );
 
       // Close modal and show success
+      this._closeFired = true;
+      track('query_modal_closed', { reason: 'submit' });
       SuperModal.close();
       this._showSuccessAnimation();
 

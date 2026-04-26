@@ -7,6 +7,7 @@ import { ItemSidebar } from './components/ItemSidebar.jsx';
 import { EvidenceDetailPanel } from './components/EvidenceDetailPanel.jsx';
 import { BatchActionBar } from './components/BatchActionBar.jsx';
 import { BatchReviewPage } from './components/BatchReviewModal.jsx';
+import { track } from '../../utils/analytics.js';
 
 /**
  * Root component for the Query Items page — split layout.
@@ -27,6 +28,11 @@ export const QueryItemsPage = ({
   const [dismissedItems, setDismissedItems] = useState(new Set());
   const [activeItem, setActiveItem] = useState(null);
   const [successInfo, setSuccessInfo] = useState(null);
+
+  // Fire page-open event once on mount
+  useEffect(() => {
+    track('query_items_opened', { source: 'fab' });
+  }, []);
 
   // Data fetching
   const {
@@ -120,6 +126,7 @@ export const QueryItemsPage = ({
             </svg>
           </div>
           <p className="query-items__error-text">{error}</p>
+          {/* NO_TRACK */}
           <button className="query-items__error-retry" onClick={retry}>
             Retry
           </button>
@@ -197,6 +204,7 @@ export const QueryItemsPage = ({
                 <line x1="12" y1="16" x2="12.01" y2="16" />
               </svg>
               <span>{batch.error}</span>
+              {/* NO_TRACK */}
               <button onClick={batch.reset} className="query-items__batch-error-dismiss">&times;</button>
             </div>
           )}

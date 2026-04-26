@@ -77,7 +77,7 @@ export const BatchReviewPage = ({
     <div className="qr">
       {/* Header */}
       <div className="qr__header">
-        <button className="qr__back-btn" onClick={onBack} disabled={isSending}>
+        <button className="qr__back-btn" onClick={onBack} disabled={isSending} data-track="query_modal_closed" data-track-prop-reason="cancel">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
             <polyline points="15 18 9 12 15 6" />
           </svg>
@@ -98,6 +98,8 @@ export const BatchReviewPage = ({
             className="qr__send-btn"
             disabled={!canSend}
             onClick={onSend}
+            data-track="query_modal_closed"
+            data-track-prop-reason="submit"
           >
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
               <path d="M22 2L11 13" />
