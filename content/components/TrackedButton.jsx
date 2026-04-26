@@ -1,7 +1,7 @@
 // Thin button wrapper that emits a tracked event on click via the global
-// delegated listener (content/utils/track-delegate.js). Renders a real <button>
-// carrying data-track / data-track-prop-* attributes, so vanilla and Preact
-// share a single tracking pathway.
+// delegated listener (content/utils/track-delegate.js). Renders a real native
+// button element carrying data-track / data-track-prop-* attributes, so
+// vanilla and Preact share a single tracking pathway.
 
 export function TrackedButton({
   track: eventName,
