@@ -34,13 +34,13 @@ const ICD10MockData = {
           rationale: 'Multiple clinical documents confirm post-stroke deficits with high-confidence evidence across SLP and PT evaluations.',
           annotationCount: 3,
           documentCount: 2,
-          pdpmCategory: 'NTA',
+          pdpmCategory: 'SLP',
           annotations: [
             {
               id: 'ann-001',
               icd10Code: 'I69.320',
               description: 'Aphasia following cerebral infarction',
-              category: 'nta',
+              category: 'slp',
               confidence: 0.92,
               rank: 1,
               evidenceStrength: 'strong',
@@ -53,14 +53,14 @@ const ICD10MockData = {
               ],
               options: [
                 { code: 'I69.320', description: 'Aphasia following cerebral infarction', confidence: 0.92 },
-                { code: 'I69.328', description: 'Other speech and language deficits following cerebral infarction', confidence: 0.74, category: 'nta' }
+                { code: 'I69.328', description: 'Other speech and language deficits following cerebral infarction', confidence: 0.74, category: 'slp' }
               ]
             },
             {
               id: 'ann-002',
               icd10Code: 'I69.354',
               description: 'Hemiplegia and hemiparesis following cerebral infarction affecting left non-dominant side',
-              category: 'nta',
+              category: 'slp',
               confidence: 0.88,
               rank: 2,
               evidenceStrength: 'strong',
@@ -76,7 +76,7 @@ const ICD10MockData = {
               id: 'ann-014',
               icd10Code: 'I69.391',
               description: 'Dysphagia following cerebral infarction',
-              category: 'nta',
+              category: 'slp',
               confidence: 0.85,
               rank: 3,
               evidenceStrength: 'moderate',
@@ -100,13 +100,13 @@ const ICD10MockData = {
           rationale: 'Family-reported diagnosis with supporting cognitive assessment findings, though formal neuropsych testing not available.',
           annotationCount: 2,
           documentCount: 2,
-          pdpmCategory: 'NTA',
+          pdpmCategory: null,
           annotations: [
             {
               id: 'ann-003',
               icd10Code: 'G30.9',
               description: "Alzheimer's disease, unspecified",
-              category: 'nta',
+              category: 'other',
               confidence: 0.75,
               rank: 1,
               evidenceStrength: 'moderate',
@@ -119,15 +119,15 @@ const ICD10MockData = {
               ],
               options: [
                 { code: 'G30.9', description: "Alzheimer's disease, unspecified", confidence: 0.75 },
-                { code: 'G30.1', description: "Alzheimer's disease with late onset", confidence: 0.68, category: 'nta' },
-                { code: 'F02.80', description: 'Dementia in other diseases classified elsewhere without behavioral disturbance', confidence: 0.52 }
+                { code: 'G30.1', description: "Alzheimer's disease with late onset", confidence: 0.68, category: 'other' },
+                { code: 'F02.80', description: 'Dementia in other diseases classified elsewhere without behavioral disturbance', confidence: 0.52, category: 'other' }
               ]
             },
             {
               id: 'ann-007',
               icd10Code: 'F03.90',
               description: 'Unspecified dementia without behavioral disturbance',
-              category: 'slp',
+              category: 'other',
               confidence: 0.68,
               rank: 2,
               evidenceStrength: 'moderate',

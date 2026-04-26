@@ -9,6 +9,13 @@
  */
 import { DEMO_API_RESPONSES } from './demo-mock-data.js';
 import { buildPlannerWeekEvents, buildPlannerSummary } from './demo-planner-fixtures.js';
+import {
+  DEMO_QM_CURRENTLY_TRIGGERING,
+  DEMO_QM_PREVENTABLE_ALERTS,
+  DEMO_GG_DETAIL_BY_PATIENT,
+  buildReportList,
+  buildReportForDate,
+} from './demo-qm-fixtures.js';
 
 /**
  * Demo UDA fixture — mirrors the structure the extension UDA viewer expects
@@ -380,6 +387,50 @@ function routeApiRequest(endpoint) {
     const udaId = udaMatch[2];
     const quote = params.get('quote') || null;
     return buildUdaResponse(udaId, quote);
+  }
+
+  // ── QM Board routes ─────────────────────────────────────────────
+
+  if (path === '/api/extension/qm-planner/currently-triggering') {
+    return { success: true, data: DEMO_QM_CURRENTLY_TRIGGERING };
+  }
+
+  if (path === '/api/extension/qm-planner/preventable-alerts') {
+    return { success: true, data: DEMO_QM_PREVENTABLE_ALERTS };
+  }
+
+  // /api/extension/patients/:id/gg-decline — rich detail for the GG modal
+  const ggMatch = path.match(/\/api\/extension\/patients\/([^/]+)\/gg-decline$/);
+  if (ggMatch) {
+    const patientId = ggMatch[1];
+    const data = DEMO_GG_DETAIL_BY_PATIENT[patientId];
+    if (data) return { success: true, data };
+    return { success: false, error: `Demo: no GG detail for ${patientId}` };
+  }
+
+  // Snooze mutations — just acknowledge; no state persistence in the demo.
+  if (/\/api\/extension\/patients\/[^/]+\/(gg-decline\/snooze|preventable-alert-snooze)(\/[^/]+)?$/.test(path)) {
+    return { success: true, data: { ok: true } };
+  }
+
+  // /api/patients/:id/evidence — Generic evidence lookup for non-GG alert
+  // SignalRow expansions. Demo returns an empty list so the UI shows
+  // "no details" rather than spinning forever.
+  const evidenceMatch = path.match(/\/api\/patients\/([^/]+)\/evidence$/);
+  if (evidenceMatch) {
+    return { success: true, data: { evidence: [] } };
+  }
+
+  // ── 24-Hour Report routes ──────────────────────────────────────
+
+  if (path === '/api/extension/24hr-report') {
+    const date = params.get('date');
+    if (date) {
+      const report = buildReportForDate(date);
+      if (!report) return { success: false, status: 404, error: 'Report not found' };
+      return { success: true, data: { report } };
+    }
+    return { success: true, data: buildReportList() };
   }
 
   console.warn('[DemoMock] Unhandled API endpoint:', path);

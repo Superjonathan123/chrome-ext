@@ -5,7 +5,7 @@ import { useState, useEffect, useCallback } from 'preact/hooks';
  * Shows staged codes with effective date picker before submitting to PCC.
  * Supports a global date for all codes, with per-code date overrides.
  */
-export function DiagnosisConfirmationDialog({ stagedCodes, defaultDate, patientId, onApply, onCancel }) {
+export function DiagnosisConfirmationDialog({ stagedCodes, defaultDate, patientId, onApply, onCancel, onDiscardAndExit }) {
   const today = new Date().toISOString().split('T')[0];
   const globalDefault = defaultDate || today;
 
@@ -286,6 +286,16 @@ export function DiagnosisConfirmationDialog({ stagedCodes, defaultDate, patientI
               <button class="dx-confirm__btn dx-confirm__btn--ghost" onClick={handleDismiss} disabled={submitting}>
                 Cancel
               </button>
+              {onDiscardAndExit && (
+                <button
+                  class="dx-confirm__btn dx-confirm__btn--ghost"
+                  onClick={onDiscardAndExit}
+                  disabled={submitting}
+                  title="Exit without adding these codes to PCC"
+                >
+                  Discard & Exit
+                </button>
+              )}
               <button
                 class="dx-confirm__btn dx-confirm__btn--primary"
                 onClick={handleApply}

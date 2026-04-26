@@ -68,7 +68,12 @@ const ICD10PDFViewer = {
         }
       }
 
-      const loadingTask = pdfjsLib.getDocument(document.signedUrl);
+      const loadingTask = pdfjsLib.getDocument({
+        url: document.signedUrl,
+        disableAutoFetch: true,
+        disableStream: false,
+        rangeChunkSize: 65536,
+      });
       this.pdfDoc = await loadingTask.promise;
       this.totalPages = this.pdfDoc.numPages;
       this.currentPage = Math.min(targetPage, this.totalPages);

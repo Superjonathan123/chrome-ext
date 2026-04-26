@@ -49,9 +49,13 @@ function parseEvidenceForViewer(ev) {
   }
 
   // Pattern 1b: queryEvidence format uses "type" + "sourceId"
-  // sourceId may have prefixes like "pcc-prognote-xxx" — strip them
+  // sourceId may have prefixes like "pcc-prognote-xxx" / "pcc-practnote-xxx" /
+  // legacy "patient-practnote-xxx" — strip whichever is present.
   if (evType === 'clinical_note' && sourceId) {
-    const noteId = sourceId.replace(/^pcc-prognote-/, '').replace(/^patient-practnote-/, '');
+    const noteId = sourceId
+      .replace(/^pcc-prognote-/, '')
+      .replace(/^pcc-practnote-/, '')
+      .replace(/^patient-practnote-/, '');
     return { viewerType: 'clinical-note', id: noteId };
   }
   if (evType === 'therapy_document' && sourceId) {
@@ -70,6 +74,9 @@ function parseEvidenceForViewer(ev) {
     }
     if (eid.startsWith('pcc-prognote-')) {
       return { viewerType: 'clinical-note', id: eid.replace('pcc-prognote-', '') };
+    }
+    if (eid.startsWith('pcc-practnote-')) {
+      return { viewerType: 'clinical-note', id: eid.replace('pcc-practnote-', '') };
     }
     if (eid.startsWith('patient-practnote-')) {
       return { viewerType: 'clinical-note', id: eid.replace('patient-practnote-', '') };
@@ -375,7 +382,8 @@ function renderModalError(modal, errorMessage, modalClass) {
 // CLINICAL NOTES MODAL
 // =============================================================================
 
-async function showClinicalNoteModal(noteId) {
+async function showClinicalNoteModal(noteId, highlightQuote = null) {
+  console.log('[NoteHighlight] showClinicalNoteModal noteId=', noteId, 'quote?', !!highlightQuote, 'quoteLen=', highlightQuote ? highlightQuote.length : 0);
   // Get params from content.js (exposed on window)
   const params = await window.getCurrentParams();
 
@@ -384,8 +392,10 @@ async function showClinicalNoteModal(noteId) {
 
   try {
     const data = await fetchClinicalNote(noteId, params);
-    renderNoteModalContent(modal, data.note);
+    console.log('[NoteHighlight] note fetched, noteText length:', data?.note?.noteText?.length || 0);
+    renderNoteModalContent(modal, data.note, highlightQuote);
   } catch (error) {
+    console.error('[NoteHighlight] fetch failed:', error);
     renderModalError(modal, error.message, 'super-note-modal');
   }
 }
@@ -415,7 +425,88 @@ function createNoteModalShell() {
   return modal;
 }
 
-function renderNoteModalContent(modal, note) {
+/**
+ * Build a highlighted HTML body for a clinical/practitioner note.
+ *
+ * Strategy: split the quote on sentence/clause punctuation, keep phrases
+ * ≥15 chars, search each case-insensitively in the note text, wrap hits
+ * in <mark>. Merges overlapping ranges so adjacent matches fuse into one
+ * continuous highlight.
+ */
+function buildHighlightedNoteText(noteText, quote) {
+  if (!noteText) return 'No note content available.';
+  const full = String(noteText);
+  if (!quote) return escapeHTMLViewer(full);
+
+  const phrases = String(quote)
+    .split(/[.;:\n]+/)
+    .map(p => p.replace(/[*"'`()]/g, '').trim())
+    .filter(p => p.length >= 15);
+
+  console.log('[NoteHighlight] quote length:', quote.length, 'phrases extracted:', phrases.length, phrases);
+
+  if (phrases.length === 0) return escapeHTMLViewer(full);
+
+  const lower = full.toLowerCase();
+  const ranges = [];
+  for (const phrase of phrases) {
+    const p = phrase.toLowerCase();
+    let idx = 0;
+    while ((idx = lower.indexOf(p, idx)) !== -1) {
+      ranges.push([idx, idx + phrase.length]);
+      idx += phrase.length;
+    }
+  }
+
+  console.log('[NoteHighlight] raw match ranges:', ranges.length);
+
+  // Fallback: word-trigram search when no long phrase matched verbatim.
+  // Slide a 3-word window over the quote and look for each window in note.
+  if (ranges.length === 0) {
+    const words = String(quote).toLowerCase().replace(/[*"'`()]/g, '').split(/\s+/).filter(w => w.length >= 3);
+    for (let i = 0; i <= words.length - 3; i++) {
+      const tri = words.slice(i, i + 3).join(' ');
+      if (tri.length < 12) continue;
+      let idx = 0;
+      while ((idx = lower.indexOf(tri, idx)) !== -1) {
+        ranges.push([idx, idx + tri.length]);
+        idx += tri.length;
+      }
+    }
+    console.log('[NoteHighlight] trigram fallback ranges:', ranges.length);
+  }
+
+  if (ranges.length === 0) {
+    console.log('[NoteHighlight] no matches found; rendering plain escaped text');
+    return escapeHTMLViewer(full);
+  }
+
+  ranges.sort((a, b) => a[0] - b[0]);
+  const merged = [ranges[0].slice()];
+  for (let i = 1; i < ranges.length; i++) {
+    const prev = merged[merged.length - 1];
+    const curr = ranges[i];
+    if (curr[0] <= prev[1]) {
+      prev[1] = Math.max(prev[1], curr[1]);
+    } else {
+      merged.push(curr.slice());
+    }
+  }
+
+  console.log('[NoteHighlight] merged ranges:', merged.length, merged);
+
+  let out = '';
+  let cursor = 0;
+  for (const [start, end] of merged) {
+    if (cursor < start) out += escapeHTMLViewer(full.slice(cursor, start));
+    out += `<mark class="super-note-highlight" ${HIGHLIGHT_DATA_ATTR}="true">${escapeHTMLViewer(full.slice(start, end))}</mark>`;
+    cursor = end;
+  }
+  if (cursor < full.length) out += escapeHTMLViewer(full.slice(cursor));
+  return out;
+}
+
+function renderNoteModalContent(modal, note, highlightQuote = null) {
   const container = modal.querySelector('.super-note-modal__container');
 
   const noteTypeLabel = note.noteType === 'practitioner' ? 'Practitioner Note' : 'Progress Note';
@@ -440,7 +531,7 @@ function renderNoteModalContent(modal, note) {
     </div>
 
     <div class="super-note-modal__body">
-      <div class="super-note-modal__text">${escapeHTMLViewer(note.noteText || 'No note content available.')}</div>
+      <div class="super-note-modal__text">${buildHighlightedNoteText(note.noteText, highlightQuote)}</div>
     </div>
 
     <div class="super-note-modal__footer">
@@ -450,6 +541,16 @@ function renderNoteModalContent(modal, note) {
   `;
 
   setupModalCloseHandlers(modal, 'super-note-modal');
+
+  if (highlightQuote) {
+    setTimeout(() => {
+      const all = modal.querySelectorAll(`[${HIGHLIGHT_DATA_ATTR}="true"]`);
+      console.log('[NoteHighlight] post-render marks found in DOM:', all.length);
+      if (all.length > 0) {
+        all[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }, 80);
+  }
 }
 
 // =============================================================================
@@ -1520,22 +1621,57 @@ window.parseEvidenceForViewer = parseEvidenceForViewer;
 window.SuperDocViewer = {
   open(evidence) {
     if (!evidence) return;
+    console.log('[NoteHighlight] SuperDocViewer.open received:', {
+      sourceType: evidence.sourceType,
+      type: evidence.type,
+      evidenceId: evidence.evidenceId,
+      sourceId: evidence.sourceId,
+      quoteText: evidence.quoteText?.slice(0, 60),
+      quote: evidence.quote?.slice(0, 60),
+    });
     const type = evidence.sourceType || evidence.type || '';
     if (type === 'clinical_note' || type === 'progress_note' || type === 'practitioner_note') {
-      const id = evidence.viewerId || evidence.sourceId || evidence.id;
-      window.showClinicalNoteModal(id);
-    } else if (type === 'therapy_doc' || type === 'therapy') {
+      const rawId = evidence.viewerId || evidence.sourceId || evidence.id || '';
+      const id = String(rawId)
+        .replace(/^pcc-prognote-/, '')
+        .replace(/^pcc-practnote-/, '')
+        .replace(/^patient-practnote-/, '');
+      const quote = evidence.quoteText || evidence.quote || '';
+      window.showClinicalNoteModal(id, quote || null);
+      return;
+    }
+    if (type === 'therapy_doc' || type === 'therapy') {
       const id = evidence.viewerId || evidence.sourceId || evidence.id;
       window.showTherapyDocModal(id, evidence.quote);
-    } else if (type === 'pdf' || type === 'document') {
+      return;
+    }
+    if (type === 'pdf' || type === 'document') {
       const id = evidence.viewerId || evidence.sourceId || evidence.id;
       window.showDocumentModal(id, evidence.wordBlocks || []);
-    } else if (type === 'uda') {
+      return;
+    }
+    if (type === 'uda') {
       const rawId = evidence.viewerId || evidence.sourceId || evidence.evidenceId || evidence.id || '';
       const id = String(rawId).replace(/^uda-/, '');
       const quote = evidence.quoteText || evidence.quote || '';
       const patientId = evidence.patientId || null;
       if (id) window.showUdaModal(id, quote, patientId);
+      return;
+    }
+
+    // sourceType missing — fall back to parsing the evidenceId / sourceId prefix
+    const parsed = parseEvidenceForViewer(evidence);
+    if (!parsed?.viewerType || !parsed.id) return;
+    if (parsed.viewerType === 'clinical-note') {
+      const quote = evidence.quoteText || evidence.quote || '';
+      window.showClinicalNoteModal(parsed.id, quote || null);
+    } else if (parsed.viewerType === 'therapy-document') {
+      window.showTherapyDocModal(parsed.id, evidence.quoteText || evidence.quote || '');
+    } else if (parsed.viewerType === 'document') {
+      window.showDocumentModal(parsed.id, evidence.wordBlocks || []);
+    } else if (parsed.viewerType === 'uda') {
+      const quote = evidence.quoteText || evidence.quote || '';
+      window.showUdaModal(parsed.id, quote, evidence.patientId || null);
     }
   }
 };

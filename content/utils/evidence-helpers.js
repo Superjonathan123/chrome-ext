@@ -58,7 +58,13 @@ export function parseViewer(ev) {
 
   // queryEvidence format
   if (evType === 'clinical_note' && sourceId) {
-    return { viewerType: 'clinical-note', id: sourceId.replace(/^pcc-prognote-/, '').replace(/^patient-practnote-/, '') };
+    return {
+      viewerType: 'clinical-note',
+      id: sourceId
+        .replace(/^pcc-prognote-/, '')
+        .replace(/^pcc-practnote-/, '')
+        .replace(/^patient-practnote-/, ''),
+    };
   }
   if (evType === 'therapy_document' && sourceId) {
     return { viewerType: 'therapy-document', id: sourceId.replace(/^therapy-doc-/, '') };
@@ -70,6 +76,7 @@ export function parseViewer(ev) {
   if (evidenceId) {
     if (evidenceId.startsWith('therapy-doc-')) return { viewerType: 'therapy-document', id: evidenceId.replace('therapy-doc-', '') };
     if (evidenceId.startsWith('pcc-prognote-')) return { viewerType: 'clinical-note', id: evidenceId.replace('pcc-prognote-', '') };
+    if (evidenceId.startsWith('pcc-practnote-')) return { viewerType: 'clinical-note', id: evidenceId.replace('pcc-practnote-', '') };
     if (evidenceId.startsWith('patient-practnote-')) return { viewerType: 'clinical-note', id: evidenceId.replace('patient-practnote-', '') };
     if (evidenceId.includes('-chunk-')) return { viewerType: 'document', id: evidenceId.split('-chunk-')[0], chunk: parseInt(evidenceId.split('-chunk-')[1], 10) };
     if (evidenceId.startsWith('uda-')) return { viewerType: 'uda', id: evidenceId.replace('uda-', '') };
@@ -82,7 +89,7 @@ export function openEvidence(ev) {
   const quote = ev.quoteText || ev.quote || ev.snippet || '';
 
   if (viewer.viewerType === 'clinical-note' && viewer.id) {
-    return window.showClinicalNoteModal?.(viewer.id);
+    return window.showClinicalNoteModal?.(viewer.id, quote || null);
   }
   if (viewer.viewerType === 'therapy-document' && viewer.id) {
     return window.showTherapyDocModal?.(viewer.id, quote);

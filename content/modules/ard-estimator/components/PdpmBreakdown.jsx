@@ -27,6 +27,29 @@ export async function fetchItemDetail(itemCode, assessmentId, facilityName, orgS
 
 // ─── Item Row ────────────────────────────────────────────────────────────────
 
+function formatMdsCode(item) {
+  const col = item.mdsColumn;
+  if (!col) return item.mdsItem;
+  // Simple 1-2 char column (e.g. "3", "A", "B2") concatenates naturally.
+  if (/^[A-Za-z0-9]{1,2}$/.test(col)) return `${item.mdsItem}${col}`;
+  // Anything more complex (e.g. "NTA:26") gets bracketed for readability.
+  return `${item.mdsItem}[${col}]`;
+}
+
+function displayDescription(item) {
+  const desc = item.description || '';
+  // Backend sometimes sends `"I8000[NTA:26]"` as the description (a code repeat,
+  // not a real label). Fall back to a human-readable name when we can.
+  const looksLikeCodeRepeat =
+    desc === item.mdsItem ||
+    desc === `${item.mdsItem}[${item.mdsColumn || ''}]` ||
+    desc === `${item.mdsItem}${item.mdsColumn || ''}`;
+  if (looksLikeCodeRepeat) {
+    return item.ntaCategoryName || item.nursingInfo?.label || desc || '';
+  }
+  return desc;
+}
+
 function ItemRow({ item, componentLabel, isActive, onSelect, onAddQuery, isQueued }) {
   const isDismissed = item.userDecision?.decision === 'disagree';
   const isReview = item.solverAnswer === 'needs_review' || item.classification === 'needs_review';
@@ -43,12 +66,10 @@ function ItemRow({ item, componentLabel, isActive, onSelect, onAddQuery, isQueue
       onKeyDown={e => e.key === 'Enter' && onSelect(item)}
     >
       {/* MDS code */}
-      <span className="ard-est__item-code">
-        {item.mdsItem}{item.mdsColumn || ''}
-      </span>
+      <span className="ard-est__item-code">{formatMdsCode(item)}</span>
 
       {/* Description */}
-      <span className="ard-est__item-desc">{item.description}</span>
+      <span className="ard-est__item-desc">{displayDescription(item)}</span>
 
       {/* NTA points */}
       {item.ntaPoints > 0 && componentLabel === 'NTA' && (

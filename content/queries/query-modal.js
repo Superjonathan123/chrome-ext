@@ -660,6 +660,7 @@ const EvidenceModal = {
       if (evidenceId.startsWith('lab-')) return 'lab-result';
       if (evidenceId.startsWith('therapy-doc-')) return 'therapy-doc';
       if (evidenceId.startsWith('pcc-prognote-')) return 'progress-note';
+      if (evidenceId.startsWith('pcc-practnote-') || evidenceId.startsWith('patient-practnote-')) return 'progress-note';
     }
 
     if (!displayName) return 'document';

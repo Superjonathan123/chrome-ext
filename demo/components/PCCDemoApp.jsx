@@ -1,18 +1,24 @@
 /**
- * PCCDemoApp — orchestrator for the PCC demo page (mds-section-i.html).
+ * PCCDemoApp — orchestrator for the captured PCC demo pages
+ * (mds-section-i.html, mds-section-n.html, pcc-demo.html).
  *
  * Runs on top of a real captured PCC page. On mount it:
- *   1. Hides the vanilla Super side-panel / modals
+ *   1. Hides the legacy vanilla Super side-panel / modals / FAB
  *   2. Injects Super badges into every MDS question wrapper
  *   3. Wires badge clicks → real ItemPopover with evidence
- *   4. Renders a FAB → MDS Command Center overlay
+ *   4. Renders the real Super speed-dial FAB with full QM + 24hr parity
  *   5. Handles PDPM Analyzer launches from Command Center
+ *   6. Intercepts the page's QuerySendModal so Preact query flow works
  */
 import { useState, useEffect, useCallback, useRef } from 'preact/hooks';
 import { MDSCommandCenter } from '../../content/modules/mds-command-center/MDSCommandCenter.jsx';
 import { PDPMAnalyzer } from '../../content/modules/pdpm-analyzer/PDPMAnalyzer.jsx';
 import { ItemPopover } from '../../content/modules/mds-command-center/ItemPopover.jsx';
+import { QMBoard } from '../../content/modules/qm-board/QMBoard.jsx';
+import { TwentyFourHourReport } from '../../content/modules/twenty-four-hour-report/TwentyFourHourReport.jsx';
 import { DemoQueryModal } from './DemoQueryModal.jsx';
+import { DemoChatOverlay } from './DemoChatOverlay.jsx';
+import { SuperDemoFab } from './SuperDemoFab.jsx';
 
 const FACILITY_NAME = 'SUNNY MEADOWS DEMO FACILITY';
 const ORG_SLUG = 'demo-org';
@@ -76,7 +82,7 @@ function Toast({ toast, onDismiss }) {
   return (
     <div
       style={{
-        position: 'fixed', bottom: '80px', left: '24px', zIndex: 200000,
+        position: 'fixed', bottom: '96px', right: '24px', zIndex: 200000,
         padding: '10px 16px', borderRadius: '8px', fontSize: '13px', fontWeight: 500,
         background: c.bg, color: c.text, border: `1px solid ${c.border}`,
         boxShadow: '0 4px 12px rgba(0,0,0,0.1)', maxWidth: '340px',
@@ -98,19 +104,19 @@ export function PCCDemoApp() {
   const [toast, setToast] = useState(null);
   const [queryData, setQueryData] = useState(null);
   const toastTimer = useRef(null);
-  // Ref to track injected badges for cleanup
   const injectedBadges = useRef([]);
 
-  // ── Hide vanilla Super elements on mount ──
+  // ── Hide legacy vanilla Super elements on mount ──
   useEffect(() => {
     const selectors = [
       '#superPanel', '#superPopover', '#superModal',
       '.super-side-panel', '.super-popover-panel',
       '.super-modal-overlay', '#super-fab-old',
-      '.super-fab', '.super-menu-fab',
+      '.super-fab', '.super-menu-fab', '#super-menu-fab',
       '#super-chat-button', '.super-chat-fab',
       '#super-chat-panel', '.super-chat-panel',
-      '#notesModal', '.super-modal'
+      '#super-menu-panel', '.super-menu-panel',
+      '#notesModal', '.super-modal',
     ];
     selectors.forEach(sel => {
       document.querySelectorAll(sel).forEach(el => { el.style.display = 'none'; });
@@ -135,21 +141,17 @@ export function PCCDemoApp() {
 
   // ── Inject Super badges into real PCC question wrappers ──
   useEffect(() => {
-
     // Remove any existing badges injected by demo-mds-overlay.js
     document.querySelectorAll('.super-badge').forEach(b => b.remove());
 
-    // Find all question wrappers and inject badges
     const badges = [];
     for (const [code, def] of Object.entries(BADGE_DEFS)) {
       const wrapper = document.getElementById(`${code}_wrapper`);
       if (!wrapper) continue;
 
-      // Find the question_label div to append badge to
       const label = wrapper.querySelector('.question_label');
       if (!label) continue;
 
-      // Don't inject if already has a badge
       if (label.querySelector('.super-badge')) continue;
 
       const badge = document.createElement('span');
@@ -165,7 +167,6 @@ export function PCCDemoApp() {
         vertical-align: middle;
       `;
 
-      // Color by status
       if (def.status === 'match') {
         badge.style.background = '#dcfce7';
         badge.style.color = '#166534';
@@ -195,8 +196,6 @@ export function PCCDemoApp() {
         badge.style.boxShadow = '';
       });
 
-      // Append to the question label (after the first <b> tag in .question_label only)
-      // PCC questions use: .question_label > b > "I0400. Coronary artery disease (CAD)"
       const bTag = label.querySelector(':scope > b');
       if (bTag) {
         bTag.appendChild(badge);
@@ -218,13 +217,15 @@ export function PCCDemoApp() {
   // ── Listen for PDPM open events from Command Center ──
   useEffect(() => {
     function handleOpenPdpm(e) {
-      const opts = e.detail;
+      const opts = e.detail || {};
       setPdpmContext({
-        scope: opts?.scope || 'mds',
-        assessmentId: opts?.assessmentId || '4860265',
+        scope: opts.scope || 'mds',
+        assessmentId: opts.assessmentId || '4860265',
+        patientId: opts.patientId,
+        patientName: opts.patientName,
         facilityName: FACILITY_NAME,
       });
-      setOverlay('pdpmMds');
+      setOverlay('pdpm');
     }
     window.addEventListener('demo:open-pdpm', handleOpenPdpm);
     return () => window.removeEventListener('demo:open-pdpm', handleOpenPdpm);
@@ -249,12 +250,11 @@ export function PCCDemoApp() {
   useEffect(() => {
     window.QuerySendModal = {
       show(opts) {
-        // Normalize: if flat API item, wrap it
         if (opts && !opts.aiAnswer && (opts.keyFindings || opts.evidence || opts.rationale || opts.status)) {
           opts = { mdsItem: opts.mdsItem, description: opts.description, aiAnswer: opts };
         }
         setQueryData(opts);
-      }
+      },
     };
   }, []);
 
@@ -276,13 +276,9 @@ export function PCCDemoApp() {
     setPopoverItem(null);
   }, []);
 
-  const handleFabClick = useCallback(() => {
-    setOverlay('commandCenter');
-  }, []);
-
   return (
     <>
-      {/* ── Command Center ── */}
+      {/* ── MDS Command Center ── */}
       {overlay === 'commandCenter' && (
         <MDSCommandCenter
           facilityName={FACILITY_NAME}
@@ -291,18 +287,41 @@ export function PCCDemoApp() {
         />
       )}
 
-      {/* ── PDPM Analyzer ── */}
-      {overlay === 'pdpmMds' && pdpmContext && (
+      {/* ── QM Board ── */}
+      {overlay === 'qm' && (
+        <QMBoard
+          facilityName={FACILITY_NAME}
+          orgSlug={ORG_SLUG}
+          onClose={handleClose}
+        />
+      )}
+
+      {/* ── 24-Hour Report ── */}
+      {overlay === '24hr' && (
+        <TwentyFourHourReport
+          facilityName={FACILITY_NAME}
+          orgSlug={ORG_SLUG}
+          onClose={handleClose}
+        />
+      )}
+
+      {/* ── AI Chat ── */}
+      {overlay === 'chat' && (
+        <DemoChatOverlay
+          patientId="2657226"
+          onClose={handleClose}
+        />
+      )}
+
+      {/* ── PDPM Analyzer (launched from Command Center) ── */}
+      {overlay === 'pdpm' && pdpmContext && (
         <div style={pdpmWrapperStyle}>
           <div style={pdpmHeaderStyle}>
             <span style={{ fontWeight: 600 }}>PDPM Analyzer</span>
             <button onClick={handleClose} style={closeButtonStyle}>&times;</button>
           </div>
           <div style={{ flex: 1, overflow: 'auto' }}>
-            <PDPMAnalyzer
-              context={pdpmContext}
-              onClose={handleClose}
-            />
+            <PDPMAnalyzer context={pdpmContext} onClose={handleClose} />
           </div>
         </div>
       )}
@@ -316,21 +335,13 @@ export function PCCDemoApp() {
         />
       )}
 
-      {/* ── FAB Button ── */}
-      <button
-        class="super-demo-fab"
-        onClick={handleFabClick}
-        title="Open Super Command Center"
-        style={fabStyle}
-      >
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <rect x="3" y="3" width="7" height="7" />
-          <rect x="14" y="3" width="7" height="7" />
-          <rect x="3" y="14" width="7" height="7" />
-          <rect x="14" y="14" width="7" height="7" />
-        </svg>
-        <span style={{ marginLeft: '8px', fontSize: '13px', fontWeight: 600 }}>Super</span>
-      </button>
+      {/* ── Real Super speed-dial FAB ── */}
+      <SuperDemoFab
+        onOpenMds={() => setOverlay('commandCenter')}
+        onOpenQm={() => setOverlay('qm')}
+        onOpen24hr={() => setOverlay('24hr')}
+        onOpenChat={() => setOverlay('chat')}
+      />
 
       {/* ── Query Modal ── */}
       {queryData && (
@@ -394,24 +405,6 @@ function getItemLabel(code) {
 }
 
 // ── Styles ──
-
-const fabStyle = {
-  position: 'fixed',
-  bottom: '24px',
-  left: '24px',
-  zIndex: 99999,
-  display: 'flex',
-  alignItems: 'center',
-  padding: '12px 20px',
-  borderRadius: '28px',
-  background: 'linear-gradient(135deg, #4f46e5 0%, #6366f1 100%)',
-  color: 'white',
-  border: 'none',
-  cursor: 'pointer',
-  boxShadow: '0 4px 14px rgba(99,102,241,0.4)',
-  transition: 'transform 0.15s ease, box-shadow 0.15s ease',
-  fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
-};
 
 const pdpmWrapperStyle = {
   position: 'fixed',

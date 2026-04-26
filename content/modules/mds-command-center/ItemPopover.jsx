@@ -175,6 +175,7 @@ export function ItemPopover({ item, context, onClose }) {
     const el = noteContainerRef.current;
     const viewer = parseViewer(viewingSource.ev);
     const quote = viewingSource.ev.quoteText || viewingSource.ev.quote || viewingSource.ev.snippet || '';
+    console.log('[NoteHighlight/popover] viewingSource.ev keys:', Object.keys(viewingSource.ev), 'quote?', !!quote, 'first60:', (viewingSource.ev.quoteText || viewingSource.ev.quote || '').slice(0, 60));
 
     el.innerHTML = '<div class="cc-pop__viewer-loading"><div class="mds-cc__spinner mds-cc__spinner--sm"></div><span>Loading...</span></div>';
 
@@ -185,7 +186,7 @@ export function ItemPopover({ item, context, onClose }) {
       const params = { assessmentId: context?.assessmentId, orgSlug, facilityName };
 
       if (viewingNote && window.renderSplitNote) {
-        await window.renderSplitNote(el, viewer.id, params);
+        await window.renderSplitNote(el, viewer.id, params, quote || null);
       } else if (viewingTherapy && window.renderSplitTherapy) {
         await window.renderSplitTherapy(el, viewer.id, quote, params);
       } else {

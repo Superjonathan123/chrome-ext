@@ -1,101 +1,101 @@
-var ze, se, ks, Cs, ke, kn, Ns, Ss, xs, rn, Gt, Vt, Ps, Ge = {}, Ts = [], gi = /acit|ex(?:s|g|n|p|$)|rph|grid|ows|mnc|ntw|ine[ch]|zoo|^ord|itera/i, je = Array.isArray;
-function be(t, n) {
+var tt, ae, Ks, Ys, Ce, Bn, Js, Zs, Xs, yn, Xt, en, ea, Ye = {}, ta = [], ai = /acit|ex(?:s|g|n|p|$)|rph|grid|ows|mnc|ntw|ine[ch]|zoo|^ord|itera/i, nt = Array.isArray;
+function Ie(t, n) {
   for (var s in n) t[s] = n[s];
   return t;
 }
-function on(t) {
+function vn(t) {
   t && t.parentNode && t.parentNode.removeChild(t);
 }
-function G(t, n, s) {
-  var i, a, r, o = {};
-  for (r in n) r == "key" ? i = n[r] : r == "ref" ? a = n[r] : o[r] = n[r];
-  if (arguments.length > 2 && (o.children = arguments.length > 3 ? ze.call(arguments, 2) : s), typeof t == "function" && t.defaultProps != null) for (r in t.defaultProps) o[r] === void 0 && (o[r] = t.defaultProps[r]);
-  return Be(t, o, i, a, null);
+function K(t, n, s) {
+  var a, i, r, o = {};
+  for (r in n) r == "key" ? a = n[r] : r == "ref" ? i = n[r] : o[r] = n[r];
+  if (arguments.length > 2 && (o.children = arguments.length > 3 ? tt.call(arguments, 2) : s), typeof t == "function" && t.defaultProps != null) for (r in t.defaultProps) o[r] === void 0 && (o[r] = t.defaultProps[r]);
+  return Qe(t, o, a, i, null);
 }
-function Be(t, n, s, i, a) {
-  var r = { type: t, props: n, key: s, ref: i, __k: null, __: null, __b: 0, __e: null, __c: null, constructor: void 0, __v: a ?? ++ks, __i: -1, __u: 0 };
-  return a == null && se.vnode != null && se.vnode(r), r;
+function Qe(t, n, s, a, i) {
+  var r = { type: t, props: n, key: s, ref: a, __k: null, __: null, __b: 0, __e: null, __c: null, constructor: void 0, __v: i ?? ++Ks, __i: -1, __u: 0 };
+  return i == null && ae.vnode != null && ae.vnode(r), r;
 }
-function fi() {
+function ii() {
   return { current: null };
 }
-function J(t) {
+function Q(t) {
   return t.children;
 }
-function Fe(t, n) {
+function je(t, n) {
   this.props = t, this.context = n;
 }
-function Le(t, n) {
-  if (n == null) return t.__ ? Le(t.__, t.__i + 1) : null;
+function Ee(t, n) {
+  if (n == null) return t.__ ? Ee(t.__, t.__i + 1) : null;
   for (var s; n < t.__k.length; n++) if ((s = t.__k[n]) != null && s.__e != null) return s.__e;
-  return typeof t.type == "function" ? Le(t) : null;
+  return typeof t.type == "function" ? Ee(t) : null;
 }
-function As(t) {
+function na(t) {
   var n, s;
   if ((t = t.__) != null && t.__c != null) {
     for (t.__e = t.__c.base = null, n = 0; n < t.__k.length; n++) if ((s = t.__k[n]) != null && s.__e != null) {
       t.__e = t.__c.base = s.__e;
       break;
     }
-    return As(t);
+    return na(t);
   }
 }
-function Wt(t) {
-  (!t.__d && (t.__d = !0) && ke.push(t) && !mt.__r++ || kn != se.debounceRendering) && ((kn = se.debounceRendering) || Ns)(mt);
+function tn(t) {
+  (!t.__d && (t.__d = !0) && Ce.push(t) && !kt.__r++ || Bn != ae.debounceRendering) && ((Bn = ae.debounceRendering) || Js)(kt);
 }
-function mt() {
-  for (var t, n, s, i, a, r, o, c = 1; ke.length; ) ke.length > c && ke.sort(Ss), t = ke.shift(), c = ke.length, t.__d && (s = void 0, i = void 0, a = (i = (n = t).__v).__e, r = [], o = [], n.__P && ((s = be({}, i)).__v = i.__v + 1, se.vnode && se.vnode(s), cn(n.__P, s, i, n.__n, n.__P.namespaceURI, 32 & i.__u ? [a] : null, r, a ?? Le(i), !!(32 & i.__u), o), s.__v = i.__v, s.__.__k[s.__i] = s, $s(r, s, o), i.__e = i.__ = null, s.__e != a && As(s)));
-  mt.__r = 0;
+function kt() {
+  for (var t, n, s, a, i, r, o, c = 1; Ce.length; ) Ce.length > c && Ce.sort(Zs), t = Ce.shift(), c = Ce.length, t.__d && (s = void 0, a = void 0, i = (a = (n = t).__v).__e, r = [], o = [], n.__P && ((s = Ie({}, a)).__v = a.__v + 1, ae.vnode && ae.vnode(s), bn(n.__P, s, a, n.__n, n.__P.namespaceURI, 32 & a.__u ? [i] : null, r, i ?? Ee(a), !!(32 & a.__u), o), s.__v = a.__v, s.__.__k[s.__i] = s, ra(r, s, o), a.__e = a.__ = null, s.__e != i && na(s)));
+  kt.__r = 0;
 }
-function Ms(t, n, s, i, a, r, o, c, l, d, u) {
-  var p, m, h, _, g, f, y, w = i && i.__k || Ts, k = n.length;
-  for (l = yi(s, n, w, l, k), p = 0; p < k; p++) (h = s.__k[p]) != null && (m = h.__i == -1 ? Ge : w[h.__i] || Ge, h.__i = p, f = cn(t, h, m, a, r, o, c, l, d, u), _ = h.__e, h.ref && m.ref != h.ref && (m.ref && dn(m.ref, null, h), u.push(h.ref, h.__c || _, h)), g == null && _ != null && (g = _), (y = !!(4 & h.__u)) || m.__k === h.__k ? l = Ls(h, l, t, y) : typeof h.type == "function" && f !== void 0 ? l = f : _ && (l = _.nextSibling), h.__u &= -7);
-  return s.__e = g, l;
+function sa(t, n, s, a, i, r, o, c, d, l, p) {
+  var u, m, h, _, g, v, b, f = a && a.__k || ta, I = n.length;
+  for (d = ri(s, n, f, d, I), u = 0; u < I; u++) (h = s.__k[u]) != null && (m = h.__i == -1 ? Ye : f[h.__i] || Ye, h.__i = u, v = bn(t, h, m, i, r, o, c, d, l, p), _ = h.__e, h.ref && m.ref != h.ref && (m.ref && wn(m.ref, null, h), p.push(h.ref, h.__c || _, h)), g == null && _ != null && (g = _), (b = !!(4 & h.__u)) || m.__k === h.__k ? d = aa(h, d, t, b) : typeof h.type == "function" && v !== void 0 ? d = v : _ && (d = _.nextSibling), h.__u &= -7);
+  return s.__e = g, d;
 }
-function yi(t, n, s, i, a) {
-  var r, o, c, l, d, u = s.length, p = u, m = 0;
-  for (t.__k = new Array(a), r = 0; r < a; r++) (o = n[r]) != null && typeof o != "boolean" && typeof o != "function" ? (typeof o == "string" || typeof o == "number" || typeof o == "bigint" || o.constructor == String ? o = t.__k[r] = Be(null, o, null, null, null) : je(o) ? o = t.__k[r] = Be(J, { children: o }, null, null, null) : o.constructor === void 0 && o.__b > 0 ? o = t.__k[r] = Be(o.type, o.props, o.key, o.ref ? o.ref : null, o.__v) : t.__k[r] = o, l = r + m, o.__ = t, o.__b = t.__b + 1, c = null, (d = o.__i = vi(o, s, l, p)) != -1 && (p--, (c = s[d]) && (c.__u |= 2)), c == null || c.__v == null ? (d == -1 && (a > u ? m-- : a < u && m++), typeof o.type != "function" && (o.__u |= 4)) : d != l && (d == l - 1 ? m-- : d == l + 1 ? m++ : (d > l ? m-- : m++, o.__u |= 4))) : t.__k[r] = null;
-  if (p) for (r = 0; r < u; r++) (c = s[r]) != null && (2 & c.__u) == 0 && (c.__e == i && (i = Le(c)), qs(c, c));
-  return i;
+function ri(t, n, s, a, i) {
+  var r, o, c, d, l, p = s.length, u = p, m = 0;
+  for (t.__k = new Array(i), r = 0; r < i; r++) (o = n[r]) != null && typeof o != "boolean" && typeof o != "function" ? (typeof o == "string" || typeof o == "number" || typeof o == "bigint" || o.constructor == String ? o = t.__k[r] = Qe(null, o, null, null, null) : nt(o) ? o = t.__k[r] = Qe(Q, { children: o }, null, null, null) : o.constructor === void 0 && o.__b > 0 ? o = t.__k[r] = Qe(o.type, o.props, o.key, o.ref ? o.ref : null, o.__v) : t.__k[r] = o, d = r + m, o.__ = t, o.__b = t.__b + 1, c = null, (l = o.__i = oi(o, s, d, u)) != -1 && (u--, (c = s[l]) && (c.__u |= 2)), c == null || c.__v == null ? (l == -1 && (i > p ? m-- : i < p && m++), typeof o.type != "function" && (o.__u |= 4)) : l != d && (l == d - 1 ? m-- : l == d + 1 ? m++ : (l > d ? m-- : m++, o.__u |= 4))) : t.__k[r] = null;
+  if (u) for (r = 0; r < p; r++) (c = s[r]) != null && (2 & c.__u) == 0 && (c.__e == a && (a = Ee(c)), ca(c, c));
+  return a;
 }
-function Ls(t, n, s, i) {
-  var a, r;
+function aa(t, n, s, a) {
+  var i, r;
   if (typeof t.type == "function") {
-    for (a = t.__k, r = 0; a && r < a.length; r++) a[r] && (a[r].__ = t, n = Ls(a[r], n, s, i));
+    for (i = t.__k, r = 0; i && r < i.length; r++) i[r] && (i[r].__ = t, n = aa(i[r], n, s, a));
     return n;
   }
-  t.__e != n && (i && (n && t.type && !n.parentNode && (n = Le(t)), s.insertBefore(t.__e, n || null)), n = t.__e);
+  t.__e != n && (a && (n && t.type && !n.parentNode && (n = Ee(t)), s.insertBefore(t.__e, n || null)), n = t.__e);
   do
     n = n && n.nextSibling;
   while (n != null && n.nodeType == 8);
   return n;
 }
-function Es(t, n) {
-  return n = n || [], t == null || typeof t == "boolean" || (je(t) ? t.some(function(s) {
-    Es(s, n);
+function ia(t, n) {
+  return n = n || [], t == null || typeof t == "boolean" || (nt(t) ? t.some(function(s) {
+    ia(s, n);
   }) : n.push(t)), n;
 }
-function vi(t, n, s, i) {
-  var a, r, o, c = t.key, l = t.type, d = n[s], u = d != null && (2 & d.__u) == 0;
-  if (d === null && c == null || u && c == d.key && l == d.type) return s;
-  if (i > (u ? 1 : 0)) {
-    for (a = s - 1, r = s + 1; a >= 0 || r < n.length; ) if ((d = n[o = a >= 0 ? a-- : r++]) != null && (2 & d.__u) == 0 && c == d.key && l == d.type) return o;
+function oi(t, n, s, a) {
+  var i, r, o, c = t.key, d = t.type, l = n[s], p = l != null && (2 & l.__u) == 0;
+  if (l === null && c == null || p && c == l.key && d == l.type) return s;
+  if (a > (p ? 1 : 0)) {
+    for (i = s - 1, r = s + 1; i >= 0 || r < n.length; ) if ((l = n[o = i >= 0 ? i-- : r++]) != null && (2 & l.__u) == 0 && c == l.key && d == l.type) return o;
   }
   return -1;
 }
-function Cn(t, n, s) {
-  n[0] == "-" ? t.setProperty(n, s ?? "") : t[n] = s == null ? "" : typeof s != "number" || gi.test(n) ? s : s + "px";
+function Hn(t, n, s) {
+  n[0] == "-" ? t.setProperty(n, s ?? "") : t[n] = s == null ? "" : typeof s != "number" || ai.test(n) ? s : s + "px";
 }
-function Ze(t, n, s, i, a) {
+function rt(t, n, s, a, i) {
   var r, o;
   e: if (n == "style") if (typeof s == "string") t.style.cssText = s;
   else {
-    if (typeof i == "string" && (t.style.cssText = i = ""), i) for (n in i) s && n in s || Cn(t.style, n, "");
-    if (s) for (n in s) i && s[n] == i[n] || Cn(t.style, n, s[n]);
+    if (typeof a == "string" && (t.style.cssText = a = ""), a) for (n in a) s && n in s || Hn(t.style, n, "");
+    if (s) for (n in s) a && s[n] == a[n] || Hn(t.style, n, s[n]);
   }
-  else if (n[0] == "o" && n[1] == "n") r = n != (n = n.replace(xs, "$1")), o = n.toLowerCase(), n = o in t || n == "onFocusOut" || n == "onFocusIn" ? o.slice(2) : n.slice(2), t.l || (t.l = {}), t.l[n + r] = s, s ? i ? s.u = i.u : (s.u = rn, t.addEventListener(n, r ? Vt : Gt, r)) : t.removeEventListener(n, r ? Vt : Gt, r);
+  else if (n[0] == "o" && n[1] == "n") r = n != (n = n.replace(Xs, "$1")), o = n.toLowerCase(), n = o in t || n == "onFocusOut" || n == "onFocusIn" ? o.slice(2) : n.slice(2), t.l || (t.l = {}), t.l[n + r] = s, s ? a ? s.u = a.u : (s.u = yn, t.addEventListener(n, r ? en : Xt, r)) : t.removeEventListener(n, r ? en : Xt, r);
   else {
-    if (a == "http://www.w3.org/2000/svg") n = n.replace(/xlink(H|:h)/, "h").replace(/sName$/, "s");
+    if (i == "http://www.w3.org/2000/svg") n = n.replace(/xlink(H|:h)/, "h").replace(/sName$/, "s");
     else if (n != "width" && n != "height" && n != "href" && n != "list" && n != "form" && n != "tabIndex" && n != "download" && n != "rowSpan" && n != "colSpan" && n != "role" && n != "popover" && n in t) try {
       t[n] = s ?? "";
       break e;
@@ -104,209 +104,209 @@ function Ze(t, n, s, i, a) {
     typeof s == "function" || (s == null || s === !1 && n[4] != "-" ? t.removeAttribute(n) : t.setAttribute(n, n == "popover" && s == 1 ? "" : s));
   }
 }
-function Nn(t) {
+function Gn(t) {
   return function(n) {
     if (this.l) {
       var s = this.l[n.type + t];
-      if (n.t == null) n.t = rn++;
+      if (n.t == null) n.t = yn++;
       else if (n.t < s.u) return;
-      return s(se.event ? se.event(n) : n);
+      return s(ae.event ? ae.event(n) : n);
     }
   };
 }
-function cn(t, n, s, i, a, r, o, c, l, d) {
-  var u, p, m, h, _, g, f, y, w, k, C, I, P, A, x, D, N, S = n.type;
+function bn(t, n, s, a, i, r, o, c, d, l) {
+  var p, u, m, h, _, g, v, b, f, I, N, D, T, A, x, k, S, w = n.type;
   if (n.constructor !== void 0) return null;
-  128 & s.__u && (l = !!(32 & s.__u), r = [c = n.__e = s.__e]), (u = se.__b) && u(n);
-  e: if (typeof S == "function") try {
-    if (y = n.props, w = "prototype" in S && S.prototype.render, k = (u = S.contextType) && i[u.__c], C = u ? k ? k.props.value : u.__ : i, s.__c ? f = (p = n.__c = s.__c).__ = p.__E : (w ? n.__c = p = new S(y, C) : (n.__c = p = new Fe(y, C), p.constructor = S, p.render = bi), k && k.sub(p), p.state || (p.state = {}), p.__n = i, m = p.__d = !0, p.__h = [], p._sb = []), w && p.__s == null && (p.__s = p.state), w && S.getDerivedStateFromProps != null && (p.__s == p.state && (p.__s = be({}, p.__s)), be(p.__s, S.getDerivedStateFromProps(y, p.__s))), h = p.props, _ = p.state, p.__v = n, m) w && S.getDerivedStateFromProps == null && p.componentWillMount != null && p.componentWillMount(), w && p.componentDidMount != null && p.__h.push(p.componentDidMount);
+  128 & s.__u && (d = !!(32 & s.__u), r = [c = n.__e = s.__e]), (p = ae.__b) && p(n);
+  e: if (typeof w == "function") try {
+    if (b = n.props, f = "prototype" in w && w.prototype.render, I = (p = w.contextType) && a[p.__c], N = p ? I ? I.props.value : p.__ : a, s.__c ? v = (u = n.__c = s.__c).__ = u.__E : (f ? n.__c = u = new w(b, N) : (n.__c = u = new je(b, N), u.constructor = w, u.render = li), I && I.sub(u), u.state || (u.state = {}), u.__n = a, m = u.__d = !0, u.__h = [], u._sb = []), f && u.__s == null && (u.__s = u.state), f && w.getDerivedStateFromProps != null && (u.__s == u.state && (u.__s = Ie({}, u.__s)), Ie(u.__s, w.getDerivedStateFromProps(b, u.__s))), h = u.props, _ = u.state, u.__v = n, m) f && w.getDerivedStateFromProps == null && u.componentWillMount != null && u.componentWillMount(), f && u.componentDidMount != null && u.__h.push(u.componentDidMount);
     else {
-      if (w && S.getDerivedStateFromProps == null && y !== h && p.componentWillReceiveProps != null && p.componentWillReceiveProps(y, C), n.__v == s.__v || !p.__e && p.shouldComponentUpdate != null && p.shouldComponentUpdate(y, p.__s, C) === !1) {
-        for (n.__v != s.__v && (p.props = y, p.state = p.__s, p.__d = !1), n.__e = s.__e, n.__k = s.__k, n.__k.some(function(E) {
-          E && (E.__ = n);
-        }), I = 0; I < p._sb.length; I++) p.__h.push(p._sb[I]);
-        p._sb = [], p.__h.length && o.push(p);
+      if (f && w.getDerivedStateFromProps == null && b !== h && u.componentWillReceiveProps != null && u.componentWillReceiveProps(b, N), n.__v == s.__v || !u.__e && u.shouldComponentUpdate != null && u.shouldComponentUpdate(b, u.__s, N) === !1) {
+        for (n.__v != s.__v && (u.props = b, u.state = u.__s, u.__d = !1), n.__e = s.__e, n.__k = s.__k, n.__k.some(function(M) {
+          M && (M.__ = n);
+        }), D = 0; D < u._sb.length; D++) u.__h.push(u._sb[D]);
+        u._sb = [], u.__h.length && o.push(u);
         break e;
       }
-      p.componentWillUpdate != null && p.componentWillUpdate(y, p.__s, C), w && p.componentDidUpdate != null && p.__h.push(function() {
-        p.componentDidUpdate(h, _, g);
+      u.componentWillUpdate != null && u.componentWillUpdate(b, u.__s, N), f && u.componentDidUpdate != null && u.__h.push(function() {
+        u.componentDidUpdate(h, _, g);
       });
     }
-    if (p.context = C, p.props = y, p.__P = t, p.__e = !1, P = se.__r, A = 0, w) {
-      for (p.state = p.__s, p.__d = !1, P && P(n), u = p.render(p.props, p.state, p.context), x = 0; x < p._sb.length; x++) p.__h.push(p._sb[x]);
-      p._sb = [];
+    if (u.context = N, u.props = b, u.__P = t, u.__e = !1, T = ae.__r, A = 0, f) {
+      for (u.state = u.__s, u.__d = !1, T && T(n), p = u.render(u.props, u.state, u.context), x = 0; x < u._sb.length; x++) u.__h.push(u._sb[x]);
+      u._sb = [];
     } else do
-      p.__d = !1, P && P(n), u = p.render(p.props, p.state, p.context), p.state = p.__s;
-    while (p.__d && ++A < 25);
-    p.state = p.__s, p.getChildContext != null && (i = be(be({}, i), p.getChildContext())), w && !m && p.getSnapshotBeforeUpdate != null && (g = p.getSnapshotBeforeUpdate(h, _)), D = u, u != null && u.type === J && u.key == null && (D = Rs(u.props.children)), c = Ms(t, je(D) ? D : [D], n, s, i, a, r, o, c, l, d), p.base = n.__e, n.__u &= -161, p.__h.length && o.push(p), f && (p.__E = p.__ = null);
-  } catch (E) {
-    if (n.__v = null, l || r != null) if (E.then) {
-      for (n.__u |= l ? 160 : 128; c && c.nodeType == 8 && c.nextSibling; ) c = c.nextSibling;
+      u.__d = !1, T && T(n), p = u.render(u.props, u.state, u.context), u.state = u.__s;
+    while (u.__d && ++A < 25);
+    u.state = u.__s, u.getChildContext != null && (a = Ie(Ie({}, a), u.getChildContext())), f && !m && u.getSnapshotBeforeUpdate != null && (g = u.getSnapshotBeforeUpdate(h, _)), k = p, p != null && p.type === Q && p.key == null && (k = oa(p.props.children)), c = sa(t, nt(k) ? k : [k], n, s, a, i, r, o, c, d, l), u.base = n.__e, n.__u &= -161, u.__h.length && o.push(u), v && (u.__E = u.__ = null);
+  } catch (M) {
+    if (n.__v = null, d || r != null) if (M.then) {
+      for (n.__u |= d ? 160 : 128; c && c.nodeType == 8 && c.nextSibling; ) c = c.nextSibling;
       r[r.indexOf(c)] = null, n.__e = c;
     } else {
-      for (N = r.length; N--; ) on(r[N]);
-      Qt(n);
+      for (S = r.length; S--; ) vn(r[S]);
+      nn(n);
     }
-    else n.__e = s.__e, n.__k = s.__k, E.then || Qt(n);
-    se.__e(E, n, s);
+    else n.__e = s.__e, n.__k = s.__k, M.then || nn(n);
+    ae.__e(M, n, s);
   }
-  else r == null && n.__v == s.__v ? (n.__k = s.__k, n.__e = s.__e) : c = n.__e = wi(s.__e, n, s, i, a, r, o, l, d);
-  return (u = se.diffed) && u(n), 128 & n.__u ? void 0 : c;
+  else r == null && n.__v == s.__v ? (n.__k = s.__k, n.__e = s.__e) : c = n.__e = ci(s.__e, n, s, a, i, r, o, d, l);
+  return (p = ae.diffed) && p(n), 128 & n.__u ? void 0 : c;
 }
-function Qt(t) {
-  t && t.__c && (t.__c.__e = !0), t && t.__k && t.__k.forEach(Qt);
+function nn(t) {
+  t && t.__c && (t.__c.__e = !0), t && t.__k && t.__k.forEach(nn);
 }
-function $s(t, n, s) {
-  for (var i = 0; i < s.length; i++) dn(s[i], s[++i], s[++i]);
-  se.__c && se.__c(n, t), t.some(function(a) {
+function ra(t, n, s) {
+  for (var a = 0; a < s.length; a++) wn(s[a], s[++a], s[++a]);
+  ae.__c && ae.__c(n, t), t.some(function(i) {
     try {
-      t = a.__h, a.__h = [], t.some(function(r) {
-        r.call(a);
+      t = i.__h, i.__h = [], t.some(function(r) {
+        r.call(i);
       });
     } catch (r) {
-      se.__e(r, a.__v);
+      ae.__e(r, i.__v);
     }
   });
 }
-function Rs(t) {
-  return typeof t != "object" || t == null || t.__b && t.__b > 0 ? t : je(t) ? t.map(Rs) : be({}, t);
+function oa(t) {
+  return typeof t != "object" || t == null || t.__b && t.__b > 0 ? t : nt(t) ? t.map(oa) : Ie({}, t);
 }
-function wi(t, n, s, i, a, r, o, c, l) {
-  var d, u, p, m, h, _, g, f = s.props || Ge, y = n.props, w = n.type;
-  if (w == "svg" ? a = "http://www.w3.org/2000/svg" : w == "math" ? a = "http://www.w3.org/1998/Math/MathML" : a || (a = "http://www.w3.org/1999/xhtml"), r != null) {
-    for (d = 0; d < r.length; d++) if ((h = r[d]) && "setAttribute" in h == !!w && (w ? h.localName == w : h.nodeType == 3)) {
-      t = h, r[d] = null;
+function ci(t, n, s, a, i, r, o, c, d) {
+  var l, p, u, m, h, _, g, v = s.props || Ye, b = n.props, f = n.type;
+  if (f == "svg" ? i = "http://www.w3.org/2000/svg" : f == "math" ? i = "http://www.w3.org/1998/Math/MathML" : i || (i = "http://www.w3.org/1999/xhtml"), r != null) {
+    for (l = 0; l < r.length; l++) if ((h = r[l]) && "setAttribute" in h == !!f && (f ? h.localName == f : h.nodeType == 3)) {
+      t = h, r[l] = null;
       break;
     }
   }
   if (t == null) {
-    if (w == null) return document.createTextNode(y);
-    t = document.createElementNS(a, w, y.is && y), c && (se.__m && se.__m(n, r), c = !1), r = null;
+    if (f == null) return document.createTextNode(b);
+    t = document.createElementNS(i, f, b.is && b), c && (ae.__m && ae.__m(n, r), c = !1), r = null;
   }
-  if (w == null) f === y || c && t.data == y || (t.data = y);
+  if (f == null) v === b || c && t.data == b || (t.data = b);
   else {
-    if (r = r && ze.call(t.childNodes), !c && r != null) for (f = {}, d = 0; d < t.attributes.length; d++) f[(h = t.attributes[d]).name] = h.value;
-    for (d in f) if (h = f[d], d != "children") {
-      if (d == "dangerouslySetInnerHTML") p = h;
-      else if (!(d in y)) {
-        if (d == "value" && "defaultValue" in y || d == "checked" && "defaultChecked" in y) continue;
-        Ze(t, d, null, h, a);
+    if (r = r && tt.call(t.childNodes), !c && r != null) for (v = {}, l = 0; l < t.attributes.length; l++) v[(h = t.attributes[l]).name] = h.value;
+    for (l in v) if (h = v[l], l != "children") {
+      if (l == "dangerouslySetInnerHTML") u = h;
+      else if (!(l in b)) {
+        if (l == "value" && "defaultValue" in b || l == "checked" && "defaultChecked" in b) continue;
+        rt(t, l, null, h, i);
       }
     }
-    for (d in y) h = y[d], d == "children" ? m = h : d == "dangerouslySetInnerHTML" ? u = h : d == "value" ? _ = h : d == "checked" ? g = h : c && typeof h != "function" || f[d] === h || Ze(t, d, h, f[d], a);
-    if (u) c || p && (u.__html == p.__html || u.__html == t.innerHTML) || (t.innerHTML = u.__html), n.__k = [];
-    else if (p && (t.innerHTML = ""), Ms(n.type == "template" ? t.content : t, je(m) ? m : [m], n, s, i, w == "foreignObject" ? "http://www.w3.org/1999/xhtml" : a, r, o, r ? r[0] : s.__k && Le(s, 0), c, l), r != null) for (d = r.length; d--; ) on(r[d]);
-    c || (d = "value", w == "progress" && _ == null ? t.removeAttribute("value") : _ != null && (_ !== t[d] || w == "progress" && !_ || w == "option" && _ != f[d]) && Ze(t, d, _, f[d], a), d = "checked", g != null && g != t[d] && Ze(t, d, g, f[d], a));
+    for (l in b) h = b[l], l == "children" ? m = h : l == "dangerouslySetInnerHTML" ? p = h : l == "value" ? _ = h : l == "checked" ? g = h : c && typeof h != "function" || v[l] === h || rt(t, l, h, v[l], i);
+    if (p) c || u && (p.__html == u.__html || p.__html == t.innerHTML) || (t.innerHTML = p.__html), n.__k = [];
+    else if (u && (t.innerHTML = ""), sa(n.type == "template" ? t.content : t, nt(m) ? m : [m], n, s, a, f == "foreignObject" ? "http://www.w3.org/1999/xhtml" : i, r, o, r ? r[0] : s.__k && Ee(s, 0), c, d), r != null) for (l = r.length; l--; ) vn(r[l]);
+    c || (l = "value", f == "progress" && _ == null ? t.removeAttribute("value") : _ != null && (_ !== t[l] || f == "progress" && !_ || f == "option" && _ != v[l]) && rt(t, l, _, v[l], i), l = "checked", g != null && g != t[l] && rt(t, l, g, v[l], i));
   }
   return t;
 }
-function dn(t, n, s) {
+function wn(t, n, s) {
   try {
     if (typeof t == "function") {
-      var i = typeof t.__u == "function";
-      i && t.__u(), i && n == null || (t.__u = t(n));
+      var a = typeof t.__u == "function";
+      a && t.__u(), a && n == null || (t.__u = t(n));
     } else t.current = n;
-  } catch (a) {
-    se.__e(a, s);
+  } catch (i) {
+    ae.__e(i, s);
   }
 }
-function qs(t, n, s) {
-  var i, a;
-  if (se.unmount && se.unmount(t), (i = t.ref) && (i.current && i.current != t.__e || dn(i, null, n)), (i = t.__c) != null) {
-    if (i.componentWillUnmount) try {
-      i.componentWillUnmount();
+function ca(t, n, s) {
+  var a, i;
+  if (ae.unmount && ae.unmount(t), (a = t.ref) && (a.current && a.current != t.__e || wn(a, null, n)), (a = t.__c) != null) {
+    if (a.componentWillUnmount) try {
+      a.componentWillUnmount();
     } catch (r) {
-      se.__e(r, n);
+      ae.__e(r, n);
     }
-    i.base = i.__P = null;
+    a.base = a.__P = null;
   }
-  if (i = t.__k) for (a = 0; a < i.length; a++) i[a] && qs(i[a], n, s || typeof t.type != "function");
-  s || on(t.__e), t.__c = t.__ = t.__e = void 0;
+  if (a = t.__k) for (i = 0; i < a.length; i++) a[i] && ca(a[i], n, s || typeof t.type != "function");
+  s || vn(t.__e), t.__c = t.__ = t.__e = void 0;
 }
-function bi(t, n, s) {
+function li(t, n, s) {
   return this.constructor(t, s);
 }
-function Ce(t, n, s) {
-  var i, a, r, o;
-  n == document && (n = document.documentElement), se.__ && se.__(t, n), a = (i = typeof s == "function") ? null : s && s.__k || n.__k, r = [], o = [], cn(n, t = (!i && s || n).__k = G(J, null, [t]), a || Ge, Ge, n.namespaceURI, !i && s ? [s] : a ? null : n.firstChild ? ze.call(n.childNodes) : null, r, !i && s ? s : a ? a.__e : n.firstChild, i, o), $s(r, t, o);
+function Se(t, n, s) {
+  var a, i, r, o;
+  n == document && (n = document.documentElement), ae.__ && ae.__(t, n), i = (a = typeof s == "function") ? null : s && s.__k || n.__k, r = [], o = [], bn(n, t = (!a && s || n).__k = K(Q, null, [t]), i || Ye, Ye, n.namespaceURI, !a && s ? [s] : i ? null : n.firstChild ? tt.call(n.childNodes) : null, r, !a && s ? s : i ? i.__e : n.firstChild, a, o), ra(r, t, o);
 }
-function Os(t, n) {
-  Ce(t, n, Os);
+function la(t, n) {
+  Se(t, n, la);
 }
-function Ii(t, n, s) {
-  var i, a, r, o, c = be({}, t.props);
-  for (r in t.type && t.type.defaultProps && (o = t.type.defaultProps), n) r == "key" ? i = n[r] : r == "ref" ? a = n[r] : c[r] = n[r] === void 0 && o != null ? o[r] : n[r];
-  return arguments.length > 2 && (c.children = arguments.length > 3 ? ze.call(arguments, 2) : s), Be(t.type, c, i || t.key, a || t.ref, null);
+function di(t, n, s) {
+  var a, i, r, o, c = Ie({}, t.props);
+  for (r in t.type && t.type.defaultProps && (o = t.type.defaultProps), n) r == "key" ? a = n[r] : r == "ref" ? i = n[r] : c[r] = n[r] === void 0 && o != null ? o[r] : n[r];
+  return arguments.length > 2 && (c.children = arguments.length > 3 ? tt.call(arguments, 2) : s), Qe(t.type, c, a || t.key, i || t.ref, null);
 }
-function Di(t) {
+function ui(t) {
   function n(s) {
-    var i, a;
-    return this.getChildContext || (i = /* @__PURE__ */ new Set(), (a = {})[n.__c] = this, this.getChildContext = function() {
-      return a;
+    var a, i;
+    return this.getChildContext || (a = /* @__PURE__ */ new Set(), (i = {})[n.__c] = this, this.getChildContext = function() {
+      return i;
     }, this.componentWillUnmount = function() {
-      i = null;
+      a = null;
     }, this.shouldComponentUpdate = function(r) {
-      this.props.value != r.value && i.forEach(function(o) {
-        o.__e = !0, Wt(o);
+      this.props.value != r.value && a.forEach(function(o) {
+        o.__e = !0, tn(o);
       });
     }, this.sub = function(r) {
-      i.add(r);
+      a.add(r);
       var o = r.componentWillUnmount;
       r.componentWillUnmount = function() {
-        i && i.delete(r), o && o.call(r);
+        a && a.delete(r), o && o.call(r);
       };
     }), s.children;
   }
-  return n.__c = "__cC" + Ps++, n.__ = t, n.Provider = n.__l = (n.Consumer = function(s, i) {
-    return s.children(i);
+  return n.__c = "__cC" + ea++, n.__ = t, n.Provider = n.__l = (n.Consumer = function(s, a) {
+    return s.children(a);
   }).contextType = n, n;
 }
-ze = Ts.slice, se = { __e: function(t, n, s, i) {
-  for (var a, r, o; n = n.__; ) if ((a = n.__c) && !a.__) try {
-    if ((r = a.constructor) && r.getDerivedStateFromError != null && (a.setState(r.getDerivedStateFromError(t)), o = a.__d), a.componentDidCatch != null && (a.componentDidCatch(t, i || {}), o = a.__d), o) return a.__E = a;
+tt = ta.slice, ae = { __e: function(t, n, s, a) {
+  for (var i, r, o; n = n.__; ) if ((i = n.__c) && !i.__) try {
+    if ((r = i.constructor) && r.getDerivedStateFromError != null && (i.setState(r.getDerivedStateFromError(t)), o = i.__d), i.componentDidCatch != null && (i.componentDidCatch(t, a || {}), o = i.__d), o) return i.__E = i;
   } catch (c) {
     t = c;
   }
   throw t;
-} }, ks = 0, Cs = function(t) {
+} }, Ks = 0, Ys = function(t) {
   return t != null && t.constructor === void 0;
-}, Fe.prototype.setState = function(t, n) {
+}, je.prototype.setState = function(t, n) {
   var s;
-  s = this.__s != null && this.__s != this.state ? this.__s : this.__s = be({}, this.state), typeof t == "function" && (t = t(be({}, s), this.props)), t && be(s, t), t != null && this.__v && (n && this._sb.push(n), Wt(this));
-}, Fe.prototype.forceUpdate = function(t) {
-  this.__v && (this.__e = !0, t && this.__h.push(t), Wt(this));
-}, Fe.prototype.render = J, ke = [], Ns = typeof Promise == "function" ? Promise.prototype.then.bind(Promise.resolve()) : setTimeout, Ss = function(t, n) {
+  s = this.__s != null && this.__s != this.state ? this.__s : this.__s = Ie({}, this.state), typeof t == "function" && (t = t(Ie({}, s), this.props)), t && Ie(s, t), t != null && this.__v && (n && this._sb.push(n), tn(this));
+}, je.prototype.forceUpdate = function(t) {
+  this.__v && (this.__e = !0, t && this.__h.push(t), tn(this));
+}, je.prototype.render = Q, Ce = [], Js = typeof Promise == "function" ? Promise.prototype.then.bind(Promise.resolve()) : setTimeout, Zs = function(t, n) {
   return t.__v.__b - n.__v.__b;
-}, mt.__r = 0, xs = /(PointerCapture)$|Capture$/i, rn = 0, Gt = Nn(!1), Vt = Nn(!0), Ps = 0;
-const ki = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+}, kt.__r = 0, Xs = /(PointerCapture)$|Capture$/i, yn = 0, Xt = Gn(!1), en = Gn(!0), ea = 0;
+const pi = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
-  Component: Fe,
-  Fragment: J,
-  cloneElement: Ii,
-  createContext: Di,
-  createElement: G,
-  createRef: fi,
-  h: G,
-  hydrate: Os,
+  Component: je,
+  Fragment: Q,
+  cloneElement: di,
+  createContext: ui,
+  createElement: K,
+  createRef: ii,
+  h: K,
+  hydrate: la,
   get isValidElement() {
-    return Cs;
+    return Ys;
   },
   get options() {
-    return se;
+    return ae;
   },
-  render: Ce,
-  toChildArray: Es
+  render: Se,
+  toChildArray: ia
 }, Symbol.toStringTag, { value: "Module" }));
-var Ci = 0;
-function e(t, n, s, i, a, r) {
+var mi = 0;
+function e(t, n, s, a, i, r) {
   n || (n = {});
-  var o, c, l = n;
-  if ("ref" in l) for (c in l = {}, n) c == "ref" ? o = n[c] : l[c] = n[c];
-  var d = { type: t, props: l, key: s, ref: o, __k: null, __: null, __b: 0, __e: null, __c: null, constructor: void 0, __v: --Ci, __i: -1, __u: 0, __source: a, __self: r };
-  if (typeof t == "function" && (o = t.defaultProps)) for (c in o) l[c] === void 0 && (l[c] = o[c]);
-  return se.vnode && se.vnode(d), d;
+  var o, c, d = n;
+  if ("ref" in d) for (c in d = {}, n) c == "ref" ? o = n[c] : d[c] = n[c];
+  var l = { type: t, props: d, key: s, ref: o, __k: null, __: null, __b: 0, __e: null, __c: null, constructor: void 0, __v: --mi, __i: -1, __u: 0, __source: i, __self: r };
+  if (typeof t == "function" && (o = t.defaultProps)) for (c in o) d[c] === void 0 && (d[c] = o[c]);
+  return ae.vnode && ae.vnode(l), l;
 }
-const _e = {
+const ge = {
   // ════════════════════════════════════════════
   // DASHBOARD (useCommandCenter)
   // ════════════════════════════════════════════
@@ -2936,7 +2936,7 @@ const _e = {
       }
     ]
   }
-}, Ni = [
+}, hi = [
   { patientId: "pat_hagerich", patientExternalId: "2657001", patientName: "Hagerich, Laurel" },
   { patientId: "pat_clark", patientExternalId: "2657002", patientName: "Clark, Terrence" },
   { patientId: "pat_saffle", patientExternalId: "2657003", patientName: "Saffle, Elinor" },
@@ -2956,153 +2956,153 @@ const _e = {
   { patientId: "pat_smith", patientExternalId: "2657017", patientName: "Smith, Bertha" },
   { patientId: "pat_clasper", patientExternalId: "2657018", patientName: "Clasper, Ronald" }
 ];
-function b(t) {
-  return Ni.find((n) => n.patientName.startsWith(t));
+function C(t) {
+  return hi.find((n) => n.patientName.startsWith(t));
 }
 function pe(t, n) {
-  const [s, i, a] = t.split("-").map(Number), r = new Date(s, i - 1, a);
+  const [s, a, i] = t.split("-").map(Number), r = new Date(s, a - 1, i);
   return r.setDate(r.getDate() + n), `${r.getFullYear()}-${String(r.getMonth() + 1).padStart(2, "0")}-${String(r.getDate()).padStart(2, "0")}`;
 }
-function de(t, n, s, { urgency: i = "ok", meta: a = {} } = {}) {
+function de(t, n, s, { urgency: a = "ok", meta: i = {} } = {}) {
   return {
     date: t,
     type: n,
     patientId: s.patientId,
     patientExternalId: s.patientExternalId,
     patientName: s.patientName,
-    urgency: i,
-    meta: a
+    urgency: a,
+    meta: i
   };
 }
-function Si(t) {
-  const n = t, s = pe(n, 1), i = pe(n, 2), a = pe(n, 3), r = pe(n, 4), o = pe(n, 5), c = pe(n, 6);
+function _i(t) {
+  const n = t, s = pe(n, 1), a = pe(n, 2), i = pe(n, 3), r = pe(n, 4), o = pe(n, 5), c = pe(n, 6);
   return [
     // Monday — urgent opener
-    de(n, "cert_overdue", b("Coble"), {
+    de(n, "cert_overdue", C("Coble"), {
       urgency: "overdue",
       meta: { certId: "cert_coble_01", type: "day_14_recert", status: "pending", bucket: "needs_to_send", daysOverdue: 32 }
     }),
-    de(n, "cp_review_due", b("Hagerich"), {
+    de(n, "cp_review_due", C("Hagerich"), {
       urgency: "warning",
       meta: { nextReviewDate: n, pccReviewId: null, pccCarePlanId: "cp_hagerich_01" }
     }),
-    de(n, "query_due", b("Saffle"), {
+    de(n, "query_due", C("Saffle"), {
       urgency: "warning",
-      meta: { queryId: "q_saffle_01", itemCode: "I5100", status: "sent", linkedArdDate: a }
+      meta: { queryId: "q_saffle_01", itemCode: "I5100", status: "sent", linkedArdDate: i }
     }),
     // Tuesday — admit + sig + cp review
-    de(s, "admit", b("Clark"), {
+    de(s, "admit", C("Clark"), {
       meta: { payer: "Medicare A", location: "4-South" }
     }),
-    de(s, "mds_ard", b("Clasper"), {
+    de(s, "mds_ard", C("Clasper"), {
       meta: { assessmentId: "mds_clasper_01", pccAssessmentId: "4860311", description: "Admission + 5-Day PPS", status: "In Progress", ardDate: s }
     }),
-    de(s, "cp_review_expected", b("Packoski"), {
+    de(s, "cp_review_expected", C("Packoski"), {
       urgency: "warning",
       meta: { relatedArdDate: pe(s, 2), expectedType: "quarterly" }
     }),
     // Wednesday — sig change MDS + queries in flight
-    de(i, "mds_ard", b("Stamper"), {
+    de(a, "mds_ard", C("Stamper"), {
       urgency: "warning",
-      meta: { assessmentId: "mds_stamper_01", pccAssessmentId: "4860312", description: "Significant Change", status: "In Progress", ardDate: i }
+      meta: { assessmentId: "mds_stamper_01", pccAssessmentId: "4860312", description: "Significant Change", status: "In Progress", ardDate: a }
     }),
-    de(i, "query_due", b("Schmalzriedt"), {
-      meta: { queryId: "q_schmalz_01", itemCode: "I2900", status: "sent", linkedArdDate: pe(i, 5) }
+    de(a, "query_due", C("Schmalzriedt"), {
+      meta: { queryId: "q_schmalz_01", itemCode: "I2900", status: "sent", linkedArdDate: pe(a, 5) }
     }),
-    de(i, "query_due", b("Nugent"), {
-      meta: { queryId: "q_nugent_01", itemCode: "J1550", status: "sent", linkedArdDate: pe(i, 6) }
+    de(a, "query_due", C("Nugent"), {
+      meta: { queryId: "q_nugent_01", itemCode: "J1550", status: "sent", linkedArdDate: pe(a, 6) }
     }),
     // Thursday — query due + cp review
-    de(a, "query_due", b("Bruton"), {
+    de(i, "query_due", C("Bruton"), {
       urgency: "warning",
-      meta: { queryId: "q_bruton_01", itemCode: "I1100", status: "pending", linkedArdDate: pe(a, 2) }
+      meta: { queryId: "q_bruton_01", itemCode: "I1100", status: "pending", linkedArdDate: pe(i, 2) }
     }),
-    de(a, "cp_review_in_progress", b("Henstreet"), {
-      meta: { startDate: pe(a, -1), targetCompletionDate: pe(a, 3), pccReviewId: "rev_henstreet_01", pccCarePlanId: "cp_henstreet_01" }
+    de(i, "cp_review_in_progress", C("Henstreet"), {
+      meta: { startDate: pe(i, -1), targetCompletionDate: pe(i, 3), pccReviewId: "rev_henstreet_01", pccCarePlanId: "cp_henstreet_01" }
     }),
     // Friday — discharge, cp review, cert
-    de(r, "discharge", b("Watkins"), {
+    de(r, "discharge", C("Watkins"), {
       meta: { actionCode: "DD" }
     }),
-    de(r, "cp_review_due", b("McCants"), {
+    de(r, "cp_review_due", C("McCants"), {
       meta: { nextReviewDate: r, pccReviewId: null, pccCarePlanId: "cp_mccants_01" }
     }),
-    de(r, "cert_due", b("Clappor"), {
+    de(r, "cert_due", C("Clappor"), {
       urgency: "warning",
       meta: { certId: "cert_clappor_01", type: "day_14_recert", status: "pending", bucket: "needs_to_send", sentAt: null }
     }),
     // Saturday — query-heavy day
-    de(o, "query_due", b("Ashley"), {
+    de(o, "query_due", C("Ashley"), {
       meta: { queryId: "q_ashley_01", itemCode: "I5100", status: "sent", linkedArdDate: pe(o, 4) }
     }),
-    de(o, "query_due", b("Hoffie"), {
+    de(o, "query_due", C("Hoffie"), {
       meta: { queryId: "q_hoffie_01", itemCode: "I2900", status: "sent", linkedArdDate: pe(o, 3) }
     }),
-    de(o, "query_due", b("Rogers"), {
+    de(o, "query_due", C("Rogers"), {
       meta: { queryId: "q_rogers_01", itemCode: "J1550", status: "sent", linkedArdDate: pe(o, 5) }
     }),
-    de(o, "query_due", b("Smith"), {
+    de(o, "query_due", C("Smith"), {
       meta: { queryId: "q_smith_01", itemCode: "O0100", status: "pending", linkedArdDate: pe(o, 6) }
     }),
     // Sunday — quiet, one cert
-    de(c, "cert_due", b("Saffle"), {
+    de(c, "cert_due", C("Saffle"), {
       meta: { certId: "cert_saffle_01", type: "day_14_recert", status: "pending", bucket: "needs_to_send", sentAt: null }
     })
   ];
 }
-function xi() {
+function gi() {
   const t = (s) => new Date(Date.now() - s * 864e5).toISOString().slice(0, 10), n = (s) => new Date(Date.now() - s * 36e5).toISOString();
   return {
     mdsCoding: {
       count: 4,
       patients: [
-        { patientId: b("Stamper").patientId, patientExternalId: b("Stamper").patientExternalId, patientName: b("Stamper").patientName, status: "In Progress", description: "Significant Change", ardDate: t(2), sectionsCompleted: 12, sectionsTotal: 18, daysToCompleteBy: 12, pccAssessmentId: "4860312", assessmentId: "mds_stamper_01" },
-        { patientId: b("Clasper").patientId, patientExternalId: b("Clasper").patientExternalId, patientName: b("Clasper").patientName, status: "In Progress", description: "Admission + 5-Day PPS", ardDate: t(5), sectionsCompleted: 16, sectionsTotal: 18, daysToCompleteBy: 9, pccAssessmentId: "4860311", assessmentId: "mds_clasper_01" },
-        { patientId: b("Hagerich").patientId, patientExternalId: b("Hagerich").patientExternalId, patientName: b("Hagerich").patientName, status: "In Progress", description: "Quarterly", ardDate: t(12), sectionsCompleted: 15, sectionsTotal: 18, daysToCompleteBy: 2, pccAssessmentId: "4860305", assessmentId: "mds_hagerich_01" },
-        { patientId: b("Saffle").patientId, patientExternalId: b("Saffle").patientExternalId, patientName: b("Saffle").patientName, status: "In Progress", description: "Annual + 5-Day PPS", ardDate: t(16), sectionsCompleted: 10, sectionsTotal: 18, daysToCompleteBy: -2, pccAssessmentId: "4860320", assessmentId: "mds_saffle_01" }
+        { patientId: C("Stamper").patientId, patientExternalId: C("Stamper").patientExternalId, patientName: C("Stamper").patientName, status: "In Progress", description: "Significant Change", ardDate: t(2), sectionsCompleted: 12, sectionsTotal: 18, daysToCompleteBy: 12, pccAssessmentId: "4860312", assessmentId: "mds_stamper_01" },
+        { patientId: C("Clasper").patientId, patientExternalId: C("Clasper").patientExternalId, patientName: C("Clasper").patientName, status: "In Progress", description: "Admission + 5-Day PPS", ardDate: t(5), sectionsCompleted: 16, sectionsTotal: 18, daysToCompleteBy: 9, pccAssessmentId: "4860311", assessmentId: "mds_clasper_01" },
+        { patientId: C("Hagerich").patientId, patientExternalId: C("Hagerich").patientExternalId, patientName: C("Hagerich").patientName, status: "In Progress", description: "Quarterly", ardDate: t(12), sectionsCompleted: 15, sectionsTotal: 18, daysToCompleteBy: 2, pccAssessmentId: "4860305", assessmentId: "mds_hagerich_01" },
+        { patientId: C("Saffle").patientId, patientExternalId: C("Saffle").patientExternalId, patientName: C("Saffle").patientName, status: "In Progress", description: "Annual + 5-Day PPS", ardDate: t(16), sectionsCompleted: 10, sectionsTotal: 18, daysToCompleteBy: -2, pccAssessmentId: "4860320", assessmentId: "mds_saffle_01" }
       ],
       completedRecently: {
         count: 3,
         windowDays: 7,
         patients: [
-          { patientId: b("Coble").patientId, patientExternalId: b("Coble").patientExternalId, patientName: b("Coble").patientName, description: "Quarterly", ardDate: t(10), lockedAt: n(18), pccAssessmentId: "4860301", assessmentId: "mds_coble_done" },
-          { patientId: b("Watkins").patientId, patientExternalId: b("Watkins").patientExternalId, patientName: b("Watkins").patientName, description: "Entry", ardDate: t(9), lockedAt: n(40), pccAssessmentId: "4860302", assessmentId: "mds_watkins_done" },
-          { patientId: b("Nugent").patientId, patientExternalId: b("Nugent").patientExternalId, patientName: b("Nugent").patientName, description: "Annual", ardDate: t(13), lockedAt: n(96), pccAssessmentId: "4860303", assessmentId: "mds_nugent_done" }
+          { patientId: C("Coble").patientId, patientExternalId: C("Coble").patientExternalId, patientName: C("Coble").patientName, description: "Quarterly", ardDate: t(10), lockedAt: n(18), pccAssessmentId: "4860301", assessmentId: "mds_coble_done" },
+          { patientId: C("Watkins").patientId, patientExternalId: C("Watkins").patientExternalId, patientName: C("Watkins").patientName, description: "Entry", ardDate: t(9), lockedAt: n(40), pccAssessmentId: "4860302", assessmentId: "mds_watkins_done" },
+          { patientId: C("Nugent").patientId, patientExternalId: C("Nugent").patientExternalId, patientName: C("Nugent").patientName, description: "Annual", ardDate: t(13), lockedAt: n(96), pccAssessmentId: "4860303", assessmentId: "mds_nugent_done" }
         ]
       }
     },
     carePlansToOpen: {
       count: 2,
       patients: [
-        { patientId: b("Clark").patientId, patientExternalId: b("Clark").patientExternalId, patientName: b("Clark").patientName, admitDate: (/* @__PURE__ */ new Date()).toISOString().slice(0, 10), hoursSinceAdmit: 8 },
-        { patientId: b("Clasper").patientId, patientExternalId: b("Clasper").patientExternalId, patientName: b("Clasper").patientName, admitDate: new Date(Date.now() - 2 * 864e5).toISOString().slice(0, 10), hoursSinceAdmit: 52 }
+        { patientId: C("Clark").patientId, patientExternalId: C("Clark").patientExternalId, patientName: C("Clark").patientName, admitDate: (/* @__PURE__ */ new Date()).toISOString().slice(0, 10), hoursSinceAdmit: 8 },
+        { patientId: C("Clasper").patientId, patientExternalId: C("Clasper").patientExternalId, patientName: C("Clasper").patientName, admitDate: new Date(Date.now() - 2 * 864e5).toISOString().slice(0, 10), hoursSinceAdmit: 52 }
       ],
       completedRecently: {
         count: 2,
         windowDays: 7,
         patients: [
-          { patientId: b("Ashley").patientId, patientExternalId: b("Ashley").patientExternalId, patientName: b("Ashley").patientName, admitDate: t(5), carePlanOpenedAt: n(30), pccCarePlanId: "cp_ashley_01" },
-          { patientId: b("Hoffie").patientId, patientExternalId: b("Hoffie").patientExternalId, patientName: b("Hoffie").patientName, admitDate: t(6), carePlanOpenedAt: n(62), pccCarePlanId: "cp_hoffie_01" }
+          { patientId: C("Ashley").patientId, patientExternalId: C("Ashley").patientExternalId, patientName: C("Ashley").patientName, admitDate: t(5), carePlanOpenedAt: n(30), pccCarePlanId: "cp_ashley_01" },
+          { patientId: C("Hoffie").patientId, patientExternalId: C("Hoffie").patientExternalId, patientName: C("Hoffie").patientName, admitDate: t(6), carePlanOpenedAt: n(62), pccCarePlanId: "cp_hoffie_01" }
         ]
       }
     },
     carePlansToReview: {
       count: 5,
       patients: [
-        { patientId: b("Hagerich").patientId, patientExternalId: b("Hagerich").patientExternalId, patientName: b("Hagerich").patientName, expectedDate: new Date(Date.now() - 864e5).toISOString().slice(0, 10), state: "overdue", pccReviewId: null, pccCarePlanId: "cp_hagerich_01" },
-        { patientId: b("Packoski").patientId, patientExternalId: b("Packoski").patientExternalId, patientName: b("Packoski").patientName, expectedDate: new Date(Date.now() + 864e5).toISOString().slice(0, 10), state: "expected", pccReviewId: null, pccCarePlanId: "cp_packoski_01" },
-        { patientId: b("Henstreet").patientId, patientExternalId: b("Henstreet").patientExternalId, patientName: b("Henstreet").patientName, expectedDate: new Date(Date.now() + 2 * 864e5).toISOString().slice(0, 10), state: "in_progress", pccReviewId: "rev_henstreet_01", pccCarePlanId: "cp_henstreet_01" },
-        { patientId: b("McCants").patientId, patientExternalId: b("McCants").patientExternalId, patientName: b("McCants").patientName, expectedDate: new Date(Date.now() + 4 * 864e5).toISOString().slice(0, 10), state: "expected", pccReviewId: null, pccCarePlanId: "cp_mccants_01" },
-        { patientId: b("Stamper").patientId, patientExternalId: b("Stamper").patientExternalId, patientName: b("Stamper").patientName, expectedDate: new Date(Date.now() + 5 * 864e5).toISOString().slice(0, 10), state: "expected", pccReviewId: null, pccCarePlanId: "cp_stamper_01" }
+        { patientId: C("Hagerich").patientId, patientExternalId: C("Hagerich").patientExternalId, patientName: C("Hagerich").patientName, expectedDate: new Date(Date.now() - 864e5).toISOString().slice(0, 10), state: "overdue", pccReviewId: null, pccCarePlanId: "cp_hagerich_01" },
+        { patientId: C("Packoski").patientId, patientExternalId: C("Packoski").patientExternalId, patientName: C("Packoski").patientName, expectedDate: new Date(Date.now() + 864e5).toISOString().slice(0, 10), state: "expected", pccReviewId: null, pccCarePlanId: "cp_packoski_01" },
+        { patientId: C("Henstreet").patientId, patientExternalId: C("Henstreet").patientExternalId, patientName: C("Henstreet").patientName, expectedDate: new Date(Date.now() + 2 * 864e5).toISOString().slice(0, 10), state: "in_progress", pccReviewId: "rev_henstreet_01", pccCarePlanId: "cp_henstreet_01" },
+        { patientId: C("McCants").patientId, patientExternalId: C("McCants").patientExternalId, patientName: C("McCants").patientName, expectedDate: new Date(Date.now() + 4 * 864e5).toISOString().slice(0, 10), state: "expected", pccReviewId: null, pccCarePlanId: "cp_mccants_01" },
+        { patientId: C("Stamper").patientId, patientExternalId: C("Stamper").patientExternalId, patientName: C("Stamper").patientName, expectedDate: new Date(Date.now() + 5 * 864e5).toISOString().slice(0, 10), state: "expected", pccReviewId: null, pccCarePlanId: "cp_stamper_01" }
       ],
       completedRecently: {
         count: 4,
         windowDays: 7,
         patients: [
-          { patientId: b("Smith").patientId, patientExternalId: b("Smith").patientExternalId, patientName: b("Smith").patientName, reviewCompletedAt: n(22), pccReviewId: "rev_smith_01", pccCarePlanId: "cp_smith_01" },
-          { patientId: b("Bruton").patientId, patientExternalId: b("Bruton").patientExternalId, patientName: b("Bruton").patientName, reviewCompletedAt: n(54), pccReviewId: "rev_bruton_01", pccCarePlanId: "cp_bruton_01" },
-          { patientId: b("Rogers").patientId, patientExternalId: b("Rogers").patientExternalId, patientName: b("Rogers").patientName, reviewCompletedAt: n(76), pccReviewId: "rev_rogers_01", pccCarePlanId: "cp_rogers_01" },
-          { patientId: b("Schmalzriedt").patientId, patientExternalId: b("Schmalzriedt").patientExternalId, patientName: b("Schmalzriedt").patientName, reviewCompletedAt: n(120), pccReviewId: "rev_schmalz_01", pccCarePlanId: "cp_schmalz_01" }
+          { patientId: C("Smith").patientId, patientExternalId: C("Smith").patientExternalId, patientName: C("Smith").patientName, reviewCompletedAt: n(22), pccReviewId: "rev_smith_01", pccCarePlanId: "cp_smith_01" },
+          { patientId: C("Bruton").patientId, patientExternalId: C("Bruton").patientExternalId, patientName: C("Bruton").patientName, reviewCompletedAt: n(54), pccReviewId: "rev_bruton_01", pccCarePlanId: "cp_bruton_01" },
+          { patientId: C("Rogers").patientId, patientExternalId: C("Rogers").patientExternalId, patientName: C("Rogers").patientName, reviewCompletedAt: n(76), pccReviewId: "rev_rogers_01", pccCarePlanId: "cp_rogers_01" },
+          { patientId: C("Schmalzriedt").patientId, patientExternalId: C("Schmalzriedt").patientExternalId, patientName: C("Schmalzriedt").patientName, reviewCompletedAt: n(120), pccReviewId: "rev_schmalz_01", pccCarePlanId: "cp_schmalz_01" }
         ]
       }
     },
@@ -3114,10 +3114,10 @@ function xi() {
         count: 4,
         windowDays: 7,
         patients: [
-          { patientId: b("Nugent").patientId, patientExternalId: b("Nugent").patientExternalId, patientName: b("Nugent").patientName, queryId: "q_nugent_done_01", itemCode: "I2100", signedAt: n(28) },
-          { patientId: b("Bruton").patientId, patientExternalId: b("Bruton").patientExternalId, patientName: b("Bruton").patientName, queryId: "q_bruton_done_01", itemCode: "I5100", signedAt: n(50) },
-          { patientId: b("Smith").patientId, patientExternalId: b("Smith").patientExternalId, patientName: b("Smith").patientName, queryId: "q_smith_done_01", itemCode: "J1550", signedAt: n(78) },
-          { patientId: b("Clappor").patientId, patientExternalId: b("Clappor").patientExternalId, patientName: b("Clappor").patientName, queryId: "q_clappor_done_01", itemCode: "I0020", signedAt: n(130) }
+          { patientId: C("Nugent").patientId, patientExternalId: C("Nugent").patientExternalId, patientName: C("Nugent").patientName, queryId: "q_nugent_done_01", itemCode: "I2100", signedAt: n(28) },
+          { patientId: C("Bruton").patientId, patientExternalId: C("Bruton").patientExternalId, patientName: C("Bruton").patientName, queryId: "q_bruton_done_01", itemCode: "I5100", signedAt: n(50) },
+          { patientId: C("Smith").patientId, patientExternalId: C("Smith").patientExternalId, patientName: C("Smith").patientName, queryId: "q_smith_done_01", itemCode: "J1550", signedAt: n(78) },
+          { patientId: C("Clappor").patientId, patientExternalId: C("Clappor").patientExternalId, patientName: C("Clappor").patientName, queryId: "q_clappor_done_01", itemCode: "I0020", signedAt: n(130) }
         ]
       }
     },
@@ -3126,19 +3126,19 @@ function xi() {
       needsToSend: { count: 4, upcomingCount: 2, overdueCount: 1 },
       awaitingSignature: { count: 8, overdueCount: 2 },
       overdueList: [
-        { certId: "cert_ashley_01", patientId: b("Ashley").patientId, patientExternalId: b("Ashley").patientExternalId, patientName: b("Ashley").patientName, type: "day_14_recert", bucket: "awaiting_signature", dueDate: new Date(Date.now() - 4 * 864e5).toISOString().slice(0, 10), daysOverdue: 4 },
-        { certId: "cert_hoffie_01", patientId: b("Hoffie").patientId, patientExternalId: b("Hoffie").patientExternalId, patientName: b("Hoffie").patientName, type: "initial", bucket: "awaiting_signature", dueDate: new Date(Date.now() - 2 * 864e5).toISOString().slice(0, 10), daysOverdue: 2 },
-        { certId: "cert_rogers_01", patientId: b("Rogers").patientId, patientExternalId: b("Rogers").patientExternalId, patientName: b("Rogers").patientName, type: "day_14_recert", bucket: "needs_to_send", dueDate: new Date(Date.now() - 1 * 864e5).toISOString().slice(0, 10), daysOverdue: 1 }
+        { certId: "cert_ashley_01", patientId: C("Ashley").patientId, patientExternalId: C("Ashley").patientExternalId, patientName: C("Ashley").patientName, type: "day_14_recert", bucket: "awaiting_signature", dueDate: new Date(Date.now() - 4 * 864e5).toISOString().slice(0, 10), daysOverdue: 4 },
+        { certId: "cert_hoffie_01", patientId: C("Hoffie").patientId, patientExternalId: C("Hoffie").patientExternalId, patientName: C("Hoffie").patientName, type: "initial", bucket: "awaiting_signature", dueDate: new Date(Date.now() - 2 * 864e5).toISOString().slice(0, 10), daysOverdue: 2 },
+        { certId: "cert_rogers_01", patientId: C("Rogers").patientId, patientExternalId: C("Rogers").patientExternalId, patientName: C("Rogers").patientName, type: "day_14_recert", bucket: "needs_to_send", dueDate: new Date(Date.now() - 1 * 864e5).toISOString().slice(0, 10), daysOverdue: 1 }
       ],
       completedRecently: {
         count: 5,
         windowDays: 7,
         patients: [
-          { certId: "cert_stamper_done_01", patientId: b("Stamper").patientId, patientExternalId: b("Stamper").patientExternalId, patientName: b("Stamper").patientName, type: "day_14_recert", signedAt: n(12) },
-          { certId: "cert_mccants_done_01", patientId: b("McCants").patientId, patientExternalId: b("McCants").patientExternalId, patientName: b("McCants").patientName, type: "initial", signedAt: n(36) },
-          { certId: "cert_watkins_done_01", patientId: b("Watkins").patientId, patientExternalId: b("Watkins").patientExternalId, patientName: b("Watkins").patientName, type: "day_30_recert", signedAt: n(60) },
-          { certId: "cert_clark_done_01", patientId: b("Clark").patientId, patientExternalId: b("Clark").patientExternalId, patientName: b("Clark").patientName, type: "initial", signedAt: n(96) },
-          { certId: "cert_packoski_done_01", patientId: b("Packoski").patientId, patientExternalId: b("Packoski").patientExternalId, patientName: b("Packoski").patientName, type: "day_14_recert", signedAt: n(140) }
+          { certId: "cert_stamper_done_01", patientId: C("Stamper").patientId, patientExternalId: C("Stamper").patientExternalId, patientName: C("Stamper").patientName, type: "day_14_recert", signedAt: n(12) },
+          { certId: "cert_mccants_done_01", patientId: C("McCants").patientId, patientExternalId: C("McCants").patientExternalId, patientName: C("McCants").patientName, type: "initial", signedAt: n(36) },
+          { certId: "cert_watkins_done_01", patientId: C("Watkins").patientId, patientExternalId: C("Watkins").patientExternalId, patientName: C("Watkins").patientName, type: "day_30_recert", signedAt: n(60) },
+          { certId: "cert_clark_done_01", patientId: C("Clark").patientId, patientExternalId: C("Clark").patientExternalId, patientName: C("Clark").patientName, type: "initial", signedAt: n(96) },
+          { certId: "cert_packoski_done_01", patientId: C("Packoski").patientId, patientExternalId: C("Packoski").patientExternalId, patientName: C("Packoski").patientName, type: "day_14_recert", signedAt: n(140) }
         ]
       }
     },
@@ -3147,46 +3147,898 @@ function xi() {
       distinctPatientCount: 5,
       byType: { bims: 3, phq: 2, gg: 5, pain: 0 },
       patients: [
-        { patientId: b("Stamper").patientId, patientExternalId: b("Stamper").patientExternalId, patientName: b("Stamper").patientName, dueType: "gg", dueDate: new Date(Date.now() + 2 * 864e5).toISOString().slice(0, 10), status: "in_progress", mdsDescription: "Significant Change", pccAssessmentId: "4860312", assessmentId: "mds_stamper_01", assessmentIds: ["mds_stamper_01"] },
-        { patientId: b("Clasper").patientId, patientExternalId: b("Clasper").patientExternalId, patientName: b("Clasper").patientName, dueType: "gg", dueDate: new Date(Date.now() + 1 * 864e5).toISOString().slice(0, 10), status: "in_progress", mdsDescription: "Admission + 5-Day PPS", pccAssessmentId: "4860311", assessmentId: "mds_clasper_01", assessmentIds: ["mds_clasper_01", "mds_clasper_02"] },
-        { patientId: b("Saffle").patientId, patientExternalId: b("Saffle").patientExternalId, patientName: b("Saffle").patientName, dueType: "gg", dueDate: new Date(Date.now() - 1 * 864e5).toISOString().slice(0, 10), status: "not_open", mdsDescription: "Annual + 5-Day PPS", pccAssessmentId: "4860320", assessmentId: "mds_saffle_01", assessmentIds: ["mds_saffle_01"] },
-        { patientId: b("Hagerich").patientId, patientExternalId: b("Hagerich").patientExternalId, patientName: b("Hagerich").patientName, dueType: "bims", dueDate: new Date(Date.now() + 3 * 864e5).toISOString().slice(0, 10), status: "not_open", mdsDescription: "Quarterly", pccAssessmentId: "4860305", assessmentId: "mds_hagerich_01", assessmentIds: ["mds_hagerich_01"] },
-        { patientId: b("Nugent").patientId, patientExternalId: b("Nugent").patientExternalId, patientName: b("Nugent").patientName, dueType: "phq", dueDate: new Date(Date.now() + 4 * 864e5).toISOString().slice(0, 10), status: "not_open", mdsDescription: "5-Day PPS", pccAssessmentId: "4860318", assessmentId: "mds_nugent_01", assessmentIds: ["mds_nugent_01"] }
+        { patientId: C("Stamper").patientId, patientExternalId: C("Stamper").patientExternalId, patientName: C("Stamper").patientName, dueType: "gg", dueDate: new Date(Date.now() + 2 * 864e5).toISOString().slice(0, 10), status: "in_progress", mdsDescription: "Significant Change", pccAssessmentId: "4860312", assessmentId: "mds_stamper_01", assessmentIds: ["mds_stamper_01"] },
+        { patientId: C("Clasper").patientId, patientExternalId: C("Clasper").patientExternalId, patientName: C("Clasper").patientName, dueType: "gg", dueDate: new Date(Date.now() + 1 * 864e5).toISOString().slice(0, 10), status: "in_progress", mdsDescription: "Admission + 5-Day PPS", pccAssessmentId: "4860311", assessmentId: "mds_clasper_01", assessmentIds: ["mds_clasper_01", "mds_clasper_02"] },
+        { patientId: C("Saffle").patientId, patientExternalId: C("Saffle").patientExternalId, patientName: C("Saffle").patientName, dueType: "gg", dueDate: new Date(Date.now() - 1 * 864e5).toISOString().slice(0, 10), status: "not_open", mdsDescription: "Annual + 5-Day PPS", pccAssessmentId: "4860320", assessmentId: "mds_saffle_01", assessmentIds: ["mds_saffle_01"] },
+        { patientId: C("Hagerich").patientId, patientExternalId: C("Hagerich").patientExternalId, patientName: C("Hagerich").patientName, dueType: "bims", dueDate: new Date(Date.now() + 3 * 864e5).toISOString().slice(0, 10), status: "not_open", mdsDescription: "Quarterly", pccAssessmentId: "4860305", assessmentId: "mds_hagerich_01", assessmentIds: ["mds_hagerich_01"] },
+        { patientId: C("Nugent").patientId, patientExternalId: C("Nugent").patientExternalId, patientName: C("Nugent").patientName, dueType: "phq", dueDate: new Date(Date.now() + 4 * 864e5).toISOString().slice(0, 10), status: "not_open", mdsDescription: "5-Day PPS", pccAssessmentId: "4860318", assessmentId: "mds_nugent_01", assessmentIds: ["mds_nugent_01"] }
       ],
       completedRecently: {
         count: 7,
         windowDays: 7,
         patients: [
-          { patientId: b("Coble").patientId, patientExternalId: b("Coble").patientExternalId, patientName: b("Coble").patientName, dueType: "gg", mdsDescription: "Quarterly", completedAt: n(18), pccAssessmentId: "4860301", assessmentId: "mds_coble_done" },
-          { patientId: b("Coble").patientId, patientExternalId: b("Coble").patientExternalId, patientName: b("Coble").patientName, dueType: "bims", mdsDescription: "Quarterly", completedAt: n(18), pccAssessmentId: "4860301", assessmentId: "mds_coble_done" },
-          { patientId: b("Nugent").patientId, patientExternalId: b("Nugent").patientExternalId, patientName: b("Nugent").patientName, dueType: "gg", mdsDescription: "Annual", completedAt: n(96), pccAssessmentId: "4860303", assessmentId: "mds_nugent_done" },
-          { patientId: b("Nugent").patientId, patientExternalId: b("Nugent").patientExternalId, patientName: b("Nugent").patientName, dueType: "phq", mdsDescription: "Annual", completedAt: n(96), pccAssessmentId: "4860303", assessmentId: "mds_nugent_done" },
-          { patientId: b("Watkins").patientId, patientExternalId: b("Watkins").patientExternalId, patientName: b("Watkins").patientName, dueType: "gg", mdsDescription: "Entry", completedAt: n(40), pccAssessmentId: "4860302", assessmentId: "mds_watkins_done" },
-          { patientId: b("Ashley").patientId, patientExternalId: b("Ashley").patientExternalId, patientName: b("Ashley").patientName, dueType: "bims", mdsDescription: "5-Day PPS", completedAt: n(54), pccAssessmentId: "4860304", assessmentId: "mds_ashley_done" },
-          { patientId: b("Hoffie").patientId, patientExternalId: b("Hoffie").patientExternalId, patientName: b("Hoffie").patientName, dueType: "gg", mdsDescription: "Quarterly", completedAt: n(140), pccAssessmentId: "4860306", assessmentId: "mds_hoffie_done" }
+          { patientId: C("Coble").patientId, patientExternalId: C("Coble").patientExternalId, patientName: C("Coble").patientName, dueType: "gg", mdsDescription: "Quarterly", completedAt: n(18), pccAssessmentId: "4860301", assessmentId: "mds_coble_done" },
+          { patientId: C("Coble").patientId, patientExternalId: C("Coble").patientExternalId, patientName: C("Coble").patientName, dueType: "bims", mdsDescription: "Quarterly", completedAt: n(18), pccAssessmentId: "4860301", assessmentId: "mds_coble_done" },
+          { patientId: C("Nugent").patientId, patientExternalId: C("Nugent").patientExternalId, patientName: C("Nugent").patientName, dueType: "gg", mdsDescription: "Annual", completedAt: n(96), pccAssessmentId: "4860303", assessmentId: "mds_nugent_done" },
+          { patientId: C("Nugent").patientId, patientExternalId: C("Nugent").patientExternalId, patientName: C("Nugent").patientName, dueType: "phq", mdsDescription: "Annual", completedAt: n(96), pccAssessmentId: "4860303", assessmentId: "mds_nugent_done" },
+          { patientId: C("Watkins").patientId, patientExternalId: C("Watkins").patientExternalId, patientName: C("Watkins").patientName, dueType: "gg", mdsDescription: "Entry", completedAt: n(40), pccAssessmentId: "4860302", assessmentId: "mds_watkins_done" },
+          { patientId: C("Ashley").patientId, patientExternalId: C("Ashley").patientExternalId, patientName: C("Ashley").patientName, dueType: "bims", mdsDescription: "5-Day PPS", completedAt: n(54), pccAssessmentId: "4860304", assessmentId: "mds_ashley_done" },
+          { patientId: C("Hoffie").patientId, patientExternalId: C("Hoffie").patientExternalId, patientName: C("Hoffie").patientName, dueType: "gg", mdsDescription: "Quarterly", completedAt: n(140), pccAssessmentId: "4860306", assessmentId: "mds_hoffie_done" }
         ]
       }
     },
     skilledMCR: {
       count: 4,
       patients: [
-        b("Clark"),
-        b("Stamper"),
-        b("Saffle"),
-        b("Clappor")
+        C("Clark"),
+        C("Stamper"),
+        C("Saffle"),
+        C("Clappor")
       ].map((s) => ({ patientId: s.patientId, patientExternalId: s.patientExternalId, patientName: s.patientName }))
     },
     skilledManagedCare: {
       count: 3,
       patients: [
-        b("Packoski"),
-        b("Henstreet"),
-        b("Bruton")
+        C("Packoski"),
+        C("Henstreet"),
+        C("Bruton")
       ].map((s) => ({ patientId: s.patientId, patientExternalId: s.patientExternalId, patientName: s.patientName }))
     }
   };
 }
-const Pi = {
+const da = "2026-04-24", ua = "America/Chicago", fi = [
+  { id: "uti", label: "UTI" },
+  { id: "catheter", label: "Indwelling Catheter" },
+  { id: "falls_major_injury", label: "Falls with Major Injury" },
+  { id: "antipsychotic_long", label: "Antipsychotic (long-stay)" },
+  { id: "weight_loss", label: "Weight Loss" },
+  { id: "pressure_ulcer_long", label: "Pressure Ulcer (long-stay)" },
+  { id: "phq9_depression", label: "Depression (PHQ-9)" },
+  { id: "adl_decline", label: "ADL Decline (GG)" },
+  { id: "physical_restraints", label: "Physical Restraints" },
+  { id: "low_risk_incontinence", label: "Low-Risk Incontinence" }
+], Fn = {
+  uti: { triggering: 3, excluded: 1, applicable: 82 },
+  catheter: { triggering: 2, excluded: 0, applicable: 82 },
+  falls_major_injury: { triggering: 1, excluded: 0, applicable: 82 },
+  antipsychotic_long: { triggering: 4, excluded: 2, applicable: 61 },
+  weight_loss: { triggering: 2, excluded: 0, applicable: 82 },
+  pressure_ulcer_long: { triggering: 1, excluded: 0, applicable: 61 },
+  phq9_depression: { triggering: 3, excluded: 0, applicable: 58 },
+  adl_decline: { triggering: 5, excluded: 1, applicable: 74 },
+  physical_restraints: { triggering: 0, excluded: 0, applicable: 82 },
+  low_risk_incontinence: { triggering: 1, excluded: 0, applicable: 44 }
+};
+function Ve(t, n, s, a = "OBRA_QUARTERLY", i = "OBRA_ANNUAL") {
+  const r = [];
+  for (const [o, [c, d]] of Object.entries(t))
+    r.push({
+      mdsItem: `${o}5`,
+      value: String(c).padStart(2, "0"),
+      note: `Prior ${a.replace(/_/g, " ").toLowerCase()}`,
+      assessmentArdDate: n,
+      assessmentType: a
+    }), r.push({
+      mdsItem: `${o}1`,
+      value: String(d).padStart(2, "0"),
+      note: `Target ${i.replace(/_/g, " ").toLowerCase()}`,
+      assessmentArdDate: s,
+      assessmentType: i
+    });
+  return r;
+}
+const yi = [
+  // ── ADL Decline (GG) — primary demo story ────────────────────────
+  {
+    patientId: "demo-p-1001",
+    externalPatientId: "2657226",
+    firstName: "Jane",
+    lastName: "Doe",
+    target: { type: "OBRA_ANNUAL", ardDate: "2026-04-29" },
+    measures: [
+      {
+        id: "adl_decline",
+        label: "ADL Decline (GG)",
+        triggers: !0,
+        clearGuidance: {
+          clearsOnNextObra: !0,
+          actionType: "next_obra",
+          actions: [
+            { label: "Re-assess GG items with nursing + therapy", detail: "Any shift average improvement of ≥1 point clears the trigger on next OBRA." },
+            { label: "Review PT/OT decline notes", detail: "Confirm whether the drop is temporary (infection, missed shift) or a new functional baseline." },
+            { label: "Re-score on target ARD", effectiveDate: "2026-04-29" }
+          ]
+        },
+        evidence: Ve({
+          GG0170D: [4, 2],
+          // Sit to Stand
+          GG0170F: [4, 2],
+          // Toilet Transfer
+          GG0170I: [3, 2],
+          // Walk 10 Feet
+          GG0130A: [5, 4]
+          // Eating
+        }, "2026-01-22", "2026-04-22")
+      },
+      {
+        id: "phq9_depression",
+        label: "Depression (PHQ-9)",
+        triggers: !0,
+        clearGuidance: {
+          clearsOnNextObra: !0,
+          actionType: "next_obra",
+          actions: [
+            { label: "Rescreen D0200 with resident", detail: "Trigger clears when total PHQ-9 score < 10 on next qualifying assessment." }
+          ]
+        },
+        evidence: [
+          { mdsItem: "D0200A1", value: "2", note: "Target PHQ-9 item A — little interest" },
+          { mdsItem: "D0200B1", value: "3", note: "Target PHQ-9 item B — feeling down" },
+          { mdsItem: "D0300", value: "14", note: "Target PHQ-9 total (triggers at ≥10)" }
+        ]
+      }
+    ]
+  },
+  {
+    patientId: "demo-p-1002",
+    externalPatientId: "2657227",
+    firstName: "Marcus",
+    lastName: "Reyes",
+    target: { type: "OBRA_QUARTERLY", ardDate: "2026-05-02" },
+    measures: [
+      {
+        id: "adl_decline",
+        label: "ADL Decline (GG)",
+        triggers: !0,
+        clearGuidance: {
+          clearsOnNextObra: !0,
+          actionType: "next_obra",
+          actions: [
+            { label: "Confirm GG accuracy with therapy", detail: 'PT last noted "ambulation with min assist x 50 ft" — verify against MDS coding.' }
+          ]
+        },
+        evidence: Ve({
+          GG0170J: [4, 2],
+          // Walk 50 Feet
+          GG0170K: [4, 2]
+          // Walk 150 Feet
+        }, "2026-02-01", "2026-04-30")
+      }
+    ]
+  },
+  {
+    patientId: "demo-p-1003",
+    externalPatientId: "2657228",
+    firstName: "Eleanor",
+    lastName: "Novak",
+    target: { type: "OBRA_QUARTERLY", ardDate: "2026-04-21" },
+    measures: [
+      {
+        id: "adl_decline",
+        label: "ADL Decline (GG)",
+        triggers: !0,
+        clearGuidance: {
+          clearsOnNextObra: !0,
+          actionType: "next_obra",
+          actions: [
+            { label: "Schedule new ARD — target has passed", detail: "ARD was 4/21; a new qualifying assessment is required to clear." }
+          ]
+        },
+        evidence: Ve({
+          GG0170D: [3, 1],
+          GG0170B: [3, 1]
+        }, "2026-01-18", "2026-04-18")
+      },
+      {
+        id: "weight_loss",
+        label: "Weight Loss",
+        triggers: !0,
+        clearGuidance: {
+          actionType: "time",
+          clearDate: "2026-07-18",
+          actions: [
+            { label: "Fortified diet + weekly weights", detail: "Trigger rolls off the 180-day scan window on 7/18." }
+          ]
+        },
+        evidence: [
+          { mdsItem: "K0300", value: "2", note: "Target weight-loss flag (>10% in 180d)" }
+        ]
+      }
+    ]
+  },
+  {
+    patientId: "demo-p-1004",
+    externalPatientId: "2657229",
+    firstName: "Harold",
+    lastName: "Park",
+    target: { type: "OBRA_QUARTERLY", ardDate: "2026-05-05" },
+    measures: [
+      {
+        id: "adl_decline",
+        label: "ADL Decline (GG)",
+        triggers: !0,
+        clearGuidance: {
+          clearsOnNextObra: !0,
+          actionType: "next_obra",
+          actions: [
+            { label: "Review GG documentation for Toilet Transfer", detail: "Nursing notes reference setup-only — verify shift-by-shift coding." }
+          ]
+        },
+        evidence: Ve({
+          GG0170F: [5, 3]
+        }, "2026-02-05", "2026-05-03")
+      }
+    ]
+  },
+  {
+    patientId: "demo-p-1005",
+    externalPatientId: "2657230",
+    firstName: "Priya",
+    lastName: "Shankar",
+    target: { type: "OBRA_ANNUAL", ardDate: "2026-05-10" },
+    measures: [
+      {
+        id: "adl_decline",
+        label: "ADL Decline (GG)",
+        triggers: !0,
+        clearGuidance: {
+          clearsOnNextObra: !0,
+          actionType: "next_obra",
+          actions: [
+            { label: "Code clean on target ARD", detail: "All current shift averages back at baseline — likely clears without further action." }
+          ]
+        },
+        evidence: Ve({
+          GG0170D: [4, 3]
+        }, "2026-01-28", "2026-04-23")
+      }
+    ]
+  },
+  // ── UTI ─────────────────────────────────────────────────────────
+  {
+    patientId: "demo-p-2001",
+    externalPatientId: "2657231",
+    firstName: "Lillian",
+    lastName: "Cho",
+    target: { type: "OBRA_QUARTERLY", ardDate: "2026-05-03" },
+    measures: [
+      {
+        id: "uti",
+        label: "UTI",
+        triggers: !0,
+        clearGuidance: {
+          actionType: "time",
+          clearDate: "2026-05-15",
+          actions: [
+            { label: "Rolls off on 5/15", detail: "UTI I2300 coded 2/5; rolls off the 90-day scan window automatically." }
+          ]
+        },
+        evidence: [
+          { mdsItem: "I2300", value: "1", note: "Target UTI coded on 2/5" }
+        ]
+      }
+    ]
+  },
+  {
+    patientId: "demo-p-2002",
+    externalPatientId: "2657232",
+    firstName: "Robert",
+    lastName: "Aldridge",
+    target: { type: "OBRA_QUARTERLY", ardDate: "2026-05-12" },
+    measures: [
+      {
+        id: "uti",
+        label: "UTI",
+        triggers: !0,
+        clearGuidance: {
+          actionType: "time",
+          clearDate: "2026-06-02",
+          actions: [{ label: "Rolls off on 6/2", detail: "Active UTI — 28 days to scan-window exit." }]
+        },
+        evidence: [
+          { mdsItem: "I2300", value: "1", note: "Target UTI coded on 3/4" }
+        ]
+      }
+    ]
+  },
+  {
+    patientId: "demo-p-2003",
+    externalPatientId: "2657233",
+    firstName: "Diane",
+    lastName: "Forester",
+    target: { type: "OBRA_QUARTERLY", ardDate: "2026-04-30" },
+    measures: [
+      {
+        id: "uti",
+        label: "UTI",
+        triggers: !0,
+        clearGuidance: {
+          clearsOnNextObra: !0,
+          actionType: "next_obra",
+          actions: [{ label: "Code clean on target ARD", detail: "UTI resolved — code I2300 = 0 on next qualifying assessment." }]
+        },
+        evidence: [
+          { mdsItem: "I2300", value: "1", note: "Target UTI coded (still lookback)" }
+        ]
+      }
+    ]
+  },
+  // ── Catheter ─────────────────────────────────────────────────────
+  {
+    patientId: "demo-p-3001",
+    externalPatientId: "2657234",
+    firstName: "Samuel",
+    lastName: "Okafor",
+    target: { type: "OBRA_ANNUAL", ardDate: "2026-05-01" },
+    measures: [
+      {
+        id: "catheter",
+        label: "Indwelling Catheter",
+        triggers: !0,
+        clearGuidance: {
+          clearsOnNextObra: !0,
+          actionType: "next_obra",
+          actions: [{ label: "Confirm medical necessity", detail: "Attach urologist order documenting continued indication." }]
+        },
+        evidence: [
+          { mdsItem: "H0100A", value: "1", note: "Target indwelling catheter present" }
+        ]
+      }
+    ]
+  },
+  // ── Falls w/ Major Injury ───────────────────────────────────────
+  {
+    patientId: "demo-p-4001",
+    externalPatientId: "2657235",
+    firstName: "Martha",
+    lastName: "Blanchard",
+    target: { type: "OBRA_QUARTERLY", ardDate: "2026-05-08" },
+    measures: [
+      {
+        id: "falls_major_injury",
+        label: "Falls with Major Injury",
+        triggers: !0,
+        clearGuidance: {
+          actionType: "time",
+          clearDate: "2026-08-20",
+          actions: [{ label: "Roll-off only", detail: "Falls scan window is 180d; no coding action clears it sooner." }]
+        },
+        evidence: [
+          { mdsItem: "J1900C", value: "1", note: "Target major-injury fall coded 2/20" }
+        ]
+      }
+    ]
+  },
+  // ── Antipsychotic (long) ────────────────────────────────────────
+  ...["5001", "5002", "5003", "5004"].map((t, n) => ({
+    patientId: `demo-p-${t}`,
+    externalPatientId: `26572${40 + n}`,
+    firstName: ["Gerald", "Alma", "Vance", "Ruth"][n],
+    lastName: ["Simmons", "Vega", "Pritchard", "McCarthy"][n],
+    target: { type: "OBRA_QUARTERLY", ardDate: "2026-05-04" },
+    measures: [
+      {
+        id: "antipsychotic_long",
+        label: "Antipsychotic (long-stay)",
+        triggers: !0,
+        clearGuidance: {
+          clearsOnNextObra: !0,
+          actionType: "next_obra",
+          actions: [
+            { label: "GDR attempt + review exclusion codes", detail: "Document GDR outcome; confirm I5950 / I5400 diagnoses." }
+          ]
+        },
+        evidence: [
+          { mdsItem: "N0415A1", value: "1", note: "Target antipsychotic in last 7 days" }
+        ]
+      }
+    ]
+  })),
+  // ── Weight Loss second patient ──────────────────────────────────
+  {
+    patientId: "demo-p-6001",
+    externalPatientId: "2657250",
+    firstName: "Henry",
+    lastName: "Grisham",
+    target: { type: "OBRA_QUARTERLY", ardDate: "2026-05-10" },
+    measures: [
+      {
+        id: "weight_loss",
+        label: "Weight Loss",
+        triggers: !0,
+        clearGuidance: {
+          actionType: "time",
+          clearDate: "2026-06-22",
+          actions: [{ label: "Dietitian reassessment", detail: "Current weight trend flat — rolls off in 59d." }]
+        },
+        evidence: [
+          { mdsItem: "K0300", value: "2", note: "Target weight-loss flag" }
+        ]
+      }
+    ]
+  },
+  // ── PHQ-9 (two additional beyond Doe) ───────────────────────────
+  {
+    patientId: "demo-p-7001",
+    externalPatientId: "2657251",
+    firstName: "Isobel",
+    lastName: "Crane",
+    target: { type: "OBRA_QUARTERLY", ardDate: "2026-05-07" },
+    measures: [
+      {
+        id: "phq9_depression",
+        label: "Depression (PHQ-9)",
+        triggers: !0,
+        clearGuidance: {
+          clearsOnNextObra: !0,
+          actionType: "next_obra",
+          actions: [{ label: "Rescreen D0200 + review med regimen" }]
+        },
+        evidence: [
+          { mdsItem: "D0300", value: "12", note: "Target PHQ-9 total (triggers at ≥10)" }
+        ]
+      }
+    ]
+  },
+  {
+    patientId: "demo-p-7002",
+    externalPatientId: "2657252",
+    firstName: "Clifford",
+    lastName: "Bateson",
+    target: { type: "OBRA_QUARTERLY", ardDate: "2026-05-13" },
+    measures: [
+      {
+        id: "phq9_depression",
+        label: "Depression (PHQ-9)",
+        triggers: !0,
+        clearGuidance: {
+          clearsOnNextObra: !0,
+          actionType: "next_obra",
+          actions: [{ label: "Document therapy referral" }]
+        },
+        evidence: [
+          { mdsItem: "D0300", value: "11", note: "Target PHQ-9 total" }
+        ]
+      }
+    ]
+  },
+  // ── Pressure Ulcer (long) ───────────────────────────────────────
+  {
+    patientId: "demo-p-8001",
+    externalPatientId: "2657253",
+    firstName: "Margaret",
+    lastName: "Hollis",
+    target: { type: "OBRA_ANNUAL", ardDate: "2026-05-06" },
+    measures: [
+      {
+        id: "pressure_ulcer_long",
+        label: "Pressure Ulcer (long-stay)",
+        triggers: !0,
+        clearGuidance: {
+          clearsOnNextObra: !0,
+          actionType: "next_obra",
+          actions: [{ label: "Heal to stage 0 or document POA", detail: "Confirm present-on-admission status in nursing admission note." }]
+        },
+        evidence: [
+          { mdsItem: "M0300B1", value: "2", note: "Target Stage 2 pressure ulcer" }
+        ]
+      }
+    ]
+  },
+  // ── Low-risk incontinence ────────────────────────────────────────
+  {
+    patientId: "demo-p-9001",
+    externalPatientId: "2657254",
+    firstName: "Benjamin",
+    lastName: "Carver",
+    target: { type: "OBRA_QUARTERLY", ardDate: "2026-05-11" },
+    measures: [
+      {
+        id: "low_risk_incontinence",
+        label: "Low-Risk Incontinence",
+        triggers: !0,
+        clearGuidance: {
+          clearsOnNextObra: !0,
+          actionType: "next_obra",
+          actions: [{ label: "Toileting program — review H0200A status" }]
+        },
+        evidence: [
+          { mdsItem: "H0300", value: "2", note: "Target bladder continence — always incontinent" }
+        ]
+      }
+    ]
+  }
+], vi = {
+  facilityDate: da,
+  timezone: ua,
+  measuresEvaluated: fi,
+  summary: {
+    byMeasure: Fn,
+    totalTriggering: Object.values(Fn).reduce((t, n) => t + n.triggering, 0)
+  },
+  patients: yi
+};
+function ot(t, n, s) {
+  return {
+    id: "gg_decline_canary",
+    category: "gg",
+    label: n,
+    qmId: "adl_decline",
+    urgency: s.severity === "severe" ? "high" : s.severity === "moderate" ? "medium" : "low",
+    latestSignalDate: s.date,
+    suggestedAction: "Review GG decline and consider re-education / therapy referral before next ARD.",
+    signals: s.items.map((a, i) => ({
+      source: "gg_decline_service",
+      refId: `${t}-gg-${i}`,
+      date: s.date,
+      text: `${a.name}: baseline ${a.baseline} → worst ${a.worstShiftAverage.toFixed(1)} (${a.severity})`,
+      detail: a
+    }))
+  };
+}
+const bi = {
+  facilityDate: da,
+  signalCounts: {
+    gg_decline_canary: { actionable: 4, suppressed: 1 },
+    weight_decline_canary: { actionable: 2, suppressed: 0 },
+    ua_canary: { actionable: 2, suppressed: 1 },
+    foley_order: { actionable: 1, suppressed: 0 },
+    antipsychotic_order: { actionable: 3, suppressed: 0 }
+  },
+  patients: [
+    // ── Jane Doe: GG decline canary (primary clickthrough) ─────────
+    {
+      patientId: "demo-p-1001",
+      externalPatientId: "2657226",
+      firstName: "Jane",
+      lastName: "Doe",
+      events: [],
+      canaries: [
+        ot("demo-p-1001", "GG decline (pre-ARD)", {
+          date: "2026-04-23",
+          severity: "moderate",
+          items: [
+            { name: "Sit to Stand", mdsKey: "GG0170D", baseline: 4, worstShiftAverage: 2.3, severity: "moderate" },
+            { name: "Toilet Transfer", mdsKey: "GG0170F", baseline: 4, worstShiftAverage: 2, severity: "moderate" },
+            { name: "Walk 10 Feet", mdsKey: "GG0170I", baseline: 3, worstShiftAverage: 2, severity: "mild" },
+            { name: "Eating", mdsKey: "GG0130A", baseline: 5, worstShiftAverage: 4, severity: "mild" }
+          ]
+        })
+      ]
+    },
+    // ── Marcus Reyes: severe GG decline on walk items ──────────────
+    {
+      patientId: "demo-p-1002",
+      externalPatientId: "2657227",
+      firstName: "Marcus",
+      lastName: "Reyes",
+      events: [],
+      canaries: [
+        ot("demo-p-1002", "GG decline — ambulation", {
+          date: "2026-04-22",
+          severity: "severe",
+          items: [
+            { name: "Walk 50 Feet", mdsKey: "GG0170J", baseline: 4, worstShiftAverage: 1.7, severity: "severe" },
+            { name: "Walk 150 Feet", mdsKey: "GG0170K", baseline: 4, worstShiftAverage: 1.7, severity: "severe" }
+          ]
+        })
+      ]
+    },
+    // ── Eleanor Novak: mild GG + weight decline ────────────────────
+    {
+      patientId: "demo-p-1003",
+      externalPatientId: "2657228",
+      firstName: "Eleanor",
+      lastName: "Novak",
+      events: [
+        {
+          id: "weight_decline_canary",
+          category: "vitals",
+          label: "Weight decline",
+          qmId: "weight_loss",
+          urgency: "medium",
+          latestSignalDate: "2026-04-22",
+          suggestedAction: "Fortified diet + weekly weights",
+          signals: [
+            { source: "vitals", date: "2026-04-22", text: "Weight 112.4 lb today vs 119.0 lb on 2026-03-11", detail: { observedPct: 5.5 } }
+          ]
+        }
+      ],
+      canaries: [
+        ot("demo-p-1003", "GG decline — transfers", {
+          date: "2026-04-21",
+          severity: "severe",
+          items: [
+            { name: "Sit to Stand", mdsKey: "GG0170D", baseline: 3, worstShiftAverage: 1.3, severity: "severe" },
+            { name: "Sit to Lying", mdsKey: "GG0170B", baseline: 3, worstShiftAverage: 1, severity: "severe" }
+          ]
+        })
+      ]
+    },
+    // ── Priya Shankar: GG with only one item ───────────────────────
+    {
+      patientId: "demo-p-1005",
+      externalPatientId: "2657230",
+      firstName: "Priya",
+      lastName: "Shankar",
+      events: [],
+      canaries: [
+        ot("demo-p-1005", "GG decline — single item", {
+          date: "2026-04-20",
+          severity: "mild",
+          items: [
+            { name: "Sit to Stand", mdsKey: "GG0170D", baseline: 4, worstShiftAverage: 3.3, severity: "mild" }
+          ]
+        })
+      ]
+    },
+    // ── Non-GG alerts to round out the dashboard ───────────────────
+    {
+      patientId: "demo-p-2002",
+      externalPatientId: "2657232",
+      firstName: "Robert",
+      lastName: "Aldridge",
+      events: [
+        {
+          id: "ua_canary",
+          category: "uti",
+          label: "UA ordered — verify result",
+          qmId: "uti",
+          urgency: "medium",
+          latestSignalDate: "2026-04-23",
+          suggestedAction: "Confirm UA result before coding I2300.",
+          signals: [
+            { source: "order", refId: "ord-ua-1", date: "2026-04-23", text: "Order: UA with C&S — pending" }
+          ]
+        }
+      ],
+      canaries: []
+    },
+    {
+      patientId: "demo-p-5001",
+      externalPatientId: "2657240",
+      firstName: "Gerald",
+      lastName: "Simmons",
+      events: [
+        {
+          id: "antipsychotic_order",
+          category: "antipsychotic",
+          label: "Antipsychotic started",
+          qmId: "antipsychotic_long",
+          urgency: "low",
+          latestSignalDate: "2026-04-20",
+          suggestedAction: "Confirm GDR + exclusion diagnosis",
+          signals: [
+            { source: "order", refId: "ord-ap-1", date: "2026-04-20", text: "Order: Quetiapine 25mg PO QHS — initiated" }
+          ]
+        }
+      ],
+      canaries: []
+    },
+    {
+      patientId: "demo-p-3001",
+      externalPatientId: "2657234",
+      firstName: "Samuel",
+      lastName: "Okafor",
+      events: [
+        {
+          id: "foley_order",
+          category: "catheter",
+          label: "Foley placement order",
+          qmId: "catheter",
+          urgency: "low",
+          latestSignalDate: "2026-04-22",
+          suggestedAction: "Ensure urologist indication is documented",
+          signals: [
+            { source: "order", refId: "ord-foley-1", date: "2026-04-22", text: "Order: 16Fr Foley for urinary retention — continue until urology appt" }
+          ]
+        }
+      ],
+      canaries: []
+    }
+  ]
+};
+function ct(t, n, { startDate: s = "2026-03-25", endDate: a = "2026-04-23" } = {}) {
+  const i = [];
+  let r = 1;
+  const o = /* @__PURE__ */ new Date(s + "T12:00:00Z"), c = /* @__PURE__ */ new Date(a + "T12:00:00Z"), d = Math.round((c - o) / (1440 * 60 * 1e3));
+  for (const l of n)
+    for (let p = 0; p <= d; p += 1) {
+      const u = new Date(o);
+      u.setUTCDate(o.getUTCDate() + p);
+      const m = u.toISOString().slice(0, 10), h = p / Math.max(1, d), _ = l.worstShiftAverage;
+      for (const g of [0, 1, 2]) {
+        const b = Math.max(0, h - 0.1 * (g === 0 ? 0 : g === 1 ? 0.4 : 0.8)), f = Math.round(l.baseline + (_ - l.baseline) * b), I = Math.max(1, Math.min(6, f)), N = String(I).padStart(2, "0");
+        i.push({
+          id: `${t}-${l.mdsKey}-${m}-${g}-${r++}`,
+          patientId: t,
+          mdsQuestionKey: l.mdsKey,
+          interventionName: l.name,
+          shiftIndex: g,
+          recordedDate: m,
+          observationDate: m,
+          value: N,
+          loggedValue: N,
+          aideName: ["J. Alvarez, CNA", "K. Dumont, CNA", "M. Okafor, CNA"][g]
+        });
+      }
+    }
+  return i;
+}
+const wi = {
+  "demo-p-1001": {
+    decline: {
+      locationName: "Unit 3 — 308-B",
+      mdsArdDate: "2026-01-22",
+      overallSeverity: "moderate",
+      baselines: [
+        { mdsKey: "GG0170D", name: "Sit to Stand", value: 4, rawValue: "04" },
+        { mdsKey: "GG0170F", name: "Toilet Transfer", value: 4, rawValue: "04" },
+        { mdsKey: "GG0170I", name: "Walk 10 Feet", value: 3, rawValue: "03" },
+        { mdsKey: "GG0130A", name: "Eating", value: 5, rawValue: "05" },
+        { mdsKey: "GG0170B", name: "Sit to Lying", value: 4, rawValue: "04" }
+      ],
+      declines: [
+        { mdsKey: "GG0170D", name: "Sit to Stand", baseline: 4, worstShiftAverage: 2.3, declineMagnitude: 1.7, severity: "moderate" },
+        { mdsKey: "GG0170F", name: "Toilet Transfer", baseline: 4, worstShiftAverage: 2, declineMagnitude: 2, severity: "moderate" },
+        { mdsKey: "GG0170I", name: "Walk 10 Feet", baseline: 3, worstShiftAverage: 2, declineMagnitude: 1, severity: "mild" },
+        { mdsKey: "GG0130A", name: "Eating", baseline: 5, worstShiftAverage: 4, declineMagnitude: 1, severity: "mild" }
+      ]
+    },
+    scores: ct("demo-p-1001", [
+      { mdsKey: "GG0170D", name: "Sit to Stand", baseline: 4, worstShiftAverage: 2.3 },
+      { mdsKey: "GG0170F", name: "Toilet Transfer", baseline: 4, worstShiftAverage: 2 },
+      { mdsKey: "GG0170I", name: "Walk 10 Feet", baseline: 3, worstShiftAverage: 2 },
+      { mdsKey: "GG0130A", name: "Eating", baseline: 5, worstShiftAverage: 4 },
+      { mdsKey: "GG0170B", name: "Sit to Lying", baseline: 4, worstShiftAverage: 3.7 }
+    ]),
+    snooze: null
+  },
+  "demo-p-1002": {
+    decline: {
+      locationName: "Unit 2 — 214-A",
+      mdsArdDate: "2026-02-01",
+      overallSeverity: "severe",
+      baselines: [
+        { mdsKey: "GG0170J", name: "Walk 50 Feet", value: 4, rawValue: "04" },
+        { mdsKey: "GG0170K", name: "Walk 150 Feet", value: 4, rawValue: "04" }
+      ],
+      declines: [
+        { mdsKey: "GG0170J", name: "Walk 50 Feet", baseline: 4, worstShiftAverage: 1.7, declineMagnitude: 2.3, severity: "severe" },
+        { mdsKey: "GG0170K", name: "Walk 150 Feet", baseline: 4, worstShiftAverage: 1.7, declineMagnitude: 2.3, severity: "severe" }
+      ]
+    },
+    scores: ct("demo-p-1002", [
+      { mdsKey: "GG0170J", name: "Walk 50 Feet", baseline: 4, worstShiftAverage: 1.7 },
+      { mdsKey: "GG0170K", name: "Walk 150 Feet", baseline: 4, worstShiftAverage: 1.7 }
+    ]),
+    snooze: null
+  },
+  "demo-p-1003": {
+    decline: {
+      locationName: "Unit 3 — 312-A",
+      mdsArdDate: "2026-01-18",
+      overallSeverity: "severe",
+      baselines: [
+        { mdsKey: "GG0170D", name: "Sit to Stand", value: 3, rawValue: "03" },
+        { mdsKey: "GG0170B", name: "Sit to Lying", value: 3, rawValue: "03" }
+      ],
+      declines: [
+        { mdsKey: "GG0170D", name: "Sit to Stand", baseline: 3, worstShiftAverage: 1.3, declineMagnitude: 1.7, severity: "severe" },
+        { mdsKey: "GG0170B", name: "Sit to Lying", baseline: 3, worstShiftAverage: 1, declineMagnitude: 2, severity: "severe" }
+      ]
+    },
+    scores: ct("demo-p-1003", [
+      { mdsKey: "GG0170D", name: "Sit to Stand", baseline: 3, worstShiftAverage: 1.3 },
+      { mdsKey: "GG0170B", name: "Sit to Lying", baseline: 3, worstShiftAverage: 1 }
+    ]),
+    snooze: null
+  },
+  "demo-p-1005": {
+    decline: {
+      locationName: "Unit 1 — 104",
+      mdsArdDate: "2026-01-28",
+      overallSeverity: "mild",
+      baselines: [
+        { mdsKey: "GG0170D", name: "Sit to Stand", value: 4, rawValue: "04" }
+      ],
+      declines: [
+        { mdsKey: "GG0170D", name: "Sit to Stand", baseline: 4, worstShiftAverage: 3.3, declineMagnitude: 0.7, severity: "mild" }
+      ]
+    },
+    scores: ct("demo-p-1005", [
+      { mdsKey: "GG0170D", name: "Sit to Stand", baseline: 4, worstShiftAverage: 3.3 }
+    ]),
+    snooze: null
+  }
+}, Ii = ["2026-04-24", "2026-04-23", "2026-04-22", "2026-04-21", "2026-04-20", "2026-04-19", "2026-04-18"];
+function ie(t) {
+  return {
+    id: t.id,
+    patientId: t.patientId,
+    patientName: t.patientName,
+    room: t.room,
+    severity: t.severity,
+    category: t.category,
+    subcategory: t.subcategory,
+    finding: t.finding,
+    narrative: t.narrative,
+    timestamp: t.timestamp
+  };
+}
+const pa = {
+  "2026-04-24": [
+    ie({ id: "f-24-1", patientId: "demo-p-1003", patientName: "Novak, Eleanor", room: "312-A", severity: "critical", category: "Fall", subcategory: "Unwitnessed fall", finding: "Unwitnessed floor-find at 0412", narrative: "Resident found on floor beside bed; no LOC reported. Head-to-toe negative for major injury. Vitals stable. Neuro checks ×24h ordered.", timestamp: "2026-04-24T04:12:00Z" }),
+    ie({ id: "f-24-2", patientId: "demo-p-1001", patientName: "Doe, Jane", room: "308-B", severity: "high", category: "GG decline", subcategory: "Transfers", finding: "Toilet Transfer: 4 → 2 avg on day shift", narrative: "Three consecutive shifts charting max-assist for toileting; PT to reassess.", timestamp: "2026-04-24T07:45:00Z" }),
+    ie({ id: "f-24-3", patientId: "demo-p-2001", patientName: "Cho, Lillian", room: "205", severity: "high", category: "Infection", subcategory: "UTI — new", finding: "Positive UA; culture pending", narrative: "Cloudy, foul-smelling urine. Leuk est large, nitrite positive. C&S sent. MD notified — awaiting order.", timestamp: "2026-04-24T02:30:00Z" }),
+    ie({ id: "f-24-4", patientId: "demo-p-5001", patientName: "Simmons, Gerald", room: "216", severity: "medium", category: "Behavior", subcategory: "Verbal agitation", finding: "Two episodes of loud verbal agitation overnight", narrative: "Redirected with 1:1 reassurance. No physical aggression. Care plan updated.", timestamp: "2026-04-24T01:15:00Z" }),
+    ie({ id: "f-24-5", patientId: "demo-p-1002", patientName: "Reyes, Marcus", room: "214-A", severity: "medium", category: "Pain", subcategory: "New onset", finding: "Reports 6/10 hip pain with ambulation", narrative: "No acute signs on exam. PRN acetaminophen given with effect. PT informed.", timestamp: "2026-04-24T06:50:00Z" }),
+    ie({ id: "f-24-6", patientId: "demo-p-8001", patientName: "Hollis, Margaret", room: "119", severity: "medium", category: "Skin", subcategory: "Pressure ulcer", finding: "Stage 2 sacral PU — unchanged", narrative: "Wound re-measured; base clean, edges defined, no tunneling. Continue current orders.", timestamp: "2026-04-24T05:20:00Z" }),
+    ie({ id: "f-24-7", patientId: "demo-p-7001", patientName: "Crane, Isobel", room: "222", severity: "low", category: "Mood", subcategory: "Tearful episode", finding: "Tearful during AM care", narrative: "Verbalized grief around recent family news. Social services notified.", timestamp: "2026-04-24T08:10:00Z" }),
+    ie({ id: "f-24-8", patientId: "demo-p-9001", patientName: "Carver, Benjamin", room: "110", severity: "low", category: "Continence", subcategory: "New incontinence", finding: "Two incontinence episodes on night shift", narrative: "Toileting schedule adjusted to Q2h. No s/s UTI at present.", timestamp: "2026-04-24T03:40:00Z" })
+  ],
+  "2026-04-23": [
+    ie({ id: "f-23-1", patientId: "demo-p-4001", patientName: "Blanchard, Martha", room: "228", severity: "critical", category: "Fall", subcategory: "Witnessed fall", finding: "Witnessed fall — no injury", narrative: "Resident slid off chair while transferring; caught by CNA, no impact. Reinforced call-light use.", timestamp: "2026-04-23T14:22:00Z" }),
+    ie({ id: "f-23-2", patientId: "demo-p-2002", patientName: "Aldridge, Robert", room: "207", severity: "high", category: "Infection", subcategory: "UTI — worsening", finding: "Increasing confusion + flank pain", narrative: "MD notified; UA ordered. ABX to start pending culture.", timestamp: "2026-04-23T09:05:00Z" }),
+    ie({ id: "f-23-3", patientId: "demo-p-6001", patientName: "Grisham, Henry", room: "121", severity: "high", category: "Nutrition", subcategory: "Weight decline", finding: "5.5% weight loss over 42d", narrative: "Dietitian consulted; fortified meals + ensure BID started.", timestamp: "2026-04-23T12:00:00Z" }),
+    ie({ id: "f-23-4", patientId: "demo-p-1002", patientName: "Reyes, Marcus", room: "214-A", severity: "medium", category: "GG decline", subcategory: "Ambulation", finding: "Walk 50 Feet: 4 → 2 on day shift", narrative: "PT reports steady decline over 10 days; equipment reassessment scheduled.", timestamp: "2026-04-23T15:30:00Z" }),
+    ie({ id: "f-23-5", patientId: "demo-p-1005", patientName: "Shankar, Priya", room: "104", severity: "low", category: "Behavior", subcategory: "Restlessness", finding: "Restlessness after supper", narrative: "Redirected with music therapy; settled within 15 min.", timestamp: "2026-04-23T19:10:00Z" }),
+    ie({ id: "f-23-6", patientId: "demo-p-7002", patientName: "Bateson, Clifford", room: "223", severity: "low", category: "Mood", subcategory: "Withdrawn", finding: "Declined group activity", narrative: "Verbalized fatigue. No new mood complaints elicited.", timestamp: "2026-04-23T16:40:00Z" })
+  ],
+  "2026-04-22": [
+    ie({ id: "f-22-1", patientId: "demo-p-1001", patientName: "Doe, Jane", room: "308-B", severity: "high", category: "GG decline", subcategory: "Ambulation", finding: "Walk 10 Feet: 3 → 2", narrative: "Required contact guard assist for short distance. Had independently ambulated 2 weeks prior.", timestamp: "2026-04-22T11:00:00Z" }),
+    ie({ id: "f-22-2", patientId: "demo-p-3001", patientName: "Okafor, Samuel", room: "302", severity: "medium", category: "Urinary", subcategory: "Foley flow", finding: "Decreased Foley output × 4h", narrative: "Bladder scan 120mL. Flushed per protocol with good return.", timestamp: "2026-04-22T22:05:00Z" }),
+    ie({ id: "f-22-3", patientId: "demo-p-5002", patientName: "Vega, Alma", room: "218", severity: "medium", category: "Behavior", subcategory: "Refused meds", finding: "Refused evening meds", narrative: "Offered with snack; accepted 2nd attempt.", timestamp: "2026-04-22T20:45:00Z" }),
+    ie({ id: "f-22-4", patientId: "demo-p-8001", patientName: "Hollis, Margaret", room: "119", severity: "low", category: "Skin", subcategory: "Routine", finding: "Skin check documented", narrative: "No new findings. Continue pressure-relief schedule.", timestamp: "2026-04-22T09:15:00Z" })
+  ],
+  "2026-04-21": [
+    ie({ id: "f-21-1", patientId: "demo-p-1003", patientName: "Novak, Eleanor", room: "312-A", severity: "high", category: "GG decline", subcategory: "Transfers", finding: "Sit to Stand: 3 → 1", narrative: "Required max assist for sit-to-stand after period of independence.", timestamp: "2026-04-21T08:30:00Z" }),
+    ie({ id: "f-21-2", patientId: "demo-p-5003", patientName: "Pritchard, Vance", room: "225", severity: "medium", category: "Medication", subcategory: "Antipsychotic", finding: "New Quetiapine order", narrative: "Started 25mg PO QHS for sleep disturbance — GDR attempt planned in 2 weeks.", timestamp: "2026-04-21T13:10:00Z" })
+  ],
+  "2026-04-20": [
+    ie({ id: "f-20-1", patientId: "demo-p-6001", patientName: "Grisham, Henry", room: "121", severity: "medium", category: "Nutrition", subcategory: "Poor intake", finding: "Ate <25% of last 3 meals", narrative: "Dietitian to follow-up in AM. Preferences review scheduled.", timestamp: "2026-04-20T18:00:00Z" }),
+    ie({ id: "f-20-2", patientId: "demo-p-9001", patientName: "Carver, Benjamin", room: "110", severity: "low", category: "Fall", subcategory: "Near-miss", finding: "Near-miss on transfer", narrative: "Slipped during wheelchair transfer; steadied by CNA. No injury. Re-education provided.", timestamp: "2026-04-20T11:20:00Z" })
+  ],
+  "2026-04-19": [
+    ie({ id: "f-19-1", patientId: "demo-p-1004", patientName: "Park, Harold", room: "309", severity: "medium", category: "GG decline", subcategory: "Transfers", finding: "Toilet Transfer: 5 → 3", narrative: "New decline over weekend — therapy to evaluate.", timestamp: "2026-04-19T10:05:00Z" })
+  ],
+  "2026-04-18": [
+    ie({ id: "f-18-1", patientId: "demo-p-7002", patientName: "Bateson, Clifford", room: "223", severity: "low", category: "Mood", subcategory: "Withdrawn", finding: "Declined therapy session", narrative: "Verbalized fatigue; will reoffer tomorrow.", timestamp: "2026-04-18T15:40:00Z" })
+  ]
+};
+function ma(t) {
+  const n = { critical: 0, high: 0, medium: 0, low: 0 };
+  for (const s of t) {
+    const a = (s.severity || "").toLowerCase();
+    a in n && (n[a] += 1);
+  }
+  return n;
+}
+function Di() {
+  return {
+    timezone: ua,
+    locationId: "demo-loc-1",
+    reports: Ii.map((t) => ({
+      id: `demo-report-${t}`,
+      reportDate: t,
+      facilityDate: t,
+      status: "final",
+      counts: ma(pa[t] || [])
+    }))
+  };
+}
+function Ni(t) {
+  const n = pa[t];
+  return n ? {
+    id: `demo-report-${t}`,
+    reportDate: t,
+    facilityDate: t,
+    status: "final",
+    counts: ma(n),
+    findings: n
+  } : null;
+}
+const ki = {
   "demo-nutrition-v3": {
     id: "demo-nutrition-v3",
     description: "Nutrition Assessment - V 3",
@@ -3312,89 +4164,89 @@ const Pi = {
     }
   }
 };
-function Ti(t, n) {
+function Ci(t, n) {
   if (!n || !t?.answers) return [];
-  const s = [], i = n.toLowerCase();
-  return t.answers.sections.forEach((a, r) => {
-    a.content.forEach((o, c) => {
-      o.questions.forEach((l, d) => {
-        const u = `${r}:${c}:${d}`, p = l.questionText?.toLowerCase() || "";
-        if (l.value && i.includes(l.value.toLowerCase())) {
-          s.push(u);
+  const s = [], a = n.toLowerCase();
+  return t.answers.sections.forEach((i, r) => {
+    i.content.forEach((o, c) => {
+      o.questions.forEach((d, l) => {
+        const p = `${r}:${c}:${l}`, u = d.questionText?.toLowerCase() || "";
+        if (d.value && a.includes(d.value.toLowerCase())) {
+          s.push(p);
           return;
         }
-        if (p && i.includes(p)) {
-          s.push(u);
+        if (u && a.includes(u)) {
+          s.push(p);
           return;
         }
-        l.options?.forEach((m, h) => {
-          m.selected && i.includes(m.text.toLowerCase()) && s.push(`${u}:${h}`);
+        d.options?.forEach((m, h) => {
+          m.selected && a.includes(m.text.toLowerCase()) && s.push(`${p}:${h}`);
         });
       });
     });
   }), s;
 }
-function Ai(t, n) {
-  const s = Pi[t];
+function Si(t, n) {
+  const s = ki[t];
   if (!s)
     return { success: !1, error: `Demo: no UDA fixture for ${t}` };
-  const i = t === "demo-nutrition-v3" ? ["0:0:0:0", "0:1:0:0", "0:2:0:0", "0:3:0:0"] : [], a = n ? i.length ? i : Ti(s, n) : [];
+  const a = t === "demo-nutrition-v3" ? ["0:0:0:0", "0:1:0:0", "0:2:0:0", "0:3:0:0"] : [], i = n ? a.length ? a : Ci(s, n) : [];
   return {
     success: !0,
     data: {
       uda: s,
-      matchKeys: a
+      matchKeys: i
     }
   };
 }
-function Mi(t) {
+function xi(t) {
   return new Promise((n) => setTimeout(n, t));
 }
-function Li() {
-  return Mi(50 + Math.random() * 150);
+function Pi() {
+  return xi(50 + Math.random() * 150);
 }
-function Ei(t) {
-  const [n, s] = t.split("?"), i = new URLSearchParams(s || "");
+function Ti(t) {
+  const [n, s] = t.split("?"), a = new URLSearchParams(s || "");
   if (n === "/api/extension/mds/dashboard")
-    return { success: !0, data: _e.dashboard };
+    return { success: !0, data: ge.dashboard };
   if (n === "/api/extension/mds/doc-risks")
-    return { success: !0, data: _e.docRisks };
+    return { success: !0, data: ge.docRisks };
   if (n === "/api/extension/mds/ard-recommendation")
-    return { success: !0, data: _e.ardRecommendation };
+    return { success: !0, data: ge.ardRecommendation };
   if (n === "/api/extension/mds/pdpm-potential") {
-    const u = i.get("externalAssessmentId"), p = _e.pdpmPotential[u];
-    return p ? { success: !0, data: p } : { success: !1, error: `No PDPM data for assessment ${u}` };
+    const m = a.get("externalAssessmentId"), h = ge.pdpmPotential[m];
+    return h ? { success: !0, data: h } : { success: !1, error: `No PDPM data for assessment ${m}` };
   }
-  const a = n.match(/\/api\/extension\/patients\/([^/]+)\/assessments/);
-  if (a) {
-    const u = a[1], p = _e.patientAssessments[u];
-    return p ? { success: !0, data: p } : { success: !1, error: `No assessments for patient ${u}` };
+  const i = n.match(/\/api\/extension\/patients\/([^/]+)\/assessments/);
+  if (i) {
+    const m = i[1], h = ge.patientAssessments[m];
+    return h ? { success: !0, data: h } : { success: !1, error: `No assessments for patient ${m}` };
   }
   const r = n.match(/\/api\/extension\/mds\/items\/([^/]+)/);
   if (r) {
-    const u = decodeURIComponent(r[1]), p = _e.itemDetail[u];
-    return p ? { success: !0, data: p } : {
+    const m = decodeURIComponent(r[1]), h = ge.itemDetail[m];
+    return h ? { success: !0, data: h } : {
       success: !0,
       data: {
-        item: { mdsItem: u, itemName: u, description: `MDS Item ${u}`, status: "dont_code", evidence: [] },
+        item: { mdsItem: m, itemName: m, description: `MDS Item ${m}`, status: "dont_code", evidence: [] },
         diagnosisSummary: null,
         treatmentSummary: null
       }
     };
   }
   if (n === "/api/extension/mds/queryable-items")
-    return { success: !0, data: _e.queryableItems };
+    return { success: !0, data: ge.queryableItems };
   if (n === "/api/extension/mds/queryable-items/batch-generate")
     return { success: !0, data: { generated: !0 } };
   if (n === "/api/extension/practitioners")
-    return { success: !0, data: _e.practitioners };
+    return { success: !0, data: ge.practitioners };
   if (n === "/api/extension/certifications/dashboard")
-    return { success: !0, data: _e.certDashboard };
+    return { success: !0, data: ge.certDashboard };
   if (n === "/api/extension/certifications/practitioners")
-    return { success: !0, data: _e.practitioners };
+    return { success: !0, data: ge.practitioners };
   if (n === "/api/extension/certifications/by-patient") {
-    const u = i.get("patientId"), p = _e.certifications || [];
-    return { success: !0, data: { certifications: u ? p.filter((h) => h.patientId === u) : p } };
+    const m = a.get("patientId"), h = ge.certifications || [];
+    return { success: !0, data: { certifications: m ? h.filter((g) => g.patientId === m) : h } };
   }
   const o = n.match(/\/api\/extension\/certifications\/([^/]+)\/sends/);
   if (o)
@@ -3412,19 +4264,19 @@ function Ei(t) {
   if (c)
     return { success: !0, data: { certId: c[1], action: c[2] } };
   if (n === "/api/extension/certifications") {
-    const u = i.get("status"), p = _e.certifications || [];
-    return { success: !0, data: { certifications: u ? p.filter((h) => h.status === u) : p } };
+    const m = a.get("status"), h = ge.certifications || [];
+    return { success: !0, data: { certifications: m ? h.filter((g) => g.status === m) : h } };
   }
   if (n === "/api/extension/planner/week-events") {
-    const u = i.get("startDate"), p = i.get("endDate");
-    return !u || !p ? { success: !1, error: "Missing required param: startDate or endDate" } : {
+    const m = a.get("startDate"), h = a.get("endDate");
+    return !m || !h ? { success: !1, error: "Missing required param: startDate or endDate" } : {
       success: !0,
       data: {
-        events: Si(u),
+        events: _i(m),
         meta: {
-          facilityName: i.get("facilityName") || "Demo Facility",
-          startDate: u,
-          endDate: p,
+          facilityName: a.get("facilityName") || "Demo Facility",
+          startDate: m,
+          endDate: h,
           generatedAt: (/* @__PURE__ */ new Date()).toISOString()
         }
       }
@@ -3434,17 +4286,17 @@ function Ei(t) {
     return {
       success: !0,
       data: {
-        summary: xi(),
+        summary: gi(),
         meta: { generatedAt: (/* @__PURE__ */ new Date()).toISOString() }
       }
     };
-  const l = n.match(/\/api\/extension\/documents\/([^/]+)/);
-  if (l)
+  const d = n.match(/\/api\/extension\/documents\/([^/]+)/);
+  if (d)
     return {
       success: !0,
       data: {
         document: {
-          id: l[1],
+          id: d[1],
           title: "Clinical Document",
           documentType: "Progress Note",
           effectiveDate: "2026-01-22",
@@ -3454,31 +4306,52 @@ function Ei(t) {
         }
       }
     };
-  const d = n.match(/\/api\/extension\/patients\/([^/]+)\/uda\/([^/]+)/);
-  if (d) {
-    const u = d[2], p = i.get("quote") || null;
-    return Ai(u, p);
+  const l = n.match(/\/api\/extension\/patients\/([^/]+)\/uda\/([^/]+)/);
+  if (l) {
+    const m = l[2], h = a.get("quote") || null;
+    return Si(m, h);
+  }
+  if (n === "/api/extension/qm-planner/currently-triggering")
+    return { success: !0, data: vi };
+  if (n === "/api/extension/qm-planner/preventable-alerts")
+    return { success: !0, data: bi };
+  const p = n.match(/\/api\/extension\/patients\/([^/]+)\/gg-decline$/);
+  if (p) {
+    const m = p[1], h = wi[m];
+    return h ? { success: !0, data: h } : { success: !1, error: `Demo: no GG detail for ${m}` };
+  }
+  if (/\/api\/extension\/patients\/[^/]+\/(gg-decline\/snooze|preventable-alert-snooze)(\/[^/]+)?$/.test(n))
+    return { success: !0, data: { ok: !0 } };
+  if (n.match(/\/api\/patients\/([^/]+)\/evidence$/))
+    return { success: !0, data: { evidence: [] } };
+  if (n === "/api/extension/24hr-report") {
+    const m = a.get("date");
+    if (m) {
+      const h = Ni(m);
+      return h ? { success: !0, data: { report: h } } : { success: !1, status: 404, error: "Report not found" };
+    }
+    return { success: !0, data: Di() };
   }
   return console.warn("[DemoMock] Unhandled API endpoint:", n), { success: !1, error: `Demo: unhandled endpoint ${n}` };
 }
-async function $i(t) {
-  switch (await Li(), t.type) {
+async function Ai(t) {
+  switch (await Pi(), t.type) {
     case "GET_ORG":
       return { org: "demo-org" };
     case "GET_AUTH_STATE":
       return { authenticated: !0 };
     case "API_REQUEST":
-      return Ei(t.endpoint);
+      return Ti(t.endpoint);
     default:
       return console.log("[DemoMock] Unhandled message type:", t.type), {};
   }
 }
-function Ri() {
+function Mi() {
   typeof window.chrome > "u" && (window.chrome = {}), window.chrome.runtime || (window.chrome.runtime = {}), window.chrome.runtime.sendMessage = function(t, n) {
-    const s = $i(t);
+    const s = Ai(t);
     if (typeof n == "function") {
-      s.then(n).catch((i) => {
-        console.error("[DemoMock] Error in callback handler:", i), n({ success: !1, error: i.message });
+      s.then(n).catch((a) => {
+        console.error("[DemoMock] Error in callback handler:", a), n({ success: !1, error: a.message });
       });
       return;
     }
@@ -3487,137 +4360,137 @@ function Ri() {
     return t.startsWith("lib/") ? `./${t}` : t;
   }, window.chrome.runtime.id = "demo-mock-extension-id", console.log("[DemoMock] Chrome API mocks installed");
 }
-var Ve, oe, Nt, Sn, We = 0, Hs = [], ce = se, xn = ce.__b, Pn = ce.__r, Tn = ce.diffed, An = ce.__c, Mn = ce.unmount, Ln = ce.__;
-function ln(t, n) {
-  ce.__h && ce.__h(oe, t, We || n), We = 0;
-  var s = oe.__H || (oe.__H = { __: [], __h: [] });
+var Je, ce, Ot, Un, Ze = 0, ha = [], le = ae, Vn = le.__b, zn = le.__r, Wn = le.diffed, Qn = le.__c, jn = le.unmount, Kn = le.__;
+function In(t, n) {
+  le.__h && le.__h(ce, t, Ze || n), Ze = 0;
+  var s = ce.__H || (ce.__H = { __: [], __h: [] });
   return t >= s.__.length && s.__.push({}), s.__[t];
 }
-function v(t) {
-  return We = 1, qi(Fs, t);
+function y(t) {
+  return Ze = 1, qi(ga, t);
 }
 function qi(t, n, s) {
-  var i = ln(Ve++, 2);
-  if (i.t = t, !i.__c && (i.__ = [Fs(void 0, n), function(c) {
-    var l = i.__N ? i.__N[0] : i.__[0], d = i.t(l, c);
-    l !== d && (i.__N = [d, i.__[1]], i.__c.setState({}));
-  }], i.__c = oe, !oe.__f)) {
-    var a = function(c, l, d) {
-      if (!i.__c.__H) return !0;
-      var u = i.__c.__H.__.filter(function(m) {
+  var a = In(Je++, 2);
+  if (a.t = t, !a.__c && (a.__ = [ga(void 0, n), function(c) {
+    var d = a.__N ? a.__N[0] : a.__[0], l = a.t(d, c);
+    d !== l && (a.__N = [l, a.__[1]], a.__c.setState({}));
+  }], a.__c = ce, !ce.__f)) {
+    var i = function(c, d, l) {
+      if (!a.__c.__H) return !0;
+      var p = a.__c.__H.__.filter(function(m) {
         return !!m.__c;
       });
-      if (u.every(function(m) {
+      if (p.every(function(m) {
         return !m.__N;
-      })) return !r || r.call(this, c, l, d);
-      var p = i.__c.props !== c;
-      return u.forEach(function(m) {
+      })) return !r || r.call(this, c, d, l);
+      var u = a.__c.props !== c;
+      return p.forEach(function(m) {
         if (m.__N) {
           var h = m.__[0];
-          m.__ = m.__N, m.__N = void 0, h !== m.__[0] && (p = !0);
+          m.__ = m.__N, m.__N = void 0, h !== m.__[0] && (u = !0);
         }
-      }), r && r.call(this, c, l, d) || p;
+      }), r && r.call(this, c, d, l) || u;
     };
-    oe.__f = !0;
-    var r = oe.shouldComponentUpdate, o = oe.componentWillUpdate;
-    oe.componentWillUpdate = function(c, l, d) {
+    ce.__f = !0;
+    var r = ce.shouldComponentUpdate, o = ce.componentWillUpdate;
+    ce.componentWillUpdate = function(c, d, l) {
       if (this.__e) {
-        var u = r;
-        r = void 0, a(c, l, d), r = u;
+        var p = r;
+        r = void 0, i(c, d, l), r = p;
       }
-      o && o.call(this, c, l, d);
-    }, oe.shouldComponentUpdate = a;
+      o && o.call(this, c, d, l);
+    }, ce.shouldComponentUpdate = i;
   }
-  return i.__N || i.__;
+  return a.__N || a.__;
 }
 function F(t, n) {
-  var s = ln(Ve++, 3);
-  !ce.__s && Bs(s.__H, n) && (s.__ = t, s.u = n, oe.__H.__h.push(s));
+  var s = In(Je++, 3);
+  !le.__s && _a(s.__H, n) && (s.__ = t, s.u = n, ce.__H.__h.push(s));
 }
-function ee(t) {
-  return We = 5, Y(function() {
+function te(t) {
+  return Ze = 5, Y(function() {
     return { current: t };
   }, []);
 }
 function Y(t, n) {
-  var s = ln(Ve++, 7);
-  return Bs(s.__H, n) && (s.__ = t(), s.__H = n, s.__h = t), s.__;
+  var s = In(Je++, 7);
+  return _a(s.__H, n) && (s.__ = t(), s.__H = n, s.__h = t), s.__;
 }
-function U(t, n) {
-  return We = 8, Y(function() {
+function G(t, n) {
+  return Ze = 8, Y(function() {
     return t;
   }, n);
 }
-function Oi() {
-  for (var t; t = Hs.shift(); ) if (t.__P && t.__H) try {
-    t.__H.__h.forEach(ot), t.__H.__h.forEach(zt), t.__H.__h = [];
+function Li() {
+  for (var t; t = ha.shift(); ) if (t.__P && t.__H) try {
+    t.__H.__h.forEach(yt), t.__H.__h.forEach(sn), t.__H.__h = [];
   } catch (n) {
-    t.__H.__h = [], ce.__e(n, t.__v);
+    t.__H.__h = [], le.__e(n, t.__v);
   }
 }
-ce.__b = function(t) {
-  oe = null, xn && xn(t);
-}, ce.__ = function(t, n) {
-  t && n.__k && n.__k.__m && (t.__m = n.__k.__m), Ln && Ln(t, n);
-}, ce.__r = function(t) {
-  Pn && Pn(t), Ve = 0;
-  var n = (oe = t.__c).__H;
-  n && (Nt === oe ? (n.__h = [], oe.__h = [], n.__.forEach(function(s) {
+le.__b = function(t) {
+  ce = null, Vn && Vn(t);
+}, le.__ = function(t, n) {
+  t && n.__k && n.__k.__m && (t.__m = n.__k.__m), Kn && Kn(t, n);
+}, le.__r = function(t) {
+  zn && zn(t), Je = 0;
+  var n = (ce = t.__c).__H;
+  n && (Ot === ce ? (n.__h = [], ce.__h = [], n.__.forEach(function(s) {
     s.__N && (s.__ = s.__N), s.u = s.__N = void 0;
-  })) : (n.__h.forEach(ot), n.__h.forEach(zt), n.__h = [], Ve = 0)), Nt = oe;
-}, ce.diffed = function(t) {
-  Tn && Tn(t);
+  })) : (n.__h.forEach(yt), n.__h.forEach(sn), n.__h = [], Je = 0)), Ot = ce;
+}, le.diffed = function(t) {
+  Wn && Wn(t);
   var n = t.__c;
-  n && n.__H && (n.__H.__h.length && (Hs.push(n) !== 1 && Sn === ce.requestAnimationFrame || ((Sn = ce.requestAnimationFrame) || Hi)(Oi)), n.__H.__.forEach(function(s) {
+  n && n.__H && (n.__H.__h.length && (ha.push(n) !== 1 && Un === le.requestAnimationFrame || ((Un = le.requestAnimationFrame) || Ei)(Li)), n.__H.__.forEach(function(s) {
     s.u && (s.__H = s.u), s.u = void 0;
-  })), Nt = oe = null;
-}, ce.__c = function(t, n) {
+  })), Ot = ce = null;
+}, le.__c = function(t, n) {
   n.some(function(s) {
     try {
-      s.__h.forEach(ot), s.__h = s.__h.filter(function(i) {
-        return !i.__ || zt(i);
+      s.__h.forEach(yt), s.__h = s.__h.filter(function(a) {
+        return !a.__ || sn(a);
       });
-    } catch (i) {
-      n.some(function(a) {
-        a.__h && (a.__h = []);
-      }), n = [], ce.__e(i, s.__v);
-    }
-  }), An && An(t, n);
-}, ce.unmount = function(t) {
-  Mn && Mn(t);
-  var n, s = t.__c;
-  s && s.__H && (s.__H.__.forEach(function(i) {
-    try {
-      ot(i);
     } catch (a) {
-      n = a;
+      n.some(function(i) {
+        i.__h && (i.__h = []);
+      }), n = [], le.__e(a, s.__v);
     }
-  }), s.__H = void 0, n && ce.__e(n, s.__v));
+  }), Qn && Qn(t, n);
+}, le.unmount = function(t) {
+  jn && jn(t);
+  var n, s = t.__c;
+  s && s.__H && (s.__H.__.forEach(function(a) {
+    try {
+      yt(a);
+    } catch (i) {
+      n = i;
+    }
+  }), s.__H = void 0, n && le.__e(n, s.__v));
 };
-var En = typeof requestAnimationFrame == "function";
-function Hi(t) {
+var Yn = typeof requestAnimationFrame == "function";
+function Ei(t) {
   var n, s = function() {
-    clearTimeout(i), En && cancelAnimationFrame(n), setTimeout(t);
-  }, i = setTimeout(s, 35);
-  En && (n = requestAnimationFrame(s));
+    clearTimeout(a), Yn && cancelAnimationFrame(n), setTimeout(t);
+  }, a = setTimeout(s, 35);
+  Yn && (n = requestAnimationFrame(s));
 }
-function ot(t) {
-  var n = oe, s = t.__c;
-  typeof s == "function" && (t.__c = void 0, s()), oe = n;
+function yt(t) {
+  var n = ce, s = t.__c;
+  typeof s == "function" && (t.__c = void 0, s()), ce = n;
 }
-function zt(t) {
-  var n = oe;
-  t.__c = t.__(), oe = n;
+function sn(t) {
+  var n = ce;
+  t.__c = t.__(), ce = n;
 }
-function Bs(t, n) {
-  return !t || t.length !== n.length || n.some(function(s, i) {
-    return s !== t[i];
+function _a(t, n) {
+  return !t || t.length !== n.length || n.some(function(s, a) {
+    return s !== t[a];
   });
 }
-function Fs(t, n) {
+function ga(t, n) {
   return typeof n == "function" ? n(t) : n;
 }
-function Bi(t) {
+function $i(t) {
   if (!t) return "";
   try {
     return new Date(t).toLocaleDateString("en-US", {
@@ -3629,14 +4502,14 @@ function Bi(t) {
     return t;
   }
 }
-function jt({ uda: t, matchKeys: n, quoteText: s, onClose: i }) {
-  const a = n instanceof Set ? n : new Set(n || []), r = ee(null);
+function an({ uda: t, matchKeys: n, quoteText: s, onClose: a }) {
+  const i = n instanceof Set ? n : new Set(n || []), r = te(null);
   F(() => {
     if (r.current) {
-      const l = setTimeout(() => {
+      const d = setTimeout(() => {
         r.current?.scrollIntoView({ behavior: "smooth", block: "center" });
       }, 80);
-      return () => clearTimeout(l);
+      return () => clearTimeout(d);
     }
   }, [t]);
   const o = t?.answers?.sections?.length ?? 0;
@@ -3659,25 +4532,25 @@ function jt({ uda: t, matchKeys: n, quoteText: s, onClose: i }) {
             /* @__PURE__ */ e("line", { x1: "8", y1: "2", x2: "8", y2: "6" }),
             /* @__PURE__ */ e("line", { x1: "3", y1: "10", x2: "21", y2: "10" })
           ] }),
-          Bi(t.date)
+          $i(t.date)
         ] }),
         /* @__PURE__ */ e("span", { className: "super-uda-viewer__meta-item", children: [
           o,
           " section",
           o !== 1 ? "s" : ""
         ] }),
-        a.size > 0 && /* @__PURE__ */ e("span", { className: "super-uda-viewer__meta-matches", children: [
-          a.size,
+        i.size > 0 && /* @__PURE__ */ e("span", { className: "super-uda-viewer__meta-matches", children: [
+          i.size,
           " match",
-          a.size !== 1 ? "es" : ""
+          i.size !== 1 ? "es" : ""
         ] })
       ] }),
-      i && /* @__PURE__ */ e(
+      a && /* @__PURE__ */ e(
         "button",
         {
           type: "button",
           className: "super-uda-viewer__close",
-          onClick: i,
+          onClick: a,
           "aria-label": "Close",
           children: "×"
         }
@@ -3691,58 +4564,58 @@ function jt({ uda: t, matchKeys: n, quoteText: s, onClose: i }) {
         "”"
       ] })
     ] }),
-    /* @__PURE__ */ e("div", { className: "super-uda-viewer__body", children: t?.answers ? t.answers.sections.map((l, d) => /* @__PURE__ */ e("div", { className: "super-uda-viewer__section", children: [
+    /* @__PURE__ */ e("div", { className: "super-uda-viewer__body", children: t?.answers ? t.answers.sections.map((d, l) => /* @__PURE__ */ e("div", { className: "super-uda-viewer__section", children: [
       /* @__PURE__ */ e("div", { className: "super-uda-viewer__section-title", children: [
-        l.description,
-        a.size > 0 && /* @__PURE__ */ e("span", { className: "super-uda-viewer__section-match-count", children: [
+        d.description,
+        i.size > 0 && /* @__PURE__ */ e("span", { className: "super-uda-viewer__section-match-count", children: [
           "(",
-          a.size,
+          i.size,
           " match",
-          a.size !== 1 ? "es" : "",
+          i.size !== 1 ? "es" : "",
           ")"
         ] })
       ] }),
-      l.content.map((u, p) => /* @__PURE__ */ e("div", { className: "super-uda-viewer__content-group", children: [
-        u.sectionTitle && u.sectionTitle !== l.description && /* @__PURE__ */ e("div", { className: "super-uda-viewer__subheader", children: u.sectionTitle }),
-        u.questions.map((m, h) => {
-          const _ = `${d}:${p}:${h}`, g = a.has(_), f = m.options?.some((C, I) => a.has(`${_}:${I}`)) ?? !1, y = g || f, w = y && !c;
-          w && (c = !0);
-          const k = m.value ?? m.options?.filter((C) => C.selected).map((C) => C.text).join("; ") ?? "";
+      d.content.map((p, u) => /* @__PURE__ */ e("div", { className: "super-uda-viewer__content-group", children: [
+        p.sectionTitle && p.sectionTitle !== d.description && /* @__PURE__ */ e("div", { className: "super-uda-viewer__subheader", children: p.sectionTitle }),
+        p.questions.map((m, h) => {
+          const _ = `${l}:${u}:${h}`, g = i.has(_), v = m.options?.some((N, D) => i.has(`${_}:${D}`)) ?? !1, b = g || v, f = b && !c;
+          f && (c = !0);
+          const I = m.value ?? m.options?.filter((N) => N.selected).map((N) => N.text).join("; ") ?? "";
           return /* @__PURE__ */ e(
             "div",
             {
-              ref: w ? r : void 0,
-              className: "super-uda-viewer__row" + (y ? " super-uda-viewer__row--highlighted" : ""),
+              ref: f ? r : void 0,
+              className: "super-uda-viewer__row" + (b ? " super-uda-viewer__row--highlighted" : ""),
               children: [
                 /* @__PURE__ */ e("div", { className: "super-uda-viewer__row-question", children: m.questionText }),
-                /* @__PURE__ */ e("div", { className: "super-uda-viewer__row-answer", children: k || /* @__PURE__ */ e("span", { className: "super-uda-viewer__row-empty", children: "—" }) })
+                /* @__PURE__ */ e("div", { className: "super-uda-viewer__row-answer", children: I || /* @__PURE__ */ e("span", { className: "super-uda-viewer__row-empty", children: "—" }) })
               ]
             },
             h
           );
         })
-      ] }, p))
-    ] }, d)) : /* @__PURE__ */ e("div", { className: "super-uda-viewer__empty", children: "UDA answers have not been synced for this assessment." }) })
+      ] }, u))
+    ] }, l)) : /* @__PURE__ */ e("div", { className: "super-uda-viewer__empty", children: "UDA answers have not been synced for this assessment." }) })
   ] });
 }
-async function $n(t, n) {
-  const s = window.SuperOverlay?.patientId || "2657226", i = new URLSearchParams({
+async function Jn(t, n) {
+  const s = window.SuperOverlay?.patientId || "2657226", a = new URLSearchParams({
     facilityName: window.SuperOverlay?.facilityName || "SUNNY MEADOWS DEMO FACILITY",
     orgSlug: "demo-org"
   });
-  n && i.set("quote", n);
-  const a = `/api/extension/patients/${s}/uda/${t}?${i.toString()}`, r = await chrome.runtime.sendMessage({ type: "API_REQUEST", endpoint: a });
+  n && a.set("quote", n);
+  const i = `/api/extension/patients/${s}/uda/${t}?${a.toString()}`, r = await chrome.runtime.sendMessage({ type: "API_REQUEST", endpoint: i });
   if (!r?.success) throw new Error(r?.error || "Failed to load UDA");
   return r.data;
 }
-function Fi() {
-  window.__DEMO_CERT_DATA = _e.certifications || [], localStorage.setItem("CORE.org_code", "demo-org"), window.getOrg = () => ({ org: "demo-org" }), window.getChatFacilityInfo = () => "SUNNY MEADOWS DEMO FACILITY", window.getChatPatientId = () => "2657226", window.getPatientNameFromPage = () => "Doe, Jane", window.getCurrentParams = () => ({
+function Ri() {
+  window.__DEMO_CERT_DATA = ge.certifications || [], localStorage.setItem("CORE.org_code", "demo-org"), window.getOrg = () => ({ org: "demo-org" }), window.getChatFacilityInfo = () => "SUNNY MEADOWS DEMO FACILITY", window.getChatPatientId = () => "2657226", window.getPatientNameFromPage = () => "Doe, Jane", window.getCurrentParams = () => ({
     facilityName: "SUNNY MEADOWS DEMO FACILITY",
     orgSlug: "demo-org",
     assessmentId: "4860265"
   }), window.QueryAPI = {
     async fetchPractitioners(n, s) {
-      return await new Promise((i) => setTimeout(i, 200)), [
+      return await new Promise((a) => setTimeout(a, 200)), [
         {
           id: "pract-001",
           firstName: "Demo",
@@ -3771,7 +4644,7 @@ function Fi() {
     },
     async generateNote(n, s) {
       await new Promise((o) => setTimeout(o, 500 + Math.random() * 500));
-      const i = s.pdpmCategoryName || s.mdsItemName || s.itemName || n;
+      const a = s.pdpmCategoryName || s.mdsItemName || s.itemName || n;
       return {
         note: {
           I5600: `Dear Doctor,
@@ -3792,7 +4665,7 @@ Please confirm whether a malnutrition diagnosis (ICD-10: E44.0) is appropriate f
 Thank you for your prompt attention to this matter.`
         }[n] || `Dear Doctor,
 
-I am writing to request your clinical assessment regarding ${i} (${n}) for this patient's current MDS assessment.
+I am writing to request your clinical assessment regarding ${a} (${n}) for this patient's current MDS assessment.
 
 Based on our review of the clinical documentation, there appears to be evidence supporting this diagnosis/condition that may warrant coding on the MDS. Your confirmation would help ensure accurate assessment completion.
 
@@ -3814,8 +4687,8 @@ Thank you for your prompt attention to this matter.`,
         }
       };
     },
-    async sendQuery(n, s, i) {
-      return await new Promise((a) => setTimeout(a, 300)), console.log(`[DemoMock] QueryAPI.sendQuery: ${n} → practitioners: ${s.join(", ")}`), { success: !0, sentAt: (/* @__PURE__ */ new Date()).toISOString() };
+    async sendQuery(n, s, a) {
+      return await new Promise((i) => setTimeout(i, 300)), console.log(`[DemoMock] QueryAPI.sendQuery: ${n} → practitioners: ${s.join(", ")}`), { success: !0, sentAt: (/* @__PURE__ */ new Date()).toISOString() };
     },
     async resendQuery(n) {
       return await new Promise((s) => setTimeout(s, 200)), console.log(`[DemoMock] QueryAPI.resendQuery: ${n}`), { success: !0 };
@@ -3854,56 +4727,56 @@ Thank you for your prompt attention to this matter.`,
     show(n) {
       console.log("[DemoMock] QueryDetailModal.show:", n);
     }
-  }, window.renderSplitAdministrations = async (n, s, i, a) => {
-    await new Promise((D) => setTimeout(D, 400));
-    const r = !s?.includes("tar"), o = r ? "MAR" : "TAR", c = r ? "super-admin-badge--mar" : "super-admin-badge--tar", l = r ? "💊" : "⚡", u = {
+  }, window.renderSplitAdministrations = async (n, s, a, i) => {
+    await new Promise((k) => setTimeout(k, 400));
+    const r = !s?.includes("tar"), o = r ? "MAR" : "TAR", c = r ? "super-admin-badge--mar" : "super-admin-badge--tar", d = r ? "💊" : "⚡", p = {
       "mar-010": { name: "Aspirin 81mg PO Daily", directions: "Take by mouth once daily with food", startDate: "2025-12-20", endDate: null },
       "mar-012": { name: "Lisinopril 20mg PO Daily", directions: "Take by mouth once daily in the morning", startDate: "2025-12-15", endDate: null },
       "mar-001": { name: "Metformin 500mg PO BID", directions: "Take by mouth twice daily with meals", startDate: "2025-11-01", endDate: null },
       "doc-nutr-004": { name: "Ensure Plus 8 OZ Oral Liquid", directions: "Give 8 oz Ensure Plus by mouth twice daily with lunch and dinner for nutritional supplementation", startDate: "2026-01-22", endDate: null },
       "doc-nutr-003": { name: "Fortified Cereal 6 OZ", directions: "Give 6 oz fortified cereal by mouth once daily with breakfast to increase caloric and protein intake", startDate: "2026-01-22", endDate: null }
-    }[s] || { name: "Medication Order", directions: "As directed", startDate: "2025-12-20", endDate: null }, p = [], m = new Date(2026, 0, 27);
-    for (let D = 6; D >= 0; D--) {
-      const N = new Date(m);
-      N.setDate(N.getDate() - D), p.push(N);
+    }[s] || { name: "Medication Order", directions: "As directed", startDate: "2025-12-20", endDate: null }, u = [], m = new Date(2026, 0, 27);
+    for (let k = 6; k >= 0; k--) {
+      const S = new Date(m);
+      S.setDate(S.getDate() - k), u.push(S);
     }
-    const h = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"], _ = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"], g = (D) => `${_[D.getMonth()]} ${D.getDate()}, ${D.getFullYear()}`, f = `${g(p[0])} - ${g(p[p.length - 1])}`, y = (D) => D ? new Date(D).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }) : "", w = p.map((D) => `
+    const h = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"], _ = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"], g = (k) => `${_[k.getMonth()]} ${k.getDate()}, ${k.getFullYear()}`, v = `${g(u[0])} - ${g(u[u.length - 1])}`, b = (k) => k ? new Date(k).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }) : "", f = u.map((k) => `
       <th class="super-admin-grid__date-header">
-        <div class="super-admin-grid__day">${h[D.getDay()]}</div>
-        <div class="super-admin-grid__date">${_[D.getMonth()]} ${D.getDate()}</div>
+        <div class="super-admin-grid__day">${h[k.getDay()]}</div>
+        <div class="super-admin-grid__date">${_[k.getMonth()]} ${k.getDate()}</div>
       </th>
-    `).join(""), C = u.name.includes("BID") ? ["0800", "1800"] : ["0800"], I = ["RN-JD", "RN-KM", "RN-TS", "LPN-AB"], P = (D) => {
-      const N = parseInt(D.substring(0, 2), 10), S = D.substring(2), E = N >= 12 ? "PM" : "AM";
-      return `${N > 12 ? N - 12 : N === 0 ? 12 : N}:${S} ${E}`;
-    }, A = C.map((D) => {
-      const N = p.map((S, E) => {
-        const B = (E + (D === "1800" ? 2 : 0)) % I.length;
+    `).join(""), N = p.name.includes("BID") ? ["0800", "1800"] : ["0800"], D = ["RN-JD", "RN-KM", "RN-TS", "LPN-AB"], T = (k) => {
+      const S = parseInt(k.substring(0, 2), 10), w = k.substring(2), M = S >= 12 ? "PM" : "AM";
+      return `${S > 12 ? S - 12 : S === 0 ? 12 : S}:${w} ${M}`;
+    }, A = N.map((k) => {
+      const S = u.map((w, M) => {
+        const H = (M + (k === "1800" ? 2 : 0)) % D.length;
         return `<td class="super-admin-grid__cell super-admin-grid__cell--given">
           <span class="super-admin-grid__check">✓</span>
-          <span class="super-admin-grid__initials">${I[B]}</span>
+          <span class="super-admin-grid__initials">${D[H]}</span>
         </td>`;
       }).join("");
       return `<tr class="super-admin-grid__row">
-        <td class="super-admin-grid__time">${P(D)}</td>
-        ${N}
+        <td class="super-admin-grid__time">${T(k)}</td>
+        ${S}
       </tr>`;
-    }).join(""), x = C.length * p.length;
+    }).join(""), x = N.length * u.length;
     n.innerHTML = `
       <div class="super-split__admin">
         <div class="super-admin-modal__header">
           <div class="super-admin-modal__title-row">
-            <span class="super-admin-modal__icon">${l}</span>
+            <span class="super-admin-modal__icon">${d}</span>
             <div class="super-admin-modal__title">
-              <span class="super-admin-modal__order-name">${u.name}</span>
+              <span class="super-admin-modal__order-name">${p.name}</span>
               <span class="super-admin-badge ${c}">${o}</span>
             </div>
           </div>
-          ${u.directions ? `<div class="super-admin-modal__directions">${u.directions}</div>` : ""}
+          ${p.directions ? `<div class="super-admin-modal__directions">${p.directions}</div>` : ""}
           <div class="super-admin-modal__meta">
-            ${C.length} time slot${C.length !== 1 ? "s" : ""}
+            ${N.length} time slot${N.length !== 1 ? "s" : ""}
             <span class="super-admin-modal__dates">
-              Start: ${y(u.startDate)}
-              ${u.endDate ? ` · Stop: ${y(u.endDate)}` : ""}
+              Start: ${b(p.startDate)}
+              ${p.endDate ? ` · Stop: ${b(p.endDate)}` : ""}
             </span>
           </div>
         </div>
@@ -3911,7 +4784,7 @@ Thank you for your prompt attention to this matter.`,
           <button class="super-admin-modal__nav-btn" title="Previous week">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
           </button>
-          <span class="super-admin-modal__date-range">📅 ${f}</span>
+          <span class="super-admin-modal__date-range">📅 ${v}</span>
           <button class="super-admin-modal__nav-btn" title="Next week">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
           </button>
@@ -3922,7 +4795,7 @@ Thank you for your prompt attention to this matter.`,
               <thead>
                 <tr>
                   <th class="super-admin-grid__time-header">Time</th>
-                  ${w}
+                  ${f}
                 </tr>
               </thead>
               <tbody>
@@ -3942,8 +4815,8 @@ Thank you for your prompt attention to this matter.`,
         </div>
       </div>
     `;
-  }, window.renderSplitNote = async (n, s, i) => {
-    await new Promise((l) => setTimeout(l, 350));
+  }, window.renderSplitNote = async (n, s, a) => {
+    await new Promise((d) => setTimeout(d, 350));
     const r = {
       "doc-nutr-001": {
         title: "NUTRITION_01_22_36001641.PDF",
@@ -4064,15 +4937,15 @@ Thank you for your prompt attention to this matter.`,
         }
       }
     }[s];
-    function o(l) {
-      return l.map((d) => {
-        let u = "super-split-pdf__line";
-        return d.highlight === "keyword" || d.highlight === !0 ? u += " super-split-pdf__line--keyword" : d.highlight === "contextual" && (u += " super-split-pdf__line--contextual"), d.bold && (u += " super-split-pdf__line--bold"), `<div class="${u}">${d.text || "&nbsp;"}</div>`;
+    function o(d) {
+      return d.map((l) => {
+        let p = "super-split-pdf__line";
+        return l.highlight === "keyword" || l.highlight === !0 ? p += " super-split-pdf__line--keyword" : l.highlight === "contextual" && (p += " super-split-pdf__line--contextual"), l.bold && (p += " super-split-pdf__line--bold"), `<div class="${p}">${l.text || "&nbsp;"}</div>`;
       }).join("");
     }
     if (r) {
-      const l = r.pageContent[1], d = r.pages;
-      let u = 1;
+      const d = r.pageContent[1], l = r.pages;
+      let p = 1;
       if (n.innerHTML = `
         <style>
           .super-split-pdf { background: #525659; padding: 20px; min-height: 100%; display: flex; flex-direction: column; }
@@ -4103,31 +4976,31 @@ Thank you for your prompt attention to this matter.`,
             </div>
           </div>
           <div class="super-split-pdf__paper">
-            ${o(l)}
+            ${o(d)}
           </div>
-          ${d > 1 ? `
+          ${l > 1 ? `
           <div class="super-split-pdf__footer">
             <button class="super-split-pdf__page-btn super-split-pdf__prev" disabled>&#8249;</button>
-            <span class="super-split-pdf__page-num">Page 1 of ${d}</span>
+            <span class="super-split-pdf__page-num">Page 1 of ${l}</span>
             <button class="super-split-pdf__page-btn super-split-pdf__next">&#8250;</button>
           </div>` : `
           <div class="super-split-pdf__footer">
             <span class="super-split-pdf__page-num">Page 1 of 1</span>
           </div>`}
-        </div>`, d > 1) {
+        </div>`, l > 1) {
         let g = function() {
-          _.innerHTML = o(r.pageContent[u]), h.textContent = `Page ${u} of ${d}`, p.disabled = u <= 1, m.disabled = u >= d;
+          _.innerHTML = o(r.pageContent[p]), h.textContent = `Page ${p} of ${l}`, u.disabled = p <= 1, m.disabled = p >= l;
         };
         var c = g;
-        const p = n.querySelector(".super-split-pdf__prev"), m = n.querySelector(".super-split-pdf__next"), h = n.querySelector(".super-split-pdf__page-num"), _ = n.querySelector(".super-split-pdf__paper");
-        p.addEventListener("click", () => {
-          u > 1 && (u--, g());
+        const u = n.querySelector(".super-split-pdf__prev"), m = n.querySelector(".super-split-pdf__next"), h = n.querySelector(".super-split-pdf__page-num"), _ = n.querySelector(".super-split-pdf__paper");
+        u.addEventListener("click", () => {
+          p > 1 && (p--, g());
         }), m.addEventListener("click", () => {
-          u < d && (u++, g());
+          p < l && (p++, g());
         });
       }
     } else {
-      const l = [
+      const d = [
         { text: "PROGRESS NOTE", highlight: !1, bold: !0 },
         { text: "", highlight: !1 },
         { text: "Patient: Doe, Jane                    MRN: 000000", highlight: !1 },
@@ -4175,14 +5048,14 @@ Thank you for your prompt attention to this matter.`,
             <span class="super-split-pdf__filename">PROGRESS_NOTE_01_22.PDF</span>
           </div>
           <div class="super-split-pdf__paper">
-            ${o(l)}
+            ${o(d)}
           </div>
           <div class="super-split-pdf__footer">
             <span class="super-split-pdf__page-num">Page 1 of 1</span>
           </div>
         </div>`;
     }
-  }, window.renderSplitTherapy = async (n, s, i, a) => {
+  }, window.renderSplitTherapy = async (n, s, a, i) => {
     await new Promise((r) => setTimeout(r, 300)), n.innerHTML = `
       <div style="padding:16px;font-family:system-ui,-apple-system,sans-serif;font-size:13px;color:#1e293b;line-height:1.6;">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid #e2e8f0;">
@@ -4217,25 +5090,25 @@ Thank you for your prompt attention to this matter.`,
           <div style="font-size:11px;color:#92400e;">Documented by <strong>Jane Specialist, PT, DPT</strong> on 01/20/2026 at 11:15</div>
         </div>
       </div>`;
-  }, window.renderSplitUda = async (n, s, i) => {
+  }, window.renderSplitUda = async (n, s, a) => {
     try {
-      const { uda: a, matchKeys: r } = await $n(s, i || null);
+      const { uda: i, matchKeys: r } = await Jn(s, a || null);
       n.innerHTML = "";
       const o = document.createElement("div");
-      o.style.cssText = "width:100%;height:100%;display:flex;flex-direction:column;min-height:0;", n.appendChild(o), Ce(
-        G(jt, {
-          uda: a,
+      o.style.cssText = "width:100%;height:100%;display:flex;flex-direction:column;min-height:0;", n.appendChild(o), Se(
+        K(an, {
+          uda: i,
           matchKeys: new Set(r || []),
-          quoteText: i || null
+          quoteText: a || null
         }),
         o
       );
-    } catch (a) {
-      console.error("[DemoMock] renderSplitUda failed:", a), n.innerHTML = `<div class="cc-pop__viewer-loading"><span>Failed to load: ${a.message}</span></div>`;
+    } catch (i) {
+      console.error("[DemoMock] renderSplitUda failed:", i), n.innerHTML = `<div class="cc-pop__viewer-loading"><span>Failed to load: ${i.message}</span></div>`;
     }
   }, window.showUdaModal = async (n, s) => {
-    const i = document.createElement("div");
-    i.className = "super-uda-modal", i.innerHTML = `
+    const a = document.createElement("div");
+    a.className = "super-uda-modal", a.innerHTML = `
       <div class="super-uda-modal__backdrop"></div>
       <div class="super-uda-modal__container">
         <div class="super-uda-modal__loading">
@@ -4243,49 +5116,49 @@ Thank you for your prompt attention to this matter.`,
           <span>Loading assessment...</span>
         </div>
       </div>
-    `, document.body.appendChild(i), document.body.style.overflow = "hidden";
-    const a = i.querySelector(".super-uda-modal__container"), r = () => {
-      document.body.style.overflow = "", document.removeEventListener("keydown", o), i.remove();
+    `, document.body.appendChild(a), document.body.style.overflow = "hidden";
+    const i = a.querySelector(".super-uda-modal__container"), r = () => {
+      document.body.style.overflow = "", document.removeEventListener("keydown", o), a.remove();
     }, o = (c) => {
       c.key === "Escape" && r();
     };
-    document.addEventListener("keydown", o), i.querySelector(".super-uda-modal__backdrop").addEventListener("click", r);
+    document.addEventListener("keydown", o), a.querySelector(".super-uda-modal__backdrop").addEventListener("click", r);
     try {
-      const { uda: c, matchKeys: l } = await $n(n, s || null);
-      a.innerHTML = "", Ce(
-        G(jt, {
+      const { uda: c, matchKeys: d } = await Jn(n, s || null);
+      i.innerHTML = "", Se(
+        K(an, {
           uda: c,
-          matchKeys: new Set(l || []),
+          matchKeys: new Set(d || []),
           quoteText: s || null,
           onClose: r
         }),
-        a
+        i
       );
     } catch (c) {
-      a.innerHTML = `<div class="super-uda-modal__error">${c.message || "Failed to load UDA"}</div>`;
+      i.innerHTML = `<div class="super-uda-modal__error">${c.message || "Failed to load UDA"}</div>`;
     }
   }, window.QuerySendModal = {
     show(n) {
       console.log("[DemoMock] QuerySendModal.show (stub):", n?.mdsItem);
     }
   }, window.CertAPI = {
-    async sendCert(n, s, i) {
-      return await new Promise((a) => setTimeout(a, 300)), console.log("[DemoMock] CertAPI.sendCert:", n), t("success", "Certification sent successfully"), { success: !0 };
+    async sendCert(n, s, a) {
+      return await new Promise((i) => setTimeout(i, 300)), console.log("[DemoMock] CertAPI.sendCert:", n), t("success", "Certification sent successfully"), { success: !0 };
     },
     async skipCert(n, s) {
-      return await new Promise((i) => setTimeout(i, 200)), console.log("[DemoMock] CertAPI.skipCert:", n), t("info", "Certification skipped"), { success: !0 };
+      return await new Promise((a) => setTimeout(a, 200)), console.log("[DemoMock] CertAPI.skipCert:", n), t("info", "Certification skipped"), { success: !0 };
     },
     async delayCert(n, s) {
-      return await new Promise((i) => setTimeout(i, 200)), console.log("[DemoMock] CertAPI.delayCert:", n), t("info", "Certification delayed"), { success: !0 };
+      return await new Promise((a) => setTimeout(a, 200)), console.log("[DemoMock] CertAPI.delayCert:", n), t("info", "Certification delayed"), { success: !0 };
     },
     async saveClinicalReason(n, s) {
-      return await new Promise((i) => setTimeout(i, 200)), console.log("[DemoMock] CertAPI.saveClinicalReason:", n, s), { success: !0 };
+      return await new Promise((a) => setTimeout(a, 200)), console.log("[DemoMock] CertAPI.saveClinicalReason:", n, s), { success: !0 };
     },
     async unskipCert(n) {
       return await new Promise((s) => setTimeout(s, 200)), console.log("[DemoMock] CertAPI.unskipCert:", n), t("info", "Certification unskipped"), { success: !0 };
     },
     async fetchPractitioners(n, s) {
-      return await new Promise((i) => setTimeout(i, 200)), [
+      return await new Promise((a) => setTimeout(a, 200)), [
         { id: "pract-001", firstName: "Demo", lastName: "Provider", title: "MD", name: "Dr. Demo Provider", phone: "555-0101", npi: "1234567890" },
         { id: "pract-002", firstName: "Sample", lastName: "Doctor", title: "DO", name: "Dr. Sample Doctor", phone: "555-0102", npi: "0987654321" },
         { id: "pract-003", firstName: "Jane", lastName: "Specialist", title: "NP", name: "Jane Specialist, NP", phone: "555-0103", npi: "1122334455" }
@@ -4299,13 +5172,13 @@ Thank you for your prompt attention to this matter.`,
       };
     },
     async fetchDashboard(n, s) {
-      return await new Promise((i) => setTimeout(i, 200)), { pending: 4, overdue: 1, dueSoon: 2, signedLast7Days: 3 };
+      return await new Promise((a) => setTimeout(a, 200)), { pending: 4, overdue: 1, dueSoon: 2, signedLast7Days: 3 };
     },
-    async fetchCertifications(n, s, i) {
-      return await new Promise((a) => setTimeout(a, 200)), window.__DEMO_CERT_DATA || [];
+    async fetchCertifications(n, s, a) {
+      return await new Promise((i) => setTimeout(i, 200)), window.__DEMO_CERT_DATA || [];
     },
-    async fetchByPatient(n, s, i) {
-      return await new Promise((r) => setTimeout(r, 200)), (window.__DEMO_CERT_DATA || []).filter((r) => r.patientId === i);
+    async fetchByPatient(n, s, a) {
+      return await new Promise((r) => setTimeout(r, 200)), (window.__DEMO_CERT_DATA || []).filter((r) => r.patientId === a);
     },
     async fetchSendHistory(n) {
       return await new Promise((s) => setTimeout(s, 200)), [
@@ -4314,42 +5187,42 @@ Thank you for your prompt attention to this matter.`,
     }
   }, window.CONFIG = { DEV_MODE: !0 }, console.log("[DemoMock] Global mocks installed");
 }
-function Ui({ facilityName: t, orgSlug: n }) {
-  const [s, i] = v(null), [a, r] = v(!0), [o, c] = v(null), l = U(async () => {
+function Oi({ facilityName: t, orgSlug: n }) {
+  const [s, a] = y(null), [i, r] = y(!0), [o, c] = y(null), d = G(async () => {
     r(!0), c(null);
     try {
-      const d = new URLSearchParams({
+      const l = new URLSearchParams({
         facilityName: t,
         orgSlug: n,
         windowDays: "30"
-      }), u = await chrome.runtime.sendMessage({
+      }), p = await chrome.runtime.sendMessage({
         type: "API_REQUEST",
-        endpoint: `/api/extension/mds/dashboard?${d}`,
+        endpoint: `/api/extension/mds/dashboard?${l}`,
         options: { method: "GET" }
       });
-      if (!u.success)
-        throw new Error(u.error || "Failed to load MDS dashboard data");
-      i(u.data);
-    } catch (d) {
-      console.error("[MDSCommandCenter] Failed to fetch dashboard:", d), c(d.message || "Failed to load dashboard");
+      if (!p.success)
+        throw new Error(p.error || "Failed to load MDS dashboard data");
+      a(p.data);
+    } catch (l) {
+      console.error("[MDSCommandCenter] Failed to fetch dashboard:", l), c(l.message || "Failed to load dashboard");
     } finally {
       r(!1);
     }
   }, [t, n]);
   return F(() => {
-    l();
-  }, [l]), { data: s, loading: a, error: o, retry: l };
+    d();
+  }, [d]), { data: s, loading: i, error: o, retry: d };
 }
-function Gi({ facilityName: t, orgSlug: n, enabled: s = !0 }) {
-  const [i, a] = v(null), [r, o] = v(!1), [c, l] = v(null);
+function Bi({ facilityName: t, orgSlug: n, enabled: s = !0 }) {
+  const [a, i] = y(null), [r, o] = y(!1), [c, d] = y(null);
   return F(() => {
     if (!s || !t) {
-      a(null), l(null);
+      i(null), d(null);
       return;
     }
-    let d = !1;
-    o(!0), l(null);
-    async function u() {
+    let l = !1;
+    o(!0), d(null);
+    async function p() {
       try {
         if (!(await chrome.runtime.sendMessage({ type: "GET_AUTH_STATE" })).authenticated)
           throw new Error("Please log in to view the MDS schedule");
@@ -4363,144 +5236,144 @@ function Gi({ facilityName: t, orgSlug: n, enabled: s = !0 }) {
         });
         if (!g.success)
           throw new Error(g.error || "Failed to load MDS schedule");
-        d || a(g.data);
-      } catch (p) {
-        d || l(p.message || "Failed to load MDS schedule");
+        l || i(g.data);
+      } catch (u) {
+        l || d(u.message || "Failed to load MDS schedule");
       } finally {
-        d || o(!1);
+        l || o(!1);
       }
     }
-    return u(), () => {
-      d = !0;
+    return p(), () => {
+      l = !0;
     };
-  }, [t, n, s]), { data: i, loading: r, error: c };
+  }, [t, n, s]), { data: a, loading: r, error: c };
 }
-function Vi({ facilityName: t, orgSlug: n, enabled: s = !1 }) {
-  const [i, a] = v(null), [r, o] = v(!1), [c, l] = v(null), d = U(async () => {
+function Hi({ facilityName: t, orgSlug: n, enabled: s = !1 }) {
+  const [a, i] = y(null), [r, o] = y(!1), [c, d] = y(null), l = G(async () => {
     if (!(!s || !t || !n)) {
-      o(!0), l(null);
+      o(!0), d(null);
       try {
-        const u = new URLSearchParams({ facilityName: t, orgSlug: n }), p = await chrome.runtime.sendMessage({
+        const p = new URLSearchParams({ facilityName: t, orgSlug: n }), u = await chrome.runtime.sendMessage({
           type: "API_REQUEST",
-          endpoint: `/api/extension/certifications/dashboard?${u}`,
+          endpoint: `/api/extension/certifications/dashboard?${p}`,
           options: { method: "GET" }
         });
-        if (!p.success) {
-          a(null);
+        if (!u.success) {
+          i(null);
           return;
         }
-        a(p.data || null);
-      } catch (u) {
-        console.warn("[Certifications] Dashboard unavailable:", u), a(null);
+        i(u.data || null);
+      } catch (p) {
+        console.warn("[Certifications] Dashboard unavailable:", p), i(null);
       } finally {
         o(!1);
       }
     }
   }, [t, n, s]);
   return F(() => {
-    d();
-  }, [d]), { data: i, loading: r, error: c, retry: d };
+    l();
+  }, [l]), { data: a, loading: r, error: c, retry: l };
 }
-function Kt({ facilityName: t, orgSlug: n, status: s, patientId: i }) {
-  const [a, r] = v([]), [o, c] = v(!0), [l, d] = v(null), u = U(async () => {
+function rn({ facilityName: t, orgSlug: n, status: s, patientId: a }) {
+  const [i, r] = y([]), [o, c] = y(!0), [d, l] = y(null), p = G(async () => {
     if (!(!t || !n)) {
-      c(!0), d(null);
+      c(!0), l(null);
       try {
-        const p = new URLSearchParams({ facilityName: t, orgSlug: n });
-        s && p.set("status", s), i && p.set("patientId", i);
+        const u = new URLSearchParams({ facilityName: t, orgSlug: n });
+        s && u.set("status", s), a && u.set("patientId", a);
         const m = await chrome.runtime.sendMessage({
           type: "API_REQUEST",
-          endpoint: `/api/extension/certifications?${p}`,
+          endpoint: `/api/extension/certifications?${u}`,
           options: { method: "GET" }
         });
         if (!m.success)
           throw new Error(m.error || "Failed to load certifications");
         r(m.data?.certifications || []);
-      } catch (p) {
-        console.error("[Certifications] Failed to fetch certifications:", p), d(p.message || "Failed to load certifications");
+      } catch (u) {
+        console.error("[Certifications] Failed to fetch certifications:", u), l(u.message || "Failed to load certifications");
       } finally {
         c(!1);
       }
     }
-  }, [t, n, s, i]);
+  }, [t, n, s, a]);
   return F(() => {
-    u();
-  }, [u]), { certs: a, loading: o, error: l, refetch: u };
+    p();
+  }, [p]), { certs: i, loading: o, error: d, refetch: p };
 }
-function ct({
+function vt({
   options: t = [],
   value: n,
   onChange: s,
-  placeholder: i = "Select…",
-  size: a = "default",
+  placeholder: a = "Select…",
+  size: i = "default",
   searchable: r = !1,
   searchPlaceholder: o = "Search…",
   className: c = "",
-  ariaLabel: l,
-  align: d = "left"
+  ariaLabel: d,
+  align: l = "left"
 }) {
-  const [u, p] = v(!1), [m, h] = v(""), [_, g] = v(-1), f = ee(null), y = ee(null), w = ee(null), k = t.find((x) => x.value === n) || null;
+  const [p, u] = y(!1), [m, h] = y(""), [_, g] = y(-1), v = te(null), b = te(null), f = te(null), I = t.find((x) => x.value === n) || null;
   F(() => {
-    if (!u) return;
-    const x = (D) => {
-      f.current && !f.current.contains(D.target) && p(!1);
+    if (!p) return;
+    const x = (k) => {
+      v.current && !v.current.contains(k.target) && u(!1);
     };
     return document.addEventListener("mousedown", x, !0), () => document.removeEventListener("mousedown", x, !0);
-  }, [u]), F(() => {
-    u && (h(""), g(-1), r && y.current && requestAnimationFrame(() => y.current?.focus({ preventScroll: !0 })));
-  }, [u, r]);
-  const C = m.toLowerCase(), I = m ? t.filter(
-    (x) => x.label.toLowerCase().includes(C) || x.subtitle && x.subtitle.toLowerCase().includes(C) || x.badge && x.badge.toLowerCase().includes(C)
-  ) : t, P = U((x) => {
-    if (!u && (x.key === "Enter" || x.key === " " || x.key === "ArrowDown")) {
-      x.preventDefault(), p(!0);
+  }, [p]), F(() => {
+    p && (h(""), g(-1), r && b.current && requestAnimationFrame(() => b.current?.focus({ preventScroll: !0 })));
+  }, [p, r]);
+  const N = m.toLowerCase(), D = m ? t.filter(
+    (x) => x.label.toLowerCase().includes(N) || x.subtitle && x.subtitle.toLowerCase().includes(N) || x.badge && x.badge.toLowerCase().includes(N)
+  ) : t, T = G((x) => {
+    if (!p && (x.key === "Enter" || x.key === " " || x.key === "ArrowDown")) {
+      x.preventDefault(), u(!0);
       return;
     }
-    if (u)
+    if (p)
       switch (x.key) {
         case "ArrowDown":
-          x.preventDefault(), g((D) => Math.min(D + 1, I.length - 1));
+          x.preventDefault(), g((k) => Math.min(k + 1, D.length - 1));
           break;
         case "ArrowUp":
-          x.preventDefault(), g((D) => Math.max(D - 1, 0));
+          x.preventDefault(), g((k) => Math.max(k - 1, 0));
           break;
         case "Enter":
-          x.preventDefault(), _ >= 0 && I[_] && (s(I[_].value), p(!1));
+          x.preventDefault(), _ >= 0 && D[_] && (s(D[_].value), u(!1));
           break;
         case "Escape":
-          x.preventDefault(), p(!1);
+          x.preventDefault(), u(!1);
           break;
         case "Tab":
-          p(!1);
+          u(!1);
           break;
       }
-  }, [u, _, I, s]);
+  }, [p, _, D, s]);
   return F(() => {
-    if (_ < 0 || !w.current) return;
-    w.current.children[_]?.scrollIntoView({ block: "nearest" });
+    if (_ < 0 || !f.current) return;
+    f.current.children[_]?.scrollIntoView({ block: "nearest" });
   }, [_]), /* @__PURE__ */ e(
     "div",
     {
-      class: `ss__root${a === "compact" ? " ss__root--compact" : ""} ${c}`,
-      ref: f,
-      onKeyDown: P,
+      class: `ss__root${i === "compact" ? " ss__root--compact" : ""} ${c}`,
+      ref: v,
+      onKeyDown: T,
       children: [
         /* @__PURE__ */ e(
           "button",
           {
             type: "button",
-            class: `ss__trigger${u ? " ss__trigger--open" : ""}`,
-            onClick: () => p(!u),
+            class: `ss__trigger${p ? " ss__trigger--open" : ""}`,
+            onClick: () => u(!p),
             "aria-haspopup": "listbox",
-            "aria-expanded": u,
-            "aria-label": l,
+            "aria-expanded": p,
+            "aria-label": d,
             children: [
-              /* @__PURE__ */ e("span", { class: "ss__trigger-text", children: k ? k.label : /* @__PURE__ */ e("span", { class: "ss__placeholder", children: i }) }),
-              /* @__PURE__ */ e("svg", { class: `ss__chevron${u ? " ss__chevron--open" : ""}`, width: "12", height: "12", viewBox: "0 0 12 12", fill: "none", children: /* @__PURE__ */ e("path", { d: "M3 4.5L6 7.5L9 4.5", stroke: "currentColor", "stroke-width": "1.5", "stroke-linecap": "round", "stroke-linejoin": "round" }) })
+              /* @__PURE__ */ e("span", { class: "ss__trigger-text", children: I ? I.label : /* @__PURE__ */ e("span", { class: "ss__placeholder", children: a }) }),
+              /* @__PURE__ */ e("svg", { class: `ss__chevron${p ? " ss__chevron--open" : ""}`, width: "12", height: "12", viewBox: "0 0 12 12", fill: "none", children: /* @__PURE__ */ e("path", { d: "M3 4.5L6 7.5L9 4.5", stroke: "currentColor", "stroke-width": "1.5", "stroke-linecap": "round", "stroke-linejoin": "round" }) })
             ]
           }
         ),
-        u && /* @__PURE__ */ e("div", { class: `ss__dropdown${d === "right" ? " ss__dropdown--right" : ""}`, role: "listbox", children: [
+        p && /* @__PURE__ */ e("div", { class: `ss__dropdown${l === "right" ? " ss__dropdown--right" : ""}`, role: "listbox", children: [
           r && /* @__PURE__ */ e("div", { class: "ss__search-wrap", children: [
             /* @__PURE__ */ e("svg", { class: "ss__search-icon", width: "13", height: "13", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": "2", children: [
               /* @__PURE__ */ e("circle", { cx: "11", cy: "11", r: "8" }),
@@ -4509,7 +5382,7 @@ function ct({
             /* @__PURE__ */ e(
               "input",
               {
-                ref: y,
+                ref: b,
                 class: "ss__search",
                 type: "text",
                 placeholder: o,
@@ -4521,77 +5394,77 @@ function ct({
               }
             )
           ] }),
-          /* @__PURE__ */ e("div", { class: "ss__list", ref: w, children: [
-            I.map((x, D) => {
-              const N = x.value === n;
+          /* @__PURE__ */ e("div", { class: "ss__list", ref: f, children: [
+            D.map((x, k) => {
+              const S = x.value === n;
               return /* @__PURE__ */ e(
                 "button",
                 {
                   type: "button",
-                  class: `ss__option${N ? " ss__option--active" : ""}${D === _ ? " ss__option--hl" : ""}`,
+                  class: `ss__option${S ? " ss__option--active" : ""}${k === _ ? " ss__option--hl" : ""}`,
                   role: "option",
-                  "aria-selected": N,
+                  "aria-selected": S,
                   onClick: () => {
-                    s(x.value), p(!1);
+                    s(x.value), u(!1);
                   },
-                  onMouseEnter: () => g(D),
+                  onMouseEnter: () => g(k),
                   children: [
                     /* @__PURE__ */ e("div", { class: "ss__option-body", children: [
                       /* @__PURE__ */ e("span", { class: "ss__option-label", children: x.label }),
                       x.subtitle && /* @__PURE__ */ e("span", { class: "ss__option-sub", children: x.subtitle })
                     ] }),
                     x.badge && /* @__PURE__ */ e("span", { class: "ss__option-badge", children: x.badge }),
-                    N && /* @__PURE__ */ e("svg", { class: "ss__check", width: "14", height: "14", viewBox: "0 0 14 14", fill: "none", children: /* @__PURE__ */ e("path", { d: "M3 7L6 10L11 4", stroke: "currentColor", "stroke-width": "2", "stroke-linecap": "round", "stroke-linejoin": "round" }) })
+                    S && /* @__PURE__ */ e("svg", { class: "ss__check", width: "14", height: "14", viewBox: "0 0 14 14", fill: "none", children: /* @__PURE__ */ e("path", { d: "M3 7L6 10L11 4", stroke: "currentColor", "stroke-width": "2", "stroke-linecap": "round", "stroke-linejoin": "round" }) })
                   ]
                 },
                 x.value
               );
             }),
-            I.length === 0 && /* @__PURE__ */ e("div", { class: "ss__empty", children: "No matches" })
+            D.length === 0 && /* @__PURE__ */ e("div", { class: "ss__empty", children: "No matches" })
           ] })
         ] })
       ]
     }
   );
 }
-const Wi = [
+const Gi = [
   { value: "all", label: "All", color: null },
   { value: "overdue", label: "Overdue", color: "#ef4444" },
   { value: "urgent", label: "Urgent", color: "#f97316" },
   { value: "approaching", label: "Approaching", color: "#eab308" },
   { value: "on_track", label: "On Track", color: "#22c55e" }
 ];
-function St({ value: t, label: n, highlight: s }) {
+function Bt({ value: t, label: n, highlight: s }) {
   return /* @__PURE__ */ e("span", { class: `mds-cc__stat${s ? " mds-cc__stat--highlight" : ""}`, children: [
     /* @__PURE__ */ e("strong", { children: t }),
     " ",
     n
   ] });
 }
-function Qi({
+function Fi({
   summary: t,
   facilityName: n,
   onClose: s,
-  activeView: i,
-  onViewChange: a,
+  activeView: a,
+  onViewChange: i,
   viewMode: r,
   onViewModeChange: o,
   isFullscreen: c,
-  onToggleFullscreen: l,
-  queryCount: d,
-  certCount: u,
-  certsEnabled: p,
+  onToggleFullscreen: d,
+  queryCount: l,
+  certCount: p,
+  certsEnabled: u,
   complianceGaps: m,
   payerFilter: h,
   onPayerFilterChange: _,
   classFilter: g,
-  onClassFilterChange: f,
-  focusFilter: y,
-  onFocusFilterChange: w,
-  urgencyFilter: k,
-  onUrgencyFilterChange: C
+  onClassFilterChange: v,
+  focusFilter: b,
+  onFocusFilterChange: f,
+  urgencyFilter: I,
+  onUrgencyFilterChange: N
 }) {
-  const I = t?.total ?? 0, P = t?.urgent ?? 0, A = t?.hippsImprovements ?? t?.withHippsImprovements ?? 0, x = t?.pendingQueries ?? t?.pendingQueriesCount ?? 0, D = t?.totalRevenueOpportunityPerDay ?? 0;
+  const D = t?.total ?? 0, T = t?.urgent ?? 0, A = t?.hippsImprovements ?? t?.withHippsImprovements ?? 0, x = t?.pendingQueries ?? t?.pendingQueriesCount ?? 0, k = t?.totalRevenueOpportunityPerDay ?? 0;
   return /* @__PURE__ */ e("div", { class: "mds-cc__header", children: [
     /* @__PURE__ */ e("div", { class: "mds-cc__title-row", children: [
       /* @__PURE__ */ e("div", { class: "mds-cc__title-group", children: [
@@ -4599,14 +5472,14 @@ function Qi({
         n && /* @__PURE__ */ e("span", { class: "mds-cc__facility-name", children: n })
       ] }),
       /* @__PURE__ */ e("div", { class: "mds-cc__title-actions", children: [
-        l && /* @__PURE__ */ e(
+        d && /* @__PURE__ */ e(
           "button",
           {
             class: `mds-cc__icon-btn${c ? " mds-cc__icon-btn--exit" : ""}`,
-            onClick: l,
+            onClick: d,
             "aria-label": c ? "Exit fullscreen" : "Enter fullscreen",
             title: c ? "Exit fullscreen" : "Fullscreen",
-            children: c ? /* @__PURE__ */ e(J, { children: [
+            children: c ? /* @__PURE__ */ e(Q, { children: [
               /* @__PURE__ */ e("svg", { width: "16", height: "16", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": "2", children: [
                 /* @__PURE__ */ e("path", { d: "M8 3v3a2 2 0 0 1-2 2H3" }),
                 /* @__PURE__ */ e("path", { d: "M21 8h-3a2 2 0 0 1-2-2V3" }),
@@ -4632,16 +5505,16 @@ function Qi({
         ] }) })
       ] })
     ] }),
-    i !== "planner" && /* @__PURE__ */ e("div", { class: "mds-cc__stats-strip", children: [
-      /* @__PURE__ */ e(St, { value: I, label: "assessments" }),
+    a !== "planner" && /* @__PURE__ */ e("div", { class: "mds-cc__stats-strip", children: [
+      /* @__PURE__ */ e(Bt, { value: D, label: "assessments" }),
       /* @__PURE__ */ e("span", { class: "mds-cc__stats-sep", children: "|" }),
-      /* @__PURE__ */ e(St, { value: P, label: "urgent", highlight: P > 0 }),
-      D > 0 && /* @__PURE__ */ e(J, { children: [
+      /* @__PURE__ */ e(Bt, { value: T, label: "urgent", highlight: T > 0 }),
+      k > 0 && /* @__PURE__ */ e(Q, { children: [
         /* @__PURE__ */ e("span", { class: "mds-cc__stats-sep", children: "|" }),
         /* @__PURE__ */ e("span", { class: "mds-cc__stat mds-cc__stat--revenue", children: [
           /* @__PURE__ */ e("strong", { children: [
             "$",
-            Math.round(D),
+            Math.round(k),
             "/day available"
           ] }),
           A > 0 && /* @__PURE__ */ e("span", { class: "mds-cc__stat-sub", children: [
@@ -4652,52 +5525,52 @@ function Qi({
         ] })
       ] }),
       /* @__PURE__ */ e("span", { class: "mds-cc__stats-sep", children: "|" }),
-      /* @__PURE__ */ e(St, { value: x, label: "pending queries", highlight: x > 0 })
+      /* @__PURE__ */ e(Bt, { value: x, label: "pending queries", highlight: x > 0 })
     ] }),
     /* @__PURE__ */ e("div", { class: "mds-cc__view-switcher", children: [
       /* @__PURE__ */ e(
         "button",
         {
-          class: `mds-cc__view-tab${i === "planner" ? " mds-cc__view-tab--active" : ""}`,
-          onClick: () => a("planner"),
+          class: `mds-cc__view-tab${a === "planner" ? " mds-cc__view-tab--active" : ""}`,
+          onClick: () => i("planner"),
           children: "Planner"
         }
       ),
       /* @__PURE__ */ e(
         "button",
         {
-          class: `mds-cc__view-tab${i === "assessments" ? " mds-cc__view-tab--active" : ""}`,
-          onClick: () => a("assessments"),
+          class: `mds-cc__view-tab${a === "assessments" ? " mds-cc__view-tab--active" : ""}`,
+          onClick: () => i("assessments"),
           children: "Assessments"
         }
       ),
       /* @__PURE__ */ e(
         "button",
         {
-          class: `mds-cc__view-tab${i === "queries" ? " mds-cc__view-tab--active" : ""}`,
-          onClick: () => a("queries"),
+          class: `mds-cc__view-tab${a === "queries" ? " mds-cc__view-tab--active" : ""}`,
+          onClick: () => i("queries"),
           children: [
             "Queries",
-            d > 0 && /* @__PURE__ */ e("span", { class: "mds-cc__view-tab-badge", children: d })
+            l > 0 && /* @__PURE__ */ e("span", { class: "mds-cc__view-tab-badge", children: l })
           ]
         }
       ),
-      p && /* @__PURE__ */ e(
+      u && /* @__PURE__ */ e(
         "button",
         {
-          class: `mds-cc__view-tab${i === "certs" ? " mds-cc__view-tab--active" : ""}`,
-          onClick: () => a("certs"),
+          class: `mds-cc__view-tab${a === "certs" ? " mds-cc__view-tab--active" : ""}`,
+          onClick: () => i("certs"),
           children: [
             "Certs",
-            u > 0 && /* @__PURE__ */ e("span", { class: "mds-cc__view-tab-badge", children: u })
+            p > 0 && /* @__PURE__ */ e("span", { class: "mds-cc__view-tab-badge", children: p })
           ]
         }
       ),
       /* @__PURE__ */ e(
         "button",
         {
-          class: `mds-cc__view-tab${i === "compliance" ? " mds-cc__view-tab--active" : ""}`,
-          onClick: () => a("compliance"),
+          class: `mds-cc__view-tab${a === "compliance" ? " mds-cc__view-tab--active" : ""}`,
+          onClick: () => i("compliance"),
           children: [
             "Care Plan",
             m > 0 && /* @__PURE__ */ e("span", { class: "mds-cc__view-tab-badge mds-cc__view-tab-badge--amber", children: m })
@@ -4705,10 +5578,10 @@ function Qi({
         }
       )
     ] }),
-    i === "assessments" && /* @__PURE__ */ e("div", { class: "mds-cc__filter-row", children: [
-      r !== "calendar" && /* @__PURE__ */ e(J, { children: [
+    a === "assessments" && /* @__PURE__ */ e("div", { class: "mds-cc__filter-row", children: [
+      r !== "calendar" && /* @__PURE__ */ e(Q, { children: [
         /* @__PURE__ */ e(
-          ct,
+          vt,
           {
             size: "compact",
             options: [
@@ -4718,12 +5591,12 @@ function Qi({
               { value: "end_of_stay", label: "End of Stay" }
             ],
             value: g,
-            onChange: f,
+            onChange: v,
             ariaLabel: "Assessment class filter"
           }
         ),
         /* @__PURE__ */ e(
-          ct,
+          vt,
           {
             size: "compact",
             options: [
@@ -4738,7 +5611,7 @@ function Qi({
           }
         ),
         /* @__PURE__ */ e(
-          ct,
+          vt,
           {
             size: "compact",
             options: [
@@ -4746,8 +5619,8 @@ function Qi({
               { value: "revenue", label: "Revenue Opportunities" },
               { value: "issues", label: "Has Issues" }
             ],
-            value: y,
-            onChange: w,
+            value: b,
+            onChange: f,
             ariaLabel: "Focus filter"
           }
         )
@@ -4793,28 +5666,28 @@ function Qi({
         )
       ] })
     ] }),
-    i === "assessments" && r !== "calendar" && C && /* @__PURE__ */ e("div", { class: "mds-cc__urgency-pills", children: [
-      Wi.map((N) => {
-        const S = k === N.value;
+    a === "assessments" && r !== "calendar" && N && /* @__PURE__ */ e("div", { class: "mds-cc__urgency-pills", children: [
+      Gi.map((S) => {
+        const w = I === S.value;
         return /* @__PURE__ */ e(
           "button",
           {
-            class: `mds-cc__urgency-pill${S ? " mds-cc__urgency-pill--active" : ""}`,
-            style: S && N.color ? { background: N.color, borderColor: N.color, color: "#fff" } : void 0,
-            onClick: () => C(N.value),
+            class: `mds-cc__urgency-pill${w ? " mds-cc__urgency-pill--active" : ""}`,
+            style: w && S.color ? { background: S.color, borderColor: S.color, color: "#fff" } : void 0,
+            onClick: () => N(S.value),
             children: [
-              N.color && /* @__PURE__ */ e("span", { class: "mds-cc__urgency-pill-dot", style: { background: S ? "#fff" : N.color } }),
-              N.label
+              S.color && /* @__PURE__ */ e("span", { class: "mds-cc__urgency-pill-dot", style: { background: w ? "#fff" : S.color } }),
+              S.label
             ]
           },
-          N.value
+          S.value
         );
       }),
-      w && /* @__PURE__ */ e(
+      f && /* @__PURE__ */ e(
         "button",
         {
-          class: `mds-cc__urgency-pill mds-cc__revenue-pill${y === "revenue" ? " mds-cc__revenue-pill--active" : ""}`,
-          onClick: () => w(y === "revenue" ? "all" : "revenue"),
+          class: `mds-cc__urgency-pill mds-cc__revenue-pill${b === "revenue" ? " mds-cc__revenue-pill--active" : ""}`,
+          onClick: () => f(b === "revenue" ? "all" : "revenue"),
           title: "Show only assessments with revenue opportunities",
           children: [
             /* @__PURE__ */ e("span", { class: "mds-cc__revenue-pill-icon", children: "$" }),
@@ -4825,29 +5698,29 @@ function Qi({
     ] })
   ] });
 }
-const zi = {
+const Ui = {
   initial: { label: "Initial", cls: "cert__type-badge--initial" },
   day_14_recert: { label: "Day 14", cls: "cert__type-badge--recert" },
   day_30_recert: { label: "Day 30", cls: "cert__type-badge--recert" }
 };
-function pn({ type: t }) {
-  const n = zi[t];
+function Dn({ type: t }) {
+  const n = Ui[t];
   return n ? /* @__PURE__ */ e("span", { class: `cert__type-badge ${n.cls}`, children: n.label }) : null;
 }
-function ji(t) {
+function Vi(t) {
   if (!t) return null;
   const n = new Date(t), s = /* @__PURE__ */ new Date();
   return n.setHours(0, 0, 0, 0), s.setHours(0, 0, 0, 0), Math.floor((n - s) / 864e5);
 }
-function Ki(t) {
+function zi(t) {
   if (!t) return "";
   const n = new Date(t);
   return isNaN(n) ? t : n.toLocaleDateString("en-US", { month: "short", day: "numeric" });
 }
-function Us({ status: t, isDelayed: n, dueDate: s, signedAt: i }) {
-  const a = ji(s), r = a !== null && a < 0, o = a !== null && a >= 0 && a <= 3;
+function fa({ status: t, isDelayed: n, dueDate: s, signedAt: a }) {
+  const i = Vi(s), r = i !== null && i < 0, o = i !== null && i >= 0 && i <= 3;
   if ((n || t === "delayed") && r) {
-    const c = Math.abs(a);
+    const c = Math.abs(i);
     return /* @__PURE__ */ e("span", { class: "cert__status-badge cert__status-badge--overdue", children: [
       c,
       " DAY",
@@ -4856,7 +5729,7 @@ function Us({ status: t, isDelayed: n, dueDate: s, signedAt: i }) {
     ] });
   }
   if (r && (t === "pending" || t === "sent")) {
-    const c = Math.abs(a);
+    const c = Math.abs(i);
     return /* @__PURE__ */ e("span", { class: "cert__status-badge cert__status-badge--overdue", children: [
       c,
       " DAY",
@@ -4865,79 +5738,79 @@ function Us({ status: t, isDelayed: n, dueDate: s, signedAt: i }) {
     ] });
   }
   if (o && t !== "signed" && t !== "skipped") {
-    const c = a === 0 ? "DUE TODAY" : `DUE IN ${a} DAY${a !== 1 ? "S" : ""}`;
+    const c = i === 0 ? "DUE TODAY" : `DUE IN ${i} DAY${i !== 1 ? "S" : ""}`;
     return /* @__PURE__ */ e("span", { class: "cert__status-badge cert__status-badge--due-soon", children: c });
   }
   return t === "sent" ? /* @__PURE__ */ e("span", { class: "cert__status-badge cert__status-badge--awaiting", children: "AWAITING SIGNATURE" }) : t === "signed" ? /* @__PURE__ */ e("span", { class: "cert__status-badge cert__status-badge--signed", children: [
     "Signed ",
-    Ki(i)
+    zi(a)
   ] }) : t === "delayed" || n ? /* @__PURE__ */ e("span", { class: "cert__status-badge cert__status-badge--delayed", children: "DELAYED" }) : t === "skipped" ? /* @__PURE__ */ e("span", { class: "cert__status-badge cert__status-badge--skipped", children: "SKIPPED" }) : /* @__PURE__ */ e("span", { class: "cert__status-badge cert__status-badge--pending", children: "PENDING" });
 }
-function Ji({ payerType: t }) {
+function Wi({ payerType: t }) {
   return t !== "managed_care" ? null : /* @__PURE__ */ e("span", { class: "cert__ma-badge", children: "MA" });
 }
-function Yi(t) {
+function Qi(t) {
   if (!t) return "";
   const n = new Date(t);
   return isNaN(n) ? t : n.toLocaleDateString("en-US", { month: "short", day: "numeric" });
 }
-function Zi(t) {
+function ji(t) {
   if (!t) return "";
   const n = new Date(t);
   return isNaN(n) ? t : n.toLocaleDateString("en-US", { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" });
 }
-function Gs(t) {
+function ya(t) {
   if (!t) return null;
   const n = new Date(t), s = /* @__PURE__ */ new Date();
   return n.setHours(0, 0, 0, 0), s.setHours(0, 0, 0, 0), Math.floor((n - s) / 864e5);
 }
-function Xi(t) {
-  const n = Gs(t.dueDate), s = n !== null && n < 0, i = t.sends?.length > 0;
-  return t.status === "skipped" ? { label: "Unskip", variant: "ghost", action: "unskip" } : t.status === "signed" ? null : s ? { label: i ? "Resend" : "Send", variant: "destructive", action: "send" } : t.status === "delayed" ? { label: i ? "Resend" : "Send", variant: "destructive", action: "send" } : i ? { label: "Resend", variant: "outline", action: "send" } : { label: "Send", variant: "primary", action: "send" };
+function Ki(t) {
+  const n = ya(t.dueDate), s = n !== null && n < 0, a = t.sends?.length > 0;
+  return t.status === "skipped" ? { label: "Unskip", variant: "ghost", action: "unskip" } : t.status === "signed" ? null : s ? { label: a ? "Resend" : "Send", variant: "destructive", action: "send" } : t.status === "delayed" ? { label: a ? "Resend" : "Send", variant: "destructive", action: "send" } : a ? { label: "Resend", variant: "outline", action: "send" } : { label: "Send", variant: "primary", action: "send" };
 }
-function ea({ sends: t }) {
+function Yi({ sends: t }) {
   if (!t || t.length === 0) return null;
   const n = t.length === 1 ? `Sent to ${t[0].practitionerName}` : `Sent ${t.length} times`;
   return /* @__PURE__ */ e("span", { class: "cert__row-meta cert__row-meta--link cert__sends-summary", children: n });
 }
-function ta({ sends: t }) {
+function Ji({ sends: t }) {
   return /* @__PURE__ */ e("div", { class: "cert__sends-detail", children: t.map((n, s) => /* @__PURE__ */ e("div", { class: "cert__sends-detail-row", children: [
     /* @__PURE__ */ e("span", { class: "cert__sends-detail-name", children: [
       n.practitionerName,
       n.practitionerTitle ? `, ${n.practitionerTitle}` : ""
     ] }),
-    /* @__PURE__ */ e("span", { class: "cert__sends-detail-date", children: Zi(n.sentAt) }),
+    /* @__PURE__ */ e("span", { class: "cert__sends-detail-date", children: ji(n.sentAt) }),
     n.smsStatus && /* @__PURE__ */ e("span", { class: `cert__sends-detail-status cert__sends-detail-status--${n.smsStatus}`, children: n.smsStatus })
   ] }, s)) });
 }
-function Rn({ cert: t, compact: n, onSend: s, onSkip: i, onUnskip: a, onDelay: r, onEditReason: o, onViewPractitioner: c }) {
-  const [l, d] = v(!1), [u, p] = v(!1), m = ee(null);
+function Zn({ cert: t, compact: n, onSend: s, onSkip: a, onUnskip: i, onDelay: r, onEditReason: o, onViewPractitioner: c }) {
+  const [d, l] = y(!1), [p, u] = y(!1), m = te(null);
   F(() => {
-    if (!l) return;
-    const D = (N) => {
-      m.current && !m.current.contains(N.target) && d(!1);
+    if (!d) return;
+    const k = (S) => {
+      m.current && !m.current.contains(S.target) && l(!1);
     };
-    return document.addEventListener("click", D, !0), () => document.removeEventListener("click", D, !0);
-  }, [l]);
-  const h = Xi(t), _ = t.type === "day_14_recert" || t.type === "day_30_recert", g = t.status !== "skipped" && t.status !== "signed", f = t.status === "pending" && !t.isDelayed && t.status !== "signed", y = _ && t.status !== "signed", w = t.sends?.length > 0, k = Gs(t.dueDate), C = k !== null && k < 0, I = k !== null && k >= 0 && k <= 3;
-  let P = "";
-  t.status === "signed" ? P = " cert__row--signed" : t.status === "skipped" ? P = " cert__row--skipped" : C || t.isDelayed ? P = " cert__row--overdue" : I && (P = " cert__row--due-soon");
-  function A(D) {
-    D.stopPropagation(), h && (h.action === "send" && s?.(t), h.action === "unskip" && a?.(t));
+    return document.addEventListener("click", k, !0), () => document.removeEventListener("click", k, !0);
+  }, [d]);
+  const h = Ki(t), _ = t.type === "day_14_recert" || t.type === "day_30_recert", g = t.status !== "skipped" && t.status !== "signed", v = t.status === "pending" && !t.isDelayed && t.status !== "signed", b = _ && t.status !== "signed", f = t.sends?.length > 0, I = ya(t.dueDate), N = I !== null && I < 0, D = I !== null && I >= 0 && I <= 3;
+  let T = "";
+  t.status === "signed" ? T = " cert__row--signed" : t.status === "skipped" ? T = " cert__row--skipped" : N || t.isDelayed ? T = " cert__row--overdue" : D && (T = " cert__row--due-soon");
+  function A(k) {
+    k.stopPropagation(), h && (h.action === "send" && s?.(t), h.action === "unskip" && i?.(t));
   }
-  function x(D) {
-    d(!1), D === "skip" && i?.(t), D === "delay" && r?.(t), D === "editReason" && o?.(t);
+  function x(k) {
+    l(!1), k === "skip" && a?.(t), k === "delay" && r?.(t), k === "editReason" && o?.(t);
   }
-  return /* @__PURE__ */ e("div", { class: `cert__row${P}`, children: [
+  return /* @__PURE__ */ e("div", { class: `cert__row${T}`, children: [
     /* @__PURE__ */ e("div", { class: "cert__row-top", children: [
       /* @__PURE__ */ e("div", { class: "cert__row-left", children: [
-        /* @__PURE__ */ e(pn, { type: t.type }),
+        /* @__PURE__ */ e(Dn, { type: t.type }),
         !n && /* @__PURE__ */ e("span", { class: "cert__row-patient", children: t.patientName }),
-        !n && /* @__PURE__ */ e(Ji, { payerType: t.payerType })
+        !n && /* @__PURE__ */ e(Wi, { payerType: t.payerType })
       ] }),
       /* @__PURE__ */ e("div", { class: "cert__row-right", children: [
         /* @__PURE__ */ e(
-          Us,
+          fa,
           {
             status: t.status,
             isDelayed: t.isDelayed,
@@ -4953,13 +5826,13 @@ function Rn({ cert: t, compact: n, onSend: s, onSkip: i, onUnskip: a, onDelay: r
             children: h.label
           }
         ),
-        (g || f || y) && /* @__PURE__ */ e("div", { class: "cert__row-menu-container", ref: m, children: [
+        (g || v || b) && /* @__PURE__ */ e("div", { class: "cert__row-menu-container", ref: m, children: [
           /* @__PURE__ */ e(
             "button",
             {
               class: "cert__row-menu-btn",
-              onClick: (D) => {
-                D.stopPropagation(), d(!l);
+              onClick: (k) => {
+                k.stopPropagation(), l(!d);
               },
               "aria-label": "More actions",
               children: /* @__PURE__ */ e("svg", { width: "16", height: "16", viewBox: "0 0 16 16", fill: "currentColor", children: [
@@ -4969,10 +5842,10 @@ function Rn({ cert: t, compact: n, onSend: s, onSkip: i, onUnskip: a, onDelay: r
               ] })
             }
           ),
-          l && /* @__PURE__ */ e("div", { class: "cert__row-menu", children: [
+          d && /* @__PURE__ */ e("div", { class: "cert__row-menu", children: [
             g && /* @__PURE__ */ e("button", { class: "cert__row-menu-item", onClick: () => x("skip"), children: "Skip Certification" }),
-            f && /* @__PURE__ */ e("button", { class: "cert__row-menu-item", onClick: () => x("delay"), children: "Mark as Delayed" }),
-            y && /* @__PURE__ */ e("button", { class: "cert__row-menu-item", onClick: () => x("editReason"), children: "Edit Clinical Reason" })
+            v && /* @__PURE__ */ e("button", { class: "cert__row-menu-item", onClick: () => x("delay"), children: "Mark as Delayed" }),
+            b && /* @__PURE__ */ e("button", { class: "cert__row-menu-item", onClick: () => x("editReason"), children: "Edit Clinical Reason" })
           ] })
         ] })
       ] })
@@ -4980,21 +5853,21 @@ function Rn({ cert: t, compact: n, onSend: s, onSkip: i, onUnskip: a, onDelay: r
     /* @__PURE__ */ e("div", { class: "cert__row-bottom", children: [
       t.dueDate && /* @__PURE__ */ e("span", { class: "cert__row-meta", children: [
         "Due ",
-        Yi(t.dueDate)
+        Qi(t.dueDate)
       ] }),
       !n && t.currentMedicareDay != null && /* @__PURE__ */ e("span", { class: "cert__row-meta", children: [
         "Medicare Day ",
         t.currentMedicareDay
       ] }),
-      w && /* @__PURE__ */ e("span", { onClick: (D) => {
-        D.stopPropagation(), p(!u);
-      }, children: /* @__PURE__ */ e(ea, { sends: t.sends }) }),
+      f && /* @__PURE__ */ e("span", { onClick: (k) => {
+        k.stopPropagation(), u(!p);
+      }, children: /* @__PURE__ */ e(Yi, { sends: t.sends }) }),
       t.signedByName && /* @__PURE__ */ e(
         "span",
         {
           class: `cert__row-meta${t.signedByPractitionerId && c ? " cert__row-meta--link" : ""}`,
-          onClick: t.signedByPractitionerId && c ? (D) => {
-            D.stopPropagation(), c(t.signedByPractitionerId);
+          onClick: t.signedByPractitionerId && c ? (k) => {
+            k.stopPropagation(), c(t.signedByPractitionerId);
           } : void 0,
           children: [
             t.signedByName,
@@ -5003,128 +5876,128 @@ function Rn({ cert: t, compact: n, onSend: s, onSkip: i, onUnskip: a, onDelay: r
         }
       )
     ] }),
-    u && w && /* @__PURE__ */ e(ta, { sends: t.sends })
+    p && f && /* @__PURE__ */ e(Ji, { sends: t.sends })
   ] });
 }
-function na({ payerType: t }) {
+function Zi({ payerType: t }) {
   const n = t === "managed_care";
   return /* @__PURE__ */ e("span", { class: `cert__stay-type-badge${n ? " cert__stay-type-badge--managed" : ""}`, children: n ? "Managed" : "Med A" });
 }
-function sa(t) {
+function Xi(t) {
   if (!t) return "";
   const n = new Date(t);
   return isNaN(n) ? t : n.toLocaleDateString("en-US", { month: "short", day: "numeric" });
 }
-function Jt(t) {
+function on(t) {
   if (!t) return null;
   const n = new Date(t), s = /* @__PURE__ */ new Date();
   return n.setHours(0, 0, 0, 0), s.setHours(0, 0, 0, 0), Math.floor((n - s) / 864e5);
 }
-const ia = ["initial", "day_14_recert", "day_30_recert"], aa = { initial: "I", day_14_recert: "14", day_30_recert: "30" };
-function ra(t) {
+const er = ["initial", "day_14_recert", "day_30_recert"], tr = { initial: "I", day_14_recert: "14", day_30_recert: "30" };
+function nr(t) {
   if (!t) return "empty";
-  const n = Jt(t.dueDate), s = n !== null && n < 0;
+  const n = on(t.dueDate), s = n !== null && n < 0;
   return t.status === "signed" ? "signed" : t.status === "skipped" ? "skipped" : s || t.isDelayed ? "overdue" : t.status === "sent" ? "sent" : n !== null && n >= 0 && n <= 3 ? "due-soon" : "pending";
 }
-function oa({ allCerts: t }) {
+function sr({ allCerts: t }) {
   const n = {};
   for (const s of t)
     n[s.type] = s;
-  return /* @__PURE__ */ e("div", { class: "cert__chain-indicator", children: ia.map((s, i) => {
-    const a = n[s], r = ra(a);
+  return /* @__PURE__ */ e("div", { class: "cert__chain-indicator", children: er.map((s, a) => {
+    const i = n[s], r = nr(i);
     return /* @__PURE__ */ e("span", { class: "cert__chain-item", children: [
-      i > 0 && /* @__PURE__ */ e("span", { class: "cert__chain-line" }),
+      a > 0 && /* @__PURE__ */ e("span", { class: "cert__chain-line" }),
       /* @__PURE__ */ e("span", { class: `cert__chain-dot cert__chain-dot--${r}` }),
-      /* @__PURE__ */ e("span", { class: `cert__chain-label cert__chain-label--${r}`, children: aa[s] })
+      /* @__PURE__ */ e("span", { class: `cert__chain-label cert__chain-label--${r}`, children: tr[s] })
     ] }, s);
   }) });
 }
-function ca({
+function ar({
   stayId: t,
   displayCerts: n,
   historyCerts: s,
-  allCerts: i,
-  onSend: a,
+  allCerts: a,
+  onSend: i,
   onSkip: r,
   onDelay: o,
   onUnskip: c,
-  onEditReason: l,
-  onViewPractitioner: d
+  onEditReason: d,
+  onViewPractitioner: l
 }) {
-  const [u, p] = v(!1), m = i[0], h = m.patientName, _ = m.payerType, g = m.currentMedicareDay, f = m.partAStartDate, y = n.some((C) => {
-    const I = Jt(C.dueDate);
-    return I !== null && I < 0 || C.isDelayed;
-  }), w = !y && n.some((C) => {
-    const I = Jt(C.dueDate);
-    return I !== null && I >= 0 && I <= 3;
+  const [p, u] = y(!1), m = a[0], h = m.patientName, _ = m.payerType, g = m.currentMedicareDay, v = m.partAStartDate, b = n.some((N) => {
+    const D = on(N.dueDate);
+    return D !== null && D < 0 || N.isDelayed;
+  }), f = !b && n.some((N) => {
+    const D = on(N.dueDate);
+    return D !== null && D >= 0 && D <= 3;
   });
-  let k = "";
-  return y ? k = " cert__stay-card--overdue" : w && (k = " cert__stay-card--due-soon"), /* @__PURE__ */ e("div", { class: `cert__stay-card${k}`, children: [
+  let I = "";
+  return b ? I = " cert__stay-card--overdue" : f && (I = " cert__stay-card--due-soon"), /* @__PURE__ */ e("div", { class: `cert__stay-card${I}`, children: [
     /* @__PURE__ */ e("div", { class: "cert__stay-header", children: [
       /* @__PURE__ */ e("div", { class: "cert__stay-header-left", children: [
         /* @__PURE__ */ e("span", { class: "cert__stay-patient", children: h }),
-        /* @__PURE__ */ e(na, { payerType: _ }),
-        /* @__PURE__ */ e(oa, { allCerts: i })
+        /* @__PURE__ */ e(Zi, { payerType: _ }),
+        /* @__PURE__ */ e(sr, { allCerts: a })
       ] }),
       /* @__PURE__ */ e("div", { class: "cert__stay-header-right", children: [
         g != null && /* @__PURE__ */ e("span", { class: "cert__stay-meta", children: [
           "Day ",
           g
         ] }),
-        f && /* @__PURE__ */ e("span", { class: "cert__stay-meta", children: sa(f) })
+        v && /* @__PURE__ */ e("span", { class: "cert__stay-meta", children: Xi(v) })
       ] })
     ] }),
-    /* @__PURE__ */ e("div", { class: "cert__stay-certs", children: n.map((C) => /* @__PURE__ */ e(
-      Rn,
+    /* @__PURE__ */ e("div", { class: "cert__stay-certs", children: n.map((N) => /* @__PURE__ */ e(
+      Zn,
       {
-        cert: C,
+        cert: N,
         compact: !0,
-        onSend: a,
+        onSend: i,
         onSkip: r,
         onDelay: o,
         onUnskip: c,
-        onEditReason: l,
-        onViewPractitioner: d
+        onEditReason: d,
+        onViewPractitioner: l
       },
-      C.id
+      N.id
     )) }),
     s.length > 0 && /* @__PURE__ */ e("div", { class: "cert__stay-history", children: [
       /* @__PURE__ */ e(
         "button",
         {
           class: "cert__stay-history-toggle",
-          onClick: () => p(!u),
+          onClick: () => u(!p),
           children: [
-            /* @__PURE__ */ e("span", { class: "cert__stay-history-icon", children: u ? "▼" : "▶" }),
+            /* @__PURE__ */ e("span", { class: "cert__stay-history-icon", children: p ? "▼" : "▶" }),
             s.length,
             " previous certification",
             s.length !== 1 ? "s" : ""
           ]
         }
       ),
-      u && /* @__PURE__ */ e("div", { class: "cert__stay-history-list", children: s.map((C) => /* @__PURE__ */ e(
-        Rn,
+      p && /* @__PURE__ */ e("div", { class: "cert__stay-history-list", children: s.map((N) => /* @__PURE__ */ e(
+        Zn,
         {
-          cert: C,
+          cert: N,
           compact: !0,
-          onSend: a,
+          onSend: i,
           onSkip: r,
           onDelay: o,
           onUnskip: c,
-          onEditReason: l,
-          onViewPractitioner: d
+          onEditReason: d,
+          onViewPractitioner: l
         },
-        C.id
+        N.id
       )) })
     ] })
   ] });
 }
-function wt({ isOpen: t, onClose: n, title: s, subtitle: i, children: a, actions: r = [] }) {
-  const o = ee(null);
+function Mt({ isOpen: t, onClose: n, title: s, subtitle: a, children: i, actions: r = [] }) {
+  const o = te(null);
   return F(() => {
     if (!t) return;
-    const c = (l) => {
-      l.key === "Escape" && n();
+    const c = (d) => {
+      d.key === "Escape" && n();
     };
     return document.addEventListener("keydown", c), document.body.style.overflow = "hidden", () => {
       document.removeEventListener("keydown", c), document.body.style.overflow = "";
@@ -5141,12 +6014,12 @@ function wt({ isOpen: t, onClose: n, title: s, subtitle: i, children: a, actions
         /* @__PURE__ */ e("div", { class: "cm__header", children: [
           /* @__PURE__ */ e("div", { class: "cm__header-text", children: [
             /* @__PURE__ */ e("h2", { class: "cm__title", children: s }),
-            i && /* @__PURE__ */ e("span", { class: "cm__subtitle", children: i })
+            a && /* @__PURE__ */ e("span", { class: "cm__subtitle", children: a })
           ] }),
           /* @__PURE__ */ e("button", { class: "cm__close", onClick: n, "aria-label": "Close", children: /* @__PURE__ */ e("svg", { width: "14", height: "14", viewBox: "0 0 14 14", fill: "none", stroke: "currentColor", "stroke-width": "2", "stroke-linecap": "round", children: /* @__PURE__ */ e("path", { d: "M1 1l12 12M13 1L1 13" }) }) })
         ] }),
-        /* @__PURE__ */ e("div", { class: "cm__body", children: a }),
-        r.length > 0 && /* @__PURE__ */ e("div", { class: "cm__footer", children: r.map((c, l) => /* @__PURE__ */ e(
+        /* @__PURE__ */ e("div", { class: "cm__body", children: i }),
+        r.length > 0 && /* @__PURE__ */ e("div", { class: "cm__footer", children: r.map((c, d) => /* @__PURE__ */ e(
           "button",
           {
             class: `cm__btn cm__btn--${c.variant || "secondary"}`,
@@ -5154,32 +6027,32 @@ function wt({ isOpen: t, onClose: n, title: s, subtitle: i, children: a, actions
             disabled: c.disabled,
             children: c.label
           },
-          l
+          d
         )) })
       ] })
     }
   ) : null;
 }
-const da = [
+const ir = [
   { value: "home_health", label: "Home Health Agency" },
   { value: "facility_care", label: "Facility Care" },
   { value: "other", label: "Other" }
 ];
-function Vs(t) {
+function va(t) {
   return t ? t === "Home Health Agency" ? { option: "home_health", otherText: "" } : t === "Facility Care" ? { option: "facility_care", otherText: "" } : t.startsWith("Other: ") ? { option: "other", otherText: t.slice(7) } : { option: "other", otherText: t } : { option: "", otherText: "" };
 }
-function Ws(t, n) {
+function ba(t, n) {
   return t === "home_health" ? "Home Health Agency" : t === "facility_care" ? "Facility Care" : t === "other" ? `Other: ${n}` : "";
 }
-function Yt(t, n) {
+function cn(t, n) {
   return t ? t === "other" ? n.trim().length > 0 : !0 : !1;
 }
-function Qs({ option: t, otherText: n, onOptionChange: s, onOtherTextChange: i }) {
+function wa({ option: t, otherText: n, onOptionChange: s, onOtherTextChange: a }) {
   return /* @__PURE__ */ e("div", { class: "cm-discharge", children: [
-    da.map((a) => /* @__PURE__ */ e(
+    ir.map((i) => /* @__PURE__ */ e(
       "label",
       {
-        class: `cm-discharge__option${t === a.value ? " cm-discharge__option--selected" : ""}`,
+        class: `cm-discharge__option${t === i.value ? " cm-discharge__option--selected" : ""}`,
         children: [
           /* @__PURE__ */ e(
             "input",
@@ -5187,16 +6060,16 @@ function Qs({ option: t, otherText: n, onOptionChange: s, onOtherTextChange: i }
               type: "radio",
               class: "cm-discharge__radio",
               name: "dischargePlan",
-              value: a.value,
-              checked: t === a.value,
-              onChange: () => s(a.value)
+              value: i.value,
+              checked: t === i.value,
+              onChange: () => s(i.value)
             }
           ),
           /* @__PURE__ */ e("span", { class: "cm-discharge__dot" }),
-          /* @__PURE__ */ e("span", { class: "cm-discharge__label", children: a.label })
+          /* @__PURE__ */ e("span", { class: "cm-discharge__label", children: i.label })
         ]
       },
-      a.value
+      i.value
     )),
     t === "other" && /* @__PURE__ */ e(
       "input",
@@ -5204,59 +6077,59 @@ function Qs({ option: t, otherText: n, onOptionChange: s, onOtherTextChange: i }
         class: "cm-input cm-discharge__other-input",
         type: "text",
         value: n,
-        onInput: (a) => i(a.target.value),
+        onInput: (i) => a(i.target.value),
         placeholder: "e.g., Assisted living, long-term care, hospice...",
         autoFocus: !0
       }
     )
   ] });
 }
-function zs({ isOpen: t, onClose: n, cert: s, facilityName: i, orgSlug: a, onSent: r }) {
-  const [o, c] = v(""), [l, d] = v(30), [u, p] = v(""), [m, h] = v(""), [_, g] = v(""), [f, y] = v([]), [w, k] = v(!1), [C, I] = v(/* @__PURE__ */ new Set()), [P, A] = v(!1), x = s?.type === "day_14_recert" || s?.type === "day_30_recert", D = s?.isDelayed, N = s?.type === "initial" ? "Initial" : s?.type === "day_14_recert" ? "Day 14 Recert" : "Day 30 Recert";
+function Ia({ isOpen: t, onClose: n, cert: s, facilityName: a, orgSlug: i, onSent: r }) {
+  const [o, c] = y(""), [d, l] = y(30), [p, u] = y(""), [m, h] = y(""), [_, g] = y(""), [v, b] = y([]), [f, I] = y(!1), [N, D] = y(/* @__PURE__ */ new Set()), [T, A] = y(!1), x = s?.type === "day_14_recert" || s?.type === "day_30_recert", k = s?.isDelayed, S = s?.type === "initial" ? "Initial" : s?.type === "day_14_recert" ? "Day 14 Recert" : "Day 30 Recert";
   F(() => {
     if (!t || !s) return;
-    c(s.clinicalReason || ""), d(s.estimatedDays || 30);
-    const q = Vs(s.planForDischarge);
-    p(q.option), h(q.otherText), g(s.delayReason || ""), I(/* @__PURE__ */ new Set()), k(!0), window.CertAPI.fetchPractitioners(i, a).then((L) => y(L)).catch((L) => console.error("[Certifications] Failed to load practitioners:", L)).finally(() => k(!1));
+    c(s.clinicalReason || ""), l(s.estimatedDays || 30);
+    const q = va(s.planForDischarge);
+    u(q.option), h(q.otherText), g(s.delayReason || ""), D(/* @__PURE__ */ new Set()), I(!0), window.CertAPI.fetchPractitioners(a, i).then((L) => b(L)).catch((L) => console.error("[Certifications] Failed to load practitioners:", L)).finally(() => I(!1));
   }, [t, s?.id]);
-  function S() {
-    if (C.size === 0 || x && !o.trim() || x && !Yt(u, m) || D && !_.trim()) return;
+  function w() {
+    if (N.size === 0 || x && !o.trim() || x && !cn(p, m) || k && !_.trim()) return;
     A(!0);
-    const q = Ws(u, m);
-    (x ? window.CertAPI.saveClinicalReason(s.id, { clinicalReason: o, estimatedDays: l, planForDischarge: q }) : Promise.resolve()).then(() => window.CertAPI.sendCert(s.id, [...C], D ? _ : void 0)).then(() => {
-      const O = f.filter((j) => C.has(j.id)).map((j) => `${j.firstName} ${j.lastName}`), Z = O.length <= 2 ? O.join(" & ") : `${O.length} practitioners`;
-      window.SuperToast?.success?.(`${N} for ${s.patientName} sent to ${Z}`), r?.(), n();
+    const q = ba(p, m);
+    (x ? window.CertAPI.saveClinicalReason(s.id, { clinicalReason: o, estimatedDays: d, planForDischarge: q }) : Promise.resolve()).then(() => window.CertAPI.sendCert(s.id, [...N], k ? _ : void 0)).then(() => {
+      const O = v.filter((z) => N.has(z.id)).map((z) => `${z.firstName} ${z.lastName}`), X = O.length <= 2 ? O.join(" & ") : `${O.length} practitioners`;
+      window.SuperToast?.success?.(`${S} for ${s.patientName} sent to ${X}`), r?.(), n();
     }).catch((O) => {
       console.error("[Certifications] Failed to send:", O), window.SuperToast?.error?.("Failed to send certification");
     }).finally(() => A(!1));
   }
-  function E(q) {
-    I((L) => {
+  function M(q) {
+    D((L) => {
       const O = new Set(L);
       return O.has(q) ? O.delete(q) : O.add(q), O;
     });
   }
-  function B() {
-    I(
-      (q) => q.size === f.length ? /* @__PURE__ */ new Set() : new Set(f.map((L) => L.id))
+  function H() {
+    D(
+      (q) => q.size === v.length ? /* @__PURE__ */ new Set() : new Set(v.map((L) => L.id))
     );
   }
   if (!s) return null;
-  const M = C.size > 0 && (!x || o.trim()) && (!x || Yt(u, m)) && (!D || _.trim()) && !P;
+  const P = N.size > 0 && (!x || o.trim()) && (!x || cn(p, m)) && (!k || _.trim()) && !T;
   return /* @__PURE__ */ e(
-    wt,
+    Mt,
     {
       isOpen: t,
       onClose: n,
       title: "Send Certification",
-      subtitle: `${s.patientName} · ${N}`,
+      subtitle: `${s.patientName} · ${S}`,
       actions: [
         { label: "Cancel", variant: "secondary", onClick: n },
         {
-          label: P ? "Sending..." : `Send to ${C.size} practitioner${C.size !== 1 ? "s" : ""}`,
+          label: T ? "Sending..." : `Send to ${N.size} practitioner${N.size !== 1 ? "s" : ""}`,
           variant: "primary",
-          onClick: S,
-          disabled: !M
+          onClick: w,
+          disabled: !P
         }
       ],
       children: [
@@ -5289,8 +6162,8 @@ function zs({ isOpen: t, onClose: n, cert: s, facilityName: i, orgSlug: a, onSen
                   class: "cm-input cm-input--days",
                   type: "number",
                   min: 1,
-                  value: l,
-                  onInput: (q) => d(parseInt(q.target.value) || 30)
+                  value: d,
+                  onInput: (q) => l(parseInt(q.target.value) || 30)
                 }
               ),
               /* @__PURE__ */ e("span", { class: "cm-input--days-unit", children: "days" })
@@ -5305,16 +6178,16 @@ function zs({ isOpen: t, onClose: n, cert: s, facilityName: i, orgSlug: a, onSen
             /* @__PURE__ */ e("span", { class: "cm-section__label", children: "Plan for Discharge" })
           ] }),
           /* @__PURE__ */ e(
-            Qs,
+            wa,
             {
-              option: u,
+              option: p,
               otherText: m,
-              onOptionChange: p,
+              onOptionChange: u,
               onOtherTextChange: h
             }
           )
         ] }),
-        D && /* @__PURE__ */ e("div", { class: "cm-section cm-section--warn", children: [
+        k && /* @__PURE__ */ e("div", { class: "cm-section cm-section--warn", children: [
           /* @__PURE__ */ e("div", { class: "cm-section__head", children: [
             /* @__PURE__ */ e("span", { class: "cm-section__icon cm-section__icon--warn", children: /* @__PURE__ */ e("svg", { width: "14", height: "14", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": "2", "stroke-linecap": "round", "stroke-linejoin": "round", children: [
               /* @__PURE__ */ e("circle", { cx: "12", cy: "12", r: "10" }),
@@ -5353,12 +6226,12 @@ function zs({ isOpen: t, onClose: n, cert: s, facilityName: i, orgSlug: a, onSen
             ] }) }),
             /* @__PURE__ */ e("span", { class: "cm-section__label", children: "Send to" }),
             /* @__PURE__ */ e("span", { class: "cm-section__count", children: [
-              C.size,
+              N.size,
               " of ",
-              f.length
+              v.length
             ] })
           ] }),
-          w ? /* @__PURE__ */ e("div", { class: "cm-loading", children: [
+          f ? /* @__PURE__ */ e("div", { class: "cm-loading", children: [
             /* @__PURE__ */ e("div", { class: "cm-loading__spinner" }),
             "Loading practitioners..."
           ] }) : /* @__PURE__ */ e("div", { class: "cm-practitioners", children: [
@@ -5368,21 +6241,21 @@ function zs({ isOpen: t, onClose: n, cert: s, facilityName: i, orgSlug: a, onSen
                 {
                   type: "checkbox",
                   class: "cm-check",
-                  checked: C.size === f.length && f.length > 0,
-                  onChange: B
+                  checked: N.size === v.length && v.length > 0,
+                  onChange: H
                 }
               ),
               /* @__PURE__ */ e("span", { class: "cm-check-box" }),
               /* @__PURE__ */ e("span", { class: "cm-pract__label", children: "Select all" })
             ] }),
-            f.map((q) => /* @__PURE__ */ e("label", { class: `cm-pract${C.has(q.id) ? " cm-pract--selected" : ""}`, children: [
+            v.map((q) => /* @__PURE__ */ e("label", { class: `cm-pract${N.has(q.id) ? " cm-pract--selected" : ""}`, children: [
               /* @__PURE__ */ e(
                 "input",
                 {
                   type: "checkbox",
                   class: "cm-check",
-                  checked: C.has(q.id),
-                  onChange: () => E(q.id)
+                  checked: N.has(q.id),
+                  onChange: () => M(q.id)
                 }
               ),
               /* @__PURE__ */ e("span", { class: "cm-check-box" }),
@@ -5399,15 +6272,15 @@ function zs({ isOpen: t, onClose: n, cert: s, facilityName: i, orgSlug: a, onSen
     }
   );
 }
-function js({ isOpen: t, onClose: n, cert: s, onSkipped: i }) {
-  const [a, r] = v(""), [o, c] = v(!1);
-  function l() {
-    a.trim() && (c(!0), i(a).then(() => {
+function Da({ isOpen: t, onClose: n, cert: s, onSkipped: a }) {
+  const [i, r] = y(""), [o, c] = y(!1);
+  function d() {
+    i.trim() && (c(!0), a(i).then(() => {
       r(""), n();
     }).catch(() => c(!1)));
   }
   return /* @__PURE__ */ e(
-    wt,
+    Mt,
     {
       isOpen: t,
       onClose: n,
@@ -5415,7 +6288,7 @@ function js({ isOpen: t, onClose: n, cert: s, onSkipped: i }) {
       subtitle: s?.patientName,
       actions: [
         { label: "Cancel", variant: "secondary", onClick: n },
-        { label: o ? "Skipping..." : "Skip", variant: "primary", onClick: l, disabled: !a.trim() || o }
+        { label: o ? "Skipping..." : "Skip", variant: "primary", onClick: d, disabled: !i.trim() || o }
       ],
       children: /* @__PURE__ */ e("div", { class: "cm-section", children: [
         /* @__PURE__ */ e("div", { class: "cm-section__head", children: /* @__PURE__ */ e("span", { class: "cm-section__label", children: "Reason for Skipping" }) }),
@@ -5424,8 +6297,8 @@ function js({ isOpen: t, onClose: n, cert: s, onSkipped: i }) {
           {
             class: "cm-input cm-input--textarea",
             rows: 3,
-            value: a,
-            onInput: (d) => r(d.target.value),
+            value: i,
+            onInput: (l) => r(l.target.value),
             placeholder: "Why is this certification being skipped?"
           }
         )
@@ -5433,24 +6306,24 @@ function js({ isOpen: t, onClose: n, cert: s, onSkipped: i }) {
     }
   );
 }
-function la({ isOpen: t, onClose: n, cert: s, onSaved: i }) {
-  const [a, r] = v(""), [o, c] = v(30), [l, d] = v(""), [u, p] = v(""), [m, h] = v(!1);
+function rr({ isOpen: t, onClose: n, cert: s, onSaved: a }) {
+  const [i, r] = y(""), [o, c] = y(30), [d, l] = y(""), [p, u] = y(""), [m, h] = y(!1);
   F(() => {
     if (t && s) {
       r(s.clinicalReason || ""), c(s.estimatedDays || 30);
-      const f = Vs(s.planForDischarge);
-      d(f.option), p(f.otherText);
+      const v = va(s.planForDischarge);
+      l(v.option), u(v.otherText);
     }
   }, [t, s?.id]);
-  const _ = a.trim() && Yt(l, u) && !m;
+  const _ = i.trim() && cn(d, p) && !m;
   function g() {
     if (!_) return;
     h(!0);
-    const f = Ws(l, u);
-    i({ clinicalReason: a, estimatedDays: o, planForDischarge: f }).then(() => n()).catch(() => h(!1));
+    const v = ba(d, p);
+    a({ clinicalReason: i, estimatedDays: o, planForDischarge: v }).then(() => n()).catch(() => h(!1));
   }
   return /* @__PURE__ */ e(
-    wt,
+    Mt,
     {
       isOpen: t,
       onClose: n,
@@ -5475,8 +6348,8 @@ function la({ isOpen: t, onClose: n, cert: s, onSaved: i }) {
           {
             class: "cm-input cm-input--textarea",
             rows: 3,
-            value: a,
-            onInput: (f) => r(f.target.value),
+            value: i,
+            onInput: (v) => r(v.target.value),
             placeholder: "Describe the clinical reason for continued skilled nursing care..."
           }
         ),
@@ -5490,7 +6363,7 @@ function la({ isOpen: t, onClose: n, cert: s, onSaved: i }) {
                 type: "number",
                 min: 1,
                 value: o,
-                onInput: (f) => c(parseInt(f.target.value) || 30)
+                onInput: (v) => c(parseInt(v.target.value) || 30)
               }
             ),
             /* @__PURE__ */ e("span", { class: "cm-input--days-unit", children: "days" })
@@ -5505,27 +6378,27 @@ function la({ isOpen: t, onClose: n, cert: s, onSaved: i }) {
           /* @__PURE__ */ e("span", { class: "cm-section__label", children: "Plan for Discharge" })
         ] }),
         /* @__PURE__ */ e(
-          Qs,
+          wa,
           {
-            option: l,
-            otherText: u,
-            onOptionChange: d,
-            onOtherTextChange: p
+            option: d,
+            otherText: p,
+            onOptionChange: l,
+            onOtherTextChange: u
           }
         )
       ] })
     }
   );
 }
-function Ks({ isOpen: t, onClose: n, cert: s, onDelayed: i }) {
-  const [a, r] = v(""), [o, c] = v(!1);
-  function l() {
-    a.trim() && (c(!0), i(a).then(() => {
+function Na({ isOpen: t, onClose: n, cert: s, onDelayed: a }) {
+  const [i, r] = y(""), [o, c] = y(!1);
+  function d() {
+    i.trim() && (c(!0), a(i).then(() => {
       r(""), n();
     }).catch(() => c(!1)));
   }
   return /* @__PURE__ */ e(
-    wt,
+    Mt,
     {
       isOpen: t,
       onClose: n,
@@ -5533,7 +6406,7 @@ function Ks({ isOpen: t, onClose: n, cert: s, onDelayed: i }) {
       subtitle: s?.patientName,
       actions: [
         { label: "Cancel", variant: "secondary", onClick: n },
-        { label: o ? "Saving..." : "Mark Delayed", variant: "primary", onClick: l, disabled: !a.trim() || o }
+        { label: o ? "Saving..." : "Mark Delayed", variant: "primary", onClick: d, disabled: !i.trim() || o }
       ],
       children: /* @__PURE__ */ e("div", { class: "cm-section cm-section--warn", children: [
         /* @__PURE__ */ e("div", { class: "cm-section__head", children: [
@@ -5551,8 +6424,8 @@ function Ks({ isOpen: t, onClose: n, cert: s, onDelayed: i }) {
           {
             class: "cm-input cm-input--textarea",
             rows: 3,
-            value: a,
-            onInput: (d) => r(d.target.value),
+            value: i,
+            onInput: (l) => r(l.target.value),
             placeholder: "Why is this certification being delayed?"
           }
         )
@@ -5560,40 +6433,40 @@ function Ks({ isOpen: t, onClose: n, cert: s, onDelayed: i }) {
     }
   );
 }
-function pa(t) {
-  const [n, s] = v(null), [i, a] = v(!1), [r, o] = v(null), [c, l] = v(0), d = U(() => {
-    l((u) => u + 1);
+function or(t) {
+  const [n, s] = y(null), [a, i] = y(!1), [r, o] = y(null), [c, d] = y(0), l = G(() => {
+    d((p) => p + 1);
   }, []);
   return F(() => {
     if (!t || !window.CertAPI) {
       s(null);
       return;
     }
-    let u = !1;
-    return a(!0), o(null), window.CertAPI.fetchPractitionerWorkload(t).then((p) => {
-      u || s(p);
-    }).catch((p) => {
-      u || o(p.message || "Failed to load practitioner data");
+    let p = !1;
+    return i(!0), o(null), window.CertAPI.fetchPractitionerWorkload(t).then((u) => {
+      p || s(u);
+    }).catch((u) => {
+      p || o(u.message || "Failed to load practitioner data");
     }).finally(() => {
-      u || a(!1);
+      p || i(!1);
     }), () => {
-      u = !0;
+      p = !0;
     };
-  }, [t, c]), { data: n, loading: i, error: r, retry: d };
+  }, [t, c]), { data: n, loading: a, error: r, retry: l };
 }
-function Zt(t) {
+function ln(t) {
   if (!t) return "";
   const n = new Date(t);
   return isNaN(n) ? t : n.toLocaleDateString("en-US", { month: "short", day: "numeric" });
 }
-function ua({ item: t }) {
+function cr({ item: t }) {
   const n = !!t.type && (t.type === "initial" || t.type.includes("recert"));
   return /* @__PURE__ */ e("div", { class: "cert__workload-row", children: [
-    /* @__PURE__ */ e("div", { class: "cert__workload-row-top", children: n ? /* @__PURE__ */ e(J, { children: [
-      /* @__PURE__ */ e(pn, { type: t.type }),
+    /* @__PURE__ */ e("div", { class: "cert__workload-row-top", children: n ? /* @__PURE__ */ e(Q, { children: [
+      /* @__PURE__ */ e(Dn, { type: t.type }),
       /* @__PURE__ */ e("span", { class: "cert__workload-patient", children: t.patientName }),
       /* @__PURE__ */ e(
-        Us,
+        fa,
         {
           status: t.status,
           isDelayed: t.isDelayed,
@@ -5601,7 +6474,7 @@ function ua({ item: t }) {
           signedAt: t.signedAt
         }
       )
-    ] }) : /* @__PURE__ */ e(J, { children: [
+    ] }) : /* @__PURE__ */ e(Q, { children: [
       /* @__PURE__ */ e("span", { class: "cert__workload-query-badge", children: "Query" }),
       /* @__PURE__ */ e("span", { class: "cert__workload-patient", children: t.patientName }),
       t.mdsItem && /* @__PURE__ */ e("span", { class: "cert__workload-meta", children: [
@@ -5612,22 +6485,22 @@ function ua({ item: t }) {
     /* @__PURE__ */ e("div", { class: "cert__workload-row-bottom", children: [
       n && t.dueDate && /* @__PURE__ */ e("span", { class: "cert__row-meta", children: [
         "Due ",
-        Zt(t.dueDate)
+        ln(t.dueDate)
       ] }),
       !n && t.sentAt && /* @__PURE__ */ e("span", { class: "cert__row-meta", children: [
         "Sent ",
-        Zt(t.sentAt)
+        ln(t.sentAt)
       ] })
     ] })
   ] });
 }
-function ma({ item: t }) {
+function lr({ item: t }) {
   const n = !!t.type && (t.type === "initial" || t.type.includes("recert"));
   return /* @__PURE__ */ e("div", { class: "cert__workload-row", children: [
-    /* @__PURE__ */ e("div", { class: "cert__workload-row-top", children: n ? /* @__PURE__ */ e(J, { children: [
-      /* @__PURE__ */ e(pn, { type: t.type }),
+    /* @__PURE__ */ e("div", { class: "cert__workload-row-top", children: n ? /* @__PURE__ */ e(Q, { children: [
+      /* @__PURE__ */ e(Dn, { type: t.type }),
       /* @__PURE__ */ e("span", { class: "cert__workload-patient", children: t.patientName })
-    ] }) : /* @__PURE__ */ e(J, { children: [
+    ] }) : /* @__PURE__ */ e(Q, { children: [
       /* @__PURE__ */ e("span", { class: "cert__workload-query-badge", children: "Query" }),
       /* @__PURE__ */ e("span", { class: "cert__workload-patient", children: t.patientName }),
       t.mdsItem && /* @__PURE__ */ e("span", { class: "cert__workload-meta", children: t.mdsItem })
@@ -5635,7 +6508,7 @@ function ma({ item: t }) {
     /* @__PURE__ */ e("div", { class: "cert__workload-row-bottom", children: [
       t.signedAt && /* @__PURE__ */ e("span", { class: "cert__row-meta", children: [
         "Signed ",
-        Zt(t.signedAt)
+        ln(t.signedAt)
       ] }),
       !n && t.selectedIcd10Code && /* @__PURE__ */ e("span", { class: "cert__row-meta", children: [
         "ICD-10: ",
@@ -5644,9 +6517,9 @@ function ma({ item: t }) {
     ] })
   ] });
 }
-function ha({ practitionerId: t, onBack: n }) {
-  const { data: s, loading: i, error: a, retry: r } = pa(t);
-  if (i)
+function dr({ practitionerId: t, onBack: n }) {
+  const { data: s, loading: a, error: i, retry: r } = or(t);
+  if (a)
     return /* @__PURE__ */ e("div", { class: "cert__workload", children: [
       /* @__PURE__ */ e("div", { class: "cert__workload-header", children: /* @__PURE__ */ e("button", { class: "cert__workload-back", onClick: n, children: [
         "←",
@@ -5657,7 +6530,7 @@ function ha({ practitionerId: t, onBack: n }) {
         /* @__PURE__ */ e("p", { class: "mds-cc__state-text", children: "Loading practitioner..." })
       ] })
     ] });
-  if (a)
+  if (i)
     return /* @__PURE__ */ e("div", { class: "cert__workload", children: [
       /* @__PURE__ */ e("div", { class: "cert__workload-header", children: /* @__PURE__ */ e("button", { class: "cert__workload-back", onClick: n, children: [
         "←",
@@ -5665,12 +6538,12 @@ function ha({ practitionerId: t, onBack: n }) {
       ] }) }),
       /* @__PURE__ */ e("div", { class: "mds-cc__state-container", children: [
         /* @__PURE__ */ e("div", { class: "mds-cc__state-icon", children: "⚠" }),
-        /* @__PURE__ */ e("p", { class: "mds-cc__state-text", children: a }),
+        /* @__PURE__ */ e("p", { class: "mds-cc__state-text", children: i }),
         /* @__PURE__ */ e("button", { class: "mds-cc__retry-btn", onClick: r, children: "Retry" })
       ] })
     ] });
   if (!s) return null;
-  const { practitioner: o, queue: c = [], recentlySigned: l = [] } = s;
+  const { practitioner: o, queue: c = [], recentlySigned: d = [] } = s;
   return /* @__PURE__ */ e("div", { class: "cert__workload", children: [
     /* @__PURE__ */ e("div", { class: "cert__workload-header", children: /* @__PURE__ */ e("button", { class: "cert__workload-back", onClick: n, children: [
       "←",
@@ -5693,212 +6566,212 @@ function ha({ practitionerId: t, onBack: n }) {
         "In Queue",
         c.length > 0 && /* @__PURE__ */ e("span", { class: "cert__workload-section-count", children: c.length })
       ] }),
-      c.length === 0 ? /* @__PURE__ */ e("div", { class: "cert__workload-empty", children: "No items in queue" }) : c.map((d, u) => /* @__PURE__ */ e(ua, { item: d }, u))
+      c.length === 0 ? /* @__PURE__ */ e("div", { class: "cert__workload-empty", children: "No items in queue" }) : c.map((l, p) => /* @__PURE__ */ e(cr, { item: l }, p))
     ] }),
     /* @__PURE__ */ e("div", { class: "cert__workload-section", children: [
       /* @__PURE__ */ e("div", { class: "cert__workload-section-header", children: [
         "Recently Signed",
-        l.length > 0 && /* @__PURE__ */ e("span", { class: "cert__workload-section-count", children: l.length })
+        d.length > 0 && /* @__PURE__ */ e("span", { class: "cert__workload-section-count", children: d.length })
       ] }),
-      l.length === 0 ? /* @__PURE__ */ e("div", { class: "cert__workload-empty", children: "No recent signatures" }) : l.map((d, u) => /* @__PURE__ */ e(ma, { item: d }, u))
+      d.length === 0 ? /* @__PURE__ */ e("div", { class: "cert__workload-empty", children: "No recent signatures" }) : d.map((l, p) => /* @__PURE__ */ e(lr, { item: l }, p))
     ] })
   ] });
 }
-const _a = [
+const ur = [
   { id: "action", label: "Action Needed" },
   { id: "awaiting", label: "Awaiting Signature" },
   { id: "overdue", label: "Overdue" },
   { id: "dueSoon", label: "Due Soon" },
   { id: "signed", label: "Signed" }
 ];
-function Xt(t) {
+function dn(t) {
   if (!t) return null;
   const n = new Date(t), s = /* @__PURE__ */ new Date();
   return n.setHours(0, 0, 0, 0), s.setHours(0, 0, 0, 0), Math.floor((n - s) / 864e5);
 }
-function qn(t) {
-  const n = Xt(t.dueDate);
+function Xn(t) {
+  const n = dn(t.dueDate);
   return n !== null && n < 0 ? n : t.isDelayed ? -0.5 : n ?? 1 / 0;
 }
-const ga = [
+const pr = [
   { id: "all", label: "All" },
   { id: "medicare", label: "Med A" },
   { id: "managed", label: "Managed" }
 ];
-function On(t, n) {
+function es(t, n) {
   return n === "all" ? !0 : n === "managed" ? t.payerType === "managed_care" : t.payerType !== "managed_care";
 }
-function fa({ facilityName: t, orgSlug: n, patientId: s, patientName: i }) {
-  const [a, r] = v("action"), [o, c] = v("all"), [l, d] = v(null), [u, p] = v(null), [m, h] = v(null), [_, g] = v(null), [f, y] = v(null), { certs: w, loading: k, error: C, refetch: I } = Kt({
+function mr({ facilityName: t, orgSlug: n, patientId: s, patientName: a }) {
+  const [i, r] = y("action"), [o, c] = y("all"), [d, l] = y(null), [p, u] = y(null), [m, h] = y(null), [_, g] = y(null), [v, b] = y(null), { certs: f, loading: I, error: N, refetch: D } = rn({
     facilityName: t,
     orgSlug: n,
     patientId: s
-  }), { certs: P, loading: A, refetch: x } = Kt({
+  }), { certs: T, loading: A, refetch: x } = rn({
     facilityName: t,
     orgSlug: n,
     patientId: s,
     status: "signed"
-  }), D = U(() => {
-    I(), x();
-  }, [I, x]), N = Y(
-    () => w.filter(($) => On($, o)),
-    [w, o]
-  ), S = Y(
-    () => P.filter(($) => On($, o)),
-    [P, o]
-  ), E = Y(() => {
-    const $ = w.length + P.length;
-    let H = 0, te = 0;
-    for (const T of [...w, ...P])
-      T.payerType === "managed_care" ? te++ : H++;
-    return { all: $, medicare: H, managed: te };
-  }, [w, P]), B = Y(() => {
-    let $ = 0, H = 0, te = 0;
-    for (const T of N) {
-      const R = Xt(T.dueDate);
-      R !== null && R < 0 || T.isDelayed ? $++ : R !== null && R >= 0 && R <= 3 && H++, T.status === "sent" && te++;
+  }), k = G(() => {
+    D(), x();
+  }, [D, x]), S = Y(
+    () => f.filter((R) => es(R, o)),
+    [f, o]
+  ), w = Y(
+    () => T.filter((R) => es(R, o)),
+    [T, o]
+  ), M = Y(() => {
+    const R = f.length + T.length;
+    let B = 0, ee = 0;
+    for (const E of [...f, ...T])
+      E.payerType === "managed_care" ? ee++ : B++;
+    return { all: R, medicare: B, managed: ee };
+  }, [f, T]), H = Y(() => {
+    let R = 0, B = 0, ee = 0;
+    for (const E of S) {
+      const $ = dn(E.dueDate);
+      $ !== null && $ < 0 || E.isDelayed ? R++ : $ !== null && $ >= 0 && $ <= 3 && B++, E.status === "sent" && ee++;
     }
     return {
-      action: N.length,
-      awaiting: te,
-      overdue: $,
-      dueSoon: H,
-      signed: S.length
+      action: S.length,
+      awaiting: ee,
+      overdue: R,
+      dueSoon: B,
+      signed: w.length
     };
-  }, [N, S]), M = Y(() => {
-    let $;
-    if (a === "signed" ? $ = S : $ = N.filter((T) => {
-      const R = Xt(T.dueDate), z = R !== null && R < 0, V = R !== null && R >= 0 && R <= 3;
-      return a === "awaiting" ? T.status === "sent" : a === "overdue" ? z || T.isDelayed : a === "dueSoon" ? V && !z : !0;
-    }), $.length === 0) return [];
-    const H = {};
-    for (const T of $) {
-      const R = T.partAStayId || T.id;
-      H[R] || (H[R] = { stayId: R, displayCerts: [], historyCerts: [] }), H[R].displayCerts.push(T);
+  }, [S, w]), P = Y(() => {
+    let R;
+    if (i === "signed" ? R = w : R = S.filter((E) => {
+      const $ = dn(E.dueDate), V = $ !== null && $ < 0, U = $ !== null && $ >= 0 && $ <= 3;
+      return i === "awaiting" ? E.status === "sent" : i === "overdue" ? V || E.isDelayed : i === "dueSoon" ? U && !V : !0;
+    }), R.length === 0) return [];
+    const B = {};
+    for (const E of R) {
+      const $ = E.partAStayId || E.id;
+      B[$] || (B[$] = { stayId: $, displayCerts: [], historyCerts: [] }), B[$].displayCerts.push(E);
     }
-    if (a !== "signed")
-      for (const T of S) {
-        const R = T.partAStayId;
-        R && H[R] && H[R].historyCerts.push(T);
+    if (i !== "signed")
+      for (const E of w) {
+        const $ = E.partAStayId;
+        $ && B[$] && B[$].historyCerts.push(E);
       }
-    const te = Object.values(H);
-    for (const T of te) {
-      T.displayCerts.sort((z, V) => (z.sequenceNumber || 0) - (V.sequenceNumber || 0)), T.historyCerts.sort((z, V) => (z.sequenceNumber || 0) - (V.sequenceNumber || 0));
-      const R = /* @__PURE__ */ new Set();
-      T.allCerts = [];
-      for (const z of [...T.displayCerts, ...T.historyCerts])
-        R.has(z.id) || (R.add(z.id), T.allCerts.push(z));
-      T.allCerts.sort((z, V) => (z.sequenceNumber || 0) - (V.sequenceNumber || 0));
+    const ee = Object.values(B);
+    for (const E of ee) {
+      E.displayCerts.sort((V, U) => (V.sequenceNumber || 0) - (U.sequenceNumber || 0)), E.historyCerts.sort((V, U) => (V.sequenceNumber || 0) - (U.sequenceNumber || 0));
+      const $ = /* @__PURE__ */ new Set();
+      E.allCerts = [];
+      for (const V of [...E.displayCerts, ...E.historyCerts])
+        $.has(V.id) || ($.add(V.id), E.allCerts.push(V));
+      E.allCerts.sort((V, U) => (V.sequenceNumber || 0) - (U.sequenceNumber || 0));
     }
-    return te.sort((T, R) => {
-      const z = Math.min(...T.displayCerts.map(qn)), V = Math.min(...R.displayCerts.map(qn));
-      return z - V;
-    }), te;
-  }, [N, S, a]);
-  async function q($) {
-    await window.CertAPI.skipCert(m.id, $), window.SuperToast?.success?.("Certification skipped"), D();
+    return ee.sort((E, $) => {
+      const V = Math.min(...E.displayCerts.map(Xn)), U = Math.min(...$.displayCerts.map(Xn));
+      return V - U;
+    }), ee;
+  }, [S, w, i]);
+  async function q(R) {
+    await window.CertAPI.skipCert(m.id, R), window.SuperToast?.success?.("Certification skipped"), k();
   }
-  async function L($) {
-    await window.CertAPI.delayCert(_.id, $), window.SuperToast?.success?.("Certification marked as delayed"), D();
+  async function L(R) {
+    await window.CertAPI.delayCert(_.id, R), window.SuperToast?.success?.("Certification marked as delayed"), k();
   }
-  async function O({ clinicalReason: $, estimatedDays: H, planForDischarge: te }) {
-    await window.CertAPI.saveClinicalReason(f.id, { clinicalReason: $, estimatedDays: H, planForDischarge: te }), window.SuperToast?.success?.(`Clinical details updated for ${f.patientName}`), D();
+  async function O({ clinicalReason: R, estimatedDays: B, planForDischarge: ee }) {
+    await window.CertAPI.saveClinicalReason(v.id, { clinicalReason: R, estimatedDays: B, planForDischarge: ee }), window.SuperToast?.success?.(`Clinical details updated for ${v.patientName}`), k();
   }
-  async function Z($) {
+  async function X(R) {
     try {
-      await window.CertAPI.unskipCert($.id), window.SuperToast?.success?.("Certification restored"), D();
-    } catch (H) {
-      console.error("[Certifications] Failed to unskip:", H), window.SuperToast?.error?.("Failed to restore certification");
+      await window.CertAPI.unskipCert(R.id), window.SuperToast?.success?.("Certification restored"), k();
+    } catch (B) {
+      console.error("[Certifications] Failed to unskip:", B), window.SuperToast?.error?.("Failed to restore certification");
     }
   }
-  const j = a === "signed" ? A : k;
-  return l ? /* @__PURE__ */ e("div", { class: "cert__view", children: /* @__PURE__ */ e(
-    ha,
+  const z = i === "signed" ? A : I;
+  return d ? /* @__PURE__ */ e("div", { class: "cert__view", children: /* @__PURE__ */ e(
+    dr,
     {
-      practitionerId: l,
-      onBack: () => d(null)
+      practitionerId: d,
+      onBack: () => l(null)
     }
   ) }) : /* @__PURE__ */ e("div", { class: "cert__view", children: [
-    s && i && /* @__PURE__ */ e("div", { class: "cert__patient-banner", children: [
+    s && a && /* @__PURE__ */ e("div", { class: "cert__patient-banner", children: [
       "Showing certs for ",
-      /* @__PURE__ */ e("strong", { children: i })
+      /* @__PURE__ */ e("strong", { children: a })
     ] }),
     /* @__PURE__ */ e("div", { class: "cert__filters", children: [
-      /* @__PURE__ */ e("div", { class: "cert__stay-type-filter", children: ga.map(($) => /* @__PURE__ */ e(
+      /* @__PURE__ */ e("div", { class: "cert__stay-type-filter", children: pr.map((R) => /* @__PURE__ */ e(
         "button",
         {
-          class: `cert__stay-type-pill${o === $.id ? " cert__stay-type-pill--active" : ""}`,
-          onClick: () => c($.id),
+          class: `cert__stay-type-pill${o === R.id ? " cert__stay-type-pill--active" : ""}`,
+          onClick: () => c(R.id),
           children: [
-            $.label,
-            E[$.id] > 0 && /* @__PURE__ */ e("span", { class: "cert__stay-type-pill-count", children: E[$.id] })
+            R.label,
+            M[R.id] > 0 && /* @__PURE__ */ e("span", { class: "cert__stay-type-pill-count", children: M[R.id] })
           ]
         },
-        $.id
+        R.id
       )) }),
-      /* @__PURE__ */ e("div", { class: "cert__sub-tabs", children: _a.map(($) => /* @__PURE__ */ e(
+      /* @__PURE__ */ e("div", { class: "cert__sub-tabs", children: ur.map((R) => /* @__PURE__ */ e(
         "button",
         {
-          class: `cert__sub-tab${a === $.id ? " cert__sub-tab--active" : ""}`,
-          onClick: () => r($.id),
+          class: `cert__sub-tab${i === R.id ? " cert__sub-tab--active" : ""}`,
+          onClick: () => r(R.id),
           children: [
-            $.label,
-            B[$.id] > 0 && /* @__PURE__ */ e("span", { class: "cert__sub-tab-count", children: B[$.id] })
+            R.label,
+            H[R.id] > 0 && /* @__PURE__ */ e("span", { class: "cert__sub-tab-count", children: H[R.id] })
           ]
         },
-        $.id
+        R.id
       )) })
     ] }),
     /* @__PURE__ */ e("div", { class: "cert__list", children: [
-      j && /* @__PURE__ */ e("div", { class: "mds-cc__state-container", children: [
+      z && /* @__PURE__ */ e("div", { class: "mds-cc__state-container", children: [
         /* @__PURE__ */ e("div", { class: "mds-cc__spinner" }),
         /* @__PURE__ */ e("p", { class: "mds-cc__state-text", children: "Loading certifications..." })
       ] }),
-      !j && C && /* @__PURE__ */ e("div", { class: "mds-cc__state-container", children: [
+      !z && N && /* @__PURE__ */ e("div", { class: "mds-cc__state-container", children: [
         /* @__PURE__ */ e("div", { class: "mds-cc__state-icon", children: "⚠" }),
-        /* @__PURE__ */ e("p", { class: "mds-cc__state-text", children: C }),
-        /* @__PURE__ */ e("button", { class: "mds-cc__retry-btn", onClick: D, children: "Retry" })
+        /* @__PURE__ */ e("p", { class: "mds-cc__state-text", children: N }),
+        /* @__PURE__ */ e("button", { class: "mds-cc__retry-btn", onClick: k, children: "Retry" })
       ] }),
-      !j && !C && M.length === 0 && /* @__PURE__ */ e("div", { class: "mds-cc__state-container", children: [
-        /* @__PURE__ */ e("div", { class: "mds-cc__state-icon", children: a === "overdue" ? "✅" : "📋" }),
+      !z && !N && P.length === 0 && /* @__PURE__ */ e("div", { class: "mds-cc__state-container", children: [
+        /* @__PURE__ */ e("div", { class: "mds-cc__state-icon", children: i === "overdue" ? "✅" : "📋" }),
         /* @__PURE__ */ e("p", { class: "mds-cc__state-text", children: [
-          a === "action" && "All certifications are up to date",
-          a === "awaiting" && "No certifications awaiting signature",
-          a === "overdue" && "No overdue certifications",
-          a === "dueSoon" && "No certifications due soon",
-          a === "signed" && "No certifications signed in the last 7 days"
+          i === "action" && "All certifications are up to date",
+          i === "awaiting" && "No certifications awaiting signature",
+          i === "overdue" && "No overdue certifications",
+          i === "dueSoon" && "No certifications due soon",
+          i === "signed" && "No certifications signed in the last 7 days"
         ] })
       ] }),
-      !j && !C && M.map(($) => /* @__PURE__ */ e(
-        ca,
+      !z && !N && P.map((R) => /* @__PURE__ */ e(
+        ar,
         {
-          stayId: $.stayId,
-          displayCerts: $.displayCerts,
-          historyCerts: $.historyCerts,
-          allCerts: $.allCerts,
-          onSend: (H) => p(H),
-          onSkip: (H) => h(H),
-          onDelay: (H) => g(H),
-          onUnskip: Z,
-          onEditReason: (H) => y(H),
-          onViewPractitioner: (H) => d(H)
+          stayId: R.stayId,
+          displayCerts: R.displayCerts,
+          historyCerts: R.historyCerts,
+          allCerts: R.allCerts,
+          onSend: (B) => u(B),
+          onSkip: (B) => h(B),
+          onDelay: (B) => g(B),
+          onUnskip: X,
+          onEditReason: (B) => b(B),
+          onViewPractitioner: (B) => l(B)
         },
-        $.stayId
+        R.stayId
       ))
     ] }),
     /* @__PURE__ */ e(
-      zs,
+      Ia,
       {
-        isOpen: !!u,
-        onClose: () => p(null),
-        cert: u,
+        isOpen: !!p,
+        onClose: () => u(null),
+        cert: p,
         facilityName: t,
         orgSlug: n,
-        onSent: D
+        onSent: k
       }
     ),
     /* @__PURE__ */ e(
-      js,
+      Da,
       {
         isOpen: !!m,
         onClose: () => h(null),
@@ -5907,7 +6780,7 @@ function fa({ facilityName: t, orgSlug: n, patientId: s, patientName: i }) {
       }
     ),
     /* @__PURE__ */ e(
-      Ks,
+      Na,
       {
         isOpen: !!_,
         onClose: () => g(null),
@@ -5916,20 +6789,20 @@ function fa({ facilityName: t, orgSlug: n, patientId: s, patientName: i }) {
       }
     ),
     /* @__PURE__ */ e(
-      la,
+      rr,
       {
-        isOpen: !!f,
-        onClose: () => y(null),
-        cert: f,
+        isOpen: !!v,
+        onClose: () => b(null),
+        cert: v,
         onSaved: O
       }
     )
   ] });
 }
-function un(t) {
+function Nn(t) {
   return !t || t.mode === "not_applicable" ? !1 : "isApplicable" in t ? !!t.isApplicable : !0;
 }
-function ya(t) {
+function hr(t) {
   if (!t) return "";
   switch (t.mode) {
     case "medicare":
@@ -5942,8 +6815,8 @@ function ya(t) {
       return "";
   }
 }
-function mn(t, n = "long") {
-  if (!un(t) || !(t.delta > 0)) return null;
+function kn(t, n = "long") {
+  if (!Nn(t) || !(t.delta > 0)) return null;
   const s = n === "short" ? "/d" : "/day";
   switch (t.mode) {
     case "medicare":
@@ -5956,40 +6829,40 @@ function mn(t, n = "long") {
       return null;
   }
 }
-function Hn(t) {
+function ts(t) {
   return t ? t.replace(/_/g, "") : null;
 }
-function va(t) {
-  if (!un(t) || !(t.delta > 0)) return null;
-  const n = ya(t), s = !!t.isEstimated;
+function _r(t) {
+  if (!Nn(t) || !(t.delta > 0)) return null;
+  const n = hr(t), s = !!t.isEstimated;
   switch (t.mode) {
     case "medicare": {
-      const i = t.current?.total, a = t.potential?.total;
-      return i == null && a == null ? null : {
-        current: i != null ? `$${Math.round(i).toLocaleString()}/day` : null,
-        potential: a != null ? `$${Math.round(a).toLocaleString()}/day` : null,
+      const a = t.current?.total, i = t.potential?.total;
+      return a == null && i == null ? null : {
+        current: a != null ? `$${Math.round(a).toLocaleString()}/day` : null,
+        potential: i != null ? `$${Math.round(i).toLocaleString()}/day` : null,
         delta: `+$${Math.round(t.delta).toLocaleString()}/day`,
         label: n,
         isEstimated: s
       };
     }
     case "state_rate": {
-      const i = t.current?.rate, a = t.potential?.rate;
-      return i == null && a == null ? null : {
-        current: i != null ? `$${Math.round(i).toLocaleString()}/day` : null,
-        potential: a != null ? `$${Math.round(a).toLocaleString()}/day` : null,
+      const a = t.current?.rate, i = t.potential?.rate;
+      return a == null && i == null ? null : {
+        current: a != null ? `$${Math.round(a).toLocaleString()}/day` : null,
+        potential: i != null ? `$${Math.round(i).toLocaleString()}/day` : null,
         delta: `+$${Math.round(t.delta).toLocaleString()}/day`,
         label: n,
         isEstimated: s,
-        currentGroupCode: Hn(t.current?.groupCode),
-        potentialGroupCode: Hn(t.potential?.groupCode)
+        currentGroupCode: ts(t.current?.groupCode),
+        potentialGroupCode: ts(t.potential?.groupCode)
       };
     }
     case "cmi": {
-      const i = t.current?.total, a = t.potential?.total;
-      return i == null && a == null ? null : {
-        current: i != null ? `${i.toFixed(3)} CMI` : null,
-        potential: a != null ? `${a.toFixed(3)} CMI` : null,
+      const a = t.current?.total, i = t.potential?.total;
+      return a == null && i == null ? null : {
+        current: a != null ? `${a.toFixed(3)} CMI` : null,
+        potential: i != null ? `${i.toFixed(3)} CMI` : null,
         delta: `+${t.delta.toFixed(3)} CMI`,
         label: n,
         isEstimated: s
@@ -5999,13 +6872,13 @@ function va(t) {
       return null;
   }
 }
-const wa = {
+const gr = {
   overdue: "#ef4444",
   urgent: "#f97316",
   approaching: "#eab308",
   on_track: "#22c55e",
   completed: "#6b7280"
-}, ba = {
+}, fr = {
   complete: { icon: "✓", cls: "done", tip: "Locked in range" },
   locked_in_range: { icon: "✓", cls: "done", tip: "Locked in range" },
   in_progress: { icon: "◐", cls: "wip", tip: "In progress" },
@@ -6016,56 +6889,56 @@ const wa = {
   not_required: null
   // hidden entirely
 };
-function xt({ label: t, status: n }) {
-  const s = ba[n];
+function Ht({ label: t, status: n }) {
+  const s = fr[n];
   return s ? /* @__PURE__ */ e("span", { class: `mds-cc__uda-badge mds-cc__uda-badge--${s.cls}`, title: s.tip, children: [
     t,
     " ",
     s.icon
   ] }) : null;
 }
-function Js(t) {
+function ka(t) {
   return t ? t.replace(/^(Medicare|Medicaid|Managed\s*Care)\s*[-\u2013\u2014]\s*/i, "").replace(/\s*\/\s*/g, " ").replace(/\s*-\s*None\s*PPS\s*/i, "").replace(/\s{2,}/g, " ").trim() || t : "";
 }
-function Bn(t) {
+function ns(t) {
   return t.toLocaleDateString("en-US", { month: "short", day: "numeric" });
 }
-function Ia(t, n) {
+function yr(t, n) {
   if (!t) return { dateText: "", completionText: "", deadlineText: "", cls: "na", isCompleted: !1 };
   const s = new Date(t);
   if (isNaN(s)) return { dateText: "", completionText: "", deadlineText: "", cls: "na", isCompleted: !1 };
-  const i = Bn(s), a = new Date(s);
-  a.setDate(a.getDate() + 14);
-  const r = Bn(a);
+  const a = ns(s), i = new Date(s);
+  i.setDate(i.getDate() + 14);
+  const r = ns(i);
   if ((n?.urgency || "on_track") === "completed")
-    return { dateText: i, completionText: r, deadlineText: "", cls: "done", isCompleted: !0 };
-  const c = n?.completionDaysRemaining ?? Math.round((a - Da()) / 864e5);
-  let l, d;
-  return c < 0 ? (l = `${Math.abs(c)}d overdue`, d = "overdue") : c === 0 ? (l = "Due today", d = "urgent") : c <= 3 ? (l = `${c}d left`, d = "urgent") : c <= 7 ? (l = `${c}d left`, d = "approaching") : (l = `${c}d left`, d = "ok"), { dateText: i, completionText: r, deadlineText: l, cls: d, isCompleted: !1 };
+    return { dateText: a, completionText: r, deadlineText: "", cls: "done", isCompleted: !0 };
+  const c = n?.completionDaysRemaining ?? Math.round((i - vr()) / 864e5);
+  let d, l;
+  return c < 0 ? (d = `${Math.abs(c)}d overdue`, l = "overdue") : c === 0 ? (d = "Due today", l = "urgent") : c <= 3 ? (d = `${c}d left`, l = "urgent") : c <= 7 ? (d = `${c}d left`, l = "approaching") : (d = `${c}d left`, l = "ok"), { dateText: a, completionText: r, deadlineText: d, cls: l, isCompleted: !1 };
 }
-function Da() {
+function vr() {
   const t = /* @__PURE__ */ new Date();
   return t.setHours(0, 0, 0, 0), t;
 }
-function Pt(t) {
+function Gt(t) {
   return t ? t === "missing" || t === "not_created" || t === "near_miss" || t === "out_of_range" || t === "in_progress" : !1;
 }
-function ka({ assessment: t, isExpanded: n, onToggle: s, onOpenAnalyzer: i }) {
+function br({ assessment: t, isExpanded: n, onToggle: s, onOpenAnalyzer: a }) {
   const {
-    patientName: a,
+    patientName: i,
     assessmentType: r,
     ardDate: o,
     pdpm: c,
-    assessmentClass: l,
-    sectionProgress: d,
-    udaSummary: u,
-    querySummary: p
-  } = t, m = t.deadlines, h = m?.urgency || "on_track", g = l === "end_of_stay" ? null : mn(c?.payment, "short"), f = Ia(o, m), y = d?.total > 0 && d.completed === d.total, w = d?.total > 0 ? Math.round(d.completed / d.total * 100) : 0, k = (p?.pending || 0) + (p?.sent || 0), C = Pt(u?.bims) || Pt(u?.gg) || Pt(u?.phq9), I = h === "on_track" || h === "completed", P = f.isCompleted ? "✓ Completed" : f.deadlineText || "", A = f.isCompleted ? "done" : f.cls;
+    assessmentClass: d,
+    sectionProgress: l,
+    udaSummary: p,
+    querySummary: u
+  } = t, m = t.deadlines, h = m?.urgency || "on_track", g = d === "end_of_stay" ? null : kn(c?.payment, "short"), v = yr(o, m), b = l?.total > 0 && l.completed === l.total, f = l?.total > 0 ? Math.round(l.completed / l.total * 100) : 0, I = (u?.pending || 0) + (u?.sent || 0), N = Gt(p?.bims) || Gt(p?.gg) || Gt(p?.phq9), D = h === "on_track" || h === "completed", T = v.isCompleted ? "✓ Completed" : v.deadlineText || "", A = v.isCompleted ? "done" : v.cls;
   return /* @__PURE__ */ e(
     "div",
     {
       class: `mds-cc__card${n ? " mds-cc__card--expanded" : ""}`,
-      style: { borderLeftColor: wa[h] || "#9ca3af" },
+      style: { borderLeftColor: gr[h] || "#9ca3af" },
       onClick: s,
       role: "button",
       tabIndex: 0,
@@ -6074,61 +6947,61 @@ function ka({ assessment: t, isExpanded: n, onToggle: s, onOpenAnalyzer: i }) {
       },
       children: [
         /* @__PURE__ */ e("div", { class: "mds-cc__card-row1", children: [
-          /* @__PURE__ */ e("span", { class: "mds-cc__card-name", children: a || "Unknown" }),
-          P && /* @__PURE__ */ e("span", { class: `mds-cc__card-urgency mds-cc__card-urgency--${A}`, children: P }),
+          /* @__PURE__ */ e("span", { class: "mds-cc__card-name", children: i || "Unknown" }),
+          T && /* @__PURE__ */ e("span", { class: `mds-cc__card-urgency mds-cc__card-urgency--${A}`, children: T }),
           /* @__PURE__ */ e("span", { class: `mds-cc__chevron${n ? " mds-cc__chevron--open" : ""}`, children: "›" })
         ] }),
         /* @__PURE__ */ e("div", { class: "mds-cc__card-row2", children: [
-          /* @__PURE__ */ e("span", { class: "mds-cc__card-type", children: Js(r) }),
-          f.dateText && /* @__PURE__ */ e(J, { children: [
+          /* @__PURE__ */ e("span", { class: "mds-cc__card-type", children: ka(r) }),
+          v.dateText && /* @__PURE__ */ e(Q, { children: [
             /* @__PURE__ */ e("span", { class: "mds-cc__card-meta-sep", children: "·" }),
             /* @__PURE__ */ e("span", { class: "mds-cc__card-ard-date", children: [
               "ARD ",
-              f.dateText
+              v.dateText
             ] }),
-            f.completionText && !f.isCompleted && /* @__PURE__ */ e(J, { children: [
+            v.completionText && !v.isCompleted && /* @__PURE__ */ e(Q, { children: [
               /* @__PURE__ */ e("span", { class: "mds-cc__card-meta-sep", children: "·" }),
               /* @__PURE__ */ e("span", { class: "mds-cc__card-complete-date", children: [
                 "Complete by ",
-                f.completionText
+                v.completionText
               ] })
             ] })
           ] })
         ] }),
-        (C || d?.total > 0 || g || k > 0) && /* @__PURE__ */ e("div", { class: "mds-cc__card-row3", children: [
-          C && /* @__PURE__ */ e("span", { class: "mds-cc__card-row3-group", children: [
-            /* @__PURE__ */ e(xt, { label: "BIM", status: u?.bims }),
-            /* @__PURE__ */ e(xt, { label: "GG", status: u?.gg }),
-            /* @__PURE__ */ e(xt, { label: "PHQ", status: u?.phq9 })
+        (N || l?.total > 0 || g || I > 0) && /* @__PURE__ */ e("div", { class: "mds-cc__card-row3", children: [
+          N && /* @__PURE__ */ e("span", { class: "mds-cc__card-row3-group", children: [
+            /* @__PURE__ */ e(Ht, { label: "BIM", status: p?.bims }),
+            /* @__PURE__ */ e(Ht, { label: "GG", status: p?.gg }),
+            /* @__PURE__ */ e(Ht, { label: "PHQ", status: p?.phq9 })
           ] }),
-          d?.total > 0 && /* @__PURE__ */ e("span", { class: `mds-cc__card-progress${y ? " mds-cc__card-progress--done" : ""}${I ? " mds-cc__card-progress--subtle" : ""}`, children: [
+          l?.total > 0 && /* @__PURE__ */ e("span", { class: `mds-cc__card-progress${b ? " mds-cc__card-progress--done" : ""}${D ? " mds-cc__card-progress--subtle" : ""}`, children: [
             /* @__PURE__ */ e("span", { class: "mds-cc__card-progress-bar", children: /* @__PURE__ */ e(
               "span",
               {
                 class: "mds-cc__card-progress-fill",
-                style: { width: `${w}%` }
+                style: { width: `${f}%` }
               }
             ) }),
-            !I && /* @__PURE__ */ e("span", { class: "mds-cc__card-progress-text", children: [
-              d.completed,
+            !D && /* @__PURE__ */ e("span", { class: "mds-cc__card-progress-text", children: [
+              l.completed,
               "/",
-              d.total
+              l.total
             ] })
           ] }),
-          k > 0 && /* @__PURE__ */ e("span", { class: "mds-cc__card-queries", children: [
-            k,
+          I > 0 && /* @__PURE__ */ e("span", { class: "mds-cc__card-queries", children: [
+            I,
             " pending ",
-            k === 1 ? "query" : "queries"
+            I === 1 ? "query" : "queries"
           ] }),
           g && /* @__PURE__ */ e(
             "span",
             {
-              class: `mds-cc__card-revenue${i ? " mds-cc__card-revenue--clickable" : ""}`,
-              onClick: i ? (x) => {
-                x.stopPropagation(), i();
+              class: `mds-cc__card-revenue${a ? " mds-cc__card-revenue--clickable" : ""}`,
+              onClick: a ? (x) => {
+                x.stopPropagation(), a();
               } : void 0,
-              title: i ? "Open PDPM Analyzer" : void 0,
-              role: i ? "button" : void 0,
+              title: a ? "Open PDPM Analyzer" : void 0,
+              role: a ? "button" : void 0,
               children: g
             }
           )
@@ -6137,23 +7010,23 @@ function ka({ assessment: t, isExpanded: n, onToggle: s, onOpenAnalyzer: i }) {
     }
   );
 }
-function Ca(t) {
-  const [n, s] = v(null), [i, a] = v(!1), [r, o] = v(null);
+function wr(t) {
+  const [n, s] = y(null), [a, i] = y(!1), [r, o] = y(null);
   return F(() => {
     if (!t) {
       s(null), o(null);
       return;
     }
     let c = !1;
-    a(!0), o(null);
-    async function l() {
+    i(!0), o(null);
+    async function d() {
       try {
         if (!(await chrome.runtime.sendMessage({ type: "GET_AUTH_STATE" })).authenticated)
           throw new Error("Please log in to view detail");
-        const p = getOrg()?.org, m = window.getChatFacilityInfo?.() || "", h = new URLSearchParams({
+        const u = getOrg()?.org, m = window.getChatFacilityInfo?.() || "", h = new URLSearchParams({
           externalAssessmentId: t,
           facilityName: m,
-          orgSlug: p
+          orgSlug: u
         }), _ = await chrome.runtime.sendMessage({
           type: "API_REQUEST",
           endpoint: `/api/extension/mds/pdpm-potential?${h}`,
@@ -6162,52 +7035,52 @@ function Ca(t) {
         if (!_.success)
           throw new Error(_.error || "Failed to load assessment detail");
         c || s(_.data);
-      } catch (d) {
-        c || o(d.message || "Failed to load detail");
+      } catch (l) {
+        c || o(l.message || "Failed to load detail");
       } finally {
-        c || a(!1);
+        c || i(!1);
       }
     }
-    return l(), () => {
+    return d(), () => {
       c = !0;
     };
-  }, [t]), { detailData: n, loading: i, error: r };
+  }, [t]), { detailData: n, loading: a, error: r };
 }
-function Na(t) {
+function Ir(t) {
   const n = [];
   return t.impact?.nursing?.wouldChangeGroup && n.push("raises nursing"), t.impact?.ptot?.wouldChangeGroup && n.push("raises PT/OT"), t.impact?.slp?.wouldChangeGroup && n.push("raises speech therapy"), t.impact?.nta?.wouldChangeLevel && n.push("raises NTA tier"), n.length === 0 ? "" : n.join(" · ");
 }
-function Sa(t) {
+function Dr(t) {
   if (!t) return "not yet sent";
   const n = Math.floor((Date.now() - new Date(t)) / 864e5);
   return n === 0 ? "sent today" : `sent ${n}d ago`;
 }
-function Ys(t) {
+function Ca(t) {
   if (!t?.checks)
-    return t?.status === "failed" && t.issues?.length > 0 ? t.issues.map((i) => i.message || i) : [];
+    return t?.status === "failed" && t.issues?.length > 0 ? t.issues.map((a) => a.message || a) : [];
   const n = { bims: "BIMS", phq9: "PHQ-9", gg: "GG", orders: "Orders", therapyDocs: "Therapy" }, s = [];
-  for (const [i, a] of Object.entries(t.checks))
-    a.status === "failed" && s.push(a.message || `${n[i] || i} incomplete`);
+  for (const [a, i] of Object.entries(t.checks))
+    i.status === "failed" && s.push(i.message || `${n[a] || a} incomplete`);
   return s;
 }
-function xa({ pdpm: t, detailData: n, payment: s, sectionProgress: i, compliance: a, isEndOfStay: r }) {
-  const o = [], c = n?.currentHipps || t?.currentHipps, l = n?.potentialHipps || t?.potentialHipps, d = l && l !== c && !r, p = un(s) && s.delta > 0 ? mn(s, "short") : null;
-  d && p ? o.push(/* @__PURE__ */ e("span", { class: "mds-cc__ss-part mds-cc__ss-part--revenue", children: [
-    p,
+function Nr({ pdpm: t, detailData: n, payment: s, sectionProgress: a, compliance: i, isEndOfStay: r }) {
+  const o = [], c = n?.currentHipps || t?.currentHipps, d = n?.potentialHipps || t?.potentialHipps, l = d && d !== c && !r, u = Nn(s) && s.delta > 0 ? kn(s, "short") : null;
+  l && u ? o.push(/* @__PURE__ */ e("span", { class: "mds-cc__ss-part mds-cc__ss-part--revenue", children: [
+    u,
     " opportunity"
-  ] })) : d && o.push(/* @__PURE__ */ e("span", { class: "mds-cc__ss-part", children: [
+  ] })) : l && o.push(/* @__PURE__ */ e("span", { class: "mds-cc__ss-part", children: [
     "HIPPS ",
     c,
     " ",
     "→",
     " ",
-    l
-  ] })), i?.percentComplete != null && o.push(/* @__PURE__ */ e("span", { class: "mds-cc__ss-part", children: [
+    d
+  ] })), a?.percentComplete != null && o.push(/* @__PURE__ */ e("span", { class: "mds-cc__ss-part", children: [
     "Sections ",
-    i.percentComplete,
+    a.percentComplete,
     "%"
   ] }));
-  const m = Ys(a), h = n?.enhancedDetections?.filter(
+  const m = Ca(i), h = n?.enhancedDetections?.filter(
     (g) => g.solverStatus === "dont_code" && (g.diagnosisPassed === !1 || g.activeStatusPassed === !1)
   ).length || 0, _ = m.length + h;
   return _ > 0 && o.push(/* @__PURE__ */ e("span", { class: "mds-cc__ss-part mds-cc__ss-part--issues", children: [
@@ -6216,32 +7089,32 @@ function xa({ pdpm: t, detailData: n, payment: s, sectionProgress: i, compliance
     _,
     " ",
     _ === 1 ? "issue" : "issues"
-  ] })), o.length === 0 ? null : /* @__PURE__ */ e("div", { class: "mds-cc__ss", children: o.map((g, f) => /* @__PURE__ */ e(J, { children: [
-    f > 0 && /* @__PURE__ */ e("span", { class: "mds-cc__ss-sep" }),
+  ] })), o.length === 0 ? null : /* @__PURE__ */ e("div", { class: "mds-cc__ss", children: o.map((g, v) => /* @__PURE__ */ e(Q, { children: [
+    v > 0 && /* @__PURE__ */ e("span", { class: "mds-cc__ss-sep" }),
     g
   ] })) });
 }
-function Pa({ detailData: t, onSelectItem: n }) {
-  const i = (t?.enhancedDetections || []).filter(
-    (a) => a.wouldChangeHipps && a.solverStatus !== "query_sent" && a.solverStatus !== "awaiting_response" && a.solverStatus !== "dont_code"
+function kr({ detailData: t, onSelectItem: n }) {
+  const a = (t?.enhancedDetections || []).filter(
+    (i) => i.wouldChangeHipps && i.solverStatus !== "query_sent" && i.solverStatus !== "awaiting_response" && i.solverStatus !== "dont_code"
   );
-  return i.length === 0 ? null : /* @__PURE__ */ e("div", { class: "mds-cc__ps", children: [
+  return a.length === 0 ? null : /* @__PURE__ */ e("div", { class: "mds-cc__ps", children: [
     /* @__PURE__ */ e("div", { class: "mds-cc__ps-header", children: [
-      i.length,
+      a.length,
       " revenue ",
-      i.length === 1 ? "opportunity" : "opportunities"
+      a.length === 1 ? "opportunity" : "opportunities"
     ] }),
-    /* @__PURE__ */ e("div", { class: "mds-cc__ps-items", children: i.map((a, r) => {
-      const o = Na(a);
+    /* @__PURE__ */ e("div", { class: "mds-cc__ps-items", children: a.map((i, r) => {
+      const o = Ir(i);
       return /* @__PURE__ */ e(
         "div",
         {
           class: "mds-cc__ps-item mds-cc__ps-item--clickable",
-          onClick: () => n(a),
+          onClick: () => n(i),
           role: "button",
           title: "View evidence",
           children: [
-            /* @__PURE__ */ e("span", { class: "mds-cc__ps-item-name", children: a.itemName }),
+            /* @__PURE__ */ e("span", { class: "mds-cc__ps-item-name", children: i.itemName }),
             o && /* @__PURE__ */ e("span", { class: "mds-cc__ps-item-impact", children: [
               "— ",
               o
@@ -6253,45 +7126,45 @@ function Pa({ detailData: t, onSelectItem: n }) {
     }) })
   ] });
 }
-function Ta() {
+function Cr() {
   return /* @__PURE__ */ e("div", { class: "mds-cc__prev-detail-loading", children: [
     /* @__PURE__ */ e("div", { class: "mds-cc__spinner mds-cc__spinner--sm" }),
     /* @__PURE__ */ e("span", { children: "Loading assessment detail..." })
   ] });
 }
-function Aa({ message: t }) {
+function Sr({ message: t }) {
   return /* @__PURE__ */ e("div", { class: "mds-cc__prev-detail-error", children: /* @__PURE__ */ e("span", { children: [
     "⚠",
     " ",
     t
   ] }) });
 }
-const Fn = {
+const ss = {
   bims: "nursing or social services",
   phq9: "nursing",
   gg: "therapy"
-}, Un = {
+}, as = {
   bims: "BIMS",
   phq9: "PHQ-9",
   gg: "GG"
 };
-function Ma(t) {
+function xr(t) {
   if (!t) return [];
   const n = [];
   for (const s of ["bims", "phq9", "gg"]) {
-    const i = t[s];
-    i === "missing" || i === "not_created" ? n.push({ key: s, label: Un[s], owner: Fn[s], severity: "missing" }) : (i === "near_miss" || i === "out_of_range") && n.push({ key: s, label: Un[s], owner: Fn[s], severity: "out_of_range" });
+    const a = t[s];
+    a === "missing" || a === "not_created" ? n.push({ key: s, label: as[s], owner: ss[s], severity: "missing" }) : (a === "near_miss" || a === "out_of_range") && n.push({ key: s, label: as[s], owner: ss[s], severity: "out_of_range" });
   }
   return n;
 }
-function La({ assessment: t, detailData: n }) {
-  const s = Ma(t.udaSummary), i = Ys(t.compliance), a = (n?.outstandingQueries || []).filter(
-    (l) => l.status === "sent" || l.status === "pending" || l.status === "awaiting_response"
+function Pr({ assessment: t, detailData: n }) {
+  const s = xr(t.udaSummary), a = Ca(t.compliance), i = (n?.outstandingQueries || []).filter(
+    (d) => d.status === "sent" || d.status === "pending" || d.status === "awaiting_response"
   ), r = (n?.enhancedDetections || []).filter(
-    (l) => l.solverStatus === "dont_code" && (l.diagnosisPassed === !1 || l.activeStatusPassed === !1)
+    (d) => d.solverStatus === "dont_code" && (d.diagnosisPassed === !1 || d.activeStatusPassed === !1)
   );
-  if (!(s.length > 0 || i.length > 0 || a.length > 0 || r.length > 0)) return null;
-  const c = s.length + i.length + a.length + r.length;
+  if (!(s.length > 0 || a.length > 0 || i.length > 0 || r.length > 0)) return null;
+  const c = s.length + a.length + i.length + r.length;
   return /* @__PURE__ */ e("div", { class: "mds-cc__blockers", children: [
     /* @__PURE__ */ e("div", { class: "mds-cc__blockers-header", children: [
       "⚠",
@@ -6300,55 +7173,55 @@ function La({ assessment: t, detailData: n }) {
       " ",
       c === 1 ? "blocker" : "blockers"
     ] }),
-    s.length > 0 && /* @__PURE__ */ e("div", { class: "mds-cc__blockers-group", children: s.map((l) => /* @__PURE__ */ e("div", { class: "mds-cc__blocker mds-cc__blocker--uda", children: [
-      /* @__PURE__ */ e("span", { class: "mds-cc__blocker-label", children: l.label }),
-      /* @__PURE__ */ e("span", { class: "mds-cc__blocker-status", children: l.severity === "missing" ? "Not completed" : "Outside window" }),
+    s.length > 0 && /* @__PURE__ */ e("div", { class: "mds-cc__blockers-group", children: s.map((d) => /* @__PURE__ */ e("div", { class: "mds-cc__blocker mds-cc__blocker--uda", children: [
+      /* @__PURE__ */ e("span", { class: "mds-cc__blocker-label", children: d.label }),
+      /* @__PURE__ */ e("span", { class: "mds-cc__blocker-status", children: d.severity === "missing" ? "Not completed" : "Outside window" }),
       /* @__PURE__ */ e("span", { class: "mds-cc__blocker-owner", children: [
         "→",
         " ",
-        l.owner
+        d.owner
       ] })
-    ] }, l.key)) }),
-    a.length > 0 && /* @__PURE__ */ e("div", { class: "mds-cc__blockers-group", children: a.map((l, d) => /* @__PURE__ */ e("div", { class: "mds-cc__blocker mds-cc__blocker--query", children: [
+    ] }, d.key)) }),
+    i.length > 0 && /* @__PURE__ */ e("div", { class: "mds-cc__blockers-group", children: i.map((d, l) => /* @__PURE__ */ e("div", { class: "mds-cc__blocker mds-cc__blocker--query", children: [
       /* @__PURE__ */ e("span", { class: "mds-cc__blocker-label", children: [
-        l.mdsItem || "Query",
+        d.mdsItem || "Query",
         ": ",
-        l.mdsItemName
+        d.mdsItemName
       ] }),
-      /* @__PURE__ */ e("span", { class: "mds-cc__blocker-status", children: Sa(l.sentAt) })
-    ] }, d)) }),
-    r.length > 0 && /* @__PURE__ */ e("div", { class: "mds-cc__blockers-group", children: r.map((l, d) => {
-      const u = l.mdsItem?.startsWith("I8000:") ? "I8000" : l.mdsItem, p = [];
-      return l.diagnosisPassed === !1 && p.push("no dx"), l.activeStatusPassed === !1 && p.push("no active tx"), /* @__PURE__ */ e("div", { class: "mds-cc__blocker mds-cc__blocker--risk", children: [
+      /* @__PURE__ */ e("span", { class: "mds-cc__blocker-status", children: Dr(d.sentAt) })
+    ] }, l)) }),
+    r.length > 0 && /* @__PURE__ */ e("div", { class: "mds-cc__blockers-group", children: r.map((d, l) => {
+      const p = d.mdsItem?.startsWith("I8000:") ? "I8000" : d.mdsItem, u = [];
+      return d.diagnosisPassed === !1 && u.push("no dx"), d.activeStatusPassed === !1 && u.push("no active tx"), /* @__PURE__ */ e("div", { class: "mds-cc__blocker mds-cc__blocker--risk", children: [
         /* @__PURE__ */ e("span", { class: "mds-cc__blocker-label", children: [
-          u,
+          p,
           ": ",
-          l.itemName
+          d.itemName
         ] }),
-        /* @__PURE__ */ e("span", { class: "mds-cc__blocker-status", children: p.join(" · ") })
-      ] }, d);
+        /* @__PURE__ */ e("span", { class: "mds-cc__blocker-status", children: u.join(" · ") })
+      ] }, l);
     }) }),
-    i.length > 0 && /* @__PURE__ */ e("div", { class: "mds-cc__blockers-group", children: i.map((l, d) => /* @__PURE__ */ e("div", { class: "mds-cc__blocker mds-cc__blocker--compliance", children: /* @__PURE__ */ e("span", { class: "mds-cc__blocker-label", children: l }) }, d)) })
+    a.length > 0 && /* @__PURE__ */ e("div", { class: "mds-cc__blockers-group", children: a.map((d, l) => /* @__PURE__ */ e("div", { class: "mds-cc__blocker mds-cc__blocker--compliance", children: /* @__PURE__ */ e("span", { class: "mds-cc__blocker-label", children: d }) }, l)) })
   ] });
 }
-function Zs({ assessment: t, onOpenAnalyzer: n, onSelectItem: s }) {
-  const { pdpm: i, sectionProgress: a, compliance: r } = t, o = t.externalAssessmentId || t.assessmentId, c = t.assessmentClass === "end_of_stay", { detailData: l, loading: d, error: u } = Ca(o), p = l?.payment || i?.payment;
+function Sa({ assessment: t, onOpenAnalyzer: n, onSelectItem: s }) {
+  const { pdpm: a, sectionProgress: i, compliance: r } = t, o = t.externalAssessmentId || t.assessmentId, c = t.assessmentClass === "end_of_stay", { detailData: d, loading: l, error: p } = wr(o), u = d?.payment || a?.payment;
   return /* @__PURE__ */ e("div", { class: "mds-cc__preview", onClick: (m) => m.stopPropagation(), children: [
-    /* @__PURE__ */ e(La, { assessment: t, detailData: l }),
+    /* @__PURE__ */ e(Pr, { assessment: t, detailData: d }),
     /* @__PURE__ */ e(
-      xa,
+      Nr,
       {
-        pdpm: i,
-        detailData: l,
-        payment: p,
-        sectionProgress: a,
+        pdpm: a,
+        detailData: d,
+        payment: u,
+        sectionProgress: i,
         compliance: r,
         isEndOfStay: c
       }
     ),
-    d && /* @__PURE__ */ e(Ta, {}),
-    !d && u && /* @__PURE__ */ e(Aa, { message: u }),
-    !d && l && /* @__PURE__ */ e(Pa, { detailData: l, onSelectItem: s }),
+    l && /* @__PURE__ */ e(Cr, {}),
+    !l && p && /* @__PURE__ */ e(Sr, { message: p }),
+    !l && d && /* @__PURE__ */ e(kr, { detailData: d, onSelectItem: s }),
     /* @__PURE__ */ e("div", { class: "mds-cc__prev-actions", children: [
       /* @__PURE__ */ e("button", { class: "mds-cc__action-btn mds-cc__action-btn--primary", onClick: n, children: "Open Full Analyzer" }),
       o && /* @__PURE__ */ e(
@@ -6376,68 +7249,68 @@ function Zs({ assessment: t, onOpenAnalyzer: n, onSelectItem: s }) {
     ] })
   ] });
 }
-const hn = {
+const Cn = {
   overdue: "#ef4444",
   urgent: "#f97316",
   approaching: "#eab308",
   on_track: "#22c55e",
   completed: "#6b7280",
   far_out: "#9ca3af"
-}, Ea = {
+}, Tr = {
   assessments: "MDS",
   queries: "QUERY",
   certs: "CERT"
 };
-function en(t) {
+function un(t) {
   if (!t) return null;
   const n = typeof t == "string" ? /* @__PURE__ */ new Date(t + "T00:00:00") : new Date(t);
   return isNaN(n) ? null : (n.setHours(0, 0, 0, 0), n);
 }
-function ht(t) {
+function Ct(t) {
   if (!t) return null;
-  const n = t.getFullYear(), s = String(t.getMonth() + 1).padStart(2, "0"), i = String(t.getDate()).padStart(2, "0");
-  return `${n}-${s}-${i}`;
+  const n = t.getFullYear(), s = String(t.getMonth() + 1).padStart(2, "0"), a = String(t.getDate()).padStart(2, "0");
+  return `${n}-${s}-${a}`;
 }
-function $a(t) {
+function Ar(t) {
   return t.toLocaleDateString("en-US", { month: "long", year: "numeric" });
 }
-function Ra(t) {
+function Mr(t) {
   return t.getDate();
 }
-function qa(t, n) {
+function qr(t, n) {
   return t.getFullYear() === n.getFullYear() && t.getMonth() === n.getMonth();
 }
-function Xs(t) {
+function xa(t) {
   const n = /* @__PURE__ */ new Date();
   return n.setHours(0, 0, 0, 0), t.getTime() === n.getTime();
 }
-function Oa(t) {
+function Lr(t) {
   const n = new Date(t);
   return n.setDate(1), n.setHours(0, 0, 0, 0), n;
 }
-function _t(t) {
-  const n = new Date(t), i = (n.getDay() + 6) % 7;
-  return n.setDate(n.getDate() - i), n.setHours(0, 0, 0, 0), n;
+function St(t) {
+  const n = new Date(t), a = (n.getDay() + 6) % 7;
+  return n.setDate(n.getDate() - a), n.setHours(0, 0, 0, 0), n;
 }
-function Ue(t, n) {
+function Ke(t, n) {
   const s = new Date(t);
   return s.setDate(s.getDate() + n), s;
 }
-function Gn(t, n) {
+function is(t, n) {
   const s = new Date(t);
   return s.setMonth(s.getMonth() + n), s;
 }
-function Ha(t, n, s, i) {
-  const a = [];
+function Er(t, n, s, a) {
+  const i = [];
   for (const r of t || []) {
     if (!r.ardDate) continue;
     const o = r.deadlines?.urgency || "on_track";
-    a.push({
+    i.push({
       id: r.id || r.assessmentId || r.externalAssessmentId,
       layer: "assessments",
       patientId: r.patientId,
       patientName: r.patientName,
-      type: Js(r.assessmentType) || r.assessmentType,
+      type: ka(r.assessmentType) || r.assessmentType,
       date: r.ardDate,
       urgency: o,
       kind: "open",
@@ -6445,140 +7318,140 @@ function Ha(t, n, s, i) {
     });
   }
   for (const r of n || [])
-    r.isOpened || r.dueDate && a.push({
+    r.isOpened || r.dueDate && i.push({
       id: `sched-${r.patientId}-${r.assessmentType}-${r.dueDate}`,
       layer: "assessments",
       patientId: r.patientId,
       patientName: r.patientName,
-      type: Ua(r.assessmentType),
+      type: Or(r.assessmentType),
       date: r.dueDate,
       urgency: r.urgency || "on_track",
       kind: "upcoming",
       ref: r
     });
   for (const r of s || [])
-    r.ardDate && a.push({
+    r.ardDate && i.push({
       id: `query-${r.id}`,
       layer: "queries",
       patientId: r.patientId,
       patientName: r.patientName,
       type: `Query: ${r.mdsItem || ""} ${r.mdsItemName || ""}`.trim(),
       date: r.ardDate,
-      urgency: Ba(r.ardDaysRemaining),
+      urgency: $r(r.ardDaysRemaining),
       kind: "query",
       ref: r
     });
-  for (const r of i || [])
-    r.dueDate && a.push({
+  for (const r of a || [])
+    r.dueDate && i.push({
       id: `cert-${r.id}`,
       layer: "certs",
       patientId: r.patientId,
       patientName: r.patientName,
       type: `${r.certType || "Cert"}${r.stayType ? ` (${r.stayType})` : ""}`,
       date: r.dueDate,
-      urgency: Fa(r),
+      urgency: Rr(r),
       kind: "cert",
       ref: r
     });
-  return a;
+  return i;
 }
-function Ba(t) {
+function $r(t) {
   return t == null ? "on_track" : t < 0 ? "overdue" : t <= 3 ? "urgent" : t <= 7 ? "approaching" : "on_track";
 }
-function Fa(t) {
+function Rr(t) {
   const n = t.dueDate ? /* @__PURE__ */ new Date(t.dueDate + "T00:00:00") : null;
   if (!n) return "on_track";
   const s = /* @__PURE__ */ new Date();
   s.setHours(0, 0, 0, 0);
-  const i = Math.round((n - s) / 864e5);
-  return i < 0 || t.isDelayed ? "overdue" : i <= 3 ? "urgent" : i <= 7 ? "approaching" : "on_track";
+  const a = Math.round((n - s) / 864e5);
+  return a < 0 || t.isDelayed ? "overdue" : a <= 3 ? "urgent" : a <= 7 ? "approaching" : "on_track";
 }
-function Ua(t) {
+function Or(t) {
   return t === "quarterly" ? "Quarterly" : t === "annual" ? "Annual" : t === "admission" ? "Admission" : t;
 }
-function Ga(t) {
+function Br(t) {
   return t ? t.replace(/\s*\(\d[\d-]*\)\s*$/, "").trim().replace(/\w\S*/g, (s) => s[0].toUpperCase() + s.slice(1).toLowerCase()) : "";
 }
-function Va({ anchorDate: t, itemsByDay: n, onSelectDay: s, selectedDay: i }) {
-  const a = Oa(t), r = _t(a), o = [];
-  for (let l = 0; l < 42; l++) o.push(Ue(r, l));
+function Hr({ anchorDate: t, itemsByDay: n, onSelectDay: s, selectedDay: a }) {
+  const i = Lr(t), r = St(i), o = [];
+  for (let d = 0; d < 42; d++) o.push(Ke(r, d));
   return /* @__PURE__ */ e("div", { class: "mds-cc__cal-month", children: [
-    /* @__PURE__ */ e("div", { class: "mds-cc__cal-weekdays", children: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map((l) => /* @__PURE__ */ e("div", { class: "mds-cc__cal-weekday", children: l }, l)) }),
-    /* @__PURE__ */ e("div", { class: "mds-cc__cal-grid", children: o.map((l) => {
-      const d = ht(l), u = n.get(d) || [], p = qa(l, t), m = Xs(l);
+    /* @__PURE__ */ e("div", { class: "mds-cc__cal-weekdays", children: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map((d) => /* @__PURE__ */ e("div", { class: "mds-cc__cal-weekday", children: d }, d)) }),
+    /* @__PURE__ */ e("div", { class: "mds-cc__cal-grid", children: o.map((d) => {
+      const l = Ct(d), p = n.get(l) || [], u = qr(d, t), m = xa(d);
       return /* @__PURE__ */ e(
         "div",
         {
-          class: `mds-cc__cal-day${p ? "" : " mds-cc__cal-day--out"}${m ? " mds-cc__cal-day--today" : ""}${i === d ? " mds-cc__cal-day--selected" : ""}${u.length > 0 ? " mds-cc__cal-day--has-items" : ""}`,
-          onClick: () => u.length > 0 && s(d),
-          role: u.length > 0 ? "button" : void 0,
-          tabIndex: u.length > 0 ? 0 : void 0,
+          class: `mds-cc__cal-day${u ? "" : " mds-cc__cal-day--out"}${m ? " mds-cc__cal-day--today" : ""}${a === l ? " mds-cc__cal-day--selected" : ""}${p.length > 0 ? " mds-cc__cal-day--has-items" : ""}`,
+          onClick: () => p.length > 0 && s(l),
+          role: p.length > 0 ? "button" : void 0,
+          tabIndex: p.length > 0 ? 0 : void 0,
           children: [
-            /* @__PURE__ */ e("div", { class: "mds-cc__cal-day-num", children: Ra(l) }),
-            u.length > 0 && /* @__PURE__ */ e("div", { class: "mds-cc__cal-day-dots", children: [
-              u.slice(0, 4).map((_, g) => /* @__PURE__ */ e(
+            /* @__PURE__ */ e("div", { class: "mds-cc__cal-day-num", children: Mr(d) }),
+            p.length > 0 && /* @__PURE__ */ e("div", { class: "mds-cc__cal-day-dots", children: [
+              p.slice(0, 4).map((_, g) => /* @__PURE__ */ e(
                 "span",
                 {
                   class: "mds-cc__cal-dot",
-                  style: { background: hn[_.urgency] || "#9ca3af" }
+                  style: { background: Cn[_.urgency] || "#9ca3af" }
                 },
                 g
               )),
-              u.length > 4 && /* @__PURE__ */ e("span", { class: "mds-cc__cal-day-overflow", children: [
+              p.length > 4 && /* @__PURE__ */ e("span", { class: "mds-cc__cal-day-overflow", children: [
                 "+",
-                u.length - 4
+                p.length - 4
               ] })
             ] })
           ]
         },
-        d
+        l
       );
     }) })
   ] });
 }
-function Wa({ anchorDate: t, itemsByDay: n, onItemClick: s }) {
-  const i = _t(t), a = [];
-  for (let o = 0; o < 7; o++) a.push(Ue(i, o));
+function Gr({ anchorDate: t, itemsByDay: n, onItemClick: s }) {
+  const a = St(t), i = [];
+  for (let o = 0; o < 7; o++) i.push(Ke(a, o));
   const r = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-  return /* @__PURE__ */ e("div", { class: "mds-cc__cal-week", children: a.map((o, c) => {
-    const l = ht(o), d = n.get(l) || [], u = Xs(o);
-    return /* @__PURE__ */ e("div", { class: `mds-cc__cal-week-col${u ? " mds-cc__cal-week-col--today" : ""}`, children: [
+  return /* @__PURE__ */ e("div", { class: "mds-cc__cal-week", children: i.map((o, c) => {
+    const d = Ct(o), l = n.get(d) || [], p = xa(o);
+    return /* @__PURE__ */ e("div", { class: `mds-cc__cal-week-col${p ? " mds-cc__cal-week-col--today" : ""}`, children: [
       /* @__PURE__ */ e("div", { class: "mds-cc__cal-week-header", children: [
         /* @__PURE__ */ e("span", { class: "mds-cc__cal-week-dow", children: r[c] }),
         /* @__PURE__ */ e("span", { class: "mds-cc__cal-week-date", children: o.toLocaleDateString("en-US", { month: "short", day: "numeric" }) })
       ] }),
       /* @__PURE__ */ e("div", { class: "mds-cc__cal-week-body", children: [
-        d.length === 0 && /* @__PURE__ */ e("div", { class: "mds-cc__cal-week-empty", children: "—" }),
-        d.map((p) => {
-          const m = p.kind === "open";
+        l.length === 0 && /* @__PURE__ */ e("div", { class: "mds-cc__cal-week-empty", children: "—" }),
+        l.map((u) => {
+          const m = u.kind === "open";
           return /* @__PURE__ */ e(
             "div",
             {
-              class: `mds-cc__cal-week-item mds-cc__cal-week-item--${p.kind}${m ? " mds-cc__cal-week-item--clickable" : ""}`,
-              style: { borderLeftColor: hn[p.urgency] || "#9ca3af" },
-              title: `${p.patientName} · ${p.type}`,
-              onClick: m ? () => s?.(p) : void 0,
+              class: `mds-cc__cal-week-item mds-cc__cal-week-item--${u.kind}${m ? " mds-cc__cal-week-item--clickable" : ""}`,
+              style: { borderLeftColor: Cn[u.urgency] || "#9ca3af" },
+              title: `${u.patientName} · ${u.type}`,
+              onClick: m ? () => s?.(u) : void 0,
               role: m ? "button" : void 0,
               tabIndex: m ? 0 : void 0,
               children: [
-                /* @__PURE__ */ e("div", { class: "mds-cc__cal-week-patient", children: Ga(p.patientName) }),
-                /* @__PURE__ */ e("div", { class: "mds-cc__cal-week-type", children: p.type })
+                /* @__PURE__ */ e("div", { class: "mds-cc__cal-week-patient", children: Br(u.patientName) }),
+                /* @__PURE__ */ e("div", { class: "mds-cc__cal-week-type", children: u.type })
               ]
             },
-            p.id
+            u.id
           );
         })
       ] })
-    ] }, l);
+    ] }, d);
   }) });
 }
-function Qa({ dayKey: t, items: n, onClose: s, onOpenAnalyzer: i }) {
-  const [a, r] = v(null);
+function Fr({ dayKey: t, items: n, onClose: s, onOpenAnalyzer: a }) {
+  const [i, r] = y(null);
   if (F(() => {
     r(null);
   }, [t]), !t || !n || n.length === 0) return null;
-  const o = en(t), c = o ? o.toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" }) : t;
-  return a && a.kind === "open" && a.ref ? /* @__PURE__ */ e(J, { children: [
+  const o = un(t), c = o ? o.toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" }) : t;
+  return i && i.kind === "open" && i.ref ? /* @__PURE__ */ e(Q, { children: [
     /* @__PURE__ */ e("div", { class: "mds-cc__cal-panel-backdrop", onClick: s }),
     /* @__PURE__ */ e("div", { class: "mds-cc__cal-panel mds-cc__cal-panel--detail", children: [
       /* @__PURE__ */ e("div", { class: "mds-cc__cal-panel-header", children: [
@@ -6600,18 +7473,18 @@ function Qa({ dayKey: t, items: n, onClose: s, onOpenAnalyzer: i }) {
         ] }) })
       ] }),
       /* @__PURE__ */ e("div", { class: "mds-cc__cal-panel-detail-title", children: [
-        /* @__PURE__ */ e("div", { class: "mds-cc__cal-panel-detail-patient", children: a.patientName }),
-        /* @__PURE__ */ e("div", { class: "mds-cc__cal-panel-detail-type", children: a.type })
+        /* @__PURE__ */ e("div", { class: "mds-cc__cal-panel-detail-patient", children: i.patientName }),
+        /* @__PURE__ */ e("div", { class: "mds-cc__cal-panel-detail-type", children: i.type })
       ] }),
       /* @__PURE__ */ e("div", { class: "mds-cc__cal-panel-body", children: /* @__PURE__ */ e(
-        Zs,
+        Sa,
         {
-          assessment: a.ref,
-          onOpenAnalyzer: () => i?.(a.ref)
+          assessment: i.ref,
+          onOpenAnalyzer: () => a?.(i.ref)
         }
       ) })
     ] })
-  ] }) : /* @__PURE__ */ e(J, { children: [
+  ] }) : /* @__PURE__ */ e(Q, { children: [
     /* @__PURE__ */ e("div", { class: "mds-cc__cal-panel-backdrop", onClick: s }),
     /* @__PURE__ */ e("div", { class: "mds-cc__cal-panel", children: [
       /* @__PURE__ */ e("div", { class: "mds-cc__cal-panel-header", children: [
@@ -6626,124 +7499,124 @@ function Qa({ dayKey: t, items: n, onClose: s, onOpenAnalyzer: i }) {
         " ",
         n.length === 1 ? "assessment" : "assessments"
       ] }),
-      /* @__PURE__ */ e("div", { class: "mds-cc__cal-panel-items", children: n.map((l) => {
-        const d = l.kind === "open", u = Ea[l.layer] || "";
+      /* @__PURE__ */ e("div", { class: "mds-cc__cal-panel-items", children: n.map((d) => {
+        const l = d.kind === "open", p = Tr[d.layer] || "";
         return /* @__PURE__ */ e(
           "div",
           {
-            class: `mds-cc__cal-panel-item mds-cc__cal-panel-item--${l.layer}${d ? " mds-cc__cal-panel-item--clickable" : ""}`,
-            style: { borderLeftColor: hn[l.urgency] || "#9ca3af" },
-            onClick: d ? () => r(l) : void 0,
-            role: d ? "button" : void 0,
-            tabIndex: d ? 0 : void 0,
+            class: `mds-cc__cal-panel-item mds-cc__cal-panel-item--${d.layer}${l ? " mds-cc__cal-panel-item--clickable" : ""}`,
+            style: { borderLeftColor: Cn[d.urgency] || "#9ca3af" },
+            onClick: l ? () => r(d) : void 0,
+            role: l ? "button" : void 0,
+            tabIndex: l ? 0 : void 0,
             children: [
               /* @__PURE__ */ e("div", { class: "mds-cc__cal-panel-item-top", children: [
-                /* @__PURE__ */ e("span", { class: `mds-cc__cal-panel-item-layer mds-cc__cal-panel-item-layer--${l.layer}`, children: u }),
-                /* @__PURE__ */ e("span", { class: "mds-cc__cal-panel-item-patient", children: l.patientName })
+                /* @__PURE__ */ e("span", { class: `mds-cc__cal-panel-item-layer mds-cc__cal-panel-item-layer--${d.layer}`, children: p }),
+                /* @__PURE__ */ e("span", { class: "mds-cc__cal-panel-item-patient", children: d.patientName })
               ] }),
               /* @__PURE__ */ e("div", { class: "mds-cc__cal-panel-item-meta", children: [
-                l.type,
-                l.kind === "upcoming" && /* @__PURE__ */ e("span", { class: "mds-cc__cal-panel-item-badge", children: "Not opened" })
+                d.type,
+                d.kind === "upcoming" && /* @__PURE__ */ e("span", { class: "mds-cc__cal-panel-item-badge", children: "Not opened" })
               ] }),
-              d && /* @__PURE__ */ e("span", { class: "mds-cc__cal-panel-item-chevron", children: "›" })
+              l && /* @__PURE__ */ e("span", { class: "mds-cc__cal-panel-item-chevron", children: "›" })
             ]
           },
-          l.id
+          d.id
         );
       }) })
     ] })
   ] });
 }
-function Tt({ label: t, count: n, active: s, color: i, onToggle: a }) {
+function Ft({ label: t, count: n, active: s, color: a, onToggle: i }) {
   return /* @__PURE__ */ e(
     "button",
     {
       class: `mds-cc__cal-layer${s ? " mds-cc__cal-layer--active" : ""}`,
-      style: s ? { borderColor: i, color: i } : void 0,
-      onClick: a,
+      style: s ? { borderColor: a, color: a } : void 0,
+      onClick: i,
       type: "button",
       children: [
-        /* @__PURE__ */ e("span", { class: "mds-cc__cal-layer-dot", style: { background: s ? i : "#d1d5db" } }),
+        /* @__PURE__ */ e("span", { class: "mds-cc__cal-layer-dot", style: { background: s ? a : "#d1d5db" } }),
         t,
         /* @__PURE__ */ e("span", { class: "mds-cc__cal-layer-count", children: n })
       ]
     }
   );
 }
-const za = { assessments: !0, queries: !0, certs: !0 };
-function ja({
+const Ur = { assessments: !0, queries: !0, certs: !0 };
+function Vr({
   dashboardAssessments: t,
   scheduleItems: n,
   outstandingQueries: s,
-  certs: i,
-  onJumpToAssessment: a
+  certs: a,
+  onJumpToAssessment: i
 }) {
-  const [r, o] = v("month"), [c, l] = v(za), d = Y(
-    () => Ha(t, n, s, i),
-    [t, n, s, i]
-  ), u = Y(
-    () => d.filter((S) => c[S.layer]),
-    [d, c]
-  ), p = Y(() => {
-    const S = /* @__PURE__ */ new Map();
-    for (const B of u) {
-      const M = B.date, q = S.get(M) || [];
-      q.push(B), S.set(M, q);
+  const [r, o] = y("month"), [c, d] = y(Ur), l = Y(
+    () => Er(t, n, s, a),
+    [t, n, s, a]
+  ), p = Y(
+    () => l.filter((w) => c[w.layer]),
+    [l, c]
+  ), u = Y(() => {
+    const w = /* @__PURE__ */ new Map();
+    for (const H of p) {
+      const P = H.date, q = w.get(P) || [];
+      q.push(H), w.set(P, q);
     }
-    const E = { overdue: 0, urgent: 1, approaching: 2, on_track: 3, far_out: 4, completed: 5 };
-    for (const B of S.values())
-      B.sort((M, q) => (E[M.urgency] ?? 9) - (E[q.urgency] ?? 9));
-    return S;
-  }, [u]), m = Y(() => {
-    const S = /* @__PURE__ */ new Date();
-    if (S.setHours(0, 0, 0, 0), u.length === 0) return S;
-    const E = `${S.getFullYear()}-${String(S.getMonth() + 1).padStart(2, "0")}`;
-    if (u.some((O) => (O.date || "").startsWith(E))) return S;
-    const q = [...u].sort((O, Z) => (O.date || "").localeCompare(Z.date || ""))[0];
-    return en(q.date) || S;
-  }, [u]), [h, _] = v(m), [g, f] = v(null), y = ee(!1);
+    const M = { overdue: 0, urgent: 1, approaching: 2, on_track: 3, far_out: 4, completed: 5 };
+    for (const H of w.values())
+      H.sort((P, q) => (M[P.urgency] ?? 9) - (M[q.urgency] ?? 9));
+    return w;
+  }, [p]), m = Y(() => {
+    const w = /* @__PURE__ */ new Date();
+    if (w.setHours(0, 0, 0, 0), p.length === 0) return w;
+    const M = `${w.getFullYear()}-${String(w.getMonth() + 1).padStart(2, "0")}`;
+    if (p.some((O) => (O.date || "").startsWith(M))) return w;
+    const q = [...p].sort((O, X) => (O.date || "").localeCompare(X.date || ""))[0];
+    return un(q.date) || w;
+  }, [p]), [h, _] = y(m), [g, v] = y(null), b = te(!1);
   F(() => {
-    y.current || _(m);
+    b.current || _(m);
   }, [m]);
-  const w = g ? p.get(g) : null, C = Y(() => {
+  const f = g ? u.get(g) : null, N = Y(() => {
     if (r === "month") {
       const q = `${h.getFullYear()}-${String(h.getMonth() + 1).padStart(2, "0")}`;
-      return u.filter((L) => !(L.date || "").startsWith(q));
+      return p.filter((L) => !(L.date || "").startsWith(q));
     }
-    const S = _t(h), E = Ue(S, 6), B = ht(S), M = ht(E);
-    return u.filter((q) => (q.date || "") < B || (q.date || "") > M);
-  }, [u, h, r]).filter((S) => S.urgency === "overdue" || S.urgency === "urgent").length;
-  function I() {
-    y.current = !0, f(null), _(r === "month" ? Gn(h, -1) : Ue(h, -7));
+    const w = St(h), M = Ke(w, 6), H = Ct(w), P = Ct(M);
+    return p.filter((q) => (q.date || "") < H || (q.date || "") > P);
+  }, [p, h, r]).filter((w) => w.urgency === "overdue" || w.urgency === "urgent").length;
+  function D() {
+    b.current = !0, v(null), _(r === "month" ? is(h, -1) : Ke(h, -7));
   }
-  function P() {
-    y.current = !0, f(null), _(r === "month" ? Gn(h, 1) : Ue(h, 7));
+  function T() {
+    b.current = !0, v(null), _(r === "month" ? is(h, 1) : Ke(h, 7));
   }
   function A() {
-    y.current = !0, f(null);
-    const S = /* @__PURE__ */ new Date();
-    S.setHours(0, 0, 0, 0), _(S);
+    b.current = !0, v(null);
+    const w = /* @__PURE__ */ new Date();
+    w.setHours(0, 0, 0, 0), _(w);
   }
   function x() {
-    const S = u.filter((M) => M.urgency === "overdue" || M.urgency === "urgent");
-    if (S.length === 0) return;
-    const E = [...S].sort((M, q) => (M.date || "").localeCompare(q.date || "")), B = en(E[0].date);
-    B && (y.current = !0, f(null), _(B));
+    const w = p.filter((P) => P.urgency === "overdue" || P.urgency === "urgent");
+    if (w.length === 0) return;
+    const M = [...w].sort((P, q) => (P.date || "").localeCompare(q.date || "")), H = un(M[0].date);
+    H && (b.current = !0, v(null), _(H));
   }
-  function D(S) {
-    if (a && S.kind === "open" && S.ref) {
-      const E = S.ref.id || S.ref.assessmentId || S.ref.externalAssessmentId;
-      a(E);
+  function k(w) {
+    if (i && w.kind === "open" && w.ref) {
+      const M = w.ref.id || w.ref.assessmentId || w.ref.externalAssessmentId;
+      i(M);
     }
   }
-  const N = r === "month" ? $a(h) : `Week of ${_t(h).toLocaleDateString("en-US", { month: "short", day: "numeric" })}`;
+  const S = r === "month" ? Ar(h) : `Week of ${St(h).toLocaleDateString("en-US", { month: "short", day: "numeric" })}`;
   return /* @__PURE__ */ e("div", { class: "mds-cc__cal", children: [
     /* @__PURE__ */ e("div", { class: "mds-cc__cal-toolbar", children: [
       /* @__PURE__ */ e("div", { class: "mds-cc__cal-nav", children: [
-        /* @__PURE__ */ e("button", { class: "mds-cc__cal-nav-btn", onClick: I, "aria-label": "Previous", children: "‹" }),
+        /* @__PURE__ */ e("button", { class: "mds-cc__cal-nav-btn", onClick: D, "aria-label": "Previous", children: "‹" }),
         /* @__PURE__ */ e("button", { class: "mds-cc__cal-today-btn", onClick: A, children: "Today" }),
-        /* @__PURE__ */ e("button", { class: "mds-cc__cal-nav-btn", onClick: P, "aria-label": "Next", children: "›" }),
-        /* @__PURE__ */ e("span", { class: "mds-cc__cal-label", children: N })
+        /* @__PURE__ */ e("button", { class: "mds-cc__cal-nav-btn", onClick: T, "aria-label": "Next", children: "›" }),
+        /* @__PURE__ */ e("span", { class: "mds-cc__cal-label", children: S })
       ] }),
       /* @__PURE__ */ e("div", { class: "mds-cc__cal-mode", children: [
         /* @__PURE__ */ e(
@@ -6751,7 +7624,7 @@ function ja({
           {
             class: `mds-cc__cal-mode-btn${r === "month" ? " mds-cc__cal-mode-btn--active" : ""}`,
             onClick: () => {
-              o("month"), f(null);
+              o("month"), v(null);
             },
             children: "Month"
           }
@@ -6761,7 +7634,7 @@ function ja({
           {
             class: `mds-cc__cal-mode-btn${r === "week" ? " mds-cc__cal-mode-btn--active" : ""}`,
             onClick: () => {
-              o("week"), f(null);
+              o("week"), v(null);
             },
             children: "Week"
           }
@@ -6770,103 +7643,103 @@ function ja({
     ] }),
     /* @__PURE__ */ e("div", { class: "mds-cc__cal-layers", children: [
       /* @__PURE__ */ e(
-        Tt,
+        Ft,
         {
           label: "Assessments",
-          count: d.filter((S) => S.layer === "assessments").length,
+          count: l.filter((w) => w.layer === "assessments").length,
           active: c.assessments,
           color: "#6366f1",
-          onToggle: () => l((S) => ({ ...S, assessments: !S.assessments }))
+          onToggle: () => d((w) => ({ ...w, assessments: !w.assessments }))
         }
       ),
       /* @__PURE__ */ e(
-        Tt,
+        Ft,
         {
           label: "Queries",
-          count: d.filter((S) => S.layer === "queries").length,
+          count: l.filter((w) => w.layer === "queries").length,
           active: c.queries,
           color: "#a855f7",
-          onToggle: () => l((S) => ({ ...S, queries: !S.queries }))
+          onToggle: () => d((w) => ({ ...w, queries: !w.queries }))
         }
       ),
       /* @__PURE__ */ e(
-        Tt,
+        Ft,
         {
           label: "Certs",
-          count: d.filter((S) => S.layer === "certs").length,
+          count: l.filter((w) => w.layer === "certs").length,
           active: c.certs,
           color: "#0891b2",
-          onToggle: () => l((S) => ({ ...S, certs: !S.certs }))
+          onToggle: () => d((w) => ({ ...w, certs: !w.certs }))
         }
       )
     ] }),
-    C > 0 && /* @__PURE__ */ e("div", { class: "mds-cc__cal-banner", onClick: x, role: "button", tabIndex: 0, children: [
+    N > 0 && /* @__PURE__ */ e("div", { class: "mds-cc__cal-banner", onClick: x, role: "button", tabIndex: 0, children: [
       /* @__PURE__ */ e("span", { class: "mds-cc__cal-banner-icon", children: "⚠" }),
       /* @__PURE__ */ e("span", { children: [
-        /* @__PURE__ */ e("strong", { children: C }),
+        /* @__PURE__ */ e("strong", { children: N }),
         " overdue ",
-        C === 1 ? "item" : "items",
+        N === 1 ? "item" : "items",
         " outside this ",
         r
       ] }),
       /* @__PURE__ */ e("span", { class: "mds-cc__cal-banner-action", children: "Jump to earliest ›" })
     ] }),
     r === "month" && /* @__PURE__ */ e(
-      Va,
+      Hr,
       {
         anchorDate: h,
-        itemsByDay: p,
-        onSelectDay: f,
+        itemsByDay: u,
+        onSelectDay: v,
         selectedDay: g
       }
     ),
     r === "week" && /* @__PURE__ */ e(
-      Wa,
+      Gr,
       {
         anchorDate: h,
-        itemsByDay: p,
-        onItemClick: D
+        itemsByDay: u,
+        onItemClick: k
       }
     ),
-    r === "month" && w && /* @__PURE__ */ e(
-      Qa,
+    r === "month" && f && /* @__PURE__ */ e(
+      Fr,
       {
         dayKey: g,
-        items: w,
-        onClose: () => f(null),
-        onOpenAnalyzer: (S) => {
-          f(null), a?.(S.id || S.assessmentId || S.externalAssessmentId);
+        items: f,
+        onClose: () => v(null),
+        onOpenAnalyzer: (w) => {
+          v(null), i?.(w.id || w.assessmentId || w.externalAssessmentId);
         }
       }
     )
   ] });
 }
-function ei(t, n, s) {
-  const [i, a] = v(null), [r, o] = v(!1), [c, l] = v(null);
+function Pa(t, n, s) {
+  const [a, i] = y(null), [r, o] = y(!1), [c, d] = y(null);
   return F(() => {
     if (!t || !s?.assessmentId) return;
-    let d = !1;
-    a(null), l(null), o(!0);
-    async function u() {
+    let l = !1;
+    i(null), d(null), o(!0);
+    async function p() {
       try {
         const m = getOrg()?.org, h = window.getChatFacilityInfo?.() || "";
         if (!m || !h)
           throw new Error("Could not determine organization or facility");
         const _ = t.includes(":") ? t.split(":")[0] : t;
         let g = `/api/extension/mds/items/${encodeURIComponent(_)}?externalAssessmentId=${s.assessmentId}&facilityName=${encodeURIComponent(h)}&orgSlug=${encodeURIComponent(m)}`;
-        n && (g += `&categoryKey=${encodeURIComponent(n)}`), chrome.runtime.sendMessage({ type: "API_REQUEST", endpoint: g }, (f) => {
-          d || (f?.success ? a(f.data) : l(f?.error || "Failed to load item detail"), o(!1));
+        n && (g += `&categoryKey=${encodeURIComponent(n)}`), chrome.runtime.sendMessage({ type: "API_REQUEST", endpoint: g }, (v) => {
+          l || (v?.success ? i(v.data) : d(v?.error || "Failed to load item detail"), o(!1));
         });
-      } catch (p) {
-        d || (l(p.message || "Failed to load item detail"), o(!1));
+      } catch (u) {
+        l || (d(u.message || "Failed to load item detail"), o(!1));
       }
     }
-    return u(), () => {
-      d = !0;
+    return p(), () => {
+      l = !0;
     };
-  }, [t, n, s?.assessmentId]), { data: i, loading: r, error: c };
+  }, [t, n, s?.assessmentId]), { data: a, loading: r, error: c };
 }
-function _n(t, n) {
+function Sn(t, n) {
   if (n) {
     if (n.startsWith("order-")) return "order";
     if (n.startsWith("mar-")) return "mar";
@@ -6876,7 +7749,7 @@ function _n(t, n) {
   const s = t.toLowerCase();
   return s.includes("dc_summary") || s.includes("discharge") ? "progress-note" : s.includes("lab") ? "lab-result" : s.includes("order") ? "order" : s.includes("mar") ? "mar" : s.includes("vital") ? "vital-signs" : s.includes("nursing") ? "nursing-note" : s.includes("history") || s.includes("h&p") || s.includes("physical") || s.includes("eval") || s.includes("st ") || s.includes("slp") ? "progress-note" : "document";
 }
-const gn = {
+const xn = {
   order: "Order",
   mar: "MAR",
   "lab-result": "Lab",
@@ -6886,61 +7759,65 @@ const gn = {
   "therapy-doc": "Therapy Doc",
   document: "Document"
 };
-function ue(t) {
-  const n = t.sourceType || "", s = t.sourceId || t.id || "", i = t.type || "", a = t.evidenceId || s;
+function me(t) {
+  const n = t.sourceType || "", s = t.sourceId || t.id || "", a = t.type || "", i = t.evidenceId || s;
   if (s && s.includes("-chunk-"))
     return { viewerType: "document", id: s.split("-chunk-")[0], chunk: parseInt(s.split("-chunk-")[1], 10) };
   if (n === "progress-note" && s) return { viewerType: "clinical-note", id: s };
   if (n === "therapy-doc" && s) return { viewerType: "therapy-document", id: s };
   if (n === "document" && s) return { viewerType: "document", id: s };
   if (n === "uda") {
-    const r = (s || a || "").replace(/^uda-/, "");
+    const r = (s || i || "").replace(/^uda-/, "");
     if (r) return { viewerType: "uda", id: r };
   }
-  if (i === "clinical_note" && s)
-    return { viewerType: "clinical-note", id: s.replace(/^pcc-prognote-/, "").replace(/^patient-practnote-/, "") };
-  if (i === "therapy_document" && s)
+  if (a === "clinical_note" && s)
+    return {
+      viewerType: "clinical-note",
+      id: s.replace(/^pcc-prognote-/, "").replace(/^pcc-practnote-/, "").replace(/^patient-practnote-/, "")
+    };
+  if (a === "therapy_document" && s)
     return { viewerType: "therapy-document", id: s.replace(/^therapy-doc-/, "") };
-  if (i === "document" && s) return { viewerType: "document", id: s };
-  if (i === "order" && s) return { viewerType: "order", id: s };
-  if (a) {
-    if (a.startsWith("therapy-doc-")) return { viewerType: "therapy-document", id: a.replace("therapy-doc-", "") };
-    if (a.startsWith("pcc-prognote-")) return { viewerType: "clinical-note", id: a.replace("pcc-prognote-", "") };
-    if (a.startsWith("patient-practnote-")) return { viewerType: "clinical-note", id: a.replace("patient-practnote-", "") };
-    if (a.includes("-chunk-")) return { viewerType: "document", id: a.split("-chunk-")[0], chunk: parseInt(a.split("-chunk-")[1], 10) };
-    if (a.startsWith("uda-")) return { viewerType: "uda", id: a.replace("uda-", "") };
+  if (a === "document" && s) return { viewerType: "document", id: s };
+  if (a === "order" && s) return { viewerType: "order", id: s };
+  if (i) {
+    if (i.startsWith("therapy-doc-")) return { viewerType: "therapy-document", id: i.replace("therapy-doc-", "") };
+    if (i.startsWith("pcc-prognote-")) return { viewerType: "clinical-note", id: i.replace("pcc-prognote-", "") };
+    if (i.startsWith("pcc-practnote-")) return { viewerType: "clinical-note", id: i.replace("pcc-practnote-", "") };
+    if (i.startsWith("patient-practnote-")) return { viewerType: "clinical-note", id: i.replace("patient-practnote-", "") };
+    if (i.includes("-chunk-")) return { viewerType: "document", id: i.split("-chunk-")[0], chunk: parseInt(i.split("-chunk-")[1], 10) };
+    if (i.startsWith("uda-")) return { viewerType: "uda", id: i.replace("uda-", "") };
   }
   return { viewerType: null, id: null };
 }
-function Ka(t) {
-  const n = ue(t), s = t.quoteText || t.quote || t.snippet || "";
+function zr(t) {
+  const n = me(t), s = t.quoteText || t.quote || t.snippet || "";
   if (n.viewerType === "clinical-note" && n.id)
-    return window.showClinicalNoteModal?.(n.id);
+    return window.showClinicalNoteModal?.(n.id, s || null);
   if (n.viewerType === "therapy-document" && n.id)
     return window.showTherapyDocModal?.(n.id, s);
   if (n.viewerType === "document" && n.id)
     return window.showDocumentModal?.(n.id, t.wordBlocks || []);
   if (n.viewerType === "uda" && n.id)
     return window.showUdaModal?.(n.id, s, t.patientId || null);
-  const i = t.sourceId || t.evidenceId || "";
-  if ((t.sourceType === "order" || i.startsWith("order-")) && window.showAdministrationModal)
-    return window.showAdministrationModal(i.replace(/^order-/, ""));
+  const a = t.sourceId || t.evidenceId || "";
+  if ((t.sourceType === "order" || a.startsWith("order-")) && window.showAdministrationModal)
+    return window.showAdministrationModal(a.replace(/^order-/, ""));
   window.SuperDocViewer?.open(t);
 }
-function Ja(t) {
-  const n = ue(t);
+function Wr(t) {
+  const n = me(t);
   return t.sourceType === "order" || (t.evidenceId || "").startsWith("order-") ? "View Administrations" : n.viewerType === "therapy-document" ? "View Document" : n.viewerType === "clinical-note" ? "View Note" : n.viewerType === "document" ? "View PDF" : n.viewerType === "uda" ? "View Assessment" : null;
 }
-const Vn = () => /* @__PURE__ */ e("svg", { class: "sid__step-icon sid__step-icon--pass", viewBox: "0 0 20 20", fill: "currentColor", width: "18", height: "18", children: /* @__PURE__ */ e("path", { "fill-rule": "evenodd", d: "M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z", "clip-rule": "evenodd" }) }), Wn = () => /* @__PURE__ */ e("svg", { class: "sid__step-icon sid__step-icon--fail", viewBox: "0 0 20 20", fill: "currentColor", width: "18", height: "18", children: /* @__PURE__ */ e("path", { "fill-rule": "evenodd", d: "M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z", "clip-rule": "evenodd" }) }), ti = () => /* @__PURE__ */ e("svg", { width: "12", height: "12", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": "2", "stroke-linecap": "round", "stroke-linejoin": "round", children: /* @__PURE__ */ e("path", { d: "M5 12h14M12 5l7 7-7 7" }) });
-function Qn(t) {
+const rs = () => /* @__PURE__ */ e("svg", { class: "sid__step-icon sid__step-icon--pass", viewBox: "0 0 20 20", fill: "currentColor", width: "18", height: "18", children: /* @__PURE__ */ e("path", { "fill-rule": "evenodd", d: "M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z", "clip-rule": "evenodd" }) }), os = () => /* @__PURE__ */ e("svg", { class: "sid__step-icon sid__step-icon--fail", viewBox: "0 0 20 20", fill: "currentColor", width: "18", height: "18", children: /* @__PURE__ */ e("path", { "fill-rule": "evenodd", d: "M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z", "clip-rule": "evenodd" }) }), Ta = () => /* @__PURE__ */ e("svg", { width: "12", height: "12", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": "2", "stroke-linecap": "round", "stroke-linejoin": "round", children: /* @__PURE__ */ e("path", { d: "M5 12h14M12 5l7 7-7 7" }) });
+function cs(t) {
   const n = t.sourceType || t.type || "", s = t.evidenceId || t.sourceId || "";
-  return n === "order" || n === "mar" || n === "medication" || s.startsWith("order-") || s.startsWith("admin-") || s.startsWith("mar-") ? "orders" : n === "progress-note" || n === "nursing-note" || n === "clinical_note" || t.type === "clinical_note" || s.startsWith("pcc-prognote-") || s.startsWith("patient-practnote-") ? "notes" : n === "document" || n === "therapy-doc" || t.type === "document" || t.type === "therapy_document" || s.startsWith("therapy-doc-") || s.includes("-chunk-") ? "documents" : n ? "other" : "documents";
+  return n === "order" || n === "mar" || n === "medication" || s.startsWith("order-") || s.startsWith("admin-") || s.startsWith("mar-") ? "orders" : n === "progress-note" || n === "nursing-note" || n === "clinical_note" || t.type === "clinical_note" || s.startsWith("pcc-prognote-") || s.startsWith("pcc-practnote-") || s.startsWith("patient-practnote-") ? "notes" : n === "document" || n === "therapy-doc" || t.type === "document" || t.type === "therapy_document" || s.startsWith("therapy-doc-") || s.includes("-chunk-") ? "documents" : n ? "other" : "documents";
 }
-const Ya = { orders: "Orders", notes: "Notes", documents: "Documents", other: "Other" };
-function Za({ fall: t }) {
+const Qr = { orders: "Orders", notes: "Notes", documents: "Documents", other: "Other" };
+function jr({ fall: t }) {
   const n = t.incidentDate ? new Date(t.incidentDate).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }) : "";
-  let s = "No injury", i = "";
-  return t.hasMajorInjury ? (s = "Major injury", i = "super-fall__injury--major", t.injuryTypes?.length && (s += `: ${t.injuryTypes.join(", ")}`)) : t.hasInjury && (s = "Minor injury", i = "super-fall__injury--minor", t.injuryTypes?.length && (s += `: ${t.injuryTypes.join(", ")}`)), /* @__PURE__ */ e("div", { class: "super-fall-row", onClick: () => {
+  let s = "No injury", a = "";
+  return t.hasMajorInjury ? (s = "Major injury", a = "super-fall__injury--major", t.injuryTypes?.length && (s += `: ${t.injuryTypes.join(", ")}`)) : t.hasInjury && (s = "Minor injury", a = "super-fall__injury--minor", t.injuryTypes?.length && (s += `: ${t.injuryTypes.join(", ")}`)), /* @__PURE__ */ e("div", { class: "super-fall-row", onClick: () => {
     t.incidentId && window.showIncidentDetailModal && window.showIncidentDetailModal(t.incidentId);
   }, role: "button", children: [
     /* @__PURE__ */ e("div", { class: "super-fall__header", children: [
@@ -6948,67 +7825,67 @@ function Za({ fall: t }) {
       /* @__PURE__ */ e("span", { class: "super-fall__type", children: t.incidentType || "Fall" })
     ] }),
     t.residentName && /* @__PURE__ */ e("div", { class: "super-fall__resident", children: t.residentName }),
-    /* @__PURE__ */ e("div", { class: `super-fall__injury ${i}`, children: s }),
+    /* @__PURE__ */ e("div", { class: `super-fall__injury ${a}`, children: s }),
     t.incidentId && /* @__PURE__ */ e("div", { class: "super-fall__action", children: [
       /* @__PURE__ */ e("span", { children: "View Incident" }),
-      /* @__PURE__ */ e(ti, {})
+      /* @__PURE__ */ e(Ta, {})
     ] })
   ] });
 }
-function Xa({ ev: t, index: n, onViewSource: s }) {
-  const i = t.quoteText || t.orderDescription || t.quote || t.snippet || t.text || "";
-  if (!i && !t.rationale) return null;
-  const a = t.sourceType || _n(t.displayName, t.evidenceId), r = t.displayName || gn[a] || a, o = Ja(t), c = !!o;
+function Kr({ ev: t, index: n, onViewSource: s }) {
+  const a = t.quoteText || t.orderDescription || t.quote || t.snippet || t.text || "";
+  if (!a && !t.rationale) return null;
+  const i = t.sourceType || Sn(t.displayName, t.evidenceId), r = t.displayName || xn[i] || i, o = Wr(t), c = !!o;
   return /* @__PURE__ */ e(
     "div",
     {
       class: `sid__ev-card${c ? " sid__ev-card--clickable" : ""}`,
       onClick: c ? () => {
         if (s) {
-          const d = ue(t), u = t.sourceType === "order" || (t.evidenceId || "").startsWith("order-"), p = d.viewerType;
-          if (p === "document" || p === "clinical-note" || p === "therapy-document" || u) {
+          const l = me(t), p = t.sourceType === "order" || (t.evidenceId || "").startsWith("order-"), u = l.viewerType;
+          if (u === "document" || u === "clinical-note" || u === "therapy-document" || p) {
             s(t, n);
             return;
           }
         }
-        Ka(t);
+        zr(t);
       } : void 0,
       role: c ? "button" : void 0,
       children: [
-        /* @__PURE__ */ e("div", { class: "sid__ev-header", children: /* @__PURE__ */ e("span", { class: `sid__ev-type sid__ev-type--${a}`, children: r }) }),
-        i && /* @__PURE__ */ e("div", { class: "sid__ev-quote", children: i }),
+        /* @__PURE__ */ e("div", { class: "sid__ev-header", children: /* @__PURE__ */ e("span", { class: `sid__ev-type sid__ev-type--${i}`, children: r }) }),
+        a && /* @__PURE__ */ e("div", { class: "sid__ev-quote", children: a }),
         t.rationale && /* @__PURE__ */ e("div", { class: "sid__ev-rationale", children: t.rationale }),
         c && /* @__PURE__ */ e("div", { class: "sid__ev-action", children: [
           /* @__PURE__ */ e("span", { children: o }),
-          /* @__PURE__ */ e(ti, {})
+          /* @__PURE__ */ e(Ta, {})
         ] })
       ]
     }
   );
 }
-function Xe({ label: t, impact: n }) {
+function lt({ label: t, impact: n }) {
   if (!n || !n.wouldChangeGroup && !n.wouldChangeLevel) return null;
-  const s = n.currentGroup || n.currentLevel || n.currentPaymentGroup, i = n.newGroup || n.newLevel || n.newPaymentGroup;
+  const s = n.currentGroup || n.currentLevel || n.currentPaymentGroup, a = n.newGroup || n.newLevel || n.newPaymentGroup;
   return /* @__PURE__ */ e("span", { class: "sid__impact", children: [
     t,
     " ",
     /* @__PURE__ */ e("span", { class: "sid__impact-from", children: s }),
     " → ",
-    /* @__PURE__ */ e("span", { class: "sid__impact-to", children: i })
+    /* @__PURE__ */ e("span", { class: "sid__impact-to", children: a })
   ] });
 }
-function er({ diagnosisSummary: t, treatmentSummary: n, validation: s }) {
-  const i = s?.diagnosisCheck?.passed ?? s?.diagnosisPassed, a = s?.treatmentCheck?.passed ?? s?.activeStatusPassed;
+function Yr({ diagnosisSummary: t, treatmentSummary: n, validation: s }) {
+  const a = s?.diagnosisCheck?.passed ?? s?.diagnosisPassed, i = s?.treatmentCheck?.passed ?? s?.activeStatusPassed;
   return /* @__PURE__ */ e("div", { class: "sid__steps", children: [
-    /* @__PURE__ */ e("div", { class: `sid__step ${i ? "sid__step--pass" : "sid__step--fail"}`, children: [
-      i ? /* @__PURE__ */ e(Vn, {}) : /* @__PURE__ */ e(Wn, {}),
+    /* @__PURE__ */ e("div", { class: `sid__step ${a ? "sid__step--pass" : "sid__step--fail"}`, children: [
+      a ? /* @__PURE__ */ e(rs, {}) : /* @__PURE__ */ e(os, {}),
       /* @__PURE__ */ e("div", { class: "sid__step-content", children: [
         /* @__PURE__ */ e("div", { class: "sid__step-label", children: "Diagnosis" }),
         t && /* @__PURE__ */ e("div", { class: "sid__step-summary", children: t })
       ] })
     ] }),
-    /* @__PURE__ */ e("div", { class: `sid__step ${a ? "sid__step--pass" : "sid__step--fail"}`, children: [
-      a ? /* @__PURE__ */ e(Vn, {}) : /* @__PURE__ */ e(Wn, {}),
+    /* @__PURE__ */ e("div", { class: `sid__step ${i ? "sid__step--pass" : "sid__step--fail"}`, children: [
+      i ? /* @__PURE__ */ e(rs, {}) : /* @__PURE__ */ e(os, {}),
       /* @__PURE__ */ e("div", { class: "sid__step-content", children: [
         /* @__PURE__ */ e("div", { class: "sid__step-label", children: "Treatment" }),
         n && /* @__PURE__ */ e("div", { class: "sid__step-summary", children: n })
@@ -7016,195 +7893,195 @@ function er({ diagnosisSummary: t, treatmentSummary: n, validation: s }) {
     ] })
   ] });
 }
-function tr({ rationale: t }) {
+function Jr({ rationale: t }) {
   return t ? /* @__PURE__ */ e("div", { class: "sid__rationale", children: [
     /* @__PURE__ */ e("div", { class: "sid__rationale-label", children: "Rationale" }),
     t
   ] }) : null;
 }
-function nr({ carePlan: t }) {
+function Zr({ carePlan: t }) {
   if (!t) return null;
-  const [n, s] = v(!1), i = t.onCarePlan, a = t.items || [];
+  const [n, s] = y(!1), a = t.onCarePlan, i = t.items || [];
   return /* @__PURE__ */ e("div", { class: "sid__careplan", children: [
     /* @__PURE__ */ e(
       "button",
       {
         class: "sid__careplan-toggle",
         type: "button",
-        onClick: () => a.length > 0 && s(!n),
+        onClick: () => i.length > 0 && s(!n),
         children: [
-          /* @__PURE__ */ e("span", { class: `sid__careplan-dot ${i ? "sid__careplan-dot--on" : "sid__careplan-dot--off"}` }),
+          /* @__PURE__ */ e("span", { class: `sid__careplan-dot ${a ? "sid__careplan-dot--on" : "sid__careplan-dot--off"}` }),
           /* @__PURE__ */ e("span", { class: "sid__careplan-title", children: "Care Plan" }),
-          /* @__PURE__ */ e("span", { class: "sid__careplan-status", children: i ? "On Care Plan" : "Not on Care Plan" }),
-          a.length > 0 && /* @__PURE__ */ e("span", { class: `sid__findings-arrow ${n ? "sid__findings-arrow--open" : ""}`, children: "▶" })
+          /* @__PURE__ */ e("span", { class: "sid__careplan-status", children: a ? "On Care Plan" : "Not on Care Plan" }),
+          i.length > 0 && /* @__PURE__ */ e("span", { class: `sid__findings-arrow ${n ? "sid__findings-arrow--open" : ""}`, children: "▶" })
         ]
       }
     ),
-    n && a.length > 0 && /* @__PURE__ */ e("ul", { class: "sid__careplan-items", children: a.map((r, o) => /* @__PURE__ */ e("li", { children: r }, o)) })
+    n && i.length > 0 && /* @__PURE__ */ e("ul", { class: "sid__careplan-items", children: i.map((r, o) => /* @__PURE__ */ e("li", { children: r }, o)) })
   ] });
 }
-function ni({ variant: t = "compact", data: n, detectionItem: s, mdsItem: i, onViewSource: a, onDismiss: r, dismissing: o, assessmentId: c }) {
-  const l = t === "full", d = n?.item, u = !!d?.columns, p = d && !u, m = !!(n?.diagnosisSummary || n?.treatmentSummary);
-  let h = d?.status;
-  !h && u && (h = Object.values(d.columns || {}).some((ae) => ae?.answer?.toLowerCase() === "yes") ? "code" : "dont_code");
-  const _ = h === "needs_physician_query", g = h === "code" || h === "recommend_coding", f = _ ? "sid__verdict-dot--query" : g ? "sid__verdict-dot--code" : "sid__verdict-dot--no-code", y = _ ? "Needs Query" : g ? "Recommend Coding" : h?.replace(/_/g, " ") || "Don't Code", w = d?.evidence || d?.queryEvidence || [], k = [];
-  if (u) {
-    const W = /* @__PURE__ */ new Set();
-    for (const ae of Object.values(d.columns || {}))
-      ae?.evidence && ae.evidence.forEach((me) => {
-        const K = me.sourceId || me.quote || JSON.stringify(me);
-        W.has(K) || (W.add(K), k.push(me));
+function Aa({ variant: t = "compact", data: n, detectionItem: s, mdsItem: a, onViewSource: i, onDismiss: r, dismissing: o, assessmentId: c }) {
+  const d = t === "full", l = n?.item, p = !!l?.columns, u = l && !p, m = !!(n?.diagnosisSummary || n?.treatmentSummary);
+  let h = l?.status;
+  !h && p && (h = Object.values(l.columns || {}).some((re) => re?.answer?.toLowerCase() === "yes") ? "code" : "dont_code");
+  const _ = h === "needs_physician_query", g = h === "code" || h === "recommend_coding", v = _ ? "sid__verdict-dot--query" : g ? "sid__verdict-dot--code" : "sid__verdict-dot--no-code", b = _ ? "Needs Query" : g ? "Recommend Coding" : h?.replace(/_/g, " ") || "Don't Code", f = l?.evidence || l?.queryEvidence || [], I = [];
+  if (p) {
+    const j = /* @__PURE__ */ new Set();
+    for (const re of Object.values(l.columns || {}))
+      re?.evidence && re.evidence.forEach((he) => {
+        const J = he.sourceId || he.quote || JSON.stringify(he);
+        j.has(J) || (j.add(J), I.push(he));
       });
   }
-  const C = p ? w : k, [I, P] = v(!1), [A, x] = v(null), D = {};
-  C.forEach((W) => {
-    const ae = Qn(W);
-    D[ae] = (D[ae] || 0) + 1;
+  const N = u ? f : I, [D, T] = y(!1), [A, x] = y(null), k = {};
+  N.forEach((j) => {
+    const re = cs(j);
+    k[re] = (k[re] || 0) + 1;
   });
-  const N = Object.keys(D).sort(), S = N.length > 1, E = A ? C.filter((W) => Qn(W) === A) : C, B = I ? E : E.slice(0, 4), M = d?.keyFindings || [], [q, L] = v(l), O = s?.impact, Z = O && (O.slp || O.nta || O.nursing || O.ptot), j = d?.columns || {}, $ = Object.keys(j), [H, te] = v($[0] || "A"), T = j[H], R = d?.subItems || [], [z, V] = v(!1), [ie, X] = v(""), ne = i?.startsWith("I8000:") ? "I8000" : i;
-  return /* @__PURE__ */ e(J, { children: [
+  const S = Object.keys(k).sort(), w = S.length > 1, M = A ? N.filter((j) => cs(j) === A) : N, H = D ? M : M.slice(0, 4), P = l?.keyFindings || [], [q, L] = y(d), O = s?.impact, X = O && (O.slp || O.nta || O.nursing || O.ptot), z = l?.columns || {}, R = Object.keys(z), [B, ee] = y(R[0] || "A"), E = z[B], $ = l?.subItems || [], [V, U] = y(!1), [Z, ne] = y(""), se = a?.startsWith("I8000:") ? "I8000" : a;
+  return /* @__PURE__ */ e(Q, { children: [
     /* @__PURE__ */ e("div", { class: "sid__verdict", children: [
-      /* @__PURE__ */ e("span", { class: `sid__verdict-dot ${f}` }),
-      /* @__PURE__ */ e("span", { class: "sid__verdict-text", children: y })
+      /* @__PURE__ */ e("span", { class: `sid__verdict-dot ${v}` }),
+      /* @__PURE__ */ e("span", { class: "sid__verdict-text", children: b })
     ] }),
     m && /* @__PURE__ */ e(
-      er,
+      Yr,
       {
         diagnosisSummary: n.diagnosisSummary,
         treatmentSummary: n.treatmentSummary,
-        validation: d?.validation
+        validation: l?.validation
       }
     ),
-    m && n?.carePlan && /* @__PURE__ */ e(nr, { carePlan: n.carePlan }),
-    !m && u && T && /* @__PURE__ */ e("div", { class: "sid__rationale", children: [
+    m && n?.carePlan && /* @__PURE__ */ e(Zr, { carePlan: n.carePlan }),
+    !m && p && E && /* @__PURE__ */ e("div", { class: "sid__rationale", children: [
       /* @__PURE__ */ e("div", { class: "sid__col-answer", children: [
         /* @__PURE__ */ e("span", { class: "sid__col-label", children: [
           "Column ",
-          H,
+          B,
           ":"
         ] }),
-        /* @__PURE__ */ e("span", { class: `sid__col-badge ${T.answer?.toLowerCase() === "yes" ? "sid__col-badge--yes" : "sid__col-badge--no"}`, children: T.answer?.toUpperCase() }),
-        (T.firstAdministered || T.lastAdministered) && /* @__PURE__ */ e("span", { class: "sid__col-dates", children: [
-          T.firstAdministered,
-          T.firstAdministered && T.lastAdministered && " – ",
-          T.lastAdministered
+        /* @__PURE__ */ e("span", { class: `sid__col-badge ${E.answer?.toLowerCase() === "yes" ? "sid__col-badge--yes" : "sid__col-badge--no"}`, children: E.answer?.toUpperCase() }),
+        (E.firstAdministered || E.lastAdministered) && /* @__PURE__ */ e("span", { class: "sid__col-dates", children: [
+          E.firstAdministered,
+          E.firstAdministered && E.lastAdministered && " – ",
+          E.lastAdministered
         ] })
       ] }),
-      T.rationale && /* @__PURE__ */ e("div", { children: T.rationale })
+      E.rationale && /* @__PURE__ */ e("div", { children: E.rationale })
     ] }),
-    !m && !u && /* @__PURE__ */ e(tr, { rationale: d?.rationale }),
-    u && $.length > 1 && /* @__PURE__ */ e("div", { class: "sid__coltabs", children: $.map((W) => {
-      const me = j[W]?.answer?.toLowerCase() === "yes";
+    !m && !p && /* @__PURE__ */ e(Jr, { rationale: l?.rationale }),
+    p && R.length > 1 && /* @__PURE__ */ e("div", { class: "sid__coltabs", children: R.map((j) => {
+      const he = z[j]?.answer?.toLowerCase() === "yes";
       return /* @__PURE__ */ e(
         "button",
         {
           type: "button",
-          class: `sid__coltab ${H === W ? "sid__coltab--on" : ""}`,
-          onClick: () => te(W),
+          class: `sid__coltab ${B === j ? "sid__coltab--on" : ""}`,
+          onClick: () => ee(j),
           children: [
             "Col ",
-            W,
-            /* @__PURE__ */ e("span", { class: `sid__coltab-dot ${me ? "sid__coltab-dot--yes" : ""}` })
+            j,
+            /* @__PURE__ */ e("span", { class: `sid__coltab-dot ${he ? "sid__coltab-dot--yes" : ""}` })
           ]
         },
-        W
+        j
       );
     }) }),
-    R.length > 0 && /* @__PURE__ */ e("div", { class: "sid__subs", children: R.map((W, ae) => {
-      const me = W.columns?.A;
-      if (!me) return null;
-      const K = me.answer?.toLowerCase() === "yes";
-      return /* @__PURE__ */ e("div", { class: `sid__sub ${K ? "sid__sub--on" : ""}`, children: [
-        /* @__PURE__ */ e("span", { class: `sid__sub-dot ${K ? "sid__sub-dot--yes" : ""}`, children: K ? "✓" : "–" }),
-        /* @__PURE__ */ e("span", { class: "sid__sub-name", children: W.description })
-      ] }, W.mdsItem || ae);
+    $.length > 0 && /* @__PURE__ */ e("div", { class: "sid__subs", children: $.map((j, re) => {
+      const he = j.columns?.A;
+      if (!he) return null;
+      const J = he.answer?.toLowerCase() === "yes";
+      return /* @__PURE__ */ e("div", { class: `sid__sub ${J ? "sid__sub--on" : ""}`, children: [
+        /* @__PURE__ */ e("span", { class: `sid__sub-dot ${J ? "sid__sub-dot--yes" : ""}`, children: J ? "✓" : "–" }),
+        /* @__PURE__ */ e("span", { class: "sid__sub-name", children: j.description })
+      ] }, j.mdsItem || re);
     }) }),
-    l && Z && /* @__PURE__ */ e("div", { class: "sid__impacts", children: [
-      /* @__PURE__ */ e(Xe, { label: "NTA", impact: O.nta }),
-      /* @__PURE__ */ e(Xe, { label: "Nursing", impact: O.nursing }),
-      /* @__PURE__ */ e(Xe, { label: "SLP", impact: O.slp }),
-      /* @__PURE__ */ e(Xe, { label: "PT/OT", impact: O.ptot })
+    d && X && /* @__PURE__ */ e("div", { class: "sid__impacts", children: [
+      /* @__PURE__ */ e(lt, { label: "NTA", impact: O.nta }),
+      /* @__PURE__ */ e(lt, { label: "Nursing", impact: O.nursing }),
+      /* @__PURE__ */ e(lt, { label: "SLP", impact: O.slp }),
+      /* @__PURE__ */ e(lt, { label: "PT/OT", impact: O.ptot })
     ] }),
-    d?.falls?.length > 0 && /* @__PURE__ */ e("div", { class: "super-falls-section", children: [
+    l?.falls?.length > 0 && /* @__PURE__ */ e("div", { class: "super-falls-section", children: [
       /* @__PURE__ */ e("div", { class: "super-falls-section__label", children: [
         "Falls (",
-        d.fallCount ?? d.falls.length,
+        l.fallCount ?? l.falls.length,
         ")"
       ] }),
-      d.lookbackWindow && /* @__PURE__ */ e("div", { class: "super-lookback-info", children: [
+      l.lookbackWindow && /* @__PURE__ */ e("div", { class: "super-lookback-info", children: [
         "Lookback: ",
-        d.lookbackWindow.startDate,
+        l.lookbackWindow.startDate,
         " – ",
-        d.lookbackWindow.endDate,
+        l.lookbackWindow.endDate,
         " (",
-        d.lookbackWindow.daysCovered,
+        l.lookbackWindow.daysCovered,
         " days)"
       ] }),
-      /* @__PURE__ */ e("div", { class: "super-falls-list", children: d.falls.map((W, ae) => /* @__PURE__ */ e(Za, { fall: W }, W.incidentId || ae)) })
+      /* @__PURE__ */ e("div", { class: "super-falls-list", children: l.falls.map((j, re) => /* @__PURE__ */ e(jr, { fall: j }, j.incidentId || re)) })
     ] }),
-    C.length > 0 && /* @__PURE__ */ e("div", { class: "sid__evidence", children: [
+    N.length > 0 && /* @__PURE__ */ e("div", { class: "sid__evidence", children: [
       /* @__PURE__ */ e("div", { class: "sid__ev-label", children: [
         "Evidence (",
-        C.length,
+        N.length,
         ")"
       ] }),
-      S && /* @__PURE__ */ e("div", { class: "sid__ev-filters", children: [
+      w && /* @__PURE__ */ e("div", { class: "sid__ev-filters", children: [
         /* @__PURE__ */ e(
           "button",
           {
             type: "button",
             class: `sid__ev-chip ${A === null ? "sid__ev-chip--active" : ""}`,
             onClick: () => {
-              x(null), P(!1);
+              x(null), T(!1);
             },
             children: [
               "All (",
-              C.length,
+              N.length,
               ")"
             ]
           }
         ),
-        N.map((W) => /* @__PURE__ */ e(
+        S.map((j) => /* @__PURE__ */ e(
           "button",
           {
             type: "button",
-            class: `sid__ev-chip ${A === W ? "sid__ev-chip--active" : ""}`,
+            class: `sid__ev-chip ${A === j ? "sid__ev-chip--active" : ""}`,
             onClick: () => {
-              x(A === W ? null : W), P(!1);
+              x(A === j ? null : j), T(!1);
             },
             children: [
-              Ya[W] || W,
+              Qr[j] || j,
               " (",
-              D[W],
+              k[j],
               ")"
             ]
           },
-          W
+          j
         ))
       ] }),
-      /* @__PURE__ */ e("div", { class: "sid__ev-list", children: B.map((W, ae) => /* @__PURE__ */ e(Xa, { ev: W, index: ae, onViewSource: a }, ae)) }),
-      E.length > 4 && !I && /* @__PURE__ */ e("button", { class: "sid__ev-show-more", type: "button", onClick: () => P(!0), children: [
+      /* @__PURE__ */ e("div", { class: "sid__ev-list", children: H.map((j, re) => /* @__PURE__ */ e(Kr, { ev: j, index: re, onViewSource: i }, re)) }),
+      M.length > 4 && !D && /* @__PURE__ */ e("button", { class: "sid__ev-show-more", type: "button", onClick: () => T(!0), children: [
         "Show all ",
-        E.length,
+        M.length,
         " ↓"
       ] })
     ] }),
-    M.length > 0 && /* @__PURE__ */ e(J, { children: [
+    P.length > 0 && /* @__PURE__ */ e(Q, { children: [
       /* @__PURE__ */ e("button", { class: "sid__findings-toggle", type: "button", onClick: () => L(!q), children: [
         /* @__PURE__ */ e("span", { class: `sid__findings-arrow ${q ? "sid__findings-arrow--open" : ""}`, children: "▶" }),
         "Key Findings (",
-        M.length,
+        P.length,
         ")"
       ] }),
-      q && /* @__PURE__ */ e("ul", { class: "sid__findings", children: M.map((W, ae) => /* @__PURE__ */ e("li", { children: W }, ae)) })
+      q && /* @__PURE__ */ e("ul", { class: "sid__findings", children: P.map((j, re) => /* @__PURE__ */ e("li", { children: j }, re)) })
     ] }),
-    z && r ? /* @__PURE__ */ e("div", { class: "sid__dismiss-form", children: [
+    V && r ? /* @__PURE__ */ e("div", { class: "sid__dismiss-form", children: [
       /* @__PURE__ */ e("label", { children: "Why do you disagree? (optional)" }),
       /* @__PURE__ */ e(
         "textarea",
         {
-          value: ie,
-          onInput: (W) => X(W.target.value),
+          value: Z,
+          onInput: (j) => ne(j.target.value),
           placeholder: "Enter reason...",
           disabled: o
         }
@@ -7217,7 +8094,7 @@ function ni({ variant: t = "compact", data: n, detectionItem: s, mdsItem: i, onV
             type: "button",
             disabled: o,
             onClick: () => {
-              V(!1), X("");
+              U(!1), ne("");
             },
             children: "Cancel"
           }
@@ -7228,154 +8105,154 @@ function ni({ variant: t = "compact", data: n, detectionItem: s, mdsItem: i, onV
             class: "sid__btn sid__btn--primary",
             type: "button",
             disabled: o,
-            onClick: () => r(ie),
+            onClick: () => r(Z),
             children: o ? "Submitting..." : "Submit"
           }
         )
       ] })
     ] }) : /* @__PURE__ */ e("div", { class: "sid__actions", children: [
-      r && /* @__PURE__ */ e("button", { class: "sid__btn sid__btn--dismiss", type: "button", onClick: () => V(!0), children: "Dismiss" }),
+      r && /* @__PURE__ */ e("button", { class: "sid__btn sid__btn--dismiss", type: "button", onClick: () => U(!0), children: "Dismiss" }),
       /* @__PURE__ */ e("div", { class: "sid__actions-right", children: [
         /* @__PURE__ */ e("button", { class: "sid__btn sid__btn--primary", onClick: () => {
-          const W = {
-            mdsItem: d?.mdsItem || i,
-            description: d?.description || s?.itemName,
-            aiAnswer: d
+          const j = {
+            mdsItem: l?.mdsItem || a,
+            description: l?.description || s?.itemName,
+            aiAnswer: l
           };
-          window.QuerySendModal?.show(W);
+          window.QuerySendModal?.show(j);
         }, type: "button", children: "Query Physician" }),
-        i && /* @__PURE__ */ e("button", { class: "sid__btn sid__btn--secondary", onClick: () => window.navigateToMDSItem?.(i, c), type: "button", children: [
+        a && /* @__PURE__ */ e("button", { class: "sid__btn sid__btn--secondary", onClick: () => window.navigateToMDSItem?.(a, c), type: "button", children: [
           "Go to ",
-          ne,
+          se,
           " ↗"
         ] })
       ] })
     ] })
   ] });
 }
-const ve = [50, 75, 100, 125, 150, 200], sr = 100;
-function fn({
+const we = [50, 75, 100, 125, 150, 200], Xr = 100;
+function Pn({
   url: t,
   wordBlocks: n = [],
   targetPage: s = 1,
-  title: i = "Document",
-  documentType: a,
+  title: a = "Document",
+  documentType: i,
   effectiveDate: r,
   fileSize: o,
   onClose: c,
-  openInNewTabUrl: l
+  openInNewTabUrl: d
 }) {
-  const [d, u] = v(null), [p, m] = v(s), [h, _] = v(1), [g, f] = v(sr), [y, w] = v(0), [k, C] = v(!0), [I, P] = v(!1), [A, x] = v(null), [D, N] = v(String(s)), S = ee(null), E = ee(null), B = ee(null), M = ee({}), q = ee(null), L = ee(0);
+  const [l, p] = y(null), [u, m] = y(s), [h, _] = y(1), [g, v] = y(Xr), [b, f] = y(0), [I, N] = y(!0), [D, T] = y(!1), [A, x] = y(null), [k, S] = y(String(s)), w = te(null), M = te(null), H = te(null), P = te({}), q = te(null), L = te(0);
   o && (o / 1024 > 1024 ? `${(o / 1024 / 1024).toFixed(1)}` : `${(o / 1024).toFixed(0)}`);
-  const O = (T) => {
-    if (!T) return "";
+  const O = (E) => {
+    if (!E) return "";
     try {
-      return new Date(T).toLocaleDateString("en-US", {
+      return new Date(E).toLocaleDateString("en-US", {
         month: "short",
         day: "numeric",
         year: "numeric"
       });
     } catch {
-      return T;
+      return E;
     }
   };
   F(() => {
     if (!t) {
-      x("No document URL available"), C(!1);
+      x("No document URL available"), N(!1);
       return;
     }
-    let T = !1;
+    let E = !1;
     return (async () => {
       try {
         if (typeof pdfjsLib > "u") throw new Error("PDF.js library not loaded");
         pdfjsLib.GlobalWorkerOptions.workerSrc || (pdfjsLib.GlobalWorkerOptions.workerSrc = chrome.runtime.getURL("lib/pdf.worker.min.js"));
-        const R = await pdfjsLib.getDocument(t).promise;
-        if (T) return;
-        const z = Math.min(s, R.numPages);
-        u(R), _(R.numPages), m(z), N(String(z)), C(!1);
-      } catch (R) {
-        T || (console.error("[PDFViewer] Load failed:", R), x(`Failed to load PDF: ${R.message}`), C(!1));
+        const $ = await pdfjsLib.getDocument(t).promise;
+        if (E) return;
+        const V = Math.min(s, $.numPages);
+        p($), _($.numPages), m(V), S(String(V)), N(!1);
+      } catch ($) {
+        E || (console.error("[PDFViewer] Load failed:", $), x(`Failed to load PDF: ${$.message}`), N(!1));
       }
     })(), () => {
-      T = !0;
+      E = !0;
     };
   }, [t]);
-  const Z = U(async (T) => {
-    if (!d) return;
-    const R = S.current, z = E.current, V = B.current;
-    if (!R || !z || !V) return;
-    const ie = ++L.current, X = Math.max(1, Math.min(T, h));
-    P(!0);
+  const X = G(async (E) => {
+    if (!l) return;
+    const $ = w.current, V = M.current, U = H.current;
+    if (!$ || !V || !U) return;
+    const Z = ++L.current, ne = Math.max(1, Math.min(E, h));
+    T(!0);
     try {
-      const ne = await d.getPage(X);
-      if (L.current !== ie) return;
-      const W = await ir(ne, X, M, y), ae = V.clientWidth, me = Math.max(ae - 16, 200), K = ne.getViewport({ scale: 1, rotation: W }), ye = me / K.width * (g / 100), he = ne.getViewport({ scale: ye, rotation: W }), xe = R.getContext("2d"), In = z.getContext("2d");
-      if (R.width = he.width, R.height = he.height, z.width = he.width, z.height = he.height, xe.clearRect(0, 0, R.width, R.height), In.clearRect(0, 0, z.width, z.height), await ne.render({ canvasContext: xe, viewport: he }).promise, L.current !== ie) return;
-      const Dn = (n || []).filter((Ye) => Ye.p === X);
-      if (Dn.length > 0) {
-        const Ye = or(In, Dn, he, W);
-        Ye.length > 0 && cr(Ye, V);
+      const se = await l.getPage(ne);
+      if (L.current !== Z) return;
+      const j = await eo(se, ne, P, b), re = U.clientWidth, he = Math.max(re - 16, 200), J = se.getViewport({ scale: 1, rotation: j }), be = he / J.width * (g / 100), _e = se.getViewport({ scale: be, rotation: j }), Te = $.getContext("2d"), Rn = V.getContext("2d");
+      if ($.width = _e.width, $.height = _e.height, V.width = _e.width, V.height = _e.height, Te.clearRect(0, 0, $.width, $.height), Rn.clearRect(0, 0, V.width, V.height), await se.render({ canvasContext: Te, viewport: _e }).promise, L.current !== Z) return;
+      const On = (n || []).filter((it) => it.p === ne);
+      if (On.length > 0) {
+        const it = so(Rn, On, _e, j);
+        it.length > 0 && ao(it, U);
       }
-    } catch (ne) {
-      console.error("[PDFViewer] Render failed:", ne);
+    } catch (se) {
+      console.error("[PDFViewer] Render failed:", se);
     } finally {
-      L.current === ie && P(!1);
+      L.current === Z && T(!1);
     }
-  }, [d, h, g, y, n]);
+  }, [l, h, g, b, n]);
   F(() => {
-    d && Z(p);
-  }, [d, p, g, y, Z]);
-  const j = U((T) => {
-    const R = Math.max(1, Math.min(T, h));
-    m(R), N(String(R));
-  }, [h]), $ = U((T) => {
-    f((R) => {
-      const z = ve.indexOf(R);
-      if (z === -1) {
-        const V = ve.reduce((X, ne) => Math.abs(ne - R) < Math.abs(X - R) ? ne : X), ie = ve.indexOf(V);
-        return ve[Math.max(0, Math.min(ie + T, ve.length - 1))];
+    l && X(u);
+  }, [l, u, g, b, X]);
+  const z = G((E) => {
+    const $ = Math.max(1, Math.min(E, h));
+    m($), S(String($));
+  }, [h]), R = G((E) => {
+    v(($) => {
+      const V = we.indexOf($);
+      if (V === -1) {
+        const U = we.reduce((ne, se) => Math.abs(se - $) < Math.abs(ne - $) ? se : ne), Z = we.indexOf(U);
+        return we[Math.max(0, Math.min(Z + E, we.length - 1))];
       }
-      return ve[Math.max(0, Math.min(z + T, ve.length - 1))];
+      return we[Math.max(0, Math.min(V + E, we.length - 1))];
     });
-  }, []), H = U(() => {
-    w((T) => (T + 90) % 360), M.current = {};
+  }, []), B = G(() => {
+    f((E) => (E + 90) % 360), P.current = {};
   }, []);
   F(() => {
-    const T = (R) => {
-      if (q.current && !(R.target.tagName === "INPUT" || R.target.tagName === "TEXTAREA") && q.current.closest(".super-pdf-modal"))
-        switch (R.key) {
+    const E = ($) => {
+      if (q.current && !($.target.tagName === "INPUT" || $.target.tagName === "TEXTAREA") && q.current.closest(".super-pdf-modal"))
+        switch ($.key) {
           case "ArrowLeft":
-            R.preventDefault(), m((z) => {
-              const V = Math.max(1, z - 1);
-              return N(String(V)), V;
+            $.preventDefault(), m((V) => {
+              const U = Math.max(1, V - 1);
+              return S(String(U)), U;
             });
             break;
           case "ArrowRight":
-            R.preventDefault(), m((z) => {
-              const V = Math.min(h, z + 1);
-              return N(String(V)), V;
+            $.preventDefault(), m((V) => {
+              const U = Math.min(h, V + 1);
+              return S(String(U)), U;
             });
             break;
           case "+":
           case "=":
-            R.preventDefault(), $(1);
+            $.preventDefault(), R(1);
             break;
           case "-":
-            R.preventDefault(), $(-1);
+            $.preventDefault(), R(-1);
             break;
           case "r":
           case "R":
-            R.preventDefault(), H();
+            $.preventDefault(), B();
             break;
         }
     };
-    return document.addEventListener("keydown", T), () => document.removeEventListener("keydown", T);
-  }, [h, $, H]);
-  const te = () => {
-    const T = parseInt(D, 10);
-    !isNaN(T) && T >= 1 && T <= h ? j(T) : N(String(p));
+    return document.addEventListener("keydown", E), () => document.removeEventListener("keydown", E);
+  }, [h, R, B]);
+  const ee = () => {
+    const E = parseInt(k, 10);
+    !isNaN(E) && E >= 1 && E <= h ? z(E) : S(String(u));
   };
-  return k ? /* @__PURE__ */ e("div", { class: "super-pdfv super-pdfv--center", ref: q, children: /* @__PURE__ */ e("div", { class: "super-pdfv__loader", children: [
+  return I ? /* @__PURE__ */ e("div", { class: "super-pdfv super-pdfv--center", ref: q, children: /* @__PURE__ */ e("div", { class: "super-pdfv__loader", children: [
     /* @__PURE__ */ e("div", { class: "super-pdfv__loader-ring" }),
     /* @__PURE__ */ e("span", { children: "Loading document..." })
   ] }) }) : A ? /* @__PURE__ */ e("div", { class: "super-pdfv super-pdfv--center", ref: q, children: /* @__PURE__ */ e("div", { class: "super-pdfv__empty-state", children: [
@@ -7392,22 +8269,22 @@ function fn({
           /* @__PURE__ */ e("path", { d: "M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" }),
           /* @__PURE__ */ e("polyline", { points: "14 2 14 8 20 8" })
         ] }),
-        /* @__PURE__ */ e("span", { class: "super-pdfv__header-title", children: i }),
+        /* @__PURE__ */ e("span", { class: "super-pdfv__header-title", children: a }),
         r && /* @__PURE__ */ e("span", { class: "super-pdfv__header-date", children: O(r) })
       ] }),
       /* @__PURE__ */ e("div", { class: "super-pdfv__header-right", children: [
         /* @__PURE__ */ e("div", { class: "super-pdfv__group", children: [
-          /* @__PURE__ */ e("button", { class: "super-pdfv__tb-btn", onClick: () => j(p - 1), disabled: p <= 1, title: "Previous page", children: /* @__PURE__ */ e("svg", { width: "14", height: "14", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": "2.5", children: /* @__PURE__ */ e("polyline", { points: "15 18 9 12 15 6" }) }) }),
+          /* @__PURE__ */ e("button", { class: "super-pdfv__tb-btn", onClick: () => z(u - 1), disabled: u <= 1, title: "Previous page", children: /* @__PURE__ */ e("svg", { width: "14", height: "14", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": "2.5", children: /* @__PURE__ */ e("polyline", { points: "15 18 9 12 15 6" }) }) }),
           /* @__PURE__ */ e("div", { class: "super-pdfv__page-pill", children: [
             /* @__PURE__ */ e(
               "input",
               {
                 class: "super-pdfv__page-input",
                 type: "text",
-                value: D,
-                onInput: (T) => N(T.target.value),
-                onBlur: te,
-                onKeyDown: (T) => T.key === "Enter" && T.target.blur(),
+                value: k,
+                onInput: (E) => S(E.target.value),
+                onBlur: ee,
+                onKeyDown: (E) => E.key === "Enter" && E.target.blur(),
                 style: { width: `${Math.max(2, String(h).length + 0.5)}ch` }
               }
             ),
@@ -7416,105 +8293,105 @@ function fn({
               h
             ] })
           ] }),
-          /* @__PURE__ */ e("button", { class: "super-pdfv__tb-btn", onClick: () => j(p + 1), disabled: p >= h, title: "Next page", children: /* @__PURE__ */ e("svg", { width: "14", height: "14", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": "2.5", children: /* @__PURE__ */ e("polyline", { points: "9 18 15 12 9 6" }) }) })
+          /* @__PURE__ */ e("button", { class: "super-pdfv__tb-btn", onClick: () => z(u + 1), disabled: u >= h, title: "Next page", children: /* @__PURE__ */ e("svg", { width: "14", height: "14", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": "2.5", children: /* @__PURE__ */ e("polyline", { points: "9 18 15 12 9 6" }) }) })
         ] }),
         /* @__PURE__ */ e("div", { class: "super-pdfv__tb-sep" }),
         /* @__PURE__ */ e("div", { class: "super-pdfv__group", children: [
-          /* @__PURE__ */ e("button", { class: "super-pdfv__tb-btn", onClick: () => $(-1), disabled: g <= ve[0], title: "Zoom out", children: /* @__PURE__ */ e("svg", { width: "14", height: "14", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": "2", children: /* @__PURE__ */ e("line", { x1: "5", y1: "12", x2: "19", y2: "12" }) }) }),
+          /* @__PURE__ */ e("button", { class: "super-pdfv__tb-btn", onClick: () => R(-1), disabled: g <= we[0], title: "Zoom out", children: /* @__PURE__ */ e("svg", { width: "14", height: "14", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": "2", children: /* @__PURE__ */ e("line", { x1: "5", y1: "12", x2: "19", y2: "12" }) }) }),
           /* @__PURE__ */ e("span", { class: "super-pdfv__zoom-label", children: [
             g,
             "%"
           ] }),
-          /* @__PURE__ */ e("button", { class: "super-pdfv__tb-btn", onClick: () => $(1), disabled: g >= ve[ve.length - 1], title: "Zoom in", children: /* @__PURE__ */ e("svg", { width: "14", height: "14", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": "2", children: [
+          /* @__PURE__ */ e("button", { class: "super-pdfv__tb-btn", onClick: () => R(1), disabled: g >= we[we.length - 1], title: "Zoom in", children: /* @__PURE__ */ e("svg", { width: "14", height: "14", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": "2", children: [
             /* @__PURE__ */ e("line", { x1: "12", y1: "5", x2: "12", y2: "19" }),
             /* @__PURE__ */ e("line", { x1: "5", y1: "12", x2: "19", y2: "12" })
           ] }) })
         ] }),
         /* @__PURE__ */ e("div", { class: "super-pdfv__tb-sep" }),
-        /* @__PURE__ */ e("button", { class: "super-pdfv__tb-btn", onClick: H, title: "Rotate 90°", children: /* @__PURE__ */ e("svg", { width: "14", height: "14", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": "2", children: [
+        /* @__PURE__ */ e("button", { class: "super-pdfv__tb-btn", onClick: B, title: "Rotate 90°", children: /* @__PURE__ */ e("svg", { width: "14", height: "14", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": "2", children: [
           /* @__PURE__ */ e("polyline", { points: "1 4 1 10 7 10" }),
           /* @__PURE__ */ e("path", { d: "M3.51 15a9 9 0 1 0 2.13-9.36L1 10" })
         ] }) }),
-        l && /* @__PURE__ */ e("a", { href: l, target: "_blank", rel: "noopener noreferrer", class: "super-pdfv__open-btn", title: "Open in new tab", children: /* @__PURE__ */ e("svg", { width: "13", height: "13", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": "2", children: [
+        d && /* @__PURE__ */ e("a", { href: d, target: "_blank", rel: "noopener noreferrer", class: "super-pdfv__open-btn", title: "Open in new tab", children: /* @__PURE__ */ e("svg", { width: "13", height: "13", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": "2", children: [
           /* @__PURE__ */ e("path", { d: "M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" }),
           /* @__PURE__ */ e("polyline", { points: "15 3 21 3 21 9" }),
           /* @__PURE__ */ e("line", { x1: "10", y1: "14", x2: "21", y2: "3" })
         ] }) })
       ] })
     ] }),
-    /* @__PURE__ */ e("div", { class: "super-pdfv__scroll", ref: B, children: [
+    /* @__PURE__ */ e("div", { class: "super-pdfv__scroll", ref: H, children: [
       /* @__PURE__ */ e("div", { class: "super-pdfv__canvas-wrap", children: [
-        /* @__PURE__ */ e("canvas", { class: "super-pdfv__canvas", ref: S }),
-        /* @__PURE__ */ e("canvas", { class: "super-pdfv__highlight", ref: E })
+        /* @__PURE__ */ e("canvas", { class: "super-pdfv__canvas", ref: w }),
+        /* @__PURE__ */ e("canvas", { class: "super-pdfv__highlight", ref: M })
       ] }),
-      I && /* @__PURE__ */ e("div", { class: "super-pdfv__page-loading", children: /* @__PURE__ */ e("div", { class: "super-pdfv__loader-ring super-pdfv__loader-ring--sm" }) })
+      D && /* @__PURE__ */ e("div", { class: "super-pdfv__page-loading", children: /* @__PURE__ */ e("div", { class: "super-pdfv__loader-ring super-pdfv__loader-ring--sm" }) })
     ] })
   ] });
 }
-async function ir(t, n, s, i) {
+async function eo(t, n, s, a) {
   if (s.current[n] !== void 0)
-    return (s.current[n] + i) % 360;
-  const a = t.view, r = a[2] - a[0], o = a[3] - a[1];
-  let c = 0, l = 0;
+    return (s.current[n] + a) % 360;
+  const i = t.view, r = i[2] - i[0], o = i[3] - i[1];
+  let c = 0, d = 0;
   try {
-    const u = (await t.getTextContent()).items.filter((p) => p.str && p.str.trim().length > 0);
-    if (l = u.length, u.length >= 3) {
-      const p = { 0: 0, 90: 0, 180: 0, 270: 0 };
-      for (const _ of u) {
-        const [g, f] = _.transform, y = Math.abs(g), w = Math.abs(f);
-        y < 0.01 && w < 0.01 || (y > w ? p[g > 0 ? 0 : 180]++ : p[f > 0 ? 90 : 270]++);
+    const p = (await t.getTextContent()).items.filter((u) => u.str && u.str.trim().length > 0);
+    if (d = p.length, p.length >= 3) {
+      const u = { 0: 0, 90: 0, 180: 0, 270: 0 };
+      for (const _ of p) {
+        const [g, v] = _.transform, b = Math.abs(g), f = Math.abs(v);
+        b < 0.01 && f < 0.01 || (b > f ? u[g > 0 ? 0 : 180]++ : u[v > 0 ? 90 : 270]++);
       }
       let m = 0, h = 0;
-      for (const [_, g] of Object.entries(p))
+      for (const [_, g] of Object.entries(u))
         g > m && (m = g, h = parseInt(_));
       h !== 0 && (c = h);
     }
   } catch {
   }
-  if (c === 0 && l < 3)
+  if (c === 0 && d < 3)
     try {
-      const d = await t.getOperatorList();
-      let u = [1, 0, 0, 1, 0, 0];
-      for (let p = 0; p < d.fnArray.length; p++)
-        if (d.fnArray[p] === 12 && (u = d.argsArray[p]), d.fnArray[p] === 85 || d.fnArray[p] === 82) {
-          const [m, h] = u;
-          Math.abs(h) > Math.abs(m) * 5 && Math.abs(u[2]) > Math.abs(u[3]) * 5 && (c = h > 0 ? 270 : 90);
+      const l = await t.getOperatorList();
+      let p = [1, 0, 0, 1, 0, 0];
+      for (let u = 0; u < l.fnArray.length; u++)
+        if (l.fnArray[u] === 12 && (p = l.argsArray[u]), l.fnArray[u] === 85 || l.fnArray[u] === 82) {
+          const [m, h] = p;
+          Math.abs(h) > Math.abs(m) * 5 && Math.abs(p[2]) > Math.abs(p[3]) * 5 && (c = h > 0 ? 270 : 90);
           break;
         }
     } catch {
     }
-  return c === 0 && r > o * 1.05 && (c = 90), s.current[n] = c, (c + i) % 360;
+  return c === 0 && r > o * 1.05 && (c = 90), s.current[n] = c, (c + a) % 360;
 }
-function ar(t, n, s, i) {
-  const { x: a, y: r, w: o, h: c } = t, l = i % 360;
-  return l === 0 ? { x: a * n, y: r * s, w: o * n, h: c * s } : l === 90 ? { x: (1 - r - c) * n, y: a * s, w: c * n, h: o * s } : l === 180 ? { x: (1 - a - o) * n, y: (1 - r - c) * s, w: o * n, h: c * s } : { x: r * n, y: (1 - a - o) * s, w: c * n, h: o * s };
+function to(t, n, s, a) {
+  const { x: i, y: r, w: o, h: c } = t, d = a % 360;
+  return d === 0 ? { x: i * n, y: r * s, w: o * n, h: c * s } : d === 90 ? { x: (1 - r - c) * n, y: i * s, w: c * n, h: o * s } : d === 180 ? { x: (1 - i - o) * n, y: (1 - r - c) * s, w: o * n, h: c * s } : { x: r * n, y: (1 - i - o) * s, w: c * n, h: o * s };
 }
-function rr(t) {
+function no(t) {
   if (t.length <= 1) return t;
-  const n = [...t].sort((a, r) => a.y - r.y || a.x - r.x), s = [];
-  let i = { ...n[0] };
-  for (let a = 1; a < n.length; a++) {
-    const r = n[a], o = Math.max(i.h, r.h), c = Math.abs(i.y + i.h / 2 - (r.y + r.h / 2)) < o * 0.6, d = r.x - (i.x + i.w) < o * 0.5;
-    if (c && d) {
-      const u = Math.max(i.x + i.w, r.x + r.w), p = Math.min(i.y, r.y), m = Math.max(i.y + i.h, r.y + r.h);
-      i.x = Math.min(i.x, r.x), i.y = p, i.w = u - i.x, i.h = m - p;
+  const n = [...t].sort((i, r) => i.y - r.y || i.x - r.x), s = [];
+  let a = { ...n[0] };
+  for (let i = 1; i < n.length; i++) {
+    const r = n[i], o = Math.max(a.h, r.h), c = Math.abs(a.y + a.h / 2 - (r.y + r.h / 2)) < o * 0.6, l = r.x - (a.x + a.w) < o * 0.5;
+    if (c && l) {
+      const p = Math.max(a.x + a.w, r.x + r.w), u = Math.min(a.y, r.y), m = Math.max(a.y + a.h, r.y + r.h);
+      a.x = Math.min(a.x, r.x), a.y = u, a.w = p - a.x, a.h = m - u;
     } else
-      s.push(i), i = { ...r };
+      s.push(a), a = { ...r };
   }
-  return s.push(i), s;
+  return s.push(a), s;
 }
-function or(t, n, s, i) {
-  const a = s.width, r = s.height, o = n.map((l) => ar(l, a, r, i)), c = rr(o);
-  return t.fillStyle = "rgba(250, 204, 21, 0.28)", c.forEach((l) => {
-    const p = l.x - 2, m = l.y - 2, h = l.w + 4, _ = l.h + 4;
-    t.beginPath(), t.moveTo(p + 3, m), t.lineTo(p + h - 3, m), t.quadraticCurveTo(p + h, m, p + h, m + 3), t.lineTo(p + h, m + _ - 3), t.quadraticCurveTo(p + h, m + _, p + h - 3, m + _), t.lineTo(p + 3, m + _), t.quadraticCurveTo(p, m + _, p, m + _ - 3), t.lineTo(p, m + 3), t.quadraticCurveTo(p, m, p + 3, m), t.closePath(), t.fill();
-  }), c.map((l, d) => ({ ...l, isActive: d === 0 }));
+function so(t, n, s, a) {
+  const i = s.width, r = s.height, o = n.map((d) => to(d, i, r, a)), c = no(o);
+  return t.fillStyle = "rgba(250, 204, 21, 0.28)", c.forEach((d) => {
+    const u = d.x - 2, m = d.y - 2, h = d.w + 4, _ = d.h + 4;
+    t.beginPath(), t.moveTo(u + 3, m), t.lineTo(u + h - 3, m), t.quadraticCurveTo(u + h, m, u + h, m + 3), t.lineTo(u + h, m + _ - 3), t.quadraticCurveTo(u + h, m + _, u + h - 3, m + _), t.lineTo(u + 3, m + _), t.quadraticCurveTo(u, m + _, u, m + _ - 3), t.lineTo(u, m + 3), t.quadraticCurveTo(u, m, u + 3, m), t.closePath(), t.fill();
+  }), c.map((d, l) => ({ ...d, isActive: l === 0 }));
 }
-function cr(t, n) {
+function ao(t, n) {
   if (!t.length || !n) return;
-  const s = t.find((a) => a.isActive) || t[0], i = n.querySelector(".super-pdfv__canvas-wrap");
-  i && requestAnimationFrame(() => {
-    const a = n.getBoundingClientRect(), r = i.getBoundingClientRect(), o = r.left - a.left + n.scrollLeft, c = r.top - a.top + n.scrollTop;
+  const s = t.find((i) => i.isActive) || t[0], a = n.querySelector(".super-pdfv__canvas-wrap");
+  a && requestAnimationFrame(() => {
+    const i = n.getBoundingClientRect(), r = a.getBoundingClientRect(), o = r.left - i.left + n.scrollLeft, c = r.top - i.top + n.scrollTop;
     n.scrollTo({
       left: Math.max(0, o + s.x + s.w / 2 - n.clientWidth / 2),
       top: Math.max(0, c + s.y + s.h / 2 - n.clientHeight / 2),
@@ -7522,32 +8399,34 @@ function cr(t, n) {
     });
   });
 }
-function dr(t) {
-  const { sourceType: n, evidenceId: s } = t, i = t.sourceId || t.id || "", a = t.type;
-  if (n === "progress-note" && i)
-    return { viewerType: "clinical-note", id: i };
-  if (n === "therapy-doc" && i)
-    return { viewerType: "therapy-document", id: i };
-  if (n === "document" && i)
-    return { viewerType: "document", id: i };
+function Ma(t) {
+  const { sourceType: n, evidenceId: s } = t, a = t.sourceId || t.id || "", i = t.type;
+  if (n === "progress-note" && a)
+    return { viewerType: "clinical-note", id: a };
+  if (n === "therapy-doc" && a)
+    return { viewerType: "therapy-document", id: a };
+  if (n === "document" && a)
+    return { viewerType: "document", id: a };
   if (n === "uda") {
-    const o = (i || s || "").replace(/^uda-/, "");
+    const o = (a || s || "").replace(/^uda-/, "");
     if (o) return { viewerType: "uda", id: o };
   }
-  if (i && i.includes("-chunk-"))
-    return { viewerType: "document", id: i.split("-chunk-")[0], chunk: parseInt(i.split("-chunk-")[1], 10) };
-  if (a === "clinical_note" && i)
-    return { viewerType: "clinical-note", id: i.replace(/^pcc-prognote-/, "").replace(/^patient-practnote-/, "") };
-  if (a === "therapy_document" && i)
-    return { viewerType: "therapy-document", id: i.replace(/^therapy-doc-/, "") };
-  if (a === "document" && i)
-    return { viewerType: "document", id: i };
-  const r = s || i;
+  if (a && a.includes("-chunk-"))
+    return { viewerType: "document", id: a.split("-chunk-")[0], chunk: parseInt(a.split("-chunk-")[1], 10) };
+  if (i === "clinical_note" && a)
+    return { viewerType: "clinical-note", id: a.replace(/^pcc-prognote-/, "").replace(/^pcc-practnote-/, "").replace(/^patient-practnote-/, "") };
+  if (i === "therapy_document" && a)
+    return { viewerType: "therapy-document", id: a.replace(/^therapy-doc-/, "") };
+  if (i === "document" && a)
+    return { viewerType: "document", id: a };
+  const r = s || a;
   if (r) {
     if (r.startsWith("therapy-doc-"))
       return { viewerType: "therapy-document", id: r.replace("therapy-doc-", "") };
     if (r.startsWith("pcc-prognote-"))
       return { viewerType: "clinical-note", id: r.replace("pcc-prognote-", "") };
+    if (r.startsWith("pcc-practnote-"))
+      return { viewerType: "clinical-note", id: r.replace("pcc-practnote-", "") };
     if (r.startsWith("patient-practnote-"))
       return { viewerType: "clinical-note", id: r.replace("patient-practnote-", "") };
     if (r.includes("-chunk-"))
@@ -7557,45 +8436,45 @@ function dr(t) {
   }
   return { viewerType: null, id: null };
 }
-function bt() {
+function qt() {
   const t = document.querySelector(".icd10-viewer-modal__container");
   return t || document.body;
 }
-async function lr(t, n) {
-  const s = `/api/extension/clinical-notes/${t}?facilityName=${encodeURIComponent(n.facilityName)}&orgSlug=${n.orgSlug}`, i = await chrome.runtime.sendMessage({
+async function io(t, n) {
+  const s = `/api/extension/clinical-notes/${t}?facilityName=${encodeURIComponent(n.facilityName)}&orgSlug=${n.orgSlug}`, a = await chrome.runtime.sendMessage({
     type: "API_REQUEST",
     endpoint: s
   });
-  if (!i.success) throw new Error(i.error);
-  return i.data;
+  if (!a.success) throw new Error(a.error);
+  return a.data;
 }
-async function pr(t, n) {
-  const s = `/api/extension/therapy-documents/${t}?facilityName=${encodeURIComponent(n.facilityName)}&orgSlug=${n.orgSlug}`, i = await chrome.runtime.sendMessage({
+async function ro(t, n) {
+  const s = `/api/extension/therapy-documents/${t}?facilityName=${encodeURIComponent(n.facilityName)}&orgSlug=${n.orgSlug}`, a = await chrome.runtime.sendMessage({
     type: "API_REQUEST",
     endpoint: s
   });
-  if (!i.success) throw new Error(i.error);
-  return i.data;
+  if (!a.success) throw new Error(a.error);
+  return a.data;
 }
-async function Qe(t, n) {
-  const s = `/api/extension/documents/${t}?facilityName=${encodeURIComponent(n.facilityName)}&orgSlug=${n.orgSlug}`, i = await chrome.runtime.sendMessage({
+async function Xe(t, n) {
+  const s = `/api/extension/documents/${t}?facilityName=${encodeURIComponent(n.facilityName)}&orgSlug=${n.orgSlug}`, a = await chrome.runtime.sendMessage({
     type: "API_REQUEST",
     endpoint: s
   });
-  if (!i.success) throw new Error(i.error);
-  return i.data;
+  if (!a.success) throw new Error(a.error);
+  return a.data;
 }
-async function ur(t, n, s, i = null) {
-  let a = `/api/extension/patients/${n}/uda/${t}?facilityName=${encodeURIComponent(s.facilityName)}&orgSlug=${s.orgSlug}`;
-  i && (a += `&quote=${encodeURIComponent(i)}`);
+async function oo(t, n, s, a = null) {
+  let i = `/api/extension/patients/${n}/uda/${t}?facilityName=${encodeURIComponent(s.facilityName)}&orgSlug=${s.orgSlug}`;
+  a && (i += `&quote=${encodeURIComponent(a)}`);
   const r = await chrome.runtime.sendMessage({
     type: "API_REQUEST",
-    endpoint: a
+    endpoint: i
   });
   if (!r.success) throw new Error(r.error);
   return r.data;
 }
-function mr() {
+function co() {
   if (typeof window < "u") {
     const t = window.SuperOverlay?.patientId;
     if (t) return t;
@@ -7607,10 +8486,10 @@ function mr() {
   }
   return null;
 }
-function Q(t) {
+function W(t) {
   return t ? String(t).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;") : "";
 }
-function gt(t) {
+function xt(t) {
   if (!t) return "";
   try {
     return new Date(t).toLocaleDateString("en-US", {
@@ -7622,7 +8501,7 @@ function gt(t) {
     return t;
   }
 }
-function hr(t) {
+function lo(t) {
   if (!t) return "";
   try {
     return new Date(t).toLocaleDateString("en-US", {
@@ -7636,71 +8515,72 @@ function hr(t) {
     return t;
   }
 }
-const It = "data-evidence-highlight";
-function ft(t) {
+const Oe = "data-evidence-highlight";
+function Pt(t) {
   return t ? t.toLowerCase().replace(/\s+/g, " ").trim() : "";
 }
-function si(t, n) {
+function qa(t, n) {
   if (!t || !n) return !1;
-  const s = ft(t), i = ft(n);
-  return s.length < 10 || i.length < 10 ? !1 : s.includes(i) || i.includes(s);
+  const s = Pt(t), a = Pt(n);
+  return s.length < 10 || a.length < 10 ? !1 : s.includes(a) || a.includes(s);
 }
-function ii(t, n, s = 4) {
+function La(t, n, s = 4) {
   if (!t || !n) return !1;
-  const i = ft(t);
-  return ft(n).split(/\s+/).filter((c) => c.length >= s).filter((c) => i.includes(c)).length >= 2;
+  const a = Pt(t);
+  return Pt(n).split(/\s+/).filter((c) => c.length >= s).filter((c) => a.includes(c)).length >= 2;
 }
-function yt(t, n) {
-  return si(n, t) || ii(n, t);
+function Tt(t, n) {
+  return qa(n, t) || La(n, t);
 }
-function _r(t, n) {
-  return t.some((s) => si(s, n) || ii(s, n));
+function uo(t, n) {
+  return t.some((s) => qa(s, n) || La(s, n));
 }
-function zn(t) {
+function ls(t) {
   if (!t) return "";
   try {
     const n = new Date(t);
     if (isNaN(n.getTime())) return t;
-    const s = n.getMonth() + 1, i = n.getDate(), a = n.getFullYear();
+    const s = n.getMonth() + 1, a = n.getDate(), i = n.getFullYear();
     let r = n.getHours();
-    const o = n.getMinutes().toString().padStart(2, "0"), c = n.getSeconds().toString().padStart(2, "0"), l = r >= 12 ? "PM" : "AM";
-    return r = r % 12 || 12, `${s}/${i}/${a} ${r}:${o}:${c} ${l}`;
+    const o = n.getMinutes().toString().padStart(2, "0"), c = n.getSeconds().toString().padStart(2, "0"), d = r >= 12 ? "PM" : "AM";
+    return r = r % 12 || 12, `${s}/${a}/${i} ${r}:${o}:${c} ${d}`;
   } catch {
     return t;
   }
 }
-function fe(t, n) {
+function ve(t, n) {
   const s = !document.querySelector(".icd10-viewer-modal__container");
   s && (document.body.style.overflow = "hidden");
-  const i = () => {
+  const a = () => {
     s && (document.body.style.overflow = ""), t.remove();
   };
-  t.querySelector(`.${n}__close`).addEventListener("click", i), t.querySelector(`.${n}__backdrop`).addEventListener("click", i);
-  const a = (r) => {
-    r.key === "Escape" && (i(), document.removeEventListener("keydown", a));
+  t.querySelector(`.${n}__close`).addEventListener("click", a), t.querySelector(`.${n}__backdrop`).addEventListener("click", a);
+  const i = (r) => {
+    r.key === "Escape" && (a(), document.removeEventListener("keydown", i));
   };
-  document.addEventListener("keydown", a);
+  document.addEventListener("keydown", i);
 }
-function yn(t, n, s) {
-  const i = t.querySelector(`.${s}__body`);
-  i.innerHTML = `
+function Tn(t, n, s) {
+  const a = t.querySelector(`.${s}__body`);
+  a.innerHTML = `
     <div class="super-viewer-error">
       <div class="super-viewer-error__icon">⚠️</div>
-      <div class="super-viewer-error__message">${Q(n)}</div>
+      <div class="super-viewer-error__message">${W(n)}</div>
     </div>
   `;
 }
-async function gr(t) {
-  const n = await window.getCurrentParams(), s = fr();
-  bt().appendChild(s);
+async function po(t, n = null) {
+  console.log("[NoteHighlight] showClinicalNoteModal noteId=", t, "quote?", !!n, "quoteLen=", n ? n.length : 0);
+  const s = await window.getCurrentParams(), a = mo();
+  qt().appendChild(a);
   try {
-    const i = await lr(t, n);
-    yr(s, i.note);
+    const i = await io(t, s);
+    console.log("[NoteHighlight] note fetched, noteText length:", i?.note?.noteText?.length || 0), _o(a, i.note, n);
   } catch (i) {
-    yn(s, i.message, "super-note-modal");
+    console.error("[NoteHighlight] fetch failed:", i), Tn(a, i.message, "super-note-modal");
   }
 }
-function fr() {
+function mo() {
   const t = document.createElement("div");
   return t.className = "super-note-modal", t.innerHTML = `
     <div class="super-note-modal__backdrop"></div>
@@ -7718,49 +8598,90 @@ function fr() {
         </div>
       </div>
     </div>
-  `, fe(t, "super-note-modal"), t;
+  `, ve(t, "super-note-modal"), t;
 }
-function yr(t, n) {
-  const s = t.querySelector(".super-note-modal__container"), i = n.noteType === "practitioner" ? "Practitioner Note" : "Progress Note", a = n.noteType === "practitioner" ? "super-note-badge--practitioner" : "super-note-badge--progress";
-  s.innerHTML = `
+function ho(t, n) {
+  if (!t) return "No note content available.";
+  const s = String(t);
+  if (!n) return W(s);
+  const a = String(n).split(/[.;:\n]+/).map((l) => l.replace(/[*"'`()]/g, "").trim()).filter((l) => l.length >= 15);
+  if (console.log("[NoteHighlight] quote length:", n.length, "phrases extracted:", a.length, a), a.length === 0) return W(s);
+  const i = s.toLowerCase(), r = [];
+  for (const l of a) {
+    const p = l.toLowerCase();
+    let u = 0;
+    for (; (u = i.indexOf(p, u)) !== -1; )
+      r.push([u, u + l.length]), u += l.length;
+  }
+  if (console.log("[NoteHighlight] raw match ranges:", r.length), r.length === 0) {
+    const l = String(n).toLowerCase().replace(/[*"'`()]/g, "").split(/\s+/).filter((p) => p.length >= 3);
+    for (let p = 0; p <= l.length - 3; p++) {
+      const u = l.slice(p, p + 3).join(" ");
+      if (u.length < 12) continue;
+      let m = 0;
+      for (; (m = i.indexOf(u, m)) !== -1; )
+        r.push([m, m + u.length]), m += u.length;
+    }
+    console.log("[NoteHighlight] trigram fallback ranges:", r.length);
+  }
+  if (r.length === 0)
+    return console.log("[NoteHighlight] no matches found; rendering plain escaped text"), W(s);
+  r.sort((l, p) => l[0] - p[0]);
+  const o = [r[0].slice()];
+  for (let l = 1; l < r.length; l++) {
+    const p = o[o.length - 1], u = r[l];
+    u[0] <= p[1] ? p[1] = Math.max(p[1], u[1]) : o.push(u.slice());
+  }
+  console.log("[NoteHighlight] merged ranges:", o.length, o);
+  let c = "", d = 0;
+  for (const [l, p] of o)
+    d < l && (c += W(s.slice(d, l))), c += `<mark class="super-note-highlight" ${Oe}="true">${W(s.slice(l, p))}</mark>`, d = p;
+  return d < s.length && (c += W(s.slice(d))), c;
+}
+function _o(t, n, s = null) {
+  const a = t.querySelector(".super-note-modal__container"), i = n.noteType === "practitioner" ? "Practitioner Note" : "Progress Note", r = n.noteType === "practitioner" ? "super-note-badge--practitioner" : "super-note-badge--progress";
+  a.innerHTML = `
     <div class="super-note-modal__header">
       <div class="super-note-modal__title-row">
         <span class="super-note-modal__icon">📝</span>
         <div class="super-note-modal__title">
-          <span class="super-note-modal__name">${Q(n.department || i)}</span>
-          <span class="super-note-badge ${a}">${i}</span>
+          <span class="super-note-modal__name">${W(n.department || i)}</span>
+          <span class="super-note-badge ${r}">${i}</span>
         </div>
         <button class="super-note-modal__close">&times;</button>
       </div>
-      ${n.provider ? `<div class="super-note-modal__provider">${Q(n.provider)}</div>` : ""}
+      ${n.provider ? `<div class="super-note-modal__provider">${W(n.provider)}</div>` : ""}
       <div class="super-note-modal__meta">
-        ${n.effectiveDate ? `<span>${gt(n.effectiveDate)}</span>` : ""}
-        ${n.visitType ? `<span class="super-note-modal__visit-type">${Q(n.visitType)}</span>` : ""}
-        ${n.task ? `<span class="super-note-modal__task">${Q(n.task)}</span>` : ""}
+        ${n.effectiveDate ? `<span>${xt(n.effectiveDate)}</span>` : ""}
+        ${n.visitType ? `<span class="super-note-modal__visit-type">${W(n.visitType)}</span>` : ""}
+        ${n.task ? `<span class="super-note-modal__task">${W(n.task)}</span>` : ""}
       </div>
     </div>
 
     <div class="super-note-modal__body">
-      <div class="super-note-modal__text">${Q(n.noteText || "No note content available.")}</div>
+      <div class="super-note-modal__text">${ho(n.noteText, s)}</div>
     </div>
 
     <div class="super-note-modal__footer">
-      ${n.signedDate ? `<span class="super-note-modal__signed">Signed: ${hr(n.signedDate)}</span>` : ""}
+      ${n.signedDate ? `<span class="super-note-modal__signed">Signed: ${lo(n.signedDate)}</span>` : ""}
       ${n.hasAddendum ? '<span class="super-note-modal__addendum">Has Addendum</span>' : ""}
     </div>
-  `, fe(t, "super-note-modal");
+  `, ve(t, "super-note-modal"), s && setTimeout(() => {
+    const o = t.querySelectorAll(`[${Oe}="true"]`);
+    console.log("[NoteHighlight] post-render marks found in DOM:", o.length), o.length > 0 && o[0].scrollIntoView({ behavior: "smooth", block: "center" });
+  }, 80);
 }
-async function vr(t, n = null) {
-  const s = await window.getCurrentParams(), i = wr();
-  bt().appendChild(i);
+async function go(t, n = null) {
+  const s = await window.getCurrentParams(), a = fo();
+  qt().appendChild(a);
   try {
-    const a = await pr(t, s);
-    br(i, a.therapyDocument, n);
-  } catch (a) {
-    yn(i, a.message, "super-therapy-modal");
+    const i = await ro(t, s);
+    yo(a, i.therapyDocument, n);
+  } catch (i) {
+    Tn(a, i.message, "super-therapy-modal");
   }
 }
-function wr() {
+function fo() {
   const t = document.createElement("div");
   return t.className = "super-therapy-modal", t.dataset.zoom = "100", t.innerHTML = `
     <div class="super-therapy-modal__backdrop"></div>
@@ -7786,51 +8707,51 @@ function wr() {
         <button class="super-therapy-modal__btn super-therapy-modal__btn--secondary super-therapy-modal__close-btn">Close</button>
       </div>
     </div>
-  `, fe(t, "super-therapy-modal"), Se(t), t.querySelector(".super-therapy-modal__close-btn")?.addEventListener("click", () => {
+  `, ve(t, "super-therapy-modal"), Pe(t), t.querySelector(".super-therapy-modal__close-btn")?.addEventListener("click", () => {
     document.body.style.overflow = "", t.remove();
   }), t;
 }
-function Se(t) {
+function Pe(t) {
   const n = [50, 75, 100, 125, 150];
   t.querySelectorAll(".super-therapy-modal__zoom-btn").forEach((s) => {
     s.addEventListener("click", () => {
-      const i = s.dataset.zoomAction, a = parseInt(t.dataset.zoom) || 100, r = n.indexOf(a);
-      let o = a;
-      i === "in" && r < n.length - 1 ? o = n[r + 1] : i === "out" && r > 0 && (o = n[r - 1]), t.dataset.zoom = o;
+      const a = s.dataset.zoomAction, i = parseInt(t.dataset.zoom) || 100, r = n.indexOf(i);
+      let o = i;
+      a === "in" && r < n.length - 1 ? o = n[r + 1] : a === "out" && r > 0 && (o = n[r - 1]), t.dataset.zoom = o;
       const c = t.querySelector(".super-therapy-modal__zoom-level");
       c && (c.textContent = `${o}%`);
-      const l = t.querySelector(".super-therapy-doc");
-      l && (l.style.transform = `scale(${o / 100})`, l.style.transformOrigin = "top center");
+      const d = t.querySelector(".super-therapy-doc");
+      d && (d.style.transform = `scale(${o / 100})`, d.style.transformOrigin = "top center");
     });
   });
 }
-function br(t, n, s = null) {
-  const { documentType: i } = n;
-  switch (i) {
+function yo(t, n, s = null) {
+  const { documentType: a } = n;
+  switch (a) {
     case "EVAL":
-      Nr(t, n, s);
+      Do(t, n, s);
       break;
     case "TEN":
-      Cr(t, n, s);
+      Io(t, n, s);
       break;
     case "PR":
-      Sr(t, n, s);
+      No(t, n, s);
       break;
     case "RECERT":
-      xr(t, n, s);
+      ko(t, n, s);
       break;
     case "DISCH":
-      Pr(t, n, s);
+      Co(t, n, s);
       break;
     default:
-      Tr(t, n, s);
+      So(t, n, s);
   }
   s && setTimeout(() => {
-    Ir(t);
+    vo(t);
   }, 100);
 }
-function Ir(t) {
-  const n = t.querySelectorAll(`[${It}="true"]`);
+function vo(t) {
+  const n = t.querySelectorAll(`[${Oe}="true"]`);
   if (n.length === 0 || (n[0].scrollIntoView({ behavior: "smooth", block: "center" }), n.length === 1)) return;
   const s = document.createElement("div");
   s.className = "super-therapy-highlight-nav", s.innerHTML = `
@@ -7846,54 +8767,54 @@ function Ir(t) {
       </svg>
     </button>
   `;
-  const i = t.querySelector(".super-therapy-modal__body");
-  i && i.appendChild(s);
-  let a = 0;
+  const a = t.querySelector(".super-therapy-modal__body");
+  a && a.appendChild(s);
+  let i = 0;
   const r = (o) => {
     n.forEach((c) => c.classList.remove("super-therapy-highlight--active")), n[o].classList.add("super-therapy-highlight--active"), n[o].scrollIntoView({ behavior: "smooth", block: "center" }), s.querySelector(".super-therapy-highlight-nav__count").textContent = `${o + 1} of ${n.length}`;
   };
   s.querySelectorAll(".super-therapy-highlight-nav__btn").forEach((o) => {
     o.addEventListener("click", () => {
-      o.dataset.action === "prev" ? a = a > 0 ? a - 1 : n.length - 1 : a = a < n.length - 1 ? a + 1 : 0, r(a);
+      o.dataset.action === "prev" ? i = i > 0 ? i - 1 : n.length - 1 : i = i < n.length - 1 ? i + 1 : 0, r(i);
     });
   }), n[0].classList.add("super-therapy-highlight--active");
 }
-const Dr = {
+const bo = {
   PT: "Physical Therapy",
   OT: "Occupational Therapy",
   ST: "Speech Therapy"
-}, kr = {
+}, wo = {
   EVAL: "Initial Evaluation",
   TEN: "Treatment Encounter Note(s)",
   PR: "Progress Report",
   RECERT: "Recertification",
   DISCH: "Discharge Summary"
 };
-function re(t, ...n) {
+function oe(t, ...n) {
   for (const s of n) {
     if (t[s] !== void 0) return t[s];
-    const i = s.charAt(0).toUpperCase() + s.slice(1);
-    if (t[i] !== void 0) return t[i];
+    const a = s.charAt(0).toUpperCase() + s.slice(1);
+    if (t[a] !== void 0) return t[a];
   }
   return null;
 }
-function Re(t) {
-  const n = t.jsonData || {}, s = n.Parameters || n.parameters || {}, i = t.discipline || "", a = Dr[i] || i || "Therapy", r = t.documentType || "", o = kr[r] || n.BodyDocumentName || n.bodyDocumentName || r, c = t.providerName || re(s, "ProviderName", "providerName") || re(n, "HeaderProviderName", "headerProviderName") || "", l = re(s, "PatientName", "patientName") || re(n, "HeaderPatientName", "headerPatientName") || re(n, "BodyPatientName", "bodyPatientName") || "";
+function Be(t) {
+  const n = t.jsonData || {}, s = n.Parameters || n.parameters || {}, a = t.discipline || "", i = bo[a] || a || "Therapy", r = t.documentType || "", o = wo[r] || n.BodyDocumentName || n.bodyDocumentName || r, c = t.providerName || oe(s, "ProviderName", "providerName") || oe(n, "HeaderProviderName", "headerProviderName") || "", d = oe(s, "PatientName", "patientName") || oe(n, "HeaderPatientName", "headerPatientName") || oe(n, "BodyPatientName", "bodyPatientName") || "";
   return `
     <div class="super-therapy-doc__header">
-      <div class="super-therapy-doc__discipline">${Q(a)}</div>
-      <div class="super-therapy-doc__title">${Q(o)}</div>
+      <div class="super-therapy-doc__discipline">${W(i)}</div>
+      <div class="super-therapy-doc__title">${W(o)}</div>
     </div>
     <div class="super-therapy-doc__info-row">
       <div class="super-therapy-doc__provider">
-        <span class="super-therapy-doc__provider-label">Provider: </span>${Q(c)}
+        <span class="super-therapy-doc__provider-label">Provider: </span>${W(c)}
       </div>
-      <div class="super-therapy-doc__patient">${Q(l)}</div>
+      <div class="super-therapy-doc__patient">${W(d)}</div>
     </div>
   `;
 }
-function qe(t) {
-  const n = t.jsonData || {}, s = n.Parameters || n.parameters || {}, i = re(s, "PatientName", "patientName") || re(n, "BodyPatientName", "bodyPatientName") || "", a = re(s, "MedicalRecordNumber", "medicalRecordNumber") || re(n, "BodyMRN", "bodyMRN") || "", r = re(s, "DateOfBirth", "dateOfBirth") || re(n, "BodyDOB", "bodyDOB") || "", o = re(s, "PayerName", "payerName") || "", c = re(s, "StartOfCare", "startOfCare") || "";
+function He(t) {
+  const n = t.jsonData || {}, s = n.Parameters || n.parameters || {}, a = oe(s, "PatientName", "patientName") || oe(n, "BodyPatientName", "bodyPatientName") || "", i = oe(s, "MedicalRecordNumber", "medicalRecordNumber") || oe(n, "BodyMRN", "bodyMRN") || "", r = oe(s, "DateOfBirth", "dateOfBirth") || oe(n, "BodyDOB", "bodyDOB") || "", o = oe(s, "PayerName", "payerName") || "", c = oe(s, "StartOfCare", "startOfCare") || "";
   return `
     <div class="super-therapy-section">
       <div class="super-therapy-section-header">Identification Information</div>
@@ -7901,23 +8822,23 @@ function qe(t) {
         <table class="super-therapy-id-table">
           <tr>
             <td class="super-therapy-id-table__label">Patient:</td>
-            <td class="super-therapy-id-table__value">${Q(i)}</td>
-            ${r ? `<td class="super-therapy-id-table__label">DOB:</td><td class="super-therapy-id-table__value">${Q(r)}</td>` : ""}
-            ${c ? `<td class="super-therapy-id-table__label">Start of Care:</td><td class="super-therapy-id-table__value">${Q(c)}</td>` : ""}
+            <td class="super-therapy-id-table__value">${W(a)}</td>
+            ${r ? `<td class="super-therapy-id-table__label">DOB:</td><td class="super-therapy-id-table__value">${W(r)}</td>` : ""}
+            ${c ? `<td class="super-therapy-id-table__label">Start of Care:</td><td class="super-therapy-id-table__value">${W(c)}</td>` : ""}
           </tr>
           <tr>
-            ${o ? `<td class="super-therapy-id-table__label">Payer:</td><td class="super-therapy-id-table__value">${Q(o)}</td>` : ""}
+            ${o ? `<td class="super-therapy-id-table__label">Payer:</td><td class="super-therapy-id-table__value">${W(o)}</td>` : ""}
             <td class="super-therapy-id-table__label">MRN:</td>
-            <td class="super-therapy-id-table__value" ${o ? "" : 'colspan="3"'}>${Q(a)}</td>
+            <td class="super-therapy-id-table__value" ${o ? "" : 'colspan="3"'}>${W(i)}</td>
           </tr>
         </table>
       </div>
     </div>
   `;
 }
-function Dt(t) {
+function Lt(t) {
   if (!t || t.length === 0) return "";
-  const n = t.filter((i) => i.IsMedicalDx || i.isMedicalDx), s = t.filter((i) => i.IsTreatmentDx || i.isTreatmentDx);
+  const n = t.filter((a) => a.IsMedicalDx || a.isMedicalDx), s = t.filter((a) => a.IsTreatmentDx || a.isTreatmentDx);
   return n.length === 0 && s.length === 0 ? "" : `
     <div class="super-therapy-section">
       <div class="super-therapy-section-header">Diagnoses</div>
@@ -7932,20 +8853,20 @@ function Dt(t) {
             </tr>
           </thead>
           <tbody>
-            ${n.map((i) => `
+            ${n.map((a) => `
               <tr>
                 <td>Medical</td>
-                <td class="super-therapy-dx-table__code">${Q(i.Code || i.code || "")}</td>
-                <td>${Q(i.Description || i.description || "")}</td>
-                <td>${gt(i.OnsetDate || i.onsetDate) || "-"}</td>
+                <td class="super-therapy-dx-table__code">${W(a.Code || a.code || "")}</td>
+                <td>${W(a.Description || a.description || "")}</td>
+                <td>${xt(a.OnsetDate || a.onsetDate) || "-"}</td>
               </tr>
             `).join("")}
-            ${s.map((i) => `
+            ${s.map((a) => `
               <tr>
                 <td>Treatment</td>
-                <td class="super-therapy-dx-table__code">${Q(i.Code || i.code || "")}</td>
-                <td>${Q(i.Description || i.description || "")}</td>
-                <td>${gt(i.OnsetDate || i.onsetDate) || "-"}</td>
+                <td class="super-therapy-dx-table__code">${W(a.Code || a.code || "")}</td>
+                <td>${W(a.Description || a.description || "")}</td>
+                <td>${xt(a.OnsetDate || a.onsetDate) || "-"}</td>
               </tr>
             `).join("")}
           </tbody>
@@ -7954,42 +8875,42 @@ function Dt(t) {
     </div>
   `;
 }
-function jn(t, n = !1, s = null) {
-  const i = n ? "LTG" : "STG", a = t.GoalNum || t.goalNum || "?", r = t.GoalStatus || t.goalStatus || "Continue", o = `super-therapy-goal__status--${r.toLowerCase().replace(/\s+/g, "")}`, c = t.GoalText || t.goalText || "", l = t.TargetDate || t.targetDate || "", d = t.GoalPlofText || t.goalPlofText || "", u = t.BaselineValueText || t.baselineValueText || "", p = t.PriorValueText || t.priorValueText || "", m = t.CurrentValueText || t.currentValueText || "", h = t.Comments || t.comments || "", _ = t.MeasurementCaption || t.measurementCaption || "", y = _r([c, h, u, p, m, d], s) ? `${It}="true"` : "", w = yt(s, c) ? "super-therapy-highlight" : "", k = yt(s, h) ? "super-therapy-highlight" : "";
+function ds(t, n = !1, s = null) {
+  const a = n ? "LTG" : "STG", i = t.GoalNum || t.goalNum || "?", r = t.GoalStatus || t.goalStatus || "Continue", o = `super-therapy-goal__status--${r.toLowerCase().replace(/\s+/g, "")}`, c = t.GoalText || t.goalText || "", d = t.TargetDate || t.targetDate || "", l = t.GoalPlofText || t.goalPlofText || "", p = t.BaselineValueText || t.baselineValueText || "", u = t.PriorValueText || t.priorValueText || "", m = t.CurrentValueText || t.currentValueText || "", h = t.Comments || t.comments || "", _ = t.MeasurementCaption || t.measurementCaption || "", b = uo([c, h, p, u, m, l], s) ? `${Oe}="true"` : "", f = Tt(s, c) ? "super-therapy-highlight" : "", I = Tt(s, h) ? "super-therapy-highlight" : "";
   return `
-    <div class="super-therapy-goal" ${y}>
+    <div class="super-therapy-goal" ${b}>
       <div class="super-therapy-goal__header">
-        <div class="super-therapy-goal__title">${i} #${a} - ${r}</div>
+        <div class="super-therapy-goal__title">${a} #${i} - ${r}</div>
         <span class="super-therapy-goal__status ${o}">${r}</span>
       </div>
       <div class="super-therapy-goal__body">
-        <p class="super-therapy-goal__text ${w}">${Q(c)}</p>
-        ${l ? `<p class="super-therapy-goal__target">Target: ${gt(l)}</p>` : ""}
+        <p class="super-therapy-goal__text ${f}">${W(c)}</p>
+        ${d ? `<p class="super-therapy-goal__target">Target: ${xt(d)}</p>` : ""}
       </div>
       <div class="super-therapy-goal__progress">
         <div>
           <div class="super-therapy-goal__progress-item">
             <div class="super-therapy-goal__progress-label">PLOF</div>
-            <div class="super-therapy-goal__progress-value">${Q(d || "Not specified")}</div>
+            <div class="super-therapy-goal__progress-value">${W(l || "Not specified")}</div>
           </div>
-          ${u ? `
+          ${p ? `
             <div class="super-therapy-goal__progress-item">
-              <div class="super-therapy-goal__progress-label">Baseline${_ ? ` <span class="super-therapy-goal__progress-sublabel">(${Q(_)})</span>` : ""}</div>
-              <div class="super-therapy-goal__progress-value">${Q(u)}</div>
+              <div class="super-therapy-goal__progress-label">Baseline${_ ? ` <span class="super-therapy-goal__progress-sublabel">(${W(_)})</span>` : ""}</div>
+              <div class="super-therapy-goal__progress-value">${W(p)}</div>
             </div>
           ` : ""}
         </div>
         <div>
-          ${p ? `
+          ${u ? `
             <div class="super-therapy-goal__progress-item">
               <div class="super-therapy-goal__progress-label">Previous</div>
-              <div class="super-therapy-goal__progress-value">${Q(p)}</div>
+              <div class="super-therapy-goal__progress-value">${W(u)}</div>
             </div>
           ` : ""}
           ${m ? `
             <div class="super-therapy-goal__progress-item">
               <div class="super-therapy-goal__progress-label">Current</div>
-              <div class="super-therapy-goal__progress-value">${Q(m)}</div>
+              <div class="super-therapy-goal__progress-value">${W(m)}</div>
             </div>
           ` : ""}
         </div>
@@ -7997,62 +8918,62 @@ function jn(t, n = !1, s = null) {
       ${h ? `
         <div class="super-therapy-goal__comments">
           <span class="super-therapy-goal__comments-label">Comments: </span>
-          <span class="${k}">${Q(h)}</span>
+          <span class="${I}">${W(h)}</span>
         </div>
       ` : ""}
     </div>
   `;
 }
-function vn(t, n = null) {
+function An(t, n = null) {
   if (!t || t.length === 0) return "";
-  const s = t.filter((a) => !a.IsLongTerm && !a.isLongTerm), i = t.filter((a) => a.IsLongTerm || a.isLongTerm);
+  const s = t.filter((i) => !i.IsLongTerm && !i.isLongTerm), a = t.filter((i) => i.IsLongTerm || i.isLongTerm);
   return `
     <div class="super-therapy-section">
       <div class="super-therapy-section-header">Goals</div>
       <div class="super-therapy-section__body">
-        ${i.length > 0 ? `
+        ${a.length > 0 ? `
           <div class="super-therapy-goals-title">Long-Term Goals</div>
-          ${i.map((a) => jn(a, !0, n)).join("")}
+          ${a.map((i) => ds(i, !0, n)).join("")}
         ` : ""}
         ${s.length > 0 ? `
           <div class="super-therapy-goals-title">Short-Term Goals</div>
-          ${s.map((a) => jn(a, !1, n)).join("")}
+          ${s.map((i) => ds(i, !1, n)).join("")}
         ` : ""}
       </div>
     </div>
   `;
 }
-function wn(t) {
+function Mn(t) {
   return !t || t.length === 0 ? "" : `
     <div class="super-therapy-section">
       <div class="super-therapy-section-header">Plan of Treatment - Interventions</div>
       <div class="super-therapy-section__body">
         ${t.map((n) => `
           <div class="super-therapy-intervention">
-            <span class="super-therapy-intervention__code">${Q(n.Code || n.code || "")}</span>
-            - ${Q(n.Description || n.description || "")}
+            <span class="super-therapy-intervention__code">${W(n.Code || n.code || "")}</span>
+            - ${W(n.Description || n.description || "")}
           </div>
         `).join("")}
       </div>
     </div>
   `;
 }
-function kt(t, n = null) {
+function Et(t, n = null) {
   if (!t || t.length === 0) return "";
   const s = {};
-  return t.forEach((i) => {
-    const a = i.PrintSectionName || i.printSectionName || i.SectionName || i.sectionName || "Assessment", r = i.PrintGroupName || i.printGroupName || i.GroupName || i.groupName || "", o = i.GroupValues || i.groupValues || "";
-    s[a] || (s[a] = []), s[a].push({ groupName: r, values: o });
-  }), Object.entries(s).map(([i, a]) => `
+  return t.forEach((a) => {
+    const i = a.PrintSectionName || a.printSectionName || a.SectionName || a.sectionName || "Assessment", r = a.PrintGroupName || a.printGroupName || a.GroupName || a.groupName || "", o = a.GroupValues || a.groupValues || "";
+    s[i] || (s[i] = []), s[i].push({ groupName: r, values: o });
+  }), Object.entries(s).map(([a, i]) => `
     <div class="super-therapy-section">
-      <div class="super-therapy-section-header">${Q(i)}</div>
+      <div class="super-therapy-section-header">${W(a)}</div>
       <div class="super-therapy-section__body">
-        ${a.map((r) => {
-    const o = yt(n, r.values), c = o ? `${It}="true"` : "", l = o ? "super-therapy-highlight" : "";
+        ${i.map((r) => {
+    const o = Tt(n, r.values), c = o ? `${Oe}="true"` : "", d = o ? "super-therapy-highlight" : "";
     return `
             <div class="super-therapy-detail-item" ${c}>
-              ${r.groupName ? `<div class="super-therapy-detail-item__name">${Q(r.groupName)}</div>` : ""}
-              <div class="super-therapy-detail-item__value ${l}">${Q(r.values)}</div>
+              ${r.groupName ? `<div class="super-therapy-detail-item__name">${W(r.groupName)}</div>` : ""}
+              <div class="super-therapy-detail-item__value ${d}">${W(r.values)}</div>
             </div>
           `;
   }).join("")}
@@ -8060,7 +8981,7 @@ function kt(t, n = null) {
     </div>
   `).join("");
 }
-function ai(t) {
+function Ea(t) {
   if (!t) return "";
   const n = t.Dates || t.dates || [], s = t.ServiceRows || t.serviceRows || [];
   return n.length === 0 || s.length === 0 ? "" : `
@@ -8071,15 +8992,15 @@ function ai(t) {
           <thead>
             <tr>
               <th class="super-therapy-matrix__service-col">Service</th>
-              ${n.map((i) => `<th>${Q(i)}</th>`).join("")}
+              ${n.map((a) => `<th>${W(a)}</th>`).join("")}
             </tr>
           </thead>
           <tbody>
-            ${s.map((i) => `
+            ${s.map((a) => `
               <tr>
-                <td class="super-therapy-matrix__service-col">${Q(i.ServiceCodeAndAbbrev || "")}</td>
-                ${n.map((a) => {
-    const r = i.DurationsByDate?.[a] || "";
+                <td class="super-therapy-matrix__service-col">${W(a.ServiceCodeAndAbbrev || "")}</td>
+                ${n.map((i) => {
+    const r = a.DurationsByDate?.[i] || "";
     return `<td>${r ? r + "m" : "-"}</td>`;
   }).join("")}
               </tr>
@@ -8091,37 +9012,37 @@ function ai(t) {
     </div>
   `;
 }
-function Ke(t) {
+function st(t) {
   if (!t) return "";
-  const n = t.OriginalSignatureText || t.originalSignatureText, s = t.OriginalSignatureDate || t.originalSignatureDate, i = t.OriginalCoSignatureText || t.originalCoSignatureText, a = t.OriginalCosignatureDate || t.originalCosignatureDate;
-  return !n && !i ? "" : `
+  const n = t.OriginalSignatureText || t.originalSignatureText, s = t.OriginalSignatureDate || t.originalSignatureDate, a = t.OriginalCoSignatureText || t.originalCoSignatureText, i = t.OriginalCosignatureDate || t.originalCosignatureDate;
+  return !n && !a ? "" : `
     <div class="super-therapy-signatures">
       ${n ? `
         <div class="super-therapy-signature">
           <div class="super-therapy-signature__line">
             <div class="super-therapy-signature__name-area">
-              <div class="super-therapy-signature__name">${Q(n)}</div>
+              <div class="super-therapy-signature__name">${W(n)}</div>
               <div class="super-therapy-signature__label">Original Signature:</div>
             </div>
             ${s ? `
               <div class="super-therapy-signature__date-area">
-                <div class="super-therapy-signature__date">${zn(s)}</div>
+                <div class="super-therapy-signature__date">${ls(s)}</div>
                 <div class="super-therapy-signature__date-label">Date</div>
               </div>
             ` : ""}
           </div>
         </div>
       ` : ""}
-      ${i ? `
+      ${a ? `
         <div class="super-therapy-signature">
           <div class="super-therapy-signature__line">
             <div class="super-therapy-signature__name-area">
-              <div class="super-therapy-signature__name">${Q(i)}</div>
+              <div class="super-therapy-signature__name">${W(a)}</div>
               <div class="super-therapy-signature__label">Cosignature:</div>
             </div>
-            ${a ? `
+            ${i ? `
               <div class="super-therapy-signature__date-area">
-                <div class="super-therapy-signature__date">${zn(a)}</div>
+                <div class="super-therapy-signature__date">${ls(i)}</div>
                 <div class="super-therapy-signature__date-label">Date</div>
               </div>
             ` : ""}
@@ -8132,10 +9053,10 @@ function Ke(t) {
     </div>
   `;
 }
-function Oe(t, n = 100) {
+function Ge(t, n = 100) {
   return `
     <div class="super-therapy-modal__toolbar">
-      <div class="super-therapy-modal__toolbar-title">${Q(t)}</div>
+      <div class="super-therapy-modal__toolbar-title">${W(t)}</div>
       <div class="super-therapy-modal__toolbar-controls">
         <div class="super-therapy-modal__zoom">
           <button class="super-therapy-modal__zoom-btn" data-zoom-action="out" title="Zoom Out">−</button>
@@ -8147,42 +9068,42 @@ function Oe(t, n = 100) {
     </div>
   `;
 }
-function Cr(t, n, s = null) {
-  const i = t.querySelector(".super-therapy-modal__container"), a = n.jsonData || {}, r = parseInt(t.dataset.zoom) || 100, o = n.displayName || `${n.discipline} TEN - Treatment Note`, c = a.Sections || a.sections || [], l = re(a, "CompletedDateFormatted", "completedDateFormatted") || "", d = re(a, "AssessmentDateFormatted", "assessmentDateFormatted") || l, u = {
-    OriginalSignatureText: a.OriginalSignatureText || a.originalSignatureText,
-    OriginalSignatureDate: a.OriginalSignatureDate || a.originalSignatureDate,
-    OriginalCoSignatureText: a.OriginalCoSignatureText || a.originalCoSignatureText,
-    OriginalCosignatureDate: a.OriginalCosignatureDate || a.originalCosignatureDate
-  }, p = [], m = c[0];
+function Io(t, n, s = null) {
+  const a = t.querySelector(".super-therapy-modal__container"), i = n.jsonData || {}, r = parseInt(t.dataset.zoom) || 100, o = n.displayName || `${n.discipline} TEN - Treatment Note`, c = i.Sections || i.sections || [], d = oe(i, "CompletedDateFormatted", "completedDateFormatted") || "", l = oe(i, "AssessmentDateFormatted", "assessmentDateFormatted") || d, p = {
+    OriginalSignatureText: i.OriginalSignatureText || i.originalSignatureText,
+    OriginalSignatureDate: i.OriginalSignatureDate || i.originalSignatureDate,
+    OriginalCoSignatureText: i.OriginalCoSignatureText || i.originalCoSignatureText,
+    OriginalCosignatureDate: i.OriginalCosignatureDate || i.originalCosignatureDate
+  }, u = [], m = c[0];
   m && (m.Details || m.details || []).forEach((_) => {
-    p.push({
+    u.push({
       name: _.PrintGroupName || _.printGroupName || "",
       value: _.GroupValues || _.groupValues || ""
     });
-  }), i.innerHTML = `
-    ${Oe(o, r)}
+  }), a.innerHTML = `
+    ${Ge(o, r)}
     <div class="super-therapy-modal__body">
       <div class="super-therapy-doc">
-        ${Re(n)}
-        ${qe(n)}
+        ${Be(n)}
+        ${He(n)}
 
         <!-- Date of Service box -->
         <div class="super-therapy-dates-box">
-          <div class="super-therapy-dates-box__item">Date of Service: ${Q(d)}</div>
-          <div class="super-therapy-dates-box__item">Completed Date: ${Q(l)}</div>
+          <div class="super-therapy-dates-box__item">Date of Service: ${W(l)}</div>
+          <div class="super-therapy-dates-box__item">Completed Date: ${W(d)}</div>
         </div>
 
         <!-- Summary of Daily Skilled Services -->
-        ${p.length > 0 ? `
+        ${u.length > 0 ? `
           <div class="super-therapy-section">
             <div class="super-therapy-section-header">Summary of Daily Skilled Services</div>
             <div class="super-therapy-section__body">
-              ${p.map((h) => {
-    const _ = /^\d{5}/.test(h.name), g = yt(s, h.value), f = g ? `${It}="true"` : "", y = g ? "super-therapy-highlight" : "";
+              ${u.map((h) => {
+    const _ = /^\d{5}/.test(h.name), g = Tt(s, h.value), v = g ? `${Oe}="true"` : "", b = g ? "super-therapy-highlight" : "";
     return `
-                  <div class="super-therapy-detail-item" ${f}>
-                    <div class="super-therapy-detail-item__name ${_ ? "super-therapy-detail-item__name--code" : ""}">${Q(h.name)}</div>
-                    <div class="super-therapy-detail-item__value ${y}">${Q(h.value)}</div>
+                  <div class="super-therapy-detail-item" ${v}>
+                    <div class="super-therapy-detail-item__name ${_ ? "super-therapy-detail-item__name--code" : ""}">${W(h.name)}</div>
+                    <div class="super-therapy-detail-item__value ${b}">${W(h.value)}</div>
                   </div>
                 `;
   }).join("")}
@@ -8190,138 +9111,138 @@ function Cr(t, n, s = null) {
           </div>
         ` : ""}
 
-        ${Ke(u)}
+        ${st(p)}
       </div>
     </div>
     <div class="super-therapy-modal__footer">
       <button class="super-therapy-modal__btn super-therapy-modal__btn--secondary super-therapy-modal__close-btn">Close</button>
     </div>
-  `, fe(t, "super-therapy-modal"), Se(t), t.querySelector(".super-therapy-modal__close-btn")?.addEventListener("click", () => {
+  `, ve(t, "super-therapy-modal"), Pe(t), t.querySelector(".super-therapy-modal__close-btn")?.addEventListener("click", () => {
     document.body.style.overflow = "", t.remove();
   });
 }
-function Nr(t, n, s = null) {
-  const i = t.querySelector(".super-therapy-modal__container"), a = n.jsonData || {}, r = parseInt(t.dataset.zoom) || 100, o = n.displayName || `${n.discipline} Eval - Initial Evaluation`, c = a.IdentifierInfo || a.identifierInfo || {}, l = a.Diagnoses || a.diagnoses || [], d = a.GoalTargets || a.goalTargets || [], u = a.Approaches || a.approaches || [], p = a.AssessmentLayout || a.assessmentLayout || [], m = a.ESignatures || a.eSignatures || {}, h = re(c, "Frequency", "frequency") || "", _ = re(c, "Duration", "duration") || "", g = re(c, "Intensity", "intensity") || "", f = re(c, "DateRange", "dateRange") || "", y = re(c, "PhysicianFullName", "physicianFullName") || "", w = re(c, "NPI", "npi") || "";
-  i.innerHTML = `
-    ${Oe(o, r)}
+function Do(t, n, s = null) {
+  const a = t.querySelector(".super-therapy-modal__container"), i = n.jsonData || {}, r = parseInt(t.dataset.zoom) || 100, o = n.displayName || `${n.discipline} Eval - Initial Evaluation`, c = i.IdentifierInfo || i.identifierInfo || {}, d = i.Diagnoses || i.diagnoses || [], l = i.GoalTargets || i.goalTargets || [], p = i.Approaches || i.approaches || [], u = i.AssessmentLayout || i.assessmentLayout || [], m = i.ESignatures || i.eSignatures || {}, h = oe(c, "Frequency", "frequency") || "", _ = oe(c, "Duration", "duration") || "", g = oe(c, "Intensity", "intensity") || "", v = oe(c, "DateRange", "dateRange") || "", b = oe(c, "PhysicianFullName", "physicianFullName") || "", f = oe(c, "NPI", "npi") || "";
+  a.innerHTML = `
+    ${Ge(o, r)}
     <div class="super-therapy-modal__body">
       <div class="super-therapy-doc">
-        ${Re(n)}
-        ${qe(n)}
+        ${Be(n)}
+        ${He(n)}
 
         <!-- Treatment Plan Info -->
-        ${h || _ || g || f ? `
+        ${h || _ || g || v ? `
           <div class="super-therapy-plan-info">
-            ${f ? `<div class="super-therapy-plan-info__item"><span class="super-therapy-plan-info__label">Certification Period: </span>${Q(f)}</div>` : ""}
-            ${h ? `<div class="super-therapy-plan-info__item"><span class="super-therapy-plan-info__label">Frequency: </span>${Q(h)}</div>` : ""}
-            ${_ ? `<div class="super-therapy-plan-info__item"><span class="super-therapy-plan-info__label">Duration: </span>${Q(_)}</div>` : ""}
-            ${g ? `<div class="super-therapy-plan-info__item"><span class="super-therapy-plan-info__label">Intensity: </span>${Q(g)}</div>` : ""}
+            ${v ? `<div class="super-therapy-plan-info__item"><span class="super-therapy-plan-info__label">Certification Period: </span>${W(v)}</div>` : ""}
+            ${h ? `<div class="super-therapy-plan-info__item"><span class="super-therapy-plan-info__label">Frequency: </span>${W(h)}</div>` : ""}
+            ${_ ? `<div class="super-therapy-plan-info__item"><span class="super-therapy-plan-info__label">Duration: </span>${W(_)}</div>` : ""}
+            ${g ? `<div class="super-therapy-plan-info__item"><span class="super-therapy-plan-info__label">Intensity: </span>${W(g)}</div>` : ""}
           </div>
         ` : ""}
 
         <!-- Physician Certification -->
-        ${y ? `
+        ${b ? `
           <div class="super-therapy-section">
             <div class="super-therapy-section-header">Physician Certification</div>
             <div class="super-therapy-section__body">
-              <div><strong>Physician:</strong> ${Q(y)}</div>
-              ${w ? `<div><strong>NPI:</strong> ${Q(w)}</div>` : ""}
+              <div><strong>Physician:</strong> ${W(b)}</div>
+              ${f ? `<div><strong>NPI:</strong> ${W(f)}</div>` : ""}
             </div>
           </div>
         ` : ""}
 
-        ${Dt(l)}
-        ${vn(d, s)}
-        ${wn(u)}
-        ${kt(p, s)}
-        ${Ke(m)}
+        ${Lt(d)}
+        ${An(l, s)}
+        ${Mn(p)}
+        ${Et(u, s)}
+        ${st(m)}
       </div>
     </div>
     <div class="super-therapy-modal__footer">
       <button class="super-therapy-modal__btn super-therapy-modal__btn--secondary super-therapy-modal__close-btn">Close</button>
     </div>
-  `, fe(t, "super-therapy-modal"), Se(t), t.querySelector(".super-therapy-modal__close-btn")?.addEventListener("click", () => {
+  `, ve(t, "super-therapy-modal"), Pe(t), t.querySelector(".super-therapy-modal__close-btn")?.addEventListener("click", () => {
     document.body.style.overflow = "", t.remove();
   });
 }
-function Sr(t, n, s = null) {
-  const i = t.querySelector(".super-therapy-modal__container"), a = n.jsonData || {}, r = parseInt(t.dataset.zoom) || 100, o = n.displayName || `${n.discipline} PR - Progress Report`, c = a.Diagnoses || a.diagnoses || [], l = a.AllActiveShortTermGoals || a.allActiveShortTermGoals || [], d = a.AllActiveLongTermGoals || a.allActiveLongTermGoals || [], u = [...l.map((g) => ({ ...g, IsLongTerm: !1 })), ...d.map((g) => ({ ...g, IsLongTerm: !0 }))], p = a.Approaches || a.approaches || [], m = a.AssessmentLayout || a.assessmentLayout || [], h = a.ServiceMatrixData || a.serviceMatrixData || {}, _ = a.ESignatures || a.eSignatures || {};
-  i.innerHTML = `
-    ${Oe(o, r)}
+function No(t, n, s = null) {
+  const a = t.querySelector(".super-therapy-modal__container"), i = n.jsonData || {}, r = parseInt(t.dataset.zoom) || 100, o = n.displayName || `${n.discipline} PR - Progress Report`, c = i.Diagnoses || i.diagnoses || [], d = i.AllActiveShortTermGoals || i.allActiveShortTermGoals || [], l = i.AllActiveLongTermGoals || i.allActiveLongTermGoals || [], p = [...d.map((g) => ({ ...g, IsLongTerm: !1 })), ...l.map((g) => ({ ...g, IsLongTerm: !0 }))], u = i.Approaches || i.approaches || [], m = i.AssessmentLayout || i.assessmentLayout || [], h = i.ServiceMatrixData || i.serviceMatrixData || {}, _ = i.ESignatures || i.eSignatures || {};
+  a.innerHTML = `
+    ${Ge(o, r)}
     <div class="super-therapy-modal__body">
       <div class="super-therapy-doc">
-        ${Re(n)}
-        ${qe(n)}
-        ${Dt(c)}
-        ${vn(u, s)}
-        ${ai(h)}
-        ${wn(p)}
-        ${kt(m, s)}
-        ${Ke(_)}
+        ${Be(n)}
+        ${He(n)}
+        ${Lt(c)}
+        ${An(p, s)}
+        ${Ea(h)}
+        ${Mn(u)}
+        ${Et(m, s)}
+        ${st(_)}
       </div>
     </div>
     <div class="super-therapy-modal__footer">
       <button class="super-therapy-modal__btn super-therapy-modal__btn--secondary super-therapy-modal__close-btn">Close</button>
     </div>
-  `, fe(t, "super-therapy-modal"), Se(t), t.querySelector(".super-therapy-modal__close-btn")?.addEventListener("click", () => {
+  `, ve(t, "super-therapy-modal"), Pe(t), t.querySelector(".super-therapy-modal__close-btn")?.addEventListener("click", () => {
     document.body.style.overflow = "", t.remove();
   });
 }
-function xr(t, n, s = null) {
-  const i = t.querySelector(".super-therapy-modal__container"), a = n.jsonData || {}, r = parseInt(t.dataset.zoom) || 100, o = n.displayName || `${n.discipline} Recert - Recertification`, c = a.Diagnoses || a.diagnoses || [], l = a.ProgressGoalTargets || a.progressGoalTargets || [], d = a.Approaches || a.approaches || [], u = a.AssessmentLayout || a.assessmentLayout || [], p = a.ServiceMatrixData || a.serviceMatrixData || {}, m = a.ESignatures || a.eSignatures || {};
-  i.innerHTML = `
-    ${Oe(o, r)}
+function ko(t, n, s = null) {
+  const a = t.querySelector(".super-therapy-modal__container"), i = n.jsonData || {}, r = parseInt(t.dataset.zoom) || 100, o = n.displayName || `${n.discipline} Recert - Recertification`, c = i.Diagnoses || i.diagnoses || [], d = i.ProgressGoalTargets || i.progressGoalTargets || [], l = i.Approaches || i.approaches || [], p = i.AssessmentLayout || i.assessmentLayout || [], u = i.ServiceMatrixData || i.serviceMatrixData || {}, m = i.ESignatures || i.eSignatures || {};
+  a.innerHTML = `
+    ${Ge(o, r)}
     <div class="super-therapy-modal__body">
       <div class="super-therapy-doc">
-        ${Re(n)}
-        ${qe(n)}
-        ${Dt(c)}
-        ${vn(l, s)}
-        ${ai(p)}
-        ${wn(d)}
-        ${kt(u, s)}
-        ${Ke(m)}
+        ${Be(n)}
+        ${He(n)}
+        ${Lt(c)}
+        ${An(d, s)}
+        ${Ea(u)}
+        ${Mn(l)}
+        ${Et(p, s)}
+        ${st(m)}
       </div>
     </div>
     <div class="super-therapy-modal__footer">
       <button class="super-therapy-modal__btn super-therapy-modal__btn--secondary super-therapy-modal__close-btn">Close</button>
     </div>
-  `, fe(t, "super-therapy-modal"), Se(t), t.querySelector(".super-therapy-modal__close-btn")?.addEventListener("click", () => {
+  `, ve(t, "super-therapy-modal"), Pe(t), t.querySelector(".super-therapy-modal__close-btn")?.addEventListener("click", () => {
     document.body.style.overflow = "", t.remove();
   });
 }
-function Pr(t, n, s = null) {
-  const i = t.querySelector(".super-therapy-modal__container"), a = n.jsonData || {}, r = parseInt(t.dataset.zoom) || 100, o = n.displayName || `${n.discipline} Disch - Discharge Summary`, c = a.Diagnoses || a.diagnoses || [], l = a.AssessmentLayout || a.assessmentLayout || [], d = a.ESignatures || a.eSignatures || {};
-  i.innerHTML = `
-    ${Oe(o, r)}
+function Co(t, n, s = null) {
+  const a = t.querySelector(".super-therapy-modal__container"), i = n.jsonData || {}, r = parseInt(t.dataset.zoom) || 100, o = n.displayName || `${n.discipline} Disch - Discharge Summary`, c = i.Diagnoses || i.diagnoses || [], d = i.AssessmentLayout || i.assessmentLayout || [], l = i.ESignatures || i.eSignatures || {};
+  a.innerHTML = `
+    ${Ge(o, r)}
     <div class="super-therapy-modal__body">
       <div class="super-therapy-doc">
-        ${Re(n)}
-        ${qe(n)}
-        ${Dt(c)}
-        ${kt(l, s)}
-        ${Ke(d)}
+        ${Be(n)}
+        ${He(n)}
+        ${Lt(c)}
+        ${Et(d, s)}
+        ${st(l)}
       </div>
     </div>
     <div class="super-therapy-modal__footer">
       <button class="super-therapy-modal__btn super-therapy-modal__btn--secondary super-therapy-modal__close-btn">Close</button>
     </div>
-  `, fe(t, "super-therapy-modal"), Se(t), t.querySelector(".super-therapy-modal__close-btn")?.addEventListener("click", () => {
+  `, ve(t, "super-therapy-modal"), Pe(t), t.querySelector(".super-therapy-modal__close-btn")?.addEventListener("click", () => {
     document.body.style.overflow = "", t.remove();
   });
 }
-function Tr(t, n, s = null) {
-  const i = t.querySelector(".super-therapy-modal__container"), a = n.jsonData || {}, r = parseInt(t.dataset.zoom) || 100, o = n.displayName || "Therapy Document";
-  i.innerHTML = `
-    ${Oe(o, r)}
+function So(t, n, s = null) {
+  const a = t.querySelector(".super-therapy-modal__container"), i = n.jsonData || {}, r = parseInt(t.dataset.zoom) || 100, o = n.displayName || "Therapy Document";
+  a.innerHTML = `
+    ${Ge(o, r)}
     <div class="super-therapy-modal__body">
       <div class="super-therapy-doc">
-        ${Re(n)}
-        ${qe(n)}
+        ${Be(n)}
+        ${He(n)}
         <div class="super-therapy-section">
           <div class="super-therapy-section-header">Document Content</div>
           <div class="super-therapy-section__body">
-            <pre class="super-therapy-raw-content">${Q(JSON.stringify(a, null, 2))}</pre>
+            <pre class="super-therapy-raw-content">${W(JSON.stringify(i, null, 2))}</pre>
           </div>
         </div>
       </div>
@@ -8329,21 +9250,21 @@ function Tr(t, n, s = null) {
     <div class="super-therapy-modal__footer">
       <button class="super-therapy-modal__btn super-therapy-modal__btn--secondary super-therapy-modal__close-btn">Close</button>
     </div>
-  `, fe(t, "super-therapy-modal"), Se(t), t.querySelector(".super-therapy-modal__close-btn")?.addEventListener("click", () => {
+  `, ve(t, "super-therapy-modal"), Pe(t), t.querySelector(".super-therapy-modal__close-btn")?.addEventListener("click", () => {
     document.body.style.overflow = "", t.remove();
   });
 }
-async function Ar(t, n = null) {
-  const s = await window.getCurrentParams(), i = Mr();
-  bt().appendChild(i);
+async function xo(t, n = null) {
+  const s = await window.getCurrentParams(), a = Po();
+  qt().appendChild(a);
   try {
-    const a = await Qe(t, s);
-    Lr(i, a.document, n);
-  } catch (a) {
-    yn(i, a.message, "super-pdf-modal");
+    const i = await Xe(t, s);
+    To(a, i.document, n);
+  } catch (i) {
+    Tn(a, i.message, "super-pdf-modal");
   }
 }
-function Mr() {
+function Po() {
   const t = document.createElement("div");
   return t.className = "super-pdf-modal", t.innerHTML = `
     <div class="super-pdf-modal__backdrop"></div>
@@ -8361,31 +9282,31 @@ function Mr() {
         </div>
       </div>
     </div>
-  `, fe(t, "super-pdf-modal"), t;
+  `, ve(t, "super-pdf-modal"), t;
 }
-function Lr(t, n, s = null) {
-  const i = t.querySelector(".super-pdf-modal__container"), a = s && s.length > 0 && s[0].p ? s[0].p : 1, r = () => {
+function To(t, n, s = null) {
+  const a = t.querySelector(".super-pdf-modal__container"), i = s && s.length > 0 && s[0].p ? s[0].p : 1, r = () => {
     document.body.style.overflow = "", t.remove();
   };
-  i.innerHTML = `
+  a.innerHTML = `
     <div class="super-pdf-modal__header">
       <div class="super-pdf-modal__title-row">
         <span class="super-pdf-modal__icon">📄</span>
         <div class="super-pdf-modal__title">
-          <span class="super-pdf-modal__name">${Q(n.title || "Document")}</span>
-          ${n.documentType ? `<span class="super-pdf-badge">${Q(n.documentType)}</span>` : ""}
+          <span class="super-pdf-modal__name">${W(n.title || "Document")}</span>
+          ${n.documentType ? `<span class="super-pdf-badge">${W(n.documentType)}</span>` : ""}
         </div>
         <button class="super-pdf-modal__close">&times;</button>
       </div>
     </div>
     <div class="super-pdf-modal__body"></div>
-  `, fe(t, "super-pdf-modal");
+  `, ve(t, "super-pdf-modal");
   const o = t.querySelector(".super-pdf-modal__body");
-  Ce(
-    G(fn, {
+  Se(
+    K(Pn, {
       url: n.signedUrl || null,
       wordBlocks: s || [],
-      targetPage: a,
+      targetPage: i,
       title: n.title || "Document",
       documentType: n.documentType,
       effectiveDate: n.effectiveDate,
@@ -8397,7 +9318,7 @@ function Lr(t, n, s = null) {
     o
   );
 }
-function Er() {
+function Ao() {
   const t = document.createElement("div");
   return t.className = "super-uda-modal", t.innerHTML = `
     <div class="super-uda-modal__backdrop"></div>
@@ -8409,66 +9330,95 @@ function Er() {
     </div>
   `, t;
 }
-async function $r(t, n = null, s = null) {
-  const i = await window.getCurrentParams(), a = s || mr(), r = Er(), o = !document.querySelector(".icd10-viewer-modal__container");
-  bt().appendChild(r), o && (document.body.style.overflow = "hidden");
-  const c = r.querySelector(".super-uda-modal__container"), l = () => {
-    o && (document.body.style.overflow = ""), document.removeEventListener("keydown", d), r.remove();
-  }, d = (u) => {
-    u.key === "Escape" && l();
+async function Mo(t, n = null, s = null) {
+  const a = await window.getCurrentParams(), i = s || co(), r = Ao(), o = !document.querySelector(".icd10-viewer-modal__container");
+  qt().appendChild(r), o && (document.body.style.overflow = "hidden");
+  const c = r.querySelector(".super-uda-modal__container"), d = () => {
+    o && (document.body.style.overflow = ""), document.removeEventListener("keydown", l), r.remove();
+  }, l = (p) => {
+    p.key === "Escape" && d();
   };
-  if (document.addEventListener("keydown", d), r.querySelector(".super-uda-modal__backdrop").addEventListener("click", l), !a) {
+  if (document.addEventListener("keydown", l), r.querySelector(".super-uda-modal__backdrop").addEventListener("click", d), !i) {
     c.innerHTML = '<div class="super-uda-modal__error">Missing patient context — open this from a patient page.</div>';
     return;
   }
   try {
-    const u = await ur(t, a, i, n), p = u.uda, m = new Set(u.matchKeys || []);
-    c.innerHTML = "", Ce(
-      G(jt, { uda: p, matchKeys: m, quoteText: n, onClose: l }),
+    const p = await oo(t, i, a, n), u = p.uda, m = new Set(p.matchKeys || []);
+    c.innerHTML = "", Se(
+      K(an, { uda: u, matchKeys: m, quoteText: n, onClose: d }),
       c
     );
-  } catch (u) {
-    c.innerHTML = `<div class="super-uda-modal__error">${Q(u.message || "Failed to load UDA")}</div>`;
+  } catch (p) {
+    c.innerHTML = `<div class="super-uda-modal__error">${W(p.message || "Failed to load UDA")}</div>`;
   }
 }
-window.showClinicalNoteModal = gr;
-window.showTherapyDocModal = vr;
-window.showDocumentModal = Ar;
-window.showUdaModal = $r;
-window.parseEvidenceForViewer = dr;
+window.showClinicalNoteModal = po;
+window.showTherapyDocModal = go;
+window.showDocumentModal = xo;
+window.showUdaModal = Mo;
+window.parseEvidenceForViewer = Ma;
 window.SuperDocViewer = {
   open(t) {
     if (!t) return;
+    console.log("[NoteHighlight] SuperDocViewer.open received:", {
+      sourceType: t.sourceType,
+      type: t.type,
+      evidenceId: t.evidenceId,
+      sourceId: t.sourceId,
+      quoteText: t.quoteText?.slice(0, 60),
+      quote: t.quote?.slice(0, 60)
+    });
     const n = t.sourceType || t.type || "";
     if (n === "clinical_note" || n === "progress_note" || n === "practitioner_note") {
-      const s = t.viewerId || t.sourceId || t.id;
-      window.showClinicalNoteModal(s);
-    } else if (n === "therapy_doc" || n === "therapy") {
-      const s = t.viewerId || t.sourceId || t.id;
-      window.showTherapyDocModal(s, t.quote);
-    } else if (n === "pdf" || n === "document") {
-      const s = t.viewerId || t.sourceId || t.id;
-      window.showDocumentModal(s, t.wordBlocks || []);
-    } else if (n === "uda") {
-      const s = t.viewerId || t.sourceId || t.evidenceId || t.id || "", i = String(s).replace(/^uda-/, ""), a = t.quoteText || t.quote || "", r = t.patientId || null;
-      i && window.showUdaModal(i, a, r);
+      const a = t.viewerId || t.sourceId || t.id || "", i = String(a).replace(/^pcc-prognote-/, "").replace(/^pcc-practnote-/, "").replace(/^patient-practnote-/, ""), r = t.quoteText || t.quote || "";
+      window.showClinicalNoteModal(i, r || null);
+      return;
+    }
+    if (n === "therapy_doc" || n === "therapy") {
+      const a = t.viewerId || t.sourceId || t.id;
+      window.showTherapyDocModal(a, t.quote);
+      return;
+    }
+    if (n === "pdf" || n === "document") {
+      const a = t.viewerId || t.sourceId || t.id;
+      window.showDocumentModal(a, t.wordBlocks || []);
+      return;
+    }
+    if (n === "uda") {
+      const a = t.viewerId || t.sourceId || t.evidenceId || t.id || "", i = String(a).replace(/^uda-/, ""), r = t.quoteText || t.quote || "", o = t.patientId || null;
+      i && window.showUdaModal(i, r, o);
+      return;
+    }
+    const s = Ma(t);
+    if (!(!s?.viewerType || !s.id)) {
+      if (s.viewerType === "clinical-note") {
+        const a = t.quoteText || t.quote || "";
+        window.showClinicalNoteModal(s.id, a || null);
+      } else if (s.viewerType === "therapy-document")
+        window.showTherapyDocModal(s.id, t.quoteText || t.quote || "");
+      else if (s.viewerType === "document")
+        window.showDocumentModal(s.id, t.wordBlocks || []);
+      else if (s.viewerType === "uda") {
+        const a = t.quoteText || t.quote || "";
+        window.showUdaModal(s.id, a, t.patientId || null);
+      }
     }
   }
 };
-function dt(t) {
+function bt(t) {
   return t.sourceType === "order" || (t.evidenceId || "").startsWith("order-");
 }
-function Rr(t) {
+function qo(t) {
   return (t.sourceId || t.evidenceId || "").replace(/^order-/, "");
 }
-function qr(t) {
-  const n = ue(t).viewerType;
-  return n === "document" || n === "clinical-note" || n === "therapy-document" || dt(t);
+function Lo(t) {
+  const n = me(t).viewerType;
+  return n === "document" || n === "clinical-note" || n === "therapy-document" || bt(t);
 }
-function Or({ item: t, context: n, onClose: s }) {
-  const i = t?.mdsItem, a = t?.categoryKey, { data: r, loading: o, error: c } = ei(i, a, n), l = i?.startsWith("I8000:") ? "I8000" : i, [d, u] = v(null), p = ee(/* @__PURE__ */ new Map()), m = ee(null), h = ee(null), g = Hr(r).filter(qr), f = d && dt(d.ev), y = d ? ue(d.ev).viewerType : null, w = y === "clinical-note", k = y === "therapy-document", C = y === "uda", I = d && !f && !w && !k && !C, P = g.filter((M) => dt(M) ? !1 : ue(M).viewerType === "document");
+function Eo({ item: t, context: n, onClose: s }) {
+  const a = t?.mdsItem, i = t?.categoryKey, { data: r, loading: o, error: c } = Pa(a, i, n), d = a?.startsWith("I8000:") ? "I8000" : a, [l, p] = y(null), u = te(/* @__PURE__ */ new Map()), m = te(null), h = te(null), g = $o(r).filter(Lo), v = l && bt(l.ev), b = l ? me(l.ev).viewerType : null, f = b === "clinical-note", I = b === "therapy-document", N = b === "uda", D = l && !v && !f && !I && !N, T = g.filter((P) => bt(P) ? !1 : me(P).viewerType === "document");
   F(() => {
-    if (!r || P.length === 0) return;
+    if (!r || T.length === 0) return;
     (async () => {
       let q;
       try {
@@ -8476,113 +9426,113 @@ function Or({ item: t, context: n, onClose: s }) {
       } catch {
         return;
       }
-      for (const L of P) {
-        const O = ue(L);
-        if (!O.id || p.current.has(O.id)) continue;
-        const Z = Qe(O.id, q).then((j) => {
-          const $ = p.current.get(O.id);
-          return $ && ($.document = j.document), j.document;
-        }).catch((j) => (console.warn("[ItemPopover] Prefetch failed for", O.id, j), null));
-        p.current.set(O.id, { document: null, promise: Z });
+      for (const L of T) {
+        const O = me(L);
+        if (!O.id || u.current.has(O.id)) continue;
+        const X = Xe(O.id, q).then((z) => {
+          const R = u.current.get(O.id);
+          return R && (R.document = z.document), z.document;
+        }).catch((z) => (console.warn("[ItemPopover] Prefetch failed for", O.id, z), null));
+        u.current.set(O.id, { document: null, promise: X });
       }
     })();
   }, [r]);
-  const [A, x] = v(null), [D, N] = v(!1);
+  const [A, x] = y(null), [k, S] = y(!1);
   F(() => {
-    if (!d || f || w || k || C) {
-      x(null), N(!1);
+    if (!l || v || f || I || N) {
+      x(null), S(!1);
       return;
     }
-    const M = ue(d.ev);
-    if (!M.id) return;
-    const q = p.current.get(M.id);
+    const P = me(l.ev);
+    if (!P.id) return;
+    const q = u.current.get(P.id);
     if (q?.document) {
-      x(q.document), N(!1);
+      x(q.document), S(!1);
       return;
     }
-    N(!0), (async () => {
+    S(!0), (async () => {
       try {
         let O;
         if (q?.promise)
           O = await q.promise;
         else {
-          const Z = await window.getCurrentParams();
-          O = (await Qe(M.id, Z)).document, p.current.set(M.id, { document: O, promise: Promise.resolve(O) });
+          const X = await window.getCurrentParams();
+          O = (await Xe(P.id, X)).document, u.current.set(P.id, { document: O, promise: Promise.resolve(O) });
         }
         x(O);
       } catch (O) {
         console.error("[ItemPopover] Failed to load document:", O), x(null);
       } finally {
-        N(!1);
+        S(!1);
       }
     })();
-  }, [d, f, w, k, C]), F(() => {
-    if (!f || !m.current) return;
-    const M = m.current, q = Rr(d.ev);
-    M.innerHTML = '<div class="cc-pop__viewer-loading"><div class="mds-cc__spinner mds-cc__spinner--sm"></div><span>Loading administrations...</span></div>', window.renderSplitAdministrations ? (async () => {
-      const Z = getOrg()?.org, j = window.getChatFacilityInfo?.() || "", $ = { assessmentId: n?.assessmentId, orgSlug: Z, facilityName: j };
-      await window.renderSplitAdministrations(M, q, void 0, $);
+  }, [l, v, f, I, N]), F(() => {
+    if (!v || !m.current) return;
+    const P = m.current, q = qo(l.ev);
+    P.innerHTML = '<div class="cc-pop__viewer-loading"><div class="mds-cc__spinner mds-cc__spinner--sm"></div><span>Loading administrations...</span></div>', window.renderSplitAdministrations ? (async () => {
+      const X = getOrg()?.org, z = window.getChatFacilityInfo?.() || "", R = { assessmentId: n?.assessmentId, orgSlug: X, facilityName: z };
+      await window.renderSplitAdministrations(P, q, void 0, R);
     })().catch((O) => {
-      console.error("[ItemPopover] Failed to load administrations:", O), M.innerHTML = '<div class="cc-pop__viewer-loading"><span>Failed to load administrations</span></div>';
-    }) : M.innerHTML = '<div class="cc-pop__viewer-loading"><span>Administration viewer not available</span></div>';
-  }, [d, f]), F(() => {
-    if (!w && !k || !h.current) return;
-    const M = h.current, q = ue(d.ev), L = d.ev.quoteText || d.ev.quote || d.ev.snippet || "";
-    M.innerHTML = '<div class="cc-pop__viewer-loading"><div class="mds-cc__spinner mds-cc__spinner--sm"></div><span>Loading...</span></div>', (async () => {
-      const j = getOrg()?.org, $ = window.getChatFacilityInfo?.() || "", H = { assessmentId: n?.assessmentId, orgSlug: j, facilityName: $ };
-      w && window.renderSplitNote ? await window.renderSplitNote(M, q.id, H) : k && window.renderSplitTherapy ? await window.renderSplitTherapy(M, q.id, L, H) : M.innerHTML = '<div class="cc-pop__viewer-loading"><span>Viewer not available</span></div>';
-    })().catch((Z) => {
-      console.error("[ItemPopover] Failed to load source:", Z), M.innerHTML = '<div class="cc-pop__viewer-loading"><span>Failed to load</span></div>';
+      console.error("[ItemPopover] Failed to load administrations:", O), P.innerHTML = '<div class="cc-pop__viewer-loading"><span>Failed to load administrations</span></div>';
+    }) : P.innerHTML = '<div class="cc-pop__viewer-loading"><span>Administration viewer not available</span></div>';
+  }, [l, v]), F(() => {
+    if (!f && !I || !h.current) return;
+    const P = h.current, q = me(l.ev), L = l.ev.quoteText || l.ev.quote || l.ev.snippet || "";
+    console.log("[NoteHighlight/popover] viewingSource.ev keys:", Object.keys(l.ev), "quote?", !!L, "first60:", (l.ev.quoteText || l.ev.quote || "").slice(0, 60)), P.innerHTML = '<div class="cc-pop__viewer-loading"><div class="mds-cc__spinner mds-cc__spinner--sm"></div><span>Loading...</span></div>', (async () => {
+      const z = getOrg()?.org, R = window.getChatFacilityInfo?.() || "", B = { assessmentId: n?.assessmentId, orgSlug: z, facilityName: R };
+      f && window.renderSplitNote ? await window.renderSplitNote(P, q.id, B, L || null) : I && window.renderSplitTherapy ? await window.renderSplitTherapy(P, q.id, L, B) : P.innerHTML = '<div class="cc-pop__viewer-loading"><span>Viewer not available</span></div>';
+    })().catch((X) => {
+      console.error("[ItemPopover] Failed to load source:", X), P.innerHTML = '<div class="cc-pop__viewer-loading"><span>Failed to load</span></div>';
     });
-  }, [d, w, k]), F(() => {
-    if (!C || !h.current) return;
-    const M = h.current, q = ue(d.ev), L = d.ev.quoteText || d.ev.quote || d.ev.snippet || "";
-    M.innerHTML = '<div class="cc-pop__viewer-loading"><div class="mds-cc__spinner mds-cc__spinner--sm"></div><span>Loading assessment...</span></div>', (async () => {
-      window.renderSplitUda ? await window.renderSplitUda(M, q.id, L) : M.innerHTML = '<div class="cc-pop__viewer-loading"><span>UDA viewer not available</span></div>';
-    })().catch((Z) => {
-      console.error("[ItemPopover] Failed to load UDA:", Z), M.innerHTML = '<div class="cc-pop__viewer-loading"><span>Failed to load</span></div>';
+  }, [l, f, I]), F(() => {
+    if (!N || !h.current) return;
+    const P = h.current, q = me(l.ev), L = l.ev.quoteText || l.ev.quote || l.ev.snippet || "";
+    P.innerHTML = '<div class="cc-pop__viewer-loading"><div class="mds-cc__spinner mds-cc__spinner--sm"></div><span>Loading assessment...</span></div>', (async () => {
+      window.renderSplitUda ? await window.renderSplitUda(P, q.id, L) : P.innerHTML = '<div class="cc-pop__viewer-loading"><span>UDA viewer not available</span></div>';
+    })().catch((X) => {
+      console.error("[ItemPopover] Failed to load UDA:", X), P.innerHTML = '<div class="cc-pop__viewer-loading"><span>Failed to load</span></div>';
     });
-  }, [d, C]);
-  const S = U((M, q) => {
-    u({ ev: M, index: q });
-  }, []), E = U(() => {
-    u(null);
-  }, []), B = d !== null;
-  return /* @__PURE__ */ e("div", { class: "cc-pop__backdrop", onClick: (M) => {
-    M.target === M.currentTarget && s();
-  }, children: /* @__PURE__ */ e("div", { class: `cc-pop${B ? " cc-pop--split" : ""}`, onClick: (M) => M.stopPropagation(), children: [
+  }, [l, N]);
+  const w = G((P, q) => {
+    p({ ev: P, index: q });
+  }, []), M = G(() => {
+    p(null);
+  }, []), H = l !== null;
+  return /* @__PURE__ */ e("div", { class: "cc-pop__backdrop", onClick: (P) => {
+    P.target === P.currentTarget && s();
+  }, children: /* @__PURE__ */ e("div", { class: `cc-pop${H ? " cc-pop--split" : ""}`, onClick: (P) => P.stopPropagation(), children: [
     /* @__PURE__ */ e("div", { class: "cc-pop__header", children: /* @__PURE__ */ e("div", { class: "cc-pop__header-top", children: [
       /* @__PURE__ */ e("div", { class: "cc-pop__header-left", children: [
-        B && /* @__PURE__ */ e("button", { class: "cc-pop__back-btn", onClick: E, type: "button", children: [
+        H && /* @__PURE__ */ e("button", { class: "cc-pop__back-btn", onClick: M, type: "button", children: [
           /* @__PURE__ */ e("svg", { width: "12", height: "12", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": "2.5", "stroke-linecap": "round", "stroke-linejoin": "round", children: /* @__PURE__ */ e("polyline", { points: "15 18 9 12 15 6" }) }),
           "Back"
         ] }),
-        /* @__PURE__ */ e("span", { class: "cc-pop__code", children: l }),
+        /* @__PURE__ */ e("span", { class: "cc-pop__code", children: d }),
         /* @__PURE__ */ e("span", { class: "cc-pop__name", children: t?.itemName || r?.item?.description || "Item Detail" })
       ] }),
       /* @__PURE__ */ e("button", { class: "cc-pop__close", onClick: s, type: "button", children: "×" })
     ] }) }),
-    B ? /* @__PURE__ */ e("div", { class: "cc-pop__split-body", children: [
+    H ? /* @__PURE__ */ e("div", { class: "cc-pop__split-body", children: [
       /* @__PURE__ */ e("div", { class: "cc-pop__sources", children: [
         /* @__PURE__ */ e("div", { class: "cc-pop__sources-label", children: [
           "Sources (",
           g.length,
           ")"
         ] }),
-        g.map((M, q) => {
-          const L = dt(M), O = M.sourceType || _n(M.displayName, M.evidenceId), Z = M.displayName || gn[O] || (L ? "Orders" : "Document"), j = M.quoteText || M.orderDescription || M.quote || M.snippet || M.text || "", $ = M.wordBlocks?.[0]?.p, H = d.ev === M;
+        g.map((P, q) => {
+          const L = bt(P), O = P.sourceType || Sn(P.displayName, P.evidenceId), X = P.displayName || xn[O] || (L ? "Orders" : "Document"), z = P.quoteText || P.orderDescription || P.quote || P.snippet || P.text || "", R = P.wordBlocks?.[0]?.p, B = l.ev === P;
           return /* @__PURE__ */ e(
             "div",
             {
-              class: `cc-pop__source-card${H ? " cc-pop__source-card--active" : ""}`,
-              onClick: () => u({ ev: M, index: q }),
+              class: `cc-pop__source-card${B ? " cc-pop__source-card--active" : ""}`,
+              onClick: () => p({ ev: P, index: q }),
               role: "button",
               children: [
-                /* @__PURE__ */ e("div", { class: `cc-pop__source-badge${L ? " cc-pop__source-badge--order" : ""}`, children: Z }),
-                j && /* @__PURE__ */ e("div", { class: "cc-pop__source-snippet", children: j }),
-                !L && $ && /* @__PURE__ */ e("div", { class: "cc-pop__source-page", children: [
+                /* @__PURE__ */ e("div", { class: `cc-pop__source-badge${L ? " cc-pop__source-badge--order" : ""}`, children: X }),
+                z && /* @__PURE__ */ e("div", { class: "cc-pop__source-snippet", children: z }),
+                !L && R && /* @__PURE__ */ e("div", { class: "cc-pop__source-page", children: [
                   "Page ",
-                  $
+                  R
                 ] })
               ]
             },
@@ -8591,16 +9541,16 @@ function Or({ item: t, context: n, onClose: s }) {
         })
       ] }),
       /* @__PURE__ */ e("div", { class: "cc-pop__viewer", children: [
-        I && D && /* @__PURE__ */ e("div", { class: "cc-pop__viewer-loading", children: [
+        D && k && /* @__PURE__ */ e("div", { class: "cc-pop__viewer-loading", children: [
           /* @__PURE__ */ e("div", { class: "mds-cc__spinner mds-cc__spinner--sm" }),
           /* @__PURE__ */ e("span", { children: "Loading document..." })
         ] }),
-        I && !D && A && /* @__PURE__ */ e(
-          fn,
+        D && !k && A && /* @__PURE__ */ e(
+          Pn,
           {
             url: A.signedUrl || null,
-            wordBlocks: d.ev.wordBlocks || [],
-            targetPage: d.ev.wordBlocks?.[0]?.p || 1,
+            wordBlocks: l.ev.wordBlocks || [],
+            targetPage: l.ev.wordBlocks?.[0]?.p || 1,
             title: A.title || "Document",
             documentType: A.documentType,
             effectiveDate: A.effectiveDate,
@@ -8609,9 +9559,9 @@ function Or({ item: t, context: n, onClose: s }) {
             openInNewTabUrl: A.signedUrl || null
           }
         ),
-        I && !D && !A && /* @__PURE__ */ e("div", { class: "cc-pop__viewer-loading", children: /* @__PURE__ */ e("span", { children: "Failed to load document" }) }),
-        f && /* @__PURE__ */ e("div", { ref: m, class: "cc-pop__admin-viewer" }),
-        (w || k || C) && /* @__PURE__ */ e("div", { ref: h, class: "cc-pop__note-viewer" })
+        D && !k && !A && /* @__PURE__ */ e("div", { class: "cc-pop__viewer-loading", children: /* @__PURE__ */ e("span", { children: "Failed to load document" }) }),
+        v && /* @__PURE__ */ e("div", { ref: m, class: "cc-pop__admin-viewer" }),
+        (f || I || N) && /* @__PURE__ */ e("div", { ref: h, class: "cc-pop__note-viewer" })
       ] })
     ] }) : /* @__PURE__ */ e("div", { class: "cc-pop__body", children: [
       o && /* @__PURE__ */ e("div", { class: "cc-pop__loading", children: [
@@ -8620,111 +9570,111 @@ function Or({ item: t, context: n, onClose: s }) {
       ] }),
       c && /* @__PURE__ */ e("div", { class: "cc-pop__error", children: c }),
       !o && !c && r && /* @__PURE__ */ e(
-        ni,
+        Aa,
         {
           variant: "compact",
           data: r,
           detectionItem: t,
-          mdsItem: i,
-          onViewSource: S
+          mdsItem: a,
+          onViewSource: w
         }
       )
     ] }),
-    B && !o && !c && r && /* @__PURE__ */ e("div", { style: { padding: "0 16px 12px", flexShrink: 0, borderTop: "1px solid #e5e7eb" }, children: /* @__PURE__ */ e("div", { class: "sid__actions", children: [
+    H && !o && !c && r && /* @__PURE__ */ e("div", { style: { padding: "0 16px 12px", flexShrink: 0, borderTop: "1px solid #e5e7eb" }, children: /* @__PURE__ */ e("div", { class: "sid__actions", children: [
       /* @__PURE__ */ e("button", { class: "sid__btn sid__btn--primary", onClick: () => window.QuerySendModal?.show(r.item || r), type: "button", children: "Query Physician" }),
-      i && /* @__PURE__ */ e("button", { class: "sid__btn sid__btn--secondary", onClick: () => window.navigateToMDSItem?.(i), type: "button", children: [
+      a && /* @__PURE__ */ e("button", { class: "sid__btn sid__btn--secondary", onClick: () => window.navigateToMDSItem?.(a), type: "button", children: [
         "Go to ",
-        l,
+        d,
         " ↗"
       ] })
     ] }) })
   ] }) });
 }
-function Hr(t) {
+function $o(t) {
   const n = t?.item;
   if (!n) return [];
   if (!!!n.columns) return n.evidence || n.queryEvidence || [];
-  const i = [], a = /* @__PURE__ */ new Set();
+  const a = [], i = /* @__PURE__ */ new Set();
   for (const r of Object.values(n.columns || {}))
     r?.evidence && r.evidence.forEach((o) => {
       const c = o.sourceId || o.quote || JSON.stringify(o);
-      a.has(c) || (a.add(c), i.push(o));
+      i.has(c) || (i.add(c), a.push(o));
     });
-  return i;
+  return a;
 }
-function Br({ facilityName: t, orgSlug: n, enabled: s }) {
-  const [i, a] = v(null), [r, o] = v(!1), [c, l] = v(null), d = U(async () => {
+function Ro({ facilityName: t, orgSlug: n, enabled: s }) {
+  const [a, i] = y(null), [r, o] = y(!1), [c, d] = y(null), l = G(async () => {
     if (!(!t || !n)) {
-      o(!0), l(null);
+      o(!0), d(null);
       try {
-        const u = new URLSearchParams({
+        const p = new URLSearchParams({
           facilityName: t || "",
           orgSlug: n || ""
-        }), p = await chrome.runtime.sendMessage({
+        }), u = await chrome.runtime.sendMessage({
           type: "API_REQUEST",
-          endpoint: `/api/extension/compliance/dashboard?${u}`
+          endpoint: `/api/extension/compliance/dashboard?${p}`
         });
-        if (!p.success)
-          throw new Error(p.error || "Failed to load compliance dashboard");
-        a(p.data);
-      } catch (u) {
-        console.error("[ComplianceDashboard] Failed to fetch:", u), l(u.message || "Failed to load compliance data");
+        if (!u.success)
+          throw new Error(u.error || "Failed to load compliance dashboard");
+        i(u.data);
+      } catch (p) {
+        console.error("[ComplianceDashboard] Failed to fetch:", p), d(p.message || "Failed to load compliance data");
       } finally {
         o(!1);
       }
     }
   }, [t, n, s]);
   return F(() => {
-    d();
-  }, [d, s]), { data: i, loading: r, error: c, retry: d };
+    l();
+  }, [l, s]), { data: a, loading: r, error: c, retry: l };
 }
-function Fr({ facilityName: t, orgSlug: n, days: s = 30, enabled: i = !0 }) {
-  const [a, r] = v(null), [o, c] = v(!1), [l, d] = v(null), u = U(async () => {
-    if (!(!i || !t || !n)) {
-      c(!0), d(null);
+function Oo({ facilityName: t, orgSlug: n, days: s = 30, enabled: a = !0 }) {
+  const [i, r] = y(null), [o, c] = y(!1), [d, l] = y(null), p = G(async () => {
+    if (!(!a || !t || !n)) {
+      c(!0), l(null);
       try {
-        const p = new URLSearchParams({
+        const u = new URLSearchParams({
           days: String(s),
           facilityName: t || "",
           orgSlug: n || ""
         }), m = await chrome.runtime.sendMessage({
           type: "API_REQUEST",
-          endpoint: `/api/extension/compliance/dashboard/trending?${p}`
+          endpoint: `/api/extension/compliance/dashboard/trending?${u}`
         });
         if (!m.success)
           throw new Error(m.error || "Failed to load trending data");
         r(m.data);
-      } catch (p) {
-        console.error("[Trending] Failed to fetch:", p), d(p.message || "Failed to load trending data");
+      } catch (u) {
+        console.error("[Trending] Failed to fetch:", u), l(u.message || "Failed to load trending data");
       } finally {
         c(!1);
       }
     }
-  }, [t, n, s, i]);
+  }, [t, n, s, a]);
   return F(() => {
-    i && u();
-  }, [u, i]), { data: a, loading: o, error: l, retry: u };
+    a && p();
+  }, [p, a]), { data: i, loading: o, error: d, retry: p };
 }
-function Kn(t) {
+function us(t) {
   return new Date(t).toLocaleDateString("en-US", { month: "short", day: "numeric" });
 }
-function Ur(t) {
+function Bo(t) {
   return t >= 80 ? "#22c55e" : t >= 50 ? "#f59e0b" : "#ef4444";
 }
-function Gr({ days: t }) {
-  const n = t && t.length >= 3, { points: s, polygonPoints: i, color: a, latestScore: r, firstDate: o, lastDate: c } = Y(() => {
+function Ho({ days: t }) {
+  const n = t && t.length >= 3, { points: s, polygonPoints: a, color: i, latestScore: r, firstDate: o, lastDate: c } = Y(() => {
     if (!n) return {};
-    const l = t.map((_, g) => {
-      const f = 5 + g / (t.length - 1) * 290, y = 75 - _.averageScore / 100 * 70;
-      return { x: f, y };
-    }), d = l.map((_) => `${_.x},${_.y}`).join(" "), u = l[l.length - 1], p = l[0], m = d + ` ${u.x},75 ${p.x},75`, h = t[t.length - 1];
+    const d = t.map((_, g) => {
+      const v = 5 + g / (t.length - 1) * 290, b = 75 - _.averageScore / 100 * 70;
+      return { x: v, y: b };
+    }), l = d.map((_) => `${_.x},${_.y}`).join(" "), p = d[d.length - 1], u = d[0], m = l + ` ${p.x},75 ${u.x},75`, h = t[t.length - 1];
     return {
-      points: d,
+      points: l,
       polygonPoints: m,
-      color: Ur(h.averageScore),
+      color: Bo(h.averageScore),
       latestScore: h.averageScore,
-      firstDate: Kn(t[0].date),
-      lastDate: Kn(h.date)
+      firstDate: us(t[0].date),
+      lastDate: us(h.date)
     };
   }, [t, n]);
   return n ? /* @__PURE__ */ e("div", { class: "cpc-cv__trend", children: [
@@ -8732,8 +9682,8 @@ function Gr({ days: t }) {
       /* @__PURE__ */ e(
         "polygon",
         {
-          points: i,
-          fill: a,
+          points: a,
+          fill: i,
           opacity: "0.1"
         }
       ),
@@ -8742,14 +9692,14 @@ function Gr({ days: t }) {
         {
           points: s,
           fill: "none",
-          stroke: a,
+          stroke: i,
           "stroke-width": "2"
         }
       )
     ] }),
     /* @__PURE__ */ e("div", { class: "cpc-cv__trend-labels", style: { display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: "12px", color: "#64748b", marginTop: "4px" }, children: [
       /* @__PURE__ */ e("span", { class: "cpc-cv__trend-date-start", children: o }),
-      /* @__PURE__ */ e("span", { class: "cpc-cv__trend-score", style: { fontSize: "18px", fontWeight: 700, color: a }, children: [
+      /* @__PURE__ */ e("span", { class: "cpc-cv__trend-score", style: { fontSize: "18px", fontWeight: 700, color: i }, children: [
         r,
         "%"
       ] }),
@@ -8757,18 +9707,18 @@ function Gr({ days: t }) {
     ] })
   ] }) : null;
 }
-const Vr = ({ scores: t, width: n = 48, height: s = 16 }) => {
-  const { points: i, color: a, isSingle: r } = Y(() => {
+const Go = ({ scores: t, width: n = 48, height: s = 16 }) => {
+  const { points: a, color: i, isSingle: r } = Y(() => {
     if (!t || t.length === 0)
       return { points: null, color: null, isSingle: !1 };
-    const o = t[0].score, c = t[t.length - 1].score, l = c > o ? "#22c55e" : c < o ? "#ef4444" : "#9ca3af";
+    const o = t[0].score, c = t[t.length - 1].score, d = c > o ? "#22c55e" : c < o ? "#ef4444" : "#9ca3af";
     if (t.length === 1)
-      return { points: null, color: l, isSingle: !0 };
-    const d = 1, u = (n - d * 2) / (t.length - 1), p = s - d * 2;
+      return { points: null, color: d, isSingle: !0 };
+    const l = 1, p = (n - l * 2) / (t.length - 1), u = s - l * 2;
     return { points: t.map((h, _) => {
-      const g = d + _ * u, f = d + p - h.score / 100 * p;
-      return `${g},${f}`;
-    }).join(" "), color: l, isSingle: !1 };
+      const g = l + _ * p, v = l + u - h.score / 100 * u;
+      return `${g},${v}`;
+    }).join(" "), color: d, isSingle: !1 };
   }, [t, n, s]);
   return !t || t.length === 0 ? null : /* @__PURE__ */ e(
     "svg",
@@ -8778,12 +9728,12 @@ const Vr = ({ scores: t, width: n = 48, height: s = 16 }) => {
       height: s,
       viewBox: `0 0 ${n} ${s}`,
       style: { display: "inline-block", verticalAlign: "middle" },
-      children: r ? /* @__PURE__ */ e("circle", { cx: n / 2, cy: s / 2, r: 2, fill: a }) : /* @__PURE__ */ e(
+      children: r ? /* @__PURE__ */ e("circle", { cx: n / 2, cy: s / 2, r: 2, fill: i }) : /* @__PURE__ */ e(
         "polyline",
         {
-          points: i,
+          points: a,
           fill: "none",
-          stroke: a,
+          stroke: i,
           "stroke-width": "1.5",
           "stroke-linecap": "round",
           "stroke-linejoin": "round"
@@ -8792,12 +9742,12 @@ const Vr = ({ scores: t, width: n = 48, height: s = 16 }) => {
     }
   );
 };
-function Wr({ patientId: t, facilityName: n, orgSlug: s }) {
-  const [i, a] = v(null), [r, o] = v(null), [c, l] = v(!0), [d, u] = v(null), [p, m] = v(!1), h = U(async () => {
+function Fo({ patientId: t, facilityName: n, orgSlug: s }) {
+  const [a, i] = y(null), [r, o] = y(null), [c, d] = y(!0), [l, p] = y(null), [u, m] = y(!1), h = G(async () => {
     if (t) {
-      l(!0), u(null);
+      d(!0), p(null);
       try {
-        const g = new URLSearchParams({ facilityName: n || "", orgSlug: s || "" }), [f, y] = await Promise.all([
+        const g = new URLSearchParams({ facilityName: n || "", orgSlug: s || "" }), [v, b] = await Promise.all([
           chrome.runtime.sendMessage({
             type: "API_REQUEST",
             endpoint: `/api/extension/patients/${t}/coverage/summary?${g}`
@@ -8807,16 +9757,16 @@ function Wr({ patientId: t, facilityName: n, orgSlug: s }) {
             endpoint: `/api/extension/patients/${t}/coverage/changes?${g}`
           })
         ]);
-        if (!f.success)
-          throw new Error(f.error || "Failed to load coverage summary");
-        a(f.data), o(y.success ? y.data : null);
+        if (!v.success)
+          throw new Error(v.error || "Failed to load coverage summary");
+        i(v.data), o(b.success ? b.data : null);
       } catch (g) {
-        console.error("[CoveragePanel] Failed to fetch coverage:", g), u(g.message || "Failed to load coverage data");
+        console.error("[CoveragePanel] Failed to fetch coverage:", g), p(g.message || "Failed to load coverage data");
       } finally {
-        l(!1);
+        d(!1);
       }
     }
-  }, [t, n, s]), _ = U(async () => {
+  }, [t, n, s]), _ = G(async () => {
     if (t) {
       m(!0);
       try {
@@ -8826,7 +9776,7 @@ function Wr({ patientId: t, facilityName: n, orgSlug: s }) {
           options: { method: "POST" }
         }), await new Promise((g) => setTimeout(g, 5e3)), await h();
       } catch (g) {
-        console.error("[CoveragePanel] Refresh failed:", g), u("Refresh failed. Showing cached data.");
+        console.error("[CoveragePanel] Refresh failed:", g), p("Refresh failed. Showing cached data.");
       } finally {
         m(!1);
       }
@@ -8834,47 +9784,47 @@ function Wr({ patientId: t, facilityName: n, orgSlug: s }) {
   }, [t, h]);
   return F(() => {
     h();
-  }, [h]), { summary: i, changes: r, loading: c, error: d, refreshing: p, refresh: _, retry: h };
+  }, [h]), { summary: a, changes: r, loading: c, error: l, refreshing: u, refresh: _, retry: h };
 }
-async function Qr(t, n, s = 5) {
-  const i = /* @__PURE__ */ new Map();
+async function Uo(t, n, s = 5) {
+  const a = /* @__PURE__ */ new Map();
   try {
-    const a = new URLSearchParams({
+    const i = new URLSearchParams({
       facilityName: t || "",
       orgSlug: n || "",
       limit: String(s)
     }), r = await chrome.runtime.sendMessage({
       type: "API_REQUEST",
-      endpoint: `/api/extension/compliance/dashboard/history?${a}`
+      endpoint: `/api/extension/compliance/dashboard/history?${i}`
     });
     if (r?.success && r?.data?.patients)
       for (const [o, c] of Object.entries(r.data.patients))
-        Array.isArray(c) && i.set(o, c.map((l) => ({ date: l.checkedAt, score: l.overallScore })));
-  } catch (a) {
-    console.warn("[PatientHistory] Batch fetch failed:", a);
+        Array.isArray(c) && a.set(o, c.map((d) => ({ date: d.checkedAt, score: d.overallScore })));
+  } catch (i) {
+    console.warn("[PatientHistory] Batch fetch failed:", i);
   }
-  return i;
+  return a;
 }
-function Ct(t) {
+function $t(t) {
   return t >= 80 ? "green" : t >= 50 ? "amber" : "red";
 }
-const ri = {
+const $a = {
   green: "#22c55e",
   amber: "#f59e0b",
   red: "#ef4444"
 };
-function Ae(t) {
+function qe(t) {
   return t ? t === t.toUpperCase() && t.length > 3 ? t.toLowerCase().replace(/\b\w/g, (n) => n.toUpperCase()) : t : "";
 }
-function oi(t) {
+function Ra(t) {
   if (!t) return;
   const n = new URL(window.location.href).origin;
   window.location.href = `${n}/admin/client/cp_careplans_rev.jsp?ESOLreviewid=-1&ESOLclientid=${t}`;
 }
-function zr({ summary: t }) {
+function Vo({ summary: t }) {
   return t ? /* @__PURE__ */ e("div", { class: "cpc-cv__cards", children: [
     /* @__PURE__ */ e("div", { class: "cpc-cv__card", children: [
-      /* @__PURE__ */ e("div", { class: `cpc-cv__card-value cpc-cv__card-value--${Ct(t.overallCoverage)}`, children: [
+      /* @__PURE__ */ e("div", { class: `cpc-cv__card-value cpc-cv__card-value--${$t(t.overallCoverage)}`, children: [
         t.overallCoverage,
         "%"
       ] }),
@@ -8898,17 +9848,17 @@ function zr({ summary: t }) {
     ] })
   ] }) : null;
 }
-function jr({ patient: t, histories: n, onOpenCoverage: s }) {
-  const i = Ct(t.overallScore ?? 0), a = (t.diagnosisMissing || 0) + (t.diagnosisPartial || 0), r = (t.orderMissing || 0) + (t.orderPartial || 0), o = a + r;
+function zo({ patient: t, histories: n, onOpenCoverage: s }) {
+  const a = $t(t.overallScore ?? 0), i = (t.diagnosisMissing || 0) + (t.diagnosisPartial || 0), r = (t.orderMissing || 0) + (t.orderPartial || 0), o = i + r;
   return /* @__PURE__ */ e("div", { class: "cpc-cv__acard", onClick: () => s(t), children: [
     /* @__PURE__ */ e("div", { class: "cpc-cv__acard-top", children: [
-      /* @__PURE__ */ e("span", { class: "cpc-cv__acard-name", children: Ae(t.patientName) }),
+      /* @__PURE__ */ e("span", { class: "cpc-cv__acard-name", children: qe(t.patientName) }),
       t.levelOfCare && /* @__PURE__ */ e("span", { class: "cpc-cv__acard-loc", children: t.levelOfCare })
     ] }),
     /* @__PURE__ */ e("div", { class: "cpc-cv__acard-bottom", children: [
-      t.hasResults ? /* @__PURE__ */ e(J, { children: [
-        /* @__PURE__ */ e("span", { class: "cpc-cv__mini-bar", style: { width: 60 }, children: /* @__PURE__ */ e("span", { class: "cpc-cv__mini-fill", style: { width: `${t.overallScore}%`, background: ri[i] } }) }),
-        /* @__PURE__ */ e("span", { class: `cpc-cv__acard-pct cpc-cv__acard-pct--${i}`, children: [
+      t.hasResults ? /* @__PURE__ */ e(Q, { children: [
+        /* @__PURE__ */ e("span", { class: "cpc-cv__mini-bar", style: { width: 60 }, children: /* @__PURE__ */ e("span", { class: "cpc-cv__mini-fill", style: { width: `${t.overallScore}%`, background: $a[a] } }) }),
+        /* @__PURE__ */ e("span", { class: `cpc-cv__acard-pct cpc-cv__acard-pct--${a}`, children: [
           t.overallScore,
           "%"
         ] })
@@ -8921,13 +9871,13 @@ function jr({ patient: t, histories: n, onOpenCoverage: s }) {
     ] })
   ] });
 }
-const At = 3;
-function Mt({ label: t, accent: n, patients: s, histories: i, historiesLoading: a, onOpenCoverage: r, defaultOpen: o }) {
-  const [c, l] = v(o), [d, u] = v(!1), m = n === "orange" && a;
+const Ut = 3;
+function Vt({ label: t, accent: n, patients: s, histories: a, historiesLoading: i, onOpenCoverage: r, defaultOpen: o }) {
+  const [c, d] = y(o), [l, p] = y(!1), m = n === "orange" && i;
   if (!m && (!s || s.length === 0)) return null;
-  const h = d ? s : (s || []).slice(0, At), _ = (s || []).length - At;
+  const h = l ? s : (s || []).slice(0, Ut), _ = (s || []).length - Ut;
   return /* @__PURE__ */ e("div", { class: `cpc-cv__attention-group cpc-cv__attention-group--${n}`, children: [
-    /* @__PURE__ */ e("div", { class: "cpc-cv__attention-header", onClick: () => l(!c), children: [
+    /* @__PURE__ */ e("div", { class: "cpc-cv__attention-header", onClick: () => d(!c), children: [
       /* @__PURE__ */ e("span", { class: `cpc__section-arrow ${c ? "cpc__section-arrow--open" : ""}`, children: "▶" }),
       /* @__PURE__ */ e("span", { class: "cpc-cv__attention-label", children: t }),
       !m && s && /* @__PURE__ */ e("span", { class: "cpc-cv__attention-count", children: s.length })
@@ -8935,50 +9885,50 @@ function Mt({ label: t, accent: n, patients: s, histories: i, historiesLoading: 
     c && /* @__PURE__ */ e("div", { class: "cpc-cv__attention-list", children: m ? /* @__PURE__ */ e("div", { class: "cpc-cv__attention-loading", children: [
       /* @__PURE__ */ e("div", { class: "cpc__spinner cpc__spinner--sm" }),
       /* @__PURE__ */ e("span", { children: "Analyzing trends..." })
-    ] }) : /* @__PURE__ */ e(J, { children: [
+    ] }) : /* @__PURE__ */ e(Q, { children: [
       /* @__PURE__ */ e("div", { class: "cpc-cv__acards", children: h.map((g) => /* @__PURE__ */ e(
-        jr,
+        zo,
         {
           patient: g,
-          histories: i,
+          histories: a,
           onOpenCoverage: r
         },
         g.patientId
       )) }),
-      !d && _ > 0 && /* @__PURE__ */ e("button", { class: "cpc-cv__view-more", onClick: (g) => {
-        g.stopPropagation(), u(!0);
+      !l && _ > 0 && /* @__PURE__ */ e("button", { class: "cpc-cv__view-more", onClick: (g) => {
+        g.stopPropagation(), p(!0);
       }, children: [
         "View ",
         _,
         " more"
       ] }),
-      d && s.length > At && /* @__PURE__ */ e("button", { class: "cpc-cv__view-more", onClick: (g) => {
-        g.stopPropagation(), u(!1);
+      l && s.length > Ut && /* @__PURE__ */ e("button", { class: "cpc-cv__view-more", onClick: (g) => {
+        g.stopPropagation(), p(!1);
       }, children: "Show less" })
     ] }) })
   ] });
 }
-function Kr({ patient: t, sparklineScores: n, onOpenCoverage: s }) {
-  const i = Ct(t.overallScore ?? 0), a = (t.diagnosisMissing || 0) + (t.diagnosisPartial || 0), r = (t.orderMissing || 0) + (t.orderPartial || 0), o = a + r;
+function Wo({ patient: t, sparklineScores: n, onOpenCoverage: s }) {
+  const a = $t(t.overallScore ?? 0), i = (t.diagnosisMissing || 0) + (t.diagnosisPartial || 0), r = (t.orderMissing || 0) + (t.orderPartial || 0), o = i + r;
   return /* @__PURE__ */ e("div", { class: "cpc-cv__row", onClick: () => s(t), children: [
     /* @__PURE__ */ e("div", { class: "cpc-cv__row-name", children: [
-      /* @__PURE__ */ e("span", { class: "cpc-cv__row-patient", children: Ae(t.patientName) }),
+      /* @__PURE__ */ e("span", { class: "cpc-cv__row-patient", children: qe(t.patientName) }),
       t.levelOfCare && /* @__PURE__ */ e("span", { class: "cpc-cv__row-loc", children: t.levelOfCare })
     ] }),
-    /* @__PURE__ */ e("div", { class: "cpc-cv__row-score", children: t.hasResults ? /* @__PURE__ */ e(J, { children: [
+    /* @__PURE__ */ e("div", { class: "cpc-cv__row-score", children: t.hasResults ? /* @__PURE__ */ e(Q, { children: [
       /* @__PURE__ */ e("span", { class: "cpc-cv__mini-bar", children: /* @__PURE__ */ e(
         "span",
         {
           class: "cpc-cv__mini-fill",
-          style: { width: `${t.overallScore}%`, background: ri[i] }
+          style: { width: `${t.overallScore}%`, background: $a[a] }
         }
       ) }),
-      /* @__PURE__ */ e("span", { class: `cpc-cv__row-pct cpc-cv__row-pct--${i}`, children: [
+      /* @__PURE__ */ e("span", { class: `cpc-cv__row-pct cpc-cv__row-pct--${a}`, children: [
         t.overallScore,
         "%"
       ] })
     ] }) : /* @__PURE__ */ e("span", { class: "cpc-cv__row-unchecked", children: "Not checked" }) }),
-    n && n.length > 1 && /* @__PURE__ */ e(Vr, { scores: n }),
+    n && n.length > 1 && /* @__PURE__ */ e(Go, { scores: n }),
     /* @__PURE__ */ e("div", { class: "cpc-cv__row-gaps", children: o > 0 ? /* @__PURE__ */ e("span", { class: "cpc-cv__gap-badge", children: [
       o,
       " gap",
@@ -8991,23 +9941,23 @@ function Kr({ patient: t, sparklineScores: n, onOpenCoverage: s }) {
         class: "cpc-cv__row-nav",
         title: "Go to patient in PCC",
         onClick: (c) => {
-          c.stopPropagation(), oi(t.externalPatientId || t.patientId);
+          c.stopPropagation(), Ra(t.externalPatientId || t.patientId);
         },
         children: /* @__PURE__ */ e("svg", { width: "14", height: "14", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": "2", "stroke-linecap": "round", "stroke-linejoin": "round", children: /* @__PURE__ */ e("path", { d: "M5 12h14M12 5l7 7-7 7" }) })
       }
     )
   ] });
 }
-function Jn({ item: t, expanded: n, onToggle: s }) {
-  const i = t.type === "diagnosis";
+function ps({ item: t, expanded: n, onToggle: s }) {
+  const a = t.type === "diagnosis";
   return /* @__PURE__ */ e("div", { class: `cpd__item ${n ? "cpd__item--open" : ""}`, children: [
     /* @__PURE__ */ e("div", { class: "cpd__item-row", onClick: s, children: [
       /* @__PURE__ */ e("span", { class: `cpd__item-dot cpd__item-dot--${t.status}` }),
       /* @__PURE__ */ e("div", { class: "cpd__item-main", children: [
         t.code && /* @__PURE__ */ e("span", { class: "cpd__item-code", children: t.code }),
-        /* @__PURE__ */ e("span", { class: "cpd__item-desc", children: Ae(t.description) })
+        /* @__PURE__ */ e("span", { class: "cpd__item-desc", children: qe(t.description) })
       ] }),
-      /* @__PURE__ */ e("span", { class: "cpd__item-type", children: i ? "Dx" : "Order" }),
+      /* @__PURE__ */ e("span", { class: "cpd__item-type", children: a ? "Dx" : "Order" }),
       /* @__PURE__ */ e("span", { class: `cpd__item-chevron ${n ? "cpd__item-chevron--open" : ""}`, children: "▶" })
     ] }),
     n && /* @__PURE__ */ e("div", { class: "cpd__item-detail", children: [
@@ -9024,32 +9974,32 @@ function Jn({ item: t, expanded: n, onToggle: s }) {
     ] })
   ] });
 }
-const Yn = { covered: 0, partial: 1, missing: 2 };
-function Jr({ patient: t, facilityName: n, orgSlug: s, onBack: i }) {
-  const { summary: a, changes: r, loading: o, error: c, refreshing: l, refresh: d, retry: u } = Wr({
+const ms = { covered: 0, partial: 1, missing: 2 };
+function Qo({ patient: t, facilityName: n, orgSlug: s, onBack: a }) {
+  const { summary: i, changes: r, loading: o, error: c, refreshing: d, refresh: l, retry: p } = Fo({
     patientId: t.patientId,
     facilityName: n,
     orgSlug: s
-  }), [p, m] = v(null), [h, _] = v(!1), g = a && a.hasResults === !1, f = a && !g, y = Y(() => (a?.gaps || []).filter((A) => A.status === "missing"), [a]), w = Y(() => (a?.gaps || []).filter((A) => A.status === "partial"), [a]), k = (a?.covered || []).length, C = [];
-  a?.pendingChanges?.newDiagnoses > 0 && C.push(`${a.pendingChanges.newDiagnoses} new diagnosis${a.pendingChanges.newDiagnoses > 1 ? "es" : ""}`), a?.pendingChanges?.newOrders > 0 && C.push(`${a.pendingChanges.newOrders} new order${a.pendingChanges.newOrders > 1 ? "s" : ""}`);
-  const I = Y(() => r?.changes ? r.changes.filter((A) => (Yn[A.currentStatus] ?? 0) > (Yn[A.previousStatus] ?? 0)) : [], [r]), P = a ? Ct(a.score) : "red";
+  }), [u, m] = y(null), [h, _] = y(!1), g = i && i.hasResults === !1, v = i && !g, b = Y(() => (i?.gaps || []).filter((A) => A.status === "missing"), [i]), f = Y(() => (i?.gaps || []).filter((A) => A.status === "partial"), [i]), I = (i?.covered || []).length, N = [];
+  i?.pendingChanges?.newDiagnoses > 0 && N.push(`${i.pendingChanges.newDiagnoses} new diagnosis${i.pendingChanges.newDiagnoses > 1 ? "es" : ""}`), i?.pendingChanges?.newOrders > 0 && N.push(`${i.pendingChanges.newOrders} new order${i.pendingChanges.newOrders > 1 ? "s" : ""}`);
+  const D = Y(() => r?.changes ? r.changes.filter((A) => (ms[A.currentStatus] ?? 0) > (ms[A.previousStatus] ?? 0)) : [], [r]), T = i ? $t(i.score) : "red";
   return /* @__PURE__ */ e("div", { class: "cpd", children: [
     /* @__PURE__ */ e("div", { class: "cpd__topbar", children: [
-      /* @__PURE__ */ e("button", { class: "cpd__back", onClick: i, title: "Back to all patients", children: [
+      /* @__PURE__ */ e("button", { class: "cpd__back", onClick: a, title: "Back to all patients", children: [
         /* @__PURE__ */ e("svg", { width: "18", height: "18", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": "2.5", "stroke-linecap": "round", "stroke-linejoin": "round", children: /* @__PURE__ */ e("path", { d: "M19 12H5M12 19l-7-7 7-7" }) }),
         /* @__PURE__ */ e("span", { children: "All Patients" })
       ] }),
       /* @__PURE__ */ e("div", { class: "cpd__topbar-actions", children: [
-        a?.stale && /* @__PURE__ */ e("span", { class: "cpd__stale", children: "Stale" }),
-        /* @__PURE__ */ e("button", { class: `cpd__refresh ${l ? "cpd__refresh--spin" : ""}`, onClick: d, disabled: l, children: [
+        i?.stale && /* @__PURE__ */ e("span", { class: "cpd__stale", children: "Stale" }),
+        /* @__PURE__ */ e("button", { class: `cpd__refresh ${d ? "cpd__refresh--spin" : ""}`, onClick: l, disabled: d, children: [
           /* @__PURE__ */ e("svg", { width: "15", height: "15", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": "2", "stroke-linecap": "round", "stroke-linejoin": "round", children: [
             /* @__PURE__ */ e("polyline", { points: "23 4 23 10 17 10" }),
             /* @__PURE__ */ e("polyline", { points: "1 20 1 14 7 14" }),
             /* @__PURE__ */ e("path", { d: "M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15" })
           ] }),
-          l ? "Checking..." : "Re-check"
+          d ? "Checking..." : "Re-check"
         ] }),
-        /* @__PURE__ */ e("button", { class: "cpd__pcc-link", onClick: () => oi(t.externalPatientId || t.patientId), title: "Open in PCC", children: [
+        /* @__PURE__ */ e("button", { class: "cpd__pcc-link", onClick: () => Ra(t.externalPatientId || t.patientId), title: "Open in PCC", children: [
           "Open in PCC",
           /* @__PURE__ */ e("svg", { width: "13", height: "13", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": "2", "stroke-linecap": "round", "stroke-linejoin": "round", children: /* @__PURE__ */ e("path", { d: "M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3" }) })
         ] })
@@ -9057,31 +10007,31 @@ function Jr({ patient: t, facilityName: n, orgSlug: s, onBack: i }) {
     ] }),
     /* @__PURE__ */ e("div", { class: "cpd__hero", children: [
       /* @__PURE__ */ e("div", { class: "cpd__hero-left", children: [
-        /* @__PURE__ */ e("div", { class: "cpd__name", children: Ae(t.patientName) }),
+        /* @__PURE__ */ e("div", { class: "cpd__name", children: qe(t.patientName) }),
         /* @__PURE__ */ e("div", { class: "cpd__meta", children: [
           t.levelOfCare && /* @__PURE__ */ e("span", { children: t.levelOfCare }),
-          a?.checkedAt && /* @__PURE__ */ e("span", { children: [
+          i?.checkedAt && /* @__PURE__ */ e("span", { children: [
             "Checked ",
-            new Date(a.checkedAt).toLocaleDateString("en-US", { month: "short", day: "numeric" })
+            new Date(i.checkedAt).toLocaleDateString("en-US", { month: "short", day: "numeric" })
           ] })
         ] })
       ] }),
-      f && /* @__PURE__ */ e("div", { class: "cpd__hero-right", children: [
-        /* @__PURE__ */ e("div", { class: `cpd__score cpd__score--${P}`, children: [
-          a.score,
+      v && /* @__PURE__ */ e("div", { class: "cpd__hero-right", children: [
+        /* @__PURE__ */ e("div", { class: `cpd__score cpd__score--${T}`, children: [
+          i.score,
           /* @__PURE__ */ e("span", { children: "%" })
         ] }),
         /* @__PURE__ */ e("div", { class: "cpd__score-detail", children: [
-          a.diagnosisCovered,
+          i.diagnosisCovered,
           "/",
-          a.diagnosisTotal,
+          i.diagnosisTotal,
           " dx · ",
-          a.orderCovered,
+          i.orderCovered,
           "/",
-          a.orderTotal,
+          i.orderTotal,
           " orders"
         ] }),
-        /* @__PURE__ */ e("div", { class: "cpd__score-bar", children: /* @__PURE__ */ e("div", { class: `cpd__score-fill cpd__score-fill--${P}`, style: { width: `${a.score}%` } }) })
+        /* @__PURE__ */ e("div", { class: "cpd__score-bar", children: /* @__PURE__ */ e("div", { class: `cpd__score-fill cpd__score-fill--${T}`, style: { width: `${i.score}%` } }) })
       ] })
     ] }),
     o && /* @__PURE__ */ e("div", { class: "cpc__loading", children: [
@@ -9090,25 +10040,25 @@ function Jr({ patient: t, facilityName: n, orgSlug: s, onBack: i }) {
     ] }),
     c && !o && /* @__PURE__ */ e("div", { class: "cpc__error", children: [
       /* @__PURE__ */ e("div", { class: "cpc__error-text", children: c }),
-      /* @__PURE__ */ e("button", { class: "cpc__retry-btn", onClick: u, children: "Try Again" })
+      /* @__PURE__ */ e("button", { class: "cpc__retry-btn", onClick: p, children: "Try Again" })
     ] }),
     g && !o && !c && /* @__PURE__ */ e("div", { class: "cpd__empty-state", children: [
       /* @__PURE__ */ e("div", { class: "cpd__empty-title", children: "No coverage data yet" }),
       /* @__PURE__ */ e("div", { class: "cpd__empty-sub", children: "Coverage checks run automatically, or click Re-check above." })
     ] }),
-    f && !o && !c && /* @__PURE__ */ e("div", { class: "cpd__body", children: [
-      C.length > 0 && /* @__PURE__ */ e("div", { class: "cpd__drift", children: [
+    v && !o && !c && /* @__PURE__ */ e("div", { class: "cpd__body", children: [
+      N.length > 0 && /* @__PURE__ */ e("div", { class: "cpd__drift", children: [
         /* @__PURE__ */ e("strong", { children: "Drift alert:" }),
         " ",
-        C.join(" and "),
+        N.join(" and "),
         " added since last coverage check. These haven't been reviewed yet."
       ] }),
-      I.length > 0 && /* @__PURE__ */ e("div", { class: "cpd__section", children: [
+      D.length > 0 && /* @__PURE__ */ e("div", { class: "cpd__section", children: [
         /* @__PURE__ */ e("div", { class: "cpd__section-head cpd__section-head--red", children: "What Got Worse" }),
-        I.map((A, x) => /* @__PURE__ */ e("div", { class: "cpd__change-row", children: [
+        D.map((A, x) => /* @__PURE__ */ e("div", { class: "cpd__change-row", children: [
           /* @__PURE__ */ e("span", { class: "cpd__change-arrow", children: "↓" }),
           /* @__PURE__ */ e("span", { class: "cpd__change-code", children: A.code }),
-          /* @__PURE__ */ e("span", { class: "cpd__change-desc", children: Ae(A.description) }),
+          /* @__PURE__ */ e("span", { class: "cpd__change-desc", children: qe(A.description) }),
           /* @__PURE__ */ e("span", { class: "cpd__change-transition", children: [
             A.previousStatus,
             " ",
@@ -9118,56 +10068,56 @@ function Jr({ patient: t, facilityName: n, orgSlug: s, onBack: i }) {
           ] })
         ] }, x))
       ] }),
-      y.length > 0 && /* @__PURE__ */ e("div", { class: "cpd__section", children: [
+      b.length > 0 && /* @__PURE__ */ e("div", { class: "cpd__section", children: [
         /* @__PURE__ */ e("div", { class: "cpd__section-head cpd__section-head--red", children: [
           "Missing From Care Plan",
-          /* @__PURE__ */ e("span", { class: "cpd__section-count", children: y.length })
+          /* @__PURE__ */ e("span", { class: "cpd__section-count", children: b.length })
         ] }),
         /* @__PURE__ */ e("div", { class: "cpd__section-hint", children: "These have no care plan focus at all." }),
-        y.map((A, x) => /* @__PURE__ */ e(Jn, { item: A, expanded: p === `m-${x}`, onToggle: () => m(p === `m-${x}` ? null : `m-${x}`) }, `m-${x}`))
+        b.map((A, x) => /* @__PURE__ */ e(ps, { item: A, expanded: u === `m-${x}`, onToggle: () => m(u === `m-${x}` ? null : `m-${x}`) }, `m-${x}`))
       ] }),
-      w.length > 0 && /* @__PURE__ */ e("div", { class: "cpd__section", children: [
+      f.length > 0 && /* @__PURE__ */ e("div", { class: "cpd__section", children: [
         /* @__PURE__ */ e("div", { class: "cpd__section-head cpd__section-head--amber", children: [
           "Partially Covered",
-          /* @__PURE__ */ e("span", { class: "cpd__section-count", children: w.length })
+          /* @__PURE__ */ e("span", { class: "cpd__section-count", children: f.length })
         ] }),
         /* @__PURE__ */ e("div", { class: "cpd__section-hint", children: "Has a related focus but it's incomplete or doesn't fully address the issue." }),
-        w.map((A, x) => /* @__PURE__ */ e(Jn, { item: A, expanded: p === `p-${x}`, onToggle: () => m(p === `p-${x}` ? null : `p-${x}`) }, `p-${x}`))
+        f.map((A, x) => /* @__PURE__ */ e(ps, { item: A, expanded: u === `p-${x}`, onToggle: () => m(u === `p-${x}` ? null : `p-${x}`) }, `p-${x}`))
       ] }),
-      k > 0 && /* @__PURE__ */ e("div", { class: "cpd__section cpd__section--muted", children: [
+      I > 0 && /* @__PURE__ */ e("div", { class: "cpd__section cpd__section--muted", children: [
         /* @__PURE__ */ e("div", { class: "cpd__section-head cpd__section-head--green cpd__section-head--toggle", onClick: () => _(!h), children: [
           /* @__PURE__ */ e("span", { children: h ? "▼" : "▶" }),
           "Covered",
-          /* @__PURE__ */ e("span", { class: "cpd__section-count", children: k })
+          /* @__PURE__ */ e("span", { class: "cpd__section-count", children: I })
         ] }),
-        h && /* @__PURE__ */ e("div", { class: "cpd__covered-list", children: (a.covered || []).map((A, x) => /* @__PURE__ */ e("div", { class: "cpd__covered-row", children: [
+        h && /* @__PURE__ */ e("div", { class: "cpd__covered-list", children: (i.covered || []).map((A, x) => /* @__PURE__ */ e("div", { class: "cpd__covered-row", children: [
           /* @__PURE__ */ e("span", { class: "cpd__covered-dot" }),
           A.code && /* @__PURE__ */ e("span", { class: "cpd__covered-code", children: A.code }),
-          /* @__PURE__ */ e("span", { class: "cpd__covered-desc", children: Ae(A.description) }),
+          /* @__PURE__ */ e("span", { class: "cpd__covered-desc", children: qe(A.description) }),
           /* @__PURE__ */ e("span", { class: "cpd__covered-type", children: A.type })
         ] }, x)) })
       ] })
     ] })
   ] });
 }
-function Yr({ data: t, loading: n, error: s, retry: i, trendingData: a, facilityName: r, orgSlug: o, onOpenCoverage: c }) {
-  const [l, d] = v("all"), [u, p] = v(null), [m, h] = v(!1), [_, g] = v(null), f = r || t?.facilityName || "", y = o || t?.orgSlug || "";
+function jo({ data: t, loading: n, error: s, retry: a, trendingData: i, facilityName: r, orgSlug: o, onOpenCoverage: c }) {
+  const [d, l] = y("all"), [p, u] = y(null), [m, h] = y(!1), [_, g] = y(null), v = r || t?.facilityName || "", b = o || t?.orgSlug || "";
   F(() => {
-    t?.patients?.length && (h(!0), Qr(f, y).then(p).finally(() => h(!1)));
-  }, [t?.patients, f, y]);
-  const { stalePatients: w, decliningPatients: k, uncheckedPatients: C } = Y(() => {
+    t?.patients?.length && (h(!0), Uo(v, b).then(u).finally(() => h(!1)));
+  }, [t?.patients, v, b]);
+  const { stalePatients: f, decliningPatients: I, uncheckedPatients: N } = Y(() => {
     if (!t?.patients) return { stalePatients: [], decliningPatients: [], uncheckedPatients: [] };
-    const N = t.patients.filter((B) => B.stale), S = t.patients.filter((B) => !B.hasResults);
-    let E = [];
-    return u && (E = t.patients.filter((B) => {
-      const M = u.get(B.patientId);
-      return !M || M.length < 2 ? !1 : M[M.length - 1].score < M[0].score;
-    })), { stalePatients: N, decliningPatients: E, uncheckedPatients: S };
-  }, [t, u]), I = w.length > 0 || k.length > 0 || C.length > 0, P = Y(() => {
+    const S = t.patients.filter((H) => H.stale), w = t.patients.filter((H) => !H.hasResults);
+    let M = [];
+    return p && (M = t.patients.filter((H) => {
+      const P = p.get(H.patientId);
+      return !P || P.length < 2 ? !1 : P[P.length - 1].score < P[0].score;
+    })), { stalePatients: S, decliningPatients: M, uncheckedPatients: w };
+  }, [t, p]), D = f.length > 0 || I.length > 0 || N.length > 0, T = Y(() => {
     if (!t?.patients) return [];
-    let N = t.patients;
-    return l === "gaps" ? N = N.filter((S) => S.hasResults && S.overallScore < 100) : l === "unchecked" ? N = N.filter((S) => !S.hasResults) : l === "stale" && (N = N.filter((S) => S.stale)), N;
-  }, [t, l]);
+    let S = t.patients;
+    return d === "gaps" ? S = S.filter((w) => w.hasResults && w.overallScore < 100) : d === "unchecked" ? S = S.filter((w) => !w.hasResults) : d === "stale" && (S = S.filter((w) => w.stale)), S;
+  }, [t, d]);
   if (n)
     return /* @__PURE__ */ e("div", { class: "cpc__loading", children: [
       /* @__PURE__ */ e("div", { class: "cpc__spinner" }),
@@ -9176,12 +10126,12 @@ function Yr({ data: t, loading: n, error: s, retry: i, trendingData: a, facility
   if (s)
     return /* @__PURE__ */ e("div", { class: "cpc__error", children: [
       /* @__PURE__ */ e("div", { class: "cpc__error-text", children: s }),
-      /* @__PURE__ */ e("button", { class: "cpc__retry-btn", onClick: i, children: "Try Again" })
+      /* @__PURE__ */ e("button", { class: "cpc__retry-btn", onClick: a, children: "Try Again" })
     ] });
   if (!t) return null;
   if (_)
     return /* @__PURE__ */ e("div", { class: "cpc-cv", children: /* @__PURE__ */ e(
-      Jr,
+      Qo,
       {
         patient: _,
         facilityName: r || t?.facilityName || "",
@@ -9189,43 +10139,43 @@ function Yr({ data: t, loading: n, error: s, retry: i, trendingData: a, facility
         onBack: () => g(null)
       }
     ) });
-  const A = t.patients?.filter((N) => !N.hasResults).length || 0, x = t.summary?.patientsStale || 0, D = t.patients?.filter((N) => N.hasResults && N.overallScore < 100).length || 0;
+  const A = t.patients?.filter((S) => !S.hasResults).length || 0, x = t.summary?.patientsStale || 0, k = t.patients?.filter((S) => S.hasResults && S.overallScore < 100).length || 0;
   return /* @__PURE__ */ e("div", { class: "cpc-cv", children: [
-    /* @__PURE__ */ e(Gr, { days: a?.days }),
-    /* @__PURE__ */ e(zr, { summary: t.summary }),
-    I && /* @__PURE__ */ e("div", { class: "cpc-cv__attention", children: [
+    /* @__PURE__ */ e(Ho, { days: i?.days }),
+    /* @__PURE__ */ e(Vo, { summary: t.summary }),
+    D && /* @__PURE__ */ e("div", { class: "cpc-cv__attention", children: [
       /* @__PURE__ */ e("div", { class: "cpc-cv__attention-title", children: "Needs Attention" }),
       /* @__PURE__ */ e(
-        Mt,
+        Vt,
         {
           label: "New Gaps / Stale Data",
           accent: "red",
-          patients: w,
-          histories: u,
+          patients: f,
+          histories: p,
           historiesLoading: m,
           onOpenCoverage: g,
           defaultOpen: !0
         }
       ),
       /* @__PURE__ */ e(
-        Mt,
+        Vt,
         {
           label: "Declining Coverage",
           accent: "orange",
-          patients: k,
-          histories: u,
+          patients: I,
+          histories: p,
           historiesLoading: m,
           onOpenCoverage: g,
           defaultOpen: !0
         }
       ),
       /* @__PURE__ */ e(
-        Mt,
+        Vt,
         {
           label: "Never Checked",
           accent: "gray",
-          patients: C,
-          histories: u,
+          patients: N,
+          histories: p,
           historiesLoading: m,
           onOpenCoverage: g,
           defaultOpen: !1
@@ -9234,127 +10184,127 @@ function Yr({ data: t, loading: n, error: s, retry: i, trendingData: a, facility
     ] }),
     /* @__PURE__ */ e("div", { class: "cpc-cv__filters", children: [
       { value: "all", label: `All (${t.patients?.length || 0})` },
-      { value: "gaps", label: `With Gaps (${D})` },
+      { value: "gaps", label: `With Gaps (${k})` },
       { value: "unchecked", label: `Unchecked (${A})` },
       ...x > 0 ? [{ value: "stale", label: `Stale (${x})` }] : []
-    ].map((N) => /* @__PURE__ */ e(
+    ].map((S) => /* @__PURE__ */ e(
       "button",
       {
-        class: `cpc-cv__filter-pill${l === N.value ? " cpc-cv__filter-pill--active" : ""}`,
-        onClick: () => d(N.value),
-        children: N.label
+        class: `cpc-cv__filter-pill${d === S.value ? " cpc-cv__filter-pill--active" : ""}`,
+        onClick: () => l(S.value),
+        children: S.label
       },
-      N.value
+      S.value
     )) }),
-    /* @__PURE__ */ e("div", { class: "cpc-cv__list", children: P.length === 0 ? /* @__PURE__ */ e("div", { class: "cpc__empty", style: { padding: "24px" }, children: "No patients match this filter." }) : P.map((N) => /* @__PURE__ */ e(
-      Kr,
+    /* @__PURE__ */ e("div", { class: "cpc-cv__list", children: T.length === 0 ? /* @__PURE__ */ e("div", { class: "cpc__empty", style: { padding: "24px" }, children: "No patients match this filter." }) : T.map((S) => /* @__PURE__ */ e(
+      Wo,
       {
-        patient: N,
-        sparklineScores: u?.get(N.patientId),
+        patient: S,
+        sparklineScores: p?.get(S.patientId),
         onOpenCoverage: g
       },
-      N.patientId
+      S.patientId
     )) })
   ] });
 }
-const Zr = { urgent: "warning", approaching: "warning" };
-function Xr(t) {
-  return Zr[t] || t || "ok";
+const Ko = { urgent: "warning", approaching: "warning" };
+function Yo(t) {
+  return Ko[t] || t || "ok";
 }
-function Zn(t) {
-  const n = t.getFullYear(), s = String(t.getMonth() + 1).padStart(2, "0"), i = String(t.getDate()).padStart(2, "0");
-  return `${n}-${s}-${i}`;
+function hs(t) {
+  const n = t.getFullYear(), s = String(t.getMonth() + 1).padStart(2, "0"), a = String(t.getDate()).padStart(2, "0");
+  return `${n}-${s}-${a}`;
 }
-function Xn(t) {
+function _s(t) {
   const n = new Date(t);
   n.setHours(0, 0, 0, 0);
-  const s = n.getDay(), i = s === 0 ? -6 : 1 - s;
-  return n.setDate(n.getDate() + i), n;
+  const s = n.getDay(), a = s === 0 ? -6 : 1 - s;
+  return n.setDate(n.getDate() + a), n;
 }
-function Lt(t, n) {
+function zt(t, n) {
   const s = new Date(t);
   return s.setDate(s.getDate() + n), s;
 }
-function eo({ facilityName: t, orgSlug: n }) {
-  const [s, i] = v(() => Xn(/* @__PURE__ */ new Date())), [a, r] = v([]), [o, c] = v(null), [l, d] = v(!0), [u, p] = v(null), m = Y(() => Lt(s, 6), [s]), h = U(async () => {
+function Jo({ facilityName: t, orgSlug: n }) {
+  const [s, a] = y(() => _s(/* @__PURE__ */ new Date())), [i, r] = y([]), [o, c] = y(null), [d, l] = y(!0), [p, u] = y(null), m = Y(() => zt(s, 6), [s]), h = G(async () => {
     if (!t || !n) return;
-    d(!0), p(null);
-    const y = new URLSearchParams({
+    l(!0), u(null);
+    const b = new URLSearchParams({
       facilityName: t,
       orgSlug: n,
-      startDate: Zn(s),
-      endDate: Zn(m)
-    }), w = new URLSearchParams({ facilityName: t, orgSlug: n });
+      startDate: hs(s),
+      endDate: hs(m)
+    }), f = new URLSearchParams({ facilityName: t, orgSlug: n });
     try {
-      const [k, C] = await Promise.all([
+      const [I, N] = await Promise.all([
         chrome.runtime.sendMessage({
           type: "API_REQUEST",
-          endpoint: `/api/extension/planner/week-events?${y}`,
+          endpoint: `/api/extension/planner/week-events?${b}`,
           options: { method: "GET" }
         }),
         chrome.runtime.sendMessage({
           type: "API_REQUEST",
-          endpoint: `/api/extension/planner/summary?${w}`,
+          endpoint: `/api/extension/planner/summary?${f}`,
           options: { method: "GET" }
         })
       ]);
-      if (!k?.success) throw new Error(k?.error || "Failed to load planner events");
-      if (!C?.success) throw new Error(C?.error || "Failed to load planner summary");
-      const P = (k.data?.events || []).map((A) => ({ ...A, urgency: Xr(A.urgency) }));
-      r(P), c(C.data?.summary || null);
-    } catch (k) {
-      console.error("[MdsPlanner] fetch failed", k), p(k.message || "Failed to load planner");
+      if (!I?.success) throw new Error(I?.error || "Failed to load planner events");
+      if (!N?.success) throw new Error(N?.error || "Failed to load planner summary");
+      const T = (I.data?.events || []).map((A) => ({ ...A, urgency: Yo(A.urgency) }));
+      r(T), c(N.data?.summary || null);
+    } catch (I) {
+      console.error("[MdsPlanner] fetch failed", I), u(I.message || "Failed to load planner");
     } finally {
-      d(!1);
+      l(!1);
     }
   }, [t, n, s, m]);
   F(() => {
     h();
   }, [h]), F(() => {
-    const y = () => h();
-    return window.addEventListener("super:query-sent", y), window.addEventListener("super:cert-signed", y), window.addEventListener("super:care-plan-updated", y), () => {
-      window.removeEventListener("super:query-sent", y), window.removeEventListener("super:cert-signed", y), window.removeEventListener("super:care-plan-updated", y);
+    const b = () => h();
+    return window.addEventListener("super:query-sent", b), window.addEventListener("super:cert-signed", b), window.addEventListener("super:care-plan-updated", b), () => {
+      window.removeEventListener("super:query-sent", b), window.removeEventListener("super:cert-signed", b), window.removeEventListener("super:care-plan-updated", b);
     };
   }, [h]);
-  const _ = U(() => i((y) => Lt(y, -7)), []), g = U(() => i((y) => Lt(y, 7)), []), f = U(() => i(Xn(/* @__PURE__ */ new Date())), []);
+  const _ = G(() => a((b) => zt(b, -7)), []), g = G(() => a((b) => zt(b, 7)), []), v = G(() => a(_s(/* @__PURE__ */ new Date())), []);
   return {
-    events: a,
+    events: i,
     summary: o,
-    loading: l,
-    error: u,
+    loading: d,
+    error: p,
     weekStart: s,
     weekEnd: m,
     goPrevWeek: _,
     goNextWeek: g,
-    goThisWeek: f,
+    goThisWeek: v,
     refetch: h
   };
 }
-function Je() {
+function at() {
   return window.location.origin;
 }
-const lt = (t) => `${Je()}/admin/client/cp_residentdashboard.jsp?ESOLrow=1&ESOLclientid=${t}`, es = (t) => `${Je()}/clinical/mds3/sectionlisting.xhtml?ESOLassessid=${t}`, ts = (t) => `${Je()}/admin/client/cp_careplans_rev.jsp?ESOLreviewid=-1&ESOLclientid=${t}`, to = (t, n) => `${Je()}/admin/client/cp_careplans_rev.jsp?ESOLreviewid=${t}&ESOLclientid=${n}`, ns = (t, n) => `${Je()}/care/chart/cp/careplandetail_rev.jsp?ESOLcareplanid=${t}&ESOLclientid=${n}`;
-function bn(t) {
+const wt = (t) => `${at()}/admin/client/cp_residentdashboard.jsp?ESOLrow=1&ESOLclientid=${t}`, gs = (t) => `${at()}/clinical/mds3/sectionlisting.xhtml?ESOLassessid=${t}`, fs = (t) => `${at()}/admin/client/cp_careplans_rev.jsp?ESOLreviewid=-1&ESOLclientid=${t}`, Zo = (t, n) => `${at()}/admin/client/cp_careplans_rev.jsp?ESOLreviewid=${t}&ESOLclientid=${n}`, ys = (t, n) => `${at()}/care/chart/cp/careplandetail_rev.jsp?ESOLcareplanid=${t}&ESOLclientid=${n}`;
+function qn(t) {
   if (!t) return null;
-  const { type: n, meta: s = {}, patientExternalId: i } = t, a = i;
+  const { type: n, meta: s = {}, patientExternalId: a } = t, i = a;
   switch (n) {
     case "admit":
     case "discharge":
     case "readmit":
-      return a ? { url: lt(a), target: "pcc" } : null;
+      return i ? { url: wt(i), target: "pcc" } : null;
     case "mds_ard":
     case "mds_due":
-      return s.pccAssessmentId ? { url: es(s.pccAssessmentId), target: "pcc" } : a ? { url: lt(a), target: "pcc" } : null;
+      return s.pccAssessmentId ? { url: gs(s.pccAssessmentId), target: "pcc" } : i ? { url: wt(i), target: "pcc" } : null;
     case "next_mds_ard":
       return null;
     case "cp_open_needed":
     case "cp_review_expected":
-      return a ? { url: ts(a), target: "pcc" } : null;
+      return i ? { url: fs(i), target: "pcc" } : null;
     case "cp_review_in_progress":
     case "cp_review_due":
-      return s.pccCarePlanId && a ? { url: ns(s.pccCarePlanId, a), target: "pcc" } : s.pccReviewId && a ? { url: to(s.pccReviewId, a), target: "pcc" } : a ? { url: ts(a), target: "pcc" } : null;
+      return s.pccCarePlanId && i ? { url: ys(s.pccCarePlanId, i), target: "pcc" } : s.pccReviewId && i ? { url: Zo(s.pccReviewId, i), target: "pcc" } : i ? { url: fs(i), target: "pcc" } : null;
     case "cp_completion_due":
-      return s.pccCarePlanId && a ? { url: ns(s.pccCarePlanId, a), target: "pcc" } : s.pccAssessmentId ? { url: es(s.pccAssessmentId), target: "pcc" } : a ? { url: lt(a), target: "pcc" } : null;
+      return s.pccCarePlanId && i ? { url: ys(s.pccCarePlanId, i), target: "pcc" } : s.pccAssessmentId ? { url: gs(s.pccAssessmentId), target: "pcc" } : i ? { url: wt(i), target: "pcc" } : null;
     case "query_due":
       return { target: "internal", handler: "query", id: s.queryId };
     case "cert_due":
@@ -9364,14 +10314,14 @@ function bn(t) {
       return null;
   }
 }
-function Ee(t) {
-  const n = bn(t);
-  return n ? n.target === "pcc" && n.url ? (window.location.href = n.url, !0) : n.target === "internal" ? (n.handler === "query" && n.id ? window.dispatchEvent(new CustomEvent("super:open-query", { detail: { queryId: n.id } })) : n.handler === "cert" && n.id && window.dispatchEvent(new CustomEvent("super:open-cert", { detail: { certId: n.id } })), t.patientExternalId && (window.location.href = lt(t.patientExternalId)), !0) : !1 : !1;
+function $e(t) {
+  const n = qn(t);
+  return n ? n.target === "pcc" && n.url ? (window.location.href = n.url, !0) : n.target === "internal" ? (n.handler === "query" && n.id ? window.dispatchEvent(new CustomEvent("super:open-query", { detail: { queryId: n.id } })) : n.handler === "cert" && n.id && window.dispatchEvent(new CustomEvent("super:open-cert", { detail: { certId: n.id } })), t.patientExternalId && (window.location.href = wt(t.patientExternalId)), !0) : !1 : !1;
 }
-function Ne(t) {
+function xe(t) {
   return t ? t.replace(/Significant Change( in Status)?/gi, "Sig Change").replace(/Significant Correction.*?(Assessment)?/gi, "Sig Correction").replace(/Interim Payment Assessment/gi, "IPA").replace(/Part A PPS Discharge( \(OMRA\))?/gi, "PPS Discharge").replace(/\bDeath in Facility\b/gi, "Death").replace(/\s+/g, " ").trim() : "";
 }
-const no = {
+const Xo = {
   admit: "admit",
   readmit: "readmit",
   discharge: "discharge",
@@ -9386,7 +10336,7 @@ const no = {
   query_due: "query",
   cert_due: "cert",
   cert_overdue: "cert overdue"
-}, so = {
+}, ec = {
   admit: /* @__PURE__ */ e("svg", { width: "11", height: "11", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": "2.2", "stroke-linecap": "round", children: [
     /* @__PURE__ */ e("line", { x1: "12", y1: "5", x2: "12", y2: "19" }),
     /* @__PURE__ */ e("line", { x1: "5", y1: "12", x2: "19", y2: "12" })
@@ -9434,25 +10384,25 @@ const no = {
     /* @__PURE__ */ e("circle", { cx: "7", cy: "7", r: "3" })
   ] })
 };
-function io({ event: t, interactive: n = !1 }) {
-  const s = t.urgency || "ok", i = t.type === "mds_ard" || t.type === "mds_due" || t.type === "next_mds_ard", a = i && t.meta?.description ? Ne(t.meta.description) : null, r = a ? `${a} ARD` : no[t.type] || t.type, o = !!bn(t), c = t.type === "cp_completion_due" && t.meta?.isProxy === !0, l = n && o, d = i ? "mds-pl__evt--t-mds" : t.type === "admit" || t.type === "readmit" ? "mds-pl__evt--t-admit" : t.type === "discharge" ? "mds-pl__evt--t-dc" : "";
+function tc({ event: t, interactive: n = !1 }) {
+  const s = t.urgency || "ok", a = t.type === "mds_ard" || t.type === "mds_due" || t.type === "next_mds_ard", i = a && t.meta?.description ? xe(t.meta.description) : null, r = i ? `${i} ARD` : Xo[t.type] || t.type, o = !!qn(t), c = t.type === "cp_completion_due" && t.meta?.isProxy === !0, d = n && o, l = a ? "mds-pl__evt--t-mds" : t.type === "admit" || t.type === "readmit" ? "mds-pl__evt--t-admit" : t.type === "discharge" ? "mds-pl__evt--t-dc" : "";
   return /* @__PURE__ */ e(
     "div",
     {
       class: [
         "mds-pl__evt",
         `mds-pl__evt--u-${s}`,
-        d,
+        l,
         c ? "mds-pl__evt--proxy" : "",
-        l ? "mds-pl__evt--clickable" : ""
+        d ? "mds-pl__evt--clickable" : ""
       ].filter(Boolean).join(" "),
-      onClick: l ? (u) => {
-        u.stopPropagation(), Ee(t);
+      onClick: d ? (p) => {
+        p.stopPropagation(), $e(t);
       } : void 0,
-      title: l ? "Open in PCC" : void 0,
+      title: d ? "Open in PCC" : void 0,
       children: [
         /* @__PURE__ */ e("span", { class: "mds-pl__evt-bar" }),
-        /* @__PURE__ */ e("span", { class: "mds-pl__evt-icon", "aria-hidden": "true", children: so[t.type] }),
+        /* @__PURE__ */ e("span", { class: "mds-pl__evt-icon", "aria-hidden": "true", children: ec[t.type] }),
         /* @__PURE__ */ e("span", { class: "mds-pl__evt-text", children: [
           /* @__PURE__ */ e("span", { class: "mds-pl__evt-who", children: t.patientName || "Unknown" }),
           /* @__PURE__ */ e("span", { class: "mds-pl__evt-tag", children: r })
@@ -9461,58 +10411,58 @@ function io({ event: t, interactive: n = !1 }) {
     }
   );
 }
-const ao = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-function ro(t) {
-  const n = t.getFullYear(), s = String(t.getMonth() + 1).padStart(2, "0"), i = String(t.getDate()).padStart(2, "0");
-  return `${n}-${s}-${i}`;
+const nc = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+function sc(t) {
+  const n = t.getFullYear(), s = String(t.getMonth() + 1).padStart(2, "0"), a = String(t.getDate()).padStart(2, "0");
+  return `${n}-${s}-${a}`;
 }
-function oo(t, n) {
+function ac(t, n) {
   return t.getFullYear() === n.getFullYear() && t.getMonth() === n.getMonth() && t.getDate() === n.getDate();
 }
-const ss = { overdue: 0, warning: 1, ok: 2 };
-function co(t) {
+const vs = { overdue: 0, warning: 1, ok: 2 };
+function ic(t) {
   return [...t].sort((n, s) => {
-    const i = ss[n.urgency] ?? 3, a = ss[s.urgency] ?? 3;
-    return i !== a ? i - a : (n.type || "").localeCompare(s.type || "");
+    const a = vs[n.urgency] ?? 3, i = vs[s.urgency] ?? 3;
+    return a !== i ? a - i : (n.type || "").localeCompare(s.type || "");
   });
 }
-function lo({ events: t, weekStart: n, selectedDay: s, onSelectDay: i }) {
-  const a = /* @__PURE__ */ new Date();
-  a.setHours(0, 0, 0, 0);
+function rc({ events: t, weekStart: n, selectedDay: s, onSelectDay: a }) {
+  const i = /* @__PURE__ */ new Date();
+  i.setHours(0, 0, 0, 0);
   const r = Y(() => {
     const o = [], c = /* @__PURE__ */ new Map();
-    for (const l of t || [])
-      c.has(l.date) || c.set(l.date, []), c.get(l.date).push(l);
-    for (let l = 0; l < 7; l++) {
-      const d = new Date(n);
-      d.setDate(n.getDate() + l);
-      const u = ro(d);
+    for (const d of t || [])
+      c.has(d.date) || c.set(d.date, []), c.get(d.date).push(d);
+    for (let d = 0; d < 7; d++) {
+      const l = new Date(n);
+      l.setDate(n.getDate() + d);
+      const p = sc(l);
       o.push({
-        date: d,
-        iso: u,
-        events: co(c.get(u) || []),
-        isToday: oo(d, a)
+        date: l,
+        iso: p,
+        events: ic(c.get(p) || []),
+        isToday: ac(l, i)
       });
     }
     return o;
   }, [t, n]);
   return /* @__PURE__ */ e("div", { class: "mds-pl__week", children: r.map((o) => {
-    const c = s === o.iso, l = o.events.length === 0;
+    const c = s === o.iso, d = o.events.length === 0;
     return /* @__PURE__ */ e(
       "div",
       {
-        class: `mds-pl__day${o.isToday ? " mds-pl__day--today" : ""}${c ? " mds-pl__day--selected" : ""}${l ? " mds-pl__day--empty" : ""}${i ? " mds-pl__day--clickable" : ""}`,
-        onClick: i ? () => i(c ? null : o.iso) : void 0,
-        role: i ? "button" : void 0,
-        tabIndex: i ? 0 : void 0,
+        class: `mds-pl__day${o.isToday ? " mds-pl__day--today" : ""}${c ? " mds-pl__day--selected" : ""}${d ? " mds-pl__day--empty" : ""}${a ? " mds-pl__day--clickable" : ""}`,
+        onClick: a ? () => a(c ? null : o.iso) : void 0,
+        role: a ? "button" : void 0,
+        tabIndex: a ? 0 : void 0,
         children: [
           /* @__PURE__ */ e("div", { class: "mds-pl__day-head", children: [
-            /* @__PURE__ */ e("span", { class: "mds-pl__day-dow", children: ao[(o.date.getDay() + 6) % 7] }),
+            /* @__PURE__ */ e("span", { class: "mds-pl__day-dow", children: nc[(o.date.getDay() + 6) % 7] }),
             /* @__PURE__ */ e("span", { class: "mds-pl__day-num", children: o.date.getDate() })
           ] }),
           /* @__PURE__ */ e("div", { class: "mds-pl__day-events", children: [
-            o.events.map((d, u) => /* @__PURE__ */ e(io, { event: d }, `${d.type}-${d.patientId}-${u}`)),
-            l && /* @__PURE__ */ e("span", { class: "mds-pl__day-quiet", children: "—" })
+            o.events.map((l, p) => /* @__PURE__ */ e(tc, { event: l }, `${l.type}-${l.patientId}-${p}`)),
+            d && /* @__PURE__ */ e("span", { class: "mds-pl__day-quiet", children: "—" })
           ] })
         ]
       },
@@ -9520,14 +10470,14 @@ function lo({ events: t, weekStart: n, selectedDay: s, onSelectDay: i }) {
     );
   }) });
 }
-function is(t) {
+function bs(t) {
   if (!t) return !1;
   const n = new Date(t);
   if (isNaN(n)) return !1;
   const s = /* @__PURE__ */ new Date();
   return s.setHours(0, 0, 0, 0), n < s;
 }
-function as(t) {
+function ws(t) {
   if (!t) return null;
   const n = new Date(t);
   if (isNaN(n)) return null;
@@ -9535,65 +10485,65 @@ function as(t) {
   const s = /* @__PURE__ */ new Date();
   return s.setHours(0, 0, 0, 0), Math.round((n - s) / 864e5);
 }
-function po(t) {
+function oc(t) {
   if (!t) return [];
-  const n = [], s = (a, r, o = {}) => ({
+  const n = [], s = (i, r, o = {}) => ({
     type: r,
-    patientExternalId: a.patientExternalId,
-    patientName: a.patientName,
+    patientExternalId: i.patientExternalId,
+    patientName: i.patientName,
     meta: {
-      pccAssessmentId: a.pccAssessmentId,
-      pccCarePlanId: a.pccCarePlanId,
-      pccReviewId: a.pccReviewId,
+      pccAssessmentId: i.pccAssessmentId,
+      pccCarePlanId: i.pccCarePlanId,
+      pccReviewId: i.pccReviewId,
       ...o
     }
   });
-  for (const a of t.mdsCoding?.patients || []) {
-    const r = a.daysToCompleteBy;
+  for (const i of t.mdsCoding?.patients || []) {
+    const r = i.daysToCompleteBy;
     if (r == null) continue;
-    const o = a.description ? `MDS · ${Ne(a.description)}` : "MDS coding";
-    r < 0 ? n.push({ kind: "mds", urgency: "overdue", anchor: "mds-coding", patient: a.patientName, label: o, detail: `${Math.abs(r)}d past lock`, sort: -100 + r, event: s(a, "mds_ard") }) : r <= 2 && n.push({ kind: "mds", urgency: "warning", anchor: "mds-coding", patient: a.patientName, label: o, detail: `${r}d to lock`, sort: r, event: s(a, "mds_ard") });
+    const o = i.description ? `MDS · ${xe(i.description)}` : "MDS coding";
+    r < 0 ? n.push({ kind: "mds", urgency: "overdue", anchor: "mds-coding", patient: i.patientName, label: o, detail: `${Math.abs(r)}d past lock`, sort: -100 + r, event: s(i, "mds_ard") }) : r <= 2 && n.push({ kind: "mds", urgency: "warning", anchor: "mds-coding", patient: i.patientName, label: o, detail: `${r}d to lock`, sort: r, event: s(i, "mds_ard") });
   }
-  for (const a of t.carePlansToOpen?.patients || []) {
-    const r = a.hoursSinceAdmit || 0;
-    r >= 48 ? n.push({ kind: "cp_open", urgency: "overdue", anchor: "cp-open", patient: a.patientName, label: "Care plan to open", detail: `${r}h since admit`, sort: -80 - r / 24, event: s(a, "cp_open_needed") }) : r >= 24 && n.push({ kind: "cp_open", urgency: "warning", anchor: "cp-open", patient: a.patientName, label: "Care plan to open", detail: `${r}h since admit`, sort: 2, event: s(a, "cp_open_needed") });
+  for (const i of t.carePlansToOpen?.patients || []) {
+    const r = i.hoursSinceAdmit || 0;
+    r >= 48 ? n.push({ kind: "cp_open", urgency: "overdue", anchor: "cp-open", patient: i.patientName, label: "Care plan to open", detail: `${r}h since admit`, sort: -80 - r / 24, event: s(i, "cp_open_needed") }) : r >= 24 && n.push({ kind: "cp_open", urgency: "warning", anchor: "cp-open", patient: i.patientName, label: "Care plan to open", detail: `${r}h since admit`, sort: 2, event: s(i, "cp_open_needed") });
   }
-  for (const a of t.carePlansToReview?.patients || []) {
-    const r = a.state === "overdue" || is(a.expectedDate), o = as(a.expectedDate), c = a.state === "in_progress" ? "cp_review_in_progress" : "cp_review_due";
-    r ? n.push({ kind: "cp_review", urgency: "overdue", anchor: "cp-review", patient: a.patientName, label: "Care plan review", detail: o != null ? `${Math.abs(o)}d past due` : "past due", sort: -60 + (o ?? 0), event: s(a, c) }) : o != null && o <= 2 && n.push({ kind: "cp_review", urgency: "warning", anchor: "cp-review", patient: a.patientName, label: "Care plan review", detail: `due in ${o}d`, sort: o, event: s(a, c) });
+  for (const i of t.carePlansToReview?.patients || []) {
+    const r = i.state === "overdue" || bs(i.expectedDate), o = ws(i.expectedDate), c = i.state === "in_progress" ? "cp_review_in_progress" : "cp_review_due";
+    r ? n.push({ kind: "cp_review", urgency: "overdue", anchor: "cp-review", patient: i.patientName, label: "Care plan review", detail: o != null ? `${Math.abs(o)}d past due` : "past due", sort: -60 + (o ?? 0), event: s(i, c) }) : o != null && o <= 2 && n.push({ kind: "cp_review", urgency: "warning", anchor: "cp-review", patient: i.patientName, label: "Care plan review", detail: `due in ${o}d`, sort: o, event: s(i, c) });
   }
-  for (const a of t.interviewsOwed?.patients || [])
-    if (is(a.dueDate)) {
-      const r = as(a.dueDate) || 0, o = (a.dueType || "").toUpperCase(), c = a.mdsDescription ? `${o} interview · ${Ne(a.mdsDescription)}` : `${o} interview`;
-      n.push({ kind: "interview", urgency: "overdue", anchor: "interviews", patient: a.patientName, label: c, detail: `${Math.abs(r)}d past due`, sort: -40 + r, event: s(a, "mds_ard") });
+  for (const i of t.interviewsOwed?.patients || [])
+    if (bs(i.dueDate)) {
+      const r = ws(i.dueDate) || 0, o = (i.dueType || "").toUpperCase(), c = i.mdsDescription ? `${o} interview · ${xe(i.mdsDescription)}` : `${o} interview`;
+      n.push({ kind: "interview", urgency: "overdue", anchor: "interviews", patient: i.patientName, label: c, detail: `${Math.abs(r)}d past due`, sort: -40 + r, event: s(i, "mds_ard") });
     }
-  const i = t.certs?.overdueList;
-  if (Array.isArray(i) && i.length > 0)
-    for (const a of i) {
-      const r = "cert_overdue", o = a.type === "day_14_recert" ? "Day-14 recert" : a.type === "day_30_recert" ? "Day-30 recert" : a.type === "initial" ? "Initial cert" : "Cert", c = a.bucket === "awaiting_signature" ? "awaiting sig" : "to send";
+  const a = t.certs?.overdueList;
+  if (Array.isArray(a) && a.length > 0)
+    for (const i of a) {
+      const r = "cert_overdue", o = i.type === "day_14_recert" ? "Day-14 recert" : i.type === "day_30_recert" ? "Day-30 recert" : i.type === "initial" ? "Initial cert" : "Cert", c = i.bucket === "awaiting_signature" ? "awaiting sig" : "to send";
       n.push({
         kind: "cert",
         urgency: "overdue",
         anchor: "certs",
-        patient: a.patientName,
+        patient: i.patientName,
         label: `${o} · ${c}`,
-        detail: `${a.daysOverdue}d overdue`,
-        sort: -20 - (a.daysOverdue || 0),
+        detail: `${i.daysOverdue}d overdue`,
+        sort: -20 - (i.daysOverdue || 0),
         event: {
           type: r,
-          patientExternalId: a.patientExternalId,
-          patientName: a.patientName,
-          meta: { certId: a.certId, type: a.type, bucket: a.bucket, daysOverdue: a.daysOverdue }
+          patientExternalId: i.patientExternalId,
+          patientName: i.patientName,
+          meta: { certId: i.certId, type: i.type, bucket: i.bucket, daysOverdue: i.daysOverdue }
         }
       });
     }
   else {
-    const a = t.certs?.needsToSend?.overdueCount || 0, r = t.certs?.awaitingSignature?.overdueCount || 0;
-    a > 0 && n.push({ kind: "cert", urgency: "overdue", anchor: "certs", patient: null, label: "Certs to send", detail: `${a} overdue`, sort: -20, event: null }), r > 0 && n.push({ kind: "cert", urgency: "overdue", anchor: "certs", patient: null, label: "Certs awaiting sig", detail: `${r} overdue`, sort: -19, event: null });
+    const i = t.certs?.needsToSend?.overdueCount || 0, r = t.certs?.awaitingSignature?.overdueCount || 0;
+    i > 0 && n.push({ kind: "cert", urgency: "overdue", anchor: "certs", patient: null, label: "Certs to send", detail: `${i} overdue`, sort: -20, event: null }), r > 0 && n.push({ kind: "cert", urgency: "overdue", anchor: "certs", patient: null, label: "Certs awaiting sig", detail: `${r} overdue`, sort: -19, event: null });
   }
-  return n.sort((a, r) => a.sort - r.sort);
+  return n.sort((i, r) => i.sort - r.sort);
 }
-const uo = {
+const cc = {
   mds: /* @__PURE__ */ e("svg", { width: "14", height: "14", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": "2", children: [
     /* @__PURE__ */ e("path", { d: "M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" }),
     /* @__PURE__ */ e("polyline", { points: "14 2 14 8 20 8" })
@@ -9609,30 +10559,30 @@ const uo = {
     /* @__PURE__ */ e("polyline", { points: "8.21 13.89 7 23 12 20 17 23 15.79 13.88" })
   ] })
 };
-function mo(t) {
+function lc(t) {
   const n = document.getElementById(`mds-pl-q-${t}`);
   n && n.scrollIntoView({ behavior: "smooth", block: "start" });
 }
-function ho(t) {
-  t.event && Ee(t.event) || mo(t.anchor);
+function dc(t) {
+  t.event && $e(t.event) || lc(t.anchor);
 }
-function _o({ summary: t }) {
-  const n = po(t);
+function uc({ summary: t }) {
+  const n = oc(t);
   if (n.length === 0)
     return /* @__PURE__ */ e("div", { class: "mds-pl__focus mds-pl__focus--empty", children: /* @__PURE__ */ e("div", { class: "mds-pl__focus-head", children: [
       /* @__PURE__ */ e("span", { class: "mds-pl__focus-title", children: "Today's focus" }),
       /* @__PURE__ */ e("span", { class: "mds-pl__focus-clear", children: "All caught up ✓" })
     ] }) });
-  const [s, i] = v(!1), a = n.filter((d) => d.urgency === "overdue").length, r = n.filter((d) => d.urgency === "warning").length, o = 5, c = s ? n : n.slice(0, o), l = n.length - c.length;
+  const [s, a] = y(!1), i = n.filter((l) => l.urgency === "overdue").length, r = n.filter((l) => l.urgency === "warning").length, o = 5, c = s ? n : n.slice(0, o), d = n.length - c.length;
   return /* @__PURE__ */ e("div", { class: "mds-pl__focus", children: [
     /* @__PURE__ */ e("div", { class: "mds-pl__focus-head", children: [
       /* @__PURE__ */ e("span", { class: "mds-pl__focus-title", children: "Today's focus" }),
       /* @__PURE__ */ e("span", { class: "mds-pl__focus-summary", children: [
-        a > 0 && /* @__PURE__ */ e("span", { class: "mds-pl__focus-count mds-pl__focus-count--overdue", children: [
-          a,
+        i > 0 && /* @__PURE__ */ e("span", { class: "mds-pl__focus-count mds-pl__focus-count--overdue", children: [
+          i,
           " overdue"
         ] }),
-        a > 0 && r > 0 && /* @__PURE__ */ e("span", { class: "mds-pl__focus-sep", children: " · " }),
+        i > 0 && r > 0 && /* @__PURE__ */ e("span", { class: "mds-pl__focus-sep", children: " · " }),
         r > 0 && /* @__PURE__ */ e("span", { class: "mds-pl__focus-count mds-pl__focus-count--warning", children: [
           r,
           " soon"
@@ -9640,37 +10590,37 @@ function _o({ summary: t }) {
       ] })
     ] }),
     /* @__PURE__ */ e("div", { class: "mds-pl__focus-list", children: [
-      c.map((d, u) => /* @__PURE__ */ e(
+      c.map((l, p) => /* @__PURE__ */ e(
         "button",
         {
           type: "button",
-          class: `mds-pl__focus-row mds-pl__focus-row--${d.urgency}`,
-          onClick: () => ho(d),
-          title: d.event ? `Open ${d.patient || d.label} in PCC` : `Jump to ${d.label}`,
+          class: `mds-pl__focus-row mds-pl__focus-row--${l.urgency}`,
+          onClick: () => dc(l),
+          title: l.event ? `Open ${l.patient || l.label} in PCC` : `Jump to ${l.label}`,
           children: [
-            /* @__PURE__ */ e("span", { class: "mds-pl__focus-icon", children: uo[d.kind] }),
+            /* @__PURE__ */ e("span", { class: "mds-pl__focus-icon", children: cc[l.kind] }),
             /* @__PURE__ */ e("span", { class: "mds-pl__focus-main", children: [
-              d.patient && /* @__PURE__ */ e(J, { children: [
-                /* @__PURE__ */ e("span", { class: "mds-pl__focus-patient", children: d.patient }),
+              l.patient && /* @__PURE__ */ e(Q, { children: [
+                /* @__PURE__ */ e("span", { class: "mds-pl__focus-patient", children: l.patient }),
                 " "
               ] }),
-              /* @__PURE__ */ e("span", { class: "mds-pl__focus-label", children: d.label })
+              /* @__PURE__ */ e("span", { class: "mds-pl__focus-label", children: l.label })
             ] }),
-            /* @__PURE__ */ e("span", { class: "mds-pl__focus-detail", children: d.detail }),
+            /* @__PURE__ */ e("span", { class: "mds-pl__focus-detail", children: l.detail }),
             /* @__PURE__ */ e("span", { class: "mds-pl__focus-chev", "aria-hidden": "true", children: "›" })
           ]
         },
-        u
+        p
       )),
-      l > 0 && /* @__PURE__ */ e(
+      d > 0 && /* @__PURE__ */ e(
         "button",
         {
           type: "button",
           class: "mds-pl__focus-more",
-          onClick: () => i(!0),
+          onClick: () => a(!0),
           children: [
             "+ ",
-            l,
+            d,
             " more — show all"
           ]
         }
@@ -9680,61 +10630,61 @@ function _o({ summary: t }) {
         {
           type: "button",
           class: "mds-pl__focus-more",
-          onClick: () => i(!1),
+          onClick: () => a(!1),
           children: "Show fewer"
         }
       )
     ] })
   ] });
 }
-const rs = 14;
-function Ie(t) {
+const Is = 14;
+function De(t) {
   if (!t) return "";
   const n = new Date(t);
   return isNaN(n) ? t : n.toLocaleDateString("en-US", { month: "short", day: "numeric" });
 }
-function vt(t) {
+function At(t) {
   if (!t) return !1;
   const n = new Date(t), s = /* @__PURE__ */ new Date();
   return s.setHours(0, 0, 0, 0), n < s;
 }
-function go({ count: t, overdueCount: n = 0, doneCount: s = 0 }) {
-  const i = typeof t == "number" ? t : parseInt(t, 10) || 0, a = Math.max(0, i - n), r = [];
+function pc({ count: t, overdueCount: n = 0, doneCount: s = 0 }) {
+  const a = typeof t == "number" ? t : parseInt(t, 10) || 0, i = Math.max(0, a - n), r = [];
   return n > 0 && r.push(/* @__PURE__ */ e("span", { class: "mds-pl__q-count-overdue", children: [
     n,
     " overdue"
-  ] })), a > 0 && n > 0 && r.push(/* @__PURE__ */ e("span", { class: "mds-pl__q-count-rest", children: [
-    a,
+  ] })), i > 0 && n > 0 && r.push(/* @__PURE__ */ e("span", { class: "mds-pl__q-count-rest", children: [
+    i,
     " open"
-  ] })), r.length === 0 && r.push(/* @__PURE__ */ e("span", { children: i })), s > 0 && r.push(/* @__PURE__ */ e("span", { class: "mds-pl__q-count-done", children: [
+  ] })), r.length === 0 && r.push(/* @__PURE__ */ e("span", { children: a })), s > 0 && r.push(/* @__PURE__ */ e("span", { class: "mds-pl__q-count-done", children: [
     s,
     " done"
-  ] })), /* @__PURE__ */ e("span", { class: "mds-pl__q-count", children: r.map((o, c) => /* @__PURE__ */ e(J, { children: [
+  ] })), /* @__PURE__ */ e("span", { class: "mds-pl__q-count", children: r.map((o, c) => /* @__PURE__ */ e(Q, { children: [
     c > 0 && /* @__PURE__ */ e("span", { class: "mds-pl__q-count-sep", children: " · " }),
     o
   ] })) });
 }
-function ge({ title: t, count: n, overdueCount: s = 0, doneCount: i = 0, footer: a, anchor: r, children: o }) {
+function ye({ title: t, count: n, overdueCount: s = 0, doneCount: a = 0, footer: i, anchor: r, children: o }) {
   return /* @__PURE__ */ e("div", { class: "mds-pl__q", id: r ? `mds-pl-q-${r}` : void 0, children: [
     /* @__PURE__ */ e("div", { class: "mds-pl__q-head", children: [
       /* @__PURE__ */ e("h3", { class: "mds-pl__q-title", children: t }),
-      /* @__PURE__ */ e(go, { count: n, overdueCount: s, doneCount: i })
+      /* @__PURE__ */ e(pc, { count: n, overdueCount: s, doneCount: a })
     ] }),
     o,
-    a && /* @__PURE__ */ e("div", { class: "mds-pl__q-footer", children: a })
+    i && /* @__PURE__ */ e("div", { class: "mds-pl__q-footer", children: i })
   ] });
 }
-function He({ completed: t, renderRow: n, windowLabel: s = "this week" }) {
+function Fe({ completed: t, renderRow: n, windowLabel: s = "this week" }) {
   if (!t || t.count === 0) return null;
-  const [i, a] = v(!1), r = t.patients || [];
-  return /* @__PURE__ */ e("div", { class: `mds-pl__done ${i ? "mds-pl__done--open" : ""}`, children: [
+  const [a, i] = y(!1), r = t.patients || [];
+  return /* @__PURE__ */ e("div", { class: `mds-pl__done ${a ? "mds-pl__done--open" : ""}`, children: [
     /* @__PURE__ */ e(
       "button",
       {
         type: "button",
         class: "mds-pl__done-toggle",
-        onClick: () => a(!i),
-        "aria-expanded": i,
+        onClick: () => i(!a),
+        "aria-expanded": a,
         children: [
           /* @__PURE__ */ e("svg", { class: "mds-pl__done-check", width: "12", height: "12", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": "3", "stroke-linecap": "round", "stroke-linejoin": "round", children: /* @__PURE__ */ e("polyline", { points: "20 6 9 17 4 12" }) }),
           /* @__PURE__ */ e("span", { class: "mds-pl__done-label", children: [
@@ -9742,44 +10692,44 @@ function He({ completed: t, renderRow: n, windowLabel: s = "this week" }) {
             " done ",
             s
           ] }),
-          /* @__PURE__ */ e("span", { class: "mds-pl__done-chev", "aria-hidden": "true", children: i ? "▾" : "▸" })
+          /* @__PURE__ */ e("span", { class: "mds-pl__done-chev", "aria-hidden": "true", children: a ? "▾" : "▸" })
         ]
       }
     ),
-    i && r.length > 0 && /* @__PURE__ */ e("div", { class: "mds-pl__done-body", children: r.map(n) })
+    a && r.length > 0 && /* @__PURE__ */ e("div", { class: "mds-pl__done-body", children: r.map(n) })
   ] });
 }
-function De(t) {
+function ke(t) {
   if (t)
     return (n) => {
-      n.target.closest("button, a") || Ee(t);
+      n.target.closest("button, a") || $e(t);
     };
 }
-const fo = /* @__PURE__ */ new Set(["In Progress", "Open", "Started", "Not Started"]);
-function yo(t) {
-  return t.status ? t.isLocked === !0 ? !1 : fo.has(t.status) : !0;
+const mc = /* @__PURE__ */ new Set(["In Progress", "Open", "Started", "Not Started"]);
+function hc(t) {
+  return t.status ? t.isLocked === !0 ? !1 : mc.has(t.status) : !0;
 }
-function vo(t) {
+function _c(t) {
   const n = t.daysToCompleteBy;
   if (n == null) return "pace-ok";
   if (n < 0) return "pace-over";
   const s = t.sectionsTotal || 0;
   if (s === 0) return "pace-ok";
-  const a = Math.max(0, rs - n) / rs;
-  return (t.sectionsCompleted || 0) / s < a - 0.05 ? "pace-behind" : "pace-ok";
+  const i = Math.max(0, Is - n) / Is;
+  return (t.sectionsCompleted || 0) / s < i - 0.05 ? "pace-behind" : "pace-ok";
 }
-function wo({ data: t }) {
-  const n = (t?.patients || []).filter(yo), s = t?.completedRecently, i = s?.count || 0;
-  if (!t || n.length === 0 && i === 0)
-    return /* @__PURE__ */ e(ge, { title: "MDS Coding", count: "0", anchor: "mds-coding", children: /* @__PURE__ */ e("div", { class: "mds-pl__q-empty", children: "No MDS in the coding window." }) });
-  const a = n.filter((r) => r.daysToCompleteBy != null && r.daysToCompleteBy < 0).length;
+function gc({ data: t }) {
+  const n = (t?.patients || []).filter(hc), s = t?.completedRecently, a = s?.count || 0;
+  if (!t || n.length === 0 && a === 0)
+    return /* @__PURE__ */ e(ye, { title: "MDS Coding", count: "0", anchor: "mds-coding", children: /* @__PURE__ */ e("div", { class: "mds-pl__q-empty", children: "No MDS in the coding window." }) });
+  const i = n.filter((r) => r.daysToCompleteBy != null && r.daysToCompleteBy < 0).length;
   return /* @__PURE__ */ e(
-    ge,
+    ye,
     {
       title: "MDS Coding",
       count: n.length,
-      overdueCount: a,
-      doneCount: i,
+      overdueCount: i,
+      doneCount: a,
       anchor: "mds-coding",
       children: [
         n.length > 0 ? /* @__PURE__ */ e("table", { class: "mds-pl__t mds-pl__t--coding", children: [
@@ -9790,7 +10740,7 @@ function wo({ data: t }) {
             /* @__PURE__ */ e("th", { children: "Due" })
           ] }) }),
           /* @__PURE__ */ e("tbody", { children: n.slice(0, 6).map((r) => {
-            const o = r.sectionsTotal ? Math.round(r.sectionsCompleted / r.sectionsTotal * 100) : 0, c = r.daysToCompleteBy != null && r.daysToCompleteBy < 0, l = vo(r), d = c ? "mds-pl__trow--overdue" : l === "pace-behind" ? "mds-pl__trow--warning" : "", u = {
+            const o = r.sectionsTotal ? Math.round(r.sectionsCompleted / r.sectionsTotal * 100) : 0, c = r.daysToCompleteBy != null && r.daysToCompleteBy < 0, d = _c(r), l = c ? "mds-pl__trow--overdue" : d === "pace-behind" ? "mds-pl__trow--warning" : "", p = {
               type: "mds_ard",
               patientExternalId: r.patientExternalId,
               patientName: r.patientName,
@@ -9799,17 +10749,17 @@ function wo({ data: t }) {
             return /* @__PURE__ */ e(
               "tr",
               {
-                class: `${d} mds-pl__trow--clickable`.trim(),
-                onClick: De(u),
+                class: `${l} mds-pl__trow--clickable`.trim(),
+                onClick: ke(p),
                 title: `Open ${r.patientName} MDS in PCC`,
                 children: [
                   /* @__PURE__ */ e("td", { class: "mds-pl__t-name", children: [
                     /* @__PURE__ */ e("div", { class: "mds-pl__t-name-main", children: r.patientName }),
-                    r.description && /* @__PURE__ */ e("div", { class: "mds-pl__t-name-sub", children: Ne(r.description) })
+                    r.description && /* @__PURE__ */ e("div", { class: "mds-pl__t-name-sub", children: xe(r.description) })
                   ] }),
-                  /* @__PURE__ */ e("td", { class: "mds-pl__t-date", children: Ie(r.ardDate) }),
+                  /* @__PURE__ */ e("td", { class: "mds-pl__t-date", children: De(r.ardDate) }),
                   /* @__PURE__ */ e("td", { class: "mds-pl__t-progress", children: [
-                    /* @__PURE__ */ e("span", { class: `mds-pl__bar mds-pl__bar--${l}`, children: /* @__PURE__ */ e("span", { class: "mds-pl__bar-fill", style: { width: `${o}%` } }) }),
+                    /* @__PURE__ */ e("span", { class: `mds-pl__bar mds-pl__bar--${d}`, children: /* @__PURE__ */ e("span", { class: "mds-pl__bar-fill", style: { width: `${o}%` } }) }),
                     /* @__PURE__ */ e("span", { class: "mds-pl__bar-label", children: [
                       r.sectionsCompleted,
                       "/",
@@ -9824,7 +10774,7 @@ function wo({ data: t }) {
           }) })
         ] }) : null,
         /* @__PURE__ */ e(
-          He,
+          Fe,
           {
             completed: s,
             renderRow: (r) => {
@@ -9838,14 +10788,14 @@ function wo({ data: t }) {
                 "div",
                 {
                   class: "mds-pl__done-row",
-                  onClick: De(o),
+                  onClick: ke(o),
                   title: `Open ${r.patientName} MDS in PCC`,
                   children: [
                     /* @__PURE__ */ e("span", { class: "mds-pl__done-row-name", children: r.patientName }),
-                    r.description && /* @__PURE__ */ e("span", { class: "mds-pl__done-row-sub", children: Ne(r.description) }),
+                    r.description && /* @__PURE__ */ e("span", { class: "mds-pl__done-row-sub", children: xe(r.description) }),
                     /* @__PURE__ */ e("span", { class: "mds-pl__done-row-date", children: [
                       "locked ",
-                      Ie(r.lockedAt)
+                      De(r.lockedAt)
                     ] })
                   ]
                 },
@@ -9858,14 +10808,14 @@ function wo({ data: t }) {
     }
   );
 }
-function bo({ data: t }) {
+function fc({ data: t }) {
   const n = t?.completedRecently, s = n?.count || 0;
-  return !t || t.count === 0 && s === 0 ? /* @__PURE__ */ e(ge, { title: "Care Plans to Open", count: "0", anchor: "cp-open", children: /* @__PURE__ */ e("div", { class: "mds-pl__q-empty", children: "Nothing to open." }) }) : /* @__PURE__ */ e(
-    ge,
+  return !t || t.count === 0 && s === 0 ? /* @__PURE__ */ e(ye, { title: "Care Plans to Open", count: "0", anchor: "cp-open", children: /* @__PURE__ */ e("div", { class: "mds-pl__q-empty", children: "Nothing to open." }) }) : /* @__PURE__ */ e(
+    ye,
     {
       title: "Care Plans to Open",
       count: t.count,
-      overdueCount: (t.patients || []).filter((i) => i.hoursSinceAdmit >= 48).length,
+      overdueCount: (t.patients || []).filter((a) => a.hoursSinceAdmit >= 48).length,
       doneCount: s,
       anchor: "cp-open",
       children: [
@@ -9875,131 +10825,54 @@ function bo({ data: t }) {
             /* @__PURE__ */ e("th", { children: "Admit" }),
             /* @__PURE__ */ e("th", { children: "Since" })
           ] }) }),
-          /* @__PURE__ */ e("tbody", { children: t.patients.slice(0, 6).map((i) => {
-            const a = i.hoursSinceAdmit >= 48, r = i.hoursSinceAdmit >= 24 && !a, o = a ? "mds-pl__trow--overdue" : r ? "mds-pl__trow--warning" : "", c = {
+          /* @__PURE__ */ e("tbody", { children: t.patients.slice(0, 6).map((a) => {
+            const i = a.hoursSinceAdmit >= 48, r = a.hoursSinceAdmit >= 24 && !i, o = i ? "mds-pl__trow--overdue" : r ? "mds-pl__trow--warning" : "", c = {
               type: "cp_open_needed",
-              patientExternalId: i.patientExternalId,
-              patientName: i.patientName,
+              patientExternalId: a.patientExternalId,
+              patientName: a.patientName,
               meta: {}
             };
             return /* @__PURE__ */ e(
               "tr",
               {
                 class: `${o} mds-pl__trow--clickable`.trim(),
-                onClick: De(c),
-                title: `Open new care plan for ${i.patientName}`,
+                onClick: ke(c),
+                title: `Open new care plan for ${a.patientName}`,
                 children: [
-                  /* @__PURE__ */ e("td", { class: "mds-pl__t-name", children: i.patientName }),
-                  /* @__PURE__ */ e("td", { class: "mds-pl__t-date", children: Ie(i.admitDate) }),
-                  /* @__PURE__ */ e("td", { class: `mds-pl__t-date${a ? " mds-pl__t-date--over" : ""}`, children: [
-                    i.hoursSinceAdmit,
+                  /* @__PURE__ */ e("td", { class: "mds-pl__t-name", children: a.patientName }),
+                  /* @__PURE__ */ e("td", { class: "mds-pl__t-date", children: De(a.admitDate) }),
+                  /* @__PURE__ */ e("td", { class: `mds-pl__t-date${i ? " mds-pl__t-date--over" : ""}`, children: [
+                    a.hoursSinceAdmit,
                     "h"
                   ] })
                 ]
               },
-              i.patientId
+              a.patientId
             );
           }) })
         ] }),
         /* @__PURE__ */ e(
-          He,
-          {
-            completed: n,
-            renderRow: (i) => {
-              const a = {
-                type: "cp_review_in_progress",
-                patientExternalId: i.patientExternalId,
-                patientName: i.patientName,
-                meta: { pccCarePlanId: i.pccCarePlanId }
-              };
-              return /* @__PURE__ */ e(
-                "div",
-                {
-                  class: "mds-pl__done-row",
-                  onClick: De(a),
-                  title: `Open care plan for ${i.patientName}`,
-                  children: [
-                    /* @__PURE__ */ e("span", { class: "mds-pl__done-row-name", children: i.patientName }),
-                    /* @__PURE__ */ e("span", { class: "mds-pl__done-row-date", children: [
-                      "opened ",
-                      Ie(i.carePlanOpenedAt)
-                    ] })
-                  ]
-                },
-                i.patientId
-              );
-            }
-          }
-        )
-      ]
-    }
-  );
-}
-function Io({ data: t }) {
-  const n = t?.completedRecently, s = n?.count || 0;
-  if (!t || t.count === 0 && s === 0)
-    return /* @__PURE__ */ e(ge, { title: "Care Plans to Review", count: "0", anchor: "cp-review", children: /* @__PURE__ */ e("div", { class: "mds-pl__q-empty", children: "All caught up." }) });
-  const i = (t.patients || []).filter((a) => a.state === "overdue" || vt(a.expectedDate)).length;
-  return /* @__PURE__ */ e(
-    ge,
-    {
-      title: "Care Plans to Review",
-      count: t.count,
-      overdueCount: i,
-      doneCount: s,
-      anchor: "cp-review",
-      children: [
-        t.count > 0 && /* @__PURE__ */ e("table", { class: "mds-pl__t mds-pl__t--cpreview", children: [
-          /* @__PURE__ */ e("thead", { children: /* @__PURE__ */ e("tr", { children: [
-            /* @__PURE__ */ e("th", { children: "Patient" }),
-            /* @__PURE__ */ e("th", { children: "Due" }),
-            /* @__PURE__ */ e("th", { children: "State" })
-          ] }) }),
-          /* @__PURE__ */ e("tbody", { children: t.patients.slice(0, 6).map((a) => {
-            const r = a.state === "overdue" || vt(a.expectedDate), o = r ? "mds-pl__trow--overdue" : "", l = {
-              type: a.state === "in_progress" ? "cp_review_in_progress" : "cp_review_due",
-              patientExternalId: a.patientExternalId,
-              patientName: a.patientName,
-              meta: { pccCarePlanId: a.pccCarePlanId, pccReviewId: a.pccReviewId }
-            };
-            return /* @__PURE__ */ e(
-              "tr",
-              {
-                class: `${o} mds-pl__trow--clickable`.trim(),
-                onClick: De(l),
-                title: `Open care plan for ${a.patientName}`,
-                children: [
-                  /* @__PURE__ */ e("td", { class: "mds-pl__t-name", children: a.patientName }),
-                  /* @__PURE__ */ e("td", { class: `mds-pl__t-date${r ? " mds-pl__t-date--over" : ""}`, children: Ie(a.expectedDate) }),
-                  /* @__PURE__ */ e("td", { children: /* @__PURE__ */ e("span", { class: `mds-pl__chip mds-pl__chip--${a.state}`, children: a.state.replace("_", " ") }) })
-                ]
-              },
-              `${a.patientId}-${a.expectedDate}`
-            );
-          }) })
-        ] }),
-        /* @__PURE__ */ e(
-          He,
+          Fe,
           {
             completed: n,
             renderRow: (a) => {
-              const r = {
+              const i = {
                 type: "cp_review_in_progress",
                 patientExternalId: a.patientExternalId,
                 patientName: a.patientName,
-                meta: { pccCarePlanId: a.pccCarePlanId, pccReviewId: a.pccReviewId }
+                meta: { pccCarePlanId: a.pccCarePlanId }
               };
               return /* @__PURE__ */ e(
                 "div",
                 {
                   class: "mds-pl__done-row",
-                  onClick: De(r),
+                  onClick: ke(i),
                   title: `Open care plan for ${a.patientName}`,
                   children: [
                     /* @__PURE__ */ e("span", { class: "mds-pl__done-row-name", children: a.patientName }),
                     /* @__PURE__ */ e("span", { class: "mds-pl__done-row-date", children: [
-                      "reviewed ",
-                      Ie(a.reviewCompletedAt)
+                      "opened ",
+                      De(a.carePlanOpenedAt)
                     ] })
                   ]
                 },
@@ -10012,15 +10885,92 @@ function Io({ data: t }) {
     }
   );
 }
-function Do({ data: t, onOpenQueriesTab: n }) {
-  if (!t) return null;
-  const s = t.completedRecently, i = s?.count || 0;
+function yc({ data: t }) {
+  const n = t?.completedRecently, s = n?.count || 0;
+  if (!t || t.count === 0 && s === 0)
+    return /* @__PURE__ */ e(ye, { title: "Care Plans to Review", count: "0", anchor: "cp-review", children: /* @__PURE__ */ e("div", { class: "mds-pl__q-empty", children: "All caught up." }) });
+  const a = (t.patients || []).filter((i) => i.state === "overdue" || At(i.expectedDate)).length;
   return /* @__PURE__ */ e(
-    ge,
+    ye,
+    {
+      title: "Care Plans to Review",
+      count: t.count,
+      overdueCount: a,
+      doneCount: s,
+      anchor: "cp-review",
+      children: [
+        t.count > 0 && /* @__PURE__ */ e("table", { class: "mds-pl__t mds-pl__t--cpreview", children: [
+          /* @__PURE__ */ e("thead", { children: /* @__PURE__ */ e("tr", { children: [
+            /* @__PURE__ */ e("th", { children: "Patient" }),
+            /* @__PURE__ */ e("th", { children: "Due" }),
+            /* @__PURE__ */ e("th", { children: "State" })
+          ] }) }),
+          /* @__PURE__ */ e("tbody", { children: t.patients.slice(0, 6).map((i) => {
+            const r = i.state === "overdue" || At(i.expectedDate), o = r ? "mds-pl__trow--overdue" : "", d = {
+              type: i.state === "in_progress" ? "cp_review_in_progress" : "cp_review_due",
+              patientExternalId: i.patientExternalId,
+              patientName: i.patientName,
+              meta: { pccCarePlanId: i.pccCarePlanId, pccReviewId: i.pccReviewId }
+            };
+            return /* @__PURE__ */ e(
+              "tr",
+              {
+                class: `${o} mds-pl__trow--clickable`.trim(),
+                onClick: ke(d),
+                title: `Open care plan for ${i.patientName}`,
+                children: [
+                  /* @__PURE__ */ e("td", { class: "mds-pl__t-name", children: i.patientName }),
+                  /* @__PURE__ */ e("td", { class: `mds-pl__t-date${r ? " mds-pl__t-date--over" : ""}`, children: De(i.expectedDate) }),
+                  /* @__PURE__ */ e("td", { children: /* @__PURE__ */ e("span", { class: `mds-pl__chip mds-pl__chip--${i.state}`, children: i.state.replace("_", " ") }) })
+                ]
+              },
+              `${i.patientId}-${i.expectedDate}`
+            );
+          }) })
+        ] }),
+        /* @__PURE__ */ e(
+          Fe,
+          {
+            completed: n,
+            renderRow: (i) => {
+              const r = {
+                type: "cp_review_in_progress",
+                patientExternalId: i.patientExternalId,
+                patientName: i.patientName,
+                meta: { pccCarePlanId: i.pccCarePlanId, pccReviewId: i.pccReviewId }
+              };
+              return /* @__PURE__ */ e(
+                "div",
+                {
+                  class: "mds-pl__done-row",
+                  onClick: ke(r),
+                  title: `Open care plan for ${i.patientName}`,
+                  children: [
+                    /* @__PURE__ */ e("span", { class: "mds-pl__done-row-name", children: i.patientName }),
+                    /* @__PURE__ */ e("span", { class: "mds-pl__done-row-date", children: [
+                      "reviewed ",
+                      De(i.reviewCompletedAt)
+                    ] })
+                  ]
+                },
+                i.patientId
+              );
+            }
+          }
+        )
+      ]
+    }
+  );
+}
+function vc({ data: t, onOpenQueriesTab: n }) {
+  if (!t) return null;
+  const s = t.completedRecently, a = s?.count || 0;
+  return /* @__PURE__ */ e(
+    ye,
     {
       title: "Queries Outstanding",
       count: t.count,
-      doneCount: i,
+      doneCount: a,
       anchor: "queries",
       footer: n && /* @__PURE__ */ e("button", { class: "mds-pl__q-link", onClick: n, children: "Open Queries tab ›" }),
       children: [
@@ -10035,32 +10985,32 @@ function Do({ data: t, onOpenQueriesTab: n }) {
           ] })
         ] }),
         /* @__PURE__ */ e(
-          He,
+          Fe,
           {
             completed: s,
-            renderRow: (a) => /* @__PURE__ */ e("div", { class: "mds-pl__done-row", children: [
-              /* @__PURE__ */ e("span", { class: "mds-pl__done-row-name", children: a.patientName }),
-              a.itemCode && /* @__PURE__ */ e("span", { class: "mds-pl__done-row-sub", children: a.itemCode }),
+            renderRow: (i) => /* @__PURE__ */ e("div", { class: "mds-pl__done-row", children: [
+              /* @__PURE__ */ e("span", { class: "mds-pl__done-row-name", children: i.patientName }),
+              i.itemCode && /* @__PURE__ */ e("span", { class: "mds-pl__done-row-sub", children: i.itemCode }),
               /* @__PURE__ */ e("span", { class: "mds-pl__done-row-date", children: [
                 "signed ",
-                Ie(a.signedAt)
+                De(i.signedAt)
               ] })
-            ] }, a.queryId)
+            ] }, i.queryId)
           }
         )
       ]
     }
   );
 }
-function ko({ data: t, onOpenCertsTab: n }) {
+function bc({ data: t, onOpenCertsTab: n }) {
   if (!t) return null;
-  const s = t.needsToSend || {}, i = t.awaitingSignature || {}, a = (s.overdueCount || 0) + (i.overdueCount || 0), r = t.completedRecently, o = r?.count || 0;
+  const s = t.needsToSend || {}, a = t.awaitingSignature || {}, i = (s.overdueCount || 0) + (a.overdueCount || 0), r = t.completedRecently, o = r?.count || 0;
   return /* @__PURE__ */ e(
-    ge,
+    ye,
     {
       title: "Certs",
       count: t.count,
-      overdueCount: a,
+      overdueCount: i,
       doneCount: o,
       anchor: "certs",
       footer: n && /* @__PURE__ */ e("button", { class: "mds-pl__q-link", onClick: n, children: "Open Certs tab ›" }),
@@ -10075,25 +11025,25 @@ function ko({ data: t, onOpenCertsTab: n }) {
             ] })
           ] }),
           /* @__PURE__ */ e("div", { class: "mds-pl__q-split-item", children: [
-            /* @__PURE__ */ e("div", { class: "mds-pl__q-split-num", children: i.count || 0 }),
+            /* @__PURE__ */ e("div", { class: "mds-pl__q-split-num", children: a.count || 0 }),
             /* @__PURE__ */ e("div", { class: "mds-pl__q-split-label", children: [
               "awaiting sig",
-              i.overdueCount ? ` · ${i.overdueCount} overdue` : ""
+              a.overdueCount ? ` · ${a.overdueCount} overdue` : ""
             ] })
           ] })
         ] }),
         /* @__PURE__ */ e(
-          He,
+          Fe,
           {
             completed: r,
             renderRow: (c) => {
-              const l = c.type === "day_14_recert" ? "Day-14 recert" : c.type === "day_30_recert" ? "Day-30 recert" : c.type === "initial" ? "Initial cert" : "Cert";
+              const d = c.type === "day_14_recert" ? "Day-14 recert" : c.type === "day_30_recert" ? "Day-30 recert" : c.type === "initial" ? "Initial cert" : "Cert";
               return /* @__PURE__ */ e("div", { class: "mds-pl__done-row", children: [
                 /* @__PURE__ */ e("span", { class: "mds-pl__done-row-name", children: c.patientName }),
-                /* @__PURE__ */ e("span", { class: "mds-pl__done-row-sub", children: l }),
+                /* @__PURE__ */ e("span", { class: "mds-pl__done-row-sub", children: d }),
                 /* @__PURE__ */ e("span", { class: "mds-pl__done-row-date", children: [
                   "signed ",
-                  Ie(c.signedAt)
+                  De(c.signedAt)
                 ] })
               ] }, c.certId);
             }
@@ -10103,16 +11053,16 @@ function ko({ data: t, onOpenCertsTab: n }) {
     }
   );
 }
-const Co = {
+const wc = {
   not_open: "Not open",
   in_progress: "In progress",
   overdue: "Overdue"
 };
-function No(t) {
-  return vt(t.dueDate) ? "overdue" : t.status || "not_open";
+function Ic(t) {
+  return At(t.dueDate) ? "overdue" : t.status || "not_open";
 }
-function So({ status: t }) {
-  const n = Co[t] || "Not open";
+function Dc({ status: t }) {
+  const n = wc[t] || "Not open";
   return /* @__PURE__ */ e("span", { class: `mds-pl__sicon mds-pl__sicon--${t === "overdue" ? "overdue" : t === "in_progress" ? "progress" : "idle"}`, role: "img", "aria-label": n, title: n, children: t === "overdue" ? /* @__PURE__ */ e("svg", { width: "14", height: "14", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": "2", "stroke-linejoin": "round", children: [
     /* @__PURE__ */ e("path", { d: "M12 3 L22 20 L2 20 Z" }),
     /* @__PURE__ */ e("line", { x1: "12", y1: "10", x2: "12", y2: "14" }),
@@ -10122,22 +11072,22 @@ function So({ status: t }) {
     /* @__PURE__ */ e("path", { d: "M12 3 A9 9 0 0 1 12 21 Z", fill: "currentColor", stroke: "none" })
   ] }) : /* @__PURE__ */ e("svg", { width: "14", height: "14", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": "2", children: /* @__PURE__ */ e("circle", { cx: "12", cy: "12", r: "9" }) }) });
 }
-function xo({ data: t }) {
+function Nc({ data: t }) {
   if (!t) return null;
-  const n = t.byType || {}, s = t.patients || [], i = t.completedRecently, a = i?.count || 0, r = s.length;
-  if (r === 0 && a === 0)
-    return /* @__PURE__ */ e(ge, { title: "Interviews Owed", count: "0", anchor: "interviews", children: /* @__PURE__ */ e("div", { class: "mds-pl__q-empty", children: "All interviews caught up." }) });
-  const o = s.filter((c) => vt(c.dueDate)).length;
+  const n = t.byType || {}, s = t.patients || [], a = t.completedRecently, i = a?.count || 0, r = s.length;
+  if (r === 0 && i === 0)
+    return /* @__PURE__ */ e(ye, { title: "Interviews Owed", count: "0", anchor: "interviews", children: /* @__PURE__ */ e("div", { class: "mds-pl__q-empty", children: "All interviews caught up." }) });
+  const o = s.filter((c) => At(c.dueDate)).length;
   return /* @__PURE__ */ e(
-    ge,
+    ye,
     {
       title: "Interviews Owed",
       count: r,
       overdueCount: o,
-      doneCount: a,
+      doneCount: i,
       anchor: "interviews",
       children: [
-        r > 0 && /* @__PURE__ */ e(J, { children: [
+        r > 0 && /* @__PURE__ */ e(Q, { children: [
           /* @__PURE__ */ e("div", { class: "mds-pl__q-chips", children: [
             n.gg ? /* @__PURE__ */ e("span", { class: "mds-pl__chip mds-pl__chip--gg", children: [
               "GG · ",
@@ -10160,7 +11110,7 @@ function xo({ data: t }) {
               /* @__PURE__ */ e("th", { class: "mds-pl__t-status-head", children: "Status" })
             ] }) }),
             /* @__PURE__ */ e("tbody", { children: s.slice(0, 6).map((c) => {
-              const l = No(c), d = l === "overdue", u = d ? "mds-pl__trow--overdue" : "", p = `${c.patientId}-${c.dueType}-${(c.assessmentIds || []).join(",") || c.assessmentId || ""}`, m = {
+              const d = Ic(c), l = d === "overdue", p = l ? "mds-pl__trow--overdue" : "", u = `${c.patientId}-${c.dueType}-${(c.assessmentIds || []).join(",") || c.assessmentId || ""}`, m = {
                 type: "mds_ard",
                 patientExternalId: c.patientExternalId,
                 patientName: c.patientName,
@@ -10169,30 +11119,30 @@ function xo({ data: t }) {
               return /* @__PURE__ */ e(
                 "tr",
                 {
-                  class: `${u} mds-pl__trow--clickable`.trim(),
-                  onClick: De(m),
+                  class: `${p} mds-pl__trow--clickable`.trim(),
+                  onClick: ke(m),
                   title: `Open ${c.patientName} MDS in PCC`,
                   children: [
                     /* @__PURE__ */ e("td", { class: "mds-pl__t-name", children: c.patientName }),
                     /* @__PURE__ */ e("td", { class: "mds-pl__t-type", children: [
                       /* @__PURE__ */ e("div", { class: "mds-pl__t-type-main", children: (c.dueType || "").toUpperCase() }),
-                      c.mdsDescription && /* @__PURE__ */ e("div", { class: "mds-pl__t-type-sub", children: Ne(c.mdsDescription) })
+                      c.mdsDescription && /* @__PURE__ */ e("div", { class: "mds-pl__t-type-sub", children: xe(c.mdsDescription) })
                     ] }),
-                    /* @__PURE__ */ e("td", { class: `mds-pl__t-date${d ? " mds-pl__t-date--over" : ""}`, children: Ie(c.dueDate) }),
-                    /* @__PURE__ */ e("td", { class: "mds-pl__t-status", children: /* @__PURE__ */ e(So, { status: l }) })
+                    /* @__PURE__ */ e("td", { class: `mds-pl__t-date${l ? " mds-pl__t-date--over" : ""}`, children: De(c.dueDate) }),
+                    /* @__PURE__ */ e("td", { class: "mds-pl__t-status", children: /* @__PURE__ */ e(Dc, { status: d }) })
                   ]
                 },
-                p
+                u
               );
             }) })
           ] })
         ] }),
         /* @__PURE__ */ e(
-          He,
+          Fe,
           {
-            completed: i,
+            completed: a,
             renderRow: (c) => {
-              const l = {
+              const d = {
                 type: "mds_ard",
                 patientExternalId: c.patientExternalId,
                 patientName: c.patientName,
@@ -10202,20 +11152,20 @@ function xo({ data: t }) {
                 "div",
                 {
                   class: "mds-pl__done-row",
-                  onClick: De(l),
+                  onClick: ke(d),
                   title: `Open ${c.patientName} MDS in PCC`,
                   children: [
                     /* @__PURE__ */ e("span", { class: "mds-pl__done-row-name", children: c.patientName }),
                     /* @__PURE__ */ e("span", { class: "mds-pl__done-row-sub", children: [
                       (c.dueType || "").toUpperCase(),
-                      c.mdsDescription && /* @__PURE__ */ e(J, { children: [
+                      c.mdsDescription && /* @__PURE__ */ e(Q, { children: [
                         " · ",
-                        Ne(c.mdsDescription)
+                        xe(c.mdsDescription)
                       ] })
                     ] }),
                     /* @__PURE__ */ e("span", { class: "mds-pl__done-row-date", children: [
                       "done ",
-                      Ie(c.completedAt)
+                      De(c.completedAt)
                     ] })
                   ]
                 },
@@ -10228,29 +11178,29 @@ function xo({ data: t }) {
     }
   );
 }
-function Po({ mcr: t, managed: n }) {
+function kc({ mcr: t, managed: n }) {
   if (!t && !n) return null;
   const s = (t?.count || 0) + (n?.count || 0);
-  return /* @__PURE__ */ e(ge, { title: "Skilled Census", count: `${s} total`, anchor: "skilled", children: /* @__PURE__ */ e("div", { class: "mds-pl__q-roster", children: [
+  return /* @__PURE__ */ e(ye, { title: "Skilled Census", count: `${s} total`, anchor: "skilled", children: /* @__PURE__ */ e("div", { class: "mds-pl__q-roster", children: [
     /* @__PURE__ */ e("div", { class: "mds-pl__q-roster-col", children: [
       /* @__PURE__ */ e("div", { class: "mds-pl__q-roster-head", children: [
         "Medicare A · ",
         t?.count || 0
       ] }),
-      (t?.patients || []).slice(0, 5).map((i) => /* @__PURE__ */ e(
+      (t?.patients || []).slice(0, 5).map((a) => /* @__PURE__ */ e(
         "div",
         {
-          class: `mds-pl__q-roster-name${i.patientExternalId ? " mds-pl__q-roster-name--clickable" : ""}`,
-          onClick: i.patientExternalId ? () => Ee({
+          class: `mds-pl__q-roster-name${a.patientExternalId ? " mds-pl__q-roster-name--clickable" : ""}`,
+          onClick: a.patientExternalId ? () => $e({
             type: "admit",
-            patientExternalId: i.patientExternalId,
-            patientName: i.patientName,
+            patientExternalId: a.patientExternalId,
+            patientName: a.patientName,
             meta: {}
           }) : void 0,
-          title: i.patientExternalId ? `Open ${i.patientName} in PCC` : void 0,
-          children: i.patientName
+          title: a.patientExternalId ? `Open ${a.patientName} in PCC` : void 0,
+          children: a.patientName
         },
-        i.patientId
+        a.patientId
       ))
     ] }),
     /* @__PURE__ */ e("div", { class: "mds-pl__q-roster-col", children: [
@@ -10258,39 +11208,39 @@ function Po({ mcr: t, managed: n }) {
         "Managed · ",
         n?.count || 0
       ] }),
-      (n?.patients || []).slice(0, 5).map((i) => /* @__PURE__ */ e(
+      (n?.patients || []).slice(0, 5).map((a) => /* @__PURE__ */ e(
         "div",
         {
-          class: `mds-pl__q-roster-name${i.patientExternalId ? " mds-pl__q-roster-name--clickable" : ""}`,
-          onClick: i.patientExternalId ? () => Ee({
+          class: `mds-pl__q-roster-name${a.patientExternalId ? " mds-pl__q-roster-name--clickable" : ""}`,
+          onClick: a.patientExternalId ? () => $e({
             type: "admit",
-            patientExternalId: i.patientExternalId,
-            patientName: i.patientName,
+            patientExternalId: a.patientExternalId,
+            patientName: a.patientName,
             meta: {}
           }) : void 0,
-          title: i.patientExternalId ? `Open ${i.patientName} in PCC` : void 0,
-          children: i.patientName
+          title: a.patientExternalId ? `Open ${a.patientName} in PCC` : void 0,
+          children: a.patientName
         },
-        i.patientId
+        a.patientId
       ))
     ] })
   ] }) });
 }
-function To({ summary: t, onOpenQueriesTab: n, onOpenCertsTab: s }) {
+function Cc({ summary: t, onOpenQueriesTab: n, onOpenCertsTab: s }) {
   return t ? /* @__PURE__ */ e("div", { class: "mds-pl__queues-wrap", children: [
-    /* @__PURE__ */ e(_o, { summary: t }),
+    /* @__PURE__ */ e(uc, { summary: t }),
     /* @__PURE__ */ e("div", { class: "mds-pl__queues", children: [
-      /* @__PURE__ */ e(wo, { data: t.mdsCoding }),
-      /* @__PURE__ */ e(bo, { data: t.carePlansToOpen }),
-      /* @__PURE__ */ e(Io, { data: t.carePlansToReview }),
-      /* @__PURE__ */ e(Do, { data: t.queriesOpen, onOpenQueriesTab: n }),
-      /* @__PURE__ */ e(ko, { data: t.certs, onOpenCertsTab: s }),
-      /* @__PURE__ */ e(xo, { data: t.interviewsOwed }),
-      /* @__PURE__ */ e(Po, { mcr: t.skilledMCR, managed: t.skilledManagedCare })
+      /* @__PURE__ */ e(gc, { data: t.mdsCoding }),
+      /* @__PURE__ */ e(fc, { data: t.carePlansToOpen }),
+      /* @__PURE__ */ e(yc, { data: t.carePlansToReview }),
+      /* @__PURE__ */ e(vc, { data: t.queriesOpen, onOpenQueriesTab: n }),
+      /* @__PURE__ */ e(bc, { data: t.certs, onOpenCertsTab: s }),
+      /* @__PURE__ */ e(Nc, { data: t.interviewsOwed }),
+      /* @__PURE__ */ e(kc, { mcr: t.skilledMCR, managed: t.skilledManagedCare })
     ] })
   ] }) : null;
 }
-const Ao = {
+const Sc = {
   admit: "Admission",
   readmit: "Readmit",
   discharge: "Discharge",
@@ -10299,26 +11249,26 @@ const Ao = {
   query_due: "Query",
   cert_due: "Certification due",
   cert_overdue: "Certification overdue"
-}, Mo = {
+}, xc = {
   overdue: "Overdue",
   warning: "Due soon",
   ok: ""
-}, os = { overdue: 0, warning: 1, ok: 2 };
-function Lo(t) {
-  const [n, s, i] = t.split("-").map(Number);
-  return new Date(n, s - 1, i).toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" });
+}, Ds = { overdue: 0, warning: 1, ok: 2 };
+function Pc(t) {
+  const [n, s, a] = t.split("-").map(Number);
+  return new Date(n, s - 1, a).toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" });
 }
-function Eo(t) {
-  const { type: n, meta: s = {} } = t, i = [];
-  return n === "mds_ard" ? (s.description && i.push(s.description), s.ardDate && i.push(`ARD ${s.ardDate}`), s.status && i.push(s.status.toLowerCase())) : n === "next_mds_ard" ? s.expectedType && i.push(s.expectedType) : n === "query_due" ? (s.itemCode && i.push(s.itemCode), s.status && i.push(s.status), s.linkedArdDate && i.push(`linked ARD ${s.linkedArdDate}`)) : n === "cert_due" || n === "cert_overdue" ? (s.type && i.push(s.type.replace(/_/g, " ")), s.bucket && i.push(s.bucket.replace(/_/g, " ")), s.daysOverdue && i.push(`${s.daysOverdue}d overdue`)) : (n === "admit" || n === "readmit") && (s.payer && i.push(s.payer), s.location && i.push(s.location)), i.join(" · ");
+function Tc(t) {
+  const { type: n, meta: s = {} } = t, a = [];
+  return n === "mds_ard" ? (s.description && a.push(s.description), s.ardDate && a.push(`ARD ${s.ardDate}`), s.status && a.push(s.status.toLowerCase())) : n === "next_mds_ard" ? s.expectedType && a.push(s.expectedType) : n === "query_due" ? (s.itemCode && a.push(s.itemCode), s.status && a.push(s.status), s.linkedArdDate && a.push(`linked ARD ${s.linkedArdDate}`)) : n === "cert_due" || n === "cert_overdue" ? (s.type && a.push(s.type.replace(/_/g, " ")), s.bucket && a.push(s.bucket.replace(/_/g, " ")), s.daysOverdue && a.push(`${s.daysOverdue}d overdue`)) : (n === "admit" || n === "readmit") && (s.payer && a.push(s.payer), s.location && a.push(s.location)), a.join(" · ");
 }
-function $o({ event: t }) {
-  const n = t.urgency || "ok", s = Ao[t.type] || t.type, i = Mo[n] || "", a = Eo(t), o = !!bn(t);
+function Ac({ event: t }) {
+  const n = t.urgency || "ok", s = Sc[t.type] || t.type, a = xc[n] || "", i = Tc(t), o = !!qn(t);
   return /* @__PURE__ */ e(
     "div",
     {
       class: `mds-pl__dv-row mds-pl__dv-row--u-${n}${o ? " mds-pl__dv-row--clickable" : ""}`,
-      onClick: o ? () => Ee(t) : void 0,
+      onClick: o ? () => $e(t) : void 0,
       role: o ? "button" : void 0,
       tabIndex: o ? 0 : void 0,
       children: [
@@ -10327,19 +11277,19 @@ function $o({ event: t }) {
           /* @__PURE__ */ e("div", { class: "mds-pl__dv-header", children: [
             /* @__PURE__ */ e("span", { class: "mds-pl__dv-name", children: t.patientName || "Unknown" }),
             /* @__PURE__ */ e("span", { class: "mds-pl__dv-type", children: s }),
-            i && /* @__PURE__ */ e("span", { class: `mds-pl__dv-urgency mds-pl__dv-urgency--${n}`, children: i })
+            a && /* @__PURE__ */ e("span", { class: `mds-pl__dv-urgency mds-pl__dv-urgency--${n}`, children: a })
           ] }),
-          a && /* @__PURE__ */ e("div", { class: "mds-pl__dv-meta", children: a })
+          i && /* @__PURE__ */ e("div", { class: "mds-pl__dv-meta", children: i })
         ] }),
         o && /* @__PURE__ */ e("span", { class: "mds-pl__dv-arrow", children: "›" })
       ]
     }
   );
 }
-function Ro({ date: t, events: n, onBack: s }) {
-  const i = [...n].sort((a, r) => {
-    const o = os[a.urgency] ?? 3, c = os[r.urgency] ?? 3;
-    return o !== c ? o - c : (a.type || "").localeCompare(r.type || "");
+function Mc({ date: t, events: n, onBack: s }) {
+  const a = [...n].sort((i, r) => {
+    const o = Ds[i.urgency] ?? 3, c = Ds[r.urgency] ?? 3;
+    return o !== c ? o - c : (i.type || "").localeCompare(r.type || "");
   });
   return /* @__PURE__ */ e("div", { class: "mds-pl__dv", children: [
     /* @__PURE__ */ e("div", { class: "mds-pl__dv-top", children: [
@@ -10348,7 +11298,7 @@ function Ro({ date: t, events: n, onBack: s }) {
         " Back to week"
       ] }),
       /* @__PURE__ */ e("div", { class: "mds-pl__dv-title", children: [
-        /* @__PURE__ */ e("span", { class: "mds-pl__dv-title-date", children: Lo(t) }),
+        /* @__PURE__ */ e("span", { class: "mds-pl__dv-title-date", children: Pc(t) }),
         /* @__PURE__ */ e("span", { class: "mds-pl__dv-title-count", children: [
           n.length,
           " ",
@@ -10356,10 +11306,10 @@ function Ro({ date: t, events: n, onBack: s }) {
         ] })
       ] })
     ] }),
-    n.length === 0 ? /* @__PURE__ */ e("div", { class: "mds-pl__dv-empty", children: "Nothing scheduled for this day." }) : /* @__PURE__ */ e("div", { class: "mds-pl__dv-list", children: i.map((a, r) => /* @__PURE__ */ e($o, { event: a }, `${a.type}-${a.patientId}-${r}`)) })
+    n.length === 0 ? /* @__PURE__ */ e("div", { class: "mds-pl__dv-empty", children: "Nothing scheduled for this day." }) : /* @__PURE__ */ e("div", { class: "mds-pl__dv-list", children: a.map((i, r) => /* @__PURE__ */ e(Ac, { event: i }, `${i.type}-${i.patientId}-${r}`)) })
   ] });
 }
-const qo = /* @__PURE__ */ new Set([
+const qc = /* @__PURE__ */ new Set([
   "admit",
   "readmit",
   "discharge",
@@ -10369,62 +11319,62 @@ const qo = /* @__PURE__ */ new Set([
   "cert_due",
   "cert_overdue"
 ]);
-function Oo(t, n) {
-  const s = t.getMonth() === n.getMonth(), i = t.toLocaleDateString("en-US", { month: "short" }), a = n.toLocaleDateString("en-US", { month: "short" });
-  return s ? `${i} ${t.getDate()} – ${n.getDate()}` : `${i} ${t.getDate()} – ${a} ${n.getDate()}`;
+function Lc(t, n) {
+  const s = t.getMonth() === n.getMonth(), a = t.toLocaleDateString("en-US", { month: "short" }), i = n.toLocaleDateString("en-US", { month: "short" });
+  return s ? `${a} ${t.getDate()} – ${n.getDate()}` : `${a} ${t.getDate()} – ${i} ${n.getDate()}`;
 }
-function Ho() {
+function Ec() {
   return /* @__PURE__ */ e("div", { class: "mds-pl__state", children: [
     /* @__PURE__ */ e("div", { class: "mds-pl__spinner" }),
     /* @__PURE__ */ e("p", { children: "Loading planner..." })
   ] });
 }
-function Bo({ message: t, onRetry: n }) {
+function $c({ message: t, onRetry: n }) {
   return /* @__PURE__ */ e("div", { class: "mds-pl__state", children: [
     /* @__PURE__ */ e("div", { class: "mds-pl__state-icon", children: "⚠" }),
     /* @__PURE__ */ e("p", { children: t || "Failed to load planner." }),
     /* @__PURE__ */ e("button", { class: "mds-pl__retry", onClick: n, children: "Retry" })
   ] });
 }
-function Fo({ facilityName: t, orgSlug: n, isFullscreen: s, onOpenTab: i }) {
+function Rc({ facilityName: t, orgSlug: n, isFullscreen: s, onOpenTab: a }) {
   const {
-    events: a,
+    events: i,
     summary: r,
     loading: o,
     error: c,
-    weekStart: l,
-    weekEnd: d,
-    goPrevWeek: u,
-    goNextWeek: p,
+    weekStart: d,
+    weekEnd: l,
+    goPrevWeek: p,
+    goNextWeek: u,
     goThisWeek: m,
     refetch: h
-  } = eo({ facilityName: t, orgSlug: n }), [_, g] = v(null), [f, y] = v(!1), w = Y(
-    () => (a || []).filter((P) => qo.has(P.type)),
-    [a]
-  ), k = Y(() => _ ? w.filter((P) => P.date === _) : [], [w, _]), C = Y(() => Oo(l, d), [l, d]), I = w.length;
-  return /* @__PURE__ */ e("div", { class: `mds-pl${s ? " mds-pl--full" : " mds-pl--compact"}${f ? " mds-pl--queues-expanded" : ""}`, children: [
+  } = Jo({ facilityName: t, orgSlug: n }), [_, g] = y(null), [v, b] = y(!1), f = Y(
+    () => (i || []).filter((T) => qc.has(T.type)),
+    [i]
+  ), I = Y(() => _ ? f.filter((T) => T.date === _) : [], [f, _]), N = Y(() => Lc(d, l), [d, l]), D = f.length;
+  return /* @__PURE__ */ e("div", { class: `mds-pl${s ? " mds-pl--full" : " mds-pl--compact"}${v ? " mds-pl--queues-expanded" : ""}`, children: [
     /* @__PURE__ */ e("div", { class: "mds-pl__nav-bar", children: [
       /* @__PURE__ */ e("div", { class: "mds-pl__week-nav", children: [
-        /* @__PURE__ */ e("button", { type: "button", onClick: u, "aria-label": "Previous week", children: "‹" }),
-        /* @__PURE__ */ e("span", { class: "mds-pl__week-label", children: C }),
-        /* @__PURE__ */ e("button", { type: "button", onClick: p, "aria-label": "Next week", children: "›" }),
+        /* @__PURE__ */ e("button", { type: "button", onClick: p, "aria-label": "Previous week", children: "‹" }),
+        /* @__PURE__ */ e("span", { class: "mds-pl__week-label", children: N }),
+        /* @__PURE__ */ e("button", { type: "button", onClick: u, "aria-label": "Next week", children: "›" }),
         /* @__PURE__ */ e("button", { type: "button", class: "mds-pl__today-btn", onClick: m, children: "Today" })
       ] }),
       /* @__PURE__ */ e("div", { class: "mds-pl__nav-right", children: [
         /* @__PURE__ */ e("span", { class: "mds-pl__event-count", children: [
-          I === 0 ? "quiet week" : `${I} event${I === 1 ? "" : "s"} this week`,
-          !_ && I > 0 && /* @__PURE__ */ e("span", { class: "mds-pl__hint", children: " · click a day for detail" })
+          D === 0 ? "quiet week" : `${D} event${D === 1 ? "" : "s"} this week`,
+          !_ && D > 0 && /* @__PURE__ */ e("span", { class: "mds-pl__hint", children: " · click a day for detail" })
         ] }),
         /* @__PURE__ */ e(
           "button",
           {
             type: "button",
-            class: `mds-pl__focus-mode-toggle${f ? " mds-pl__focus-mode-toggle--active" : ""}`,
-            onClick: () => y((P) => !P),
-            "aria-label": f ? "Show calendar" : "Hide calendar — focus on queues",
-            title: f ? "Show calendar" : "Hide calendar — focus on queues",
+            class: `mds-pl__focus-mode-toggle${v ? " mds-pl__focus-mode-toggle--active" : ""}`,
+            onClick: () => b((T) => !T),
+            "aria-label": v ? "Show calendar" : "Hide calendar — focus on queues",
+            title: v ? "Show calendar" : "Hide calendar — focus on queues",
             children: [
-              f ? /* @__PURE__ */ e("svg", { width: "13", height: "13", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": "2", children: [
+              v ? /* @__PURE__ */ e("svg", { width: "13", height: "13", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": "2", children: [
                 /* @__PURE__ */ e("polyline", { points: "4 14 10 14 10 20" }),
                 /* @__PURE__ */ e("polyline", { points: "20 10 14 10 14 4" }),
                 /* @__PURE__ */ e("line", { x1: "14", y1: "10", x2: "21", y2: "3" }),
@@ -10435,110 +11385,110 @@ function Fo({ facilityName: t, orgSlug: n, isFullscreen: s, onOpenTab: i }) {
                 /* @__PURE__ */ e("line", { x1: "21", y1: "3", x2: "14", y2: "10" }),
                 /* @__PURE__ */ e("line", { x1: "3", y1: "21", x2: "10", y2: "14" })
               ] }),
-              /* @__PURE__ */ e("span", { children: f ? "Show calendar" : "Focus mode" })
+              /* @__PURE__ */ e("span", { children: v ? "Show calendar" : "Focus mode" })
             ]
           }
         )
       ] })
     ] }),
-    o && /* @__PURE__ */ e(Ho, {}),
-    !o && c && /* @__PURE__ */ e(Bo, { message: c, onRetry: h }),
+    o && /* @__PURE__ */ e(Ec, {}),
+    !o && c && /* @__PURE__ */ e($c, { message: c, onRetry: h }),
     !o && !c && /* @__PURE__ */ e("div", { class: "mds-pl__body", children: [
-      !f && /* @__PURE__ */ e("section", { class: "mds-pl__left", children: _ ? /* @__PURE__ */ e(
-        Ro,
+      !v && /* @__PURE__ */ e("section", { class: "mds-pl__left", children: _ ? /* @__PURE__ */ e(
+        Mc,
         {
           date: _,
-          events: k,
+          events: I,
           onBack: () => g(null)
         }
       ) : /* @__PURE__ */ e(
-        lo,
+        rc,
         {
-          events: w,
-          weekStart: l,
+          events: f,
+          weekStart: d,
           selectedDay: null,
           onSelectDay: g
         }
       ) }),
       /* @__PURE__ */ e("aside", { class: "mds-pl__right", children: /* @__PURE__ */ e(
-        To,
+        Cc,
         {
           summary: r,
-          onOpenQueriesTab: i ? () => i("queries") : void 0,
-          onOpenCertsTab: i ? () => i("certs") : void 0
+          onOpenQueriesTab: a ? () => a("queries") : void 0,
+          onOpenCertsTab: a ? () => a("certs") : void 0
         }
       ) })
     ] })
   ] });
 }
-function Uo(t) {
+function Oc(t) {
   return t.deadlines?.urgency || t.urgency || "on_track";
 }
-function Go(t, n, s, i) {
-  let a = t;
-  return n !== "all" && (a = a.filter((r) => r.payerType === n)), s !== "all" && (a = a.filter((r) => r.assessmentClass === s)), i === "revenue" && (a = a.filter((r) => r.pdpm?.hasImprovements)), i === "issues" && (a = a.filter((r) => {
-    const o = r.udaSummary, c = o && (o.bims === "missing" || o.bims === "near_miss" || o.bims === "in_progress" || o.phq9 === "missing" || o.phq9 === "near_miss" || o.phq9 === "in_progress" || o.gg === "missing" || o.gg === "near_miss" || o.gg === "in_progress"), l = r.compliance?.checks?.orders ? r.compliance.checks.orders.status !== "passed" : !1;
-    return c || l;
-  })), a;
+function Bc(t, n, s, a) {
+  let i = t;
+  return n !== "all" && (i = i.filter((r) => r.payerType === n)), s !== "all" && (i = i.filter((r) => r.assessmentClass === s)), a === "revenue" && (i = i.filter((r) => r.pdpm?.hasImprovements)), a === "issues" && (i = i.filter((r) => {
+    const o = r.udaSummary, c = o && (o.bims === "missing" || o.bims === "near_miss" || o.bims === "in_progress" || o.phq9 === "missing" || o.phq9 === "near_miss" || o.phq9 === "in_progress" || o.gg === "missing" || o.gg === "near_miss" || o.gg === "in_progress"), d = r.compliance?.checks?.orders ? r.compliance.checks.orders.status !== "passed" : !1;
+    return c || d;
+  })), i;
 }
-const tn = ["overdue", "urgent", "approaching", "on_track", "completed"];
-function Vo(t) {
+const pn = ["overdue", "urgent", "approaching", "on_track", "completed"];
+function Hc(t) {
   const n = {};
-  for (const s of tn) n[s] = [];
+  for (const s of pn) n[s] = [];
   for (const s of t) {
-    const i = Uo(s);
-    n[i] ? n[i].push(s) : n.on_track.push(s);
+    const a = Oc(s);
+    n[a] ? n[a].push(s) : n.on_track.push(s);
   }
-  for (const s of tn)
-    n[s].sort((i, a) => {
-      if (i.patientId && a.patientId && i.patientId !== a.patientId)
-        return i.patientId.localeCompare(a.patientId);
-      const r = i.ardDate ? new Date(i.ardDate) : /* @__PURE__ */ new Date(0), o = a.ardDate ? new Date(a.ardDate) : /* @__PURE__ */ new Date(0);
+  for (const s of pn)
+    n[s].sort((a, i) => {
+      if (a.patientId && i.patientId && a.patientId !== i.patientId)
+        return a.patientId.localeCompare(i.patientId);
+      const r = a.ardDate ? new Date(a.ardDate) : /* @__PURE__ */ new Date(0), o = i.ardDate ? new Date(i.ardDate) : /* @__PURE__ */ new Date(0);
       return r - o;
     });
   return n;
 }
-function Wo() {
+function Gc() {
   return /* @__PURE__ */ e("div", { class: "mds-cc__state-container", children: [
     /* @__PURE__ */ e("div", { class: "mds-cc__spinner" }),
     /* @__PURE__ */ e("p", { class: "mds-cc__state-text", children: "Loading assessments..." })
   ] });
 }
-function Qo({ message: t, onRetry: n }) {
+function Fc({ message: t, onRetry: n }) {
   return /* @__PURE__ */ e("div", { class: "mds-cc__state-container", children: [
     /* @__PURE__ */ e("div", { class: "mds-cc__state-icon", children: "⚠" }),
     /* @__PURE__ */ e("p", { class: "mds-cc__state-text", children: t }),
     /* @__PURE__ */ e("button", { class: "mds-cc__retry-btn", onClick: n, children: "Retry" })
   ] });
 }
-function zo() {
+function Uc() {
   return /* @__PURE__ */ e("div", { class: "mds-cc__state-container", children: [
     /* @__PURE__ */ e("div", { class: "mds-cc__state-icon", children: "📋" }),
     /* @__PURE__ */ e("p", { class: "mds-cc__state-text", children: "No assessments found." })
   ] });
 }
-function jo(t) {
+function Vc(t) {
   if (!t) return "";
   const n = Math.floor((Date.now() - new Date(t)) / 864e5);
   return n === 0 ? "today" : n === 1 ? "1d ago" : `${n}d ago`;
 }
-function Ko(t) {
+function zc(t) {
   return t ? t.replace(/\s*\/\s*/g, " ").replace(/\s{2,}/g, " ").trim() : "";
 }
-function Jo(t) {
+function Wc(t) {
   const n = t.ardDaysRemaining;
   if (n == null) return null;
-  let s, i;
-  return n < 0 ? (s = `ARD passed ${Math.abs(n)}d ago`, i = "mds-cc__ard--critical") : n === 0 ? (s = "ARD today", i = "mds-cc__ard--critical") : n <= 3 ? (s = `ARD in ${n}d`, i = "mds-cc__ard--warn") : (s = `ARD in ${n}d`, i = "mds-cc__ard--neutral"), /* @__PURE__ */ e("span", { class: `mds-cc__ard ${i}`, children: s });
+  let s, a;
+  return n < 0 ? (s = `ARD passed ${Math.abs(n)}d ago`, a = "mds-cc__ard--critical") : n === 0 ? (s = "ARD today", a = "mds-cc__ard--critical") : n <= 3 ? (s = `ARD in ${n}d`, a = "mds-cc__ard--warn") : (s = `ARD in ${n}d`, a = "mds-cc__ard--neutral"), /* @__PURE__ */ e("span", { class: `mds-cc__ard ${a}`, children: s });
 }
-function cs(t) {
+function Ns(t) {
   return [...t].sort((n, s) => {
-    const i = n.ardDaysRemaining ?? 1 / 0, a = s.ardDaysRemaining ?? 1 / 0;
-    return i - a;
+    const a = n.ardDaysRemaining ?? 1 / 0, i = s.ardDaysRemaining ?? 1 / 0;
+    return a - i;
   });
 }
-function ds({ q: t, expanded: n, onToggle: s, onOpenAssessment: i, assessmentCtx: a, isPending: r }) {
-  const o = mn(t.assessmentPayment), c = t.sentTo?.[0] || t.practitioner, l = c ? `${c.firstName || ""} ${c.lastName || ""}`.trim() : null, d = c?.title;
+function ks({ q: t, expanded: n, onToggle: s, onOpenAssessment: a, assessmentCtx: i, isPending: r }) {
+  const o = kn(t.assessmentPayment), c = t.sentTo?.[0] || t.practitioner, d = c ? `${c.firstName || ""} ${c.lastName || ""}`.trim() : null, l = c?.title;
   return /* @__PURE__ */ e("div", { class: `mds-cc__qcard${n ? " mds-cc__qcard--open" : ""}`, children: [
     /* @__PURE__ */ e("div", { class: "mds-cc__qcard-header", onClick: s, role: "button", tabIndex: 0, children: [
       /* @__PURE__ */ e("div", { class: "mds-cc__qcard-left", children: [
@@ -10549,52 +11499,52 @@ function ds({ q: t, expanded: n, onToggle: s, onOpenAssessment: i, assessmentCtx
         ] })
       ] }),
       /* @__PURE__ */ e("div", { class: "mds-cc__qcard-right", children: [
-        Jo(t),
+        Wc(t),
         o && /* @__PURE__ */ e("span", { class: `mds-cc__qcard-delta${r ? " mds-cc__qcard-delta--pending" : ""}`, children: o }),
         /* @__PURE__ */ e("svg", { class: `mds-cc__qcard-chevron${n ? " mds-cc__qcard-chevron--open" : ""}`, width: "14", height: "14", viewBox: "0 0 14 14", fill: "none", children: /* @__PURE__ */ e("path", { d: "M3.5 5.25L7 8.75L10.5 5.25", stroke: "currentColor", "stroke-width": "1.5", "stroke-linecap": "round", "stroke-linejoin": "round" }) })
       ] })
     ] }),
     /* @__PURE__ */ e("div", { class: "mds-cc__qcard-meta", children: [
-      a && /* @__PURE__ */ e("span", { class: "mds-cc__qcard-ctx", children: a }),
-      /* @__PURE__ */ e("span", { class: `mds-cc__qcard-status mds-cc__qcard-status--${r ? "pending" : "sent"}`, children: r ? "Not yet sent" : `Sent ${jo(t.sentAt)}` }),
-      l && /* @__PURE__ */ e("span", { class: "mds-cc__qcard-practitioner", children: [
+      i && /* @__PURE__ */ e("span", { class: "mds-cc__qcard-ctx", children: i }),
+      /* @__PURE__ */ e("span", { class: `mds-cc__qcard-status mds-cc__qcard-status--${r ? "pending" : "sent"}`, children: r ? "Not yet sent" : `Sent ${Vc(t.sentAt)}` }),
+      d && /* @__PURE__ */ e("span", { class: "mds-cc__qcard-practitioner", children: [
         "to ",
-        l,
-        d ? `, ${d}` : ""
+        d,
+        l ? `, ${l}` : ""
       ] })
     ] }),
     n && /* @__PURE__ */ e("div", { class: "mds-cc__qcard-body", children: /* @__PURE__ */ e("div", { class: "mds-cc__qcard-actions", children: [
-      /* @__PURE__ */ e("button", { class: "mds-cc__qcard-btn mds-cc__qcard-btn--primary", onClick: (u) => {
-        u.stopPropagation(), i();
+      /* @__PURE__ */ e("button", { class: "mds-cc__qcard-btn mds-cc__qcard-btn--primary", onClick: (p) => {
+        p.stopPropagation(), a();
       }, children: "Open in PDPM Analyzer" }),
-      !r && /* @__PURE__ */ e("button", { class: "mds-cc__qcard-btn mds-cc__qcard-btn--secondary", onClick: (u) => {
-        u.stopPropagation();
-        const p = u.currentTarget;
-        p.textContent = "Sending...", p.disabled = !0;
+      !r && /* @__PURE__ */ e("button", { class: "mds-cc__qcard-btn mds-cc__qcard-btn--secondary", onClick: (p) => {
+        p.stopPropagation();
+        const u = p.currentTarget;
+        u.textContent = "Sending...", u.disabled = !0;
         try {
           window.QueryAPI.resendQuery(t.id).then(() => {
-            window.SuperToast?.success?.("SMS resent"), p.textContent = "Sent!";
+            window.SuperToast?.success?.("SMS resent"), u.textContent = "Sent!";
           }).catch((m) => {
-            console.error("[Super] Resend failed:", m), window.SuperToast?.error?.("Failed to resend"), p.textContent = "Resend SMS", p.disabled = !1;
+            console.error("[Super] Resend failed:", m), window.SuperToast?.error?.("Failed to resend"), u.textContent = "Resend SMS", u.disabled = !1;
           });
         } catch (m) {
-          console.error("[Super] Resend error:", m), p.textContent = "Resend SMS", p.disabled = !1;
+          console.error("[Super] Resend error:", m), u.textContent = "Resend SMS", u.disabled = !1;
         }
       }, children: "Resend SMS" })
     ] }) })
   ] });
 }
-function Yo({ outstandingQueries: t, recentlySigned: n, assessments: s, onOpenAssessment: i }) {
-  const [a, r] = v(null), o = cs((t || []).filter((m) => m.status === "pending")), c = cs((t || []).filter((m) => m.status === "sent" || m.status === "awaiting_response"));
-  function l(m) {
+function Qc({ outstandingQueries: t, recentlySigned: n, assessments: s, onOpenAssessment: a }) {
+  const [i, r] = y(null), o = Ns((t || []).filter((m) => m.status === "pending")), c = Ns((t || []).filter((m) => m.status === "sent" || m.status === "awaiting_response"));
+  function d(m) {
     const h = (s || []).find((_) => _.id === m.mdsAssessmentId);
     return h?.externalAssessmentId || h?.assessmentId || h?.id || m.mdsAssessmentId;
   }
-  function d(m) {
+  function l(m) {
     const h = (s || []).find((_) => _.id === m.mdsAssessmentId);
-    return h && Ko(h.assessmentType) || null;
+    return h && zc(h.assessmentType) || null;
   }
-  async function u(m) {
+  async function p(m) {
     try {
       const h = await fetch(`/api/extension/diagnosis-queries/${m}/pdf`), { pdfUrl: _ } = await h.json();
       _ && window.open(_, "_blank");
@@ -10602,7 +11552,7 @@ function Yo({ outstandingQueries: t, recentlySigned: n, assessments: s, onOpenAs
       console.warn("[Super] PDF fetch failed", h);
     }
   }
-  const p = o.length + c.length;
+  const u = o.length + c.length;
   return /* @__PURE__ */ e("div", { class: "mds-cc__queries-view", children: [
     c.length > 0 && /* @__PURE__ */ e("div", { class: "mds-cc__queries-group", children: [
       /* @__PURE__ */ e("div", { class: "mds-cc__queries-group-label", children: [
@@ -10611,13 +11561,13 @@ function Yo({ outstandingQueries: t, recentlySigned: n, assessments: s, onOpenAs
         /* @__PURE__ */ e("span", { class: "mds-cc__queries-group-count", children: c.length })
       ] }),
       c.map((m) => /* @__PURE__ */ e(
-        ds,
+        ks,
         {
           q: m,
-          expanded: a === m.id,
-          onToggle: () => r(a === m.id ? null : m.id),
-          onOpenAssessment: () => i?.(l(m)),
-          assessmentCtx: d(m),
+          expanded: i === m.id,
+          onToggle: () => r(i === m.id ? null : m.id),
+          onOpenAssessment: () => a?.(d(m)),
+          assessmentCtx: l(m),
           isPending: !1
         },
         m.id
@@ -10630,13 +11580,13 @@ function Yo({ outstandingQueries: t, recentlySigned: n, assessments: s, onOpenAs
         /* @__PURE__ */ e("span", { class: "mds-cc__queries-group-count", children: o.length })
       ] }),
       o.map((m) => /* @__PURE__ */ e(
-        ds,
+        ks,
         {
           q: m,
-          expanded: a === m.id,
-          onToggle: () => r(a === m.id ? null : m.id),
-          onOpenAssessment: () => i?.(l(m)),
-          assessmentCtx: d(m),
+          expanded: i === m.id,
+          onToggle: () => r(i === m.id ? null : m.id),
+          onOpenAssessment: () => a?.(d(m)),
+          assessmentCtx: l(m),
           isPending: !0
         },
         m.id
@@ -10651,7 +11601,7 @@ function Yo({ outstandingQueries: t, recentlySigned: n, assessments: s, onOpenAs
       n.map((m) => {
         const h = m.status === "signed", _ = m.status === "rejected", g = m.practitioner || m.sentTo?.[0];
         return /* @__PURE__ */ e("div", { class: `mds-cc__qcard mds-cc__qcard--signed${_ ? " mds-cc__qcard--rejected" : ""}`, children: [
-          /* @__PURE__ */ e("div", { class: "mds-cc__qcard-header", onClick: () => r(a === m.id ? null : m.id), role: "button", tabIndex: 0, children: [
+          /* @__PURE__ */ e("div", { class: "mds-cc__qcard-header", onClick: () => r(i === m.id ? null : m.id), role: "button", tabIndex: 0, children: [
             /* @__PURE__ */ e("div", { class: "mds-cc__qcard-left", children: [
               /* @__PURE__ */ e("span", { class: "mds-cc__qcard-patient", children: m.patientName }),
               /* @__PURE__ */ e("div", { class: "mds-cc__qcard-diag", children: [
@@ -10661,7 +11611,7 @@ function Yo({ outstandingQueries: t, recentlySigned: n, assessments: s, onOpenAs
             ] }),
             /* @__PURE__ */ e("div", { class: "mds-cc__qcard-right", children: [
               /* @__PURE__ */ e("span", { class: `mds-cc__qcard-status-badge mds-cc__qcard-status-badge--${m.status}`, children: h ? "Signed" : "Rejected" }),
-              /* @__PURE__ */ e("svg", { class: `mds-cc__qcard-chevron${a === m.id ? " mds-cc__qcard-chevron--open" : ""}`, width: "14", height: "14", viewBox: "0 0 14 14", fill: "none", children: /* @__PURE__ */ e("path", { d: "M3.5 5.25L7 8.75L10.5 5.25", stroke: "currentColor", "stroke-width": "1.5", "stroke-linecap": "round", "stroke-linejoin": "round" }) })
+              /* @__PURE__ */ e("svg", { class: `mds-cc__qcard-chevron${i === m.id ? " mds-cc__qcard-chevron--open" : ""}`, width: "14", height: "14", viewBox: "0 0 14 14", fill: "none", children: /* @__PURE__ */ e("path", { d: "M3.5 5.25L7 8.75L10.5 5.25", stroke: "currentColor", "stroke-width": "1.5", "stroke-linecap": "round", "stroke-linejoin": "round" }) })
             ] })
           ] }),
           /* @__PURE__ */ e("div", { class: "mds-cc__qcard-meta", children: [
@@ -10678,208 +11628,208 @@ function Yo({ outstandingQueries: t, recentlySigned: n, assessments: s, onOpenAs
               "”"
             ] })
           ] }),
-          a === m.id && /* @__PURE__ */ e("div", { class: "mds-cc__qcard-body", children: /* @__PURE__ */ e("div", { class: "mds-cc__qcard-actions", children: [
-            /* @__PURE__ */ e("button", { class: "mds-cc__qcard-btn mds-cc__qcard-btn--primary", onClick: (f) => {
-              f.stopPropagation(), i?.(l(m));
+          i === m.id && /* @__PURE__ */ e("div", { class: "mds-cc__qcard-body", children: /* @__PURE__ */ e("div", { class: "mds-cc__qcard-actions", children: [
+            /* @__PURE__ */ e("button", { class: "mds-cc__qcard-btn mds-cc__qcard-btn--primary", onClick: (v) => {
+              v.stopPropagation(), a?.(d(m));
             }, children: "Open in PDPM Analyzer" }),
-            m.hasPdf && /* @__PURE__ */ e("button", { class: "mds-cc__qcard-btn mds-cc__qcard-btn--secondary", onClick: (f) => {
-              f.stopPropagation(), u(m.id);
+            m.hasPdf && /* @__PURE__ */ e("button", { class: "mds-cc__qcard-btn mds-cc__qcard-btn--secondary", onClick: (v) => {
+              v.stopPropagation(), p(m.id);
             }, children: "View Signed PDF" })
           ] }) })
         ] }, m.id || m.mdsItem);
       })
     ] }),
-    p === 0 && (!n || n.length === 0) && /* @__PURE__ */ e("div", { class: "mds-cc__state-container", children: [
+    u === 0 && (!n || n.length === 0) && /* @__PURE__ */ e("div", { class: "mds-cc__state-container", children: [
       /* @__PURE__ */ e("div", { class: "mds-cc__state-icon", children: "✉" }),
       /* @__PURE__ */ e("p", { class: "mds-cc__state-text", children: "No outstanding queries." })
     ] })
   ] });
 }
-function Zo({ facilityName: t, orgSlug: n, onClose: s, initialExpandedId: i }) {
-  const [a, r] = v("planner"), [o, c] = v("list"), [l, d] = v(!1), [u, p] = v("all"), [m, h] = v("all"), [_, g] = v("all"), [f, y] = v("all"), [w, k] = v(i || null), [C, I] = v(null), { data: P, loading: A, error: x, retry: D } = Ui({ facilityName: t, orgSlug: n }), { data: N } = Gi({ facilityName: t, orgSlug: n, enabled: !0 }), { data: S } = Vi({ facilityName: t, orgSlug: n, enabled: !0 }), E = S !== null, B = E ? (S?.pending || 0) + (S?.overdue || 0) : 0, { certs: M } = Kt({ facilityName: t, orgSlug: n }), {
+function jc({ facilityName: t, orgSlug: n, onClose: s, initialExpandedId: a }) {
+  const [i, r] = y("planner"), [o, c] = y("list"), [d, l] = y(!1), [p, u] = y("all"), [m, h] = y("all"), [_, g] = y("all"), [v, b] = y("all"), [f, I] = y(a || null), [N, D] = y(null), { data: T, loading: A, error: x, retry: k } = Oi({ facilityName: t, orgSlug: n }), { data: S } = Bi({ facilityName: t, orgSlug: n, enabled: !0 }), { data: w } = Hi({ facilityName: t, orgSlug: n, enabled: !0 }), M = w !== null, H = M ? (w?.pending || 0) + (w?.overdue || 0) : 0, { certs: P } = rn({ facilityName: t, orgSlug: n }), {
     data: q,
     loading: L,
     error: O,
-    retry: Z
-  } = Br({ facilityName: t, orgSlug: n, enabled: !0 }), j = q?.summary?.totalGaps || 0, { data: $ } = Fr({ facilityName: t, orgSlug: n, enabled: !0 }), H = P?.assessments || [], te = P?.summary || {}, T = Y(() => {
-    const K = Go(H, u, m, _);
-    return Vo(K);
-  }, [H, u, m, _]), R = Y(() => {
-    const K = f === "all" ? tn : [f], le = [];
-    for (const ye of K) {
-      const he = T[ye] || [];
-      for (const xe of he) le.push(xe);
+    retry: X
+  } = Ro({ facilityName: t, orgSlug: n, enabled: !0 }), z = q?.summary?.totalGaps || 0, { data: R } = Oo({ facilityName: t, orgSlug: n, enabled: !0 }), B = T?.assessments || [], ee = T?.summary || {}, E = Y(() => {
+    const J = Bc(B, p, m, _);
+    return Hc(J);
+  }, [B, p, m, _]), $ = Y(() => {
+    const J = v === "all" ? pn : [v], ue = [];
+    for (const be of J) {
+      const _e = E[be] || [];
+      for (const Te of _e) ue.push(Te);
     }
-    return le;
-  }, [T, f]), z = R.length, V = ee(!1);
+    return ue;
+  }, [E, v]), V = $.length, U = te(!1);
   F(() => {
-    !i || !H.length || V.current || (V.current = !0, requestAnimationFrame(() => {
-      const K = ne.current?.querySelector(`[data-assessment-id="${i}"]`);
-      K && K.scrollIntoView({ behavior: "smooth", block: "center" });
+    !a || !B.length || U.current || (U.current = !0, requestAnimationFrame(() => {
+      const J = se.current?.querySelector(`[data-assessment-id="${a}"]`);
+      J && J.scrollIntoView({ behavior: "smooth", block: "center" });
     }));
-  }, [H, i]);
-  function ie(K) {
-    k((le) => {
-      const ye = le === K ? null : K;
-      return ye && requestAnimationFrame(() => {
-        const he = ne.current?.querySelector(`[data-assessment-id="${ye}"]`);
-        he && he.scrollIntoView({ behavior: "smooth", block: "nearest" });
-      }), ye;
+  }, [B, a]);
+  function Z(J) {
+    I((ue) => {
+      const be = ue === J ? null : J;
+      return be && requestAnimationFrame(() => {
+        const _e = se.current?.querySelector(`[data-assessment-id="${be}"]`);
+        _e && _e.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      }), be;
     });
   }
-  const X = ee(null), ne = ee(null);
+  const ne = te(null), se = te(null);
   F(() => {
-    if (a === "assessments" && X.current) {
-      const K = X.current;
-      X.current = null, requestAnimationFrame(() => {
-        const le = ne.current?.querySelector(`[data-assessment-id="${K}"]`);
-        le && (le.scrollIntoView({ behavior: "smooth", block: "center" }), le.classList.add("mds-cc__card-wrapper--highlight"), setTimeout(() => le.classList.remove("mds-cc__card-wrapper--highlight"), 1500));
+    if (i === "assessments" && ne.current) {
+      const J = ne.current;
+      ne.current = null, requestAnimationFrame(() => {
+        const ue = se.current?.querySelector(`[data-assessment-id="${J}"]`);
+        ue && (ue.scrollIntoView({ behavior: "smooth", block: "center" }), ue.classList.add("mds-cc__card-wrapper--highlight"), setTimeout(() => ue.classList.remove("mds-cc__card-wrapper--highlight"), 1500));
       });
     }
-  }, [a, w]);
-  function W(K) {
-    const le = K.externalAssessmentId || K.assessmentId || K.id;
-    s({ hide: !0 }), window.PDPMAnalyzerLauncher?.open({ scope: "mds", assessmentId: le });
+  }, [i, f]);
+  function j(J) {
+    const ue = J.externalAssessmentId || J.assessmentId || J.id;
+    s({ hide: !0 }), window.PDPMAnalyzerLauncher?.open({ scope: "mds", assessmentId: ue });
   }
-  function ae(K) {
-    s({ hide: !0 }), window.PDPMAnalyzerLauncher?.open({ scope: "mds", assessmentId: K });
+  function re(J) {
+    s({ hide: !0 }), window.PDPMAnalyzerLauncher?.open({ scope: "mds", assessmentId: J });
   }
-  function me(K) {
-    K.target === K.currentTarget && s();
+  function he(J) {
+    J.target === J.currentTarget && s();
   }
-  return /* @__PURE__ */ e("div", { class: "mds-cc__overlay", onClick: me, children: /* @__PURE__ */ e("div", { class: `mds-cc__modal${l ? " mds-cc__modal--fullscreen" : ""}`, role: "dialog", "aria-modal": "true", "aria-label": "MDS Command Center", children: [
-    C && /* @__PURE__ */ e(
-      Or,
+  return /* @__PURE__ */ e("div", { class: "mds-cc__overlay", onClick: he, children: /* @__PURE__ */ e("div", { class: `mds-cc__modal${d ? " mds-cc__modal--fullscreen" : ""}`, role: "dialog", "aria-modal": "true", "aria-label": "MDS Command Center", children: [
+    N && /* @__PURE__ */ e(
+      Eo,
       {
-        item: C.item,
-        context: { assessmentId: C.assessmentId },
-        onClose: () => I(null)
+        item: N.item,
+        context: { assessmentId: N.assessmentId },
+        onClose: () => D(null)
       }
     ),
     /* @__PURE__ */ e(
-      Qi,
+      Fi,
       {
-        summary: te,
+        summary: ee,
         facilityName: t,
         onClose: s,
-        activeView: a,
+        activeView: i,
         onViewChange: r,
         viewMode: o,
         onViewModeChange: c,
-        isFullscreen: l,
-        onToggleFullscreen: () => d((K) => !K),
-        queryCount: (P?.outstandingQueries || []).length,
-        certCount: B,
-        certsEnabled: E,
-        complianceGaps: j,
-        payerFilter: u,
-        onPayerFilterChange: p,
+        isFullscreen: d,
+        onToggleFullscreen: () => l((J) => !J),
+        queryCount: (T?.outstandingQueries || []).length,
+        certCount: H,
+        certsEnabled: M,
+        complianceGaps: z,
+        payerFilter: p,
+        onPayerFilterChange: u,
         classFilter: m,
         onClassFilterChange: h,
         focusFilter: _,
         onFocusFilterChange: g,
-        urgencyFilter: f,
-        onUrgencyFilterChange: y
+        urgencyFilter: v,
+        onUrgencyFilterChange: b
       }
     ),
-    /* @__PURE__ */ e("div", { class: "mds-cc__list", ref: ne, children: [
-      A && /* @__PURE__ */ e(Wo, {}),
-      !A && x && /* @__PURE__ */ e(Qo, { message: x, onRetry: D }),
-      !A && !x && a === "assessments" && o === "list" && /* @__PURE__ */ e(J, { children: [
-        z === 0 && /* @__PURE__ */ e(zo, {}),
-        z > 0 && /* @__PURE__ */ e("div", { class: "mds-cc__assessments mds-cc__assessments--flat", children: R.map((K) => {
-          const le = K.id || K.assessmentId || K.externalAssessmentId, ye = w === le;
+    /* @__PURE__ */ e("div", { class: "mds-cc__list", ref: se, children: [
+      A && /* @__PURE__ */ e(Gc, {}),
+      !A && x && /* @__PURE__ */ e(Fc, { message: x, onRetry: k }),
+      !A && !x && i === "assessments" && o === "list" && /* @__PURE__ */ e(Q, { children: [
+        V === 0 && /* @__PURE__ */ e(Uc, {}),
+        V > 0 && /* @__PURE__ */ e("div", { class: "mds-cc__assessments mds-cc__assessments--flat", children: $.map((J) => {
+          const ue = J.id || J.assessmentId || J.externalAssessmentId, be = f === ue;
           return /* @__PURE__ */ e(
             "div",
             {
               class: "mds-cc__card-wrapper",
-              "data-assessment-id": le,
+              "data-assessment-id": ue,
               children: [
                 /* @__PURE__ */ e(
-                  ka,
+                  br,
                   {
-                    assessment: K,
-                    isExpanded: ye,
-                    onToggle: () => ie(le),
-                    onOpenAnalyzer: () => W(K)
+                    assessment: J,
+                    isExpanded: be,
+                    onToggle: () => Z(ue),
+                    onOpenAnalyzer: () => j(J)
                   }
                 ),
-                ye && /* @__PURE__ */ e(
-                  Zs,
+                be && /* @__PURE__ */ e(
+                  Sa,
                   {
-                    assessment: K,
-                    onOpenAnalyzer: () => W(K),
-                    onSelectItem: (he) => {
-                      const xe = K.externalAssessmentId || K.assessmentId || K.id;
-                      I({ item: he, assessmentId: xe });
+                    assessment: J,
+                    onOpenAnalyzer: () => j(J),
+                    onSelectItem: (_e) => {
+                      const Te = J.externalAssessmentId || J.assessmentId || J.id;
+                      D({ item: _e, assessmentId: Te });
                     }
                   }
                 )
               ]
             },
-            le
+            ue
           );
         }) })
       ] }),
-      !A && !x && a === "assessments" && o === "calendar" && /* @__PURE__ */ e(
-        ja,
+      !A && !x && i === "assessments" && o === "calendar" && /* @__PURE__ */ e(
+        Vr,
         {
-          dashboardAssessments: H,
-          scheduleItems: N?.schedule || [],
-          outstandingQueries: P?.outstandingQueries || [],
-          certs: M || [],
-          onJumpToAssessment: (K) => {
-            c("list"), k(K), X.current = K;
+          dashboardAssessments: B,
+          scheduleItems: S?.schedule || [],
+          outstandingQueries: T?.outstandingQueries || [],
+          certs: P || [],
+          onJumpToAssessment: (J) => {
+            c("list"), I(J), ne.current = J;
           }
         }
       ),
-      !A && !x && a === "queries" && /* @__PURE__ */ e(
-        Yo,
+      !A && !x && i === "queries" && /* @__PURE__ */ e(
+        Qc,
         {
-          outstandingQueries: P?.outstandingQueries || [],
-          recentlySigned: P?.recentlySigned || [],
-          assessments: H,
-          onOpenAssessment: ae
+          outstandingQueries: T?.outstandingQueries || [],
+          recentlySigned: T?.recentlySigned || [],
+          assessments: B,
+          onOpenAssessment: re
         }
       ),
-      a === "certs" && /* @__PURE__ */ e(
-        fa,
+      i === "certs" && /* @__PURE__ */ e(
+        mr,
         {
           facilityName: t,
           orgSlug: n
         }
       ),
-      a === "compliance" && /* @__PURE__ */ e(
-        Yr,
+      i === "compliance" && /* @__PURE__ */ e(
+        jo,
         {
           data: q,
           loading: L,
           error: O,
-          retry: Z,
-          trendingData: $,
+          retry: X,
+          trendingData: R,
           facilityName: t,
           orgSlug: n
         }
       ),
-      a === "planner" && /* @__PURE__ */ e(
-        Fo,
+      i === "planner" && /* @__PURE__ */ e(
+        Rc,
         {
           facilityName: t,
           orgSlug: n,
-          isFullscreen: l,
+          isFullscreen: d,
           onOpenTab: r
         }
       )
     ] })
   ] }) });
 }
-function Xo(t, n) {
-  const [s, i] = v([]), [a, r] = v(null), [o, c] = v(""), [l, d] = v(!1), [u, p] = v(!1), [m, h] = v(null), [_, g] = v(0), [f, y] = v(0), w = U(() => {
-    g((I) => I + 1);
-  }, []), k = U(() => {
-    y((I) => I + 1);
+function Kc(t, n) {
+  const [s, a] = y([]), [i, r] = y(null), [o, c] = y(""), [d, l] = y(!1), [p, u] = y(!1), [m, h] = y(null), [_, g] = y(0), [v, b] = y(0), f = G(() => {
+    g((D) => D + 1);
+  }, []), I = G(() => {
+    b((D) => D + 1);
   }, []);
-  async function C() {
+  async function N() {
     if (!(await chrome.runtime.sendMessage({ type: "GET_AUTH_STATE" })).authenticated) throw new Error("Please log in to view MDS data");
     const A = getOrg()?.org, x = window.getChatFacilityInfo?.() || "";
     if (!A || !x) throw new Error("Could not determine organization or facility");
@@ -10887,93 +11837,93 @@ function Xo(t, n) {
   }
   return F(() => {
     if (!t) return;
-    let I = !1;
-    async function P() {
-      d(!0), h(null);
+    let D = !1;
+    async function T() {
+      l(!0), h(null);
       try {
-        const { orgSlug: A, facilityName: x } = await C();
+        const { orgSlug: A, facilityName: x } = await N();
         if (t.scope === "mds" && t.assessmentId) {
-          const D = new URLSearchParams({ externalAssessmentId: t.assessmentId, facilityName: x, orgSlug: A }), N = await chrome.runtime.sendMessage({
+          const k = new URLSearchParams({ externalAssessmentId: t.assessmentId, facilityName: x, orgSlug: A }), S = await chrome.runtime.sendMessage({
             type: "API_REQUEST",
-            endpoint: `/api/extension/mds/pdpm-potential?${D}`,
+            endpoint: `/api/extension/mds/pdpm-potential?${k}`,
             options: { method: "GET" }
           });
-          if (!N.success) throw new Error(N.error || "Failed to load MDS data");
-          I || (r(N.data), c(N.data?.patientName || t.patientName || ""), i([]));
+          if (!S.success) throw new Error(S.error || "Failed to load MDS data");
+          D || (r(S.data), c(S.data?.patientName || t.patientName || ""), a([]));
         } else if (t.scope === "patient" && t.patientId) {
-          const D = new URLSearchParams({ facilityName: x, orgSlug: A }), N = await chrome.runtime.sendMessage({
+          const k = new URLSearchParams({ facilityName: x, orgSlug: A }), S = await chrome.runtime.sendMessage({
             type: "API_REQUEST",
-            endpoint: `/api/extension/patients/${t.patientId}/assessments?${D}`,
+            endpoint: `/api/extension/patients/${t.patientId}/assessments?${k}`,
             options: { method: "GET" }
           });
-          if (!N.success) throw new Error(N.error || "Failed to load patient data");
-          const S = N.data?.data || N.data || N;
-          I || (i(S.assessments || []), c(S.patientName || t.patientName || "Patient"), r(null));
+          if (!S.success) throw new Error(S.error || "Failed to load patient data");
+          const w = S.data?.data || S.data || S;
+          D || (a(w.assessments || []), c(w.patientName || t.patientName || "Patient"), r(null));
         } else
-          I || (i([]), r(null));
+          D || (a([]), r(null));
       } catch (A) {
-        I || h(A.message || "Failed to load data");
+        D || h(A.message || "Failed to load data");
       } finally {
-        I || d(!1);
+        D || l(!1);
       }
     }
-    return P(), () => {
-      I = !0;
+    return T(), () => {
+      D = !0;
     };
   }, [t?.scope, t?.assessmentId, t?.patientId, _]), F(() => {
     if (t?.scope !== "patient" || !n) return;
-    let I = !1;
-    async function P() {
-      p(!0), r(null);
+    let D = !1;
+    async function T() {
+      u(!0), r(null);
       try {
-        const { orgSlug: A, facilityName: x } = await C(), D = new URLSearchParams({ externalAssessmentId: n, facilityName: x, orgSlug: A }), N = await chrome.runtime.sendMessage({
+        const { orgSlug: A, facilityName: x } = await N(), k = new URLSearchParams({ externalAssessmentId: n, facilityName: x, orgSlug: A }), S = await chrome.runtime.sendMessage({
           type: "API_REQUEST",
-          endpoint: `/api/extension/mds/pdpm-potential?${D}`,
+          endpoint: `/api/extension/mds/pdpm-potential?${k}`,
           options: { method: "GET" }
         });
-        if (!N.success) throw new Error(N.error || "Failed to load assessment data");
-        I || r(N.data);
+        if (!S.success) throw new Error(S.error || "Failed to load assessment data");
+        D || r(S.data);
       } catch (A) {
-        I || h(A.message || "Failed to load assessment detail");
+        D || h(A.message || "Failed to load assessment detail");
       } finally {
-        I || p(!1);
+        D || u(!1);
       }
     }
-    return P(), () => {
-      I = !0;
+    return T(), () => {
+      D = !0;
     };
-  }, [t?.scope, n, f]), F(() => {
-    function I() {
-      y((P) => P + 1);
+  }, [t?.scope, n, v]), F(() => {
+    function D() {
+      b((T) => T + 1);
     }
-    return window.addEventListener("super:item-decision", I), () => window.removeEventListener("super:item-decision", I);
-  }, []), { assessments: s, detail: a, patientName: o, loading: l, detailLoading: u, error: m, retry: w, retryDetail: k };
+    return window.addEventListener("super:item-decision", D), () => window.removeEventListener("super:item-decision", D);
+  }, []), { assessments: s, detail: i, patientName: o, loading: d, detailLoading: p, error: m, retry: f, retryDetail: I };
 }
-const ls = ["bims", "phq9", "gg", "orders", "therapyDocs"], ps = { bims: "BIMS", phq9: "PHQ-9", gg: "GG", orders: "Orders", therapyDocs: "Therapy" }, nn = 6;
-function Pe(t) {
+const Cs = ["bims", "phq9", "gg", "orders", "therapyDocs"], Ss = { bims: "BIMS", phq9: "PHQ-9", gg: "GG", orders: "Orders", therapyDocs: "Therapy" }, mn = 6;
+function Ae(t) {
   return t ? new Date(t).toLocaleDateString("en-US", { month: "short", day: "numeric" }) : "";
 }
-function ec(t) {
+function Yc(t) {
   if (!t) return "";
   const n = t.split(`
 `)[0].trim();
   return n.length > 80 ? n.slice(0, 77) + "…" : n;
 }
-function tc(t, n) {
+function Jc(t, n) {
   if (!t || !n?.start || !n?.end) return null;
   const s = new Date(t).getTime();
   return s >= new Date(n.start).getTime() && s <= new Date(n.end).getTime();
 }
-function nc({ check: t }) {
+function Zc({ check: t }) {
   const n = t?.foundUda;
   if (!n) return null;
-  const s = !!n.lockedDate, i = tc(n.lockedDate || n.date, t.searchedDateRange);
+  const s = !!n.lockedDate, a = Jc(n.lockedDate || n.date, t.searchedDateRange);
   return /* @__PURE__ */ e("div", { class: "pdpm-an__cc-detail", children: /* @__PURE__ */ e("div", { class: "pdpm-an__cc-uda-grid", children: [
     /* @__PURE__ */ e("span", { class: "pdpm-an__cc-uda-key", children: "Assessment" }),
     /* @__PURE__ */ e("span", { class: "pdpm-an__cc-uda-val", children: n.description }),
-    n.date && /* @__PURE__ */ e(J, { children: [
+    n.date && /* @__PURE__ */ e(Q, { children: [
       /* @__PURE__ */ e("span", { class: "pdpm-an__cc-uda-key", children: "Completed" }),
-      /* @__PURE__ */ e("span", { class: "pdpm-an__cc-uda-val", children: Pe(n.date) })
+      /* @__PURE__ */ e("span", { class: "pdpm-an__cc-uda-val", children: Ae(n.date) })
     ] }),
     /* @__PURE__ */ e("span", { class: "pdpm-an__cc-uda-key", children: "Lock" }),
     /* @__PURE__ */ e("span", { class: "pdpm-an__cc-uda-val", children: s ? /* @__PURE__ */ e("span", { class: "pdpm-an__cc-lock pdpm-an__cc-lock--yes", children: [
@@ -10981,7 +11931,7 @@ function nc({ check: t }) {
         /* @__PURE__ */ e("rect", { x: "2", y: "5", width: "8", height: "6", rx: "1.5", fill: "currentColor" }),
         /* @__PURE__ */ e("path", { d: "M4 5V3.5a2 2 0 014 0V5", stroke: "currentColor", "stroke-width": "1.2", fill: "none" })
       ] }),
-      Pe(n.lockedDate)
+      Ae(n.lockedDate)
     ] }) : /* @__PURE__ */ e("span", { class: "pdpm-an__cc-lock pdpm-an__cc-lock--no", children: [
       /* @__PURE__ */ e("svg", { width: "12", height: "12", viewBox: "0 0 12 12", fill: "none", children: [
         /* @__PURE__ */ e("rect", { x: "2", y: "5", width: "8", height: "6", rx: "1.5", fill: "currentColor" }),
@@ -10989,24 +11939,24 @@ function nc({ check: t }) {
       ] }),
       "Unlocked"
     ] }) }),
-    t.searchedDateRange && /* @__PURE__ */ e(J, { children: [
+    t.searchedDateRange && /* @__PURE__ */ e(Q, { children: [
       /* @__PURE__ */ e("span", { class: "pdpm-an__cc-uda-key", children: "Window" }),
       /* @__PURE__ */ e("span", { class: "pdpm-an__cc-uda-val", children: [
-        Pe(t.searchedDateRange.start),
+        Ae(t.searchedDateRange.start),
         " ",
         "–",
         " ",
-        Pe(t.searchedDateRange.end),
-        i === !0 && /* @__PURE__ */ e("span", { class: "pdpm-an__cc-window pdpm-an__cc-window--in", children: "In range" }),
-        i === !1 && /* @__PURE__ */ e("span", { class: "pdpm-an__cc-window pdpm-an__cc-window--out", children: "Outside range" })
+        Ae(t.searchedDateRange.end),
+        a === !0 && /* @__PURE__ */ e("span", { class: "pdpm-an__cc-window pdpm-an__cc-window--in", children: "In range" }),
+        a === !1 && /* @__PURE__ */ e("span", { class: "pdpm-an__cc-window pdpm-an__cc-window--out", children: "Outside range" })
       ] })
     ] })
   ] }) });
 }
-function sc({ check: t }) {
+function Xc({ check: t }) {
   const n = t?.unsignedOrders;
   if (!n || n.length === 0) return null;
-  const s = n.slice(0, nn), i = n.length - nn;
+  const s = n.slice(0, mn), a = n.length - mn;
   return /* @__PURE__ */ e("div", { class: "pdpm-an__cc-detail", children: [
     /* @__PURE__ */ e("div", { class: "pdpm-an__cc-detail-summary", children: [
       /* @__PURE__ */ e("span", { class: "pdpm-an__cc-detail-stat pdpm-an__cc-detail-stat--fail", children: [
@@ -11019,22 +11969,22 @@ function sc({ check: t }) {
       ] })
     ] }),
     /* @__PURE__ */ e("div", { class: "pdpm-an__cc-orders", children: [
-      s.map((a, r) => /* @__PURE__ */ e("div", { class: "pdpm-an__cc-order", children: [
-        /* @__PURE__ */ e("span", { class: "pdpm-an__cc-order-name", children: ec(a.orderName) }),
+      s.map((i, r) => /* @__PURE__ */ e("div", { class: "pdpm-an__cc-order", children: [
+        /* @__PURE__ */ e("span", { class: "pdpm-an__cc-order-name", children: Yc(i.orderName) }),
         /* @__PURE__ */ e("span", { class: "pdpm-an__cc-order-meta", children: [
-          a.category !== "Other" && /* @__PURE__ */ e("span", { class: "pdpm-an__cc-order-cat", children: a.category }),
-          a.startDate && /* @__PURE__ */ e("span", { children: Pe(a.startDate) })
+          i.category !== "Other" && /* @__PURE__ */ e("span", { class: "pdpm-an__cc-order-cat", children: i.category }),
+          i.startDate && /* @__PURE__ */ e("span", { children: Ae(i.startDate) })
         ] })
       ] }, r)),
-      i > 0 && /* @__PURE__ */ e("span", { class: "pdpm-an__cc-orders-more", children: [
+      a > 0 && /* @__PURE__ */ e("span", { class: "pdpm-an__cc-orders-more", children: [
         "+",
-        i,
+        a,
         " more unsigned"
       ] })
     ] })
   ] });
 }
-function ic({ check: t }) {
+function el({ check: t }) {
   if (!t) return null;
   const n = t.unsignedDocs || [];
   return /* @__PURE__ */ e("div", { class: "pdpm-an__cc-detail", children: [
@@ -11048,329 +11998,329 @@ function ic({ check: t }) {
         " total"
       ] })
     ] }),
-    n.length > 0 && /* @__PURE__ */ e("div", { class: "pdpm-an__cc-orders", children: n.slice(0, nn).map((s, i) => /* @__PURE__ */ e("div", { class: "pdpm-an__cc-order", children: [
-      /* @__PURE__ */ e("span", { class: "pdpm-an__cc-order-name", children: s.description || s.name || `Document ${i + 1}` }),
-      s.date && /* @__PURE__ */ e("span", { class: "pdpm-an__cc-order-meta", children: Pe(s.date) })
-    ] }, i)) })
+    n.length > 0 && /* @__PURE__ */ e("div", { class: "pdpm-an__cc-orders", children: n.slice(0, mn).map((s, a) => /* @__PURE__ */ e("div", { class: "pdpm-an__cc-order", children: [
+      /* @__PURE__ */ e("span", { class: "pdpm-an__cc-order-name", children: s.description || s.name || `Document ${a + 1}` }),
+      s.date && /* @__PURE__ */ e("span", { class: "pdpm-an__cc-order-meta", children: Ae(s.date) })
+    ] }, a)) })
   ] });
 }
-function ac({ checkKey: t, check: n }) {
-  return t === "orders" ? /* @__PURE__ */ e(sc, { check: n }) : t === "therapyDocs" ? /* @__PURE__ */ e(ic, { check: n }) : /* @__PURE__ */ e(nc, { check: n });
+function tl({ checkKey: t, check: n }) {
+  return t === "orders" ? /* @__PURE__ */ e(Xc, { check: n }) : t === "therapyDocs" ? /* @__PURE__ */ e(el, { check: n }) : /* @__PURE__ */ e(Zc, { check: n });
 }
-function rc({ data: t, collapsed: n, onToggleCollapse: s }) {
-  const [i, a] = v(null), r = t?.compliance || {}, o = r.checks || {}, c = r.summary?.passed ?? 0, l = r.summary?.total ?? ls.length, d = r.summary?.notApplicable ?? 0, u = l - d, p = (m) => a(i === m ? null : m);
-  return /* @__PURE__ */ e("div", { class: `pdpm-an__card${c === u ? " pdpm-an__card--success" : " pdpm-an__card--warning"}`, children: [
+function nl({ data: t, collapsed: n, onToggleCollapse: s }) {
+  const [a, i] = y(null), r = t?.compliance || {}, o = r.checks || {}, c = r.summary?.passed ?? 0, d = r.summary?.total ?? Cs.length, l = r.summary?.notApplicable ?? 0, p = d - l, u = (m) => i(a === m ? null : m);
+  return /* @__PURE__ */ e("div", { class: `pdpm-an__card${c === p ? " pdpm-an__card--success" : " pdpm-an__card--warning"}`, children: [
     /* @__PURE__ */ e("div", { class: "pdpm-an__card-header pdpm-an__card-header--collapsible", onClick: s, role: "button", tabIndex: 0, children: [
       /* @__PURE__ */ e("span", { class: "pdpm-an__card-icon", children: "✓" }),
       /* @__PURE__ */ e("span", { class: "pdpm-an__card-title", children: "Compliance" }),
       /* @__PURE__ */ e("span", { class: "pdpm-an__card-badge", children: [
         c,
         "/",
-        u
+        p
       ] }),
       /* @__PURE__ */ e("svg", { class: `pdpm-an__card-chevron${n ? "" : " pdpm-an__card-chevron--open"}`, width: "12", height: "12", viewBox: "0 0 12 12", fill: "none", children: /* @__PURE__ */ e("path", { d: "M3 4.5L6 7.5L9 4.5", stroke: "currentColor", "stroke-width": "1.5", "stroke-linecap": "round", "stroke-linejoin": "round" }) })
     ] }),
     !n && /* @__PURE__ */ e("div", { class: "pdpm-an__cc-body", children: [
-      /* @__PURE__ */ e("div", { class: "pdpm-an__cc-chips", children: ls.map((m) => {
+      /* @__PURE__ */ e("div", { class: "pdpm-an__cc-chips", children: Cs.map((m) => {
         const h = o[m];
         if (!h || h.status === "not_applicable") return null;
         const _ = h.status === "passed", g = h.foundUda || m === "orders" || m === "therapyDocs";
         return /* @__PURE__ */ e(
           "button",
           {
-            class: `pdpm-an__cc-chip${_ ? " pdpm-an__cc-chip--pass" : " pdpm-an__cc-chip--fail"}${i === m ? " pdpm-an__cc-chip--active" : ""}`,
-            onClick: g ? () => p(m) : void 0,
+            class: `pdpm-an__cc-chip${_ ? " pdpm-an__cc-chip--pass" : " pdpm-an__cc-chip--fail"}${a === m ? " pdpm-an__cc-chip--active" : ""}`,
+            onClick: g ? () => u(m) : void 0,
             title: h.message || "",
             children: [
               /* @__PURE__ */ e("span", { class: "pdpm-an__cc-chip-icon", children: _ ? "✓" : "✗" }),
-              ps[m] || m
+              Ss[m] || m
             ]
           },
           m
         );
       }) }),
-      i && o[i] && o[i].status !== "not_applicable" && /* @__PURE__ */ e("div", { class: "pdpm-an__cc-expanded", children: [
+      a && o[a] && o[a].status !== "not_applicable" && /* @__PURE__ */ e("div", { class: "pdpm-an__cc-expanded", children: [
         /* @__PURE__ */ e("div", { class: "pdpm-an__cc-expanded-label", children: [
-          ps[i],
+          Ss[a],
           ": ",
-          o[i].message
+          o[a].message
         ] }),
-        /* @__PURE__ */ e(ac, { checkKey: i, check: o[i] })
+        /* @__PURE__ */ e(tl, { checkKey: a, check: o[a] })
       ] })
     ] })
   ] });
 }
-function pt(t) {
+function It(t) {
   return t.sourceType === "order" || t.type === "order" || (t.evidenceId || "").startsWith("order-");
 }
-function oc(t) {
+function sl(t) {
   return (t.sourceId || t.evidenceId || "").replace(/^order-/, "");
 }
-function ci(t) {
+function Oa(t) {
   return t.type === "medication" || (t.sourceId || "").startsWith("admin-");
 }
-function cc(t) {
-  if (ci(t)) return !0;
-  const n = ue(t).viewerType;
-  return n === "document" || n === "clinical-note" || n === "therapy-document" || n === "order" || pt(t);
+function al(t) {
+  if (Oa(t)) return !0;
+  const n = me(t).viewerType;
+  return n === "document" || n === "clinical-note" || n === "therapy-document" || n === "order" || It(t);
 }
-function di({ item: t, context: n, onBack: s, onSplitChange: i, onDismiss: a }) {
-  const r = t?.mdsItem, o = t?.categoryKey, { data: c, loading: l, error: d } = ei(r, o, n), u = r?.startsWith("I8000:") ? "I8000" : r, p = c?.item, m = p?.status === "needs_physician_query", [h, _] = v(!1), g = p?.userDecision?.decision, f = g !== "disagree" && g !== "agree", y = U(async (T) => {
+function Ba({ item: t, context: n, onBack: s, onSplitChange: a, onDismiss: i }) {
+  const r = t?.mdsItem, o = t?.categoryKey, { data: c, loading: d, error: l } = Pa(r, o, n), p = r?.startsWith("I8000:") ? "I8000" : r, u = c?.item, m = u?.status === "needs_physician_query", [h, _] = y(!1), g = u?.userDecision?.decision, v = g !== "disagree" && g !== "agree", b = G(async (E) => {
     _(!0);
     try {
-      const z = getOrg()?.org, V = window.getChatFacilityInfo?.() || "", ie = r?.includes(":") ? r.split(":")[0] : r, X = t?.column || "", ne = await chrome.runtime.sendMessage({
+      const V = getOrg()?.org, U = window.getChatFacilityInfo?.() || "", Z = r?.includes(":") ? r.split(":")[0] : r, ne = t?.column || "", se = await chrome.runtime.sendMessage({
         type: "API_REQUEST",
-        endpoint: `/api/extension/mds/items/${encodeURIComponent(ie)}/decision`,
+        endpoint: `/api/extension/mds/items/${encodeURIComponent(Z)}/decision`,
         options: {
           method: "POST",
           body: JSON.stringify({
             externalAssessmentId: n?.assessmentId,
-            facilityName: V,
-            orgSlug: z,
+            facilityName: U,
+            orgSlug: V,
             decision: "disagree",
-            note: T || "",
-            mdsColumn: X
+            note: E || "",
+            mdsColumn: ne
           })
         }
       });
-      if (!ne?.success) throw new Error(ne?.error || "Failed to save decision");
-      const W = `${ie}-${X}`;
-      window.SuperOverlay?.dismissedItems && (window.SuperOverlay.dismissedItems.add(W), chrome.storage.local.set({ superDismissedItems: Array.from(window.SuperOverlay.dismissedItems) })), window.dispatchEvent(new CustomEvent("super:item-decision", {
-        detail: { mdsItem: ie, column: X, decision: "disagree" }
-      })), window.SuperToast?.success?.("Item dismissed"), a?.();
-    } catch (R) {
-      console.error("[ItemDetailView] Dismiss failed:", R), window.SuperToast?.error?.(R.message || "Failed to dismiss"), _(!1);
+      if (!se?.success) throw new Error(se?.error || "Failed to save decision");
+      const j = `${Z}-${ne}`;
+      window.SuperOverlay?.dismissedItems && (window.SuperOverlay.dismissedItems.add(j), chrome.storage.local.set({ superDismissedItems: Array.from(window.SuperOverlay.dismissedItems) })), window.dispatchEvent(new CustomEvent("super:item-decision", {
+        detail: { mdsItem: Z, column: ne, decision: "disagree" }
+      })), window.SuperToast?.success?.("Item dismissed"), i?.();
+    } catch ($) {
+      console.error("[ItemDetailView] Dismiss failed:", $), window.SuperToast?.error?.($.message || "Failed to dismiss"), _(!1);
     }
-  }, [r, t, n, a]), [w, k] = v(null), C = ee(/* @__PURE__ */ new Map()), [I, P] = v(null), [A, x] = v(!1), D = ee(null), S = dc(c).filter(cc), E = w !== null, B = w && ci(w.ev), M = w && !B && pt(w.ev), q = w ? ue(w.ev).viewerType : null, L = !B && q === "clinical-note", O = !B && q === "therapy-document", Z = w && !M && !L && !O && !B, j = ee(null);
+  }, [r, t, n, i]), [f, I] = y(null), N = te(/* @__PURE__ */ new Map()), [D, T] = y(null), [A, x] = y(!1), k = te(null), w = il(c).filter(al), M = f !== null, H = f && Oa(f.ev), P = f && !H && It(f.ev), q = f ? me(f.ev).viewerType : null, L = !H && q === "clinical-note", O = !H && q === "therapy-document", X = f && !P && !L && !O && !H, z = te(null);
   F(() => {
-    i?.(E);
-  }, [E]);
-  const $ = S.filter((T) => pt(T) ? !1 : ue(T).viewerType === "document");
+    a?.(M);
+  }, [M]);
+  const R = w.filter((E) => It(E) ? !1 : me(E).viewerType === "document");
   F(() => {
-    if (!c || $.length === 0) return;
+    if (!c || R.length === 0) return;
     (async () => {
-      let R;
+      let $;
       try {
-        R = await window.getCurrentParams();
+        $ = await window.getCurrentParams();
       } catch {
         return;
       }
-      for (const z of $) {
-        const V = ue(z);
-        if (!V.id || C.current.has(V.id)) continue;
-        const ie = Qe(V.id, R).then((X) => {
-          const ne = C.current.get(V.id);
-          return ne && (ne.document = X.document), X.document;
-        }).catch((X) => (console.warn("[ItemDetailView] Prefetch failed for", V.id, X), null));
-        C.current.set(V.id, { document: null, promise: ie });
+      for (const V of R) {
+        const U = me(V);
+        if (!U.id || N.current.has(U.id)) continue;
+        const Z = Xe(U.id, $).then((ne) => {
+          const se = N.current.get(U.id);
+          return se && (se.document = ne.document), ne.document;
+        }).catch((ne) => (console.warn("[ItemDetailView] Prefetch failed for", U.id, ne), null));
+        N.current.set(U.id, { document: null, promise: Z });
       }
     })();
   }, [c]), F(() => {
-    if (!w || M || L || O) {
-      P(null), x(!1);
+    if (!f || P || L || O) {
+      T(null), x(!1);
       return;
     }
-    const T = ue(w.ev);
-    if (!T.id) return;
-    const R = C.current.get(T.id);
-    if (R?.document) {
-      P(R.document), x(!1);
+    const E = me(f.ev);
+    if (!E.id) return;
+    const $ = N.current.get(E.id);
+    if ($?.document) {
+      T($.document), x(!1);
       return;
     }
     x(!0), (async () => {
       try {
-        let V;
-        if (R?.promise)
-          V = await R.promise;
+        let U;
+        if ($?.promise)
+          U = await $.promise;
         else {
-          const ie = await window.getCurrentParams();
-          V = (await Qe(T.id, ie)).document, C.current.set(T.id, { document: V, promise: Promise.resolve(V) });
+          const Z = await window.getCurrentParams();
+          U = (await Xe(E.id, Z)).document, N.current.set(E.id, { document: U, promise: Promise.resolve(U) });
         }
-        P(V);
-      } catch (V) {
-        console.error("[ItemDetailView] Failed to load document:", V), P(null);
+        T(U);
+      } catch (U) {
+        console.error("[ItemDetailView] Failed to load document:", U), T(null);
       } finally {
         x(!1);
       }
     })();
-  }, [w, M]), F(() => {
-    if (!M || !D.current) return;
-    const T = D.current, R = oc(w.ev);
-    T.innerHTML = '<div class="idv__viewer-loading" style="position:static;padding:40px 0"><div class="pdpm-an__spinner"></div><span>Loading administrations...</span></div>', window.renderSplitAdministrations ? (async () => {
-      const ie = getOrg()?.org, X = window.getChatFacilityInfo?.() || "", ne = { assessmentId: n?.assessmentId, orgSlug: ie, facilityName: X };
-      await window.renderSplitAdministrations(T, R, void 0, ne);
-    })().catch((V) => {
-      console.error("[ItemDetailView] Failed to load administrations:", V), T.innerHTML = '<div class="idv__viewer-loading" style="position:static;padding:40px 0"><span>Failed to load administrations</span></div>';
-    }) : T.innerHTML = '<div class="idv__viewer-loading" style="position:static;padding:40px 0"><span>Administration viewer not available</span></div>';
-  }, [w, M]), F(() => {
-    if (!L && !O || !j.current) return;
-    const T = j.current, R = ue(w.ev), z = w.ev.quoteText || w.ev.quote || w.ev.snippet || "";
-    T.innerHTML = '<div class="idv__viewer-loading" style="position:static;padding:40px 0"><div class="pdpm-an__spinner"></div><span>Loading...</span></div>', (async () => {
-      const X = getOrg()?.org, ne = window.getChatFacilityInfo?.() || "", W = { assessmentId: n?.assessmentId, orgSlug: X, facilityName: ne };
-      L && window.renderSplitNote ? await window.renderSplitNote(T, R.id, W) : O && window.renderSplitTherapy ? await window.renderSplitTherapy(T, R.id, z, W) : T.innerHTML = '<div class="idv__viewer-loading" style="position:static;padding:40px 0"><span>Viewer not available</span></div>';
-    })().catch((ie) => {
-      console.error("[ItemDetailView] Failed to load source:", ie), T.innerHTML = '<div class="idv__viewer-loading" style="position:static;padding:40px 0"><span>Failed to load</span></div>';
+  }, [f, P]), F(() => {
+    if (!P || !k.current) return;
+    const E = k.current, $ = sl(f.ev);
+    E.innerHTML = '<div class="idv__viewer-loading" style="position:static;padding:40px 0"><div class="pdpm-an__spinner"></div><span>Loading administrations...</span></div>', window.renderSplitAdministrations ? (async () => {
+      const Z = getOrg()?.org, ne = window.getChatFacilityInfo?.() || "", se = { assessmentId: n?.assessmentId, orgSlug: Z, facilityName: ne };
+      await window.renderSplitAdministrations(E, $, void 0, se);
+    })().catch((U) => {
+      console.error("[ItemDetailView] Failed to load administrations:", U), E.innerHTML = '<div class="idv__viewer-loading" style="position:static;padding:40px 0"><span>Failed to load administrations</span></div>';
+    }) : E.innerHTML = '<div class="idv__viewer-loading" style="position:static;padding:40px 0"><span>Administration viewer not available</span></div>';
+  }, [f, P]), F(() => {
+    if (!L && !O || !z.current) return;
+    const E = z.current, $ = me(f.ev), V = f.ev.quoteText || f.ev.quote || f.ev.snippet || "";
+    E.innerHTML = '<div class="idv__viewer-loading" style="position:static;padding:40px 0"><div class="pdpm-an__spinner"></div><span>Loading...</span></div>', (async () => {
+      const ne = getOrg()?.org, se = window.getChatFacilityInfo?.() || "", j = { assessmentId: n?.assessmentId, orgSlug: ne, facilityName: se };
+      L && window.renderSplitNote ? await window.renderSplitNote(E, $.id, j, V || null) : O && window.renderSplitTherapy ? await window.renderSplitTherapy(E, $.id, V, j) : E.innerHTML = '<div class="idv__viewer-loading" style="position:static;padding:40px 0"><span>Viewer not available</span></div>';
+    })().catch((Z) => {
+      console.error("[ItemDetailView] Failed to load source:", Z), E.innerHTML = '<div class="idv__viewer-loading" style="position:static;padding:40px 0"><span>Failed to load</span></div>';
     });
-  }, [w, L, O]);
-  const H = U((T, R) => {
-    k({ ev: T, index: R });
-  }, []), te = U(() => {
-    k(null);
+  }, [f, L, O]);
+  const B = G((E, $) => {
+    I({ ev: E, index: $ });
+  }, []), ee = G(() => {
+    I(null);
   }, []);
-  return /* @__PURE__ */ e("div", { class: `idv${E ? " idv--split" : ""}`, children: [
+  return /* @__PURE__ */ e("div", { class: `idv${M ? " idv--split" : ""}`, children: [
     /* @__PURE__ */ e("div", { class: "idv__head", children: [
-      /* @__PURE__ */ e("button", { class: "idv__back", onClick: E ? te : s, type: "button", children: [
+      /* @__PURE__ */ e("button", { class: "idv__back", onClick: M ? ee : s, type: "button", children: [
         /* @__PURE__ */ e("svg", { width: "14", height: "14", viewBox: "0 0 14 14", fill: "none", children: /* @__PURE__ */ e("path", { d: "M9 11L5 7l4-4", stroke: "currentColor", "stroke-width": "1.5", "stroke-linecap": "round", "stroke-linejoin": "round" }) }),
         "Back"
       ] }),
-      /* @__PURE__ */ e("span", { class: "idv__code", children: u }),
-      /* @__PURE__ */ e("h2", { class: "idv__name", children: p?.description || p?.kbCategory?.categoryName || t?.itemName || "Item Detail" }),
+      /* @__PURE__ */ e("span", { class: "idv__code", children: p }),
+      /* @__PURE__ */ e("h2", { class: "idv__name", children: u?.description || u?.kbCategory?.categoryName || t?.itemName || "Item Detail" }),
       m && /* @__PURE__ */ e("span", { class: "idv__badge idv__badge--amber", children: "Needs Query" })
     ] }),
-    l && /* @__PURE__ */ e("div", { class: "pdpm-an__state", children: [
+    d && /* @__PURE__ */ e("div", { class: "pdpm-an__state", children: [
       /* @__PURE__ */ e("div", { class: "pdpm-an__spinner" }),
       /* @__PURE__ */ e("p", { children: "Loading..." })
     ] }),
-    d && /* @__PURE__ */ e("div", { class: "pdpm-an__state", children: /* @__PURE__ */ e("p", { children: d }) }),
-    !l && !d && c && !E && /* @__PURE__ */ e("div", { class: "idv__body", children: /* @__PURE__ */ e(
-      ni,
+    l && /* @__PURE__ */ e("div", { class: "pdpm-an__state", children: /* @__PURE__ */ e("p", { children: l }) }),
+    !d && !l && c && !M && /* @__PURE__ */ e("div", { class: "idv__body", children: /* @__PURE__ */ e(
+      Aa,
       {
         variant: "full",
         data: c,
         detectionItem: t,
         mdsItem: r,
-        onViewSource: H,
-        onDismiss: f ? y : void 0,
+        onViewSource: B,
+        onDismiss: v ? b : void 0,
         dismissing: h,
         assessmentId: n?.assessmentId
       }
     ) }),
-    !l && !d && c && E && /* @__PURE__ */ e("div", { class: "idv__split-body", children: [
+    !d && !l && c && M && /* @__PURE__ */ e("div", { class: "idv__split-body", children: [
       /* @__PURE__ */ e("div", { class: "idv__sources", children: [
         /* @__PURE__ */ e("div", { class: "idv__sources-label", children: [
           "Sources (",
-          S.length,
+          w.length,
           ")"
         ] }),
-        S.map((T, R) => {
-          const z = pt(T), V = T.sourceType || _n(T.displayName, T.evidenceId), ie = T.displayName || gn[V] || (z ? "Orders" : "Document"), X = T.quoteText || T.orderDescription || T.quote || T.snippet || T.text || "", ne = T.wordBlocks?.[0]?.p, W = w.ev === T;
+        w.map((E, $) => {
+          const V = It(E), U = E.sourceType || Sn(E.displayName, E.evidenceId), Z = E.displayName || xn[U] || (V ? "Orders" : "Document"), ne = E.quoteText || E.orderDescription || E.quote || E.snippet || E.text || "", se = E.wordBlocks?.[0]?.p, j = f.ev === E;
           return /* @__PURE__ */ e(
             "div",
             {
-              class: `idv__source-card${W ? " idv__source-card--active" : ""}`,
-              onClick: () => k({ ev: T, index: R }),
+              class: `idv__source-card${j ? " idv__source-card--active" : ""}`,
+              onClick: () => I({ ev: E, index: $ }),
               role: "button",
               children: [
-                /* @__PURE__ */ e("div", { class: `idv__source-badge${z ? " idv__source-badge--order" : ""}`, children: ie }),
-                X && /* @__PURE__ */ e("div", { class: "idv__source-snippet", children: X }),
-                !z && ne && /* @__PURE__ */ e("div", { class: "idv__source-page", children: [
+                /* @__PURE__ */ e("div", { class: `idv__source-badge${V ? " idv__source-badge--order" : ""}`, children: Z }),
+                ne && /* @__PURE__ */ e("div", { class: "idv__source-snippet", children: ne }),
+                !V && se && /* @__PURE__ */ e("div", { class: "idv__source-page", children: [
                   "Page ",
-                  ne
+                  se
                 ] })
               ]
             },
-            R
+            $
           );
         })
       ] }),
       /* @__PURE__ */ e("div", { class: "idv__viewer", children: [
-        Z && A && /* @__PURE__ */ e("div", { class: "idv__viewer-loading", children: [
+        X && A && /* @__PURE__ */ e("div", { class: "idv__viewer-loading", children: [
           /* @__PURE__ */ e("div", { class: "pdpm-an__spinner" }),
           /* @__PURE__ */ e("span", { children: "Loading document..." })
         ] }),
-        Z && !A && I && /* @__PURE__ */ e(
-          fn,
+        X && !A && D && /* @__PURE__ */ e(
+          Pn,
           {
-            url: I.signedUrl || null,
-            wordBlocks: w.ev.wordBlocks || [],
-            targetPage: w.ev.wordBlocks?.[0]?.p || 1,
-            title: I.title || "Document",
-            documentType: I.documentType,
-            effectiveDate: I.effectiveDate,
-            fileSize: I.fileSize,
+            url: D.signedUrl || null,
+            wordBlocks: f.ev.wordBlocks || [],
+            targetPage: f.ev.wordBlocks?.[0]?.p || 1,
+            title: D.title || "Document",
+            documentType: D.documentType,
+            effectiveDate: D.effectiveDate,
+            fileSize: D.fileSize,
             expiresAt: !0,
-            openInNewTabUrl: I.signedUrl || null
+            openInNewTabUrl: D.signedUrl || null
           }
         ),
-        Z && !A && !I && /* @__PURE__ */ e("div", { class: "idv__viewer-loading", children: /* @__PURE__ */ e("span", { children: "Failed to load document" }) }),
-        M && /* @__PURE__ */ e("div", { ref: D, class: "idv__admin-viewer" }),
-        (L || O) && /* @__PURE__ */ e("div", { ref: j, class: "idv__note-viewer" }),
-        B && /* @__PURE__ */ e("div", { class: "idv__note-viewer", children: /* @__PURE__ */ e("div", { class: "super-split__content", children: [
+        X && !A && !D && /* @__PURE__ */ e("div", { class: "idv__viewer-loading", children: /* @__PURE__ */ e("span", { children: "Failed to load document" }) }),
+        P && /* @__PURE__ */ e("div", { ref: k, class: "idv__admin-viewer" }),
+        (L || O) && /* @__PURE__ */ e("div", { ref: z, class: "idv__note-viewer" }),
+        H && /* @__PURE__ */ e("div", { class: "idv__note-viewer", children: /* @__PURE__ */ e("div", { class: "super-split__content", children: [
           /* @__PURE__ */ e("div", { class: "super-split__content-header", children: [
             /* @__PURE__ */ e("h3", { class: "super-split__content-title", children: "Administration Record" }),
             /* @__PURE__ */ e("span", { class: "super-split__content-badge", children: "Medication" })
           ] }),
-          w.ev.date && /* @__PURE__ */ e("div", { class: "super-split__content-meta", children: w.ev.date }),
-          /* @__PURE__ */ e("div", { class: "super-split__content-body", children: /* @__PURE__ */ e("pre", { class: "super-split__note-text", children: w.ev.text || w.ev.quote || w.ev.quoteText || "No details available." }) })
+          f.ev.date && /* @__PURE__ */ e("div", { class: "super-split__content-meta", children: f.ev.date }),
+          /* @__PURE__ */ e("div", { class: "super-split__content-body", children: /* @__PURE__ */ e("pre", { class: "super-split__note-text", children: f.ev.text || f.ev.quote || f.ev.quoteText || "No details available." }) })
         ] }) })
       ] })
     ] })
   ] });
 }
-function dc(t) {
+function il(t) {
   const n = t?.item;
   if (!n) return [];
   if (!!!n.columns)
     return [...n.evidence || [], ...n.queryEvidence || []];
-  const i = [], a = /* @__PURE__ */ new Set();
+  const a = [], i = /* @__PURE__ */ new Set();
   for (const r of Object.values(n.columns || {}))
     for (const o of [...r?.evidence || [], ...r?.queryEvidence || []]) {
       const c = o.sourceId || o.quote || JSON.stringify(o);
-      a.has(c) || (a.add(c), i.push(o));
+      i.has(c) || (i.add(c), a.push(o));
     }
-  return i;
+  return a;
 }
-function lc(t) {
-  const [n, s] = v([]), [i, a] = v(!1), [r, o] = v(null), [c, l] = v(0), d = U(() => {
-    l((u) => u + 1);
+function rl(t) {
+  const [n, s] = y([]), [a, i] = y(!1), [r, o] = y(null), [c, d] = y(0), l = G(() => {
+    d((p) => p + 1);
   }, []);
   return F(() => {
     if (!t || !window.CertAPI) {
       s([]);
       return;
     }
-    let u = !1;
-    return a(!0), o(null), (async () => {
+    let p = !1;
+    return i(!0), o(null), (async () => {
       try {
         const m = getOrg()?.org, h = window.getChatFacilityInfo?.() || "";
         if (!m || !h) {
-          u || (s([]), a(!1));
+          p || (s([]), i(!1));
           return;
         }
         const _ = await window.CertAPI.fetchByPatient(h, m, t);
-        u || s(_ || []);
+        p || s(_ || []);
       } catch {
-        u || s([]);
+        p || s([]);
       } finally {
-        u || a(!1);
+        p || i(!1);
       }
     })(), () => {
-      u = !0;
+      p = !0;
     };
-  }, [t, c]), { certs: n, loading: i, error: r, refresh: d };
+  }, [t, c]), { certs: n, loading: a, error: r, refresh: l };
 }
-const pc = ["initial", "day_14_recert", "day_30_recert"], uc = {
+const ol = ["initial", "day_14_recert", "day_30_recert"], cl = {
   initial: "Initial",
   day_14_recert: "Day 14",
   day_30_recert: "Day 30"
 };
-function mc(t) {
+function ll(t) {
   if (!t) return null;
   const n = new Date(t), s = /* @__PURE__ */ new Date();
   return n.setHours(0, 0, 0, 0), s.setHours(0, 0, 0, 0), Math.floor((n - s) / 864e5);
 }
-function Et(t) {
+function Wt(t) {
   if (!t) return "";
   const n = new Date(t);
   return isNaN(n) ? t : n.toLocaleDateString("en-US", { month: "short", day: "numeric" });
 }
-function hc(t) {
+function dl(t) {
   if (!t) return { variant: "empty", label: "—" };
-  const n = mc(t.dueDate), s = n !== null && n < 0;
+  const n = ll(t.dueDate), s = n !== null && n < 0;
   return t.status === "signed" ? {
     variant: "signed",
     label: "Signed",
-    detail: Et(t.signedAt),
+    detail: Wt(t.signedAt),
     subDetail: t.signedByName || ""
   } : t.status === "skipped" ? { variant: "skipped", label: "Skipped", showUnskip: !0 } : (t.isDelayed || t.status === "delayed") && s ? {
     variant: "overdue",
@@ -11383,112 +12333,112 @@ function hc(t) {
   } : t.status === "sent" ? {
     variant: "sent",
     label: "Awaiting",
-    detail: Et(t.sentAt)
+    detail: Wt(t.sentAt)
   } : {
     variant: "pending",
     label: "Pending",
-    detail: t.dueDate ? `Due ${Et(t.dueDate)}` : "",
+    detail: t.dueDate ? `Due ${Wt(t.dueDate)}` : "",
     showSend: !0
   };
 }
-function _c({ type: t, cert: n, onAction: s }) {
-  const i = hc(n);
-  return /* @__PURE__ */ e("div", { class: `cert-chain__slot cert-chain__slot--${i.variant}`, children: [
-    /* @__PURE__ */ e("div", { class: "cert-chain__slot-header", children: /* @__PURE__ */ e("span", { class: "cert-chain__slot-type", children: uc[t] }) }),
-    /* @__PURE__ */ e("div", { class: "cert-chain__slot-status", children: i.label }),
-    i.detail && /* @__PURE__ */ e("div", { class: "cert-chain__slot-detail", children: i.detail }),
-    i.subDetail && /* @__PURE__ */ e("div", { class: "cert-chain__slot-sub", children: i.subDetail }),
-    i.showSend && n && /* @__PURE__ */ e(
+function ul({ type: t, cert: n, onAction: s }) {
+  const a = dl(n);
+  return /* @__PURE__ */ e("div", { class: `cert-chain__slot cert-chain__slot--${a.variant}`, children: [
+    /* @__PURE__ */ e("div", { class: "cert-chain__slot-header", children: /* @__PURE__ */ e("span", { class: "cert-chain__slot-type", children: cl[t] }) }),
+    /* @__PURE__ */ e("div", { class: "cert-chain__slot-status", children: a.label }),
+    a.detail && /* @__PURE__ */ e("div", { class: "cert-chain__slot-detail", children: a.detail }),
+    a.subDetail && /* @__PURE__ */ e("div", { class: "cert-chain__slot-sub", children: a.subDetail }),
+    a.showSend && n && /* @__PURE__ */ e(
       "button",
       {
-        class: `cert-chain__slot-btn cert-chain__slot-btn--${i.variant === "overdue" ? "destructive" : "primary"}`,
-        onClick: (a) => {
-          a.stopPropagation(), s(n, "send");
+        class: `cert-chain__slot-btn cert-chain__slot-btn--${a.variant === "overdue" ? "destructive" : "primary"}`,
+        onClick: (i) => {
+          i.stopPropagation(), s(n, "send");
         },
         children: "Send"
       }
     ),
-    i.showUnskip && n && /* @__PURE__ */ e(
+    a.showUnskip && n && /* @__PURE__ */ e(
       "button",
       {
         class: "cert-chain__slot-btn cert-chain__slot-btn--ghost",
-        onClick: (a) => {
-          a.stopPropagation(), s(n, "unskip");
+        onClick: (i) => {
+          i.stopPropagation(), s(n, "unskip");
         },
         children: "Unskip"
       }
     )
   ] });
 }
-function gc({ certs: t, onAction: n }) {
+function pl({ certs: t, onAction: n }) {
   const s = {};
-  for (const i of t)
-    s[i.type] = i;
-  return /* @__PURE__ */ e("div", { class: "cert-chain__stay", children: pc.map((i, a) => /* @__PURE__ */ e("div", { class: "cert-chain__step-wrapper", children: [
-    a > 0 && /* @__PURE__ */ e("div", { class: "cert-chain__connector" }),
-    /* @__PURE__ */ e(_c, { type: i, cert: s[i] || null, onAction: n })
-  ] }, i)) });
+  for (const a of t)
+    s[a.type] = a;
+  return /* @__PURE__ */ e("div", { class: "cert-chain__stay", children: ol.map((a, i) => /* @__PURE__ */ e("div", { class: "cert-chain__step-wrapper", children: [
+    i > 0 && /* @__PURE__ */ e("div", { class: "cert-chain__connector" }),
+    /* @__PURE__ */ e(ul, { type: a, cert: s[a] || null, onAction: n })
+  ] }, a)) });
 }
-function fc({ certs: t, onAction: n }) {
+function ml({ certs: t, onAction: n }) {
   const s = Y(() => {
     if (!t || t.length === 0) return [];
-    const i = {};
+    const a = {};
     for (const r of t) {
       const o = r.partAStayId || "unknown";
-      i[o] || (i[o] = []), i[o].push(r);
+      a[o] || (a[o] = []), a[o].push(r);
     }
-    const a = Object.entries(i);
-    for (const [, r] of a)
+    const i = Object.entries(a);
+    for (const [, r] of i)
       r.sort((o, c) => (o.sequenceNumber || 0) - (c.sequenceNumber || 0));
-    return a.sort((r, o) => {
-      const c = Math.max(...r[1].map((d) => d.sequenceNumber || 0));
-      return Math.max(...o[1].map((d) => d.sequenceNumber || 0)) - c;
-    }), a;
+    return i.sort((r, o) => {
+      const c = Math.max(...r[1].map((l) => l.sequenceNumber || 0));
+      return Math.max(...o[1].map((l) => l.sequenceNumber || 0)) - c;
+    }), i;
   }, [t]);
-  return s.length === 0 ? null : /* @__PURE__ */ e("div", { class: "cert-chain", children: s.map(([i, a]) => /* @__PURE__ */ e(gc, { certs: a, onAction: n }, i)) });
+  return s.length === 0 ? null : /* @__PURE__ */ e("div", { class: "cert-chain", children: s.map(([a, i]) => /* @__PURE__ */ e(pl, { certs: i, onAction: n }, a)) });
 }
-function yc({ patientId: t, collapsed: n, onToggleCollapse: s }) {
-  const { certs: i, loading: a, refresh: r } = lc(t), [o, c] = v(null), [l, d] = v(null), [u, p] = v(null), [m, h] = v({ facilityName: "", orgSlug: "" }), _ = U(async () => {
+function hl({ patientId: t, collapsed: n, onToggleCollapse: s }) {
+  const { certs: a, loading: i, refresh: r } = rl(t), [o, c] = y(null), [d, l] = y(null), [p, u] = y(null), [m, h] = y({ facilityName: "", orgSlug: "" }), _ = G(async () => {
     if (m.facilityName && m.orgSlug) return m;
-    const k = getOrg()?.org || "", I = { facilityName: window.getChatFacilityInfo?.() || "", orgSlug: k };
-    return h(I), I;
-  }, [m]), g = U(async (w, k) => {
-    if (k === "send")
-      await _(), c(w);
-    else if (k === "skip")
-      d(w);
-    else if (k === "delay")
-      p(w);
-    else if (k === "unskip")
+    const I = getOrg()?.org || "", D = { facilityName: window.getChatFacilityInfo?.() || "", orgSlug: I };
+    return h(D), D;
+  }, [m]), g = G(async (f, I) => {
+    if (I === "send")
+      await _(), c(f);
+    else if (I === "skip")
+      l(f);
+    else if (I === "delay")
+      u(f);
+    else if (I === "unskip")
       try {
-        await window.CertAPI.unskipCert(w.id), window.SuperToast?.success?.("Certification restored"), r();
-      } catch (C) {
-        console.error("[CertSection] Failed to unskip:", C), window.SuperToast?.error?.("Failed to restore certification");
+        await window.CertAPI.unskipCert(f.id), window.SuperToast?.success?.("Certification restored"), r();
+      } catch (N) {
+        console.error("[CertSection] Failed to unskip:", N), window.SuperToast?.error?.("Failed to restore certification");
       }
   }, [_, r]);
-  async function f(w) {
-    await window.CertAPI.skipCert(l.id, w), window.SuperToast?.success?.("Certification skipped"), r();
+  async function v(f) {
+    await window.CertAPI.skipCert(d.id, f), window.SuperToast?.success?.("Certification skipped"), r();
   }
-  async function y(w) {
-    await window.CertAPI.delayCert(u.id, w), window.SuperToast?.success?.("Certification marked as delayed"), r();
+  async function b(f) {
+    await window.CertAPI.delayCert(p.id, f), window.SuperToast?.success?.("Certification marked as delayed"), r();
   }
-  return a ? /* @__PURE__ */ e("div", { class: "pdpm-an__card", children: [
+  return i ? /* @__PURE__ */ e("div", { class: "pdpm-an__card", children: [
     /* @__PURE__ */ e("div", { class: "pdpm-an__card-header pdpm-an__card-header--collapsible", onClick: s, role: "button", tabIndex: 0, children: [
       /* @__PURE__ */ e("span", { class: "pdpm-an__card-title", children: "Certifications" }),
       /* @__PURE__ */ e("svg", { class: `pdpm-an__card-chevron${n ? "" : " pdpm-an__card-chevron--open"}`, width: "12", height: "12", viewBox: "0 0 12 12", fill: "none", children: /* @__PURE__ */ e("path", { d: "M3 4.5L6 7.5L9 4.5", stroke: "currentColor", "stroke-width": "1.5", "stroke-linecap": "round", "stroke-linejoin": "round" }) })
     ] }),
     !n && /* @__PURE__ */ e("div", { class: "pdpm-an__card-body", style: "padding: 16px; text-align: center; color: #6b7280; font-size: 13px;", children: "Loading certifications..." })
-  ] }) : !i || i.length === 0 ? null : /* @__PURE__ */ e(J, { children: [
+  ] }) : !a || a.length === 0 ? null : /* @__PURE__ */ e(Q, { children: [
     /* @__PURE__ */ e("div", { class: "pdpm-an__card", children: [
       /* @__PURE__ */ e("div", { class: "pdpm-an__card-header pdpm-an__card-header--collapsible", onClick: s, role: "button", tabIndex: 0, children: [
         /* @__PURE__ */ e("span", { class: "pdpm-an__card-title", children: "Certifications" }),
-        /* @__PURE__ */ e("span", { class: "pdpm-an__card-badge", children: i.length }),
+        /* @__PURE__ */ e("span", { class: "pdpm-an__card-badge", children: a.length }),
         /* @__PURE__ */ e("svg", { class: `pdpm-an__card-chevron${n ? "" : " pdpm-an__card-chevron--open"}`, width: "12", height: "12", viewBox: "0 0 12 12", fill: "none", children: /* @__PURE__ */ e("path", { d: "M3 4.5L6 7.5L9 4.5", stroke: "currentColor", "stroke-width": "1.5", "stroke-linecap": "round", "stroke-linejoin": "round" }) })
       ] }),
-      !n && /* @__PURE__ */ e("div", { class: "pdpm-an__card-body", style: "padding: 8px 12px;", children: /* @__PURE__ */ e(fc, { certs: i, onAction: g }) })
+      !n && /* @__PURE__ */ e("div", { class: "pdpm-an__card-body", style: "padding: 8px 12px;", children: /* @__PURE__ */ e(ml, { certs: a, onAction: g }) })
     ] }),
     /* @__PURE__ */ e(
-      zs,
+      Ia,
       {
         isOpen: !!o,
         onClose: () => c(null),
@@ -11499,43 +12449,43 @@ function yc({ patientId: t, collapsed: n, onToggleCollapse: s }) {
       }
     ),
     /* @__PURE__ */ e(
-      js,
+      Da,
       {
-        isOpen: !!l,
-        onClose: () => d(null),
-        cert: l,
-        onSkipped: f
+        isOpen: !!d,
+        onClose: () => l(null),
+        cert: d,
+        onSkipped: v
       }
     ),
     /* @__PURE__ */ e(
-      Ks,
+      Na,
       {
-        isOpen: !!u,
-        onClose: () => p(null),
-        cert: u,
-        onDelayed: y
+        isOpen: !!p,
+        onClose: () => u(null),
+        cert: p,
+        onDelayed: b
       }
     )
   ] });
 }
-function li(t) {
+function Ha(t) {
   return t ? new Date(t).toLocaleDateString("en-US", { month: "short", day: "numeric" }) : "";
 }
-function sn(t) {
+function hn(t) {
   return t && t.replace(/[\s/]+$/, "").trim() || null;
 }
-function vc({ assessments: t, selectedId: n, onChange: s }) {
+function _l({ assessments: t, selectedId: n, onChange: s }) {
   if (!t || t.length <= 1) return null;
-  const i = t.map((a) => ({
-    value: a.id,
-    label: sn(a.type) || sn(a.assessmentType) || "Assessment",
-    subtitle: a.ardDate ? `ARD ${li(a.ardDate)}` : void 0,
-    badge: a.currentHipps || a.hipps || void 0
+  const a = t.map((i) => ({
+    value: i.id,
+    label: hn(i.type) || hn(i.assessmentType) || "Assessment",
+    subtitle: i.ardDate ? `ARD ${Ha(i.ardDate)}` : void 0,
+    badge: i.currentHipps || i.hipps || void 0
   }));
   return /* @__PURE__ */ e(
-    ct,
+    vt,
     {
-      options: i,
+      options: a,
       value: n,
       onChange: s,
       align: "right",
@@ -11543,7 +12493,7 @@ function vc({ assessments: t, selectedId: n, onChange: s }) {
     }
   );
 }
-const et = {
+const dt = {
   K0100: "Swallowing Disorder",
   K0200: "Height & Weight",
   K0520A: "Nutritional Approach — Parenteral/IV",
@@ -11644,35 +12594,35 @@ const et = {
   O0600: "Physician Examinations",
   O0700: "Physician Orders"
 };
-function $e(t, n) {
-  const s = n?.replace(/\[.*\]$/, "") || "", i = t?.replace(/\[.*\]$/, "") || "";
-  return t && /^[A-Z]{1,2}\d+[A-Z]?(\[.*\])?$/.test(t) ? et[i] || et[s] || t : t && i !== s ? t : et[s] || et[i] || t || n;
+function Re(t, n) {
+  const s = n?.replace(/\[.*\]$/, "") || "", a = t?.replace(/\[.*\]$/, "") || "";
+  return t && /^[A-Z]{1,2}\d+[A-Z]?(\[.*\])?$/.test(t) ? dt[a] || dt[s] || t : t && a !== s ? t : dt[s] || dt[a] || t || n;
 }
-function us(t, n) {
+function xs(t, n) {
   if (!n?.meta?.ntaTiers) return null;
   for (const s of n.meta.ntaTiers)
     if ((s.levels || []).includes(t)) return s.tier;
   return null;
 }
-function wc(t, n) {
+function gl(t, n) {
   if (n?.mode === "state_rate") {
-    const s = us(t.currentLevel, n), i = us(t.newLevel, n);
-    return s != null && i != null ? `NTA: Tier ${s} → Tier ${i}` : "NTA: tier upgrade";
+    const s = xs(t.currentLevel, n), a = xs(t.newLevel, n);
+    return s != null && a != null ? `NTA: Tier ${s} → Tier ${a}` : "NTA: tier upgrade";
   }
   return `NTA: ${t.currentLevel} → ${t.newLevel}`;
 }
-function pi({ impact: t, payment: n, variant: s }) {
-  const i = [];
-  return t?.nta?.wouldChangeLevel && i.push({ label: "NTA", text: wc(t.nta, n) }), t?.nursing?.wouldChangeGroup && i.push({ label: "Nursing", from: t.nursing.currentPaymentGroup, to: t.nursing.newPaymentGroup }), t?.slp?.wouldChangeGroup && i.push({ label: "SLP", from: t.slp.currentGroup, to: t.slp.newGroup }), t?.ptot?.wouldChangeGroup && i.push({ label: "PT/OT", from: t.ptot.currentGroup, to: t.ptot.newGroup }), i.length === 0 ? null : /* @__PURE__ */ e("div", { class: s === "pending" ? "pdpm-an__impact-chips pdpm-an__impact-chips--pending" : "pdpm-an__impact-chips", children: i.map((r, o) => /* @__PURE__ */ e("span", { class: "pdpm-an__impact-chip", children: [
+function Ga({ impact: t, payment: n, variant: s }) {
+  const a = [];
+  return t?.nta?.wouldChangeLevel && a.push({ label: "NTA", text: gl(t.nta, n) }), t?.nursing?.wouldChangeGroup && a.push({ label: "Nursing", from: t.nursing.currentPaymentGroup, to: t.nursing.newPaymentGroup }), t?.slp?.wouldChangeGroup && a.push({ label: "SLP", from: t.slp.currentGroup, to: t.slp.newGroup }), t?.ptot?.wouldChangeGroup && a.push({ label: "PT/OT", from: t.ptot.currentGroup, to: t.ptot.newGroup }), a.length === 0 ? null : /* @__PURE__ */ e("div", { class: s === "pending" ? "pdpm-an__impact-chips pdpm-an__impact-chips--pending" : "pdpm-an__impact-chips", children: a.map((r, o) => /* @__PURE__ */ e("span", { class: "pdpm-an__impact-chip", children: [
     /* @__PURE__ */ e("span", { class: "pdpm-an__impact-chip-k", children: r.label }),
     /* @__PURE__ */ e("span", { class: "pdpm-an__impact-chip-v", children: r.text || `${r.from} → ${r.to}` })
   ] }, o)) });
 }
-function bc({ data: t, onItemClick: n }) {
-  const s = t?.enhancedDetections || [], i = t?.payment, a = s.filter(
+function fl({ data: t, onItemClick: n }) {
+  const s = t?.enhancedDetections || [], a = t?.payment, i = s.filter(
     (r) => r.wouldChangeHipps && r.solverStatus !== "query_sent" && r.solverStatus !== "awaiting_response" && r.solverStatus !== "dont_code" && r.userDecision?.decision !== "disagree"
   );
-  return a.length === 0 ? null : /* @__PURE__ */ e("div", { class: "pdpm-an__opps", children: a.map((r, o) => {
+  return i.length === 0 ? null : /* @__PURE__ */ e("div", { class: "pdpm-an__opps", children: i.map((r, o) => {
     const c = r.mdsItem?.startsWith("I8000:") ? "I8000" : r.mdsItem;
     return /* @__PURE__ */ e(
       "div",
@@ -11681,14 +12631,14 @@ function bc({ data: t, onItemClick: n }) {
         onClick: () => n && n(r),
         role: "button",
         tabIndex: 0,
-        onKeyDown: (l) => {
-          (l.key === "Enter" || l.key === " ") && (l.preventDefault(), n?.(r));
+        onKeyDown: (d) => {
+          (d.key === "Enter" || d.key === " ") && (d.preventDefault(), n?.(r));
         },
         children: [
           /* @__PURE__ */ e("span", { class: "pdpm-an__opp-icon", children: "⚡" }),
           /* @__PURE__ */ e("span", { class: "pdpm-an__opp-code", children: c }),
-          /* @__PURE__ */ e("span", { class: "pdpm-an__opp-name", children: $e(r.itemName, r.mdsItem) }),
-          /* @__PURE__ */ e(pi, { impact: r.impact, payment: i }),
+          /* @__PURE__ */ e("span", { class: "pdpm-an__opp-name", children: Re(r.itemName, r.mdsItem) }),
+          /* @__PURE__ */ e(Ga, { impact: r.impact, payment: a }),
           /* @__PURE__ */ e("svg", { class: "pdpm-an__opp-go", width: "14", height: "14", viewBox: "0 0 14 14", fill: "none", children: /* @__PURE__ */ e("path", { d: "M5 3l4 4-4 4", stroke: "currentColor", "stroke-width": "1.3", "stroke-linecap": "round", "stroke-linejoin": "round" }) })
         ]
       },
@@ -11696,35 +12646,35 @@ function bc({ data: t, onItemClick: n }) {
     );
   }) });
 }
-function Ic({ data: t, onItemClick: n, collapsed: s, onToggleCollapse: i }) {
+function yl({ data: t, onItemClick: n, collapsed: s, onToggleCollapse: a }) {
   const r = (t?.enhancedDetections || []).filter(
     (o) => o.solverStatus === "dont_code" && (o.diagnosisPassed === !1 || o.activeStatusPassed === !1) && o.userDecision?.decision !== "disagree"
   );
   return r.length === 0 ? null : /* @__PURE__ */ e("div", { class: "pdpm-an__card pdpm-an__card--doc-risk", children: [
-    /* @__PURE__ */ e("div", { class: "pdpm-an__card-header pdpm-an__card-header--collapsible", onClick: i, role: "button", tabIndex: 0, children: [
+    /* @__PURE__ */ e("div", { class: "pdpm-an__card-header pdpm-an__card-header--collapsible", onClick: a, role: "button", tabIndex: 0, children: [
       /* @__PURE__ */ e("span", { class: "pdpm-an__card-icon", children: "⚠" }),
       /* @__PURE__ */ e("span", { class: "pdpm-an__card-title", children: "Documentation Risks" }),
       /* @__PURE__ */ e("span", { class: "pdpm-an__card-badge pdpm-an__card-badge--amber", children: r.length }),
       /* @__PURE__ */ e("svg", { class: `pdpm-an__card-chevron${s ? "" : " pdpm-an__card-chevron--open"}`, width: "12", height: "12", viewBox: "0 0 12 12", fill: "none", children: /* @__PURE__ */ e("path", { d: "M3 4.5L6 7.5L9 4.5", stroke: "currentColor", "stroke-width": "1.5", "stroke-linecap": "round", "stroke-linejoin": "round" }) })
     ] }),
     !s && /* @__PURE__ */ e("div", { class: "pdpm-an__doc-risk-list", children: r.map((o, c) => {
-      const l = o.mdsItem?.startsWith("I8000:") ? "I8000" : o.mdsItem, d = [];
-      return o.diagnosisPassed === !1 && d.push("No physician diagnosis found"), o.activeStatusPassed === !1 && d.push("No active treatment order found"), /* @__PURE__ */ e(
+      const d = o.mdsItem?.startsWith("I8000:") ? "I8000" : o.mdsItem, l = [];
+      return o.diagnosisPassed === !1 && l.push("No physician diagnosis found"), o.activeStatusPassed === !1 && l.push("No active treatment order found"), /* @__PURE__ */ e(
         "div",
         {
           class: "pdpm-an__doc-risk-item",
           onClick: () => n && n(o),
           role: "button",
           tabIndex: 0,
-          onKeyDown: (u) => {
-            (u.key === "Enter" || u.key === " ") && (u.preventDefault(), n && n(o));
+          onKeyDown: (p) => {
+            (p.key === "Enter" || p.key === " ") && (p.preventDefault(), n && n(o));
           },
           children: [
             /* @__PURE__ */ e("div", { class: "pdpm-an__doc-risk-top", children: [
-              /* @__PURE__ */ e("span", { class: "pdpm-an__driver-section", children: l }),
-              /* @__PURE__ */ e("span", { class: "pdpm-an__driver-text", children: $e(o.itemName, o.mdsItem) })
+              /* @__PURE__ */ e("span", { class: "pdpm-an__driver-section", children: d }),
+              /* @__PURE__ */ e("span", { class: "pdpm-an__driver-text", children: Re(o.itemName, o.mdsItem) })
             ] }),
-            /* @__PURE__ */ e("div", { class: "pdpm-an__doc-risk-badges", children: d.map((u, p) => /* @__PURE__ */ e("span", { class: "pdpm-an__doc-risk-badge", children: u }, p)) }),
+            /* @__PURE__ */ e("div", { class: "pdpm-an__doc-risk-badges", children: l.map((p, u) => /* @__PURE__ */ e("span", { class: "pdpm-an__doc-risk-badge", children: p }, u)) }),
             o.rationale && /* @__PURE__ */ e("div", { class: "pdpm-an__doc-risk-rationale", children: o.rationale })
           ]
         },
@@ -11733,24 +12683,24 @@ function Ic({ data: t, onItemClick: n, collapsed: s, onToggleCollapse: i }) {
     }) })
   ] });
 }
-function Dc(t) {
+function vl(t) {
   if (!t) return "not yet sent";
   const n = Math.floor((Date.now() - new Date(t)) / 864e5);
   return n === 0 ? "sent today" : `sent ${n}d ago`;
 }
-function kc({ data: t, onQueryClick: n, collapsed: s, onToggleCollapse: i }) {
-  const a = t?.outstandingQueries || [], r = t?.payment, o = a.filter(
+function bl({ data: t, onQueryClick: n, collapsed: s, onToggleCollapse: a }) {
+  const i = t?.outstandingQueries || [], r = t?.payment, o = i.filter(
     (c) => c.status === "sent" || c.status === "pending" || c.status === "awaiting_response"
   );
   return o.length === 0 ? null : /* @__PURE__ */ e("div", { class: "pdpm-an__card pdpm-an__card--queries", children: [
-    /* @__PURE__ */ e("div", { class: "pdpm-an__card-header pdpm-an__card-header--collapsible", onClick: i, role: "button", tabIndex: 0, children: [
+    /* @__PURE__ */ e("div", { class: "pdpm-an__card-header pdpm-an__card-header--collapsible", onClick: a, role: "button", tabIndex: 0, children: [
       /* @__PURE__ */ e("span", { class: "pdpm-an__card-icon", children: "✉" }),
       /* @__PURE__ */ e("span", { class: "pdpm-an__card-title", children: "Pending Queries" }),
       /* @__PURE__ */ e("span", { class: "pdpm-an__card-badge pdpm-an__card-badge--pending", children: o.length }),
       /* @__PURE__ */ e("svg", { class: `pdpm-an__card-chevron${s ? "" : " pdpm-an__card-chevron--open"}`, width: "12", height: "12", viewBox: "0 0 12 12", fill: "none", children: /* @__PURE__ */ e("path", { d: "M3 4.5L6 7.5L9 4.5", stroke: "currentColor", "stroke-width": "1.5", "stroke-linecap": "round", "stroke-linejoin": "round" }) })
     ] }),
-    !s && /* @__PURE__ */ e("ul", { class: "pdpm-an__query-list", children: o.map((c, l) => {
-      const d = c.pdpmImpact?.componentImpacts, u = d ? { slp: d.slp, nta: d.nta, nursing: d.nursing, ptot: d.ptot } : null, p = c.status === "sent" || c.status === "awaiting_response";
+    !s && /* @__PURE__ */ e("ul", { class: "pdpm-an__query-list", children: o.map((c, d) => {
+      const l = c.pdpmImpact?.componentImpacts, p = l ? { slp: l.slp, nta: l.nta, nursing: l.nursing, ptot: l.ptot } : null, u = c.status === "sent" || c.status === "awaiting_response";
       return /* @__PURE__ */ e(
         "li",
         {
@@ -11762,31 +12712,31 @@ function kc({ data: t, onQueryClick: n, collapsed: s, onToggleCollapse: i }) {
             /* @__PURE__ */ e("div", { class: "pdpm-an__query-top", children: [
               /* @__PURE__ */ e("div", { class: "pdpm-an__query-main", children: [
                 c.mdsItem && /* @__PURE__ */ e("span", { class: "pdpm-an__query-code", children: c.mdsItem }),
-                /* @__PURE__ */ e("span", { class: "pdpm-an__query-text", children: $e(c.mdsItemName, c.mdsItem) })
+                /* @__PURE__ */ e("span", { class: "pdpm-an__query-text", children: Re(c.mdsItemName, c.mdsItem) })
               ] }),
-              /* @__PURE__ */ e("span", { class: `pdpm-an__query-status-pill${p ? "" : " pdpm-an__query-status-pill--draft"}`, children: p ? Dc(c.sentAt) : "draft" })
+              /* @__PURE__ */ e("span", { class: `pdpm-an__query-status-pill${u ? "" : " pdpm-an__query-status-pill--draft"}`, children: u ? vl(c.sentAt) : "draft" })
             ] }),
-            u && /* @__PURE__ */ e(pi, { impact: u, payment: r, variant: "pending" })
+            p && /* @__PURE__ */ e(Ga, { impact: p, payment: r, variant: "pending" })
           ]
         },
-        l
+        d
       );
     }) })
   ] });
 }
-function Cc(t) {
+function wl(t) {
   if (!t) return "";
   const n = Math.floor((Date.now() - new Date(t)) / 864e5);
   return n === 0 ? "today" : n === 1 ? "yesterday" : `${n}d ago`;
 }
-function Nc({ data: t, onQueryClick: n, collapsed: s, onToggleCollapse: i }) {
+function Il({ data: t, onQueryClick: n, collapsed: s, onToggleCollapse: a }) {
   const r = (t?.recentlySigned || t?.signedQueries || t?.completedQueries || []).filter(
     (c) => c.status === "signed" || c.status === "completed" || c.status === "resolved" || c.signedAt
   );
   if (r.length === 0) return null;
   const o = r.filter((c) => c.mdsItemCoded === !1).length;
   return /* @__PURE__ */ e("div", { class: "pdpm-an__card pdpm-an__card--signed", children: [
-    /* @__PURE__ */ e("div", { class: "pdpm-an__card-header pdpm-an__card-header--collapsible", onClick: i, role: "button", tabIndex: 0, children: [
+    /* @__PURE__ */ e("div", { class: "pdpm-an__card-header pdpm-an__card-header--collapsible", onClick: a, role: "button", tabIndex: 0, children: [
       /* @__PURE__ */ e("span", { class: "pdpm-an__card-icon", children: "✓" }),
       /* @__PURE__ */ e("span", { class: "pdpm-an__card-title", children: "Recently Signed" }),
       /* @__PURE__ */ e("span", { class: "pdpm-an__card-badge", children: r.length }),
@@ -11796,39 +12746,39 @@ function Nc({ data: t, onQueryClick: n, collapsed: s, onToggleCollapse: i }) {
       ] }),
       /* @__PURE__ */ e("svg", { class: `pdpm-an__card-chevron${s ? "" : " pdpm-an__card-chevron--open"}`, width: "12", height: "12", viewBox: "0 0 12 12", fill: "none", children: /* @__PURE__ */ e("path", { d: "M3 4.5L6 7.5L9 4.5", stroke: "currentColor", "stroke-width": "1.5", "stroke-linecap": "round", "stroke-linejoin": "round" }) })
     ] }),
-    !s && /* @__PURE__ */ e("ul", { class: "pdpm-an__query-list", children: r.map((c, l) => {
-      const d = c.mdsItemCoded === !1, u = c.mdsItemCoded === !0, p = Cc(c.signedAt || c.completedAt);
+    !s && /* @__PURE__ */ e("ul", { class: "pdpm-an__query-list", children: r.map((c, d) => {
+      const l = c.mdsItemCoded === !1, p = c.mdsItemCoded === !0, u = wl(c.signedAt || c.completedAt);
       return /* @__PURE__ */ e(
         "li",
         {
-          class: `pdpm-an__signed-item${d ? " pdpm-an__signed-item--needs-coding" : ""} pdpm-an__signed-item--clickable`,
+          class: `pdpm-an__signed-item${l ? " pdpm-an__signed-item--needs-coding" : ""} pdpm-an__signed-item--clickable`,
           onClick: () => n && n(c),
           role: "button",
           tabIndex: 0,
           children: [
             c.mdsItem && /* @__PURE__ */ e("span", { class: "pdpm-an__query-code pdpm-an__query-code--signed", children: c.mdsItem }),
-            /* @__PURE__ */ e("span", { class: "pdpm-an__query-text", children: $e(c.mdsItemName, c.mdsItem) }),
+            /* @__PURE__ */ e("span", { class: "pdpm-an__query-text", children: Re(c.mdsItemName, c.mdsItem) }),
             /* @__PURE__ */ e("div", { class: "pdpm-an__signed-badges", children: [
-              d && /* @__PURE__ */ e("span", { class: "pdpm-an__signed-badge pdpm-an__signed-badge--coding", children: "Needs Coding" }),
-              u && /* @__PURE__ */ e("span", { class: "pdpm-an__signed-badge pdpm-an__signed-badge--coded", children: "Coded" }),
-              p && /* @__PURE__ */ e("span", { class: "pdpm-an__query-date", children: p })
+              l && /* @__PURE__ */ e("span", { class: "pdpm-an__signed-badge pdpm-an__signed-badge--coding", children: "Needs Coding" }),
+              p && /* @__PURE__ */ e("span", { class: "pdpm-an__signed-badge pdpm-an__signed-badge--coded", children: "Coded" }),
+              u && /* @__PURE__ */ e("span", { class: "pdpm-an__query-date", children: u })
             ] })
           ]
         },
-        l
+        d
       );
     }) })
   ] });
 }
-function Sc({ nta: t, potentialLevel: n, payment: s }) {
+function Dl({ nta: t, potentialLevel: n, payment: s }) {
   if (!t) return null;
   if (s?.mode === "state_rate") {
     if (t.currentPoints == null || t.pointsNeeded == null) return null;
     const h = s.current?.ntaTier?.tier, _ = h != null ? h - 1 : null, g = _ != null && _ >= 1 ? `Tier ${_}` : null;
     if (!g && t.pointsNeeded <= 0) return null;
-    const f = t.currentPoints + t.pointsNeeded, y = f > 0 ? Math.round(t.currentPoints / f * 100) : 0;
+    const v = t.currentPoints + t.pointsNeeded, b = v > 0 ? Math.round(t.currentPoints / v * 100) : 0;
     return /* @__PURE__ */ e("div", { class: "pdpm-an__nta-inline", children: [
-      /* @__PURE__ */ e("div", { class: "pdpm-an__nta-sbar", children: /* @__PURE__ */ e("div", { class: "pdpm-an__nta-sfill", style: { width: `${y}%` } }) }),
+      /* @__PURE__ */ e("div", { class: "pdpm-an__nta-sbar", children: /* @__PURE__ */ e("div", { class: "pdpm-an__nta-sfill", style: { width: `${b}%` } }) }),
       /* @__PURE__ */ e("span", { class: "pdpm-an__nta-slbl", children: [
         t.pointsNeeded === 1 ? "1 pt" : `${t.pointsNeeded} pts`,
         " away",
@@ -11836,21 +12786,21 @@ function Sc({ nta: t, potentialLevel: n, payment: s }) {
       ] })
     ] });
   }
-  const i = t.levels;
-  if (!i || i.length < 2 || !t.currentLevel) return null;
-  const a = i.findIndex((h) => h.code === t.currentLevel);
-  if (a === -1) return null;
-  const r = n || t.nextLevel, o = r ? i.findIndex((h) => h.code === r) : -1;
-  if (o <= a) return null;
-  const c = (h) => h / (i.length - 1) * 100, l = Math.max(c(a), 4), u = c(o) - l, p = t.pointsNeeded, m = t.nextLevel;
+  const a = t.levels;
+  if (!a || a.length < 2 || !t.currentLevel) return null;
+  const i = a.findIndex((h) => h.code === t.currentLevel);
+  if (i === -1) return null;
+  const r = n || t.nextLevel, o = r ? a.findIndex((h) => h.code === r) : -1;
+  if (o <= i) return null;
+  const c = (h) => h / (a.length - 1) * 100, d = Math.max(c(i), 4), p = c(o) - d, u = t.pointsNeeded, m = t.nextLevel;
   return /* @__PURE__ */ e("div", { class: "pdpm-an__nta-track", children: [
     /* @__PURE__ */ e("div", { class: "pdpm-an__nta-bar", children: [
-      /* @__PURE__ */ e("div", { class: "pdpm-an__nta-bar-cur", style: { width: `${l}%` } }),
-      /* @__PURE__ */ e("div", { class: "pdpm-an__nta-bar-gain", style: { left: `${l}%`, width: `${u}%` } })
+      /* @__PURE__ */ e("div", { class: "pdpm-an__nta-bar-cur", style: { width: `${d}%` } }),
+      /* @__PURE__ */ e("div", { class: "pdpm-an__nta-bar-gain", style: { left: `${d}%`, width: `${p}%` } })
     ] }),
-    /* @__PURE__ */ e("div", { class: "pdpm-an__nta-lvls", children: i.map((h, _) => /* @__PURE__ */ e("span", { class: `pdpm-an__nta-lvl${_ === a ? " pdpm-an__nta-lvl--cur" : ""}${_ === o ? " pdpm-an__nta-lvl--tgt" : ""}`, children: h.code }, h.code)) }),
-    p != null && p > 0 && m && /* @__PURE__ */ e("span", { class: "pdpm-an__nta-away", children: [
-      p === 1 ? "1 pt" : `${p} pts`,
+    /* @__PURE__ */ e("div", { class: "pdpm-an__nta-lvls", children: a.map((h, _) => /* @__PURE__ */ e("span", { class: `pdpm-an__nta-lvl${_ === i ? " pdpm-an__nta-lvl--cur" : ""}${_ === o ? " pdpm-an__nta-lvl--tgt" : ""}`, children: h.code }, h.code)) }),
+    u != null && u > 0 && m && /* @__PURE__ */ e("span", { class: "pdpm-an__nta-away", children: [
+      u === 1 ? "1 pt" : `${u} pts`,
       " ",
       "→",
       " ",
@@ -11858,14 +12808,14 @@ function Sc({ nta: t, potentialLevel: n, payment: s }) {
     ] })
   ] });
 }
-function xc({ gap: t }) {
+function Nl({ gap: t }) {
   const n = t?.slp;
   if (!n || n.tier1Met == null && n.tier2Met == null) return null;
   const s = (n.tier2Met ?? 0) + (n.tier2Needed ?? 0);
   return /* @__PURE__ */ e("div", { class: "pdpm-an__tier-row", children: [
     n.tier1Met != null && /* @__PURE__ */ e("span", { class: "pdpm-an__tier-segment", children: [
       "Tier 1: ",
-      Array.from({ length: n.tier1Met }, (i, a) => /* @__PURE__ */ e("span", { class: "pdpm-an__tier-dot pdpm-an__tier-dot--filled", children: "●" }, a)),
+      Array.from({ length: n.tier1Met }, (a, i) => /* @__PURE__ */ e("span", { class: "pdpm-an__tier-dot pdpm-an__tier-dot--filled", children: "●" }, i)),
       " ",
       n.tier1Met,
       " met"
@@ -11873,8 +12823,8 @@ function xc({ gap: t }) {
     (n.tier2Met != null || n.tier2Needed != null) && /* @__PURE__ */ e("span", { class: "pdpm-an__tier-segment", children: [
       n.tier1Met != null && /* @__PURE__ */ e("span", { class: "pdpm-an__tier-sep", children: "·" }),
       "Tier 2: ",
-      Array.from({ length: n.tier2Met ?? 0 }, (i, a) => /* @__PURE__ */ e("span", { class: "pdpm-an__tier-dot pdpm-an__tier-dot--filled", children: "●" }, `f${a}`)),
-      Array.from({ length: n.tier2Needed ?? 0 }, (i, a) => /* @__PURE__ */ e("span", { class: "pdpm-an__tier-dot pdpm-an__tier-dot--empty", children: "○" }, `e${a}`)),
+      Array.from({ length: n.tier2Met ?? 0 }, (a, i) => /* @__PURE__ */ e("span", { class: "pdpm-an__tier-dot pdpm-an__tier-dot--filled", children: "●" }, `f${i}`)),
+      Array.from({ length: n.tier2Needed ?? 0 }, (a, i) => /* @__PURE__ */ e("span", { class: "pdpm-an__tier-dot pdpm-an__tier-dot--empty", children: "○" }, `e${i}`)),
       " ",
       n.tier2Met ?? 0,
       "/",
@@ -11882,7 +12832,7 @@ function xc({ gap: t }) {
     ] })
   ] });
 }
-function Pc(t) {
+function kl(t) {
   const n = { ptot: [], slp: [], nursing: [], nta: [] };
   if (!t) return n;
   if (t.nta?.contributingConditions && (n.nta = t.nta.contributingConditions.map((s) => ({
@@ -11893,89 +12843,89 @@ function Pc(t) {
   }))), t.slp) {
     const s = [];
     if (t.slp.tier2?.hasSwallowingDisorder && s.push({ mdsItem: "K0100A", itemName: "Swallowing Disorder", helpText: "Tier 2: swallowing" }), t.slp.tier2?.hasMechanicallyAlteredDiet && s.push({ mdsItem: "K0520C1", itemName: "Mechanically Altered Diet", helpText: "Tier 2: mechanically altered diet" }), t.slp.comorbidities)
-      for (const i of t.slp.comorbidities)
-        i.isPresent && i.comorbidityNumber <= 100 && s.push({ mdsItem: i.mdsItem, itemName: i.name, helpText: `Tier 1 comorbidity: ${i.name}` });
+      for (const a of t.slp.comorbidities)
+        a.isPresent && a.comorbidityNumber <= 100 && s.push({ mdsItem: a.mdsItem, itemName: a.name, helpText: `Tier 1 comorbidity: ${a.name}` });
     t.slp.tier1?.hasCognitiveImpairment && s.push({ mdsItem: "C0500", itemName: "Cognitive Impairment", helpText: "Tier 1: cognitive impairment" }), t.slp.tier1?.hasAcuteNeuro && s.push({ mdsItem: "I4500", itemName: "Acute Neurological", helpText: "Tier 1: acute neurological condition" }), n.slp = s;
   }
   if (t.nursing?.conditionsEvaluated) {
     const s = { ES: "Extensive Services", SCH: "Special Care High", SCL: "Special Care Low", CC: "Clinically Complex" };
-    n.nursing = t.nursing.conditionsEvaluated.filter((i) => i.isMet).map((i) => ({
-      mdsItem: i.triggeringItems?.[0] || "",
-      itemName: i.subcategoryName,
-      helpText: `${s[i.mainCategory] || i.mainCategory}: ${i.subcategoryName}`
+    n.nursing = t.nursing.conditionsEvaluated.filter((a) => a.isMet).map((a) => ({
+      mdsItem: a.triggeringItems?.[0] || "",
+      itemName: a.subcategoryName,
+      helpText: `${s[a.mainCategory] || a.mainCategory}: ${a.subcategoryName}`
     }));
   }
   return n;
 }
-function Tc({ data: t, payment: n, onItemClick: s, collapsed: i, onToggleCollapse: a }) {
-  const [r, o] = v(null), c = t?.gapAnalysis || {}, l = t?.hippsDecoded || {}, d = t?.potentialHippsDecoded || {}, u = t?.enhancedDetections || [], p = Pc(t?.calculation), m = [
+function Cl({ data: t, payment: n, onItemClick: s, collapsed: a, onToggleCollapse: i }) {
+  const [r, o] = y(null), c = t?.gapAnalysis || {}, d = t?.hippsDecoded || {}, l = t?.potentialHippsDecoded || {}, p = t?.enhancedDetections || [], u = kl(t?.calculation), m = [
     {
       label: "PT/OT",
       key: "ptot",
-      currentCode: l.ptot?.code,
-      potential: d.ptot?.code,
-      name: l.ptot?.name,
+      currentCode: d.ptot?.code,
+      potential: l.ptot?.code,
+      name: d.ptot?.name,
       detail: c.ptot?.clinicalCategoryName,
       items: c.ptot?.detectionsToHelp || [],
-      captured: p.ptot
+      captured: u.ptot
     },
     {
       label: "SLP",
       key: "slp",
-      currentCode: l.slp?.code,
-      potential: d.slp?.code,
-      name: l.slp?.name,
+      currentCode: d.slp?.code,
+      potential: l.slp?.code,
+      name: d.slp?.name,
       detail: c.slp?.clinicalCategoryName,
       items: c.slp?.detectionsToHelp || [],
-      captured: p.slp
+      captured: u.slp
     },
     {
       label: "Nursing",
       key: "nursing",
-      currentCode: l.nursing?.code,
-      potential: d.nursing?.code,
-      name: l.nursing?.name,
+      currentCode: d.nursing?.code,
+      potential: l.nursing?.code,
+      name: d.nursing?.name,
       detail: c.nursing?.qualifyingSubcategoryName,
       items: c.nursing?.detectionsToHelp || [],
-      captured: p.nursing
+      captured: u.nursing
     },
     {
       label: "NTA",
       key: "nta",
-      currentCode: n?.mode === "state_rate" && n.current?.ntaTier?.tier != null ? `Tier ${n.current.ntaTier.tier}` : l.nta?.code,
-      potential: n?.mode === "state_rate" ? n.potential?.ntaTier?.tier != null && n.potential.ntaTier.tier !== n.current?.ntaTier?.tier ? `Tier ${n.potential.ntaTier.tier}` : null : d.nta?.code,
-      name: n?.mode === "state_rate" && n.current?.ntaTier?.label || l.nta?.name,
+      currentCode: n?.mode === "state_rate" && n.current?.ntaTier?.tier != null ? `Tier ${n.current.ntaTier.tier}` : d.nta?.code,
+      potential: n?.mode === "state_rate" ? n.potential?.ntaTier?.tier != null && n.potential.ntaTier.tier !== n.current?.ntaTier?.tier ? `Tier ${n.potential.ntaTier.tier}` : null : l.nta?.code,
+      name: n?.mode === "state_rate" && n.current?.ntaTier?.label || d.nta?.name,
       detail: n?.mode === "state_rate" && n.current?.ntaTier?.pointRange || c.nta?.clinicalCategoryName,
       items: c.nta?.detectionsToHelp || [],
-      captured: p.nta,
+      captured: u.nta,
       ntaProgress: c.nta
     }
   ];
   return m.some((_) => _.currentCode || _.potential) ? /* @__PURE__ */ e("div", { class: "pdpm-an__card", children: [
-    /* @__PURE__ */ e("div", { class: "pdpm-an__card-header pdpm-an__card-header--collapsible", onClick: a, role: "button", tabIndex: 0, children: [
+    /* @__PURE__ */ e("div", { class: "pdpm-an__card-header pdpm-an__card-header--collapsible", onClick: i, role: "button", tabIndex: 0, children: [
       /* @__PURE__ */ e("span", { class: "pdpm-an__card-icon", children: "☰" }),
       /* @__PURE__ */ e("span", { class: "pdpm-an__card-title", children: "PDPM Components" }),
-      /* @__PURE__ */ e("svg", { class: `pdpm-an__card-chevron${i ? "" : " pdpm-an__card-chevron--open"}`, width: "12", height: "12", viewBox: "0 0 12 12", fill: "none", children: /* @__PURE__ */ e("path", { d: "M3 4.5L6 7.5L9 4.5", stroke: "currentColor", "stroke-width": "1.5", "stroke-linecap": "round", "stroke-linejoin": "round" }) })
+      /* @__PURE__ */ e("svg", { class: `pdpm-an__card-chevron${a ? "" : " pdpm-an__card-chevron--open"}`, width: "12", height: "12", viewBox: "0 0 12 12", fill: "none", children: /* @__PURE__ */ e("path", { d: "M3 4.5L6 7.5L9 4.5", stroke: "currentColor", "stroke-width": "1.5", "stroke-linecap": "round", "stroke-linejoin": "round" }) })
     ] }),
-    !i && /* @__PURE__ */ e("div", { class: "pdpm-an__components", children: m.map((_) => {
+    !a && /* @__PURE__ */ e("div", { class: "pdpm-an__components", children: m.map((_) => {
       if (!_.currentCode && !_.potential) return null;
-      const g = _.potential && _.currentCode && _.potential !== _.currentCode, f = _.items.length > 0, y = _.captured.length > 0, w = r === _.key, k = () => {
-        (f || y || _.detail) && o(w ? null : _.key);
-      }, C = f || y || _.detail;
+      const g = _.potential && _.currentCode && _.potential !== _.currentCode, v = _.items.length > 0, b = _.captured.length > 0, f = r === _.key, I = () => {
+        (v || b || _.detail) && o(f ? null : _.key);
+      }, N = v || b || _.detail;
       return /* @__PURE__ */ e(
         "div",
         {
-          class: `pdpm-an__comp-row${g ? " pdpm-an__comp-row--improved" : ""}${w ? " pdpm-an__comp-row--expanded" : ""}`,
+          class: `pdpm-an__comp-row${g ? " pdpm-an__comp-row--improved" : ""}${f ? " pdpm-an__comp-row--expanded" : ""}`,
           children: [
             /* @__PURE__ */ e(
               "div",
               {
-                class: `pdpm-an__comp-header${C ? " pdpm-an__comp-header--clickable" : ""}`,
-                onClick: C ? k : void 0,
-                role: C ? "button" : void 0,
-                tabIndex: C ? 0 : void 0,
-                onKeyDown: C ? (I) => {
-                  (I.key === "Enter" || I.key === " ") && (I.preventDefault(), k());
+                class: `pdpm-an__comp-header${N ? " pdpm-an__comp-header--clickable" : ""}`,
+                onClick: N ? I : void 0,
+                role: N ? "button" : void 0,
+                tabIndex: N ? 0 : void 0,
+                onKeyDown: N ? (D) => {
+                  (D.key === "Enter" || D.key === " ") && (D.preventDefault(), I());
                 } : void 0,
                 children: [
                   /* @__PURE__ */ e("span", { class: "pdpm-an__comp-label", children: _.label }),
@@ -11986,21 +12936,21 @@ function Tc({ data: t, payment: n, onItemClick: s, collapsed: i, onToggleCollaps
                     " ",
                     _.potential
                   ] }),
-                  C && /* @__PURE__ */ e("svg", { class: `pdpm-an__comp-chevron${w ? " pdpm-an__comp-chevron--open" : ""}`, width: "14", height: "14", viewBox: "0 0 14 14", fill: "none", children: /* @__PURE__ */ e("path", { d: "M4 5.5L7 8.5L10 5.5", stroke: "currentColor", "stroke-width": "1.5", "stroke-linecap": "round", "stroke-linejoin": "round" }) })
+                  N && /* @__PURE__ */ e("svg", { class: `pdpm-an__comp-chevron${f ? " pdpm-an__comp-chevron--open" : ""}`, width: "14", height: "14", viewBox: "0 0 14 14", fill: "none", children: /* @__PURE__ */ e("path", { d: "M4 5.5L7 8.5L10 5.5", stroke: "currentColor", "stroke-width": "1.5", "stroke-linecap": "round", "stroke-linejoin": "round" }) })
                 ]
               }
             ),
-            _.ntaProgress && /* @__PURE__ */ e(Sc, { nta: _.ntaProgress, potentialLevel: _.potential, payment: n }),
-            w && /* @__PURE__ */ e("div", { class: "pdpm-an__comp-detail", children: [
+            _.ntaProgress && /* @__PURE__ */ e(Dl, { nta: _.ntaProgress, potentialLevel: _.potential, payment: n }),
+            f && /* @__PURE__ */ e("div", { class: "pdpm-an__comp-detail", children: [
               _.detail && /* @__PURE__ */ e("div", { class: "pdpm-an__comp-qualifier", children: _.detail }),
-              _.key === "slp" && /* @__PURE__ */ e(xc, { gap: c }),
-              f && /* @__PURE__ */ e(J, { children: [
-                y && /* @__PURE__ */ e("div", { class: "pdpm-an__captured-label pdpm-an__captured-label--opps", children: "Opportunities" }),
-                /* @__PURE__ */ e("div", { class: "pdpm-an__ci-list", children: _.items.map((I, P) => {
-                  const A = I.mdsItem?.startsWith("I8000:") ? "I8000" : I.mdsItem, x = (D) => {
-                    if (D.stopPropagation(), !s) return;
-                    const N = u.find((S) => S.mdsItem === I.mdsItem);
-                    N && s(N);
+              _.key === "slp" && /* @__PURE__ */ e(Nl, { gap: c }),
+              v && /* @__PURE__ */ e(Q, { children: [
+                b && /* @__PURE__ */ e("div", { class: "pdpm-an__captured-label pdpm-an__captured-label--opps", children: "Opportunities" }),
+                /* @__PURE__ */ e("div", { class: "pdpm-an__ci-list", children: _.items.map((D, T) => {
+                  const A = D.mdsItem?.startsWith("I8000:") ? "I8000" : D.mdsItem, x = (k) => {
+                    if (k.stopPropagation(), !s) return;
+                    const S = p.find((w) => w.mdsItem === D.mdsItem);
+                    S && s(S);
                   };
                   return /* @__PURE__ */ e(
                     "div",
@@ -12009,33 +12959,33 @@ function Tc({ data: t, payment: n, onItemClick: s, collapsed: i, onToggleCollaps
                       onClick: x,
                       role: "button",
                       tabIndex: 0,
-                      onKeyDown: (D) => {
-                        (D.key === "Enter" || D.key === " ") && (D.preventDefault(), x(D));
+                      onKeyDown: (k) => {
+                        (k.key === "Enter" || k.key === " ") && (k.preventDefault(), x(k));
                       },
                       children: [
                         /* @__PURE__ */ e("span", { class: "pdpm-an__ci-code", children: A }),
                         /* @__PURE__ */ e("div", { class: "pdpm-an__ci-body", children: [
-                          /* @__PURE__ */ e("span", { class: "pdpm-an__ci-name", children: $e(I.itemName, I.mdsItem) }),
-                          I.helpText && /* @__PURE__ */ e("span", { class: "pdpm-an__ci-help", children: I.helpText })
+                          /* @__PURE__ */ e("span", { class: "pdpm-an__ci-name", children: Re(D.itemName, D.mdsItem) }),
+                          D.helpText && /* @__PURE__ */ e("span", { class: "pdpm-an__ci-help", children: D.helpText })
                         ] }),
-                        I.pointsAdded != null && /* @__PURE__ */ e("span", { class: "pdpm-an__ci-impact pdpm-an__ci-impact--pts", children: [
+                        D.pointsAdded != null && /* @__PURE__ */ e("span", { class: "pdpm-an__ci-impact pdpm-an__ci-impact--pts", children: [
                           "+",
-                          I.pointsAdded,
+                          D.pointsAdded,
                           " pts"
                         ] })
                       ]
                     },
-                    P
+                    T
                   );
                 }) })
               ] }),
-              y && /* @__PURE__ */ e("div", { class: "pdpm-an__captured", children: [
-                (f || _.detail) && /* @__PURE__ */ e("div", { class: "pdpm-an__captured-label", children: "Currently captured" }),
-                /* @__PURE__ */ e("div", { class: "pdpm-an__ci-list", children: _.captured.map((I, P) => {
-                  const A = I.mdsItem?.startsWith("I8000:") ? "I8000" : I.mdsItem, x = (D) => {
-                    if (D.stopPropagation(), !s) return;
-                    const N = u.find((S) => S.mdsItem === I.mdsItem);
-                    N && s(N);
+              b && /* @__PURE__ */ e("div", { class: "pdpm-an__captured", children: [
+                (v || _.detail) && /* @__PURE__ */ e("div", { class: "pdpm-an__captured-label", children: "Currently captured" }),
+                /* @__PURE__ */ e("div", { class: "pdpm-an__ci-list", children: _.captured.map((D, T) => {
+                  const A = D.mdsItem?.startsWith("I8000:") ? "I8000" : D.mdsItem, x = (k) => {
+                    if (k.stopPropagation(), !s) return;
+                    const S = p.find((w) => w.mdsItem === D.mdsItem);
+                    S && s(S);
                   };
                   return /* @__PURE__ */ e(
                     "div",
@@ -12044,24 +12994,24 @@ function Tc({ data: t, payment: n, onItemClick: s, collapsed: i, onToggleCollaps
                       onClick: x,
                       role: "button",
                       tabIndex: 0,
-                      onKeyDown: (D) => {
-                        (D.key === "Enter" || D.key === " ") && (D.preventDefault(), x(D));
+                      onKeyDown: (k) => {
+                        (k.key === "Enter" || k.key === " ") && (k.preventDefault(), x(k));
                       },
                       children: [
                         /* @__PURE__ */ e("span", { class: "pdpm-an__ci-check", children: "✓" }),
                         /* @__PURE__ */ e("span", { class: "pdpm-an__ci-code", children: A }),
                         /* @__PURE__ */ e("div", { class: "pdpm-an__ci-body", children: [
-                          /* @__PURE__ */ e("span", { class: "pdpm-an__ci-name", children: $e(I.itemName, I.mdsItem) }),
-                          I.helpText && /* @__PURE__ */ e("span", { class: "pdpm-an__ci-help", children: I.helpText })
+                          /* @__PURE__ */ e("span", { class: "pdpm-an__ci-name", children: Re(D.itemName, D.mdsItem) }),
+                          D.helpText && /* @__PURE__ */ e("span", { class: "pdpm-an__ci-help", children: D.helpText })
                         ] }),
-                        I.pointsAdded != null && /* @__PURE__ */ e("span", { class: "pdpm-an__ci-impact pdpm-an__ci-impact--pts", children: [
+                        D.pointsAdded != null && /* @__PURE__ */ e("span", { class: "pdpm-an__ci-impact pdpm-an__ci-impact--pts", children: [
                           "+",
-                          I.pointsAdded,
+                          D.pointsAdded,
                           " pts"
                         ] })
                       ]
                     },
-                    `cap-${P}`
+                    `cap-${T}`
                   );
                 }) })
               ] })
@@ -12073,7 +13023,7 @@ function Tc({ data: t, payment: n, onItemClick: s, collapsed: i, onToggleCollaps
     }) })
   ] }) : null;
 }
-const Ac = {
+const Sl = {
   // BIMS — lower = worse
   Intact: "#059669",
   "Mildly Impaired": "#d97706",
@@ -12094,23 +13044,23 @@ const Ac = {
   Dependent: "#d97706",
   "Most Dependent": "#ef4444"
 };
-function tt({ value: t, max: n, label: s, severity: i, impact: a, extra: r }) {
-  const o = Ac[i] || "#9ca3af", c = t != null && n > 0 ? Math.round(t / n * 100) : 0, l = 20, d = 2 * Math.PI * l, u = d - c / 100 * d;
-  return /* @__PURE__ */ e("div", { class: "pdpm-an__sc", title: a || "", children: [
+function ut({ value: t, max: n, label: s, severity: a, impact: i, extra: r }) {
+  const o = Sl[a] || "#9ca3af", c = t != null && n > 0 ? Math.round(t / n * 100) : 0, d = 20, l = 2 * Math.PI * d, p = l - c / 100 * l;
+  return /* @__PURE__ */ e("div", { class: "pdpm-an__sc", title: i || "", children: [
     /* @__PURE__ */ e("div", { class: "pdpm-an__sc-ring", children: [
       /* @__PURE__ */ e("svg", { width: "52", height: "52", viewBox: "0 0 52 52", children: [
-        /* @__PURE__ */ e("circle", { cx: "26", cy: "26", r: l, fill: "none", stroke: "#f1f5f9", "stroke-width": "4" }),
+        /* @__PURE__ */ e("circle", { cx: "26", cy: "26", r: d, fill: "none", stroke: "#f1f5f9", "stroke-width": "4" }),
         t != null && /* @__PURE__ */ e(
           "circle",
           {
             cx: "26",
             cy: "26",
-            r: l,
+            r: d,
             fill: "none",
             stroke: o,
             "stroke-width": "4",
-            "stroke-dasharray": d,
-            "stroke-dashoffset": u,
+            "stroke-dasharray": l,
+            "stroke-dashoffset": p,
             "stroke-linecap": "round",
             transform: "rotate(-90 26 26)"
           }
@@ -12119,11 +13069,11 @@ function tt({ value: t, max: n, label: s, severity: i, impact: a, extra: r }) {
       /* @__PURE__ */ e("span", { class: "pdpm-an__sc-val", children: t ?? "—" })
     ] }),
     /* @__PURE__ */ e("span", { class: "pdpm-an__sc-label", children: s }),
-    i && /* @__PURE__ */ e("span", { class: "pdpm-an__sc-severity", style: { color: o }, children: i }),
+    a && /* @__PURE__ */ e("span", { class: "pdpm-an__sc-severity", style: { color: o }, children: a }),
     r && /* @__PURE__ */ e("span", { class: "pdpm-an__sc-extra", children: r })
   ] });
 }
-const Mc = [
+const xl = [
   { key: "eating", label: "Eating", code: "GG0130A", scope: "both" },
   { key: "oralHygiene", label: "Oral Hygiene", code: "GG0130B", scope: "ptot" },
   { key: "toiletingHygiene", label: "Toileting Hygiene", code: "GG0130C", scope: "both" },
@@ -12135,9 +13085,9 @@ const Mc = [
   { key: "walking50", label: "Walking 50ft", code: "GG0170J", scope: "ptot" },
   { key: "walking150", label: "Walking 150ft", code: "GG0170K", scope: "ptot" }
 ];
-function Lc({ breakdown: t }) {
+function Pl({ breakdown: t }) {
   if (!t) return null;
-  const n = t.selfCare || {}, s = t.mobility || {}, i = { ...n, ...s };
+  const n = t.selfCare || {}, s = t.mobility || {}, a = { ...n, ...s };
   return /* @__PURE__ */ e("div", { class: "pdpm-an__gg", children: [
     /* @__PURE__ */ e("div", { class: "pdpm-an__gg-header", children: [
       /* @__PURE__ */ e("span", { class: "pdpm-an__gg-title", children: "GG Functional Items" }),
@@ -12151,12 +13101,12 @@ function Lc({ breakdown: t }) {
       /* @__PURE__ */ e("span", { class: "pdpm-an__gg-th", children: "Item" }),
       /* @__PURE__ */ e("span", { class: "pdpm-an__gg-th", children: "Score" }),
       /* @__PURE__ */ e("span", { class: "pdpm-an__gg-th", children: "Used In" }),
-      Mc.map((a) => {
-        const r = i[a.key];
-        return /* @__PURE__ */ e(J, { children: [
-          /* @__PURE__ */ e("span", { class: "pdpm-an__gg-cell", children: a.label }),
+      xl.map((i) => {
+        const r = a[i.key];
+        return /* @__PURE__ */ e(Q, { children: [
+          /* @__PURE__ */ e("span", { class: "pdpm-an__gg-cell", children: i.label }),
           /* @__PURE__ */ e("span", { class: "pdpm-an__gg-cell pdpm-an__gg-cell--score", children: r ?? "—" }),
-          /* @__PURE__ */ e("span", { class: `pdpm-an__gg-cell pdpm-an__gg-scope${a.scope === "ptot" ? " pdpm-an__gg-scope--ptot" : ""}`, children: a.scope === "ptot" ? "PT/OT only" : "Nursing + PT/OT" })
+          /* @__PURE__ */ e("span", { class: `pdpm-an__gg-cell pdpm-an__gg-scope${i.scope === "ptot" ? " pdpm-an__gg-scope--ptot" : ""}`, children: i.scope === "ptot" ? "PT/OT only" : "Nursing + PT/OT" })
         ] });
       })
     ] }),
@@ -12176,27 +13126,27 @@ function Lc({ breakdown: t }) {
     ] })
   ] });
 }
-function Ec({ data: t, collapsed: n, onToggleCollapse: s }) {
-  const i = t?.sectionProgress;
-  if (!i || !i.total) return null;
-  const { sections: a = {} } = i, r = Object.entries(a);
-  let o = 0, c = 0, l = 0;
-  for (const [, p] of r)
-    p === "Complete" || p === "Completed" || p === "Locked" ? o++ : p === "In Progress" ? c++ : l++;
-  const d = r.length || i.total || 0, u = d > 0 ? Math.round(o / d * 100) : 0;
+function Tl({ data: t, collapsed: n, onToggleCollapse: s }) {
+  const a = t?.sectionProgress;
+  if (!a || !a.total) return null;
+  const { sections: i = {} } = a, r = Object.entries(i);
+  let o = 0, c = 0, d = 0;
+  for (const [, u] of r)
+    u === "Complete" || u === "Completed" || u === "Locked" ? o++ : u === "In Progress" ? c++ : d++;
+  const l = r.length || a.total || 0, p = l > 0 ? Math.round(o / l * 100) : 0;
   return /* @__PURE__ */ e("div", { class: "pdpm-an__card", children: [
     /* @__PURE__ */ e("div", { class: "pdpm-an__card-header pdpm-an__card-header--collapsible", onClick: s, role: "button", tabIndex: 0, children: [
       /* @__PURE__ */ e("span", { class: "pdpm-an__card-icon", children: "📋" }),
       /* @__PURE__ */ e("span", { class: "pdpm-an__card-title", children: "MDS Sections" }),
       /* @__PURE__ */ e("span", { class: "pdpm-an__card-badge", children: [
-        u,
+        p,
         "%"
       ] }),
       /* @__PURE__ */ e("svg", { class: `pdpm-an__card-chevron${n ? "" : " pdpm-an__card-chevron--open"}`, width: "12", height: "12", viewBox: "0 0 12 12", fill: "none", children: /* @__PURE__ */ e("path", { d: "M3 4.5L6 7.5L9 4.5", stroke: "currentColor", "stroke-width": "1.5", "stroke-linecap": "round", "stroke-linejoin": "round" }) })
     ] }),
     !n && /* @__PURE__ */ e("div", { class: "pdpm-an__sp-body", children: [
       /* @__PURE__ */ e("div", { class: "pdpm-an__sp-bar-row", children: [
-        /* @__PURE__ */ e("div", { class: "pdpm-an__sp-bar", children: /* @__PURE__ */ e("div", { class: "pdpm-an__sp-fill", style: { width: `${u}%` } }) }),
+        /* @__PURE__ */ e("div", { class: "pdpm-an__sp-bar", children: /* @__PURE__ */ e("div", { class: "pdpm-an__sp-fill", style: { width: `${p}%` } }) }),
         /* @__PURE__ */ e("div", { class: "pdpm-an__sp-counts", children: [
           o > 0 && /* @__PURE__ */ e("span", { class: "pdpm-an__sp-count pdpm-an__sp-count--done", children: [
             o,
@@ -12206,29 +13156,29 @@ function Ec({ data: t, collapsed: n, onToggleCollapse: s }) {
             c,
             " in progress"
           ] }),
-          l > 0 && /* @__PURE__ */ e("span", { class: "pdpm-an__sp-count pdpm-an__sp-count--todo", children: [
-            l,
+          d > 0 && /* @__PURE__ */ e("span", { class: "pdpm-an__sp-count pdpm-an__sp-count--todo", children: [
+            d,
             " not started"
           ] })
         ] })
       ] }),
-      r.length > 0 && /* @__PURE__ */ e("div", { class: "pdpm-an__sp-tags", children: r.map(([p, m]) => {
+      r.length > 0 && /* @__PURE__ */ e("div", { class: "pdpm-an__sp-tags", children: r.map(([u, m]) => {
         const h = m === "Complete" || m === "Completed", _ = m === "Locked";
         return /* @__PURE__ */ e("span", { class: `pdpm-an__sp-tag ${h || _ ? "pdpm-an__sp-tag--done" : m === "In Progress" ? "pdpm-an__sp-tag--wip" : "pdpm-an__sp-tag--todo"}`, title: m, children: [
           (h || _) && /* @__PURE__ */ e("span", { class: "pdpm-an__sp-tag-check", children: "✓" }),
-          p
-        ] }, p);
+          u
+        ] }, u);
       }) })
     ] })
   ] });
 }
-function $c({ data: t, collapsed: n, onToggleCollapse: s }) {
-  const [i, a] = v(!1), r = t?.scores;
+function Al({ data: t, collapsed: n, onToggleCollapse: s }) {
+  const [a, i] = y(!1), r = t?.scores;
   if (!r) return null;
-  const o = r.bims, c = r.phq9, l = r.nursingFunctionalScore, d = r.ptotFunctionalScore, u = r.functionalScoreBreakdown;
-  if (!o && !c && !l && !d) return null;
-  const p = c?.score != null && c.score !== 99 ? c.score : c?.staffAssessmentScore, m = (c?.score == null || c?.score === 99) && c?.staffAssessmentScore != null ? "(Staff assessment)" : null, h = [];
-  return o?.meetsImpairmentThreshold && h.push({ color: "#d97706", text: o.pdpmImpact || "Cognitive impairment detected — affects SLP and Nursing classification" }), c?.meetsDepressionThreshold && h.push({ color: "#ea580c", text: c.pdpmImpact || "Depression threshold met — upgrades Nursing payment group" }), l?.meetsBSCPThreshold && h.push({ color: "#6366f1", text: l.bscpNote || "NFS ≥ 11 — BSCP category eligible" }), /* @__PURE__ */ e("div", { class: "pdpm-an__card", children: [
+  const o = r.bims, c = r.phq9, d = r.nursingFunctionalScore, l = r.ptotFunctionalScore, p = r.functionalScoreBreakdown;
+  if (!o && !c && !d && !l) return null;
+  const u = c?.score != null && c.score !== 99 ? c.score : c?.staffAssessmentScore, m = (c?.score == null || c?.score === 99) && c?.staffAssessmentScore != null ? "(Staff assessment)" : null, h = [];
+  return o?.meetsImpairmentThreshold && h.push({ color: "#d97706", text: o.pdpmImpact || "Cognitive impairment detected — affects SLP and Nursing classification" }), c?.meetsDepressionThreshold && h.push({ color: "#ea580c", text: c.pdpmImpact || "Depression threshold met — upgrades Nursing payment group" }), d?.meetsBSCPThreshold && h.push({ color: "#6366f1", text: d.bscpNote || "NFS ≥ 11 — BSCP category eligible" }), /* @__PURE__ */ e("div", { class: "pdpm-an__card", children: [
     /* @__PURE__ */ e("div", { class: "pdpm-an__card-header pdpm-an__card-header--collapsible", onClick: s, role: "button", tabIndex: 0, children: [
       /* @__PURE__ */ e("span", { class: "pdpm-an__card-icon", children: "🧠" }),
       /* @__PURE__ */ e("span", { class: "pdpm-an__card-title", children: "Clinical Scores" }),
@@ -12236,46 +13186,46 @@ function $c({ data: t, collapsed: n, onToggleCollapse: s }) {
     ] }),
     !n && /* @__PURE__ */ e("div", { class: "pdpm-an__scores-body", children: [
       /* @__PURE__ */ e("div", { class: "pdpm-an__scores-row", children: [
-        o && /* @__PURE__ */ e(tt, { value: o.score, max: 15, label: "BIMS", severity: o.severity, impact: o.pdpmImpact }),
-        c && /* @__PURE__ */ e(tt, { value: p, max: 27, label: "PHQ-9", severity: c.severity, impact: c.pdpmImpact, extra: m }),
-        l && /* @__PURE__ */ e(tt, { value: l.score, max: 16, label: "NFS", severity: l.severity, impact: l.pdpmImpact }),
-        d && /* @__PURE__ */ e(tt, { value: d.score, max: 24, label: "PT/OT Func", severity: d.severity, impact: d.pdpmImpact })
+        o && /* @__PURE__ */ e(ut, { value: o.score, max: 15, label: "BIMS", severity: o.severity, impact: o.pdpmImpact }),
+        c && /* @__PURE__ */ e(ut, { value: u, max: 27, label: "PHQ-9", severity: c.severity, impact: c.pdpmImpact, extra: m }),
+        d && /* @__PURE__ */ e(ut, { value: d.score, max: 16, label: "NFS", severity: d.severity, impact: d.pdpmImpact }),
+        l && /* @__PURE__ */ e(ut, { value: l.score, max: 24, label: "PT/OT Func", severity: l.severity, impact: l.pdpmImpact })
       ] }),
       h.length > 0 && /* @__PURE__ */ e("div", { class: "pdpm-an__thresholds", children: h.map((_, g) => /* @__PURE__ */ e("div", { class: "pdpm-an__threshold", style: { borderLeftColor: _.color }, children: _.text }, g)) }),
-      u && /* @__PURE__ */ e("div", { class: "pdpm-an__gg-toggle-wrap", children: [
-        /* @__PURE__ */ e("button", { class: "pdpm-an__gg-toggle", onClick: () => a(!i), children: [
-          i ? "Hide" : "Show",
+      p && /* @__PURE__ */ e("div", { class: "pdpm-an__gg-toggle-wrap", children: [
+        /* @__PURE__ */ e("button", { class: "pdpm-an__gg-toggle", onClick: () => i(!a), children: [
+          a ? "Hide" : "Show",
           " GG Item Breakdown",
-          /* @__PURE__ */ e("svg", { class: `pdpm-an__card-chevron${i ? " pdpm-an__card-chevron--open" : ""}`, width: "10", height: "10", viewBox: "0 0 12 12", fill: "none", children: /* @__PURE__ */ e("path", { d: "M3 4.5L6 7.5L9 4.5", stroke: "currentColor", "stroke-width": "1.5", "stroke-linecap": "round", "stroke-linejoin": "round" }) })
+          /* @__PURE__ */ e("svg", { class: `pdpm-an__card-chevron${a ? " pdpm-an__card-chevron--open" : ""}`, width: "10", height: "10", viewBox: "0 0 12 12", fill: "none", children: /* @__PURE__ */ e("path", { d: "M3 4.5L6 7.5L9 4.5", stroke: "currentColor", "stroke-width": "1.5", "stroke-linecap": "round", "stroke-linejoin": "round" }) })
         ] }),
-        i && /* @__PURE__ */ e(Lc, { breakdown: u })
+        a && /* @__PURE__ */ e(Pl, { breakdown: p })
       ] })
     ] })
   ] });
 }
-function Rc({ data: t }) {
+function Ml({ data: t }) {
   if (!t) return null;
-  const n = t.summary || {}, s = t.calculation || {}, i = t.payment, a = n.currentHipps || s.hippsCode || "?????", r = n.potentialHippsIfCoded, o = i?.mode === "state_rate", c = (P) => P ? P.replace(/_/g, "") : null, l = o && c(i.current?.groupCode) || a, d = o ? c(i.potential?.groupCode) ?? l : r, u = o ? d && d !== l : n.hasImprovements && r && r !== a, p = va(i), m = t.compliance?.summary || {}, h = m.passed ?? 0, _ = m.notApplicable ?? 0, g = (m.total ?? 0) - _, f = t.sectionProgress;
-  let y = 0, w = 0;
-  if (f?.sections)
-    for (const P of Object.values(f.sections))
-      w++, (P === "Complete" || P === "Completed" || P === "Locked") && y++;
-  w || (w = f?.total ?? 0);
-  const k = w > 0 ? Math.round(y / w * 100) : 0, C = (t.enhancedDetections || []).filter(
-    (P) => P.wouldChangeHipps && P.solverStatus !== "query_sent" && P.solverStatus !== "awaiting_response" && P.solverStatus !== "dont_code" && P.userDecision?.decision !== "disagree"
-  ).length, I = p && p.delta && p.delta !== "+$0/day" && p.delta !== "+0";
+  const n = t.summary || {}, s = t.calculation || {}, a = t.payment, i = n.currentHipps || s.hippsCode || "?????", r = n.potentialHippsIfCoded, o = a?.mode === "state_rate", c = (T) => T ? T.replace(/_/g, "") : null, d = o && c(a.current?.groupCode) || i, l = o ? c(a.potential?.groupCode) ?? d : r, p = o ? l && l !== d : n.hasImprovements && r && r !== i, u = _r(a), m = t.compliance?.summary || {}, h = m.passed ?? 0, _ = m.notApplicable ?? 0, g = (m.total ?? 0) - _, v = t.sectionProgress;
+  let b = 0, f = 0;
+  if (v?.sections)
+    for (const T of Object.values(v.sections))
+      f++, (T === "Complete" || T === "Completed" || T === "Locked") && b++;
+  f || (f = v?.total ?? 0);
+  const I = f > 0 ? Math.round(b / f * 100) : 0, N = (t.enhancedDetections || []).filter(
+    (T) => T.wouldChangeHipps && T.solverStatus !== "query_sent" && T.solverStatus !== "awaiting_response" && T.solverStatus !== "dont_code" && T.userDecision?.decision !== "disagree"
+  ).length, D = u && u.delta && u.delta !== "+$0/day" && u.delta !== "+0";
   return /* @__PURE__ */ e("div", { class: "pdpm-an__summary", children: [
-    I && /* @__PURE__ */ e("div", { class: "pdpm-an__summary-delta", children: p.delta }),
+    D && /* @__PURE__ */ e("div", { class: "pdpm-an__summary-delta", children: u.delta }),
     /* @__PURE__ */ e("div", { class: "pdpm-an__summary-codes", children: [
-      /* @__PURE__ */ e("span", { class: "pdpm-an__summary-code", children: l }),
-      u && /* @__PURE__ */ e(J, { children: [
+      /* @__PURE__ */ e("span", { class: "pdpm-an__summary-code", children: d }),
+      p && /* @__PURE__ */ e(Q, { children: [
         /* @__PURE__ */ e("span", { class: "pdpm-an__summary-arrow", children: "→" }),
-        /* @__PURE__ */ e("span", { class: "pdpm-an__summary-code pdpm-an__summary-code--green", children: d })
+        /* @__PURE__ */ e("span", { class: "pdpm-an__summary-code pdpm-an__summary-code--green", children: l })
       ] })
     ] }),
     /* @__PURE__ */ e("div", { class: "pdpm-an__summary-stats", children: [
-      w > 0 && /* @__PURE__ */ e("span", { class: "pdpm-an__summary-stat", children: [
-        k,
+      f > 0 && /* @__PURE__ */ e("span", { class: "pdpm-an__summary-stat", children: [
+        I,
         "% MDS"
       ] }),
       g > 0 && /* @__PURE__ */ e("span", { class: "pdpm-an__summary-stat", children: [
@@ -12284,43 +13234,43 @@ function Rc({ data: t }) {
         g,
         " Compliance"
       ] }),
-      C > 0 && /* @__PURE__ */ e("span", { class: "pdpm-an__summary-stat pdpm-an__summary-stat--green", children: [
-        C,
+      N > 0 && /* @__PURE__ */ e("span", { class: "pdpm-an__summary-stat pdpm-an__summary-stat--green", children: [
+        N,
         " Opp",
-        C !== 1 ? "s" : ""
+        N !== 1 ? "s" : ""
       ] })
     ] })
   ] });
 }
-function qc() {
+function ql() {
   return /* @__PURE__ */ e("div", { class: "pdpm-an__state", children: [
     /* @__PURE__ */ e("div", { class: "pdpm-an__spinner" }),
     /* @__PURE__ */ e("p", { children: "Loading assessment data…" })
   ] });
 }
-function Oc({ message: t, onRetry: n }) {
+function Ll({ message: t, onRetry: n }) {
   return /* @__PURE__ */ e("div", { class: "pdpm-an__state", children: [
     /* @__PURE__ */ e("div", { class: "pdpm-an__state-icon", children: "⚠" }),
     /* @__PURE__ */ e("p", { children: t }),
     /* @__PURE__ */ e("button", { class: "pdpm-an__retry-btn", onClick: n, children: "Retry" })
   ] });
 }
-function Hc({ assessmentData: t, onItemClick: n, onQueryClick: s, patientId: i }) {
-  const [a, r] = v({}), o = (c) => r((l) => ({ ...l, [c]: !l[c] }));
+function El({ assessmentData: t, onItemClick: n, onQueryClick: s, patientId: a }) {
+  const [i, r] = y({}), o = (c) => r((d) => ({ ...d, [c]: !d[c] }));
   return t ? /* @__PURE__ */ e("div", { class: "pdpm-an__content", children: [
-    /* @__PURE__ */ e(Rc, { data: t }),
-    /* @__PURE__ */ e(bc, { data: t, onItemClick: n }),
-    /* @__PURE__ */ e(kc, { data: t, onQueryClick: s, collapsed: a.queries, onToggleCollapse: () => o("queries") }),
-    /* @__PURE__ */ e(Nc, { data: t, onQueryClick: s, collapsed: a.signed, onToggleCollapse: () => o("signed") }),
-    /* @__PURE__ */ e(Tc, { data: t, payment: t?.payment, onItemClick: n, collapsed: a.components, onToggleCollapse: () => o("components") }),
-    /* @__PURE__ */ e(Ec, { data: t, collapsed: a.sections, onToggleCollapse: () => o("sections") }),
-    /* @__PURE__ */ e(Ic, { data: t, onItemClick: n, collapsed: a.docRisks, onToggleCollapse: () => o("docRisks") }),
-    /* @__PURE__ */ e($c, { data: t, collapsed: a.scores, onToggleCollapse: () => o("scores") }),
-    /* @__PURE__ */ e(rc, { data: t, collapsed: a.compliance, onToggleCollapse: () => o("compliance") }),
-    i && /* @__PURE__ */ e(yc, { patientId: i, collapsed: a.certs, onToggleCollapse: () => o("certs") })
+    /* @__PURE__ */ e(Ml, { data: t }),
+    /* @__PURE__ */ e(fl, { data: t, onItemClick: n }),
+    /* @__PURE__ */ e(bl, { data: t, onQueryClick: s, collapsed: i.queries, onToggleCollapse: () => o("queries") }),
+    /* @__PURE__ */ e(Il, { data: t, onQueryClick: s, collapsed: i.signed, onToggleCollapse: () => o("signed") }),
+    /* @__PURE__ */ e(Cl, { data: t, payment: t?.payment, onItemClick: n, collapsed: i.components, onToggleCollapse: () => o("components") }),
+    /* @__PURE__ */ e(Tl, { data: t, collapsed: i.sections, onToggleCollapse: () => o("sections") }),
+    /* @__PURE__ */ e(yl, { data: t, onItemClick: n, collapsed: i.docRisks, onToggleCollapse: () => o("docRisks") }),
+    /* @__PURE__ */ e(Al, { data: t, collapsed: i.scores, onToggleCollapse: () => o("scores") }),
+    /* @__PURE__ */ e(nl, { data: t, collapsed: i.compliance, onToggleCollapse: () => o("compliance") }),
+    a && /* @__PURE__ */ e(hl, { patientId: a, collapsed: i.certs, onToggleCollapse: () => o("certs") })
   ] }) : /* @__PURE__ */ e("div", { class: "pdpm-an__state", children: /* @__PURE__ */ e("p", { children: "No assessment data available." }) });
 }
-function Bc({ mode: t, onToggle: n }) {
+function $l({ mode: t, onToggle: n }) {
   const s = t === "panel" ? "Expand to modal" : "Dock as side panel";
   return /* @__PURE__ */ e("button", { class: "pdpm-an__mode-toggle", onClick: n, title: s, "aria-label": s, children: t === "panel" ? (
     // Expand icon (arrows pointing outward)
@@ -12333,82 +13283,82 @@ function Bc({ mode: t, onToggle: n }) {
     ] })
   ) });
 }
-function ms({ context: t, onClose: n, initialMode: s = "modal" }) {
-  const [i, a] = v(null), [r, o] = v(null), [c, l] = v(s), [d, u] = v(!1), {
-    assessments: p,
+function Rl({ context: t, onClose: n, initialMode: s = "modal" }) {
+  const [a, i] = y(null), [r, o] = y(null), [c, d] = y(s), [l, p] = y(!1), {
+    assessments: u,
     detail: m,
     patientName: h,
     loading: _,
     detailLoading: g,
-    error: f,
-    retry: y,
-    retryDetail: w
-  } = Xo(t, i), k = p?.[0]?.id;
-  t?.scope === "patient" && k && !i && a(k);
-  const C = c === "panel";
-  function I(L) {
-    C || L.target === L.currentTarget && n();
+    error: v,
+    retry: b,
+    retryDetail: f
+  } = Kc(t, a), I = u?.[0]?.id;
+  t?.scope === "patient" && I && !a && i(I);
+  const N = c === "panel";
+  function D(L) {
+    N || L.target === L.currentTarget && n();
   }
-  function P() {
+  function T() {
     n(), typeof MDSCommandCenterLauncher < "u" && MDSCommandCenterLauncher.open();
   }
   function A() {
-    l((L) => L === "modal" ? "panel" : "modal");
+    d((L) => L === "modal" ? "panel" : "modal");
   }
-  const x = h || t?.patientName || "", D = m || null, N = p.find((L) => L.id === i), S = sn(
-    D?.assessmentType || D?.type || N?.type
-  ) || "", E = D?.ardDate || N?.ardDate ? li(D?.ardDate || N?.ardDate) : "", B = _ || g, M = C ? "pdpm-an__panel-backdrop" : "pdpm-an__overlay", q = (C ? "pdpm-an__panel" : "pdpm-an__modal") + (d ? " pdpm-an--split" : "");
-  return /* @__PURE__ */ e("div", { class: M, onClick: I, children: /* @__PURE__ */ e("div", { class: q, role: "dialog", "aria-modal": C ? "false" : "true", "aria-label": "PDPM Analyzer", children: [
+  const x = h || t?.patientName || "", k = m || null, S = u.find((L) => L.id === a), w = hn(
+    k?.assessmentType || k?.type || S?.type
+  ) || "", M = k?.ardDate || S?.ardDate ? Ha(k?.ardDate || S?.ardDate) : "", H = _ || g, P = N ? "pdpm-an__panel-backdrop" : "pdpm-an__overlay", q = (N ? "pdpm-an__panel" : "pdpm-an__modal") + (l ? " pdpm-an--split" : "");
+  return /* @__PURE__ */ e("div", { class: P, onClick: D, children: /* @__PURE__ */ e("div", { class: q, role: "dialog", "aria-modal": N ? "false" : "true", "aria-label": "PDPM Analyzer", children: [
     /* @__PURE__ */ e("div", { class: "pdpm-an__header", children: [
       /* @__PURE__ */ e("div", { class: "pdpm-an__header-left", children: [
-        /* @__PURE__ */ e("button", { class: "pdpm-an__back-btn", onClick: P, children: [
+        /* @__PURE__ */ e("button", { class: "pdpm-an__back-btn", onClick: T, children: [
           "←",
           " Command Center"
         ] }),
         /* @__PURE__ */ e("div", { class: "pdpm-an__patient-info", children: [
           x && /* @__PURE__ */ e("span", { class: "pdpm-an__patient-name", children: x }),
-          S && /* @__PURE__ */ e("span", { class: "pdpm-an__assessment-label", children: S }),
-          E && /* @__PURE__ */ e("span", { class: "pdpm-an__ard-date", children: [
+          w && /* @__PURE__ */ e("span", { class: "pdpm-an__assessment-label", children: w }),
+          M && /* @__PURE__ */ e("span", { class: "pdpm-an__ard-date", children: [
             "ARD ",
-            E
+            M
           ] })
         ] })
       ] }),
       /* @__PURE__ */ e("div", { class: "pdpm-an__header-right", children: [
         /* @__PURE__ */ e(
-          vc,
+          _l,
           {
-            assessments: p,
-            selectedId: i,
+            assessments: u,
+            selectedId: a,
             onChange: (L) => {
-              a(L), o(null);
+              i(L), o(null);
             }
           }
         ),
-        /* @__PURE__ */ e(Bc, { mode: c, onToggle: A }),
+        /* @__PURE__ */ e($l, { mode: c, onToggle: A }),
         /* @__PURE__ */ e("button", { class: "pdpm-an__close-btn", onClick: n, "aria-label": "Close", children: "✕" })
       ] })
     ] }),
     /* @__PURE__ */ e("div", { class: "pdpm-an__body", children: [
-      B && /* @__PURE__ */ e(qc, {}),
-      !B && f && /* @__PURE__ */ e(Oc, { message: f, onRetry: m ? w : y }),
-      !B && !f && (r ? /* @__PURE__ */ e(
-        di,
+      H && /* @__PURE__ */ e(ql, {}),
+      !H && v && /* @__PURE__ */ e(Ll, { message: v, onRetry: m ? f : b }),
+      !H && !v && (r ? /* @__PURE__ */ e(
+        Ba,
         {
           item: r.item,
-          context: { ...t, assessmentId: i || t?.assessmentId, patientName: x },
+          context: { ...t, assessmentId: a || t?.assessmentId, patientName: x },
           onBack: () => {
-            o(null), u(!1);
+            o(null), p(!1);
           },
-          onSplitChange: u,
+          onSplitChange: p,
           onDismiss: () => {
-            o(null), u(!1);
+            o(null), p(!1);
           }
         }
       ) : /* @__PURE__ */ e(
-        Hc,
+        El,
         {
-          assessmentData: D,
+          assessmentData: k,
           patientId: t?.patientId,
           onItemClick: (L) => o({ type: "detection", item: L }),
           onQueryClick: (L) => {
@@ -12424,243 +13374,243 @@ function ms({ context: t, onClose: n, initialMode: s = "modal" }) {
     ] })
   ] }) });
 }
-function Fc({ patientId: t, facilityName: n, orgSlug: s, assessmentId: i }) {
-  const [a, r] = v([]), [o, c] = v(null), [l, d] = v(null), [u, p] = v(null), [m, h] = v(!0), [_, g] = v(null), f = U(async () => {
+function Ol({ patientId: t, facilityName: n, orgSlug: s, assessmentId: a }) {
+  const [i, r] = y([]), [o, c] = y(null), [d, l] = y(null), [p, u] = y(null), [m, h] = y(!0), [_, g] = y(null), v = G(async () => {
     h(!0), g(null);
     try {
-      const y = new URLSearchParams({
+      const b = new URLSearchParams({
         patientId: t,
         facilityName: n,
         orgSlug: s
       });
-      i && y.set("externalAssessmentId", i);
-      const w = await chrome.runtime.sendMessage({
+      a && b.set("externalAssessmentId", a);
+      const f = await chrome.runtime.sendMessage({
         type: "API_REQUEST",
-        endpoint: `/api/extension/mds/queryable-items?${y}`
+        endpoint: `/api/extension/mds/queryable-items?${b}`
       });
-      if (!w.success)
-        throw new Error(w.error || "Failed to fetch queryable items");
-      const k = w.data || {}, C = i || k.assessment?.externalAssessmentId || null;
-      let I = {};
-      if (C) {
-        const D = new URLSearchParams({
+      if (!f.success)
+        throw new Error(f.error || "Failed to fetch queryable items");
+      const I = f.data || {}, N = a || I.assessment?.externalAssessmentId || null;
+      let D = {};
+      if (N) {
+        const k = new URLSearchParams({
           facilityName: n,
           orgSlug: s,
-          externalAssessmentId: C
-        }), N = await chrome.runtime.sendMessage({
+          externalAssessmentId: N
+        }), S = await chrome.runtime.sendMessage({
           type: "API_REQUEST",
-          endpoint: `/api/extension/mds/pdpm-potential?${D}`
+          endpoint: `/api/extension/mds/pdpm-potential?${k}`
         });
-        I = N.success ? N.data || {} : {};
+        D = S.success ? S.data || {} : {};
       }
-      const P = {};
-      if (I.enhancedDetections)
-        for (const D of I.enhancedDetections)
-          P[D.mdsItem] = {
-            wouldChangeHipps: D.wouldChangeHipps,
-            impact: D.impact
+      const T = {};
+      if (D.enhancedDetections)
+        for (const k of D.enhancedDetections)
+          T[k.mdsItem] = {
+            wouldChangeHipps: k.wouldChangeHipps,
+            impact: k.impact
           };
-      if (I.outstandingQueries)
-        for (const D of I.outstandingQueries)
-          D.pdpmImpact && (P[D.mdsItem] = {
-            wouldChangeHipps: D.pdpmImpact.wouldChangeHipps,
-            impact: D.pdpmImpact.componentImpacts || D.pdpmImpact
+      if (D.outstandingQueries)
+        for (const k of D.outstandingQueries)
+          k.pdpmImpact && (T[k.mdsItem] = {
+            wouldChangeHipps: k.pdpmImpact.wouldChangeHipps,
+            impact: k.pdpmImpact.componentImpacts || k.pdpmImpact
           });
-      const x = (k.items || []).map((D) => ({
-        ...D,
-        pdpmImpact: P[D.mdsItem] || null
+      const x = (I.items || []).map((k) => ({
+        ...k,
+        pdpmImpact: T[k.mdsItem] || null
       }));
-      r(x), c(k.assessment || I.assessment || null), d(k.summary || null), p({
-        currentHipps: I.summary?.currentHipps || I.calculation?.hippsCode || null,
-        potentialHipps: I.summary?.potentialHippsIfCoded || null,
-        hasImprovements: I.summary?.hasImprovements || !1,
-        calculation: I.calculation || null,
-        enhancedDetections: I.enhancedDetections || []
+      r(x), c(I.assessment || D.assessment || null), l(I.summary || null), u({
+        currentHipps: D.summary?.currentHipps || D.calculation?.hippsCode || null,
+        potentialHipps: D.summary?.potentialHippsIfCoded || null,
+        hasImprovements: D.summary?.hasImprovements || !1,
+        calculation: D.calculation || null,
+        enhancedDetections: D.enhancedDetections || []
       });
-    } catch (y) {
-      console.error("[QueryItems] Failed to fetch data:", y), g(y.message);
+    } catch (b) {
+      console.error("[QueryItems] Failed to fetch data:", b), g(b.message);
     } finally {
       h(!1);
     }
-  }, [t, n, s, i]);
+  }, [t, n, s, a]);
   return F(() => {
-    t && n && s ? f() : (h(!1), g("Missing required context (patient, facility, or organization)."));
-  }, [f]), {
-    items: a,
+    t && n && s ? v() : (h(!1), g("Missing required context (patient, facility, or organization)."));
+  }, [v]), {
+    items: i,
     setItems: r,
     assessment: o,
-    summary: l,
-    pdpmData: u,
+    summary: d,
+    pdpmData: p,
     loading: m,
     error: _,
-    retry: f
+    retry: v
   };
 }
-function Uc(t, n) {
-  const [s, i] = v(/* @__PURE__ */ new Set()), a = Y(() => t.filter(
-    (u) => !u.existingQuery && !n.has(u.mdsItem)
-  ), [t, n]), r = U((u) => {
-    i((p) => {
-      const m = new Set(p);
-      return m.has(u) ? m.delete(u) : m.add(u), m;
+function Bl(t, n) {
+  const [s, a] = y(/* @__PURE__ */ new Set()), i = Y(() => t.filter(
+    (p) => !p.existingQuery && !n.has(p.mdsItem)
+  ), [t, n]), r = G((p) => {
+    a((u) => {
+      const m = new Set(u);
+      return m.has(p) ? m.delete(p) : m.add(p), m;
     });
-  }, []), o = U(() => {
-    const u = a.filter((p) => p.solverStatus === "needs_physician_query").map((p) => p.mdsItem);
-    i(new Set(u));
-  }, [a]), c = U(() => {
-    i(/* @__PURE__ */ new Set());
-  }, []), l = U((u) => s.has(u), [s]), d = Y(() => t.filter((u) => s.has(u.mdsItem)), [t, s]);
+  }, []), o = G(() => {
+    const p = i.filter((u) => u.solverStatus === "needs_physician_query").map((u) => u.mdsItem);
+    a(new Set(p));
+  }, [i]), c = G(() => {
+    a(/* @__PURE__ */ new Set());
+  }, []), d = G((p) => s.has(p), [s]), l = Y(() => t.filter((p) => s.has(p.mdsItem)), [t, s]);
   return {
     selectedIds: s,
-    selectedItems: d,
+    selectedItems: l,
     selectedCount: s.size,
-    selectableCount: a.length,
+    selectableCount: i.length,
     toggle: r,
     selectAllQueryable: o,
     deselectAll: c,
-    isSelected: l
+    isSelected: d
   };
 }
-function ui({ patientId: t, facilityName: n, orgSlug: s, assessmentId: i, onComplete: a }) {
-  const [r, o] = v("idle"), [c, l] = v([]), [d, u] = v([]), [p, m] = v(null), [h, _] = v({ current: 0, total: 0 }), [g, f] = v(null), y = ee(!1), w = U(async (D) => {
-    if (D.length === 0) return;
-    o("generating"), f(null), _({ current: 0, total: D.length }), y.current = !1;
-    const N = [];
+function Fa({ patientId: t, facilityName: n, orgSlug: s, assessmentId: a, onComplete: i }) {
+  const [r, o] = y("idle"), [c, d] = y([]), [l, p] = y([]), [u, m] = y(null), [h, _] = y({ current: 0, total: 0 }), [g, v] = y(null), b = te(!1), f = G(async (k) => {
+    if (k.length === 0) return;
+    o("generating"), v(null), _({ current: 0, total: k.length }), b.current = !1;
+    const S = [];
     try {
-      const S = window.QueryAPI.fetchPractitioners(n, s);
-      for (let B = 0; B < D.length && !y.current; B++) {
-        const M = D[B], q = M.pdpmCategoryName || M.mdsItemName || M.mdsItem;
-        _({ current: B, total: D.length, currentItemName: q });
+      const w = window.QueryAPI.fetchPractitioners(n, s);
+      for (let H = 0; H < k.length && !b.current; H++) {
+        const P = k[H], q = P.pdpmCategoryName || P.mdsItemName || P.mdsItem;
+        _({ current: H, total: k.length, currentItemName: q });
         try {
           const L = await window.QueryAPI.generateNote(
-            M.mdsItem,
-            M
+            P.mdsItem,
+            P
           );
-          N.push({
-            item: M,
+          S.push({
+            item: P,
             noteText: L.note,
             preferredIcd10: L.preferredIcd10,
             icd10Options: L.icd10Options
           });
         } catch (L) {
-          console.error(`[BatchQuery] Failed to generate note for ${M.mdsItem}:`, L), N.push({
-            item: M,
+          console.error(`[BatchQuery] Failed to generate note for ${P.mdsItem}:`, L), S.push({
+            item: P,
             noteText: "",
             error: L.message
           });
         }
       }
-      _({ current: D.length, total: D.length });
+      _({ current: k.length, total: k.length });
       try {
-        const B = await S;
-        u(B);
-      } catch (B) {
-        console.error("[BatchQuery] Failed to fetch practitioners:", B), u([]);
+        const H = await w;
+        p(H);
+      } catch (H) {
+        console.error("[BatchQuery] Failed to fetch practitioners:", H), p([]);
       }
-      const E = N.filter((B) => B.noteText);
-      l(E), E.length === 0 ? (f("Failed to generate any notes. Please try again."), o("idle")) : o("reviewing");
-    } catch (S) {
-      console.error("[BatchQuery] Generation failed:", S), f(S.message), o("idle");
+      const M = S.filter((H) => H.noteText);
+      d(M), M.length === 0 ? (v("Failed to generate any notes. Please try again."), o("idle")) : o("reviewing");
+    } catch (w) {
+      console.error("[BatchQuery] Generation failed:", w), v(w.message), o("idle");
     }
-  }, [t, n, s, i]), k = U((D, N) => {
-    l(
-      (S) => S.map(
-        (E) => E.item.mdsItem === D ? { ...E, noteText: N } : E
+  }, [t, n, s, a]), I = G((k, S) => {
+    d(
+      (w) => w.map(
+        (M) => M.item.mdsItem === k ? { ...M, noteText: S } : M
       )
     );
-  }, []), C = U((D, N) => {
-    l(
-      (S) => S.map(
-        (E) => E.item.mdsItem === D ? { ...E, selectedIcd10: N } : E
+  }, []), N = G((k, S) => {
+    d(
+      (w) => w.map(
+        (M) => M.item.mdsItem === k ? { ...M, selectedIcd10: S } : M
       )
     );
-  }, []), I = U(async () => {
-    if (!p || c.length === 0) return;
-    o("sending"), f(null), _({ current: 0, total: c.length }), y.current = !1;
-    const D = [];
+  }, []), D = G(async () => {
+    if (!u || c.length === 0) return;
+    o("sending"), v(null), _({ current: 0, total: c.length }), b.current = !1;
+    const k = [];
     try {
-      for (let N = 0; N < c.length && !y.current; N++) {
-        const { item: S, noteText: E, selectedIcd10: B, preferredIcd10: M } = c[N];
-        _({ current: N, total: c.length });
-        const q = B || M?.code || null, L = q ? [{ code: q }] : S.recommendedIcd10 || [];
+      for (let S = 0; S < c.length && !b.current; S++) {
+        const { item: w, noteText: M, selectedIcd10: H, preferredIcd10: P } = c[S];
+        _({ current: S, total: c.length });
+        const q = H || P?.code || null, L = q ? [{ code: q }] : w.recommendedIcd10 || [];
         try {
           const { query: O } = await window.QueryAPI.createQuery({
             patientId: t,
             facilityName: n,
             orgSlug: s,
-            mdsAssessmentId: i,
-            mdsItem: S.mdsItem,
-            mdsItemName: S.pdpmCategoryName || S.mdsItemName || S.mdsItem,
-            queryReason: S.rationale || "",
-            keyFindings: S.keyFindings || [],
-            queryEvidence: S.queryEvidence || S.evidence || [],
+            mdsAssessmentId: a,
+            mdsItem: w.mdsItem,
+            mdsItemName: w.pdpmCategoryName || w.mdsItemName || w.mdsItem,
+            queryReason: w.rationale || "",
+            keyFindings: w.keyFindings || [],
+            queryEvidence: w.queryEvidence || w.evidence || [],
             recommendedIcd10: L,
-            aiGeneratedNote: E
+            aiGeneratedNote: M
           });
           await window.QueryAPI.sendQuery(
             O.id,
-            [p],
-            E
-          ), D.push({ ...O, mdsItem: S.mdsItem });
+            [u],
+            M
+          ), k.push({ ...O, mdsItem: w.mdsItem });
         } catch (O) {
-          console.error(`[BatchQuery] Failed to create/send query for ${S.mdsItem}:`, O);
+          console.error(`[BatchQuery] Failed to create/send query for ${w.mdsItem}:`, O);
         }
       }
-      if (_({ current: c.length, total: c.length }), o("complete"), a) {
-        const N = d.find((E) => E.id === p), S = N ? N.firstName && N.lastName ? `${N.firstName} ${N.lastName}${N.title ? `, ${N.title}` : ""}` : N.name || "Provider" : "Provider";
-        a(D, S);
+      if (_({ current: c.length, total: c.length }), o("complete"), i) {
+        const S = l.find((M) => M.id === u), w = S ? S.firstName && S.lastName ? `${S.firstName} ${S.lastName}${S.title ? `, ${S.title}` : ""}` : S.name || "Provider" : "Provider";
+        i(k, w);
       }
-    } catch (N) {
-      console.error("[BatchQuery] Send failed:", N), f(N.message), o("reviewing");
+    } catch (S) {
+      console.error("[BatchQuery] Send failed:", S), v(S.message), o("reviewing");
     }
-  }, [t, n, s, i, c, p, d, a]), P = U(() => {
-    o("idle"), l([]), _({ current: 0, total: 0 });
-  }, []), A = U(() => {
-    o("idle"), l([]), u([]), m(null), _({ current: 0, total: 0 }), f(null), y.current = !1;
-  }, []), x = U(() => {
-    y.current = !0;
+  }, [t, n, s, a, c, u, l, i]), T = G(() => {
+    o("idle"), d([]), _({ current: 0, total: 0 });
+  }, []), A = G(() => {
+    o("idle"), d([]), p([]), m(null), _({ current: 0, total: 0 }), v(null), b.current = !1;
+  }, []), x = G(() => {
+    b.current = !0;
   }, []);
   return {
     state: r,
     generatedQueries: c,
-    practitioners: d,
-    selectedPractitionerId: p,
+    practitioners: l,
+    selectedPractitionerId: u,
     setSelectedPractitionerId: m,
     progress: h,
     error: g,
-    generate: w,
-    updateNote: k,
-    updateIcd10: C,
-    sendAll: I,
-    backToSelection: P,
+    generate: f,
+    updateNote: I,
+    updateIcd10: N,
+    sendAll: D,
+    backToSelection: T,
     reset: A,
     abort: x
   };
 }
-const Gc = ({ assessment: t, summary: n, pdpmData: s }) => {
-  const i = s?.calculation, a = s?.hasImprovements && s.potentialHipps && s.potentialHipps !== s.currentHipps, r = Vc(s);
+const Hl = ({ assessment: t, summary: n, pdpmData: s }) => {
+  const a = s?.calculation, i = s?.hasImprovements && s.potentialHipps && s.potentialHipps !== s.currentHipps, r = Gl(s);
   return /* @__PURE__ */ e("div", { className: "query-items__header", children: [
     /* @__PURE__ */ e("div", { className: "query-items__header-top", children: [
-      /* @__PURE__ */ e("div", { className: "query-items__assessment-info", children: t && /* @__PURE__ */ e(J, { children: [
+      /* @__PURE__ */ e("div", { className: "query-items__assessment-info", children: t && /* @__PURE__ */ e(Q, { children: [
         /* @__PURE__ */ e("strong", { children: t.description || "Assessment" }),
         t.ardDate && /* @__PURE__ */ e("span", { children: [
           " · ARD: ",
-          Wc(t.ardDate)
+          Fl(t.ardDate)
         ] })
       ] }) }),
       s && s.currentHipps && /* @__PURE__ */ e("div", { className: "query-items__hipps", children: [
         /* @__PURE__ */ e("span", { className: "query-items__hipps-current", children: s.currentHipps }),
-        a ? /* @__PURE__ */ e(J, { children: [
+        i ? /* @__PURE__ */ e(Q, { children: [
           /* @__PURE__ */ e("span", { className: "query-items__hipps-arrow", children: "→" }),
           /* @__PURE__ */ e("span", { className: "query-items__hipps-potential", children: s.potentialHipps })
         ] }) : /* @__PURE__ */ e("span", { className: "query-items__hipps-same", children: "No change" })
       ] })
     ] }),
-    i && /* @__PURE__ */ e("div", { className: "query-items__components", children: [
-      /* @__PURE__ */ e(nt, { label: "PT/OT", current: i.ptot, change: r.ptot }),
-      /* @__PURE__ */ e(nt, { label: "SLP", current: i.slp, change: r.slp }),
-      /* @__PURE__ */ e(nt, { label: "Nursing", current: i.nursing, change: r.nursing }),
-      /* @__PURE__ */ e(nt, { label: "NTA", current: i.nta, change: r.nta })
+    a && /* @__PURE__ */ e("div", { className: "query-items__components", children: [
+      /* @__PURE__ */ e(pt, { label: "PT/OT", current: a.ptot, change: r.ptot }),
+      /* @__PURE__ */ e(pt, { label: "SLP", current: a.slp, change: r.slp }),
+      /* @__PURE__ */ e(pt, { label: "Nursing", current: a.nursing, change: r.nursing }),
+      /* @__PURE__ */ e(pt, { label: "NTA", current: a.nta, change: r.nta })
     ] }),
     n && /* @__PURE__ */ e("div", { className: "query-items__summary", children: [
       /* @__PURE__ */ e("div", { className: "query-items__summary-stat", children: [
@@ -12677,26 +13627,26 @@ const Gc = ({ assessment: t, summary: n, pdpmData: s }) => {
       ] })
     ] })
   ] });
-}, nt = ({ label: t, current: n, change: s }) => {
+}, pt = ({ label: t, current: n, change: s }) => {
   if (!n) return null;
-  const i = s && s.to && s.to !== n;
-  return /* @__PURE__ */ e("div", { className: `query-items__component${i ? " query-items__component--has-change" : ""}`, children: [
+  const a = s && s.to && s.to !== n;
+  return /* @__PURE__ */ e("div", { className: `query-items__component${a ? " query-items__component--has-change" : ""}`, children: [
     /* @__PURE__ */ e("span", { className: "query-items__component-label", children: t }),
     /* @__PURE__ */ e("span", { className: "query-items__component-value", children: n }),
-    i && /* @__PURE__ */ e(J, { children: [
+    a && /* @__PURE__ */ e(Q, { children: [
       /* @__PURE__ */ e("span", { className: "query-items__component-arrow", children: "→" }),
       /* @__PURE__ */ e("span", { className: "query-items__component-new", children: s.to })
     ] })
   ] });
 };
-function Vc(t) {
+function Gl(t) {
   const n = { ptot: null, slp: null, nursing: null, nta: null };
   if (!t?.enhancedDetections) return n;
   for (const s of t.enhancedDetections)
     s.impact && (s.impact.ptot?.wouldChangeGroup && !n.ptot && (n.ptot = { to: s.impact.ptot.newGroup }), s.impact.slp?.wouldChangeGroup && !n.slp && (n.slp = { to: s.impact.slp.newGroup }), s.impact.nursing?.wouldChangeGroup && !n.nursing && (n.nursing = { to: s.impact.nursing.newPaymentGroup }), s.impact.nta?.wouldChangeLevel && !n.nta && (n.nta = { to: s.impact.nta.newLevel }));
   return n;
 }
-function Wc(t) {
+function Fl(t) {
   if (!t) return "";
   try {
     const n = new Date(t);
@@ -12705,16 +13655,16 @@ function Wc(t) {
     return t;
   }
 }
-const st = ({ item: t, isActive: n, isChecked: s, onSelect: i, onToggleCheck: a }) => {
+const mt = ({ item: t, isActive: n, isChecked: s, onSelect: a, onToggleCheck: i }) => {
   const r = t.pdpmCategoryName || t.mdsItemName || t.mdsItem, o = t.solverStatus === "needs_physician_query", c = !!t.existingQuery;
   return /* @__PURE__ */ e(
     "div",
     {
       className: `qi-sidebar__item${n ? " qi-sidebar__item--active" : ""}${o ? " qi-sidebar__item--query" : ""}`,
-      onClick: () => i(t.mdsItem),
+      onClick: () => a(t.mdsItem),
       children: [
-        /* @__PURE__ */ e("div", { className: "qi-sidebar__item-check", onClick: (d) => {
-          d.stopPropagation(), c || a(t.mdsItem);
+        /* @__PURE__ */ e("div", { className: "qi-sidebar__item-check", onClick: (l) => {
+          l.stopPropagation(), c || i(t.mdsItem);
         }, children: /* @__PURE__ */ e(
           "input",
           {
@@ -12745,12 +13695,12 @@ const st = ({ item: t, isActive: n, isChecked: s, onSelect: i, onToggleCheck: a 
       ]
     }
   );
-}, Qc = ({ items: t, activeItem: n, onSelect: s, isChecked: i, onToggleCheck: a, dismissedItems: r }) => {
-  const { queryItems: o, onMdsItems: c, canCodeItems: l, reviewItems: d } = Y(() => {
-    const u = [], p = [], m = [], h = [];
+}, Ul = ({ items: t, activeItem: n, onSelect: s, isChecked: a, onToggleCheck: i, dismissedItems: r }) => {
+  const { queryItems: o, onMdsItems: c, canCodeItems: d, reviewItems: l } = Y(() => {
+    const p = [], u = [], m = [], h = [];
     for (const _ of t)
-      r.has(_.mdsItem) || (_.solverStatus === "needs_physician_query" ? u.push(_) : _.solverStatus === "needs_review" ? h.push(_) : _.codedOnMds ? p.push(_) : m.push(_));
-    return { queryItems: u, onMdsItems: p, canCodeItems: m, reviewItems: h };
+      r.has(_.mdsItem) || (_.solverStatus === "needs_physician_query" ? p.push(_) : _.solverStatus === "needs_review" ? h.push(_) : _.codedOnMds ? u.push(_) : m.push(_));
+    return { queryItems: p, onMdsItems: u, canCodeItems: m, reviewItems: h };
   }, [t, r]);
   return /* @__PURE__ */ e("div", { className: "qi-sidebar", children: [
     o.length > 0 && /* @__PURE__ */ e("div", { className: "qi-sidebar__group", children: [
@@ -12758,50 +13708,50 @@ const st = ({ item: t, isActive: n, isChecked: s, onSelect: i, onToggleCheck: a 
         /* @__PURE__ */ e("span", { children: "Needs Query" }),
         /* @__PURE__ */ e("span", { className: "qi-sidebar__group-count", children: o.length })
       ] }),
-      o.map((u) => /* @__PURE__ */ e(
-        st,
+      o.map((p) => /* @__PURE__ */ e(
+        mt,
         {
-          item: u,
-          isActive: n === u.mdsItem,
-          isChecked: i(u.mdsItem),
+          item: p,
+          isActive: n === p.mdsItem,
+          isChecked: a(p.mdsItem),
           onSelect: s,
-          onToggleCheck: a
+          onToggleCheck: i
         },
-        u.mdsItem
-      ))
-    ] }),
-    l.length > 0 && /* @__PURE__ */ e("div", { className: "qi-sidebar__group", children: [
-      /* @__PURE__ */ e("div", { className: "qi-sidebar__group-header qi-sidebar__group-header--can-code", children: [
-        /* @__PURE__ */ e("span", { children: "Can Code" }),
-        /* @__PURE__ */ e("span", { className: "qi-sidebar__group-count", children: l.length })
-      ] }),
-      l.map((u) => /* @__PURE__ */ e(
-        st,
-        {
-          item: u,
-          isActive: n === u.mdsItem,
-          isChecked: i(u.mdsItem),
-          onSelect: s,
-          onToggleCheck: a
-        },
-        u.mdsItem
+        p.mdsItem
       ))
     ] }),
     d.length > 0 && /* @__PURE__ */ e("div", { className: "qi-sidebar__group", children: [
-      /* @__PURE__ */ e("div", { className: "qi-sidebar__group-header qi-sidebar__group-header--review", children: [
-        /* @__PURE__ */ e("span", { children: "Needs Review" }),
+      /* @__PURE__ */ e("div", { className: "qi-sidebar__group-header qi-sidebar__group-header--can-code", children: [
+        /* @__PURE__ */ e("span", { children: "Can Code" }),
         /* @__PURE__ */ e("span", { className: "qi-sidebar__group-count", children: d.length })
       ] }),
-      d.map((u) => /* @__PURE__ */ e(
-        st,
+      d.map((p) => /* @__PURE__ */ e(
+        mt,
         {
-          item: u,
-          isActive: n === u.mdsItem,
-          isChecked: i(u.mdsItem),
+          item: p,
+          isActive: n === p.mdsItem,
+          isChecked: a(p.mdsItem),
           onSelect: s,
-          onToggleCheck: a
+          onToggleCheck: i
         },
-        u.mdsItem
+        p.mdsItem
+      ))
+    ] }),
+    l.length > 0 && /* @__PURE__ */ e("div", { className: "qi-sidebar__group", children: [
+      /* @__PURE__ */ e("div", { className: "qi-sidebar__group-header qi-sidebar__group-header--review", children: [
+        /* @__PURE__ */ e("span", { children: "Needs Review" }),
+        /* @__PURE__ */ e("span", { className: "qi-sidebar__group-count", children: l.length })
+      ] }),
+      l.map((p) => /* @__PURE__ */ e(
+        mt,
+        {
+          item: p,
+          isActive: n === p.mdsItem,
+          isChecked: a(p.mdsItem),
+          onSelect: s,
+          onToggleCheck: i
+        },
+        p.mdsItem
       ))
     ] }),
     c.length > 0 && /* @__PURE__ */ e("div", { className: "qi-sidebar__group", children: [
@@ -12809,20 +13759,20 @@ const st = ({ item: t, isActive: n, isChecked: s, onSelect: i, onToggleCheck: a 
         /* @__PURE__ */ e("span", { children: "On MDS" }),
         /* @__PURE__ */ e("span", { className: "qi-sidebar__group-count", children: c.length })
       ] }),
-      c.map((u) => /* @__PURE__ */ e(
-        st,
+      c.map((p) => /* @__PURE__ */ e(
+        mt,
         {
-          item: u,
-          isActive: n === u.mdsItem,
-          isChecked: i(u.mdsItem),
+          item: p,
+          isActive: n === p.mdsItem,
+          isChecked: a(p.mdsItem),
           onSelect: s,
-          onToggleCheck: a
+          onToggleCheck: i
         },
-        u.mdsItem
+        p.mdsItem
       ))
     ] })
   ] });
-}, zc = ({ status: t }) => {
+}, Vl = ({ status: t }) => {
   const s = {
     code: "Can Code",
     coded: "Can Code",
@@ -12830,25 +13780,25 @@ const st = ({ item: t, isActive: n, isChecked: s, onSelect: i, onToggleCheck: a 
     needs_review: "Needs Review"
   }[t] || t;
   return /* @__PURE__ */ e("span", { className: `query-items__status-badge query-items__status-badge--${t}`, children: s });
-}, jc = ({ pdpmImpact: t }) => {
+}, zl = ({ pdpmImpact: t }) => {
   if (!t || !t.impact) return null;
   const { impact: n } = t, s = [];
-  return n.nta?.wouldChangeLevel && s.push({ label: "NTA", from: n.nta.currentLevel, to: n.nta.newLevel }), n.slp?.wouldChangeGroup && s.push({ label: "SLP", from: n.slp.currentGroup, to: n.slp.newGroup }), n.nursing?.wouldChangeGroup && s.push({ label: "Nursing", from: n.nursing.currentPaymentGroup, to: n.nursing.newPaymentGroup }), n.ptot?.wouldChangeGroup && s.push({ label: "PT/OT", from: n.ptot.currentGroup, to: n.ptot.newGroup }), s.length === 0 ? null : /* @__PURE__ */ e(J, { children: s.map((i, a) => /* @__PURE__ */ e("span", { className: "query-items__pdpm-badge", children: [
-    i.label,
+  return n.nta?.wouldChangeLevel && s.push({ label: "NTA", from: n.nta.currentLevel, to: n.nta.newLevel }), n.slp?.wouldChangeGroup && s.push({ label: "SLP", from: n.slp.currentGroup, to: n.slp.newGroup }), n.nursing?.wouldChangeGroup && s.push({ label: "Nursing", from: n.nursing.currentPaymentGroup, to: n.nursing.newPaymentGroup }), n.ptot?.wouldChangeGroup && s.push({ label: "PT/OT", from: n.ptot.currentGroup, to: n.ptot.newGroup }), s.length === 0 ? null : /* @__PURE__ */ e(Q, { children: s.map((a, i) => /* @__PURE__ */ e("span", { className: "query-items__pdpm-badge", children: [
+    a.label,
     ": ",
-    i.from || "?",
+    a.from || "?",
     /* @__PURE__ */ e("span", { className: "query-items__pdpm-arrow", children: "→" }),
-    /* @__PURE__ */ e("span", { className: "query-items__pdpm-new", children: i.to || "?" })
-  ] }, a)) });
+    /* @__PURE__ */ e("span", { className: "query-items__pdpm-new", children: a.to || "?" })
+  ] }, i)) });
 };
-function mi(t) {
+function Ua(t) {
   return t.quoteText || t.quote || t.orderDescription || t.findingText || t.text || "";
 }
-function Kc(t) {
+function Wl(t) {
   if (t.sourceType) return t.sourceType;
   const n = t.evidenceId || "";
   if (n.startsWith("therapy-doc-")) return "therapy-doc";
-  if (n.startsWith("pcc-prognote-") || n.startsWith("patient-practnote-")) return "progress-note";
+  if (n.startsWith("pcc-prognote-") || n.startsWith("pcc-practnote-") || n.startsWith("patient-practnote-")) return "progress-note";
   if (n.startsWith("order-")) return "order";
   if (n.startsWith("lab-")) return "lab-result";
   if (n.startsWith("mar-")) return "mar";
@@ -12859,10 +13809,10 @@ function Kc(t) {
   if (s === "order") return "order";
   if (s === "lab_result") return "lab-result";
   if (s === "document") return "document";
-  const i = (t.displayName || "").toLowerCase();
-  return i.includes("therapy") || i.includes("eval") ? "therapy-doc" : i.includes("lab") ? "lab-result" : i.includes("order") ? "order" : "document";
+  const a = (t.displayName || "").toLowerCase();
+  return a.includes("therapy") || a.includes("eval") ? "therapy-doc" : a.includes("lab") ? "lab-result" : a.includes("order") ? "order" : "document";
 }
-const Jc = {
+const Ql = {
   "progress-note": "Progress Note",
   "therapy-doc": "Therapy Doc",
   order: "Order",
@@ -12873,32 +13823,32 @@ const Jc = {
   uda: "Assessment",
   document: "Document"
 };
-function Yc(t) {
+function jl(t) {
   if (typeof window.parseEvidenceForViewer == "function") {
     const { viewerType: n } = window.parseEvidenceForViewer(t);
     return !!n;
   }
   return !1;
 }
-function Zc(t) {
+function Kl(t) {
   if (typeof window.parseEvidenceForViewer != "function") return;
   const { viewerType: n, id: s } = window.parseEvidenceForViewer(t);
   if (!n || !s) return;
-  const i = mi(t), a = t.wordBlocks || null;
-  n === "clinical-note" && typeof window.showClinicalNoteModal == "function" ? window.showClinicalNoteModal(s) : n === "therapy-document" && typeof window.showTherapyDocModal == "function" ? window.showTherapyDocModal(s, i) : n === "document" && typeof window.showDocumentModal == "function" ? window.showDocumentModal(s, a) : n === "uda" && typeof window.showUdaModal == "function" && window.showUdaModal(s, i, t.patientId || null);
+  const a = Ua(t), i = t.wordBlocks || null;
+  n === "clinical-note" && typeof window.showClinicalNoteModal == "function" ? window.showClinicalNoteModal(s) : n === "therapy-document" && typeof window.showTherapyDocModal == "function" ? window.showTherapyDocModal(s, a) : n === "document" && typeof window.showDocumentModal == "function" ? window.showDocumentModal(s, i) : n === "uda" && typeof window.showUdaModal == "function" && window.showUdaModal(s, a, t.patientId || null);
 }
-const $t = ({ ev: t }) => {
-  const n = Kc(t), s = t.displayName || Jc[n] || "Evidence", i = mi(t), a = Yc(t), r = t.date || t.serviceDate || "";
+const Qt = ({ ev: t }) => {
+  const n = Wl(t), s = t.displayName || Ql[n] || "Evidence", a = Ua(t), i = jl(t), r = t.date || t.serviceDate || "";
   return /* @__PURE__ */ e(
     "div",
     {
-      className: `qi-detail__evidence-card${a ? " qi-detail__evidence-card--viewable" : ""}`,
-      onClick: a ? () => Zc(t) : void 0,
+      className: `qi-detail__evidence-card${i ? " qi-detail__evidence-card--viewable" : ""}`,
+      onClick: i ? () => Kl(t) : void 0,
       children: [
         /* @__PURE__ */ e("div", { className: "qi-detail__evidence-card-header", children: [
           /* @__PURE__ */ e("span", { className: `qi-detail__evidence-type qi-detail__evidence-type--${n}`, children: s }),
           r && /* @__PURE__ */ e("span", { className: "qi-detail__evidence-date", children: r }),
-          a && /* @__PURE__ */ e("span", { className: "qi-detail__evidence-view-link", children: [
+          i && /* @__PURE__ */ e("span", { className: "qi-detail__evidence-view-link", children: [
             "View",
             /* @__PURE__ */ e("svg", { width: "12", height: "12", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", children: [
               /* @__PURE__ */ e("path", { d: "M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6" }),
@@ -12907,21 +13857,21 @@ const $t = ({ ev: t }) => {
             ] })
           ] })
         ] }),
-        i && /* @__PURE__ */ e("div", { className: "qi-detail__evidence-quote", children: i }),
+        a && /* @__PURE__ */ e("div", { className: "qi-detail__evidence-quote", children: a }),
         t.rationale && /* @__PURE__ */ e("div", { className: "qi-detail__evidence-rationale", children: t.rationale })
       ]
     }
   );
-}, Xc = ({ item: t }) => {
+}, Yl = ({ item: t }) => {
   if (!t)
     return /* @__PURE__ */ e("div", { className: "qi-detail qi-detail--empty", children: [
       /* @__PURE__ */ e("div", { className: "qi-detail__empty-icon", children: /* @__PURE__ */ e("svg", { width: "40", height: "40", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "1.5", children: /* @__PURE__ */ e("path", { d: "M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122" }) }) }),
       /* @__PURE__ */ e("div", { className: "qi-detail__empty-text", children: "Select an item to view evidence" })
     ] });
-  const n = t.pdpmCategoryName || t.mdsItemName || t.mdsItem, s = t.solverStatus === "needs_physician_query", i = t.queryEvidence || [], a = t.evidence || [], r = {};
-  for (const l of a) {
-    const d = l.evidenceRole || "supporting";
-    r[d] || (r[d] = []), r[d].push(l);
+  const n = t.pdpmCategoryName || t.mdsItemName || t.mdsItem, s = t.solverStatus === "needs_physician_query", a = t.queryEvidence || [], i = t.evidence || [], r = {};
+  for (const d of i) {
+    const l = d.evidenceRole || "supporting";
+    r[l] || (r[l] = []), r[l].push(d);
   }
   const o = {
     diagnosis: "Step 1: Diagnosis",
@@ -12932,12 +13882,12 @@ const $t = ({ ev: t }) => {
     /* @__PURE__ */ e("div", { className: "qi-detail__header", children: [
       /* @__PURE__ */ e("div", { className: "qi-detail__header-top", children: [
         /* @__PURE__ */ e("h2", { className: "qi-detail__name", children: n }),
-        /* @__PURE__ */ e(zc, { status: t.solverStatus })
+        /* @__PURE__ */ e(Vl, { status: t.solverStatus })
       ] }),
       /* @__PURE__ */ e("div", { className: "qi-detail__header-meta", children: [
         /* @__PURE__ */ e("span", { className: "qi-detail__code", children: t.mdsItem }),
         t.pdpmComponent && /* @__PURE__ */ e("span", { className: "qi-detail__component", children: t.pdpmComponent }),
-        /* @__PURE__ */ e(jc, { pdpmImpact: t.pdpmImpact }),
+        /* @__PURE__ */ e(zl, { pdpmImpact: t.pdpmImpact }),
         t.codedOnMds && /* @__PURE__ */ e("span", { className: "qi-detail__coded-badge", children: "On MDS" })
       ] })
     ] }),
@@ -12964,75 +13914,75 @@ const $t = ({ ev: t }) => {
       ] }),
       t.keyFindings && t.keyFindings.length > 0 && /* @__PURE__ */ e("div", { className: "qi-detail__findings", children: [
         /* @__PURE__ */ e("div", { className: "qi-detail__section-label", children: "Key Findings" }),
-        /* @__PURE__ */ e("ul", { className: "qi-detail__findings-list", children: t.keyFindings.map((l, d) => /* @__PURE__ */ e("li", { children: typeof l == "string" ? l : l.text || l.finding || JSON.stringify(l) }, d)) })
-      ] }),
-      i.length > 0 && /* @__PURE__ */ e("div", { className: "qi-detail__evidence-section", children: [
-        /* @__PURE__ */ e("div", { className: "qi-detail__section-label", children: [
-          "Query Evidence",
-          /* @__PURE__ */ e("span", { className: "qi-detail__section-count", children: i.length })
-        ] }),
-        i.map((l, d) => /* @__PURE__ */ e($t, { ev: l }, d))
+        /* @__PURE__ */ e("ul", { className: "qi-detail__findings-list", children: t.keyFindings.map((d, l) => /* @__PURE__ */ e("li", { children: typeof d == "string" ? d : d.text || d.finding || JSON.stringify(d) }, l)) })
       ] }),
       a.length > 0 && /* @__PURE__ */ e("div", { className: "qi-detail__evidence-section", children: [
-        c.map((l) => {
-          const d = r[l];
-          return !d || d.length === 0 ? null : /* @__PURE__ */ e("div", { className: "qi-detail__evidence-group", children: [
+        /* @__PURE__ */ e("div", { className: "qi-detail__section-label", children: [
+          "Query Evidence",
+          /* @__PURE__ */ e("span", { className: "qi-detail__section-count", children: a.length })
+        ] }),
+        a.map((d, l) => /* @__PURE__ */ e(Qt, { ev: d }, l))
+      ] }),
+      i.length > 0 && /* @__PURE__ */ e("div", { className: "qi-detail__evidence-section", children: [
+        c.map((d) => {
+          const l = r[d];
+          return !l || l.length === 0 ? null : /* @__PURE__ */ e("div", { className: "qi-detail__evidence-group", children: [
             /* @__PURE__ */ e("div", { className: "qi-detail__section-label", children: [
-              o[l] || l,
-              /* @__PURE__ */ e("span", { className: "qi-detail__section-count", children: d.length })
+              o[d] || d,
+              /* @__PURE__ */ e("span", { className: "qi-detail__section-count", children: l.length })
             ] }),
-            d.map((u, p) => /* @__PURE__ */ e($t, { ev: u }, p))
-          ] }, l);
+            l.map((p, u) => /* @__PURE__ */ e(Qt, { ev: p }, u))
+          ] }, d);
         }),
-        Object.keys(r).filter((l) => !c.includes(l)).map((l) => /* @__PURE__ */ e("div", { className: "qi-detail__evidence-group", children: [
-          /* @__PURE__ */ e("div", { className: "qi-detail__section-label", children: l }),
-          r[l].map((d, u) => /* @__PURE__ */ e($t, { ev: d }, u))
-        ] }, l))
+        Object.keys(r).filter((d) => !c.includes(d)).map((d) => /* @__PURE__ */ e("div", { className: "qi-detail__evidence-group", children: [
+          /* @__PURE__ */ e("div", { className: "qi-detail__section-label", children: d }),
+          r[d].map((l, p) => /* @__PURE__ */ e(Qt, { ev: l }, p))
+        ] }, d))
       ] }),
       t.recommendedIcd10 && t.recommendedIcd10.length > 0 && /* @__PURE__ */ e("div", { className: "qi-detail__icd10-section", children: [
         /* @__PURE__ */ e("div", { className: "qi-detail__section-label", children: "Suggested ICD-10 Codes" }),
-        /* @__PURE__ */ e("div", { className: "qi-detail__icd10-codes", children: t.recommendedIcd10.map((l, d) => /* @__PURE__ */ e("span", { className: "qi-detail__icd10-code", title: l.description || "", children: [
-          l.code || l,
-          l.description && /* @__PURE__ */ e("span", { className: "qi-detail__icd10-desc", children: l.description })
-        ] }, d)) })
+        /* @__PURE__ */ e("div", { className: "qi-detail__icd10-codes", children: t.recommendedIcd10.map((d, l) => /* @__PURE__ */ e("span", { className: "qi-detail__icd10-code", title: d.description || "", children: [
+          d.code || d,
+          d.description && /* @__PURE__ */ e("span", { className: "qi-detail__icd10-desc", children: d.description })
+        ] }, l)) })
       ] })
     ] })
   ] });
-}, ed = ({
+}, Jl = ({
   selectedCount: t,
   selectableCount: n,
   batchState: s,
-  progress: i,
-  onSelectAll: a,
+  progress: a,
+  onSelectAll: i,
   onDeselectAll: r,
   onGenerate: o
 }) => {
-  const c = s === "idle", l = s === "generating", u = l || s === "sending";
+  const c = s === "idle", d = s === "generating", p = d || s === "sending";
   return n === 0 && c ? /* @__PURE__ */ e("div", { className: "query-items__batch-bar query-items__batch-bar--hidden" }) : /* @__PURE__ */ e("div", { className: "query-items__batch-bar", children: [
     /* @__PURE__ */ e("div", { className: "query-items__batch-left", children: [
-      c && /* @__PURE__ */ e(J, { children: [
+      c && /* @__PURE__ */ e(Q, { children: [
         /* @__PURE__ */ e("span", { className: "query-items__batch-count", children: [
           /* @__PURE__ */ e("span", { children: t }),
           " of ",
           n,
           " items selected"
         ] }),
-        t > 0 ? /* @__PURE__ */ e("button", { className: "query-items__select-all-btn", onClick: r, children: "Deselect all" }) : /* @__PURE__ */ e("button", { className: "query-items__select-all-btn", onClick: a, children: "Select all queryable" })
+        t > 0 ? /* @__PURE__ */ e("button", { className: "query-items__select-all-btn", onClick: r, children: "Deselect all" }) : /* @__PURE__ */ e("button", { className: "query-items__select-all-btn", onClick: i, children: "Select all queryable" })
       ] }),
-      u && /* @__PURE__ */ e("div", { className: "query-items__progress", children: [
+      p && /* @__PURE__ */ e("div", { className: "query-items__progress", children: [
         /* @__PURE__ */ e("div", { className: "query-items__progress-bar", children: /* @__PURE__ */ e(
           "div",
           {
             className: "query-items__progress-fill",
-            style: { width: `${i.total > 0 ? i.current / i.total * 100 : 0}%` }
+            style: { width: `${a.total > 0 ? a.current / a.total * 100 : 0}%` }
           }
         ) }),
         /* @__PURE__ */ e("span", { className: "query-items__progress-text", children: [
-          l ? "Generating" : "Sending",
+          d ? "Generating" : "Sending",
           " ",
-          i.current,
+          a.current,
           "/",
-          i.total,
+          a.total,
           "..."
         ] })
       ] })
@@ -13053,55 +14003,55 @@ const $t = ({ ev: t }) => {
       }
     ) })
   ] });
-}, hi = ({
+}, Va = ({
   generatedQueries: t,
   practitioners: n,
   selectedPractitionerId: s,
-  onSelectPractitioner: i,
-  onUpdateNote: a,
+  onSelectPractitioner: a,
+  onUpdateNote: i,
   onUpdateIcd10: r,
   onSend: o,
   onBack: c,
-  isSending: l,
-  progress: d
+  isSending: d,
+  progress: l
 }) => {
-  const u = ee(null), p = ee(!1);
+  const p = te(null), u = te(!1);
   F(() => {
-    if (!u.current || n.length === 0 || p.current) return;
-    u.current.innerHTML = "";
+    if (!p.current || n.length === 0 || u.current) return;
+    p.current.innerHTML = "";
     const h = n.map((_) => ({
       id: _.id,
-      label: nd(_),
+      label: Xl(_),
       subtitle: _.title || _.specialty || ""
     }));
     if (typeof window.SuperDropdown?.create == "function")
-      window.SuperDropdown.create(u.current, {
+      window.SuperDropdown.create(p.current, {
         items: h,
         placeholder: "Select a practitioner...",
         searchPlaceholder: "Search practitioners...",
         onSelect: (_) => {
-          i(_.id);
+          a(_.id);
         }
-      }), p.current = !0;
+      }), u.current = !0;
     else {
       const _ = document.createElement("select");
       _.className = "qr__physician-select-fallback", _.style.cssText = "width:100%;padding:10px 12px;border:1px solid #d0d5dd;border-radius:8px;font-size:14px;color:#344054;background:#fff;cursor:pointer;";
       const g = document.createElement("option");
-      g.value = "", g.textContent = "Select a practitioner...", g.disabled = !0, g.selected = !0, _.appendChild(g), h.forEach((f) => {
-        const y = document.createElement("option");
-        y.value = f.id, y.textContent = f.label + (f.subtitle ? ` — ${f.subtitle}` : ""), _.appendChild(y);
-      }), _.addEventListener("change", (f) => {
-        i(f.target.value);
-      }), u.current.appendChild(_), p.current = !0;
+      g.value = "", g.textContent = "Select a practitioner...", g.disabled = !0, g.selected = !0, _.appendChild(g), h.forEach((v) => {
+        const b = document.createElement("option");
+        b.value = v.id, b.textContent = v.label + (v.subtitle ? ` — ${v.subtitle}` : ""), _.appendChild(b);
+      }), _.addEventListener("change", (v) => {
+        a(v.target.value);
+      }), p.current.appendChild(_), u.current = !0;
     }
     return () => {
-      p.current = !1;
+      u.current = !1;
     };
-  }, [n, i]);
-  const m = s && t.length > 0 && !l;
+  }, [n, a]);
+  const m = s && t.length > 0 && !d;
   return /* @__PURE__ */ e("div", { className: "qr", children: [
     /* @__PURE__ */ e("div", { className: "qr__header", children: [
-      /* @__PURE__ */ e("button", { className: "qr__back-btn", onClick: c, disabled: l, children: [
+      /* @__PURE__ */ e("button", { className: "qr__back-btn", onClick: c, disabled: d, children: [
         /* @__PURE__ */ e("svg", { width: "14", height: "14", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2.5", children: /* @__PURE__ */ e("polyline", { points: "15 18 9 12 15 6" }) }),
         "Back"
       ] }),
@@ -13114,12 +14064,12 @@ const $t = ({ ev: t }) => {
         ] })
       ] }),
       /* @__PURE__ */ e("div", { className: "qr__header-right", children: [
-        l && /* @__PURE__ */ e("div", { className: "qr__sending-status", children: [
+        d && /* @__PURE__ */ e("div", { className: "qr__sending-status", children: [
           /* @__PURE__ */ e("div", { className: "qr__sending-spinner" }),
           "Sending ",
-          d.current + 1,
+          l.current + 1,
           "/",
-          d.total
+          l.total
         ] }),
         /* @__PURE__ */ e(
           "button",
@@ -13132,7 +14082,7 @@ const $t = ({ ev: t }) => {
                 /* @__PURE__ */ e("path", { d: "M22 2L11 13" }),
                 /* @__PURE__ */ e("path", { d: "M22 2L15 22L11 13L2 9L22 2Z" })
               ] }),
-              l ? "Sending..." : "Send All"
+              d ? "Sending..." : "Send All"
             ]
           }
         )
@@ -13146,34 +14096,34 @@ const $t = ({ ev: t }) => {
         ] }),
         "Physician"
       ] }),
-      /* @__PURE__ */ e("div", { className: "qr__physician-dropdown", ref: u })
+      /* @__PURE__ */ e("div", { className: "qr__physician-dropdown", ref: p })
     ] }),
     /* @__PURE__ */ e("div", { className: "qr__body", children: t.map((h, _) => /* @__PURE__ */ e(
-      td,
+      Zl,
       {
         gq: h,
         index: _,
         total: t.length,
-        onUpdateNote: a,
+        onUpdateNote: i,
         onUpdateIcd10: r,
-        disabled: l
+        disabled: d
       },
       h.item.mdsItem
     )) })
   ] });
-}, td = ({ gq: t, index: n, total: s, onUpdateNote: i, onUpdateIcd10: a, disabled: r }) => {
+}, Zl = ({ gq: t, index: n, total: s, onUpdateNote: a, onUpdateIcd10: i, disabled: r }) => {
   const o = t.item.pdpmCategoryName || t.item.mdsItemName || t.item.mdsItem, c = Y(() => {
-    const d = /* @__PURE__ */ new Set(), u = [], p = (m, h, _) => {
-      !m || d.has(m) || (d.add(m), u.push({ code: m, description: h || "", source: _ }));
+    const l = /* @__PURE__ */ new Set(), p = [], u = (m, h, _) => {
+      !m || l.has(m) || (l.add(m), p.push({ code: m, description: h || "", source: _ }));
     };
-    if (t.preferredIcd10 && p(t.preferredIcd10.code, t.preferredIcd10.description, "recommended"), t.icd10Options)
+    if (t.preferredIcd10 && u(t.preferredIcd10.code, t.preferredIcd10.description, "recommended"), t.icd10Options)
       for (const m of t.icd10Options)
-        p(m.code, m.description, "ai");
+        u(m.code, m.description, "ai");
     if (t.item.recommendedIcd10)
       for (const m of t.item.recommendedIcd10)
-        p(m.code, m.description, "item");
-    return u;
-  }, [t]), l = t.selectedIcd10 || t.preferredIcd10?.code || "";
+        u(m.code, m.description, "item");
+    return p;
+  }, [t]), d = t.selectedIcd10 || t.preferredIcd10?.code || "";
   return /* @__PURE__ */ e("div", { className: "qr__card", children: [
     /* @__PURE__ */ e("div", { className: "qr__card-header", children: [
       /* @__PURE__ */ e("span", { className: "qr__card-number", children: n + 1 }),
@@ -13193,13 +14143,13 @@ const $t = ({ ev: t }) => {
           "select",
           {
             className: "qr__icd10-select",
-            value: l,
-            onChange: (d) => a(t.item.mdsItem, d.target.value),
+            value: d,
+            onChange: (l) => i(t.item.mdsItem, l.target.value),
             disabled: r,
-            children: c.map((d) => /* @__PURE__ */ e("option", { value: d.code, children: [
-              d.code,
-              d.description ? ` — ${d.description}` : ""
-            ] }, d.code))
+            children: c.map((l) => /* @__PURE__ */ e("option", { value: l.code, children: [
+              l.code,
+              l.description ? ` — ${l.description}` : ""
+            ] }, l.code))
           }
         )
       ] }),
@@ -13216,7 +14166,7 @@ const $t = ({ ev: t }) => {
           {
             className: "qr__note-textarea",
             value: t.noteText,
-            onInput: (d) => i(t.item.mdsItem, d.target.value),
+            onInput: (l) => a(t.item.mdsItem, l.target.value),
             disabled: r,
             rows: 5
           }
@@ -13226,73 +14176,73 @@ const $t = ({ ev: t }) => {
     t.error && /* @__PURE__ */ e("div", { className: "qr__card-error", children: t.error })
   ] });
 };
-function nd(t) {
+function Xl(t) {
   return t.firstName && t.lastName ? `${t.firstName} ${t.lastName}${t.title ? `, ${t.title}` : ""}` : t.name || "Unknown";
 }
-const _i = ({
+const za = ({
   patientId: t,
   patientName: n,
   facilityName: s,
-  orgSlug: i,
-  assessmentId: a,
+  orgSlug: a,
+  assessmentId: i,
   onBack: r,
   onClose: o
 }) => {
-  const [c, l] = v(/* @__PURE__ */ new Set()), [d, u] = v(null), [p, m] = v(null), {
+  const [c, d] = y(/* @__PURE__ */ new Set()), [l, p] = y(null), [u, m] = y(null), {
     items: h,
     setItems: _,
     assessment: g,
-    summary: f,
-    pdpmData: y,
-    loading: w,
-    error: k,
-    retry: C
-  } = Fc({ patientId: t, facilityName: s, orgSlug: i, assessmentId: a }), {
-    selectedCount: I,
-    selectedItems: P,
+    summary: v,
+    pdpmData: b,
+    loading: f,
+    error: I,
+    retry: N
+  } = Ol({ patientId: t, facilityName: s, orgSlug: a, assessmentId: i }), {
+    selectedCount: D,
+    selectedItems: T,
     selectableCount: A,
     toggle: x,
-    selectAllQueryable: D,
-    deselectAll: N,
-    isSelected: S
-  } = Uc(h, c), E = ui({
+    selectAllQueryable: k,
+    deselectAll: S,
+    isSelected: w
+  } = Bl(h, c), M = Fa({
     patientId: t,
     facilityName: s,
-    orgSlug: i,
-    assessmentId: a,
+    orgSlug: a,
+    assessmentId: i,
     onComplete: (L, O) => {
-      const Z = new Set(L.map((j) => j.mdsItem));
-      _((j) => j.map(($) => Z.has($.mdsItem) ? {
-        ...$,
+      const X = new Set(L.map((z) => z.mdsItem));
+      _((z) => z.map((R) => X.has(R.mdsItem) ? {
+        ...R,
         existingQuery: { status: "sent", sentAt: (/* @__PURE__ */ new Date()).toISOString() }
-      } : $)), N(), m({ count: L.length, practitionerName: O }), setTimeout(() => m(null), 3e3);
+      } : R)), S(), m({ count: L.length, practitionerName: O }), setTimeout(() => m(null), 3e3);
     }
   });
   F(() => {
-    if (!w && h.length > 0 && !d) {
+    if (!f && h.length > 0 && !l) {
       const L = h.find((O) => O.solverStatus === "needs_physician_query");
-      u(L ? L.mdsItem : h[0].mdsItem);
+      p(L ? L.mdsItem : h[0].mdsItem);
     }
-  }, [w, h]);
-  const B = Y(() => d && h.find((L) => L.mdsItem === d) || null, [d, h]), M = U(() => {
-    E.generate(P);
-  }, [E, P]);
-  if (w)
+  }, [f, h]);
+  const H = Y(() => l && h.find((L) => L.mdsItem === l) || null, [l, h]), P = G(() => {
+    M.generate(T);
+  }, [M, T]);
+  if (f)
     return /* @__PURE__ */ e("div", { className: "query-items", children: /* @__PURE__ */ e("div", { className: "query-items__skeleton", children: [
       /* @__PURE__ */ e("div", { className: "query-items__skeleton-header" }),
       /* @__PURE__ */ e("div", { className: "query-items__skeleton-card" }),
       /* @__PURE__ */ e("div", { className: "query-items__skeleton-card" }),
       /* @__PURE__ */ e("div", { className: "query-items__skeleton-card" })
     ] }) });
-  if (k)
+  if (I)
     return /* @__PURE__ */ e("div", { className: "query-items", children: /* @__PURE__ */ e("div", { className: "query-items__error", children: [
       /* @__PURE__ */ e("div", { className: "query-items__error-icon", children: /* @__PURE__ */ e("svg", { width: "48", height: "48", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "1.5", children: [
         /* @__PURE__ */ e("circle", { cx: "12", cy: "12", r: "10" }),
         /* @__PURE__ */ e("line", { x1: "12", y1: "8", x2: "12", y2: "12" }),
         /* @__PURE__ */ e("line", { x1: "12", y1: "16", x2: "12.01", y2: "16" })
       ] }) }),
-      /* @__PURE__ */ e("p", { className: "query-items__error-text", children: k }),
-      /* @__PURE__ */ e("button", { className: "query-items__error-retry", onClick: C, children: "Retry" })
+      /* @__PURE__ */ e("p", { className: "query-items__error-text", children: I }),
+      /* @__PURE__ */ e("button", { className: "query-items__error-retry", onClick: N, children: "Retry" })
     ] }) });
   if (h.length === 0)
     return /* @__PURE__ */ e("div", { className: "query-items", children: /* @__PURE__ */ e("div", { className: "query-items__empty", children: [
@@ -13304,120 +14254,2410 @@ const _i = ({
       /* @__PURE__ */ e("div", { className: "query-items__empty-title", children: "No Queryable Items" }),
       /* @__PURE__ */ e("p", { className: "query-items__empty-text", children: "All MDS items are either properly coded or don't require physician queries at this time." })
     ] }) });
-  const q = E.state === "reviewing" || E.state === "sending";
+  const q = M.state === "reviewing" || M.state === "sending";
   return /* @__PURE__ */ e("div", { className: "query-items", style: { position: "relative" }, children: [
     q ? (
       /* ── Review & Send page ── */
       /* @__PURE__ */ e(
-        hi,
+        Va,
         {
-          generatedQueries: E.generatedQueries,
-          practitioners: E.practitioners,
-          selectedPractitionerId: E.selectedPractitionerId,
-          onSelectPractitioner: E.setSelectedPractitionerId,
-          onUpdateNote: E.updateNote,
-          onUpdateIcd10: E.updateIcd10,
-          onSend: E.sendAll,
-          onBack: E.backToSelection,
-          isSending: E.state === "sending",
-          progress: E.progress
+          generatedQueries: M.generatedQueries,
+          practitioners: M.practitioners,
+          selectedPractitionerId: M.selectedPractitionerId,
+          onSelectPractitioner: M.setSelectedPractitionerId,
+          onUpdateNote: M.updateNote,
+          onUpdateIcd10: M.updateIcd10,
+          onSend: M.sendAll,
+          onBack: M.backToSelection,
+          isSending: M.state === "sending",
+          progress: M.progress
         }
       )
     ) : (
       /* ── Selection page (split layout) ── */
-      /* @__PURE__ */ e(J, { children: [
+      /* @__PURE__ */ e(Q, { children: [
         /* @__PURE__ */ e(
-          Gc,
+          Hl,
           {
             assessment: g,
-            summary: f,
-            pdpmData: y
+            summary: v,
+            pdpmData: b
           }
         ),
         /* @__PURE__ */ e("div", { className: "query-items__split", children: [
           /* @__PURE__ */ e(
-            Qc,
+            Ul,
             {
               items: h,
-              activeItem: d,
-              onSelect: u,
-              isChecked: S,
+              activeItem: l,
+              onSelect: p,
+              isChecked: w,
               onToggleCheck: x,
               dismissedItems: c
             }
           ),
-          /* @__PURE__ */ e(Xc, { item: B })
+          /* @__PURE__ */ e(Yl, { item: H })
         ] }),
-        E.error && /* @__PURE__ */ e("div", { className: "query-items__batch-error", children: [
+        M.error && /* @__PURE__ */ e("div", { className: "query-items__batch-error", children: [
           /* @__PURE__ */ e("svg", { width: "16", height: "16", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", children: [
             /* @__PURE__ */ e("circle", { cx: "12", cy: "12", r: "10" }),
             /* @__PURE__ */ e("line", { x1: "12", y1: "8", x2: "12", y2: "12" }),
             /* @__PURE__ */ e("line", { x1: "12", y1: "16", x2: "12.01", y2: "16" })
           ] }),
-          /* @__PURE__ */ e("span", { children: E.error }),
-          /* @__PURE__ */ e("button", { onClick: E.reset, className: "query-items__batch-error-dismiss", children: "×" })
+          /* @__PURE__ */ e("span", { children: M.error }),
+          /* @__PURE__ */ e("button", { onClick: M.reset, className: "query-items__batch-error-dismiss", children: "×" })
         ] }),
         /* @__PURE__ */ e(
-          ed,
+          Jl,
           {
-            selectedCount: I,
+            selectedCount: D,
             selectableCount: A,
-            batchState: E.state,
-            progress: E.progress,
-            onSelectAll: D,
-            onDeselectAll: N,
-            onGenerate: M
+            batchState: M.state,
+            progress: M.progress,
+            onSelectAll: k,
+            onDeselectAll: S,
+            onGenerate: P
           }
         ),
-        E.state === "generating" && /* @__PURE__ */ e("div", { className: "query-items__generating-overlay", children: [
+        M.state === "generating" && /* @__PURE__ */ e("div", { className: "query-items__generating-overlay", children: [
           /* @__PURE__ */ e("div", { className: "query-items__generating-spinner" }),
           /* @__PURE__ */ e("div", { className: "query-items__generating-title", children: "Generating Queries..." }),
           /* @__PURE__ */ e("div", { className: "query-items__generating-progress-text", children: [
-            E.progress.current + 1,
+            M.progress.current + 1,
             " of ",
-            E.progress.total
+            M.progress.total
           ] }),
           /* @__PURE__ */ e("div", { className: "query-items__generating-bar", children: /* @__PURE__ */ e(
             "div",
             {
               className: "query-items__generating-bar-fill",
-              style: { width: `${(E.progress.current + 1) / E.progress.total * 100}%` }
+              style: { width: `${(M.progress.current + 1) / M.progress.total * 100}%` }
             }
           ) }),
-          E.progress.currentItemName && /* @__PURE__ */ e("div", { className: "query-items__generating-item-name", children: E.progress.currentItemName })
+          M.progress.currentItemName && /* @__PURE__ */ e("div", { className: "query-items__generating-item-name", children: M.progress.currentItemName })
         ] })
       ] })
     ),
-    p && /* @__PURE__ */ e("div", { className: "query-items__success-overlay", children: [
+    u && /* @__PURE__ */ e("div", { className: "query-items__success-overlay", children: [
       /* @__PURE__ */ e("div", { className: "query-items__success-icon", children: /* @__PURE__ */ e("svg", { width: "32", height: "32", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2.5", children: /* @__PURE__ */ e("polyline", { points: "20 6 9 17 4 12" }) }) }),
       /* @__PURE__ */ e("div", { className: "query-items__success-text", children: [
-        p.count,
+        u.count,
         " ",
-        p.count === 1 ? "Query" : "Queries",
+        u.count === 1 ? "Query" : "Queries",
         " Sent"
       ] }),
       /* @__PURE__ */ e("div", { className: "query-items__success-subtitle", children: [
         "to ",
-        p.practitionerName
+        u.practitionerName
       ] })
     ] })
   ] });
 };
-let sd = 0;
-function id() {
-  return `demo-tc-${++sd}-${Date.now().toString(36)}`;
+function et(t) {
+  return t && typeof t == "object" && "success" in t && "data" in t ? t.data : t;
+}
+function ed({ facilityName: t, orgSlug: n }) {
+  const [s, a] = y(null), [i, r] = y(null), [o, c] = y(!0), [d, l] = y(null), p = G(async () => {
+    if (!t || !n) {
+      l("Missing facility or organization context"), c(!1);
+      return;
+    }
+    c(!0), l(null);
+    const u = new URLSearchParams({ facilityName: t, orgSlug: n });
+    try {
+      const [m, h] = await Promise.all([
+        chrome.runtime.sendMessage({
+          type: "API_REQUEST",
+          endpoint: `/api/extension/qm-planner/currently-triggering?${u}`,
+          options: { method: "GET" }
+        }),
+        chrome.runtime.sendMessage({
+          type: "API_REQUEST",
+          endpoint: `/api/extension/qm-planner/preventable-alerts?${u}`,
+          options: { method: "GET" }
+        })
+      ]);
+      if (!m?.success) throw new Error(m?.error || "Failed to load currently-triggering");
+      if (!h?.success) throw new Error(h?.error || "Failed to load preventable alerts");
+      a(et(m.data)), r(et(h.data));
+    } catch (m) {
+      console.error("[QMBoard] fetch failed", m), l(m.message || "Failed to load QM board");
+    } finally {
+      c(!1);
+    }
+  }, [t, n]);
+  return F(() => {
+    p();
+  }, [p]), F(() => {
+    const u = () => p();
+    return window.addEventListener("super:qm-snooze-changed", u), () => window.removeEventListener("super:qm-snooze-changed", u);
+  }, [p]), { currentlyTriggering: s, preventableAlerts: i, loading: o, error: d, retry: p };
+}
+function td({ tile: t, onClick: n }) {
+  const { status: s, label: a, triggering: i, alerts: r } = t;
+  return /* @__PURE__ */ e(
+    "button",
+    {
+      className: `qmb-tile qmb-tile--${s}`,
+      onClick: () => n(t.id),
+      type: "button",
+      children: [
+        /* @__PURE__ */ e("div", { className: "qmb-tile__label", children: a }),
+        /* @__PURE__ */ e("div", { className: "qmb-tile__num-wrap", children: [
+          /* @__PURE__ */ e("div", { className: "qmb-tile__num", children: i }),
+          /* @__PURE__ */ e("div", { className: "qmb-tile__sub", children: s === "clean" ? "✓ clean" : s === "skipped" ? "n/a" : "triggering" })
+        ] }),
+        /* @__PURE__ */ e("div", { className: "qmb-tile__foot", children: [
+          r > 0 ? /* @__PURE__ */ e("span", { className: "qmb-tile__alert", children: [
+            "⚡ ",
+            r
+          ] }) : /* @__PURE__ */ e("span", { children: "·" }),
+          /* @__PURE__ */ e("span", { className: "qmb-tile__trend qmb-tile__trend--flat", children: "→" })
+        ] })
+      ]
+    }
+  );
+}
+const Wa = 1440 * 60 * 1e3;
+function nd(t, n) {
+  if (!t) return null;
+  const s = new Date(t).getTime(), a = new Date(n).getTime();
+  return Math.round((s - a) / Wa);
+}
+function sd(t) {
+  if (!t) return null;
+  const n = new Date(t);
+  return n.setDate(n.getDate() + 92), n.toISOString().slice(0, 10);
+}
+function ad(t, n) {
+  if (!t?.measuresEvaluated) return [];
+  const s = t.facilityDate || (/* @__PURE__ */ new Date()).toISOString().slice(0, 10), a = n?.signalCounts || {}, i = t.summary?.byMeasure || {}, r = {
+    uti: a.ua_canary?.actionable || 0,
+    catheter: a.foley_order?.actionable || 0,
+    antipsychotic_long: a.antipsychotic_order?.actionable || 0,
+    weight_loss: a.weight_decline_canary?.actionable || 0,
+    adl_decline: a.gg_decline_canary?.actionable || 0
+  };
+  return t.measuresEvaluated.map((o) => {
+    const c = i[o.id] || { triggering: 0, applicable: 0 }, d = r[o.id] || 0;
+    let l;
+    return c.triggering >= 5 ? l = "hot" : c.triggering > 0 ? l = "warn" : d > 0 ? l = "alert" : l = "clean", {
+      id: o.id,
+      label: Ue(o.id, o.label),
+      triggering: c.triggering,
+      alerts: d,
+      applicable: c.applicable,
+      status: l,
+      _facilityDate: s
+    };
+  });
+}
+function Ue(t, n) {
+  return {
+    uti: "UTI",
+    catheter: "Indwelling Catheter",
+    falls_major_injury: "Falls w/ Major Injury",
+    antipsychotic_long: "Antipsychotic (long)",
+    weight_loss: "Weight Loss",
+    pressure_ulcer_long: "Pressure Ulcer (long)",
+    phq9_depression: "Depression (PHQ-9)",
+    adl_decline: "ADL Decline",
+    physical_restraints: "Physical Restraints",
+    low_risk_incontinence: "Low-Risk Incontinence",
+    discharge_function: "Discharge Function",
+    antipsychotic_new: "Antipsychotic (new)",
+    pressure_ulcer_short: "Pressure Ulcer (short)",
+    influenza_vaccine: "Influenza Vaccination"
+  }[t] || n || t;
+}
+function Ln(t) {
+  if (!t?.patients) return [];
+  const n = t.facilityDate || (/* @__PURE__ */ new Date()).toISOString().slice(0, 10), s = [];
+  for (const a of t.patients)
+    for (const i of a.measures || []) {
+      if (!i.triggers) continue;
+      const r = a.target?.ardDate || null, o = !!i.clearGuidance?.clearsOnNextObra, c = i.clearGuidance?.clearDate || null, d = c || (o ? sd(r) : null), l = d ? nd(d, n) : null, p = l == null ? "stable" : l < 0 ? "overdue" : l <= 7 ? "soon" : "later";
+      s.push({
+        patientId: a.patientId,
+        externalPatientId: a.externalPatientId,
+        name: ja(a),
+        targetType: a.target?.type || "—",
+        ardDate: r,
+        measureId: i.id,
+        measureLabel: Ue(i.id, i.label),
+        clearDate: d,
+        clearDateIsEstimate: !c && o,
+        daysUntilClear: l,
+        clearActionType: i.clearGuidance?.actionType || "none",
+        clearsOnNextObra: o,
+        clearActions: i.clearGuidance?.actions || [],
+        evidence: i.evidence || [],
+        urgency: p
+      });
+    }
+  return s;
+}
+function Qa(t, { includeSuppressed: n = !1 } = {}) {
+  if (!t?.patients) return [];
+  const s = [];
+  for (const i of t.patients)
+    for (const r of [...i.events || [], ...i.canaries || []])
+      !n && (r.snooze || r.suppressedByExistingCoding) || s.push({
+        patientId: i.patientId,
+        externalPatientId: i.externalPatientId,
+        name: ja(i),
+        alertId: r.id,
+        category: r.category,
+        label: r.label,
+        qmId: r.qmId,
+        urgency: r.urgency,
+        latestSignalDate: r.latestSignalDate,
+        suggestedAction: r.suggestedAction,
+        signals: r.signals || [],
+        snooze: r.snooze || null,
+        suppressedByExistingCoding: !!r.suppressedByExistingCoding
+      });
+  const a = { high: 0, medium: 1, low: 2 };
+  return s.sort(
+    (i, r) => (a[i.urgency] ?? 9) - (a[r.urgency] ?? 9) || (r.latestSignalDate || "").localeCompare(i.latestSignalDate || "")
+  ), s;
+}
+function ja(t) {
+  return `${t.lastName || ""}, ${t.firstName || ""}`.replace(/^, |, $/g, "").trim() || "—";
+}
+const id = {
+  GG0170B: "Sit to Lying",
+  GG0170D: "Sit to Stand",
+  GG0170F: "Toilet Transfer",
+  GG0130A: "Eating",
+  GG0170I: "Walk 10 Feet",
+  GG0170J: "Walk 50 Feet",
+  GG0170K: "Walk 150 Feet"
+};
+function rd(t) {
+  return t && t.replace(/[1-9]$/, "");
+}
+function Ka(t, n) {
+  if (!n || n.length === 0) return null;
+  if (t === "adl_decline") {
+    const a = /* @__PURE__ */ new Map();
+    for (const r of n) {
+      const o = rd(r.mdsItem);
+      a.has(o) || a.set(o, { target: null, prior: null, name: id[o] || o });
+      const c = /^Target\b/i.test(r.note || ""), d = /^Prior\b/i.test(r.note || ""), l = parseInt(r.value, 10);
+      c ? a.get(o).target = l : d && (a.get(o).prior = l);
+    }
+    const i = [];
+    for (const [, r] of a)
+      r.target != null && r.prior != null && r.target !== r.prior && i.push(`${r.name} ${r.prior} → ${r.target}`);
+    return i.length ? i.join(" · ") : null;
+  }
+  const s = n.find((a) => /target/i.test(a.note || "")) || n[0];
+  return s?.note && !/^Prior/i.test(s.note) ? s.note : null;
+}
+function En(t) {
+  if (!t) return "";
+  if (t.source === "vitals") {
+    const n = /([0-9.]+)\s*lb.*?vs\s*([0-9.]+)\s*lb.*?on\s*(\d{4}-\d{2}-\d{2})/i.exec(t.text || "");
+    if (n) {
+      const s = parseFloat(n[1]), a = parseFloat(n[2]), i = new Date(n[3]), r = t.date ? new Date(t.date) : /* @__PURE__ */ new Date(), o = Math.max(1, Math.round((r - i) / Wa)), c = Math.abs(a - s).toFixed(1).replace(/\.0$/, ""), d = t.detail?.observedPct, l = d != null ? ` (${d.toFixed(1)}%)` : "";
+      return `${s < a ? "Lost" : "Gained"} ${c} lb in ${o}d${l}`;
+    }
+  }
+  if (t.source === "gg_decline_service" && t.detail) {
+    const n = t.detail;
+    if (n.name && n.baseline != null && n.worstShiftAverage != null)
+      return `${n.name}: ${n.baseline} → ${n.worstShiftAverage.toFixed(1)} (${n.severity})`;
+  }
+  return t.text || "";
+}
+function fe(t) {
+  if (!t) return "";
+  try {
+    return (/* @__PURE__ */ new Date(t + "T00:00:00")).toLocaleDateString("en-US", { month: "short", day: "numeric" });
+  } catch {
+    return t;
+  }
+}
+function od(t) {
+  if (!t) return "";
+  if (t.urgency === "overdue") return "OVERDUE";
+  const n = t.daysUntilClear;
+  if (n != null) {
+    const s = t.clearDateIsEstimate ? "~" : "";
+    return n === 0 ? "today" : n === 1 ? `${s}1d` : `${s}${n}d`;
+  }
+  return t.clearActionType === "stay_locked" ? "next admit" : "—";
+}
+function $n(t) {
+  if (!t) return null;
+  if (t.urgency === "overdue") {
+    const n = t.daysUntilClear != null ? Math.abs(t.daysUntilClear) : 0;
+    return {
+      verb: "Schedule new ARD",
+      detail: n ? `${n}d past target` : "past target",
+      tone: "urgent"
+    };
+  }
+  if (t.clearActionType === "stay_locked")
+    return { verb: "Clears on discharge", detail: "no action", tone: "passive" };
+  if (t.clearsOnNextObra) {
+    const n = t.clearDateIsEstimate, s = t.daysUntilClear;
+    return { verb: "Code clean", detail: s != null ? `next ARD ${n ? "~" : ""}${s}d out` : "on next ARD", tone: "active" };
+  }
+  return t.clearActionType === "time" && t.daysUntilClear != null ? {
+    verb: `Rolls off ${t.daysUntilClear}d`,
+    detail: "no action",
+    tone: "passive"
+  } : t.daysUntilClear != null ? {
+    verb: `Clears ${t.daysUntilClear}d`,
+    detail: null,
+    tone: "passive"
+  } : { verb: "Review", detail: null, tone: "active" };
 }
 function Rt(t) {
+  if (!t) return null;
+  const n = t.suggestedAction;
+  return {
+    verb: n && n.length <= 22 ? n : "Prevent",
+    detail: fe(t.latestSignalDate) || null,
+    tone: "alert"
+  };
+}
+function cd({
+  triggeringRows: t,
+  alerts: n,
+  onRowClick: s,
+  onAlertClick: a,
+  onViewAllClearing: i,
+  onViewAllHeadsUp: r
+}) {
+  const o = [...t].sort((u, m) => Ps(u) - Ps(m)), c = o.slice(0, 5), d = o.filter((u) => u.urgency === "overdue").length, l = o.filter((u) => u.urgency === "soon" || u.urgency === "overdue").length, p = n.slice(0, 5);
+  return /* @__PURE__ */ e("div", { className: "qmb-rail", children: [
+    /* @__PURE__ */ e("div", { className: "qmb-panel", children: [
+      /* @__PURE__ */ e("div", { className: "qmb-panel__head", children: [
+        /* @__PURE__ */ e("h3", { className: "qmb-panel__title", children: "Clearing soon" }),
+        /* @__PURE__ */ e("span", { className: `qmb-panel__count ${d ? "qmb-panel__count--hot" : ""}`, children: [
+          d ? `${d} overdue · ` : "",
+          l,
+          " this week"
+        ] })
+      ] }),
+      c.length === 0 ? /* @__PURE__ */ e("div", { className: "qmb-panel__empty", children: "Nothing triggering right now." }) : c.map((u) => {
+        const m = $n(u);
+        return /* @__PURE__ */ e(
+          "div",
+          {
+            className: "qmb-qrow",
+            onClick: () => s(u),
+            children: [
+              /* @__PURE__ */ e("span", { className: `qmb-qrow__dot qmb-qrow__dot--${u.urgency === "overdue" ? "urgent" : u.urgency === "soon" ? "soon" : "stable"}` }),
+              /* @__PURE__ */ e("span", { className: "qmb-qrow__body", children: /* @__PURE__ */ e("span", { className: "qmb-qrow__name", children: [
+                u.name,
+                /* @__PURE__ */ e("span", { className: "qmb-qrow__qm", children: u.measureLabel })
+              ] }) }),
+              /* @__PURE__ */ e(Ts, { cta: m })
+            ]
+          },
+          `${u.patientId}-${u.measureId}`
+        );
+      }),
+      o.length > 5 && /* @__PURE__ */ e("button", { type: "button", className: "qmb-panel__foot", onClick: i, children: [
+        "View all ",
+        o.length,
+        " ›"
+      ] })
+    ] }),
+    /* @__PURE__ */ e("div", { className: "qmb-panel", children: [
+      /* @__PURE__ */ e("div", { className: "qmb-panel__head", children: [
+        /* @__PURE__ */ e("h3", { className: "qmb-panel__title", children: "Heads-up" }),
+        /* @__PURE__ */ e("span", { className: "qmb-panel__count qmb-panel__count--alert", children: [
+          n.length,
+          " incoming"
+        ] })
+      ] }),
+      p.length === 0 ? /* @__PURE__ */ e("div", { className: "qmb-panel__empty", children: "No preventable alerts right now." }) : p.map((u) => {
+        const m = Rt(u);
+        return /* @__PURE__ */ e(
+          "div",
+          {
+            className: "qmb-qrow",
+            onClick: () => a(u),
+            children: [
+              /* @__PURE__ */ e("span", { className: "qmb-qrow__dot qmb-qrow__dot--alert" }),
+              /* @__PURE__ */ e("span", { className: "qmb-qrow__body", children: [
+                /* @__PURE__ */ e("span", { className: "qmb-qrow__name", children: [
+                  u.name,
+                  u.qmId && /* @__PURE__ */ e("span", { className: "qmb-qrow__qm", children: Ue(u.qmId) })
+                ] }),
+                /* @__PURE__ */ e("span", { className: "qmb-qrow__meta", children: ld(u) })
+              ] }),
+              /* @__PURE__ */ e(Ts, { cta: m })
+            ]
+          },
+          `${u.patientId}-${u.alertId}`
+        );
+      }),
+      n.length > 5 && /* @__PURE__ */ e("button", { type: "button", className: "qmb-panel__foot", onClick: r, children: [
+        "View all ",
+        n.length,
+        " ›"
+      ] })
+    ] })
+  ] });
+}
+function Ps(t) {
+  return t.urgency === "overdue" ? 0 : t.urgency === "soon" ? 1 + (t.daysUntilClear ?? 7) : t.urgency === "later" ? 100 + (t.daysUntilClear ?? 999) : 1e3;
+}
+function ld(t) {
+  const n = t.signals?.[0];
+  if (n) {
+    const s = En(n);
+    if (s) return s;
+  }
+  return t.label;
+}
+function Ts({ cta: t }) {
+  return t ? /* @__PURE__ */ e("span", { className: `qmb-cta qmb-cta--${t.tone}`, children: [
+    /* @__PURE__ */ e("span", { className: "qmb-cta__verb", children: t.verb }),
+    t.detail && /* @__PURE__ */ e("span", { className: "qmb-cta__detail", children: t.detail })
+  ] }) : null;
+}
+function dd({
+  measureId: t,
+  currentlyTriggering: n,
+  preventableAlerts: s,
+  onBack: a,
+  onRowClick: i,
+  onAlertClick: r
+}) {
+  const c = Ln(n).filter((m) => m.measureId === t), d = n?.measuresEvaluated?.find((m) => m.id === t), l = Ue(t, d?.label), p = [];
+  for (const m of s?.patients || [])
+    for (const h of [...m.events || [], ...m.canaries || []])
+      h.qmId === t && (h.snooze || h.suppressedByExistingCoding || p.push({
+        patientId: m.patientId,
+        name: `${m.lastName || ""}, ${m.firstName || ""}`.trim(),
+        alertId: h.id,
+        label: h.label,
+        qmId: h.qmId,
+        urgency: h.urgency,
+        latestSignalDate: h.latestSignalDate,
+        suggestedAction: h.suggestedAction,
+        signals: h.signals || []
+      }));
+  const u = n?.summary?.byMeasure?.[t];
+  return /* @__PURE__ */ e("div", { className: "qmb-detail", children: [
+    /* @__PURE__ */ e("div", { className: "qmb-backbar", children: /* @__PURE__ */ e("div", { children: [
+      /* @__PURE__ */ e("button", { type: "button", className: "qmb-backbar__btn", onClick: a, children: "‹ Back to measures" }),
+      /* @__PURE__ */ e("span", { className: "qmb-backbar__title", children: l }),
+      /* @__PURE__ */ e("span", { className: "qmb-backbar__sub", children: [
+        u ? `${u.triggering} triggering · ${u.applicable} applicable` : "",
+        p.length ? ` · ${p.length} heads-up` : ""
+      ] })
+    ] }) }),
+    c.length === 0 ? /* @__PURE__ */ e("div", { className: "qmb-empty", children: "No currently-triggering residents." }) : /* @__PURE__ */ e("div", { className: "qmb-rows", children: c.map((m) => {
+      const h = Ka(m.measureId, m.evidence), _ = $n(m);
+      return /* @__PURE__ */ e(
+        "div",
+        {
+          className: `qmb-row qmb-row--${m.urgency === "overdue" ? "urgent" : m.urgency === "soon" ? "soon" : "stable"} ${h ? "qmb-row--with-why" : ""}`,
+          onClick: () => i(m),
+          children: [
+            /* @__PURE__ */ e("span", { className: "qmb-row__dot" }),
+            /* @__PURE__ */ e("span", { className: "qmb-row__name", children: m.name }),
+            /* @__PURE__ */ e("span", { className: "qmb-row__meta", children: [
+              ud(m.targetType),
+              m.ardDate && /* @__PURE__ */ e("span", { className: "qmb-row__sep", children: "·" }),
+              m.ardDate && /* @__PURE__ */ e("span", { children: [
+                "ARD ",
+                fe(m.ardDate)
+              ] })
+            ] }),
+            /* @__PURE__ */ e(As, { cta: _ }),
+            h && /* @__PURE__ */ e("span", { className: "qmb-row__why", children: [
+              /* @__PURE__ */ e("span", { className: "qmb-row__why-arrow", children: "↘" }),
+              " ",
+              h
+            ] })
+          ]
+        },
+        `${m.patientId}-${m.measureId}`
+      );
+    }) }),
+    p.length > 0 && /* @__PURE__ */ e(Q, { children: [
+      /* @__PURE__ */ e("div", { className: "qmb-slabel", style: { marginTop: 20 }, children: [
+        /* @__PURE__ */ e("span", { children: "Heads-up on this measure" }),
+        /* @__PURE__ */ e("span", { className: "qmb-slabel__meta", children: [
+          p.length,
+          " incoming signal",
+          p.length === 1 ? "" : "s"
+        ] })
+      ] }),
+      /* @__PURE__ */ e("div", { className: "qmb-rows", children: p.map((m) => {
+        const h = Rt(m);
+        return /* @__PURE__ */ e(
+          "div",
+          {
+            className: "qmb-row qmb-row--alert",
+            onClick: () => r(m),
+            children: [
+              /* @__PURE__ */ e("span", { className: "qmb-row__dot qmb-row__dot--alert" }),
+              /* @__PURE__ */ e("span", { className: "qmb-row__name", children: m.name }),
+              /* @__PURE__ */ e("span", { className: "qmb-row__meta", children: En(m.signals?.[0]) || m.label }),
+              /* @__PURE__ */ e(As, { cta: h })
+            ]
+          },
+          `${m.patientId}-${m.alertId}`
+        );
+      }) })
+    ] })
+  ] });
+}
+function ud(t) {
+  return t ? t.replace(/[\s/]+$/, "").trim() : "";
+}
+function As({ cta: t }) {
+  return t ? /* @__PURE__ */ e("span", { className: `qmb-row__cta qmb-row__cta--${t.tone}`, children: [
+    /* @__PURE__ */ e("span", { className: "qmb-row__cta-verb", children: t.verb }),
+    t.detail && /* @__PURE__ */ e("span", { className: "qmb-row__cta-detail", children: t.detail })
+  ] }) : null;
+}
+function pd({ patientId: t, facilityName: n, orgSlug: s, days: a = 30, mode: i = "qm", enabled: r = !0 }) {
+  const [o, c] = y(null), [d, l] = y(r), [p, u] = y(null), m = G(() => {
+    if (!r) return () => {
+    };
+    if (!t || !n || !s)
+      return l(!1), u("Missing patient, facility, or org context"), () => {
+      };
+    let h = !1;
+    l(!0), u(null);
+    const _ = new URLSearchParams({
+      facilityName: n,
+      orgSlug: s,
+      days: String(a),
+      mode: i
+    });
+    return chrome.runtime.sendMessage({
+      type: "API_REQUEST",
+      endpoint: `/api/extension/patients/${t}/gg-decline?${_}`,
+      options: { method: "GET" }
+    }).then((g) => {
+      if (!h) {
+        if (!g?.success) throw new Error(g?.error || "Failed to load GG detail");
+        c(et(g.data));
+      }
+    }).catch((g) => {
+      h || (console.error("[QMBoard] gg-decline fetch failed", g), u(g.message || "Failed to load"));
+    }).finally(() => {
+      h || l(!1);
+    }), () => {
+      h = !0;
+    };
+  }, [t, n, s, a, i, r]);
+  return F(() => {
+    let h = m();
+    const _ = () => {
+      h && h(), h = m();
+    };
+    return window.addEventListener("super:qm-snooze-changed", _), () => {
+      window.removeEventListener("super:qm-snooze-changed", _), h && h();
+    };
+  }, [m]), { data: o, loading: d, error: p };
+}
+function md({ facilityName: t, orgSlug: n }) {
+  const [s, a] = y(!1), [i, r] = y(null), o = new URLSearchParams({ facilityName: t, orgSlug: n }).toString(), c = G(async (m, h, _) => {
+    a(!0), r(null);
+    try {
+      const g = await chrome.runtime.sendMessage({
+        type: "API_REQUEST",
+        endpoint: m,
+        options: {
+          method: h,
+          headers: _ ? { "Content-Type": "application/json" } : void 0,
+          body: _ ? JSON.stringify(_) : void 0
+        }
+      });
+      if (!g?.success) throw new Error(g?.error || "Request failed");
+      return window.dispatchEvent(new CustomEvent("super:qm-snooze-changed")), et(g.data);
+    } catch (g) {
+      throw console.error("[QMBoard] snooze mutation failed", g), r(g.message || "Mutation failed"), g;
+    } finally {
+      a(!1);
+    }
+  }, [o]), d = G((m, h, _) => c(
+    `/api/extension/patients/${m}/gg-decline/snooze?${o}`,
+    "POST",
+    { days: h, reason: _ }
+  ), [c, o]), l = G((m, h) => c(
+    `/api/extension/patients/${m}/gg-decline/snooze/${h}?${o}`,
+    "DELETE",
+    null
+  ), [c, o]), p = G((m, h, _, g) => c(
+    `/api/extension/patients/${m}/preventable-alert-snooze?${o}`,
+    "POST",
+    { alertId: h, days: _, reason: g }
+  ), [c, o]), u = G((m, h) => c(
+    `/api/extension/patients/${m}/preventable-alert-snooze/${h}?${o}`,
+    "DELETE",
+    null
+  ), [c, o]);
+  return { snoozeGg: d, unsnoozeGg: l, snoozeAlert: p, unsnoozeAlert: u, pending: s, error: i };
+}
+const hd = [
+  { v: 6, short: "Indep" },
+  { v: 5, short: "Setup" },
+  { v: 4, short: "Supv" },
+  { v: 3, short: "Mod" },
+  { v: 2, short: "Max" },
+  { v: 1, short: "Dep" }
+], Ya = {
+  6: "Independent",
+  5: "Setup/clean-up",
+  4: "Supervision",
+  3: "Moderate",
+  2: "Maximal",
+  1: "Dependent"
+}, _d = {
+  severe: "qmb-chart-card__badge--severe",
+  moderate: "qmb-chart-card__badge--moderate",
+  mild: "qmb-chart-card__badge--mild"
+};
+function gd({ item: t, points: n, shiftColor: s = "#3b82f6" }) {
+  const [u, m] = y(null), h = te(null), _ = t.declineMagnitude && t.declineMagnitude >= 1, g = _ ? `↘ ${t.declineMagnitude.toFixed(t.declineMagnitude % 1 === 0 ? 0 : 1)}-pt` : "Stable", v = _ ? _d[t.severity] || "qmb-chart-card__badge--mild" : "qmb-chart-card__badge--stable", b = t.baseline != null ? `${Ya[t.baseline] || "—"} (${String(t.baseline).padStart(2, "0")})` : "Not in MDS", f = (w) => 176 - (w - 1) / 5 * 162, I = n.length, N = (w) => I <= 1 ? 52 + 454 / 2 : 52 + w / (I - 1) * 454, D = I > 0, T = D ? n.map((w, M) => `${M ? "L" : "M"}${N(M).toFixed(1)} ${f(w.value).toFixed(1)}`).join(" ") : "", A = n[0]?.date || "", x = n[n.length - 1]?.date || "", k = u ? n[u.i] : null, S = u && u.x > 520 * 0.62;
+  return /* @__PURE__ */ e("div", { className: "qmb-chart-card", children: [
+    /* @__PURE__ */ e("div", { className: "qmb-chart-card__head", children: [
+      /* @__PURE__ */ e("div", { className: "qmb-chart-card__title-group", children: [
+        /* @__PURE__ */ e("h4", { className: "qmb-chart-card__title", children: t.name }),
+        t.baseline != null && /* @__PURE__ */ e("div", { className: "qmb-chart-card__sub", children: [
+          "Baseline: ",
+          /* @__PURE__ */ e("b", { children: b }),
+          _ && t.worstShiftAverage != null && /* @__PURE__ */ e(Q, { children: [
+            " → Worst avg: ",
+            /* @__PURE__ */ e("b", { style: { color: "#b91c1c" }, children: t.worstShiftAverage.toFixed(1) })
+          ] })
+        ] })
+      ] }),
+      /* @__PURE__ */ e("span", { className: `qmb-chart-card__badge ${v}`, children: g })
+    ] }),
+    /* @__PURE__ */ e("div", { className: "qmb-chart-card__svg-wrap", children: [
+      /* @__PURE__ */ e(
+        "svg",
+        {
+          ref: h,
+          className: "qmb-chart-card__svg",
+          viewBox: "0 0 520 200",
+          preserveAspectRatio: "xMidYMid meet",
+          onMouseLeave: () => m(null),
+          children: [
+            hd.map(({ v: w, short: M }) => /* @__PURE__ */ e("g", { children: [
+              /* @__PURE__ */ e(
+                "line",
+                {
+                  x1: 52,
+                  y1: f(w),
+                  x2: 506,
+                  y2: f(w),
+                  stroke: "#f3f4f6",
+                  strokeWidth: "1",
+                  strokeDasharray: "2 3"
+                }
+              ),
+              /* @__PURE__ */ e("text", { x: 44, y: f(w) + 4, fontSize: "11", fill: "#9ca3af", textAnchor: "end", children: M })
+            ] }, w)),
+            t.baseline != null && /* @__PURE__ */ e("g", { children: [
+              /* @__PURE__ */ e(
+                "line",
+                {
+                  x1: 52,
+                  y1: f(t.baseline),
+                  x2: 506,
+                  y2: f(t.baseline),
+                  stroke: "#6366f1",
+                  strokeWidth: "1.5",
+                  strokeDasharray: "6 4",
+                  opacity: "0.9"
+                }
+              ),
+              /* @__PURE__ */ e(
+                "text",
+                {
+                  x: 502,
+                  y: f(t.baseline) + 14,
+                  fontSize: "10",
+                  fill: "#6366f1",
+                  textAnchor: "end",
+                  fontWeight: "600",
+                  children: "Baseline"
+                }
+              )
+            ] }),
+            D && /* @__PURE__ */ e(Q, { children: [
+              /* @__PURE__ */ e("path", { d: T, fill: "none", stroke: s, strokeWidth: "2" }),
+              n.map((w, M) => /* @__PURE__ */ e("g", { children: [
+                /* @__PURE__ */ e(
+                  "circle",
+                  {
+                    cx: N(M),
+                    cy: f(w.value),
+                    r: u?.i === M ? 5 : 3.5,
+                    fill: s,
+                    stroke: "#fff",
+                    strokeWidth: "1.5"
+                  }
+                ),
+                /* @__PURE__ */ e(
+                  "circle",
+                  {
+                    cx: N(M),
+                    cy: f(w.value),
+                    r: "14",
+                    fill: "transparent",
+                    onMouseEnter: () => m({ i: M, x: N(M), y: f(w.value) }),
+                    style: { cursor: "pointer" }
+                  }
+                )
+              ] }, `${w.date}-${M}`))
+            ] }),
+            u && /* @__PURE__ */ e(
+              "line",
+              {
+                x1: u.x,
+                y1: 14,
+                x2: u.x,
+                y2: 176,
+                stroke: "#9ca3af",
+                strokeWidth: "1",
+                strokeDasharray: "3 3",
+                opacity: "0.5"
+              }
+            ),
+            A && /* @__PURE__ */ e("text", { x: 52, y: 194, fontSize: "10", fill: "#9ca3af", children: jt(A) }),
+            x && x !== A && /* @__PURE__ */ e("text", { x: 506, y: 194, fontSize: "10", fill: "#9ca3af", textAnchor: "end", children: jt(x) }),
+            !D && /* @__PURE__ */ e(
+              "text",
+              {
+                x: 52 + 454 / 2,
+                y: 14 + 162 / 2,
+                fontSize: "12",
+                fill: "#9ca3af",
+                textAnchor: "middle",
+                fontStyle: "italic",
+                children: "No scores in window"
+              }
+            )
+          ]
+        }
+      ),
+      k && /* @__PURE__ */ e(
+        "div",
+        {
+          className: "qmb-chart-tooltip",
+          style: {
+            left: `${u.x / 520 * 100}%`,
+            top: `${u.y / 200 * 100}%`,
+            transform: S ? "translate(-100%, -50%) translateX(-10px)" : "translate(0, -50%) translateX(10px)"
+          },
+          children: [
+            /* @__PURE__ */ e("div", { className: "qmb-chart-tooltip__date", children: jt(k.date) }),
+            k.entries && k.entries.length > 0 ? k.entries.map((w, M) => /* @__PURE__ */ e("div", { className: "qmb-chart-tooltip__row", children: [
+              /* @__PURE__ */ e("span", { className: "qmb-chart-tooltip__dot", style: { background: w.shiftColor || s } }),
+              /* @__PURE__ */ e("span", { className: "qmb-chart-tooltip__shift", children: [
+                w.shift || "—",
+                ":"
+              ] }),
+              /* @__PURE__ */ e("span", { className: "qmb-chart-tooltip__label", children: [
+                /* @__PURE__ */ e("b", { children: w.label }),
+                " ",
+                /* @__PURE__ */ e("span", { style: { color: "#9ca3af" }, children: [
+                  "(",
+                  w.value,
+                  ")"
+                ] })
+              ] }),
+              w.aideName && /* @__PURE__ */ e("span", { className: "qmb-chart-tooltip__aide", children: [
+                "— ",
+                w.aideName
+              ] })
+            ] }, M)) : /* @__PURE__ */ e("div", { className: "qmb-chart-tooltip__row", children: [
+              /* @__PURE__ */ e("span", { className: "qmb-chart-tooltip__dot", style: { background: s } }),
+              /* @__PURE__ */ e("span", { className: "qmb-chart-tooltip__label", children: [
+                /* @__PURE__ */ e("b", { children: fd(k.value) }),
+                " (",
+                k.value.toFixed(1),
+                ")"
+              ] })
+            ] })
+          ]
+        }
+      )
+    ] })
+  ] });
+}
+function jt(t) {
+  if (!t) return "";
+  const [, n, s] = t.split("-");
+  return !n || !s ? t : `${Number(n)}/${Number(s)}`;
+}
+function fd(t) {
+  if (t == null) return "—";
+  const n = Math.round(t);
+  return Ya[n] || "—";
+}
+const _n = [
+  { key: "day", idx: 0, label: "Day", color: "#3b82f6" },
+  { key: "evening", idx: 1, label: "Evening", color: "#22c55e" },
+  { key: "night", idx: 2, label: "Night", color: "#a855f7" },
+  { key: "average", idx: null, label: "Average", color: "#475569" }
+], Ja = {
+  "01": "Dependent",
+  "02": "Maximal",
+  "03": "Moderate",
+  "04": "Supervision",
+  "05": "Setup",
+  "06": "Independent",
+  "07": "Refused",
+  "09": "N/A",
+  10: "Env. limit",
+  88: "Medical reason"
+}, Za = { 0: "Day", 1: "Evening", 2: "Night" }, yd = { 0: "#3b82f6", 1: "#22c55e", 2: "#a855f7" }, vd = {
+  severe: "qmb-pill qmb-pill--severe",
+  moderate: "qmb-pill qmb-pill--moderate",
+  mild: "qmb-pill qmb-pill--mild"
+};
+function bd({ alert: t, facilityName: n, orgSlug: s, onBack: a }) {
+  const { data: i, loading: r, error: o } = pd({
+    patientId: t.patientId,
+    facilityName: n,
+    orgSlug: s,
+    days: 30,
+    mode: "qm",
+    enabled: !0
+  });
+  return r ? /* @__PURE__ */ e("div", { className: "qmb-detail", children: [
+    /* @__PURE__ */ e(Kt, { alert: t, onBack: a }),
+    /* @__PURE__ */ e("div", { className: "qmb-empty", children: "Loading GG history…" })
+  ] }) : o ? /* @__PURE__ */ e("div", { className: "qmb-detail", children: [
+    /* @__PURE__ */ e(Kt, { alert: t, onBack: a }),
+    /* @__PURE__ */ e("div", { className: "qmb-empty qmb-empty--error", children: [
+      "Failed to load: ",
+      o
+    ] })
+  ] }) : i?.decline ? /* @__PURE__ */ e(
+    wd,
+    {
+      alert: t,
+      gg: i,
+      facilityName: n,
+      orgSlug: s,
+      onBack: a
+    }
+  ) : /* @__PURE__ */ e("div", { className: "qmb-detail", children: [
+    /* @__PURE__ */ e(Kt, { alert: t, onBack: a }),
+    /* @__PURE__ */ e("div", { className: "qmb-empty", children: "No GG decline data for this resident." })
+  ] });
+}
+function wd({ alert: t, gg: n, facilityName: s, orgSlug: a, onBack: i }) {
+  const [r, o] = y("average"), [c, d] = y("charts"), [l, p] = y(!1), u = n.decline, m = n.scores || [], h = Y(() => {
+    const f = /* @__PURE__ */ new Map();
+    for (const I of u.baselines || [])
+      f.set(I.mdsKey, { mdsKey: I.mdsKey, name: I.name, baseline: I.value, rawValue: I.rawValue });
+    for (const I of u.declines || []) {
+      const N = f.get(I.mdsKey) || { mdsKey: I.mdsKey, name: I.name };
+      f.set(I.mdsKey, {
+        ...N,
+        baseline: N.baseline ?? I.baseline,
+        worstShiftAverage: I.worstShiftAverage,
+        declineMagnitude: I.declineMagnitude,
+        severity: I.severity
+      });
+    }
+    for (const I of m)
+      I.mdsQuestionKey && (f.has(I.mdsQuestionKey) || f.set(I.mdsQuestionKey, {
+        mdsKey: I.mdsQuestionKey,
+        name: I.interventionName || I.mdsQuestionKey
+      }));
+    return [...f.values()];
+  }, [u, m]), _ = Y(
+    () => Nd(m, h, r),
+    [m, h, r]
+  ), g = _n.find((f) => f.key === r)?.color || "#3b82f6", v = u.overallSeverity, b = v ? vd[v] || "qmb-pill" : null;
+  return /* @__PURE__ */ e("div", { className: "qmb-detail", children: [
+    /* @__PURE__ */ e("div", { className: "qmb-backbar", children: [
+      /* @__PURE__ */ e("div", { className: "qmb-backbar__left", children: [
+        /* @__PURE__ */ e("button", { type: "button", className: "qmb-backbar__btn", onClick: i, children: "‹ Back" }),
+        /* @__PURE__ */ e("span", { className: "qmb-backbar__title", children: t.name }),
+        v && /* @__PURE__ */ e("span", { className: b, children: v }),
+        /* @__PURE__ */ e("div", { className: "qmb-backbar__subline", children: [
+          /* @__PURE__ */ e("span", { children: u.locationName }),
+          u.mdsArdDate && /* @__PURE__ */ e(
+            "button",
+            {
+              type: "button",
+              className: "qmb-baselines-toggle",
+              onClick: () => p((f) => !f),
+              children: [
+                "· MDS Baseline: ",
+                /* @__PURE__ */ e("u", { children: u.mdsArdDate }),
+                " ",
+                /* @__PURE__ */ e("span", { children: l ? "▴" : "▾" })
+              ]
+            }
+          )
+        ] })
+      ] }),
+      /* @__PURE__ */ e(
+        Xa,
+        {
+          patientId: t.patientId,
+          snooze: n.snooze,
+          kind: "gg",
+          facilityName: s,
+          orgSlug: a
+        }
+      )
+    ] }),
+    l && /* @__PURE__ */ e(Id, { baselines: u.baselines }),
+    /* @__PURE__ */ e("div", { className: "qmb-item-pills", children: h.map((f) => {
+      const I = (u.declines || []).find((D) => D.mdsKey === f.mdsKey), N = I && I.declineMagnitude >= 1;
+      return /* @__PURE__ */ e(
+        "span",
+        {
+          className: `qmb-item-pill ${N ? `qmb-item-pill--${I.severity || "declined"}` : ""}`,
+          children: [
+            f.name,
+            N && /* @__PURE__ */ e("span", { className: "qmb-item-pill__delta", children: [
+              "↘ ",
+              I.declineMagnitude.toFixed(I.declineMagnitude % 1 === 0 ? 0 : 1),
+              "pt"
+            ] })
+          ]
+        },
+        f.mdsKey
+      );
+    }) }),
+    /* @__PURE__ */ e("div", { className: "qmb-view-controls", children: [
+      /* @__PURE__ */ e("div", { className: "qmb-seg", children: [
+        /* @__PURE__ */ e(
+          "button",
+          {
+            type: "button",
+            className: `qmb-seg__btn ${c === "charts" ? "is-active" : ""}`,
+            onClick: () => d("charts"),
+            children: "📊 Charts"
+          }
+        ),
+        /* @__PURE__ */ e(
+          "button",
+          {
+            type: "button",
+            className: `qmb-seg__btn ${c === "table" ? "is-active" : ""}`,
+            onClick: () => d("table"),
+            children: "≡ Table"
+          }
+        )
+      ] }),
+      c === "charts" && /* @__PURE__ */ e("div", { className: "qmb-seg", children: _n.map((f) => /* @__PURE__ */ e(
+        "button",
+        {
+          type: "button",
+          className: `qmb-seg__btn ${r === f.key ? "is-active" : ""}`,
+          onClick: () => o(f.key),
+          style: r === f.key ? { "--active-color": f.color } : void 0,
+          children: f.label
+        },
+        f.key
+      )) })
+    ] }),
+    c === "charts" ? /* @__PURE__ */ e("div", { className: "qmb-chart-grid", children: h.map((f) => /* @__PURE__ */ e(
+      gd,
+      {
+        item: f,
+        points: _.get(f.mdsKey) || [],
+        shiftColor: g
+      },
+      f.mdsKey
+    )) }) : /* @__PURE__ */ e(Dd, { scores: m })
+  ] });
+}
+function Kt({ alert: t, onBack: n }) {
+  return /* @__PURE__ */ e("div", { className: "qmb-backbar", children: /* @__PURE__ */ e("div", { children: [
+    /* @__PURE__ */ e("button", { type: "button", className: "qmb-backbar__btn", onClick: n, children: "‹ Back" }),
+    /* @__PURE__ */ e("span", { className: "qmb-backbar__title", children: t.name })
+  ] }) });
+}
+function Id({ baselines: t }) {
+  return !t || !t.length ? null : /* @__PURE__ */ e("div", { className: "qmb-baselines", children: t.map((n) => /* @__PURE__ */ e("div", { className: "qmb-baseline-card", children: [
+    /* @__PURE__ */ e("div", { className: "qmb-baseline-card__top", children: [
+      /* @__PURE__ */ e("span", { className: "qmb-baseline-card__name", children: n.name }),
+      /* @__PURE__ */ e("span", { className: "qmb-baseline-card__key", children: n.mdsKey })
+    ] }),
+    /* @__PURE__ */ e("div", { className: "qmb-baseline-card__val", children: n.value == null ? /* @__PURE__ */ e("i", { children: "Not in MDS" }) : /* @__PURE__ */ e("b", { children: n.rawValue || n.value }) })
+  ] }, n.mdsKey)) });
+}
+function Xa({ patientId: t, snooze: n, kind: s, alertId: a, facilityName: i, orgSlug: r }) {
+  const [o, c] = y(!1), { snoozeGg: d, unsnoozeGg: l, snoozeAlert: p, unsnoozeAlert: u, pending: m } = md({ facilityName: i, orgSlug: r });
+  if (n) {
+    const _ = n.snoozedUntil ? new Date(n.snoozedUntil).toLocaleDateString("en-US", { month: "short", day: "numeric" }) : "";
+    return /* @__PURE__ */ e(
+      "button",
+      {
+        type: "button",
+        className: "qmb-snooze-btn qmb-snooze-btn--active",
+        onClick: async () => {
+          try {
+            s === "gg" ? await l(t, n.id) : await u(t, n.id);
+          } catch {
+          }
+        },
+        disabled: m,
+        children: [
+          "🕒 Unsnooze ",
+          _ && /* @__PURE__ */ e("span", { className: "qmb-snooze-btn__meta", children: [
+            "· until ",
+            _
+          ] })
+        ]
+      }
+    );
+  }
+  const h = async (_) => {
+    try {
+      s === "gg" ? await d(t, _, null) : await p(t, a, _, null);
+    } catch {
+    }
+    c(!1);
+  };
+  return /* @__PURE__ */ e("div", { className: "qmb-snooze-wrap", children: [
+    /* @__PURE__ */ e(
+      "button",
+      {
+        type: "button",
+        className: "qmb-snooze-btn",
+        onClick: () => c((_) => !_),
+        disabled: m,
+        children: [
+          "🕒 Snooze ",
+          o ? "▴" : "▾"
+        ]
+      }
+    ),
+    o && /* @__PURE__ */ e("div", { className: "qmb-snooze-menu", children: [
+      /* @__PURE__ */ e("button", { type: "button", onClick: () => h(1), children: "1 day" }),
+      /* @__PURE__ */ e("button", { type: "button", onClick: () => h(7), children: "7 days" }),
+      /* @__PURE__ */ e("button", { type: "button", onClick: () => h(30), children: "30 days" })
+    ] })
+  ] });
+}
+function Dd({ scores: t }) {
+  const n = [...t].sort((s, a) => {
+    const i = (a.recordedDate || "").localeCompare(s.recordedDate || "");
+    return i !== 0 ? i : (s.shiftIndex || 0) - (a.shiftIndex || 0);
+  });
+  return /* @__PURE__ */ e("table", { className: "qmb-scores-table", children: [
+    /* @__PURE__ */ e("thead", { children: /* @__PURE__ */ e("tr", { children: [
+      /* @__PURE__ */ e("th", { children: "Date" }),
+      /* @__PURE__ */ e("th", { children: "Shift" }),
+      /* @__PURE__ */ e("th", { children: "Item" }),
+      /* @__PURE__ */ e("th", { children: "Score" }),
+      /* @__PURE__ */ e("th", { children: "Aide" })
+    ] }) }),
+    /* @__PURE__ */ e("tbody", { children: [
+      n.map((s) => /* @__PURE__ */ e("tr", { children: [
+        /* @__PURE__ */ e("td", { className: "qmb-mono", children: fe(s.recordedDate) }),
+        /* @__PURE__ */ e("td", { children: Za[s.shiftIndex] || "—" }),
+        /* @__PURE__ */ e("td", { children: s.interventionName || s.mdsQuestionKey }),
+        /* @__PURE__ */ e("td", { children: [
+          /* @__PURE__ */ e("b", { children: Ja[s.loggedValue] || "—" }),
+          /* @__PURE__ */ e("span", { className: "qmb-mono", style: { marginLeft: 6, color: "#9ca3af" }, children: [
+            "(",
+            s.loggedValue,
+            ")"
+          ] })
+        ] }),
+        /* @__PURE__ */ e("td", { children: s.aideName || "—" })
+      ] }, s.id || `${s.patientId}-${s.recordedDate}-${s.shiftIndex}-${s.mdsQuestionKey}`)),
+      n.length === 0 && /* @__PURE__ */ e("tr", { children: /* @__PURE__ */ e("td", { colSpan: 5, style: { textAlign: "center", padding: "24px", color: "#9ca3af", fontStyle: "italic" }, children: "No raw scores in window." }) })
+    ] })
+  ] });
+}
+function Nd(t, n, s) {
+  const a = /* @__PURE__ */ new Map(), i = s === "average" ? null : _n.find((r) => r.key === s)?.idx;
+  for (const r of n) {
+    const o = t.filter((l) => l.mdsQuestionKey === r.mdsKey), c = /* @__PURE__ */ new Map();
+    for (const l of o) {
+      const p = parseInt(l.loggedValue, 10);
+      if (!(p >= 1 && p <= 6) || i != null && l.shiftIndex !== i) continue;
+      const u = l.recordedDate;
+      c.has(u) || c.set(u, { values: [], entries: [] });
+      const m = c.get(u);
+      m.values.push(p), m.entries.push({
+        shift: Za[l.shiftIndex] || "—",
+        shiftColor: yd[l.shiftIndex] || "#64748b",
+        value: p,
+        label: Ja[l.loggedValue] || "—",
+        aideName: l.aideName || null
+      });
+    }
+    const d = [...c.entries()].map(([l, p]) => ({
+      date: l,
+      value: p.values.reduce((u, m) => u + m, 0) / p.values.length,
+      entries: p.entries
+    })).sort((l, p) => l.date.localeCompare(p.date));
+    a.set(r.mdsKey, d);
+  }
+  return a;
+}
+function kd({ alert: t, facilityName: n, orgSlug: s, onBack: a }) {
+  return t.alertId === "gg_decline_canary" ? /* @__PURE__ */ e(
+    bd,
+    {
+      alert: t,
+      facilityName: n,
+      orgSlug: s,
+      onBack: a
+    }
+  ) : /* @__PURE__ */ e(
+    Sd,
+    {
+      alert: t,
+      facilityName: n,
+      orgSlug: s,
+      onBack: a
+    }
+  );
+}
+const Cd = {
+  high: "qmb-pill qmb-pill--high",
+  medium: "qmb-pill qmb-pill--medium",
+  low: "qmb-pill qmb-pill--low"
+};
+function Sd({ alert: t, facilityName: n, orgSlug: s, onBack: a }) {
+  const i = t.urgency ? Cd[t.urgency] || "qmb-pill" : null;
+  return /* @__PURE__ */ e("div", { className: "qmb-detail", children: [
+    /* @__PURE__ */ e("div", { className: "qmb-backbar", children: [
+      /* @__PURE__ */ e("div", { className: "qmb-backbar__left", children: [
+        /* @__PURE__ */ e("button", { type: "button", className: "qmb-backbar__btn", onClick: a, children: "‹ Back" }),
+        /* @__PURE__ */ e("span", { className: "qmb-backbar__title", children: t.name }),
+        t.urgency && /* @__PURE__ */ e("span", { className: i, children: t.urgency }),
+        /* @__PURE__ */ e("div", { className: "qmb-backbar__subline", children: [
+          /* @__PURE__ */ e("span", { children: t.label }),
+          t.qmId && /* @__PURE__ */ e("span", { className: "qmb-pill qmb-pill--alert", children: Ue(t.qmId) })
+        ] })
+      ] }),
+      t.alertId !== "gg_decline_canary" && /* @__PURE__ */ e(
+        Xa,
+        {
+          patientId: t.patientId,
+          snooze: t.snooze,
+          kind: "alert",
+          alertId: t.alertId,
+          facilityName: n,
+          orgSlug: s
+        }
+      )
+    ] }),
+    t.suggestedAction && /* @__PURE__ */ e("p", { className: "qmb-detail__summary", children: t.suggestedAction }),
+    /* @__PURE__ */ e(
+      xd,
+      {
+        signals: t.signals,
+        patientId: t.patientId,
+        facilityName: n,
+        orgSlug: s
+      }
+    )
+  ] });
+}
+function xd({ signals: t, patientId: n, facilityName: s, orgSlug: a }) {
+  return !t || t.length === 0 ? /* @__PURE__ */ e("div", { className: "qmb-empty", children: "No signals on this alert." }) : /* @__PURE__ */ e("div", { className: "qmb-signals", children: [
+    /* @__PURE__ */ e("div", { className: "qmb-slabel", children: [
+      /* @__PURE__ */ e("span", { children: "Signals" }),
+      /* @__PURE__ */ e("span", { className: "qmb-slabel__meta", children: [
+        t.length,
+        " total"
+      ] })
+    ] }),
+    t.map((i, r) => /* @__PURE__ */ e(
+      Pd,
+      {
+        signal: i,
+        patientId: n,
+        facilityName: s,
+        orgSlug: a
+      },
+      `${i.source}-${i.refId || r}-${i.date}`
+    ))
+  ] });
+}
+function Pd({ signal: t, patientId: n, facilityName: s, orgSlug: a }) {
+  const [i, r] = y(!1), o = Td(t);
+  return /* @__PURE__ */ e("div", { className: "qmb-signal-wrap", children: [
+    /* @__PURE__ */ e(
+      "div",
+      {
+        className: `qmb-signal ${o ? "qmb-signal--clickable" : ""}`,
+        onClick: o ? () => {
+          if (t.source === "note" && t.refId) {
+            typeof window.showClinicalNoteModal == "function" ? window.showClinicalNoteModal(t.refId) : r((d) => !d);
+            return;
+          }
+          if (t.source === "order" && t.refId) {
+            r((d) => !d);
+            return;
+          }
+        } : void 0,
+        children: [
+          /* @__PURE__ */ e("span", { className: "qmb-signal__date", children: fe(t.date) }),
+          /* @__PURE__ */ e("span", { className: "qmb-signal__src", children: t.source }),
+          /* @__PURE__ */ e("span", { className: "qmb-signal__text", children: t.text }),
+          o && /* @__PURE__ */ e("span", { className: "qmb-signal__cta", children: t.source === "note" ? "open note ›" : "view ›" })
+        ]
+      }
+    ),
+    i && t.source === "order" && t.refId && /* @__PURE__ */ e(
+      Ad,
+      {
+        patientId: n,
+        orderId: t.refId,
+        facilityName: s,
+        orgSlug: a
+      }
+    )
+  ] });
+}
+function Td(t) {
+  return t.refId ? t.source === "note" || t.source === "order" : !1;
+}
+function Ad({ patientId: t, orderId: n, facilityName: s, orgSlug: a }) {
+  const [i, r] = y({ loading: !0, data: null, error: null });
+  if (F(() => {
+    let c = !1;
+    r({ loading: !0, data: null, error: null });
+    const d = new URLSearchParams({
+      type: "order",
+      sourceId: n,
+      ...s ? { facilityName: s } : {},
+      ...a ? { orgSlug: a } : {}
+    });
+    return chrome.runtime.sendMessage({
+      type: "API_REQUEST",
+      endpoint: `/api/patients/${t}/evidence?${d}`,
+      options: { method: "GET" }
+    }).then((l) => {
+      if (!c) {
+        if (!l?.success) throw new Error(l?.error || "Failed to load order");
+        r({ loading: !1, data: et(l.data), error: null });
+      }
+    }).catch((l) => {
+      c || r({ loading: !1, data: null, error: l.message || "Failed to load" });
+    }), () => {
+      c = !0;
+    };
+  }, [t, n, s, a]), i.loading) return /* @__PURE__ */ e("div", { className: "qmb-signal-inline", children: "Loading order…" });
+  if (i.error) return /* @__PURE__ */ e("div", { className: "qmb-signal-inline qmb-signal-inline--error", children: [
+    "Failed to load: ",
+    i.error
+  ] });
+  const o = i.data || {};
+  return /* @__PURE__ */ e("div", { className: "qmb-signal-inline", children: [
+    /* @__PURE__ */ e("div", { className: "qmb-signal-inline__grid", children: [
+      o.description && /* @__PURE__ */ e(Ne, { k: "Description", v: o.description }),
+      o.category && /* @__PURE__ */ e(Ne, { k: "Category", v: o.category }),
+      o.status && /* @__PURE__ */ e(Ne, { k: "Status", v: o.status }),
+      o.medicationName && /* @__PURE__ */ e(Ne, { k: "Medication", v: o.medicationName }),
+      o.directions && /* @__PURE__ */ e(Ne, { k: "Directions", v: o.directions }),
+      o.startDate && /* @__PURE__ */ e(Ne, { k: "Start", v: fe(o.startDate) }),
+      o.endDate && /* @__PURE__ */ e(Ne, { k: "End", v: fe(o.endDate) }),
+      o.orderedBy && /* @__PURE__ */ e(Ne, { k: "Ordered by", v: o.orderedBy }),
+      o.notes && /* @__PURE__ */ e(Ne, { k: "Notes", v: o.notes })
+    ] }),
+    Object.keys(o).length === 0 && /* @__PURE__ */ e("div", { style: { color: "#9ca3af", fontStyle: "italic" }, children: "No details returned." })
+  ] });
+}
+function Ne({ k: t, v: n }) {
+  return /* @__PURE__ */ e(Q, { children: [
+    /* @__PURE__ */ e("dt", { children: t }),
+    /* @__PURE__ */ e("dd", { children: n })
+  ] });
+}
+const Md = {
+  overdue: "qmb-pill qmb-pill--high",
+  soon: "qmb-pill qmb-pill--medium",
+  later: "qmb-pill qmb-pill--low",
+  stable: "qmb-pill qmb-pill--low"
+}, qd = {
+  GG0170B: "Sit to Lying",
+  GG0170D: "Sit to Stand",
+  GG0170F: "Toilet Transfer",
+  GG0130A: "Eating",
+  GG0170I: "Walk 10 Feet",
+  GG0170J: "Walk 50 Feet",
+  GG0170K: "Walk 150 Feet"
+};
+function Ld({ row: t, preventableAlerts: n, onBack: s, onAlertClick: a }) {
+  const i = Y(() => Ka(t.measureId, t.evidence), [t]), r = Y(() => Qa(n).filter((l) => l.patientId === t.patientId && l.qmId === t.measureId), [n, t]), o = Ed(t), c = Md[t.urgency] || "qmb-pill";
+  return /* @__PURE__ */ e("div", { className: "qmb-detail", children: [
+    /* @__PURE__ */ e("div", { className: "qmb-backbar", children: /* @__PURE__ */ e("div", { className: "qmb-backbar__left", children: [
+      /* @__PURE__ */ e("button", { type: "button", className: "qmb-backbar__btn", onClick: s, children: "‹ Back" }),
+      /* @__PURE__ */ e("span", { className: "qmb-backbar__title", children: t.name }),
+      /* @__PURE__ */ e("span", { className: c, children: t.urgency || "triggering" }),
+      /* @__PURE__ */ e("div", { className: "qmb-backbar__subline", children: [
+        /* @__PURE__ */ e("span", { className: "qmb-row__qm", style: { background: "#eef2ff", color: "#4f46e5" }, children: t.measureLabel }),
+        /* @__PURE__ */ e("span", { children: Dt(t.targetType) }),
+        t.ardDate && /* @__PURE__ */ e(Q, { children: [
+          /* @__PURE__ */ e("span", { className: "qmb-row__sep", children: "·" }),
+          /* @__PURE__ */ e("span", { children: [
+            "ARD ",
+            fe(t.ardDate)
+          ] })
+        ] })
+      ] })
+    ] }) }),
+    /* @__PURE__ */ e("div", { className: "qmb-trigger-summary", children: [
+      /* @__PURE__ */ e("div", { className: "qmb-trigger-summary__main", children: o.headline }),
+      o.sub && /* @__PURE__ */ e("div", { className: "qmb-trigger-summary__sub", children: o.sub })
+    ] }),
+    /* @__PURE__ */ e("div", { className: "qmb-slabel", children: [
+      /* @__PURE__ */ e("span", { children: "Why it's triggering" }),
+      /* @__PURE__ */ e("span", { className: "qmb-slabel__meta", children: [
+        t.evidence?.length || 0,
+        " evidence row",
+        (t.evidence?.length || 0) === 1 ? "" : "s"
+      ] })
+    ] }),
+    i && /* @__PURE__ */ e("div", { className: "qmb-trigger-why", children: [
+      /* @__PURE__ */ e("span", { className: "qmb-row__why-arrow", children: "↘" }),
+      " ",
+      i
+    ] }),
+    /* @__PURE__ */ e($d, { measureId: t.measureId, evidence: t.evidence || [] }),
+    t.clearActions && t.clearActions.length > 0 && /* @__PURE__ */ e(Q, { children: [
+      /* @__PURE__ */ e("div", { className: "qmb-slabel", style: { marginTop: 18 }, children: /* @__PURE__ */ e("span", { children: "What you can do" }) }),
+      /* @__PURE__ */ e("ul", { className: "qmb-action-list", children: t.clearActions.map((d, l) => /* @__PURE__ */ e("li", { children: [
+        /* @__PURE__ */ e("div", { className: "qmb-action-list__label", children: d.label }),
+        d.detail && /* @__PURE__ */ e("div", { className: "qmb-action-list__detail", children: d.detail }),
+        d.effectiveDate && /* @__PURE__ */ e("div", { className: "qmb-action-list__detail", children: [
+          "Effective ",
+          fe(d.effectiveDate)
+        ] })
+      ] }, l)) })
+    ] }),
+    r.length > 0 && /* @__PURE__ */ e(Q, { children: [
+      /* @__PURE__ */ e("div", { className: "qmb-slabel", style: { marginTop: 18 }, children: [
+        /* @__PURE__ */ e("span", { children: "Related heads-up" }),
+        /* @__PURE__ */ e("span", { className: "qmb-slabel__meta", children: [
+          r.length,
+          " signal",
+          r.length === 1 ? "" : "s"
+        ] })
+      ] }),
+      /* @__PURE__ */ e("div", { className: "qmb-rows", children: r.map((d) => {
+        const l = Rt(d);
+        return /* @__PURE__ */ e(
+          "div",
+          {
+            className: "qmb-row qmb-row--alert",
+            onClick: () => a(d),
+            children: [
+              /* @__PURE__ */ e("span", { className: "qmb-row__dot qmb-row__dot--alert" }),
+              /* @__PURE__ */ e("span", { className: "qmb-row__name", children: d.label }),
+              /* @__PURE__ */ e("span", { className: "qmb-row__meta", children: d.signals?.[0]?.text || "—" }),
+              /* @__PURE__ */ e(Rd, { cta: l })
+            ]
+          },
+          `${d.patientId}-${d.alertId}`
+        );
+      }) })
+    ] })
+  ] });
+}
+function Ed(t) {
+  if (t.urgency === "overdue")
+    return { headline: "Overdue", sub: "Target ARD has passed without clearing — schedule a new qualifying assessment." };
+  const n = od(t);
+  let s = "";
+  return t.clearsOnNextObra ? s = "Clears on the next qualifying OBRA with clean coding. Days above are estimated from the typical 46–165 day quarterly window." : t.clearActionType === "time" ? s = `Rolls off on ${fe(t.clearDate)} — no new assessment required, it exits the scan window automatically.` : t.clearActionType === "stay_locked" && (s = "Stay-locked — clears only on the next admission cycle."), { headline: `Clears ${n}`, sub: s };
+}
+function $d({ measureId: t, evidence: n }) {
+  if (!n || n.length === 0)
+    return /* @__PURE__ */ e("div", { className: "qmb-empty", children: "No evidence returned." });
+  if (t === "adl_decline") {
+    const s = /* @__PURE__ */ new Map();
+    for (const a of n) {
+      const i = (a.mdsItem || "").replace(/[1-9]$/, "");
+      s.has(i) || s.set(i, { name: qd[i] || i, target: null, prior: null, rows: [] }), s.get(i).rows.push(a);
+      const r = parseInt(a.value, 10);
+      /^Target/i.test(a.note || "") && (s.get(i).target = { val: r, note: a.note, ardDate: a.assessmentArdDate, type: a.assessmentType }), /^Prior/i.test(a.note || "") && (s.get(i).prior = { val: r, note: a.note, ardDate: a.assessmentArdDate, type: a.assessmentType });
+    }
+    return /* @__PURE__ */ e("div", { className: "qmb-evidence", children: [...s.entries()].map(([a, i]) => /* @__PURE__ */ e("div", { className: "qmb-evidence__gg", children: [
+      /* @__PURE__ */ e("div", { className: "qmb-evidence__gg-title", children: [
+        /* @__PURE__ */ e("b", { children: i.name }),
+        /* @__PURE__ */ e("span", { className: "qmb-evidence__gg-key", children: a })
+      ] }),
+      /* @__PURE__ */ e("div", { className: "qmb-evidence__gg-change", children: [
+        "Prior ",
+        /* @__PURE__ */ e("b", { children: i.prior?.val ?? "—" }),
+        " (",
+        fe(i.prior?.ardDate),
+        ", ",
+        Dt(i.prior?.type),
+        ")",
+        " → ",
+        "Target ",
+        /* @__PURE__ */ e("b", { style: { color: "#b91c1c" }, children: i.target?.val ?? "—" }),
+        " (",
+        fe(i.target?.ardDate),
+        ", ",
+        Dt(i.target?.type),
+        ")"
+      ] })
+    ] }, a)) });
+  }
+  return /* @__PURE__ */ e("div", { className: "qmb-evidence", children: n.map((s, a) => /* @__PURE__ */ e("div", { className: "qmb-evidence__row", children: [
+    /* @__PURE__ */ e("span", { className: "qmb-mono qmb-evidence__item", children: s.mdsItem || "—" }),
+    /* @__PURE__ */ e("span", { className: "qmb-evidence__val", children: [
+      /* @__PURE__ */ e("b", { children: s.value ?? "—" }),
+      s.assessmentArdDate && /* @__PURE__ */ e("span", { className: "qmb-evidence__meta", children: [
+        "· ARD ",
+        fe(s.assessmentArdDate),
+        s.assessmentType && ` · ${Dt(s.assessmentType)}`
+      ] })
+    ] }),
+    s.note && /* @__PURE__ */ e("div", { className: "qmb-evidence__note", children: s.note })
+  ] }, a)) });
+}
+function Dt(t) {
+  return t ? t.replace(/[\s/]+$/, "").trim() : "";
+}
+function Rd({ cta: t }) {
+  return t ? /* @__PURE__ */ e("span", { className: `qmb-row__cta qmb-row__cta--${t.tone}`, children: [
+    /* @__PURE__ */ e("span", { className: "qmb-row__cta-verb", children: t.verb }),
+    t.detail && /* @__PURE__ */ e("span", { className: "qmb-row__cta-detail", children: t.detail })
+  ] }) : null;
+}
+function Od({ currentlyTriggering: t, onBack: n, onRowClick: s }) {
+  const i = [...Ln(t)].sort((r, o) => Ms(r) - Ms(o));
+  return /* @__PURE__ */ e("div", { className: "qmb-detail", children: [
+    /* @__PURE__ */ e("div", { className: "qmb-backbar", children: /* @__PURE__ */ e("div", { children: [
+      /* @__PURE__ */ e("button", { type: "button", className: "qmb-backbar__btn", onClick: n, children: "‹ Back" }),
+      /* @__PURE__ */ e("span", { className: "qmb-backbar__title", children: "Clearing soon" }),
+      /* @__PURE__ */ e("span", { className: "qmb-backbar__sub", children: [
+        i.length,
+        " residents — flat list across all measures"
+      ] })
+    ] }) }),
+    i.length === 0 ? /* @__PURE__ */ e("div", { className: "qmb-empty", children: "Nothing triggering right now." }) : /* @__PURE__ */ e("div", { className: "qmb-rows", children: i.map((r) => {
+      const o = $n(r);
+      return /* @__PURE__ */ e(
+        "div",
+        {
+          className: `qmb-row qmb-row--${r.urgency === "overdue" ? "urgent" : r.urgency === "soon" ? "soon" : "stable"}`,
+          onClick: () => s(r),
+          children: [
+            /* @__PURE__ */ e("span", { className: "qmb-row__dot" }),
+            /* @__PURE__ */ e("span", { className: "qmb-row__name", children: [
+              r.name,
+              /* @__PURE__ */ e("span", { className: "qmb-row__qm", children: r.measureLabel })
+            ] }),
+            /* @__PURE__ */ e("span", { className: "qmb-row__meta", children: r.ardDate ? `ARD ${fe(r.ardDate)}` : "—" }),
+            /* @__PURE__ */ e(Bd, { cta: o })
+          ]
+        },
+        `${r.patientId}-${r.measureId}`
+      );
+    }) })
+  ] });
+}
+function Ms(t) {
+  return t.urgency === "overdue" ? 0 : t.urgency === "soon" ? 1 + (t.daysUntilClear ?? 7) : t.urgency === "later" ? 100 + (t.daysUntilClear ?? 999) : 1e3;
+}
+function Bd({ cta: t }) {
+  return t ? /* @__PURE__ */ e("span", { className: `qmb-row__cta qmb-row__cta--${t.tone}`, children: [
+    /* @__PURE__ */ e("span", { className: "qmb-row__cta-verb", children: t.verb }),
+    t.detail && /* @__PURE__ */ e("span", { className: "qmb-row__cta-detail", children: t.detail })
+  ] }) : null;
+}
+function Hd({ alerts: t, onBack: n, onAlertClick: s }) {
+  return /* @__PURE__ */ e("div", { className: "qmb-detail", children: [
+    /* @__PURE__ */ e("div", { className: "qmb-backbar", children: /* @__PURE__ */ e("div", { children: [
+      /* @__PURE__ */ e("button", { type: "button", className: "qmb-backbar__btn", onClick: n, children: "‹ Back" }),
+      /* @__PURE__ */ e("span", { className: "qmb-backbar__title", children: "Heads-up" }),
+      /* @__PURE__ */ e("span", { className: "qmb-backbar__sub", children: [
+        t.length,
+        " incoming signal",
+        t.length === 1 ? "" : "s"
+      ] })
+    ] }) }),
+    t.length === 0 ? /* @__PURE__ */ e("div", { className: "qmb-empty", children: "No preventable alerts right now." }) : /* @__PURE__ */ e("div", { className: "qmb-rows", children: t.map((a) => {
+      const i = Rt(a);
+      return /* @__PURE__ */ e(
+        "div",
+        {
+          className: "qmb-row qmb-row--alert",
+          onClick: () => s(a),
+          children: [
+            /* @__PURE__ */ e("span", { className: "qmb-row__dot qmb-row__dot--alert" }),
+            /* @__PURE__ */ e("span", { className: "qmb-row__name", children: [
+              a.name,
+              a.qmId && /* @__PURE__ */ e("span", { className: "qmb-row__qm", children: Ue(a.qmId) })
+            ] }),
+            /* @__PURE__ */ e("span", { className: "qmb-row__meta", children: En(a.signals?.[0]) || a.label }),
+            /* @__PURE__ */ e(Gd, { cta: i })
+          ]
+        },
+        `${a.patientId}-${a.alertId}`
+      );
+    }) })
+  ] });
+}
+function Gd({ cta: t }) {
+  return t ? /* @__PURE__ */ e("span", { className: `qmb-row__cta qmb-row__cta--${t.tone}`, children: [
+    /* @__PURE__ */ e("span", { className: "qmb-row__cta-verb", children: t.verb }),
+    t.detail && /* @__PURE__ */ e("span", { className: "qmb-row__cta-detail", children: t.detail })
+  ] }) : null;
+}
+function Fd({ facilityName: t, orgSlug: n, onClose: s }) {
+  const [a, i] = y([{ kind: "dashboard" }]), r = a[a.length - 1], o = G((w) => i((M) => [...M, w]), []), c = G(() => i((w) => w.length > 1 ? w.slice(0, -1) : w), []), { currentlyTriggering: d, preventableAlerts: l, loading: p, error: u, retry: m } = ed({ facilityName: t, orgSlug: n }), h = Y(
+    () => ad(d, l),
+    [d, l]
+  ), _ = Y(
+    () => Ln(d),
+    [d]
+  ), g = Y(
+    () => Qa(l),
+    [l]
+  ), v = _.length, b = _.filter((w) => w.urgency === "overdue").length, f = _.filter((w) => w.urgency === "soon" || w.urgency === "overdue").length, I = g.length, N = (w) => o({ kind: "measure", measureId: w }), D = (w) => o({ kind: "alert", alert: w }), T = (w) => o({ kind: "trigger", row: w }), A = () => o({ kind: "clearing" }), x = () => o({ kind: "headsup" }), k = (w) => T(w), S = r.kind === "clearing" || r.kind === "headsup" || r.kind === "alert" || r.kind === "trigger";
+  return /* @__PURE__ */ e("div", { className: "qmb__overlay", role: "dialog", "aria-modal": "true", "aria-labelledby": "qmb-title", children: [
+    /* @__PURE__ */ e("div", { className: "qmb__backdrop", onClick: s }),
+    /* @__PURE__ */ e("div", { className: "qmb__modal", children: [
+      /* @__PURE__ */ e("header", { className: "qmb__header", children: /* @__PURE__ */ e("div", { className: "qmb__title-row", children: [
+        /* @__PURE__ */ e("div", { className: "qmb__title-group", children: [
+          /* @__PURE__ */ e("h2", { className: "qmb__title", id: "qmb-title", children: "QM Board" }),
+          t && /* @__PURE__ */ e("span", { className: "qmb__facility", children: t })
+        ] }),
+        /* @__PURE__ */ e("button", { type: "button", className: "qmb__close", onClick: s, "aria-label": "Close", children: /* @__PURE__ */ e("svg", { width: "20", height: "20", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": "2", "stroke-linecap": "round", "stroke-linejoin": "round", children: [
+          /* @__PURE__ */ e("line", { x1: "18", y1: "6", x2: "6", y2: "18" }),
+          /* @__PURE__ */ e("line", { x1: "6", y1: "6", x2: "18", y2: "18" })
+        ] }) })
+      ] }) }),
+      /* @__PURE__ */ e("div", { className: "qmb__summary", children: [
+        /* @__PURE__ */ e(ht, { num: v, label: "Triggering" }),
+        /* @__PURE__ */ e(ht, { num: f, label: "Clearing ≤ 7d", tone: "soon" }),
+        /* @__PURE__ */ e(ht, { num: b, label: "Overdue", tone: "urgent" }),
+        /* @__PURE__ */ e(ht, { num: I, label: "Heads-up", tone: "alert" })
+      ] }),
+      p ? /* @__PURE__ */ e("div", { className: "qmb__loading", children: "Loading QM board…" }) : u ? /* @__PURE__ */ e("div", { className: "qmb__error", children: [
+        /* @__PURE__ */ e("div", { children: "Failed to load QM data" }),
+        /* @__PURE__ */ e("div", { className: "qmb__error-detail", children: u }),
+        /* @__PURE__ */ e("button", { type: "button", className: "qmb__retry", onClick: m, children: "Retry" })
+      ] }) : /* @__PURE__ */ e("div", { className: `qmb__body ${S ? "qmb__body--takeover" : ""}`, children: [
+        /* @__PURE__ */ e("div", { className: "qmb__left", children: [
+          r.kind === "dashboard" && /* @__PURE__ */ e(Ud, { tiles: h, onTileClick: N }),
+          r.kind === "measure" && /* @__PURE__ */ e(
+            dd,
+            {
+              measureId: r.measureId,
+              currentlyTriggering: d,
+              preventableAlerts: l,
+              onBack: c,
+              onRowClick: k,
+              onAlertClick: D
+            }
+          ),
+          r.kind === "clearing" && /* @__PURE__ */ e(
+            Od,
+            {
+              currentlyTriggering: d,
+              onBack: c,
+              onRowClick: k
+            }
+          ),
+          r.kind === "headsup" && /* @__PURE__ */ e(
+            Hd,
+            {
+              alerts: g,
+              onBack: c,
+              onAlertClick: D
+            }
+          ),
+          r.kind === "alert" && /* @__PURE__ */ e(
+            kd,
+            {
+              alert: r.alert,
+              facilityName: t,
+              orgSlug: n,
+              onBack: c
+            }
+          ),
+          r.kind === "trigger" && /* @__PURE__ */ e(
+            Ld,
+            {
+              row: r.row,
+              preventableAlerts: l,
+              onBack: c,
+              onAlertClick: D
+            }
+          )
+        ] }),
+        !S && /* @__PURE__ */ e("aside", { className: "qmb__right", children: /* @__PURE__ */ e(
+          cd,
+          {
+            triggeringRows: _,
+            alerts: g,
+            onRowClick: k,
+            onAlertClick: D,
+            onViewAllClearing: A,
+            onViewAllHeadsUp: x
+          }
+        ) })
+      ] })
+    ] })
+  ] });
+}
+function ht({ num: t, label: n, tone: s }) {
+  return /* @__PURE__ */ e("div", { className: "qmb-stat", children: [
+    /* @__PURE__ */ e("span", { className: `qmb-stat__num ${s ? `qmb-stat__num--${s}` : ""}`, children: t }),
+    /* @__PURE__ */ e("span", { className: "qmb-stat__label", children: n })
+  ] });
+}
+function Ud({ tiles: t, onTileClick: n }) {
+  return /* @__PURE__ */ e(Q, { children: [
+    /* @__PURE__ */ e("div", { className: "qmb-slabel", children: [
+      /* @__PURE__ */ e("span", { children: "Measures" }),
+      /* @__PURE__ */ e("span", { className: "qmb-slabel__meta", children: [
+        t.length,
+        " measures · click a tile to drill in"
+      ] })
+    ] }),
+    /* @__PURE__ */ e("div", { className: "qmb-tiles", children: t.map((s) => /* @__PURE__ */ e(td, { tile: s, onClick: n }, s.id)) })
+  ] });
+}
+function qs(t) {
+  return t && typeof t == "object" && "success" in t && "data" in t ? t.data : t;
+}
+function ei(t, n, s = {}) {
+  if (!t) return "";
+  const [a, i, r] = t.split("-").map(Number);
+  if (!a || !i || !r) return t;
+  const o = new Date(Date.UTC(a, i - 1, r, 12)), c = new Intl.DateTimeFormat("en-US", {
+    weekday: s.weekday ?? "short",
+    month: s.month ?? "short",
+    day: "numeric",
+    year: s.year ?? "numeric",
+    timeZone: n || void 0
+  });
+  try {
+    return c.format(o);
+  } catch {
+    return t;
+  }
+}
+function ti(t) {
+  const n = /* @__PURE__ */ new Date();
+  try {
+    const s = new Intl.DateTimeFormat("en-CA", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      timeZone: t || void 0
+    }).formatToParts(n), a = s.find((o) => o.type === "year")?.value, i = s.find((o) => o.type === "month")?.value, r = s.find((o) => o.type === "day")?.value;
+    if (a && i && r) return `${a}-${i}-${r}`;
+  } catch {
+  }
+  return n.toISOString().slice(0, 10);
+}
+function Ls(t, n) {
+  const [s, a, i] = t.split("-").map(Number), r = new Date(Date.UTC(s, a - 1, i));
+  return r.setUTCDate(r.getUTCDate() + n), `${r.getUTCFullYear()}-${String(r.getUTCMonth() + 1).padStart(2, "0")}-${String(r.getUTCDate()).padStart(2, "0")}`;
+}
+function Vd(t, n) {
+  if (!t) return null;
+  if (typeof t.facilityDate == "string") return t.facilityDate;
+  if (typeof t.reportDate == "string" && t.reportDate.length === 10)
+    return t.reportDate;
+  if (t.reportDate)
+    try {
+      const s = new Intl.DateTimeFormat("en-CA", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        timeZone: n || void 0
+      }).formatToParts(new Date(t.reportDate)), a = s.find((o) => o.type === "year")?.value, i = s.find((o) => o.type === "month")?.value, r = s.find((o) => o.type === "day")?.value;
+      if (a && i && r) return `${a}-${i}-${r}`;
+    } catch {
+    }
+  return null;
+}
+function zd({ facilityName: t, orgSlug: n, initialDate: s = null }) {
+  const [a, i] = y(null), [r, o] = y([]), [c, d] = y({}), [l, p] = y(s), [u, m] = y(void 0), [h, _] = y(!1), [g, v] = y(null), [b, f] = y(!0), [I, N] = y(null), D = te(/* @__PURE__ */ new Map()), T = G(async () => {
+    if (!t || !n)
+      return N("Missing facility or organization context"), f(!1), null;
+    f(!0), N(null);
+    try {
+      const P = new URLSearchParams({ facilityName: t, orgSlug: n }), q = await chrome.runtime.sendMessage({
+        type: "API_REQUEST",
+        endpoint: `/api/extension/24hr-report?${P}`,
+        options: { method: "GET" }
+      });
+      if (!q?.success) throw new Error(q?.error || "Failed to load reports list");
+      const L = qs(q.data) || {}, O = L.timezone || null, X = Array.isArray(L.reports) ? L.reports : [], z = [], R = {};
+      for (const B of X) {
+        const ee = Vd(B, O);
+        ee && (z.push(ee), R[ee] = B);
+      }
+      return z.sort((B, ee) => B < ee ? 1 : B > ee ? -1 : 0), i(O), o(z), d(R), f(!1), { timezone: O, dates: z };
+    } catch (P) {
+      return console.error("[24HR] list fetch failed", P), N(P.message || "Failed to load 24-hour reports"), f(!1), null;
+    }
+  }, [t, n]), A = G(async (P) => {
+    if (!P || !t || !n) return;
+    const q = D.current.get(P);
+    if (q !== void 0) {
+      m(q), v(null), _(!1);
+      return;
+    }
+    _(!0), v(null);
+    try {
+      const L = new URLSearchParams({ facilityName: t, orgSlug: n, date: P }), O = await chrome.runtime.sendMessage({
+        type: "API_REQUEST",
+        endpoint: `/api/extension/24hr-report?${L}`,
+        options: { method: "GET" }
+      });
+      if (!O?.success) {
+        if (O?.status === 404 || /not found/i.test(O?.error || "")) {
+          D.current.set(P, null), m(null), _(!1);
+          return;
+        }
+        throw new Error(O?.error || "Failed to load report");
+      }
+      const z = (qs(O.data) || {}).report || null;
+      D.current.set(P, z), m(z);
+    } catch (L) {
+      console.error("[24HR] day fetch failed", L), v(L.message || "Failed to load report"), m(void 0);
+    } finally {
+      _(!1);
+    }
+  }, [t, n]);
+  F(() => {
+    let P = !1;
+    return (async () => {
+      const q = await T();
+      if (P || !q) return;
+      const { timezone: L, dates: O } = q, X = s || O[0] || ti(L);
+      p(X);
+    })(), () => {
+      P = !0;
+    };
+  }, [T]), F(() => {
+    l && A(l);
+  }, [l, A]);
+  const x = G((P) => {
+    P && p(P);
+  }, []), k = G(() => {
+    p((P) => P && Ls(P, -1));
+  }, []), S = G(() => {
+    p((P) => P && Ls(P, 1));
+  }, []), w = G((P = "prev") => {
+    p((q) => !q || r.length === 0 ? q : P === "prev" ? r.find((z) => z < q) || r[0] || q : [...r].sort().find((X) => X > q) || q);
+  }, [r]), M = G(() => {
+    l && (D.current.delete(l), A(l));
+  }, [l, A]), H = G(() => {
+    T();
+  }, [T]);
+  return {
+    availableDates: r,
+    availableByDate: c,
+    timezone: a,
+    currentDate: l,
+    currentReport: u,
+    loading: h,
+    listLoading: b,
+    error: g,
+    listError: I,
+    goToDate: x,
+    goPrevDay: k,
+    goNextDay: S,
+    goToNearestAvailable: w,
+    retry: M,
+    retryList: H
+  };
+}
+function Wd({ payload: t, currentReport: n, currentDate: s, bodyRef: a }) {
+  const i = te(!1);
+  F(() => {
+    if (!t || i.current || !n || s !== t.date) return;
+    const r = requestAnimationFrame(() => {
+      const o = a.current;
+      if (!o) {
+        i.current = !0;
+        return;
+      }
+      const c = t.findingId ? o.querySelector(`[data-finding-id="${Qd(t.findingId)}"]`) : null;
+      if (c) {
+        c.scrollIntoView({ block: "center", behavior: "auto" }), c.classList.add("thr__row--pulse");
+        const d = () => c.classList.remove("thr__row--pulse");
+        c.addEventListener("animationend", d, { once: !0 }), setTimeout(d, 2500);
+      } else Number.isFinite(t.scrollTop) && (o.scrollTop = t.scrollTop);
+      i.current = !0;
+    });
+    return () => cancelAnimationFrame(r);
+  }, [t, n, s, a]);
+}
+function Qd(t) {
+  return typeof CSS < "u" && typeof CSS.escape == "function" ? CSS.escape(t) : String(t).replace(/(["\\\]])/g, "\\$1");
+}
+const jd = ["critical", "high", "medium", "low"], Kd = {
+  critical: "Critical",
+  high: "High",
+  medium: "Medium",
+  low: "Low"
+};
+function Yd({ counts: t, activeSeverities: n, onToggle: s }) {
+  return /* @__PURE__ */ e("div", { class: "thr__severity-strip", role: "group", "aria-label": "Filter by severity", children: jd.map((a) => {
+    const i = t?.[a] ?? 0, r = n.has(a);
+    return /* @__PURE__ */ e(
+      "button",
+      {
+        type: "button",
+        class: `thr__sev-card thr__sev-card--${a} ${r ? "is-active" : ""}`,
+        "aria-pressed": r,
+        onClick: () => s(a),
+        children: [
+          /* @__PURE__ */ e("span", { class: "thr__sev-label", children: Kd[a] }),
+          /* @__PURE__ */ e("span", { class: "thr__sev-count", children: i })
+        ]
+      },
+      a
+    );
+  }) });
+}
+const Es = {
+  falls_safety: { emoji: "🚑", label: "Falls & Safety" },
+  behavioral: { emoji: "🧠", label: "Behavioral" },
+  vitals_labs: { emoji: "📊", label: "Vitals & Labs" },
+  respiratory: { emoji: "🫁", label: "Respiratory" },
+  skin_wounds: { emoji: "🩹", label: "Skin & Wounds" },
+  medications: { emoji: "💊", label: "Medications" },
+  abuse_neglect: { emoji: "⚠️", label: "Abuse & Neglect" },
+  other_clinical: { emoji: "🏥", label: "Other Clinical" },
+  medications_pain: { emoji: "💊", label: "Medications & Pain" },
+  abuse_neglect_rights: { emoji: "⚠️", label: "Abuse / Neglect / Rights" }
+};
+function ni(t) {
+  return t ? String(t).split(/[_\s]+/).filter(Boolean).map((n) => n.charAt(0).toUpperCase() + n.slice(1).toLowerCase()).join(" ") : "";
+}
+function gn(t) {
+  if (!t) return null;
+  const n = String(t).toLowerCase();
+  return Es[n] ? Es[n] : { emoji: "", label: ni(t) };
+}
+function Jd(t) {
+  return t ? ni(t) : "";
+}
+function Zd(t) {
+  return t?.finding || t?.findingText || t?.narrative || t?.description || "";
+}
+function Xd({
+  search: t,
+  onSearchChange: n,
+  category: s,
+  onCategoryChange: a,
+  categories: i,
+  hasActiveFilters: r,
+  onClear: o,
+  visibleCount: c,
+  totalCount: d
+}) {
+  return /* @__PURE__ */ e("div", { class: "thr__filters", children: [
+    /* @__PURE__ */ e("div", { class: "thr__filters-controls", children: [
+      /* @__PURE__ */ e("div", { class: "thr__search-wrap", children: [
+        /* @__PURE__ */ e(
+          "svg",
+          {
+            class: "thr__search-icon",
+            width: "14",
+            height: "14",
+            viewBox: "0 0 24 24",
+            fill: "none",
+            stroke: "currentColor",
+            "stroke-width": "2",
+            "stroke-linecap": "round",
+            "stroke-linejoin": "round",
+            children: [
+              /* @__PURE__ */ e("circle", { cx: "11", cy: "11", r: "7" }),
+              /* @__PURE__ */ e("line", { x1: "21", y1: "21", x2: "16.65", y2: "16.65" })
+            ]
+          }
+        ),
+        /* @__PURE__ */ e(
+          "input",
+          {
+            type: "search",
+            class: "thr__search",
+            placeholder: "Search patient, room, finding…",
+            value: t,
+            onInput: (l) => n(l.currentTarget.value),
+            "aria-label": "Search findings"
+          }
+        )
+      ] }),
+      /* @__PURE__ */ e(
+        eu,
+        {
+          value: s,
+          onChange: a,
+          categories: i
+        }
+      ),
+      r && /* @__PURE__ */ e("button", { class: "thr__clear", onClick: o, "aria-label": "Clear filters", children: [
+        /* @__PURE__ */ e("span", { class: "thr__clear-x", children: "×" }),
+        " Clear"
+      ] })
+    ] }),
+    /* @__PURE__ */ e("div", { class: "thr__count", "aria-live": "polite", children: [
+      c,
+      " of ",
+      d
+    ] })
+  ] });
+}
+function eu({ value: t, onChange: n, categories: s }) {
+  const [a, i] = y(!1), r = te(null);
+  F(() => {
+    if (!a) return;
+    const c = (l) => {
+      r.current && !r.current.contains(l.target) && i(!1);
+    }, d = (l) => {
+      l.key === "Escape" && i(!1);
+    };
+    return document.addEventListener("mousedown", c), document.addEventListener("keydown", d), () => {
+      document.removeEventListener("mousedown", c), document.removeEventListener("keydown", d);
+    };
+  }, [a]);
+  const o = t ? gn(t) : null;
+  return /* @__PURE__ */ e("div", { class: "thr__category-wrap", ref: r, children: [
+    /* @__PURE__ */ e(
+      "button",
+      {
+        type: "button",
+        class: "thr__category-btn",
+        "aria-haspopup": "listbox",
+        "aria-expanded": a,
+        onClick: () => i((c) => !c),
+        children: [
+          o ? /* @__PURE__ */ e("span", { children: [
+            o.emoji && /* @__PURE__ */ e("span", { class: "thr__chip-emoji", "aria-hidden": "true", children: o.emoji }),
+            o.label
+          ] }) : /* @__PURE__ */ e("span", { children: "All Categories" }),
+          /* @__PURE__ */ e("span", { class: "thr__caret", children: "▾" })
+        ]
+      }
+    ),
+    a && /* @__PURE__ */ e("ul", { class: "thr__category-menu", role: "listbox", children: [
+      /* @__PURE__ */ e("li", { children: /* @__PURE__ */ e(
+        "button",
+        {
+          type: "button",
+          class: `thr__category-opt ${t ? "" : "is-active"}`,
+          role: "option",
+          "aria-selected": !t,
+          onClick: () => {
+            n(null), i(!1);
+          },
+          children: "All Categories"
+        }
+      ) }),
+      s.map((c) => {
+        const d = gn(c);
+        return /* @__PURE__ */ e("li", { children: /* @__PURE__ */ e(
+          "button",
+          {
+            type: "button",
+            class: `thr__category-opt ${t === c ? "is-active" : ""}`,
+            role: "option",
+            "aria-selected": t === c,
+            onClick: () => {
+              n(c), i(!1);
+            },
+            children: [
+              d?.emoji && /* @__PURE__ */ e("span", { class: "thr__chip-emoji", "aria-hidden": "true", children: d.emoji }),
+              d?.label || c
+            ]
+          }
+        ) }, c);
+      })
+    ] })
+  ] });
+}
+const tu = {
+  critical: "Critical",
+  high: "High",
+  medium: "Medium",
+  low: "Low"
+};
+function nu() {
+  try {
+    return new URL(window.location.href).origin;
+  } catch {
+    return "";
+  }
+}
+function su(t) {
+  if (!t) return null;
+  const n = nu();
+  return n ? `${n}/admin/client/cp_residentdashboard.jsp?ESOLrow=1&ESOLclientid=${encodeURIComponent(t)}` : null;
+}
+function au(t) {
+  if (t.patientName) return t.patientName;
+  const n = t.patientFirstName || "";
+  return [t.patientLastName || "", n].filter(Boolean).join(", ") || "Unknown";
+}
+function iu({ finding: t, onOpenInPCC: n }) {
+  const s = (t.severity || "low").toLowerCase(), a = tu[s] || s, i = au(t), r = t.room || t.patientRoom || "", o = gn(t.category), c = Jd(t.subcategory || t.type || t.findingType), d = Zd(t), l = t.id || t.findingId || null, p = t.patientId || t.residentId || null, u = su(p), m = (h) => {
+    u && (h.metaKey || h.ctrlKey || h.shiftKey || h.button === 1 || (h.preventDefault(), n?.(t, { href: u })));
+  };
+  return /* @__PURE__ */ e("li", { class: "thr__row", "data-finding-id": l || void 0, "data-severity": s, children: [
+    /* @__PURE__ */ e("span", { class: `thr__row-bar thr__row-bar--${s}`, "aria-hidden": "true" }),
+    /* @__PURE__ */ e("div", { class: "thr__row-main", children: [
+      /* @__PURE__ */ e("div", { class: "thr__row-heading", children: [
+        /* @__PURE__ */ e("span", { class: `thr__sev-badge thr__sev-badge--${s}`, children: a }),
+        /* @__PURE__ */ e("span", { class: "thr__row-name", children: i }),
+        r && /* @__PURE__ */ e("span", { class: "thr__row-meta", children: r }),
+        o && /* @__PURE__ */ e("span", { class: "thr__chip", children: [
+          o.emoji && /* @__PURE__ */ e("span", { class: "thr__chip-emoji", "aria-hidden": "true", children: o.emoji }),
+          o.label
+        ] }),
+        c && /* @__PURE__ */ e("span", { class: "thr__chip thr__chip--type", children: c })
+      ] }),
+      d && /* @__PURE__ */ e("p", { class: "thr__row-text", children: d })
+    ] }),
+    u && /* @__PURE__ */ e(
+      "a",
+      {
+        class: "thr__row-open",
+        href: u,
+        onClick: m,
+        "aria-label": `Open ${i} in PointClickCare`,
+        title: "Open in PointClickCare",
+        children: /* @__PURE__ */ e(
+          "svg",
+          {
+            width: "14",
+            height: "14",
+            viewBox: "0 0 24 24",
+            fill: "none",
+            stroke: "currentColor",
+            "stroke-width": "2",
+            "stroke-linecap": "round",
+            "stroke-linejoin": "round",
+            children: [
+              /* @__PURE__ */ e("path", { d: "M7 17L17 7" }),
+              /* @__PURE__ */ e("polyline", { points: "7 7 17 7 17 17" })
+            ]
+          }
+        )
+      }
+    )
+  ] });
+}
+function ru() {
+  return /* @__PURE__ */ e("div", { class: "thr__skeleton", "aria-busy": "true", "aria-label": "Loading", children: [0, 1, 2, 3, 4, 5].map((t) => /* @__PURE__ */ e("div", { class: "thr__skeleton-row", children: [
+    /* @__PURE__ */ e("span", { class: "thr__skeleton-bar" }),
+    /* @__PURE__ */ e("div", { class: "thr__skeleton-body", children: [
+      /* @__PURE__ */ e("span", { class: "thr__skeleton-line thr__skeleton-line--short" }),
+      /* @__PURE__ */ e("span", { class: "thr__skeleton-line thr__skeleton-line--long" })
+    ] })
+  ] }, t)) });
+}
+function ou({ variant: t = "day", date: n, timezone: s, onJumpToLastAvailable: a }) {
+  const i = n ? ei(n, s, { weekday: "short" }) : "";
+  return /* @__PURE__ */ e("div", { class: "thr__empty", role: "status", children: [
+    /* @__PURE__ */ e("div", { class: "thr__empty-icon", "aria-hidden": "true", children: /* @__PURE__ */ e(
+      "svg",
+      {
+        width: "36",
+        height: "36",
+        viewBox: "0 0 24 24",
+        fill: "none",
+        stroke: "currentColor",
+        "stroke-width": "1.6",
+        "stroke-linecap": "round",
+        "stroke-linejoin": "round",
+        children: [
+          /* @__PURE__ */ e("path", { d: "M9 17h6" }),
+          /* @__PURE__ */ e("path", { d: "M9 13h6" }),
+          /* @__PURE__ */ e("path", { d: "M16 3H8a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2z" }),
+          /* @__PURE__ */ e("path", { d: "M9 3v2a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1V3" })
+        ]
+      }
+    ) }),
+    t === "ever" ? /* @__PURE__ */ e(Q, { children: [
+      /* @__PURE__ */ e("h3", { class: "thr__empty-title", children: "No 24-hour reports yet" }),
+      /* @__PURE__ */ e("p", { class: "thr__empty-sub", children: "No 24-hour reports have been generated for this facility." })
+    ] }) : /* @__PURE__ */ e(Q, { children: [
+      /* @__PURE__ */ e("h3", { class: "thr__empty-title", children: "No 24-hour report for this day" }),
+      i && /* @__PURE__ */ e("p", { class: "thr__empty-sub", children: i }),
+      a && /* @__PURE__ */ e(
+        "button",
+        {
+          type: "button",
+          class: "thr__empty-action",
+          onClick: a,
+          children: "Jump to last available report"
+        }
+      )
+    ] })
+  ] });
+}
+const cu = "super:24hr:restore", lu = 1, du = 1800 * 1e3;
+function uu({
+  facilityName: t,
+  orgSlug: n,
+  date: s,
+  findingId: a,
+  scrollTop: i
+}) {
+  if (!t || !n || !s) return !1;
+  const r = {
+    version: lu,
+    facilityName: t,
+    orgSlug: n,
+    date: s,
+    findingId: a || null,
+    scrollTop: Number.isFinite(i) ? i : 0,
+    expiresAt: Date.now() + du
+  };
+  try {
+    return sessionStorage.setItem(cu, JSON.stringify(r)), !0;
+  } catch (o) {
+    return console.warn("[24HR] failed to write restore payload", o), !1;
+  }
+}
+const ze = ["critical", "high", "medium", "low"];
+function si(t) {
+  return t ? Array.isArray(t.findings) ? t.findings : Array.isArray(t.items) ? t.items : [] : [];
+}
+function pu(t) {
+  const n = { critical: 0, high: 0, medium: 0, low: 0 };
+  if (!t) return n;
+  if (t.counts && typeof t.counts == "object")
+    return { ...n, ...t.counts };
+  for (const s of si(t)) {
+    const a = (s.severity || "").toLowerCase();
+    a in n && (n[a] += 1);
+  }
+  return n;
+}
+function mu({ facilityName: t, orgSlug: n, restore: s, onClose: a }) {
+  const {
+    availableDates: i,
+    timezone: r,
+    currentDate: o,
+    currentReport: c,
+    loading: d,
+    listLoading: l,
+    error: p,
+    listError: u,
+    goToDate: m,
+    goPrevDay: h,
+    goNextDay: _,
+    retry: g,
+    retryList: v
+  } = zd({
+    facilityName: t,
+    orgSlug: n,
+    initialDate: s?.date || null
+  }), b = Y(() => ti(r), [r]), f = i[0] || null, I = i[i.length - 1] || null, N = !!o && (!I || o > I), D = !!o && o < b, T = !!o && !!f && o !== f, [A, x] = y(new Set(ze)), k = ($) => {
+    x((V) => {
+      const U = new Set(V);
+      if (U.size === ze.length)
+        return /* @__PURE__ */ new Set([$]);
+      if (U.has($)) {
+        if (U.delete($), U.size === 0) return new Set(ze);
+      } else
+        U.add($);
+      return U;
+    });
+  }, S = Y(
+    () => pu(c),
+    [c]
+  ), [w, M] = y(""), [H, P] = y(null), q = Y(() => si(c), [c]), L = Y(() => {
+    const $ = /* @__PURE__ */ new Set();
+    for (const V of q)
+      V?.category && $.add(V.category);
+    return [...$].sort();
+  }, [q]), O = Y(() => {
+    const $ = w.trim().toLowerCase(), V = q.filter((Z) => {
+      const ne = (Z.severity || "").toLowerCase();
+      return !(!A.has(ne) || H && Z.category !== H || $ && ![
+        Z.patientName,
+        Z.patientFirstName,
+        Z.patientLastName,
+        Z.room,
+        Z.patientRoom,
+        Z.category,
+        Z.subcategory,
+        Z.type,
+        Z.findingType,
+        Z.finding,
+        Z.findingText,
+        Z.narrative,
+        Z.description
+      ].filter(Boolean).join(" ").toLowerCase().includes($));
+    }), U = { critical: 0, high: 1, medium: 2, low: 3 };
+    return V.sort((Z, ne) => {
+      const se = U[(Z.severity || "").toLowerCase()] ?? 9, j = U[(ne.severity || "").toLowerCase()] ?? 9;
+      return se !== j ? se - j : (Z.patientName || "").localeCompare(ne.patientName || "");
+    });
+  }, [q, A, H, w]), X = !!w.trim() || !!H || A.size !== ze.length, z = () => {
+    M(""), P(null), x(new Set(ze));
+  }, R = te(null), B = te(null);
+  Wd({
+    payload: s,
+    currentReport: c,
+    currentDate: o,
+    bodyRef: B
+  });
+  const ee = ($, { href: V }) => {
+    if (!V) return;
+    const U = B.current?.scrollTop ?? 0;
+    uu({
+      facilityName: t,
+      orgSlug: n,
+      date: o,
+      findingId: $.id || $.findingId || null,
+      scrollTop: U
+    }), window.location.href = V;
+  };
+  return /* @__PURE__ */ e("div", { class: "thr__overlay", onClick: ($) => {
+    $.target === $.currentTarget && a();
+  }, children: /* @__PURE__ */ e(
+    "aside",
+    {
+      class: "thr__panel",
+      role: "dialog",
+      "aria-modal": "true",
+      "aria-label": "24-Hour Report",
+      children: [
+        /* @__PURE__ */ e("header", { class: "thr__header", children: [
+          /* @__PURE__ */ e("div", { class: "thr__header-top", children: [
+            /* @__PURE__ */ e("div", { class: "thr__titles", children: [
+              /* @__PURE__ */ e("span", { class: "thr__title", children: "24-Hour Report" }),
+              t && /* @__PURE__ */ e("span", { class: "thr__facility", children: t })
+            ] }),
+            /* @__PURE__ */ e(
+              "button",
+              {
+                class: "thr__close",
+                onClick: a,
+                "aria-label": "Close",
+                title: "Close",
+                children: "×"
+              }
+            )
+          ] }),
+          /* @__PURE__ */ e("div", { class: "thr__header-date", children: [
+            /* @__PURE__ */ e(
+              "button",
+              {
+                class: "thr__nav-btn",
+                onClick: h,
+                disabled: !N,
+                "aria-label": "Previous day",
+                children: "‹"
+              }
+            ),
+            /* @__PURE__ */ e("span", { class: "thr__date", children: o ? ei(o, r, { weekday: "short" }) : "—" }),
+            /* @__PURE__ */ e(
+              "button",
+              {
+                class: "thr__nav-btn",
+                onClick: _,
+                disabled: !D,
+                "aria-label": "Next day",
+                children: "›"
+              }
+            ),
+            T && /* @__PURE__ */ e(
+              "button",
+              {
+                class: "thr__jump-today",
+                onClick: () => m(f),
+                children: "Jump to today"
+              }
+            )
+          ] })
+        ] }),
+        c && /* @__PURE__ */ e(Q, { children: [
+          /* @__PURE__ */ e(
+            Yd,
+            {
+              counts: S,
+              activeSeverities: A,
+              onToggle: k
+            }
+          ),
+          /* @__PURE__ */ e(
+            Xd,
+            {
+              search: w,
+              onSearchChange: M,
+              category: H,
+              onCategoryChange: P,
+              categories: L,
+              hasActiveFilters: X,
+              onClear: z,
+              visibleCount: O.length,
+              totalCount: q.length
+            }
+          )
+        ] }),
+        /* @__PURE__ */ e("div", { class: "thr__body", ref: B, children: [
+          u && /* @__PURE__ */ e("div", { class: "thr__error", children: [
+            /* @__PURE__ */ e("p", { children: "Couldn't load 24-hour reports." }),
+            /* @__PURE__ */ e("button", { onClick: v, children: "Retry" })
+          ] }),
+          !u && p && /* @__PURE__ */ e("div", { class: "thr__error", children: [
+            /* @__PURE__ */ e("p", { children: "Couldn't load this report." }),
+            /* @__PURE__ */ e("button", { onClick: g, children: "Retry" })
+          ] }),
+          !u && !p && (d || l && !o) && /* @__PURE__ */ e(ru, {}),
+          !u && !p && !d && c === null && /* @__PURE__ */ e(
+            ou,
+            {
+              variant: i.length === 0 ? "ever" : "day",
+              date: o,
+              timezone: r,
+              onJumpToLastAvailable: i.length > 0 ? () => m(f) : void 0
+            }
+          ),
+          !u && !p && !d && c && O.length === 0 && q.length > 0 && /* @__PURE__ */ e("div", { class: "thr__placeholder", children: [
+            "No findings match these filters.",
+            " ",
+            /* @__PURE__ */ e("button", { class: "thr__inline-link", onClick: z, children: "Clear" })
+          ] }),
+          !u && !p && !d && c && q.length === 0 && /* @__PURE__ */ e("div", { class: "thr__placeholder", children: "This report has no findings." }),
+          !u && !p && !d && c && O.length > 0 && /* @__PURE__ */ e("ul", { class: "thr__row-list", ref: R, children: O.map(($, V) => /* @__PURE__ */ e(iu, { finding: $, onOpenInPCC: ee }, $.id || V)) })
+        ] })
+      ]
+    }
+  ) });
+}
+let hu = 0;
+function _u() {
+  return `demo-tc-${++hu}-${Date.now().toString(36)}`;
+}
+function Yt(t) {
   return new Promise((n) => setTimeout(n, t));
 }
-function it(t, n) {
+function _t(t, n) {
   const s = t.toLowerCase();
-  return n.some((i) => s.includes(i));
+  return n.some((a) => s.includes(a));
 }
-function ad(t) {
-  return it(t, ["malnutrition", "nutrition", "weight loss", "albumin", "aphasia"]) ? rd() : it(t, ["pdpm", "hipps", "opportunities", "reimbursement", "revenue"]) ? od() : it(t, ["iv fluid", "iv ", "intravenous", "fluids", "hospital doc"]) ? cd() : it(t, ["medication", "med ", "meds", "drug", "prescription", "taking"]) ? dd() : ld();
+function gu(t) {
+  return _t(t, ["malnutrition", "nutrition", "weight loss", "albumin", "aphasia"]) ? fu() : _t(t, ["pdpm", "hipps", "opportunities", "reimbursement", "revenue"]) ? yu() : _t(t, ["iv fluid", "iv ", "intravenous", "fluids", "hospital doc"]) ? vu() : _t(t, ["medication", "med ", "meds", "drug", "prescription", "taking"]) ? bu() : wu();
 }
-function rd() {
+function fu() {
   return [
     {
       type: "tool",
@@ -13504,7 +16744,7 @@ Active treatment via MAR:
     }
   ];
 }
-function od() {
+function yu() {
   return [
     {
       type: "tool",
@@ -13581,7 +16821,7 @@ Would you like me to dive deeper into any of these opportunities?
     }
   ];
 }
-function cd() {
+function vu() {
   return [
     {
       type: "tool",
@@ -13651,7 +16891,7 @@ The Nursing Transfer Note (2/15/2026) corroborates:
     }
   ];
 }
-function dd() {
+function bu() {
   return [
     {
       type: "tool",
@@ -13714,7 +16954,7 @@ All medications were prescribed by **Dr. Sarah Kim** starting around the admissi
     }
   ];
 }
-function ld() {
+function wu() {
   return [
     {
       type: "tool",
@@ -13745,66 +16985,66 @@ Try one of these to see the full demo experience!
     }
   ];
 }
-function pd(t) {
-  const [n, s] = v([]), [i, a] = v("ready"), [r, o] = v(null), [c, l] = v(
+function Iu(t) {
+  const [n, s] = y([]), [a, i] = y("ready"), [r, o] = y(null), [c, d] = y(
     () => typeof crypto < "u" && crypto.randomUUID ? crypto.randomUUID() : `demo-${Date.now()}`
-  ), d = ee(!1), u = ee(!1);
+  ), l = te(!1), p = te(!1);
   F(() => {
     m();
   }, [t]);
-  const p = U(
+  const u = G(
     async (g) => {
-      if (i !== "ready" || u.current || !g.trim()) return;
-      d.current = !1, u.current = !0, o(null);
-      const f = { role: "user", content: g }, y = { role: "assistant", content: "", parts: [] };
-      if (s((k) => [...k, f, y]), a("submitted"), await Rt(600), d.current) {
-        u.current = !1;
+      if (a !== "ready" || p.current || !g.trim()) return;
+      l.current = !1, p.current = !0, o(null);
+      const v = { role: "user", content: g }, b = { role: "assistant", content: "", parts: [] };
+      if (s((I) => [...I, v, b]), i("submitted"), await Yt(600), l.current) {
+        p.current = !1;
         return;
       }
-      a("streaming");
-      const w = ad(g);
-      for (const k of w) {
-        if (d.current) break;
-        if (k.type === "tool") {
-          const C = id(), I = {
-            type: `tool-${k.toolName}`,
-            toolCallId: C,
+      i("streaming");
+      const f = gu(g);
+      for (const I of f) {
+        if (l.current) break;
+        if (I.type === "tool") {
+          const N = _u(), D = {
+            type: `tool-${I.toolName}`,
+            toolCallId: N,
             status: "running",
-            input: k.input,
+            input: I.input,
             output: void 0
           };
-          if (y.parts.push(I), s((P) => {
-            const A = [...P];
-            return A[A.length - 1] = { ...y, parts: [...y.parts] }, A;
-          }), await Rt(k.delayMs || 800), d.current) break;
-          I.status = "done", I.output = k.output, s((P) => {
-            const A = [...P];
-            return A[A.length - 1] = { ...y, parts: [...y.parts] }, A;
+          if (b.parts.push(D), s((T) => {
+            const A = [...T];
+            return A[A.length - 1] = { ...b, parts: [...b.parts] }, A;
+          }), await Yt(I.delayMs || 800), l.current) break;
+          D.status = "done", D.output = I.output, s((T) => {
+            const A = [...T];
+            return A[A.length - 1] = { ...b, parts: [...b.parts] }, A;
           });
-        } else if (k.type === "text") {
-          if (await Rt(k.delayMs || 600), d.current) break;
-          const C = { type: "text", content: k.content };
-          y.parts.push(C), y.content = k.content, s((I) => {
-            const P = [...I];
-            return P[P.length - 1] = { ...y, parts: [...y.parts] }, P;
+        } else if (I.type === "text") {
+          if (await Yt(I.delayMs || 600), l.current) break;
+          const N = { type: "text", content: I.content };
+          b.parts.push(N), b.content = I.content, s((D) => {
+            const T = [...D];
+            return T[T.length - 1] = { ...b, parts: [...b.parts] }, T;
           });
         }
       }
-      a("ready"), u.current = !1;
+      i("ready"), p.current = !1;
     },
-    [i]
-  ), m = U(() => {
-    d.current = !0, u.current = !1, s([]), a("ready"), o(null), l(
+    [a]
+  ), m = G(() => {
+    l.current = !0, p.current = !1, s([]), i("ready"), o(null), d(
       typeof crypto < "u" && crypto.randomUUID ? crypto.randomUUID() : `demo-${Date.now()}`
     );
-  }, []), h = U(() => {
-    d.current = !0, u.current = !1, a("ready");
-  }, []), _ = U((g, f) => {
-    d.current = !0, u.current = !1, l(g), s(f || []), a("ready"), o(null);
+  }, []), h = G(() => {
+    l.current = !0, p.current = !1, i("ready");
+  }, []), _ = G((g, v) => {
+    l.current = !0, p.current = !1, d(g), s(v || []), i("ready"), o(null);
   }, []);
-  return { messages: n, status: i, error: r, sessionId: c, send: p, clear: m, stop: h, setMessages: s, loadSession: _ };
+  return { messages: n, status: a, error: r, sessionId: c, send: u, clear: m, stop: h, setMessages: s, loadSession: _ };
 }
-const ud = {
+const Du = {
   "doc-001": {
     title: "SLP Evaluation",
     date: "01/20/2026",
@@ -14383,23 +17623,23 @@ const ud = {
     ]
   }
 };
-function md({ docId: t, page: n = 1, highlightText: s = !1, onClose: i }) {
-  const a = ud[t], [r, o] = v(n);
+function Nu({ docId: t, page: n = 1, highlightText: s = !1, onClose: a }) {
+  const i = Du[t], [r, o] = y(n);
   F(() => {
     o(n);
   }, [n]);
-  const c = U(
+  const c = G(
     (h) => {
-      h.key === "Escape" && i?.();
+      h.key === "Escape" && a?.();
     },
-    [i]
+    [a]
   );
-  if (F(() => (document.addEventListener("keydown", c), () => document.removeEventListener("keydown", c)), [c]), !a)
-    return /* @__PURE__ */ e("div", { className: "fake-doc-viewer__backdrop", onClick: i, children: /* @__PURE__ */ e("div", { className: "fake-doc-viewer__panel", onClick: (h) => h.stopPropagation(), children: [
+  if (F(() => (document.addEventListener("keydown", c), () => document.removeEventListener("keydown", c)), [c]), !i)
+    return /* @__PURE__ */ e("div", { className: "fake-doc-viewer__backdrop", onClick: a, children: /* @__PURE__ */ e("div", { className: "fake-doc-viewer__panel", onClick: (h) => h.stopPropagation(), children: [
       /* @__PURE__ */ e("div", { className: "fake-doc-viewer__header", children: [
-        /* @__PURE__ */ e("button", { className: "fake-doc-viewer__back-btn", onClick: i, children: "← Back" }),
+        /* @__PURE__ */ e("button", { className: "fake-doc-viewer__back-btn", onClick: a, children: "← Back" }),
         /* @__PURE__ */ e("div", { className: "fake-doc-viewer__header-title", children: /* @__PURE__ */ e("span", { className: "fake-doc-viewer__title", children: "Document Not Found" }) }),
-        /* @__PURE__ */ e("button", { className: "fake-doc-viewer__close-btn", onClick: i, children: "✕" })
+        /* @__PURE__ */ e("button", { className: "fake-doc-viewer__close-btn", onClick: a, children: "✕" })
       ] }),
       /* @__PURE__ */ e("div", { className: "fake-doc-viewer__canvas", children: /* @__PURE__ */ e("div", { className: "fake-doc-viewer__page", children: /* @__PURE__ */ e("p", { children: [
         "The requested document (ID: ",
@@ -14407,16 +17647,16 @@ function md({ docId: t, page: n = 1, highlightText: s = !1, onClose: i }) {
         ") could not be found."
       ] }) }) })
     ] }) });
-  const l = a.pages.length, d = Math.max(1, Math.min(r, l)), u = a.pages.find((h) => h.pageNum === d) || a.pages[0], p = () => o((h) => Math.max(1, h - 1)), m = () => o((h) => Math.min(l, h + 1));
-  return /* @__PURE__ */ e("div", { className: "fake-doc-viewer__backdrop", onClick: i, children: /* @__PURE__ */ e("div", { className: "fake-doc-viewer__panel", onClick: (h) => h.stopPropagation(), children: [
+  const d = i.pages.length, l = Math.max(1, Math.min(r, d)), p = i.pages.find((h) => h.pageNum === l) || i.pages[0], u = () => o((h) => Math.max(1, h - 1)), m = () => o((h) => Math.min(d, h + 1));
+  return /* @__PURE__ */ e("div", { className: "fake-doc-viewer__backdrop", onClick: a, children: /* @__PURE__ */ e("div", { className: "fake-doc-viewer__panel", onClick: (h) => h.stopPropagation(), children: [
     /* @__PURE__ */ e("div", { className: "fake-doc-viewer__header", children: [
-      /* @__PURE__ */ e("button", { className: "fake-doc-viewer__back-btn", onClick: i, children: "← Back" }),
+      /* @__PURE__ */ e("button", { className: "fake-doc-viewer__back-btn", onClick: a, children: "← Back" }),
       /* @__PURE__ */ e("div", { className: "fake-doc-viewer__header-title", children: [
-        /* @__PURE__ */ e("span", { className: "fake-doc-viewer__title", children: a.title }),
-        /* @__PURE__ */ e("span", { className: "fake-doc-viewer__date", children: a.date })
+        /* @__PURE__ */ e("span", { className: "fake-doc-viewer__title", children: i.title }),
+        /* @__PURE__ */ e("span", { className: "fake-doc-viewer__date", children: i.date })
       ] }),
-      /* @__PURE__ */ e("span", { className: "fake-doc-viewer__type-badge", children: a.type }),
-      /* @__PURE__ */ e("button", { className: "fake-doc-viewer__close-btn", onClick: i, children: "✕" })
+      /* @__PURE__ */ e("span", { className: "fake-doc-viewer__type-badge", children: i.type }),
+      /* @__PURE__ */ e("button", { className: "fake-doc-viewer__close-btn", onClick: a, children: "✕" })
     ] }),
     /* @__PURE__ */ e("div", { className: "fake-doc-viewer__toolbar", children: [
       /* @__PURE__ */ e("div", { className: "fake-doc-viewer__page-nav", children: [
@@ -14424,23 +17664,23 @@ function md({ docId: t, page: n = 1, highlightText: s = !1, onClose: i }) {
           "button",
           {
             className: "fake-doc-viewer__nav-btn",
-            onClick: p,
-            disabled: d <= 1,
+            onClick: u,
+            disabled: l <= 1,
             children: "‹ Prev"
           }
         ),
         /* @__PURE__ */ e("span", { className: "fake-doc-viewer__page-indicator", children: [
           "Page ",
-          d,
+          l,
           " of ",
-          l
+          d
         ] }),
         /* @__PURE__ */ e(
           "button",
           {
             className: "fake-doc-viewer__nav-btn",
             onClick: m,
-            disabled: d >= l,
+            disabled: l >= d,
             children: "Next ›"
           }
         )
@@ -14451,109 +17691,109 @@ function md({ docId: t, page: n = 1, highlightText: s = !1, onClose: i }) {
       "div",
       {
         className: "fake-doc-viewer__page",
-        dangerouslySetInnerHTML: { __html: u.content }
+        dangerouslySetInnerHTML: { __html: p.content }
       }
     ) })
   ] }) });
 }
-function hd(t) {
+function ku(t) {
   if (!t) return "";
   let n = t;
   const s = [];
-  n = n.replace(/```(\w*)\n([\s\S]*?)```/g, (c, l, d) => {
-    const u = s.length;
-    return s.push(`<pre><code>${Me(d.trimEnd())}</code></pre>`), `\0CODEBLOCK${u}\0`;
+  n = n.replace(/```(\w*)\n([\s\S]*?)```/g, (c, d, l) => {
+    const p = s.length;
+    return s.push(`<pre><code>${Le(l.trimEnd())}</code></pre>`), `\0CODEBLOCK${p}\0`;
   });
-  const i = [];
-  n = n.replace(/`([^`]+)`/g, (c, l) => {
-    const d = i.length;
-    return i.push(`<code>${Me(l)}</code>`), `\0INLINE${d}\0`;
+  const a = [];
+  n = n.replace(/`([^`]+)`/g, (c, d) => {
+    const l = a.length;
+    return a.push(`<code>${Le(d)}</code>`), `\0INLINE${l}\0`;
   });
-  const a = n.split(`
+  const i = n.split(`
 `), r = [];
   let o = 0;
-  for (; o < a.length; ) {
-    const c = a[o];
-    if (o + 1 < a.length && _d(a[o + 1]) && c.includes("|")) {
-      const d = [c, a[o + 1]];
-      for (o += 2; o < a.length && a[o].trim().startsWith("|"); )
-        d.push(a[o]), o++;
-      r.push(gd(d));
+  for (; o < i.length; ) {
+    const c = i[o];
+    if (o + 1 < i.length && Cu(i[o + 1]) && c.includes("|")) {
+      const l = [c, i[o + 1]];
+      for (o += 2; o < i.length && i[o].trim().startsWith("|"); )
+        l.push(i[o]), o++;
+      r.push(Su(l));
       continue;
     }
-    const l = c.match(/^(#{1,4})\s+(.+)$/);
-    if (l) {
-      const d = l[1].length;
-      r.push(`<h${d}>${Te(l[2])}</h${d}>`), o++;
+    const d = c.match(/^(#{1,4})\s+(.+)$/);
+    if (d) {
+      const l = d[1].length;
+      r.push(`<h${l}>${Me(d[2])}</h${l}>`), o++;
       continue;
     }
     if (/^[\s]*[-*]\s+/.test(c)) {
-      const d = [];
-      for (; o < a.length && /^[\s]*[-*]\s+/.test(a[o]); )
-        d.push(a[o].replace(/^[\s]*[-*]\s+/, "")), o++;
-      r.push("<ul>" + d.map((u) => `<li>${Te(u)}</li>`).join("") + "</ul>");
+      const l = [];
+      for (; o < i.length && /^[\s]*[-*]\s+/.test(i[o]); )
+        l.push(i[o].replace(/^[\s]*[-*]\s+/, "")), o++;
+      r.push("<ul>" + l.map((p) => `<li>${Me(p)}</li>`).join("") + "</ul>");
       continue;
     }
     if (/^[\s]*\d+[.)]\s+/.test(c)) {
-      const d = [];
-      for (; o < a.length && /^[\s]*\d+[.)]\s+/.test(a[o]); )
-        d.push(a[o].replace(/^[\s]*\d+[.)]\s+/, "")), o++;
-      r.push("<ol>" + d.map((u) => `<li>${Te(u)}</li>`).join("") + "</ol>");
+      const l = [];
+      for (; o < i.length && /^[\s]*\d+[.)]\s+/.test(i[o]); )
+        l.push(i[o].replace(/^[\s]*\d+[.)]\s+/, "")), o++;
+      r.push("<ol>" + l.map((p) => `<li>${Me(p)}</li>`).join("") + "</ol>");
       continue;
     }
     if (c.trim() === "") {
       r.push("<br>"), o++;
       continue;
     }
-    r.push(Te(c)), o++;
+    r.push(Me(c)), o++;
   }
   return n = r.join(`
-`), n = n.replace(/\x00CODEBLOCK(\d+)\x00/g, (c, l) => s[l]), n = n.replace(/\x00INLINE(\d+)\x00/g, (c, l) => i[l]), n = n.replace(/(<br>\s*){3,}/g, "<br><br>"), n;
+`), n = n.replace(/\x00CODEBLOCK(\d+)\x00/g, (c, d) => s[d]), n = n.replace(/\x00INLINE(\d+)\x00/g, (c, d) => a[d]), n = n.replace(/(<br>\s*){3,}/g, "<br><br>"), n;
 }
-function Te(t) {
+function Me(t) {
   return t.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>").replace(/\*([^*]+)\*/g, "<em>$1</em>").replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
 }
-function _d(t) {
+function Cu(t) {
   return t ? /^\|?[\s-:|]+\|[\s-:|]*$/.test(t.trim()) : !1;
 }
-function gd(t) {
-  const n = hs(t[0]), s = t.slice(2);
-  let i = '<div class="super-chat-table-wrap"><table class="super-chat-table">';
-  i += "<thead><tr>";
-  for (const a of n)
-    i += `<th>${Te(a)}</th>`;
-  if (i += "</tr></thead>", s.length > 0) {
-    i += "<tbody>";
-    for (const a of s) {
-      const r = hs(a);
-      i += "<tr>";
+function Su(t) {
+  const n = $s(t[0]), s = t.slice(2);
+  let a = '<div class="super-chat-table-wrap"><table class="super-chat-table">';
+  a += "<thead><tr>";
+  for (const i of n)
+    a += `<th>${Me(i)}</th>`;
+  if (a += "</tr></thead>", s.length > 0) {
+    a += "<tbody>";
+    for (const i of s) {
+      const r = $s(i);
+      a += "<tr>";
       for (let o = 0; o < n.length; o++)
-        i += `<td>${Te(r[o] || "")}</td>`;
-      i += "</tr>";
+        a += `<td>${Me(r[o] || "")}</td>`;
+      a += "</tr>";
     }
-    i += "</tbody>";
+    a += "</tbody>";
   }
-  return i += "</table></div>", i;
+  return a += "</table></div>", a;
 }
-function hs(t) {
+function $s(t) {
   let n = t.trim();
   return n.startsWith("|") && (n = n.slice(1)), n.endsWith("|") && (n = n.slice(0, -1)), n.split("|").map((s) => s.trim());
 }
-function Me(t) {
+function Le(t) {
   if (!t) return "";
   const n = document.createElement("div");
   return n.textContent = t, n.innerHTML;
 }
-function fd({ content: t }) {
+function xu({ content: t }) {
   return /* @__PURE__ */ e("div", { class: "super-chat-message super-chat-message--user", children: /* @__PURE__ */ e(
     "div",
     {
       class: "super-chat-message__content",
-      dangerouslySetInnerHTML: { __html: Me(t) }
+      dangerouslySetInnerHTML: { __html: Le(t) }
     }
   ) });
 }
-const yd = {
+const Pu = {
   think: "Reasoning",
   searchVitals: "Searching Vitals",
   searchLabs: "Searching Labs",
@@ -14566,7 +17806,7 @@ const yd = {
   searchSemantically: "Semantic Search",
   searchCarePlans: "Searching Care Plans",
   searchAdministrationRecords: "Searching Administration Records"
-}, vd = {
+}, Tu = {
   think: "💭",
   // thought balloon
   searchVitals: "💓",
@@ -14592,16 +17832,16 @@ const yd = {
   searchAdministrationRecords: "💉"
   // syringe
 };
-function wd(t) {
-  return yd[t] || Id(t);
+function Au(t) {
+  return Pu[t] || qu(t);
 }
-function bd(t) {
-  return vd[t] || "🔍";
+function Mu(t) {
+  return Tu[t] || "🔍";
 }
-function Id(t) {
+function qu(t) {
   return t.replace(/([A-Z])/g, " $1").replace(/^./, (n) => n.toUpperCase()).trim();
 }
-function Dd(t, n) {
+function Lu(t, n) {
   if (!n) return "";
   switch (t) {
     case "searchVitals":
@@ -14623,7 +17863,7 @@ function Dd(t, n) {
       return n.keyword ? `"${n.keyword}"` : n.query ? `"${n.query.slice(0, 30)}${n.query.length > 30 ? "..." : ""}"` : "";
   }
 }
-function kd(t, n) {
+function Eu(t, n) {
   if (!n) return "";
   if (typeof n == "string")
     try {
@@ -14635,19 +17875,19 @@ function kd(t, n) {
     }
   return Array.isArray(n) ? `${n.length} results` : n.results && Array.isArray(n.results) ? `${n.results.length} results` : "Complete";
 }
-function Cd({ part: t }) {
-  const [n, s] = v(!1), i = t.type.replace("tool-", ""), a = i === "think", r = t.output !== void 0 && t.output !== null, o = t.status === "running" && !r, c = wd(i), l = bd(i), d = Dd(i, t.input), u = r ? kd(i, t.output) : "";
-  return /* @__PURE__ */ e("div", { class: `super-chat-tool ${a ? "super-chat-tool--thinking" : ""} ${o ? "super-chat-tool--running" : ""} ${n ? "super-chat-tool--expanded" : ""}`, children: [
+function $u({ part: t }) {
+  const [n, s] = y(!1), a = t.type.replace("tool-", ""), i = a === "think", r = t.output !== void 0 && t.output !== null, o = t.status === "running" && !r, c = Au(a), d = Mu(a), l = Lu(a, t.input), p = r ? Eu(a, t.output) : "";
+  return /* @__PURE__ */ e("div", { class: `super-chat-tool ${i ? "super-chat-tool--thinking" : ""} ${o ? "super-chat-tool--running" : ""} ${n ? "super-chat-tool--expanded" : ""}`, children: [
     /* @__PURE__ */ e(
       "div",
       {
         class: "super-chat-tool__header",
         onClick: () => s(!n),
         children: [
-          /* @__PURE__ */ e("span", { class: "super-chat-tool__icon", children: l }),
+          /* @__PURE__ */ e("span", { class: "super-chat-tool__icon", children: d }),
           /* @__PURE__ */ e("span", { class: "super-chat-tool__name", children: c }),
-          d && /* @__PURE__ */ e("span", { class: "super-chat-tool__summary", children: d }),
-          u && !o && /* @__PURE__ */ e("span", { class: "super-chat-tool__result-summary", children: u }),
+          l && /* @__PURE__ */ e("span", { class: "super-chat-tool__summary", children: l }),
+          p && !o && /* @__PURE__ */ e("span", { class: "super-chat-tool__result-summary", children: p }),
           /* @__PURE__ */ e("span", { class: `super-chat-tool__status ${r ? "super-chat-tool__status--done" : "super-chat-tool__status--loading"}`, children: r ? "✓" : o ? /* @__PURE__ */ e("span", { class: "super-chat-tool__spinner" }) : "⏷" }),
           /* @__PURE__ */ e("span", { class: "super-chat-tool__toggle", children: n ? "▴" : "▾" })
         ]
@@ -14655,38 +17895,38 @@ function Cd({ part: t }) {
     ),
     n && /* @__PURE__ */ e("div", { class: "super-chat-tool__body", children: [
       t.input && /* @__PURE__ */ e("div", { class: "super-chat-tool__section", children: [
-        /* @__PURE__ */ e("div", { class: "super-chat-tool__section-label", children: a && t.input.thought ? "Thought Process" : "Parameters" }),
-        /* @__PURE__ */ e("pre", { children: a && t.input.thought ? Me(t.input.thought) : Me(JSON.stringify(t.input, null, 2)) })
+        /* @__PURE__ */ e("div", { class: "super-chat-tool__section-label", children: i && t.input.thought ? "Thought Process" : "Parameters" }),
+        /* @__PURE__ */ e("pre", { children: i && t.input.thought ? Le(t.input.thought) : Le(JSON.stringify(t.input, null, 2)) })
       ] }),
-      r && !a && /* @__PURE__ */ e("div", { class: "super-chat-tool__section", children: [
+      r && !i && /* @__PURE__ */ e("div", { class: "super-chat-tool__section", children: [
         /* @__PURE__ */ e("div", { class: "super-chat-tool__section-label", children: "Results" }),
-        /* @__PURE__ */ e("pre", { children: Me(
+        /* @__PURE__ */ e("pre", { children: Le(
           typeof t.output == "string" ? t.output : JSON.stringify(t.output, null, 2)
         ) })
       ] })
     ] })
   ] });
 }
-function Nd({ content: t }) {
+function Ru({ content: t }) {
   return t?.trim() ? /* @__PURE__ */ e(
     "div",
     {
       class: "super-chat-message__content",
-      dangerouslySetInnerHTML: { __html: hd(t) }
+      dangerouslySetInnerHTML: { __html: ku(t) }
     }
   ) : null;
 }
-function Sd({ message: t }) {
-  const n = t.parts || [], s = n.filter((c) => c.type?.startsWith("tool-")), i = n.filter((c) => c.type === "text"), a = s.some((c) => c.status === "running"), r = i.length > 0 ? i.map((c) => c.content).join("") : t.content || "", o = s.length > 0 || r.trim();
+function Ou({ message: t }) {
+  const n = t.parts || [], s = n.filter((c) => c.type?.startsWith("tool-")), a = n.filter((c) => c.type === "text"), i = s.some((c) => c.status === "running"), r = a.length > 0 ? a.map((c) => c.content).join("") : t.content || "", o = s.length > 0 || r.trim();
   return /* @__PURE__ */ e("div", { class: "super-chat-message super-chat-message--assistant", children: [
     s.length > 0 && /* @__PURE__ */ e("div", { class: "super-chat-tools-container", children: [
-      s.map((c) => /* @__PURE__ */ e(Cd, { part: c }, c.toolCallId)),
-      a && /* @__PURE__ */ e("div", { class: "super-chat-tools-progress", children: [
+      s.map((c) => /* @__PURE__ */ e($u, { part: c }, c.toolCallId)),
+      i && /* @__PURE__ */ e("div", { class: "super-chat-tools-progress", children: [
         /* @__PURE__ */ e("span", { class: "super-chat-tools-progress__spinner" }),
         /* @__PURE__ */ e("span", { children: "Working..." })
       ] })
     ] }),
-    r.trim() && /* @__PURE__ */ e(Nd, { content: r }),
+    r.trim() && /* @__PURE__ */ e(Ru, { content: r }),
     !o && /* @__PURE__ */ e("div", { class: "super-chat-message__content super-chat-message__loading", children: /* @__PURE__ */ e("span", { class: "super-chat-inline-loader", children: [
       /* @__PURE__ */ e("span", {}),
       /* @__PURE__ */ e("span", {}),
@@ -14694,37 +17934,37 @@ function Sd({ message: t }) {
     ] }) })
   ] });
 }
-function xd({ onSend: t, status: n }) {
-  const [s, i] = v(""), a = ee(null), r = n === "ready";
+function Bu({ onSend: t, status: n }) {
+  const [s, a] = y(""), i = te(null), r = n === "ready";
   F(() => {
-    r && a.current && a.current.focus();
+    r && i.current && i.current.focus();
   }, [r]);
   const o = () => {
-    !s.trim() || !r || (t(s.trim()), i(""), a.current && (a.current.style.height = "auto"));
-  }, c = (u) => {
-    u.key === "Enter" && !u.shiftKey && (u.preventDefault(), o());
-  }, l = (u) => {
-    i(u.target.value);
-    const p = u.target;
-    p.style.height = "auto", p.style.height = Math.min(p.scrollHeight, 120) + "px";
+    !s.trim() || !r || (t(s.trim()), a(""), i.current && (i.current.style.height = "auto"));
+  }, c = (p) => {
+    p.key === "Enter" && !p.shiftKey && (p.preventDefault(), o());
+  }, d = (p) => {
+    a(p.target.value);
+    const u = p.target;
+    u.style.height = "auto", u.style.height = Math.min(u.scrollHeight, 120) + "px";
   };
-  let d;
+  let l;
   if (!r)
-    d = n === "submitted" ? "Searching records..." : "Generating response...";
+    l = n === "submitted" ? "Searching records..." : "Generating response...";
   else {
-    const u = typeof window.getChatContext == "function" ? window.getChatContext() : {};
-    u.externalPatientId || u.externalAssessmentId ? d = "Ask about this patient..." : u.facilityName ? d = "Search across this facility..." : d = "Search across your facilities...";
+    const p = typeof window.getChatContext == "function" ? window.getChatContext() : {};
+    p.externalPatientId || p.externalAssessmentId ? l = "Ask about this patient..." : p.facilityName ? l = "Search across this facility..." : l = "Search across your facilities...";
   }
   return /* @__PURE__ */ e("div", { class: "super-chat-input-container", children: [
     /* @__PURE__ */ e(
       "textarea",
       {
-        ref: a,
+        ref: i,
         class: "super-chat-input",
         value: s,
-        onInput: l,
+        onInput: d,
         onKeyDown: c,
-        placeholder: d,
+        placeholder: l,
         disabled: !r,
         rows: 1
       }
@@ -14744,32 +17984,32 @@ function xd({ onSend: t, status: n }) {
     )
   ] });
 }
-const Pd = [
+const Hu = [
   "Does this patient have malnutrition?",
   "What are the PDPM opportunities?",
   "Look for IV fluids in hospital docs",
   "What medications is this patient on?"
 ];
-function Td({ patientId: t, onClose: n }) {
-  const { messages: s, status: i, send: a, clear: r } = pd(t), [o, c] = v(null), l = ee(null);
+function Gu({ patientId: t, onClose: n }) {
+  const { messages: s, status: a, send: i, clear: r } = Iu(t), [o, c] = y(null), d = te(null);
   F(() => {
-    l.current && (l.current.scrollTop = l.current.scrollHeight);
+    d.current && (d.current.scrollTop = d.current.scrollHeight);
   }, [s]);
-  const d = U((p) => {
-    const m = p.target.closest('a[href^="#doc:"]');
+  const l = G((u) => {
+    const m = u.target.closest('a[href^="#doc:"]');
     if (m) {
-      p.preventDefault();
+      u.preventDefault();
       const _ = m.getAttribute("href").replace("#doc:", "").split(":");
       c({ docId: _[0], page: parseInt(_[1], 10) || 1 });
       return;
     }
-    p.target.closest('a[href^="#viewer:"]') && p.preventDefault();
-  }, []), u = U((p) => {
-    a(p);
-  }, [a]);
-  return /* @__PURE__ */ e(J, { children: [
-    /* @__PURE__ */ e("div", { class: "super-chat-overlay", onClick: (p) => {
-      p.target.classList.contains("super-chat-overlay") && n();
+    u.target.closest('a[href^="#viewer:"]') && u.preventDefault();
+  }, []), p = G((u) => {
+    i(u);
+  }, [i]);
+  return /* @__PURE__ */ e(Q, { children: [
+    /* @__PURE__ */ e("div", { class: "super-chat-overlay", onClick: (u) => {
+      u.target.classList.contains("super-chat-overlay") && n();
     }, children: /* @__PURE__ */ e("div", { class: "super-chat-overlay__panel", children: [
       /* @__PURE__ */ e("div", { class: "super-chat-header", children: [
         /* @__PURE__ */ e("div", { class: "super-chat-header__left", children: [
@@ -14788,25 +18028,25 @@ function Td({ patientId: t, onClose: n }) {
           ] }) })
         ] })
       ] }),
-      /* @__PURE__ */ e("div", { class: "super-chat-messages", ref: l, onClick: d, children: s.length === 0 ? (
+      /* @__PURE__ */ e("div", { class: "super-chat-messages", ref: d, onClick: l, children: s.length === 0 ? (
         // Custom demo empty state with our specific suggestions
         /* @__PURE__ */ e("div", { class: "super-chat-empty", children: [
           /* @__PURE__ */ e("div", { class: "super-chat-empty__icon", children: "✨" }),
           /* @__PURE__ */ e("div", { class: "super-chat-empty__title", children: "Hi, I'm your AI assistant" }),
           /* @__PURE__ */ e("div", { class: "super-chat-empty__text", children: "I can search clinical notes, hospital records, labs, medications, and help analyze MDS coding opportunities." }),
-          /* @__PURE__ */ e("div", { class: "super-chat-empty__suggestions", children: Pd.map((p) => /* @__PURE__ */ e(
+          /* @__PURE__ */ e("div", { class: "super-chat-empty__suggestions", children: Hu.map((u) => /* @__PURE__ */ e(
             "button",
             {
               class: "super-chat-empty__suggestion",
-              onClick: () => u(p),
-              children: p
+              onClick: () => p(u),
+              children: u
             },
-            p
+            u
           )) })
         ] })
-      ) : /* @__PURE__ */ e(J, { children: [
-        s.map((p, m) => p.role === "user" ? /* @__PURE__ */ e(fd, { content: p.content }, m) : /* @__PURE__ */ e(Sd, { message: p }, m)),
-        i === "submitted" && /* @__PURE__ */ e("div", { class: "super-chat-message super-chat-message--assistant", children: /* @__PURE__ */ e("div", { class: "super-chat-typing", children: [
+      ) : /* @__PURE__ */ e(Q, { children: [
+        s.map((u, m) => u.role === "user" ? /* @__PURE__ */ e(xu, { content: u.content }, m) : /* @__PURE__ */ e(Ou, { message: u }, m)),
+        a === "submitted" && /* @__PURE__ */ e("div", { class: "super-chat-message super-chat-message--assistant", children: /* @__PURE__ */ e("div", { class: "super-chat-typing", children: [
           /* @__PURE__ */ e("div", { class: "super-chat-typing__dots", children: [
             /* @__PURE__ */ e("div", { class: "super-chat-typing__dot" }),
             /* @__PURE__ */ e("div", { class: "super-chat-typing__dot" }),
@@ -14815,10 +18055,10 @@ function Td({ patientId: t, onClose: n }) {
           /* @__PURE__ */ e("span", { children: "Analyzing patient data..." })
         ] }) })
       ] }) }),
-      /* @__PURE__ */ e(xd, { onSend: a, status: i })
+      /* @__PURE__ */ e(Bu, { onSend: i, status: a })
     ] }) }),
     o && /* @__PURE__ */ e(
-      md,
+      Nu,
       {
         docId: o.docId,
         page: o.page,
@@ -14828,190 +18068,224 @@ function Td({ patientId: t, onClose: n }) {
     )
   ] });
 }
-const at = "SUNNY MEADOWS DEMO FACILITY", _s = "demo-org", we = {
-  commandCenter: {
-    facilityName: at,
-    orgSlug: _s
-  },
-  pdpmMds: {
-    context: { scope: "mds", assessmentId: "4860265", facilityName: at }
-  },
-  pdpmPatient: {
-    context: { scope: "patient", patientId: "2657226", patientName: "Doe, Jane", facilityName: at }
-  },
-  queryItems: {
-    patientId: "2657226",
-    patientName: "Doe, Jane",
-    facilityName: at,
-    orgSlug: _s,
-    assessmentId: "4860265"
-  },
-  chat: {
-    patientId: "2657226"
-  }
-}, Ad = [
-  { id: "commandCenter", label: "Command Center", icon: "📋", color: "#6366f1" },
-  { id: "pdpmMds", label: "PDPM (MDS)", icon: "📊", color: "#22c55e" },
-  { id: "pdpmPatient", label: "PDPM (Patient)", icon: "🧑", color: "#f97316" },
-  { id: "queryItems", label: "Query Items", icon: "📝", color: "#3b82f6" },
-  { id: "chat", label: "AI Chat", icon: "💬", color: "#8b5cf6" }
-];
-function Md() {
-  const [t, n] = v(null), [s, i] = v(!1);
+function Fu({
+  onOpenMds: t,
+  onOpenQm: n,
+  onOpen24hr: s,
+  onOpenChat: a,
+  mdsBadgeCount: i = 0
+}) {
+  const [r, o] = y(!1), c = te(null);
   F(() => {
-    function o(c) {
-      const l = c.detail;
-      l?.scope === "mds" && l?.assessmentId && n("pdpmMds");
+    if (!r) return;
+    const l = (p) => {
+      c.current && !c.current.contains(p.target) && o(!1);
+    };
+    return document.addEventListener("click", l, !0), () => document.removeEventListener("click", l, !0);
+  }, [r]);
+  const d = (l) => (p) => {
+    p.stopPropagation(), o(!1), l?.();
+  };
+  return /* @__PURE__ */ e(
+    "div",
+    {
+      id: "super-bubbles-container",
+      ref: c,
+      class: r ? "super-dial--open" : "",
+      children: [
+        /* @__PURE__ */ e(
+          "button",
+          {
+            id: "super-chat-action",
+            type: "button",
+            class: "super-dial__action super-dial__action--chat",
+            "aria-label": "Open Chat",
+            onClick: d(a),
+            children: /* @__PURE__ */ e("svg", { width: "20", height: "20", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": "2", "stroke-linecap": "round", "stroke-linejoin": "round", children: /* @__PURE__ */ e("path", { d: "M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" }) })
+          }
+        ),
+        /* @__PURE__ */ e(
+          "button",
+          {
+            id: "super-mds-action",
+            type: "button",
+            class: "super-dial__action super-dial__action--mds",
+            "aria-label": "Open Dashboard",
+            onClick: d(t),
+            children: [
+              /* @__PURE__ */ e("svg", { width: "20", height: "20", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": "2", "stroke-linecap": "round", "stroke-linejoin": "round", children: [
+                /* @__PURE__ */ e("rect", { x: "3", y: "3", width: "7", height: "7" }),
+                /* @__PURE__ */ e("rect", { x: "14", y: "3", width: "7", height: "7" }),
+                /* @__PURE__ */ e("rect", { x: "14", y: "14", width: "7", height: "7" }),
+                /* @__PURE__ */ e("rect", { x: "3", y: "14", width: "7", height: "7" })
+              ] }),
+              i > 0 && /* @__PURE__ */ e("span", { class: "super-dial__action-badge", children: i > 99 ? "99+" : i })
+            ]
+          }
+        ),
+        /* @__PURE__ */ e(
+          "button",
+          {
+            id: "super-qm-action",
+            type: "button",
+            class: "super-dial__action super-dial__action--qm",
+            "aria-label": "QM Board",
+            onClick: d(n),
+            children: /* @__PURE__ */ e("svg", { width: "20", height: "20", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": "2", "stroke-linecap": "round", "stroke-linejoin": "round", children: [
+              /* @__PURE__ */ e("path", { d: "M9 11l3 3L22 4" }),
+              /* @__PURE__ */ e("path", { d: "M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" })
+            ] })
+          }
+        ),
+        /* @__PURE__ */ e(
+          "button",
+          {
+            id: "super-24hr-action",
+            type: "button",
+            class: "super-dial__action super-dial__action--24hr",
+            "aria-label": "24-Hour Report",
+            onClick: d(s),
+            children: "24H"
+          }
+        ),
+        /* @__PURE__ */ e(
+          "button",
+          {
+            id: "super-bubble-main",
+            type: "button",
+            class: "super-bubble__main",
+            "aria-label": "Super",
+            onClick: (l) => {
+              l.stopPropagation(), o((p) => !p);
+            },
+            children: "S"
+          }
+        )
+      ]
     }
-    return window.addEventListener("demo:open-pdpm", o), () => window.removeEventListener("demo:open-pdpm", o);
+  );
+}
+const We = "SUNNY MEADOWS DEMO FACILITY", gt = "demo-org", Uu = [
+  "#super-menu-fab",
+  ".super-menu-fab",
+  ".super-chat-fab",
+  "#super-chat-button",
+  "#super-menu-panel",
+  ".super-menu-panel",
+  "#super-chat-panel",
+  ".super-chat-panel"
+];
+function Vu() {
+  const [t, n] = y(null), [s, a] = y(null), [i, r] = y(null);
+  F(() => {
+    Uu.forEach((d) => {
+      document.querySelectorAll(d).forEach((l) => {
+        l.style.display = "none";
+      });
+    });
   }, []), F(() => {
-    function o() {
+    function d(l) {
+      const p = l.detail || {};
+      a({
+        scope: p.scope || "mds",
+        assessmentId: p.assessmentId || "4860265",
+        patientId: p.patientId,
+        patientName: p.patientName,
+        facilityName: We
+      }), n("pdpm");
+    }
+    return window.addEventListener("demo:open-pdpm", d), () => window.removeEventListener("demo:open-pdpm", d);
+  }, []), F(() => {
+    function d(l) {
+      const p = l.detail || {};
+      r({
+        patientId: p.patientId || "2657226",
+        patientName: p.patientName || "Doe, Jane",
+        assessmentId: p.assessmentId || "4860265"
+      }), n("queryItems");
+    }
+    return window.addEventListener("demo:open-query-items", d), () => window.removeEventListener("demo:open-query-items", d);
+  }, []), F(() => {
+    function d() {
       n("chat");
     }
-    return window.addEventListener("demo:open-chat", o), () => window.removeEventListener("demo:open-chat", o);
+    return window.addEventListener("demo:open-chat", d), () => window.removeEventListener("demo:open-chat", d);
   }, []);
-  function a() {
-    n(null);
+  function o() {
+    n(null), a(null), r(null);
   }
-  function r(o) {
-    o?.hide || n(null);
+  function c(d) {
+    d?.hide || n(null);
   }
-  return /* @__PURE__ */ e(J, { children: [
+  return /* @__PURE__ */ e(Q, { children: [
     t === "commandCenter" && /* @__PURE__ */ e(
-      Zo,
+      jc,
       {
-        facilityName: we.commandCenter.facilityName,
-        orgSlug: we.commandCenter.orgSlug,
-        onClose: r
+        facilityName: We,
+        orgSlug: gt,
+        onClose: c
       }
     ),
-    t === "pdpmMds" && /* @__PURE__ */ e("div", { class: "demo-pdpm-wrapper", style: qt, children: [
-      /* @__PURE__ */ e("div", { class: "demo-pdpm-header", style: Ot, children: [
-        /* @__PURE__ */ e("span", { style: { fontWeight: 600 }, children: "PDPM Analyzer (MDS Scope)" }),
-        /* @__PURE__ */ e("button", { onClick: a, style: Ht, children: "×" })
-      ] }),
-      /* @__PURE__ */ e("div", { style: { flex: 1, overflow: "auto" }, children: /* @__PURE__ */ e(
-        ms,
-        {
-          context: we.pdpmMds.context,
-          onClose: a
-        }
-      ) })
-    ] }),
-    t === "pdpmPatient" && /* @__PURE__ */ e("div", { class: "demo-pdpm-wrapper", style: qt, children: [
-      /* @__PURE__ */ e("div", { class: "demo-pdpm-header", style: Ot, children: [
-        /* @__PURE__ */ e("span", { style: { fontWeight: 600 }, children: "PDPM Analyzer (Patient Scope)" }),
-        /* @__PURE__ */ e("button", { onClick: a, style: Ht, children: "×" })
-      ] }),
-      /* @__PURE__ */ e("div", { style: { flex: 1, overflow: "auto" }, children: /* @__PURE__ */ e(
-        ms,
-        {
-          context: we.pdpmPatient.context,
-          onClose: a
-        }
-      ) })
-    ] }),
-    t === "queryItems" && /* @__PURE__ */ e("div", { class: "demo-query-wrapper", style: qt, children: [
-      /* @__PURE__ */ e("div", { class: "demo-query-header", style: Ot, children: [
-        /* @__PURE__ */ e("span", { style: { fontWeight: 600 }, children: "Query Items Page" }),
-        /* @__PURE__ */ e("button", { onClick: a, style: Ht, children: "×" })
-      ] }),
-      /* @__PURE__ */ e("div", { style: { flex: 1, overflow: "auto" }, children: /* @__PURE__ */ e(
-        _i,
-        {
-          patientId: we.queryItems.patientId,
-          patientName: we.queryItems.patientName,
-          facilityName: we.queryItems.facilityName,
-          orgSlug: we.queryItems.orgSlug,
-          assessmentId: we.queryItems.assessmentId,
-          onClose: a,
-          onBack: a
-        }
-      ) })
-    ] }),
+    t === "qm" && /* @__PURE__ */ e(
+      Fd,
+      {
+        facilityName: We,
+        orgSlug: gt,
+        onClose: o
+      }
+    ),
+    t === "24hr" && /* @__PURE__ */ e(
+      mu,
+      {
+        facilityName: We,
+        orgSlug: gt,
+        onClose: o
+      }
+    ),
     t === "chat" && /* @__PURE__ */ e(
-      Td,
+      Gu,
       {
-        patientId: we.chat.patientId,
-        onClose: a
+        patientId: "2657226",
+        onClose: o
       }
     ),
-    /* @__PURE__ */ e("div", { style: Ld, children: [
-      s && /* @__PURE__ */ e("div", { style: $d, children: Ad.map((o) => /* @__PURE__ */ e(
-        "button",
+    t === "pdpm" && s && /* @__PURE__ */ e("div", { style: Rs, children: [
+      /* @__PURE__ */ e("div", { style: Os, children: [
+        /* @__PURE__ */ e("span", { style: { fontWeight: 600 }, children: "PDPM Analyzer" }),
+        /* @__PURE__ */ e("button", { onClick: o, style: Bs, children: "×" })
+      ] }),
+      /* @__PURE__ */ e("div", { style: { flex: 1, overflow: "auto" }, children: /* @__PURE__ */ e(Rl, { context: s, onClose: o }) })
+    ] }),
+    t === "queryItems" && i && /* @__PURE__ */ e("div", { style: Rs, children: [
+      /* @__PURE__ */ e("div", { style: Os, children: [
+        /* @__PURE__ */ e("span", { style: { fontWeight: 600 }, children: "Query Items" }),
+        /* @__PURE__ */ e("button", { onClick: o, style: Bs, children: "×" })
+      ] }),
+      /* @__PURE__ */ e("div", { style: { flex: 1, overflow: "auto" }, children: /* @__PURE__ */ e(
+        za,
         {
-          onClick: () => {
-            n(o.id), i(!1);
-          },
-          style: {
-            ...Rd,
-            background: o.color
-          },
-          title: o.label,
-          children: [
-            /* @__PURE__ */ e("span", { style: { fontSize: "16px", marginRight: "8px" }, children: o.icon }),
-            /* @__PURE__ */ e("span", { style: { fontSize: "12px", fontWeight: 500 }, children: o.label })
-          ]
-        },
-        o.id
-      )) }),
-      /* @__PURE__ */ e(
-        "button",
-        {
-          onClick: () => i(!s),
-          style: {
-            ...Ed,
-            transform: s ? "rotate(45deg)" : "rotate(0deg)"
-          },
-          title: "Open Preact Demo Modules",
-          children: "+"
+          patientId: i.patientId,
+          patientName: i.patientName,
+          facilityName: We,
+          orgSlug: gt,
+          assessmentId: i.assessmentId,
+          onClose: o,
+          onBack: o
         }
-      )
-    ] })
+      ) })
+    ] }),
+    /* @__PURE__ */ e(
+      Fu,
+      {
+        onOpenMds: () => n("commandCenter"),
+        onOpenQm: () => n("qm"),
+        onOpen24hr: () => n("24hr"),
+        onOpenChat: () => n("chat")
+      }
+    )
   ] });
 }
-const Ld = {
-  position: "fixed",
-  bottom: "24px",
-  left: "24px",
-  zIndex: 99999,
-  display: "flex",
-  flexDirection: "column",
-  alignItems: "flex-start",
-  gap: "8px"
-}, Ed = {
-  width: "52px",
-  height: "52px",
-  borderRadius: "50%",
-  background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-  color: "white",
-  border: "none",
-  cursor: "pointer",
-  boxShadow: "0 4px 12px rgba(0,0,0,0.3)",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  fontSize: "28px",
-  fontWeight: 300,
-  transition: "transform 0.2s ease",
-  lineHeight: 1
-}, $d = {
-  display: "flex",
-  flexDirection: "column",
-  gap: "6px",
-  marginBottom: "4px"
-}, Rd = {
-  display: "flex",
-  alignItems: "center",
-  padding: "8px 14px",
-  borderRadius: "8px",
-  border: "none",
-  color: "white",
-  cursor: "pointer",
-  boxShadow: "0 2px 8px rgba(0,0,0,0.2)",
-  whiteSpace: "nowrap",
-  transition: "opacity 0.15s"
-}, qt = {
+const Rs = {
   position: "fixed",
   inset: "20px",
   zIndex: 1e5,
@@ -15021,7 +18295,7 @@ const Ld = {
   display: "flex",
   flexDirection: "column",
   overflow: "hidden"
-}, Ot = {
+}, Os = {
   padding: "12px 16px",
   borderBottom: "1px solid #e5e7eb",
   display: "flex",
@@ -15029,7 +18303,7 @@ const Ld = {
   alignItems: "center",
   background: "#f9fafb",
   flexShrink: 0
-}, Ht = {
+}, Bs = {
   background: "transparent",
   border: "none",
   fontSize: "22px",
@@ -15037,7 +18311,7 @@ const Ld = {
   color: "#6b7280",
   padding: "0 4px",
   lineHeight: 1
-}, gs = {
+}, Hs = {
   I69: "Sequelae of cerebrovascular disease",
   G30: "Alzheimer's disease",
   R13: "Dysphagia",
@@ -15069,62 +18343,62 @@ const Ld = {
   S12: "Cervical vertebra fracture",
   H91: "Hearing loss"
 };
-function qd(t, n) {
-  if (gs[t]) return gs[t];
+function zu(t, n) {
+  if (Hs[t]) return Hs[t];
   if (!n) return t;
   const s = n.split(/[,(]/)[0].trim();
   return s.length > 40 ? s.substring(0, 40) + "…" : s;
 }
-function Bt(t) {
+function Jt(t) {
   let n = !1, s = !1;
-  for (const i of t || [])
-    if (i.category === "nta" && (n = !0), i.category === "slp" && (s = !0), n && s) break;
+  for (const a of t || [])
+    if (a.category === "nta" && (n = !0), a.category === "slp" && (s = !0), n && s) break;
   return { nta: n, slp: s };
 }
-function Od({ topRanked: t, approved: n, annotations: s }) {
-  const i = (t || []).map((c) => ({
+function Wu({ topRanked: t, approved: n, annotations: s }) {
+  const a = (t || []).map((c) => ({
     kind: "group",
     key: `t:${c.groupId}`,
     origin: "topRanked",
     rank: c.rank,
     code: c.groupCode,
     description: c.groupName,
-    badges: Bt(c.annotations || []),
+    badges: Jt(c.annotations || []),
     group: c
-  })), a = (n || []).map((c) => ({
+  })), i = (n || []).map((c) => ({
     kind: "group",
     key: `a:${c.groupId}`,
     origin: "approved",
     code: c.groupCode,
     description: c.groupName,
-    badges: Bt(c.annotations || []),
+    badges: Jt(c.annotations || []),
     group: c
   })), r = { other: {}, speculative: {} };
   for (const c of s || []) {
-    const l = (c.icd10Code || "").substring(0, 3);
-    if (!l) continue;
-    const d = c.category === "speculative" ? "speculative" : "other";
-    r[d][l] || (r[d][l] = { baseCode: l, items: [], description: "" }), r[d][l].items.push(c), !r[d][l].description && c.description && (r[d][l].description = c.description);
+    const d = (c.icd10Code || "").substring(0, 3);
+    if (!d) continue;
+    const l = c.category === "speculative" ? "speculative" : "other";
+    r[l][d] || (r[l][d] = { baseCode: d, items: [], description: "" }), r[l][d].items.push(c), !r[l][d].description && c.description && (r[l][d].description = c.description);
   }
-  const o = (c, l) => Object.values(c).map((d) => ({
+  const o = (c, d) => Object.values(c).map((l) => ({
     kind: "baseCode",
-    key: `${l}:${d.baseCode}`,
-    origin: l === "s" ? "speculative" : "other",
-    code: d.baseCode,
-    description: qd(d.baseCode, d.description),
-    badges: Bt(d.items),
-    count: d.items.length,
-    baseCode: d.baseCode,
-    items: d.items
-  })).sort((d, u) => u.count - d.count || d.code.localeCompare(u.code));
+    key: `${d}:${l.baseCode}`,
+    origin: d === "s" ? "speculative" : "other",
+    code: l.baseCode,
+    description: zu(l.baseCode, l.description),
+    badges: Jt(l.items),
+    count: l.items.length,
+    baseCode: l.baseCode,
+    items: l.items
+  })).sort((l, p) => p.count - l.count || l.code.localeCompare(p.code));
   return {
-    topPicks: i,
-    approved: a,
+    topPicks: a,
+    approved: i,
     other: o(r.other, "o"),
     speculative: o(r.speculative, "s")
   };
 }
-function Ft(t) {
+function Zt(t) {
   return [
     ...t.topPicks,
     ...t.other,
@@ -15132,10 +18406,10 @@ function Ft(t) {
     ...t.approved
   ];
 }
-function Hd(t) {
+function Qu(t) {
   return t.topPicks.length ? t.topPicks[0].key : t.other.length ? t.other[0].key : t.speculative.length ? t.speculative[0].key : t.approved.length ? t.approved[0].key : null;
 }
-function fs(t) {
+function Gs(t) {
   if (!t) return null;
   if (t.kind === "group") {
     const n = t.group;
@@ -15155,229 +18429,229 @@ function fs(t) {
     items: t.items
   };
 }
-function an({ name: t }) {
-  return t === "check" ? G(
+function fn({ name: t }) {
+  return t === "check" ? K(
     "svg",
     { width: 14, height: 14, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": 2 },
-    G("polyline", { points: "20 6 9 17 4 12" })
-  ) : t === "alert" ? G(
+    K("polyline", { points: "20 6 9 17 4 12" })
+  ) : t === "alert" ? K(
     "svg",
     { width: 14, height: 14, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": 2 },
-    G("path", { d: "M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" }),
-    G("line", { x1: 12, y1: 9, x2: 12, y2: 13 }),
-    G("line", { x1: 12, y1: 17, x2: 12.01, y2: 17 })
-  ) : t === "star" ? G(
+    K("path", { d: "M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" }),
+    K("line", { x1: 12, y1: 9, x2: 12, y2: 13 }),
+    K("line", { x1: 12, y1: 17, x2: 12.01, y2: 17 })
+  ) : t === "star" ? K(
     "svg",
     { width: 14, height: 14, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": 2 },
-    G("polygon", { points: "12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" })
-  ) : t === "chevron" ? G(
+    K("polygon", { points: "12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" })
+  ) : t === "chevron" ? K(
     "svg",
     { width: 12, height: 12, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": 2 },
-    G("polyline", { points: "6 9 12 15 18 9" })
+    K("polyline", { points: "6 9 12 15 18 9" })
   ) : null;
 }
-function rt({ row: t, selected: n, onClick: s }) {
-  const i = ["icd10-sb__row"];
-  return n && i.push("icd10-sb__row--selected"), t.rank != null && i.push("icd10-sb__row--ranked"), G(
+function ft({ row: t, selected: n, onClick: s }) {
+  const a = ["icd10-sb__row"];
+  return n && a.push("icd10-sb__row--selected"), t.rank != null && a.push("icd10-sb__row--ranked"), K(
     "div",
     {
-      class: i.join(" "),
+      class: a.join(" "),
       onClick: () => s(t.key)
     },
-    t.rank != null && G("span", { class: "icd10-sb__rank" }, `#${t.rank}`),
-    G("span", { class: "icd10-sb__code" }, t.code),
-    G("span", { class: "icd10-sb__desc", title: t.description }, t.description),
-    (t.badges.nta || t.badges.slp) && G(
+    t.rank != null && K("span", { class: "icd10-sb__rank" }, `#${t.rank}`),
+    K("span", { class: "icd10-sb__code" }, t.code),
+    K("span", { class: "icd10-sb__desc", title: t.description }, t.description),
+    (t.badges.nta || t.badges.slp) && K(
       "span",
       { class: "icd10-sb__badges" },
-      t.badges.nta && G("span", { class: "icd10-sb__badge icd10-sb__badge--nta" }, "NTA"),
-      t.badges.slp && G("span", { class: "icd10-sb__badge icd10-sb__badge--slp" }, "SLP")
+      t.badges.nta && K("span", { class: "icd10-sb__badge icd10-sb__badge--nta" }, "NTA"),
+      t.badges.slp && K("span", { class: "icd10-sb__badge icd10-sb__badge--slp" }, "SLP")
     )
   );
 }
-function ys({ label: t, count: n, icon: s, open: i, onToggle: a, variant: r }) {
+function Fs({ label: t, count: n, icon: s, open: a, onToggle: i, variant: r }) {
   const o = ["icd10-sb__section-hdr", "icd10-sb__section-hdr--collapsible"];
-  return r && o.push(`icd10-sb__section-hdr--${r}`), G(
+  return r && o.push(`icd10-sb__section-hdr--${r}`), K(
     "button",
     {
       type: "button",
       class: o.join(" "),
-      onClick: a,
-      "aria-expanded": i
+      onClick: i,
+      "aria-expanded": a
     },
-    s && G("span", { class: "icd10-sb__section-icon" }, G(an, { name: s })),
-    G("span", { class: "icd10-sb__section-label" }, t),
-    G("span", { class: "icd10-sb__section-count" }, n),
-    G(
+    s && K("span", { class: "icd10-sb__section-icon" }, K(fn, { name: s })),
+    K("span", { class: "icd10-sb__section-label" }, t),
+    K("span", { class: "icd10-sb__section-count" }, n),
+    K(
       "span",
-      { class: `icd10-sb__section-chevron ${i ? "icd10-sb__section-chevron--open" : ""}` },
-      G(an, { name: "chevron" })
+      { class: `icd10-sb__section-chevron ${a ? "icd10-sb__section-chevron--open" : ""}` },
+      K(fn, { name: "chevron" })
     )
   );
 }
-function vs({ label: t, icon: n }) {
-  return G(
+function Us({ label: t, icon: n }) {
+  return K(
     "div",
     { class: "icd10-sb__section-hdr icd10-sb__section-hdr--static" },
-    n && G("span", { class: "icd10-sb__section-icon" }, G(an, { name: n })),
-    G("span", { class: "icd10-sb__section-label" }, t)
+    n && K("span", { class: "icd10-sb__section-icon" }, K(fn, { name: n })),
+    K("span", { class: "icd10-sb__section-label" }, t)
   );
 }
-function Bd({ topRanked: t = [], approved: n = [], annotations: s = [], onSelect: i }) {
-  const [a, r] = v(!1), [o, c] = v(!1), [l, d] = v(null), u = ee(null), p = Y(
-    () => Od({ topRanked: t, approved: n, annotations: s }),
+function ju({ topRanked: t = [], approved: n = [], annotations: s = [], onSelect: a }) {
+  const [i, r] = y(!1), [o, c] = y(!1), [d, l] = y(null), p = te(null), u = Y(
+    () => Wu({ topRanked: t, approved: n, annotations: s }),
     [t, n, s]
   ), m = Y(() => {
-    const y = /* @__PURE__ */ new Set();
-    for (const w of Ft(p)) y.add(w.key);
-    return y;
-  }, [p]);
+    const b = /* @__PURE__ */ new Set();
+    for (const f of Zt(u)) b.add(f.key);
+    return b;
+  }, [u]);
   F(() => {
-    if (l && m.has(l) ? l : null) return;
-    const w = Hd(p);
-    if (!w || u.current === w) return;
-    u.current = w, d(w);
-    const k = Ft(p).find((C) => C.key === w);
-    k && i && i(fs(k));
-  }, [p, l, m, i]);
-  const h = (y) => {
-    d(y);
-    const w = Ft(p).find((k) => k.key === y);
-    w && i && i(fs(w));
-  }, _ = p.approved.length > 0, g = p.other.length > 0, f = p.speculative.length > 0;
-  return G(
+    if (d && m.has(d) ? d : null) return;
+    const f = Qu(u);
+    if (!f || p.current === f) return;
+    p.current = f, l(f);
+    const I = Zt(u).find((N) => N.key === f);
+    I && a && a(Gs(I));
+  }, [u, d, m, a]);
+  const h = (b) => {
+    l(b);
+    const f = Zt(u).find((I) => I.key === b);
+    f && a && a(Gs(f));
+  }, _ = u.approved.length > 0, g = u.other.length > 0, v = u.speculative.length > 0;
+  return K(
     "div",
     { class: "icd10-sb" },
-    _ && G(
+    _ && K(
       "section",
       { class: "icd10-sb__section" },
-      G(ys, {
+      K(Fs, {
         label: "Approved",
-        count: p.approved.length,
+        count: u.approved.length,
         icon: "check",
-        open: a,
-        onToggle: () => r((y) => !y)
+        open: i,
+        onToggle: () => r((b) => !b)
       }),
-      a && G(
+      i && K(
         "div",
         { class: "icd10-sb__section-body" },
-        p.approved.map(
-          (y) => G(rt, { key: y.key, row: y, selected: l === y.key, onClick: h })
+        u.approved.map(
+          (b) => K(ft, { key: b.key, row: b, selected: d === b.key, onClick: h })
         )
       )
     ),
-    G(
+    K(
       "section",
       { class: "icd10-sb__section" },
-      G(vs, { label: "Top picks", icon: "star" }),
-      G(
+      K(Us, { label: "Top picks", icon: "star" }),
+      K(
         "div",
         { class: "icd10-sb__section-body" },
-        p.topPicks.length > 0 ? p.topPicks.map(
-          (y) => G(rt, { key: y.key, row: y, selected: l === y.key, onClick: h })
-        ) : G("div", { class: "icd10-sb__empty" }, "No suggestions yet")
+        u.topPicks.length > 0 ? u.topPicks.map(
+          (b) => K(ft, { key: b.key, row: b, selected: d === b.key, onClick: h })
+        ) : K("div", { class: "icd10-sb__empty" }, "No suggestions yet")
       )
     ),
-    g && G(
+    g && K(
       "section",
       { class: "icd10-sb__section" },
-      G(vs, { label: "Other suggestions" }),
-      G(
+      K(Us, { label: "Other suggestions" }),
+      K(
         "div",
         { class: "icd10-sb__section-body" },
-        p.other.map(
-          (y) => G(rt, { key: y.key, row: y, selected: l === y.key, onClick: h })
+        u.other.map(
+          (b) => K(ft, { key: b.key, row: b, selected: d === b.key, onClick: h })
         )
       )
     ),
-    f && G(
+    v && K(
       "section",
       { class: "icd10-sb__section" },
-      G(ys, {
+      K(Fs, {
         label: "Speculative",
-        count: p.speculative.length,
+        count: u.speculative.length,
         icon: "alert",
         open: o,
-        onToggle: () => c((y) => !y),
+        onToggle: () => c((b) => !b),
         variant: "warning"
       }),
-      o && G(
+      o && K(
         "div",
         { class: "icd10-sb__section-body" },
-        p.speculative.map(
-          (y) => G(rt, { key: y.key, row: y, selected: l === y.key, onClick: h })
+        u.speculative.map(
+          (b) => K(ft, { key: b.key, row: b, selected: d === b.key, onClick: h })
         )
       )
     )
   );
 }
-function Fd({ patientId: t, facilityName: n, orgSlug: s, assessmentId: i }) {
-  const [a, r] = v(null), [o, c] = v(!0), [l, d] = v(null), [u, p] = v(null), m = U(async () => {
-    c(!0), d(null);
+function Ku({ patientId: t, facilityName: n, orgSlug: s, assessmentId: a }) {
+  const [i, r] = y(null), [o, c] = y(!0), [d, l] = y(null), [p, u] = y(null), m = G(async () => {
+    c(!0), l(null);
     try {
-      const k = new URLSearchParams({ facilityName: n, orgSlug: s });
-      i && k.set("externalAssessmentId", i), t && k.set("patientExternalId", t);
-      const C = await chrome.runtime.sendMessage({
+      const I = new URLSearchParams({ facilityName: n, orgSlug: s });
+      a && I.set("externalAssessmentId", a), t && I.set("patientExternalId", t);
+      const N = await chrome.runtime.sendMessage({
         type: "API_REQUEST",
-        endpoint: `/api/extension/mds/ard-recommendation?${k}`
+        endpoint: `/api/extension/mds/ard-recommendation?${I}`
       });
-      if (!C.success)
-        throw new Error(C.error || "Failed to fetch ARD recommendation");
-      const I = C.data || C;
-      if (I.success === !1)
-        throw new Error(I.error || "Failed to fetch ARD recommendation");
-      r(I), I.recommendedDayNumber && p((P) => P ?? I.recommendedDayNumber);
-    } catch (k) {
-      console.error("[ArdEstimator] Fetch error:", k), d(k.message || "Failed to load ARD recommendation");
+      if (!N.success)
+        throw new Error(N.error || "Failed to fetch ARD recommendation");
+      const D = N.data || N;
+      if (D.success === !1)
+        throw new Error(D.error || "Failed to fetch ARD recommendation");
+      r(D), D.recommendedDayNumber && u((T) => T ?? D.recommendedDayNumber);
+    } catch (I) {
+      console.error("[ArdEstimator] Fetch error:", I), l(I.message || "Failed to load ARD recommendation");
     } finally {
       c(!1);
     }
-  }, [t, n, s, i]);
+  }, [t, n, s, a]);
   F(() => {
-    (t || i) && m();
+    (t || a) && m();
   }, [m]), F(() => {
-    const k = () => m();
-    return window.addEventListener("super:query-sent", k), window.addEventListener("super:item-decision", k), () => {
-      window.removeEventListener("super:query-sent", k), window.removeEventListener("super:item-decision", k);
+    const I = () => m();
+    return window.addEventListener("super:query-sent", I), window.addEventListener("super:item-decision", I), () => {
+      window.removeEventListener("super:query-sent", I), window.removeEventListener("super:item-decision", I);
     };
   }, [m]);
-  const h = a?.scores?.find((k) => k.dayNumber === u) || null, _ = a?.classifiedItems || [], g = _.filter(
-    (k) => k.classification === "time_sensitive_captured" || k.classification === "time_sensitive_at_risk" || k.classification === "time_sensitive_missed"
+  const h = i?.scores?.find((I) => I.dayNumber === p) || null, _ = i?.classifiedItems || [], g = _.filter(
+    (I) => I.classification === "time_sensitive_captured" || I.classification === "time_sensitive_at_risk" || I.classification === "time_sensitive_missed"
+  ), v = _.filter(
+    (I) => I.classification === "needs_review"
+  ), b = _.filter(
+    (I) => I.classification === "item_to_query"
   ), f = _.filter(
-    (k) => k.classification === "needs_review"
-  ), y = _.filter(
-    (k) => k.classification === "item_to_query"
-  ), w = _.filter(
-    (k) => k.classification === "always_captured" && Ud(k)
+    (I) => I.classification === "always_captured" && Yu(I)
   );
   return {
-    result: a,
+    result: i,
     loading: o,
-    error: l,
-    selectedDay: u,
-    setSelectedDay: p,
+    error: d,
+    selectedDay: p,
+    setSelectedDay: u,
     selectedScore: h,
     timeSensitiveItems: g,
-    needsReviewItems: f,
-    queryItems: y,
-    alwaysCapturedItems: w,
+    needsReviewItems: v,
+    queryItems: b,
+    alwaysCapturedItems: f,
     refetch: m
   };
 }
-function Ud(t) {
+function Yu(t) {
   return t.ntaPoints !== null && t.ntaPoints > 0 || !!t.nursingInfo || t.pdpmComponents.length > 0;
 }
-function Gd(t) {
+function Ju(t) {
   if (!t) return "";
   const n = t.split("-");
   return n.length !== 3 ? t : `${parseInt(n[1])}/${parseInt(n[2])}`;
 }
-function Vd({
+function Zu({
   scores: t,
   selectedDay: n,
   recommendedDay: s,
-  onSelectDay: i,
-  ganttItems: a
+  onSelectDay: a,
+  ganttItems: i
 }) {
   return !t || t.length === 0 ? null : /* @__PURE__ */ e("div", { className: "ard-est__day-picker", children: [
     /* @__PURE__ */ e("h3", { className: "ard-est__section-label", children: "Pick ARD Date" }),
@@ -15386,19 +18660,19 @@ function Vd({
         /* @__PURE__ */ e("div", { className: "ard-est__timeline-label" }),
         /* @__PURE__ */ e("div", { className: "ard-est__timeline-grid", children: t.map((r) => {
           const o = r.dayNumber === n, c = r.dayNumber === s;
-          let l = "ard-est__day-btn";
-          return o ? l += " ard-est__day-btn--selected" : c && (l += " ard-est__day-btn--recommended"), /* @__PURE__ */ e(
+          let d = "ard-est__day-btn";
+          return o ? d += " ard-est__day-btn--selected" : c && (d += " ard-est__day-btn--recommended"), /* @__PURE__ */ e(
             "button",
             {
-              className: l,
-              onClick: () => i(r.dayNumber),
+              className: d,
+              onClick: () => a(r.dayNumber),
               title: `Day ${r.dayNumber}: ${r.date}`,
               children: [
                 /* @__PURE__ */ e("span", { className: "ard-est__day-num", children: [
                   "D",
                   r.dayNumber
                 ] }),
-                /* @__PURE__ */ e("span", { className: "ard-est__day-date", children: Gd(r.date) }),
+                /* @__PURE__ */ e("span", { className: "ard-est__day-date", children: Ju(r.date) }),
                 c && !o && /* @__PURE__ */ e("span", { className: "ard-est__day-best", children: "BEST" })
               ]
             },
@@ -15406,8 +18680,8 @@ function Vd({
           );
         }) })
       ] }),
-      a.map((r, o) => {
-        const c = r.firstAdministered && r.lastAdministered, l = r.classification === "needs_review";
+      i.map((r, o) => {
+        const c = r.firstAdministered && r.lastAdministered, d = r.classification === "needs_review";
         return /* @__PURE__ */ e(
           "div",
           {
@@ -15420,24 +18694,24 @@ function Vd({
                   r.ntaPoints
                 ] })
               ] }),
-              /* @__PURE__ */ e("div", { className: "ard-est__timeline-grid", children: t.map((d) => {
-                const u = d.dayNumber, p = r.capturedOnDays.includes(u), m = u === n;
+              /* @__PURE__ */ e("div", { className: "ard-est__timeline-grid", children: t.map((l) => {
+                const p = l.dayNumber, u = r.capturedOnDays.includes(p), m = p === n;
                 return c ? /* @__PURE__ */ e(
                   "div",
                   {
-                    className: `ard-est__gantt-cell${p ? " ard-est__gantt-cell--captured" : ""}${m ? " ard-est__gantt-cell--ring" : ""}`,
-                    title: `Day ${u}: ${p ? "Captured" : "Not captured"}`,
-                    children: p && /* @__PURE__ */ e("span", { className: "ard-est__gantt-num", children: u })
+                    className: `ard-est__gantt-cell${u ? " ard-est__gantt-cell--captured" : ""}${m ? " ard-est__gantt-cell--ring" : ""}`,
+                    title: `Day ${p}: ${u ? "Captured" : "Not captured"}`,
+                    children: u && /* @__PURE__ */ e("span", { className: "ard-est__gantt-num", children: p })
                   },
-                  u
+                  p
                 ) : /* @__PURE__ */ e(
                   "div",
                   {
-                    className: `ard-est__gantt-cell ard-est__gantt-cell--unknown${m ? " ard-est__gantt-cell--ring" : ""}${l ? " ard-est__gantt-cell--review" : ""}`,
+                    className: `ard-est__gantt-cell ard-est__gantt-cell--unknown${m ? " ard-est__gantt-cell--ring" : ""}${d ? " ard-est__gantt-cell--review" : ""}`,
                     title: `${r.description}: No date range`,
                     children: /* @__PURE__ */ e("span", { className: "ard-est__gantt-q", children: "?" })
                   },
-                  u
+                  p
                 );
               }) })
             ]
@@ -15448,43 +18722,43 @@ function Vd({
     ] })
   ] });
 }
-function Wd({
+function Xu({
   result: t,
   selectedDay: n,
   timeSensitiveItems: s,
-  needsReviewItems: i
+  needsReviewItems: a
 }) {
   if (!t || !n) return null;
-  const a = n === t.recommendedDayNumber, r = new Set(t.scores.map((p) => p.estimatedPpd)).size === 1, o = t.scores.find((p) => p.dayNumber === n), c = t.scores.find((p) => p.dayNumber === t.recommendedDayNumber), l = [...s, ...i];
-  let d = "";
-  if (r && l.length === 0)
-    d = "Any date works — no time-sensitive items found. All PDPM value comes from diagnoses captured regardless of ARD date.";
-  else if (r && i.length > 0 && s.length === 0) {
-    const p = i.slice(0, 3).map((m) => m.description).join(", ");
-    d = `All dates produce the same score. ${i.length} possible item${i.length > 1 ? "s" : ""} (${p}) — confirm dates to refine.`;
-  } else if (a) {
-    const p = n + 1, m = l.filter(
-      (h) => h.capturedOnDays.includes(n) && !h.capturedOnDays.includes(p)
+  const i = n === t.recommendedDayNumber, r = new Set(t.scores.map((u) => u.estimatedPpd)).size === 1, o = t.scores.find((u) => u.dayNumber === n), c = t.scores.find((u) => u.dayNumber === t.recommendedDayNumber), d = [...s, ...a];
+  let l = "";
+  if (r && d.length === 0)
+    l = "Any date works — no time-sensitive items found. All PDPM value comes from diagnoses captured regardless of ARD date.";
+  else if (r && a.length > 0 && s.length === 0) {
+    const u = a.slice(0, 3).map((m) => m.description).join(", ");
+    l = `All dates produce the same score. ${a.length} possible item${a.length > 1 ? "s" : ""} (${u}) — confirm dates to refine.`;
+  } else if (i) {
+    const u = n + 1, m = d.filter(
+      (h) => h.capturedOnDays.includes(n) && !h.capturedOnDays.includes(u)
     );
     if (m.length > 0) {
       const h = m.map((g) => {
-        const f = [];
-        return g.nursingInfo && f.push(g.nursingInfo.mainCategory + " nursing"), g.ntaPoints && g.ntaPoints > 0 && f.push(`+${g.ntaPoints} NTA`), g.pdpmComponents.length > 0 && !g.nursingInfo && !g.ntaPoints && f.push(g.pdpmComponents.join("/")), `${g.description}${f.length ? ` (${f.join(", ")})` : ""}`;
+        const v = [];
+        return g.nursingInfo && v.push(g.nursingInfo.mainCategory + " nursing"), g.ntaPoints && g.ntaPoints > 0 && v.push(`+${g.ntaPoints} NTA`), g.pdpmComponents.length > 0 && !g.nursingInfo && !g.ntaPoints && v.push(g.pdpmComponents.join("/")), `${g.description}${v.length ? ` (${v.join(", ")})` : ""}`;
       }).join("; ");
-      d = `Recommended. ${n >= 8 ? "A later ARD" : `Day ${p}+`} would lose: ${h}.`;
+      l = `Recommended. ${n >= 8 ? "A later ARD" : `Day ${u}+`} would lose: ${h}.`;
     } else
-      d = "Recommended. All time-sensitive items captured.";
+      l = "Recommended. All time-sensitive items captured.";
   } else {
-    const p = (o?.estimatedPpd ?? 0) - (c?.estimatedPpd ?? 0);
-    if (p < -0.5) {
-      const m = l.filter(
+    const u = (o?.estimatedPpd ?? 0) - (c?.estimatedPpd ?? 0);
+    if (u < -0.5) {
+      const m = d.filter(
         (_) => _.capturedOnDays.includes(t.recommendedDayNumber) && !_.capturedOnDays.includes(n)
       ), h = m.map((_) => _.description).join(", ");
-      d = `$${Math.abs(p).toFixed(0)}/day less than Day ${t.recommendedDayNumber}${m.length > 0 ? `. Loses: ${h}` : ""}.`;
-    } else p > 0.5 ? d = `$${p.toFixed(0)}/day more than Day ${t.recommendedDayNumber}. Consider this date.` : d = `Same score as Day ${t.recommendedDayNumber}.`;
+      l = `$${Math.abs(u).toFixed(0)}/day less than Day ${t.recommendedDayNumber}${m.length > 0 ? `. Loses: ${h}` : ""}.`;
+    } else u > 0.5 ? l = `$${u.toFixed(0)}/day more than Day ${t.recommendedDayNumber}. Consider this date.` : l = `Same score as Day ${t.recommendedDayNumber}.`;
   }
-  let u = "neutral";
-  return a ? u = "positive" : r || (u = "warning"), /* @__PURE__ */ e("div", { className: `ard-est__rec-text ard-est__rec-text--${u}`, children: [
+  let p = "neutral";
+  return i ? p = "positive" : r || (p = "warning"), /* @__PURE__ */ e("div", { className: `ard-est__rec-text ard-est__rec-text--${p}`, children: [
     /* @__PURE__ */ e("span", { className: "ard-est__rec-text-bold", children: [
       "Day ",
       n,
@@ -15492,45 +18766,45 @@ function Wd({
       "—",
       " "
     ] }),
-    d
+    l
   ] });
 }
-const ut = [
+const Nt = [
   { level: "NF", min: 0, max: 0 },
   { level: "NE", min: 1, max: 2 },
   { level: "ND", min: 3, max: 7 },
   { level: "NC", min: 8, max: 11 },
   { level: "NB", min: 12, max: 15 },
   { level: "NA", min: 16, max: 20 }
-], Ut = 20;
-function ws(t) {
-  for (const n of ut)
+], Vs = 20;
+function zs(t) {
+  for (const n of Nt)
     if (t >= n.min && t <= n.max) return n;
-  return ut[ut.length - 1];
+  return Nt[Nt.length - 1];
 }
-function Qd({ currentPoints: t, potentialPoints: n }) {
+function ep({ currentPoints: t, potentialPoints: n }) {
   if (t == null) return null;
-  const s = n != null && n > t, i = Math.min(t / Ut * 100, 100), a = s ? Math.min(n / Ut * 100, 100) : 0, r = ws(t), o = s ? ws(n) : null;
+  const s = n != null && n > t, a = zs(t), i = s ? zs(n) : null, r = Vs + 1, o = Math.min((a.max + 1) / r * 100, 100), c = s ? Math.min((i.max + 1) / r * 100, 100) : 0;
   return /* @__PURE__ */ e("div", { className: "ard-est__nta-bar", children: [
     /* @__PURE__ */ e("div", { className: "ard-est__nta-track", children: [
-      ut.map((c) => {
-        const l = (c.max - c.min + 1) / (Ut + 1) * 100;
+      Nt.map((d) => {
+        const l = (d.max - d.min + 1) / (Vs + 1) * 100;
         return /* @__PURE__ */ e(
           "div",
           {
-            className: `ard-est__nta-seg${c.level === r.level ? " ard-est__nta-seg--current" : ""}`,
+            className: `ard-est__nta-seg${d.level === a.level ? " ard-est__nta-seg--current" : ""}`,
             style: { width: `${l}%` },
-            children: /* @__PURE__ */ e("span", { className: "ard-est__nta-seg-label", children: c.level })
+            children: /* @__PURE__ */ e("span", { className: "ard-est__nta-seg-label", children: d.level })
           },
-          c.level
+          d.level
         );
       }),
-      /* @__PURE__ */ e("div", { className: "ard-est__nta-fill", style: { width: `${i}%` } }),
+      /* @__PURE__ */ e("div", { className: "ard-est__nta-fill", style: { width: `${o}%` } }),
       s && /* @__PURE__ */ e(
         "div",
         {
           className: "ard-est__nta-fill ard-est__nta-fill--ghost",
-          style: { left: `${i}%`, width: `${a - i}%` }
+          style: { left: `${o}%`, width: `${c - o}%` }
         }
       )
     ] }),
@@ -15538,65 +18812,70 @@ function Qd({ currentPoints: t, potentialPoints: n }) {
       /* @__PURE__ */ e("span", { children: [
         t,
         " pts (",
-        r.level,
+        a.level,
         ")"
       ] }),
       s && /* @__PURE__ */ e("span", { className: "ard-est__nta-legend-potential", children: [
         "potential ",
         n,
         " pts (",
-        o.level,
+        i.level,
         ") if queries confirmed"
       ] })
     ] })
   ] });
 }
-async function zd(t, n, s, i) {
-  const a = new URLSearchParams({ facilityName: s, orgSlug: i });
-  n && a.set("externalAssessmentId", n);
+async function tp(t, n, s, a) {
+  const i = new URLSearchParams({ facilityName: s, orgSlug: a });
+  n && i.set("externalAssessmentId", n);
   const r = await chrome.runtime.sendMessage({
     type: "API_REQUEST",
-    endpoint: `/api/extension/mds/items/${encodeURIComponent(t)}?${a}`
+    endpoint: `/api/extension/mds/items/${encodeURIComponent(t)}?${i}`
   });
   if (!r.success)
     throw new Error(r.error || "Failed to fetch item details");
   return r.data;
 }
-function jd({ item: t, componentLabel: n, isActive: s, onSelect: i, onAddQuery: a, isQueued: r }) {
-  const o = t.userDecision?.decision === "disagree", c = t.solverAnswer === "needs_review" || t.classification === "needs_review", l = t.classification === "item_to_query" && !t.queryStatus, d = !!t.queryStatus, u = !c && !l && !d;
+function np(t) {
+  const n = t.mdsColumn;
+  return n ? /^[A-Za-z0-9]{1,2}$/.test(n) ? `${t.mdsItem}${n}` : `${t.mdsItem}[${n}]` : t.mdsItem;
+}
+function sp(t) {
+  const n = t.description || "";
+  return n === t.mdsItem || n === `${t.mdsItem}[${t.mdsColumn || ""}]` || n === `${t.mdsItem}${t.mdsColumn || ""}` ? t.ntaCategoryName || t.nursingInfo?.label || n || "" : n;
+}
+function ap({ item: t, componentLabel: n, isActive: s, onSelect: a, onAddQuery: i, isQueued: r }) {
+  const o = t.userDecision?.decision === "disagree", c = t.solverAnswer === "needs_review" || t.classification === "needs_review", d = t.classification === "item_to_query" && !t.queryStatus, l = !!t.queryStatus, p = !c && !d && !l;
   return /* @__PURE__ */ e(
     "div",
     {
       className: `ard-est__item-row${s ? " ard-est__item-row--active" : ""}${o ? " ard-est__item-row--dismissed" : ""}`,
       role: "button",
       tabIndex: 0,
-      onClick: () => i(t),
-      onKeyDown: (p) => p.key === "Enter" && i(t),
+      onClick: () => a(t),
+      onKeyDown: (u) => u.key === "Enter" && a(t),
       children: [
-        /* @__PURE__ */ e("span", { className: "ard-est__item-code", children: [
-          t.mdsItem,
-          t.mdsColumn || ""
-        ] }),
-        /* @__PURE__ */ e("span", { className: "ard-est__item-desc", children: t.description }),
+        /* @__PURE__ */ e("span", { className: "ard-est__item-code", children: np(t) }),
+        /* @__PURE__ */ e("span", { className: "ard-est__item-desc", children: sp(t) }),
         t.ntaPoints > 0 && n === "NTA" && /* @__PURE__ */ e("span", { className: "ard-est__item-pts", children: [
           "+",
           t.ntaPoints
         ] }),
         o && /* @__PURE__ */ e("span", { className: "ard-est__status ard-est__status--dismissed", children: "dismissed" }),
-        !o && d && /* @__PURE__ */ e("span", { className: `ard-est__status ard-est__status--${t.queryStatus}`, children: t.queryStatus }),
-        !o && !d && l && !r && /* @__PURE__ */ e(
+        !o && l && /* @__PURE__ */ e("span", { className: `ard-est__status ard-est__status--${t.queryStatus}`, children: t.queryStatus }),
+        !o && !l && d && !r && /* @__PURE__ */ e(
           "button",
           {
             className: "ard-est__add-query-btn",
-            onClick: (p) => {
-              p.stopPropagation(), a(t.mdsItem);
+            onClick: (u) => {
+              u.stopPropagation(), i(t.mdsItem);
             },
             children: "+ Add Query"
           }
         ),
-        !o && !d && l && r && /* @__PURE__ */ e("span", { className: "ard-est__status ard-est__status--queued", children: "queued" }),
-        !o && !d && c && /* @__PURE__ */ e("span", { className: "ard-est__status ard-est__status--review", children: "possible" }),
-        !o && u && /* @__PURE__ */ e("span", { className: "ard-est__status ard-est__status--coded", children: "coded" }),
+        !o && !l && d && r && /* @__PURE__ */ e("span", { className: "ard-est__status ard-est__status--queued", children: "queued" }),
+        !o && !l && c && /* @__PURE__ */ e("span", { className: "ard-est__status ard-est__status--review", children: "possible" }),
+        !o && p && /* @__PURE__ */ e("span", { className: "ard-est__status ard-est__status--coded", children: "coded" }),
         /* @__PURE__ */ e(
           "svg",
           {
@@ -15614,17 +18893,17 @@ function jd({ item: t, componentLabel: n, isActive: s, onSelect: i, onAddQuery: 
     }
   );
 }
-const Kd = { emerald: "positive", blue: "info", amber: "warning", slate: "neutral" };
-function Jd(t, n) {
+const ip = { emerald: "positive", blue: "info", amber: "warning", slate: "neutral" };
+function rp(t, n) {
   if (t === "Nursing") {
     const s = n.nursingMainCategory;
     return s === "ES" ? "emerald" : s === "SCH" ? "blue" : "amber";
   }
   return t === "NTA" ? n.ntaPoints >= 12 ? "emerald" : n.ntaPoints >= 6 ? "blue" : "amber" : "slate";
 }
-function Yd({ label: t, value: n, sub: s, items: i, color: a, activeItem: r, onSelect: o, onAddQuery: c, selectedIds: l, ntaBar: d }) {
-  const u = Kd[a] || "neutral";
-  return /* @__PURE__ */ e("div", { className: `ard-est__comp-card ard-est__comp-card--${u}`, children: [
+function op({ label: t, value: n, sub: s, items: a, color: i, activeItem: r, onSelect: o, onAddQuery: c, selectedIds: d, ntaBar: l }) {
+  const p = ip[i] || "neutral";
+  return /* @__PURE__ */ e("div", { className: `ard-est__comp-card ard-est__comp-card--${p}`, children: [
     /* @__PURE__ */ e("div", { className: "ard-est__comp-header", children: [
       /* @__PURE__ */ e("div", { className: "ard-est__comp-header-left", children: [
         /* @__PURE__ */ e("span", { className: "ard-est__comp-value", children: n }),
@@ -15635,41 +18914,41 @@ function Yd({ label: t, value: n, sub: s, items: i, color: a, activeItem: r, onS
           ")"
         ] })
       ] }),
-      i.length > 0 && /* @__PURE__ */ e("span", { className: "ard-est__comp-count", children: [
-        i.length,
+      a.length > 0 && /* @__PURE__ */ e("span", { className: "ard-est__comp-count", children: [
+        a.length,
         " item",
-        i.length !== 1 ? "s" : ""
+        a.length !== 1 ? "s" : ""
       ] })
     ] }),
-    d,
-    i.length > 0 && /* @__PURE__ */ e("div", { className: "ard-est__comp-items", children: i.map((p, m) => /* @__PURE__ */ e(
-      jd,
+    l,
+    a.length > 0 && /* @__PURE__ */ e("div", { className: "ard-est__comp-items", children: a.map((u, m) => /* @__PURE__ */ e(
+      ap,
       {
-        item: p,
+        item: u,
         componentLabel: t,
-        isActive: r === p.mdsItem + (p.mdsColumn || ""),
+        isActive: r === u.mdsItem + (u.mdsColumn || ""),
         onSelect: o,
         onAddQuery: c,
-        isQueued: l?.has(p.mdsItem)
+        isQueued: d?.has(u.mdsItem)
       },
-      `${t}-${p.mdsItem}-${m}`
+      `${t}-${u.mdsItem}-${m}`
     )) }),
-    i.length === 0 && /* @__PURE__ */ e("div", { className: "ard-est__comp-empty", children: "No detected items" })
+    a.length === 0 && /* @__PURE__ */ e("div", { className: "ard-est__comp-empty", children: "No detected items" })
   ] });
 }
-function Zd({ score: t, allItems: n, activeItem: s, onSelectItem: i, onAddQuery: a, selectedIds: r, potentialNtaPoints: o, potentialPpd: c }) {
+function cp({ score: t, allItems: n, activeItem: s, onSelectItem: a, onAddQuery: i, selectedIds: r, potentialNtaPoints: o, potentialPpd: c }) {
   if (!t) return null;
-  const l = n.filter((g) => g.pdpmComponents?.includes("nursing") || g.nursingInfo), d = n.filter((g) => g.pdpmComponents?.includes("nta") || g.ntaPoints && g.ntaPoints > 0), u = n.filter((g) => g.pdpmComponents?.includes("slp")), p = n.filter((g) => g.pdpmComponents?.includes("ptot")), m = c != null && Math.abs(c - (t.estimatedPpd || 0)) > 0.5, h = m ? c - (t.estimatedPpd || 0) : 0, _ = [
-    { label: "Nursing", value: t.nursingMainCategory, sub: t.nursingPaymentGroup, items: l },
+  const d = n.filter((g) => g.pdpmComponents?.includes("nursing") || g.nursingInfo), l = n.filter((g) => g.pdpmComponents?.includes("nta") || g.ntaPoints && g.ntaPoints > 0), p = n.filter((g) => g.pdpmComponents?.includes("slp")), u = n.filter((g) => g.pdpmComponents?.includes("ptot")), m = c != null && Math.abs(c - (t.estimatedPpd || 0)) > 0.5, h = m ? c - (t.estimatedPpd || 0) : 0, _ = [
+    { label: "Nursing", value: t.nursingMainCategory, sub: t.nursingPaymentGroup, items: d },
     {
       label: "NTA",
       value: t.ntaLevel,
       sub: `${t.ntaPoints} pts`,
-      items: d,
-      ntaBar: /* @__PURE__ */ e(Qd, { currentPoints: t.ntaPoints, potentialPoints: o })
+      items: l,
+      ntaBar: /* @__PURE__ */ e(ep, { currentPoints: t.ntaPoints, potentialPoints: o })
     },
-    { label: "SLP", value: t.slpGroup, sub: "Speech", items: u },
-    { label: "PT/OT", value: t.ptotGroup, sub: "Therapy", items: p }
+    { label: "SLP", value: t.slpGroup, sub: "Speech", items: p },
+    { label: "PT/OT", value: t.ptotGroup, sub: "Therapy", items: u }
   ];
   return /* @__PURE__ */ e("div", { className: "ard-est__breakdown", children: [
     /* @__PURE__ */ e("div", { className: "ard-est__breakdown-header", children: [
@@ -15689,32 +18968,32 @@ function Zd({ score: t, allItems: n, activeItem: s, onSelectItem: i, onAddQuery:
       ] })
     ] }),
     /* @__PURE__ */ e("div", { className: "ard-est__breakdown-cards", children: _.map((g) => /* @__PURE__ */ e(
-      Yd,
+      op,
       {
         ...g,
-        color: Jd(g.label, t),
+        color: rp(g.label, t),
         activeItem: s,
-        onSelect: i,
-        onAddQuery: a,
+        onSelect: a,
+        onAddQuery: i,
         selectedIds: r
       },
       g.label
     )) })
   ] });
 }
-function Xd({ title: t, count: n, defaultOpen: s = !0, children: i }) {
-  const [a, r] = v(s);
+function lp({ title: t, count: n, defaultOpen: s = !0, children: a }) {
+  const [i, r] = y(s);
   return /* @__PURE__ */ e("div", { className: "ard-est__collapsible", children: [
     /* @__PURE__ */ e(
       "button",
       {
         className: "ard-est__collapsible-header",
-        onClick: () => r(!a),
+        onClick: () => r(!i),
         children: [
           /* @__PURE__ */ e(
             "svg",
             {
-              className: `ard-est__collapsible-chevron${a ? " ard-est__collapsible-chevron--open" : ""}`,
+              className: `ard-est__collapsible-chevron${i ? " ard-est__collapsible-chevron--open" : ""}`,
               width: "12",
               height: "12",
               viewBox: "0 0 24 24",
@@ -15729,10 +19008,10 @@ function Xd({ title: t, count: n, defaultOpen: s = !0, children: i }) {
         ]
       }
     ),
-    a && /* @__PURE__ */ e("div", { className: "ard-est__collapsible-body", children: i })
+    i && /* @__PURE__ */ e("div", { className: "ard-est__collapsible-body", children: a })
   ] });
 }
-const el = () => /* @__PURE__ */ e(
+const dp = () => /* @__PURE__ */ e(
   "svg",
   {
     width: "16",
@@ -15750,7 +19029,7 @@ const el = () => /* @__PURE__ */ e(
       /* @__PURE__ */ e("line", { x1: "3", y1: "10", x2: "21", y2: "10" })
     ]
   }
-), bs = () => /* @__PURE__ */ e(
+), Ws = () => /* @__PURE__ */ e(
   "svg",
   {
     width: "14",
@@ -15767,7 +19046,7 @@ const el = () => /* @__PURE__ */ e(
       /* @__PURE__ */ e("line", { x1: "12", y1: "17", x2: "12.01", y2: "17" })
     ]
   }
-), Is = () => /* @__PURE__ */ e(
+), Qs = () => /* @__PURE__ */ e(
   "svg",
   {
     width: "16",
@@ -15783,7 +19062,7 @@ const el = () => /* @__PURE__ */ e(
       /* @__PURE__ */ e("polyline", { points: "12 19 5 12 12 5" })
     ]
   }
-), tl = () => /* @__PURE__ */ e(
+), up = () => /* @__PURE__ */ e(
   "svg",
   {
     width: "14",
@@ -15800,7 +19079,7 @@ const el = () => /* @__PURE__ */ e(
     ]
   }
 );
-function nl({ item: t }) {
+function pp({ item: t }) {
   return /* @__PURE__ */ e("div", { className: "ard-est__item-row ard-est__item-row--compact", children: [
     /* @__PURE__ */ e("span", { className: "ard-est__item-code", children: [
       t.mdsItem,
@@ -15815,24 +19094,24 @@ function nl({ item: t }) {
     t.nursingInfo && /* @__PURE__ */ e("span", { className: "ard-est__item-pts", children: t.nursingInfo.mainCategory })
   ] });
 }
-function sl({ queueCount: t, batchState: n, progress: s, onClear: i, onGenerate: a }) {
-  const r = n === "idle", o = n === "generating", l = o || n === "sending";
+function mp({ queueCount: t, batchState: n, progress: s, onClear: a, onGenerate: i }) {
+  const r = n === "idle", o = n === "generating", d = o || n === "sending";
   return t === 0 && r ? null : /* @__PURE__ */ e("div", { className: "ard-est__query-queue", children: [
-    r && /* @__PURE__ */ e(J, { children: [
+    r && /* @__PURE__ */ e(Q, { children: [
       /* @__PURE__ */ e("div", { className: "ard-est__queue-left", children: [
         /* @__PURE__ */ e("span", { className: "ard-est__queue-badge", children: t }),
         /* @__PURE__ */ e("span", { className: "ard-est__queue-text", children: [
           t === 1 ? "query" : "queries",
           " ready"
         ] }),
-        /* @__PURE__ */ e("button", { className: "ard-est__queue-clear", onClick: i, children: "clear" })
+        /* @__PURE__ */ e("button", { className: "ard-est__queue-clear", onClick: a, children: "clear" })
       ] }),
-      /* @__PURE__ */ e("button", { className: "ard-est__queue-send-btn", onClick: a, children: [
-        /* @__PURE__ */ e(tl, {}),
+      /* @__PURE__ */ e("button", { className: "ard-est__queue-send-btn", onClick: i, children: [
+        /* @__PURE__ */ e(up, {}),
         "Send Queries"
       ] })
     ] }),
-    l && /* @__PURE__ */ e("div", { className: "ard-est__batch-progress", children: [
+    d && /* @__PURE__ */ e("div", { className: "ard-est__batch-progress", children: [
       /* @__PURE__ */ e("div", { className: "ard-est__batch-progress-bar", children: /* @__PURE__ */ e(
         "div",
         {
@@ -15851,97 +19130,97 @@ function sl({ queueCount: t, batchState: n, progress: s, onClear: i, onGenerate:
     ] })
   ] });
 }
-function il({
+function hp({
   patientId: t,
   patientName: n,
   facilityName: s,
-  orgSlug: i,
-  assessmentId: a,
+  orgSlug: a,
+  assessmentId: i,
   onBack: r,
   onClose: o
 }) {
   const {
     result: c,
-    loading: l,
-    error: d,
-    selectedDay: u,
-    setSelectedDay: p,
+    loading: d,
+    error: l,
+    selectedDay: p,
+    setSelectedDay: u,
     selectedScore: m,
     timeSensitiveItems: h,
     needsReviewItems: _,
     alwaysCapturedItems: g,
-    refetch: f
-  } = Fd({ patientId: t, facilityName: s, orgSlug: i, assessmentId: a }), [y, w] = v(!1), [k, C] = v(/* @__PURE__ */ new Set()), [I, P] = v(null), [A, x] = v(null), [D, N] = v(null), S = a || c?.externalAssessmentId;
+    refetch: v
+  } = Ku({ patientId: t, facilityName: s, orgSlug: a, assessmentId: i }), [b, f] = y(!1), [I, N] = y(/* @__PURE__ */ new Set()), [D, T] = y(null), [A, x] = y(null), [k, S] = y(null), w = i || c?.externalAssessmentId;
   Y(() => (c?.classifiedItems || []).filter(
-    ($) => $.classification === "item_to_query" && !$.queryStatus
+    (R) => R.classification === "item_to_query" && !R.queryStatus
   ), [c?.classifiedItems]);
-  const E = U(($) => {
-    C((H) => {
-      const te = new Set(H);
-      return te.add($), te;
+  const M = G((R) => {
+    N((B) => {
+      const ee = new Set(B);
+      return ee.add(R), ee;
     });
   }, []);
-  U(($) => {
-    C((H) => {
-      const te = new Set(H);
-      return te.delete($), te;
+  G((R) => {
+    N((B) => {
+      const ee = new Set(B);
+      return ee.delete(R), ee;
     });
   }, []);
-  const B = U(() => {
-    C(/* @__PURE__ */ new Set());
-  }, []), M = U(($) => {
-    const H = $.mdsItem + ($.mdsColumn || "");
-    if (D === H) {
-      N(null), x(null);
+  const H = G(() => {
+    N(/* @__PURE__ */ new Set());
+  }, []), P = G((R) => {
+    const B = R.mdsItem + (R.mdsColumn || "");
+    if (k === B) {
+      S(null), x(null);
       return;
     }
-    N(H), x({ item: $ });
-  }, [D]), q = Y(() => (c?.classifiedItems || []).filter(($) => k.has($.mdsItem)), [c?.classifiedItems, k]), L = ui({
+    S(B), x({ item: R });
+  }, [k]), q = Y(() => (c?.classifiedItems || []).filter((R) => I.has(R.mdsItem)), [c?.classifiedItems, I]), L = Fa({
     patientId: t,
     facilityName: s,
-    orgSlug: i,
-    assessmentId: S,
-    onComplete: ($, H) => {
-      B(), P({ count: $.length, practitionerName: H }), setTimeout(() => P(null), 4e3), f();
+    orgSlug: a,
+    assessmentId: w,
+    onComplete: (R, B) => {
+      H(), T({ count: R.length, practitionerName: B }), setTimeout(() => T(null), 4e3), v();
     }
-  }), O = U(async () => {
-    const $ = [];
-    for (const H of q)
+  }), O = G(async () => {
+    const R = [];
+    for (const B of q)
       try {
-        const te = H.mdsItem + (H.mdsColumn || ""), T = await zd(te, S, s, i), R = T?.item || T;
-        $.push({
-          mdsItem: H.mdsItem,
-          mdsItemName: H.description,
-          pdpmCategoryName: H.description,
-          rationale: R?.rationale || R?.queryReason || T?.diagnosisSummary || "",
-          keyFindings: R?.keyFindings || [],
-          evidence: R?.evidence || [],
-          queryEvidence: R?.queryEvidence || R?.evidence || [],
-          recommendedIcd10: R?.recommendedIcd10 || [],
-          ...R
+        const ee = B.mdsItem + (B.mdsColumn || ""), E = await tp(ee, w, s, a), $ = E?.item || E;
+        R.push({
+          mdsItem: B.mdsItem,
+          mdsItemName: B.description,
+          pdpmCategoryName: B.description,
+          rationale: $?.rationale || $?.queryReason || E?.diagnosisSummary || "",
+          keyFindings: $?.keyFindings || [],
+          evidence: $?.evidence || [],
+          queryEvidence: $?.queryEvidence || $?.evidence || [],
+          recommendedIcd10: $?.recommendedIcd10 || [],
+          ...$
         });
-      } catch (te) {
-        console.error(`[ArdEstimator] Failed to fetch detail for ${H.mdsItem}:`, te), $.push({
-          mdsItem: H.mdsItem,
-          mdsItemName: H.description,
-          pdpmCategoryName: H.description,
-          rationale: H.queryPdpmImpact || "",
+      } catch (ee) {
+        console.error(`[ArdEstimator] Failed to fetch detail for ${B.mdsItem}:`, ee), R.push({
+          mdsItem: B.mdsItem,
+          mdsItemName: B.description,
+          pdpmCategoryName: B.description,
+          rationale: B.queryPdpmImpact || "",
           keyFindings: [],
           evidence: [],
           queryEvidence: []
         });
       }
-    L.generate($);
-  }, [q, S, s, i, L]), Z = [...h, ..._], j = /* @__PURE__ */ e("div", { className: "ard-est__header", children: [
+    L.generate(R);
+  }, [q, w, s, a, L]), X = [...h, ..._], z = /* @__PURE__ */ e("div", { className: "ard-est__header", children: [
     /* @__PURE__ */ e("div", { className: "ard-est__header-left", children: [
-      r && L.state === "idle" && /* @__PURE__ */ e("button", { className: "ard-est__back-btn", onClick: r, title: "Back", children: /* @__PURE__ */ e(Is, {}) }),
-      L.state === "reviewing" && /* @__PURE__ */ e("button", { className: "ard-est__back-btn", onClick: L.backToSelection, title: "Back to estimate", children: /* @__PURE__ */ e(Is, {}) }),
+      r && L.state === "idle" && /* @__PURE__ */ e("button", { className: "ard-est__back-btn", onClick: r, title: "Back", children: /* @__PURE__ */ e(Qs, {}) }),
+      L.state === "reviewing" && /* @__PURE__ */ e("button", { className: "ard-est__back-btn", onClick: L.backToSelection, title: "Back to estimate", children: /* @__PURE__ */ e(Qs, {}) }),
       /* @__PURE__ */ e("div", { children: [
         /* @__PURE__ */ e("h2", { className: "ard-est__title", children: [
-          /* @__PURE__ */ e(el, {}),
+          /* @__PURE__ */ e(dp, {}),
           L.state === "reviewing" ? "Review & Send Queries" : "PDPM Estimate & ARD Recommendation"
         ] }),
-        /* @__PURE__ */ e("p", { className: "ard-est__subtitle", children: L.state === "reviewing" ? `${L.generatedQueries.length} queries ready to send` : l ? "Loading..." : `5-Day PPS · Admitted ${c?.admissionDate || "—"}` })
+        /* @__PURE__ */ e("p", { className: "ard-est__subtitle", children: L.state === "reviewing" ? `${L.generatedQueries.length} queries ready to send` : d ? "Loading..." : `5-Day PPS · Admitted ${c?.admissionDate || "—"}` })
       ] })
     ] }),
     m && L.state === "idle" && /* @__PURE__ */ e("div", { className: "ard-est__header-right", children: [
@@ -15964,28 +19243,28 @@ function il({
       ] })
     ] })
   ] });
-  if (l)
+  if (d)
     return /* @__PURE__ */ e("div", { className: "ard-est", children: [
-      j,
+      z,
       /* @__PURE__ */ e("div", { className: "ard-est__loading", children: [
         /* @__PURE__ */ e("div", { className: "ard-est__spinner" }),
         /* @__PURE__ */ e("p", { className: "ard-est__loading-text", children: "Calculating optimal ARD..." })
       ] })
     ] });
-  if (d)
+  if (l)
     return /* @__PURE__ */ e("div", { className: "ard-est", children: [
-      j,
+      z,
       /* @__PURE__ */ e("div", { className: "ard-est__error", children: [
-        /* @__PURE__ */ e(bs, {}),
-        /* @__PURE__ */ e("p", { className: "ard-est__error-text", children: d }),
-        /* @__PURE__ */ e("button", { className: "ard-est__error-retry", onClick: f, children: "Retry" })
+        /* @__PURE__ */ e(Ws, {}),
+        /* @__PURE__ */ e("p", { className: "ard-est__error-text", children: l }),
+        /* @__PURE__ */ e("button", { className: "ard-est__error-retry", onClick: v, children: "Retry" })
       ] })
     ] });
   if (L.state === "reviewing" || L.state === "sending")
     return /* @__PURE__ */ e("div", { className: "ard-est", children: [
-      j,
+      z,
       /* @__PURE__ */ e("div", { className: "ard-est__body", children: /* @__PURE__ */ e(
-        hi,
+        Va,
         {
           generatedQueries: L.generatedQueries,
           practitioners: L.practitioners,
@@ -16001,57 +19280,57 @@ function il({
       ) })
     ] });
   if (A) {
-    const $ = {
-      assessmentId: S,
+    const R = {
+      assessmentId: w,
       scope: "mds"
     };
     return /* @__PURE__ */ e("div", { className: "ard-est ard-est--detail-view", children: /* @__PURE__ */ e(
-      di,
+      Ba,
       {
         item: {
           mdsItem: A.item.mdsItem + (A.item.mdsColumn || ""),
           itemName: A.item.description,
           column: A.item.mdsColumn || ""
         },
-        context: $,
+        context: R,
         onBack: () => {
-          x(null), N(null);
+          x(null), S(null);
         },
         onDismiss: () => {
-          x(null), N(null);
+          x(null), S(null);
         }
       }
     ) });
   }
   return /* @__PURE__ */ e("div", { className: "ard-est", children: [
-    j,
-    I && /* @__PURE__ */ e("div", { className: "ard-est__success-banner", children: [
+    z,
+    D && /* @__PURE__ */ e("div", { className: "ard-est__success-banner", children: [
       /* @__PURE__ */ e("svg", { width: "16", height: "16", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2.5", children: [
         /* @__PURE__ */ e("path", { d: "M22 11.08V12a10 10 0 1 1-5.93-9.14" }),
         /* @__PURE__ */ e("polyline", { points: "22 4 12 14.01 9 11.01" })
       ] }),
-      I.count,
+      D.count,
       " quer",
-      I.count === 1 ? "y" : "ies",
+      D.count === 1 ? "y" : "ies",
       " sent to ",
-      I.practitionerName
+      D.practitionerName
     ] }),
     /* @__PURE__ */ e("div", { className: "ard-est__body", children: [
       /* @__PURE__ */ e(
-        Vd,
+        Zu,
         {
           scores: c?.scores || [],
-          selectedDay: u,
+          selectedDay: p,
           recommendedDay: c?.recommendedDayNumber,
-          onSelectDay: p,
-          ganttItems: Z
+          onSelectDay: u,
+          ganttItems: X
         }
       ),
       /* @__PURE__ */ e(
-        Wd,
+        Xu,
         {
           result: c,
-          selectedDay: u,
+          selectedDay: p,
           timeSensitiveItems: h,
           needsReviewItems: _
         }
@@ -16070,29 +19349,29 @@ function il({
         ] })
       ] }),
       (c?.classifiedItems || []).length > 0 && /* @__PURE__ */ e(
-        Zd,
+        cp,
         {
           score: m,
           allItems: c?.classifiedItems || [],
-          activeItem: D,
-          onSelectItem: M,
-          onAddQuery: E,
-          selectedIds: k,
+          activeItem: k,
+          onSelectItem: P,
+          onAddQuery: M,
+          selectedIds: I,
           potentialNtaPoints: c?.potentialNtaPoints,
           potentialPpd: c?.potentialPpd
         }
       ),
       g.length > 0 && /* @__PURE__ */ e(
-        Xd,
+        lp,
         {
           title: "Already Captured (PDPM items)",
           count: g.length,
           defaultOpen: !1,
-          children: g.map(($, H) => /* @__PURE__ */ e(nl, { item: $ }, `cap-${$.mdsItem}-${H}`))
+          children: g.map((R, B) => /* @__PURE__ */ e(pp, { item: R }, `cap-${R.mdsItem}-${B}`))
         }
       ),
       (c?.classifiedItems || []).length > 0 && c?.sectionsMissing?.length > 0 && /* @__PURE__ */ e("div", { className: "ard-est__warning", children: [
-        /* @__PURE__ */ e(bs, {}),
+        /* @__PURE__ */ e(Ws, {}),
         /* @__PURE__ */ e("span", { children: [
           "Missing solver data for Section",
           c.sectionsMissing.length > 1 ? "s" : "",
@@ -16103,26 +19382,26 @@ function il({
       ] })
     ] }),
     /* @__PURE__ */ e(
-      sl,
+      mp,
       {
-        queueCount: k.size,
+        queueCount: I.size,
         batchState: L.state,
         progress: L.progress,
-        onClear: B,
+        onClear: H,
         onGenerate: O
       }
     )
   ] });
 }
+Mi();
 Ri();
-Fi();
 window.__DEMO_MODE = !0;
-window.__preact = ki;
-window.__QueryItemsPage = _i;
-window.__ICD10SidebarComponent = Bd;
-window.__ArdEstimator = il;
-function Ds() {
+window.__preact = pi;
+window.__QueryItemsPage = za;
+window.__ICD10SidebarComponent = ju;
+window.__ArdEstimator = hp;
+function js() {
   let t = document.getElementById("super-demo-root");
-  t || (t = document.createElement("div"), t.id = "super-demo-root", document.body.appendChild(t)), Ce(/* @__PURE__ */ e(Md, {}), t), console.log("[Demo] DemoApp mounted");
+  t || (t = document.createElement("div"), t.id = "super-demo-root", document.body.appendChild(t)), Se(/* @__PURE__ */ e(Vu, {}), t), console.log("[Demo] DemoApp mounted");
 }
-document.readyState === "loading" ? document.addEventListener("DOMContentLoaded", Ds) : Ds();
+document.readyState === "loading" ? document.addEventListener("DOMContentLoaded", js) : js();

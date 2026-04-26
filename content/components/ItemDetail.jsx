@@ -39,7 +39,7 @@ function getEvidenceCategory(ev) {
   }
   // Notes (progress notes, nursing notes, clinical notes)
   if (sourceType === 'progress-note' || sourceType === 'nursing-note' || sourceType === 'clinical_note' ||
-      ev.type === 'clinical_note' || evidenceId.startsWith('pcc-prognote-') || evidenceId.startsWith('patient-practnote-')) {
+      ev.type === 'clinical_note' || evidenceId.startsWith('pcc-prognote-') || evidenceId.startsWith('pcc-practnote-') || evidenceId.startsWith('patient-practnote-')) {
     return 'notes';
   }
   // Documents / PDFs / therapy docs

@@ -32,7 +32,14 @@ import '../content/css/certifications.css';
 import '../content/css/admin-modal.css';
 import '../content/css/mds-planner.css';
 import '../content/css/uda-modal.css';
+import '../content/css/care-plan-coverage.css';
+import '../content/css/clinical-notes-modal.css';
+import '../content/css/diagnosis-query-modal.css';
 import '../content/css/ard-estimator.css';
+import '../content/css/qm-board.css';
+import '../content/css/24hr-report.css';
+import '../content/css/ai-chat.css';
+import './demo-chat.css';
 import './pcc-demo-overrides.css';
 
 // ── Step 3: Mount PCCDemoApp ──

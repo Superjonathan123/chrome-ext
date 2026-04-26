@@ -6,9 +6,17 @@ function createBubbles() {
   const container = document.createElement('div');
   container.id = 'super-bubbles-container';
   container.innerHTML = `
+    <button id="super-feedback-action" class="super-dial__action super-dial__action--feedback" aria-label="Send Feedback">?</button>
     <button id="super-chat-action" class="super-dial__action super-dial__action--chat" aria-label="Open Chat">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+      </svg>
+    </button>
+    <button id="super-qm-action" class="super-dial__action super-dial__action--qm" aria-label="QM Board">QM</button>
+    <button id="super-24hr-action" class="super-dial__action super-dial__action--24hr" aria-label="24-Hour Report">24H</button>
+    <button id="super-coverage-action" class="super-dial__action super-dial__action--coverage" aria-label="Care Plan Coverage" style="display:none;">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
       </svg>
     </button>
     <button id="super-mds-action" class="super-dial__action super-dial__action--mds" aria-label="Open Dashboard">
@@ -19,18 +27,6 @@ function createBubbles() {
         <rect x="3" y="14" width="7" height="7"/>
       </svg>
       <span class="super-dial__action-badge" id="super-mds-badge" style="display:none;"></span>
-    </button>
-    <button id="super-qm-action" class="super-dial__action super-dial__action--qm" aria-label="QM Board">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M9 11l3 3L22 4"/>
-        <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
-      </svg>
-    </button>
-    <button id="super-24hr-action" class="super-dial__action super-dial__action--24hr" aria-label="24-Hour Report">24H</button>
-    <button id="super-coverage-action" class="super-dial__action super-dial__action--coverage" aria-label="Care Plan Coverage" style="display:none;">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-      </svg>
     </button>
     <button id="super-bubble-main" class="super-bubble__main" aria-label="Super">S</button>
   `;
@@ -99,6 +95,18 @@ function createBubbles() {
       TwentyFourHourReportLauncher.close();
     } else {
       TwentyFourHourReportLauncher.open();
+    }
+  });
+
+  // Feedback button → opens feedback modal
+  const feedbackAction = document.getElementById('super-feedback-action');
+  feedbackAction.addEventListener('click', (e) => {
+    e.stopPropagation();
+    container.classList.remove('super-dial--open');
+    if (FeedbackLauncher.isOpen()) {
+      FeedbackLauncher.close();
+    } else {
+      FeedbackLauncher.open();
     }
   });
 
@@ -500,6 +508,62 @@ const TwentyFourHourReportLauncher = {
   isOpen() { return !!this._overlayEl; }
 };
 
+// Feedback Launcher — dynamic import pattern
+const FeedbackLauncher = {
+  _overlayEl: null,
+  _preactUnmount: null,
+
+  async open() {
+    if (this._overlayEl) return;
+
+    // Capture the page BEFORE we render the modal so the screenshot doesn't
+    // include our own UI. Failures here are non-fatal — the modal still opens.
+    let initialScreenshot = null;
+    try {
+      const res = await chrome.runtime.sendMessage({ type: 'CAPTURE_VIEWPORT' });
+      if (res?.success) initialScreenshot = res.dataUrl;
+    } catch (e) {
+      console.warn('[Feedback] initial capture failed:', e);
+    }
+
+    const overlayEl = document.createElement('div');
+    overlayEl.id = 'feedback-overlay';
+    document.body.appendChild(overlayEl);
+    this._overlayEl = overlayEl;
+
+    try {
+      const [{ render, h }, { FeedbackModal }] = await Promise.all([
+        import('preact'),
+        import('../modules/feedback/FeedbackModal.jsx')
+      ]);
+
+      render(
+        h(FeedbackModal, { onClose: () => this.close(), initialScreenshot }),
+        overlayEl
+      );
+
+      this._preactUnmount = () => render(null, overlayEl);
+    } catch (err) {
+      console.error('[Feedback] Failed to load module:', err);
+      overlayEl.remove();
+      this._overlayEl = null;
+    }
+  },
+
+  close() {
+    if (this._preactUnmount) {
+      this._preactUnmount();
+      this._preactUnmount = null;
+    }
+    if (this._overlayEl) {
+      this._overlayEl.remove();
+      this._overlayEl = null;
+    }
+  },
+
+  isOpen() { return !!this._overlayEl; }
+};
+
 function openChatOverlay() {
   if (ChatOverlayLauncher.isOpen()) {
     ChatOverlayLauncher.close();
@@ -722,3 +786,4 @@ window.ChatOverlayLauncher = ChatOverlayLauncher;
 window.CoveragePanelLauncher = CoveragePanelLauncher;
 window.QMBoardLauncher = QMBoardLauncher;
 window.TwentyFourHourReportLauncher = TwentyFourHourReportLauncher;
+window.FeedbackLauncher = FeedbackLauncher;

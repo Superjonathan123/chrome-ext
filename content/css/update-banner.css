@@ -1,0 +1,359 @@
+.super-update-banner {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 2147483640;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  background: #ffffff;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 10px;
+  box-shadow: 0 10px 32px rgba(15, 23, 42, 0.14), 0 2px 6px rgba(15, 23, 42, 0.06);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 13px;
+  color: #0f172a;
+  max-width: 320px;
+  animation: super-update-banner-slide-in 200ms ease-out;
+}
+
+@keyframes super-update-banner-slide-in {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.super-update-banner__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #16a34a;
+  box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.18);
+  flex-shrink: 0;
+}
+
+.super-update-banner__text {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+  flex: 1;
+}
+
+.super-update-banner__text strong {
+  font-weight: 600;
+  color: #0f172a;
+  font-size: 13px;
+}
+
+.super-update-banner__version {
+  font-size: 11px;
+  color: #64748b;
+  font-variant-numeric: tabular-nums;
+}
+
+.super-update-banner__reload {
+  background: #0f172a;
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  flex-shrink: 0;
+  transition: background 120ms ease;
+}
+
+.super-update-banner__reload:hover {
+  background: #1e293b;
+}
+
+.super-update-banner__reload--full {
+  width: 100%;
+  padding: 9px 12px;
+  font-size: 13px;
+}
+
+.super-update-banner__dismiss {
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  font-size: 18px;
+  line-height: 1;
+  padding: 2px 6px;
+  cursor: pointer;
+  border-radius: 4px;
+  font-family: inherit;
+  flex-shrink: 0;
+  transition: color 120ms ease, background 120ms ease;
+}
+
+.super-update-banner__dismiss:hover {
+  color: #0f172a;
+  background: #f1f5f9;
+}
+
+/* ---- Instructions state ---------------------------------------------- */
+.super-update-banner--instructions {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 12px;
+  padding: 16px 16px 14px;
+  max-width: 340px;
+  width: 340px;
+  position: fixed;
+  top: 20px;
+  left: 20px;
+}
+
+.super-update-banner__dismiss--top {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  font-size: 20px;
+  padding: 0 7px;
+}
+
+.super-update-banner__instr-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  font-size: 14px;
+  color: #0f172a;
+  padding-right: 24px;
+}
+
+.super-update-banner__instr-steps {
+  list-style: decimal;
+  margin: 0;
+  padding-left: 18px;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: #334155;
+}
+
+.super-update-banner__instr-steps li {
+  margin-bottom: 4px;
+}
+
+.super-update-banner__instr-steps em {
+  color: #64748b;
+  font-style: normal;
+  font-size: 11.5px;
+}
+
+.super-update-banner__instr-version {
+  font-size: 11.5px;
+  color: #64748b;
+  font-variant-numeric: tabular-nums;
+  margin-top: -8px;
+  padding-right: 24px;
+}
+
+.super-update-banner__instr-nope {
+  margin-top: 3px;
+  font-size: 11px;
+  color: #b45309;
+  background: #fef3c7;
+  border-radius: 4px;
+  padding: 3px 6px;
+  display: inline-block;
+  line-height: 1.35;
+}
+
+.super-update-banner__opened-hint {
+  font-size: 12px;
+  color: #16a34a;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 6px;
+  padding: 8px 10px;
+  font-weight: 500;
+  line-height: 1.35;
+  text-align: center;
+}
+
+.super-update-banner__reload-icon {
+  color: #0f172a;
+  flex-shrink: 0;
+}
+
+.super-update-banner__reload-icon--inline {
+  display: inline;
+  vertical-align: -3px;
+  width: 14px;
+  height: 14px;
+  margin: 0 1px;
+  color: #0f172a;
+}
+
+/* Visual mockup of the Chrome extensions card — dark theme to match what
+   users actually see at chrome://extensions. */
+.super-update-banner__instr-mock {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 10px;
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+}
+
+.super-update-banner__instr-label {
+  font-size: 10px;
+  color: #64748b;
+  font-family: ui-monospace, SFMono-Regular, Monaco, Consolas, monospace;
+  letter-spacing: 0.2px;
+}
+
+.super-update-banner__instr-card {
+  width: 100%;
+  padding: 10px 10px 8px;
+  background: #292a2d;
+  color: #e8eaed;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.super-update-banner__instr-card-top {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+}
+
+.super-update-banner__instr-card-logo {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 14px;
+  flex-shrink: 0;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.super-update-banner__instr-card-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.super-update-banner__instr-card-title {
+  font-size: 11px;
+  font-weight: 500;
+  color: #e8eaed;
+  line-height: 1.3;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.super-update-banner__instr-card-ver {
+  color: #9aa0a6;
+  font-weight: 400;
+  font-variant-numeric: tabular-nums;
+}
+
+.super-update-banner__instr-card-desc {
+  font-size: 10px;
+  color: #9aa0a6;
+  line-height: 1.35;
+  margin-top: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.super-update-banner__instr-card-actions {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.super-update-banner__instr-pill {
+  font-size: 9px;
+  color: #8ab4f8;
+  border: 1px solid #8ab4f8;
+  border-radius: 999px;
+  padding: 2px 7px;
+  line-height: 1.35;
+  flex-shrink: 0;
+}
+
+.super-update-banner__instr-pill--danger {
+  color: #f28b82;
+  border-color: #f28b82;
+}
+
+.super-update-banner__instr-card-spacer {
+  flex: 1;
+}
+
+.super-update-banner__instr-reload-target {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #e8eaed;
+  flex-shrink: 0;
+  position: relative;
+  animation: super-update-banner-pulse 1.4s ease-in-out infinite;
+}
+
+.super-update-banner__instr-reload-target::after {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border: 2px solid #22c55e;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+@keyframes super-update-banner-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.55); }
+  50% { box-shadow: 0 0 0 6px rgba(34, 197, 94, 0); }
+}
+
+.super-update-banner__instr-toggle {
+  width: 28px;
+  height: 14px;
+  background: #8ab4f8;
+  border-radius: 999px;
+  position: relative;
+  flex-shrink: 0;
+  opacity: 0.9;
+}
+
+.super-update-banner__instr-toggle-knob {
+  width: 10px;
+  height: 10px;
+  background: #1a73e8;
+  border-radius: 50%;
+  position: absolute;
+  top: 2px;
+  right: 2px;
+}
+
+.super-update-banner__instr-reload-target .super-update-banner__reload-icon {
+  color: #e8eaed;
+}
+
+.super-update-banner__instr-hint {
+  font-size: 11px;
+  color: #16a34a;
+  font-weight: 600;
+  margin-top: 2px;
+}

@@ -17,6 +17,7 @@ import './css/mds-planner.css';
 import './css/uda-modal.css';
 import './css/qm-board.css';
 import './css/24hr-report.css';
+import './css/update-banner.css';
 
 // 2. Import vanilla utilities (order matters - matches current manifest.json order)
 import './mockData.js';
@@ -99,3 +100,7 @@ function initPreactApp() {
   document.body.appendChild(root);
   render(h(App, null), root);
 }
+
+// 8. Start update checker (polls GitHub Releases on this repo)
+import { UpdateChecker } from './utils/update-checker.js';
+UpdateChecker.startPolling();

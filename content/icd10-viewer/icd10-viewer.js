@@ -425,6 +425,25 @@ const ICD10Viewer = {
   async _handleEvidenceSelect(item) {
     console.log('[ICD10Viewer] _handleEvidenceSelect called with item:', item?.id, item?.documentId);
 
+    // Note / order / UDA evidence has no documentId — dispatch to SuperDocViewer
+    // so practitioner notes, orders, labs, etc. open in their native viewer
+    // instead of the PDF panel's empty state.
+    if (item && !item.documentId && item.evidenceId && window.SuperDocViewer) {
+      const eid = String(item.evidenceId);
+      const nonPdf = /^pcc-prognote-|^pcc-practnote-|^patient-practnote-|^uda-|^therapy-doc-|^order-|^lab-|^mar-/.test(eid);
+      if (nonPdf) {
+        window.SuperDocViewer.open({
+          evidenceId: item.evidenceId,
+          sourceId: item.evidenceId,
+          sourceType: item.sourceType || null,
+          quote: item.quoteText || item.evidenceExcerpt || '',
+          patientId: item.patientId || null,
+        });
+        ICD10PDFViewer.render();
+        return;
+      }
+    }
+
     if (!item || !item.documentId) {
       console.log('[ICD10Viewer] No item or documentId, showing empty state');
       ICD10PDFViewer.render(); // Show empty state
@@ -621,6 +640,12 @@ const ICD10Viewer = {
           onCancel: () => {
             cleanup();
             // User stays in viewer, staged codes preserved
+          },
+          onDiscardAndExit: () => {
+            this.stagedCodes = [];
+            this._updateStagedBadge();
+            cleanup();
+            proceedCallback();
           }
         }),
         mountEl

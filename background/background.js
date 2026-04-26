@@ -42,6 +42,38 @@ async function apiRequest(endpoint, options = {}) {
 }
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  // Open chrome://extensions so user can click the Reload icon after
+  // a background file-swap update (content scripts can't open chrome:// URLs).
+  if (message.type === 'OPEN_EXTENSIONS_PAGE') {
+    chrome.tabs.create({ url: 'chrome://extensions' }, () => {
+      sendResponse({ ok: true });
+    });
+    return true;
+  }
+
+  // Open an arbitrary URL in a new tab (used for release-notes link, etc.)
+  if (message.type === 'OPEN_TAB' && typeof message.url === 'string') {
+    chrome.tabs.create({ url: message.url }, () => {
+      sendResponse({ ok: true });
+    });
+    return true;
+  }
+
+  // Reload the tab the content script is running in. More reliable than
+  // window.location.reload() from a content script — that can be blocked
+  // by the page's CSP, isolated-world quirks, or host framing.
+  if (message.type === 'RELOAD_CURRENT_TAB') {
+    const tabId = sender?.tab?.id;
+    if (tabId) {
+      chrome.tabs.reload(tabId, { bypassCache: true }, () => {
+        sendResponse({ ok: true });
+      });
+    } else {
+      sendResponse({ ok: false, error: 'No tab id' });
+    }
+    return true;
+  }
+
   // Initiate login - generate state and return auth URL
   if (message.type === 'LOGIN') {
     (async () => {
@@ -159,6 +191,35 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       try {
         await chrome.storage.local.remove(['authToken', 'user', 'authState']);
         sendResponse({ success: true });
+      } catch (error) {
+        sendResponse({ success: false, error: error.message });
+      }
+    })();
+    return true;
+  }
+
+  // Capture the current visible tab as a PNG data URL
+  if (message.type === 'CAPTURE_VIEWPORT') {
+    const windowId = sender?.tab?.windowId;
+    chrome.tabs.captureVisibleTab(windowId, { format: 'png' }, (dataUrl) => {
+      if (chrome.runtime.lastError) {
+        sendResponse({ success: false, error: chrome.runtime.lastError.message });
+      } else {
+        sendResponse({ success: true, dataUrl });
+      }
+    });
+    return true;
+  }
+
+  // Submit feedback to the backend
+  if (message.type === 'SUBMIT_FEEDBACK') {
+    (async () => {
+      try {
+        const result = await apiRequest('/api/extension/feedback', {
+          method: 'POST',
+          body: JSON.stringify(message.payload),
+        });
+        sendResponse({ success: true, data: result });
       } catch (error) {
         sendResponse({ success: false, error: error.message });
       }

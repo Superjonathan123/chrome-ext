@@ -117,7 +117,7 @@ export function TwentyFourHourReport({ facilityName, orgSlug, restore, onClose }
 
   const filteredFindings = useMemo(() => {
     const needle = search.trim().toLowerCase();
-    return allFindings.filter(f => {
+    const filtered = allFindings.filter(f => {
       const sev = (f.severity || '').toLowerCase();
       if (!activeSeverities.has(sev)) return false;
       if (category && f.category !== category) return false;
@@ -129,8 +129,10 @@ export function TwentyFourHourReport({ facilityName, orgSlug, restore, onClose }
           f.room,
           f.patientRoom,
           f.category,
+          f.subcategory,
           f.type,
           f.findingType,
+          f.finding,
           f.findingText,
           f.narrative,
           f.description,
@@ -138,6 +140,16 @@ export function TwentyFourHourReport({ facilityName, orgSlug, restore, onClose }
         if (!haystack.includes(needle)) return false;
       }
       return true;
+    });
+
+    // Sort by severity: critical → high → medium → low.
+    const sevRank = { critical: 0, high: 1, medium: 2, low: 3 };
+    return filtered.sort((a, b) => {
+      const ra = sevRank[(a.severity || '').toLowerCase()] ?? 9;
+      const rb = sevRank[(b.severity || '').toLowerCase()] ?? 9;
+      if (ra !== rb) return ra - rb;
+      // tie-break: keep original backend order by patient name
+      return (a.patientName || '').localeCompare(b.patientName || '');
     });
   }, [allFindings, activeSeverities, category, search]);
 

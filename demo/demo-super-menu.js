@@ -698,14 +698,25 @@
   function openICD10Viewer() {
     console.log('[Demo] Opening ICD-10 Viewer...');
 
-    // Check if ICD10Viewer exists (from extension)
-    if (window.ICD10Viewer && typeof window.ICD10Viewer.open === 'function') {
-      // Context is already set up in setupPatientContext() at init time
-      window.ICD10Viewer.open();
-    } else {
-      // Show demo modal
-      showDemoICD10Modal();
-    }
+    // Wait up to ~2s for the real viewer to register itself on window before
+    // giving up. The classic-script ordering in the demo HTML runs
+    // icd10-viewer.js before demo-super-menu.js, but on some deploys the
+    // viewer file lands on a cold cache and assigns window.ICD10Viewer a
+    // tick after this module evaluates.
+    let waited = 0;
+    const tryOpen = () => {
+      if (window.ICD10Viewer && typeof window.ICD10Viewer.open === 'function') {
+        window.ICD10Viewer.open();
+        return;
+      }
+      waited += 50;
+      if (waited > 2000) {
+        console.error('[Demo] window.ICD10Viewer unavailable — cannot open ICD-10 viewer.');
+        return;
+      }
+      setTimeout(tryOpen, 50);
+    };
+    tryOpen();
   }
 
   // ============================================
@@ -1287,126 +1298,6 @@
     modal.querySelector('#therapy-modal-print').addEventListener('click', () => window.print());
   }
 
-  function showDemoICD10Modal() {
-    // Create modal if it doesn't exist
-    let modal = document.getElementById('demo-icd10-modal');
-    if (!modal) {
-      modal = document.createElement('div');
-      modal.id = 'demo-icd10-modal';
-      modal.className = 'demo-modal';
-      modal.innerHTML = `
-        <div class="demo-modal-backdrop"></div>
-        <div class="demo-modal-container">
-          <div class="demo-modal-header">
-            <button class="demo-modal-back">&larr; Back</button>
-            <span class="demo-modal-title">ICD-10 Viewer - Doe, Jane</span>
-            <button class="demo-modal-close">&times;</button>
-          </div>
-          <div class="demo-modal-body">
-            <div class="demo-icd10-layout">
-              <div class="demo-icd10-sidebar">
-                <div class="demo-icd10-categories">
-                  <div class="demo-icd10-cat demo-icd10-cat--active" data-cat="nta">
-                    <span>NTA Comorbidities</span>
-                    <span class="demo-badge">4</span>
-                  </div>
-                  <div class="demo-icd10-cat" data-cat="slp">
-                    <span>SLP Comorbidities</span>
-                    <span class="demo-badge">0</span>
-                  </div>
-                  <div class="demo-icd10-cat" data-cat="nursing">
-                    <span>Nursing Comorbidities</span>
-                    <span class="demo-badge">2</span>
-                  </div>
-                </div>
-                <div class="demo-icd10-codes">
-                  <div class="demo-icd10-code demo-icd10-code--active">
-                    <div class="demo-code-header">
-                      <span class="demo-code-icd">J44.9</span>
-                      <span class="demo-code-pts">2 pts</span>
-                    </div>
-                    <div class="demo-code-desc">COPD, unspecified</div>
-                    <div class="demo-code-evidence">3 evidence items</div>
-                  </div>
-                  <div class="demo-icd10-code">
-                    <div class="demo-code-header">
-                      <span class="demo-code-icd">E11.9</span>
-                      <span class="demo-code-pts">2 pts</span>
-                    </div>
-                    <div class="demo-code-desc">Type 2 DM without complications</div>
-                    <div class="demo-code-evidence">2 evidence items</div>
-                  </div>
-                  <div class="demo-icd10-code demo-icd10-code--suggested">
-                    <div class="demo-code-header">
-                      <span class="demo-code-icd">F32.9</span>
-                      <span class="demo-code-pts">+2 pts</span>
-                    </div>
-                    <div class="demo-code-desc">Major depressive disorder</div>
-                    <div class="demo-code-evidence">AI Suggested - 2 evidence items</div>
-                  </div>
-                </div>
-              </div>
-              <div class="demo-icd10-evidence">
-                <div class="demo-evidence-header">Evidence for J44.9</div>
-                <div class="demo-evidence-cards">
-                  <div class="demo-evidence-card">
-                    <div class="demo-evidence-type">Progress Note</div>
-                    <div class="demo-evidence-date">01/25/2026</div>
-                    <div class="demo-evidence-text">"Patient continues to experience <mark>shortness of breath</mark> and <mark>chronic cough</mark> consistent with COPD exacerbation..."</div>
-                    <button class="demo-evidence-view">View in Document</button>
-                  </div>
-                  <div class="demo-evidence-card">
-                    <div class="demo-evidence-type">H&amp;P</div>
-                    <div class="demo-evidence-date">06/12/2020</div>
-                    <div class="demo-evidence-text">"History of <mark>chronic obstructive pulmonary disease</mark>, on home oxygen 2L NC..."</div>
-                    <button class="demo-evidence-view">View in Document</button>
-                  </div>
-                </div>
-              </div>
-              <div class="demo-icd10-pdf">
-                <div class="demo-pdf-header">
-                  <span>Progress Note - 01/25/2026</span>
-                  <div class="demo-pdf-controls">
-                    <button>-</button>
-                    <span>100%</span>
-                    <button>+</button>
-                  </div>
-                </div>
-                <div class="demo-pdf-viewer">
-                  <div class="demo-pdf-page">
-                    <p><strong>Progress Note</strong></p>
-                    <p><strong>Date:</strong> 01/25/2026</p>
-                    <p><strong>Patient:</strong> Doe, Jane</p>
-                    <p><strong>Provider:</strong> Dr. Demo Provider</p>
-                    <br>
-                    <p><strong>Subjective:</strong></p>
-                    <p>Patient reports increased <span class="demo-highlight">shortness of breath</span> over the past 3 days. Denies fever or chest pain. <span class="demo-highlight">Chronic cough</span> productive of white sputum.</p>
-                    <br>
-                    <p><strong>Objective:</strong></p>
-                    <p>VS: BP 147/80, HR 88, RR 22, O2 sat 94% on 2L NC</p>
-                    <p>Lungs: Decreased breath sounds bilateral bases, scattered wheezes</p>
-                    <br>
-                    <p><strong>Assessment:</strong></p>
-                    <p>1. <span class="demo-highlight">COPD</span> exacerbation, mild</p>
-                    <p>2. Type 2 diabetes mellitus</p>
-                    <p>3. Hypertension</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      `;
-      document.body.appendChild(modal);
-
-      // Add event listeners
-      modal.querySelector('.demo-modal-backdrop').addEventListener('click', () => modal.classList.remove('demo-modal--open'));
-      modal.querySelector('.demo-modal-close').addEventListener('click', () => modal.classList.remove('demo-modal--open'));
-      modal.querySelector('.demo-modal-back').addEventListener('click', () => modal.classList.remove('demo-modal--open'));
-    }
-
-    modal.classList.add('demo-modal--open');
-  }
 
   // ============================================
   // PDPM ANALYZER SLIDE-OUT

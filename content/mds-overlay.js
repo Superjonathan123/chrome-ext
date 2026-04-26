@@ -109,6 +109,23 @@ const SuperLoadingStatus = {
         this._tasks.clear();
       }, 200);
     }
+  },
+
+  /**
+   * Show a one-off notice (e.g. "AI not run yet") in place of the spinner
+   * and auto-hide after durationMs. Also marks every pending task as done
+   * so the regular completion path doesn't race or leak spinners.
+   */
+  showNotice(message, durationMs = 5000) {
+    this.show();
+    if (!this._el) return;
+    this._tasks.forEach(t => { t.done = true; });
+    const spinner = this._el.querySelector('.super-loading-status__spinner');
+    const text = this._el.querySelector('.super-loading-status__text');
+    if (spinner) spinner.style.display = 'none';
+    if (text) text.textContent = message;
+    clearTimeout(this._noticeTimer);
+    this._noticeTimer = setTimeout(() => this.hide(), durationMs);
   }
 };
 
@@ -369,7 +386,11 @@ async function initSuperOverlay() {
 
   } catch (error) {
     console.error('Super LTC: Failed to fetch section data:', error);
-    // TODO: Show error state in UI
+    const msg = String(error?.message || error || '');
+    const friendly = /no completed run/i.test(msg)
+      ? 'AI analysis not run for this section yet'
+      : `Super LTC couldn't load: ${msg || 'unknown error'}`;
+    SuperLoadingStatus.showNotice(friendly);
   }
 }
 
@@ -1212,7 +1233,7 @@ function getEvidenceCategoryOverlay(ev) {
   const sourceType = ev.sourceType || ev.type || inferSourceType(ev.displayName, ev.evidenceId);
   const evidenceId = ev.evidenceId || ev.sourceId || '';
   if (sourceType === 'order' || sourceType === 'mar' || evidenceId.startsWith('order-') || evidenceId.startsWith('admin-') || evidenceId.startsWith('mar-')) return 'orders';
-  if (sourceType === 'progress-note' || sourceType === 'nursing-note' || sourceType === 'clinical_note' || evidenceId.startsWith('pcc-prognote-') || evidenceId.startsWith('patient-practnote-')) return 'notes';
+  if (sourceType === 'progress-note' || sourceType === 'nursing-note' || sourceType === 'clinical_note' || evidenceId.startsWith('pcc-prognote-') || evidenceId.startsWith('pcc-practnote-') || evidenceId.startsWith('patient-practnote-')) return 'notes';
   if (sourceType === 'document' || sourceType === 'therapy-doc' || evidenceId.startsWith('therapy-doc-') || evidenceId.includes('-chunk-')) return 'documents';
   if (sourceType) return 'other';
   return 'documents';
@@ -2311,7 +2332,7 @@ async function renderSplitContent(popover, viewerEl, viewerType, viewerId, extra
     if (viewerType === 'document') {
       await renderSplitPDF(popover, viewerEl, viewerId, extra.wordBlocks);
     } else if (viewerType === 'clinical-note') {
-      await renderSplitNote(viewerEl, viewerId);
+      await renderSplitNote(viewerEl, viewerId, undefined, extra?.quote || null);
     } else if (viewerType === 'therapy-document') {
       await renderSplitTherapy(viewerEl, viewerId, extra.quote);
     } else if (viewerType === 'order') {
@@ -2368,7 +2389,74 @@ async function renderSplitPDF(popover, viewerEl, documentId, wordBlocks) {
 }
 
 /** Render clinical note inline in split viewer */
-async function renderSplitNote(viewerEl, noteId, overrideParams) {
+/**
+ * Fuzzy-highlight note text against a quote. Splits the quote into
+ * clauses (≥15 chars) and looks for each case-insensitively; falls back
+ * to 3-word sliding windows. Non-matched segments are HTML-escaped;
+ * matched segments are wrapped in <mark class="super-split-note-highlight">.
+ */
+function buildSplitNoteHTML(noteText, quote) {
+  if (!noteText) return 'No note content available.';
+  const full = String(noteText);
+  if (!quote) return escapeHTML(full);
+
+  const phrases = String(quote)
+    .split(/[.;:\n]+/)
+    .map(p => p.replace(/[*"'`()]/g, '').trim())
+    .filter(p => p.length >= 15);
+
+  console.log('[NoteHighlight/split] quote length:', quote.length, 'phrases:', phrases.length);
+
+  const lower = full.toLowerCase();
+  const ranges = [];
+  for (const phrase of phrases) {
+    const p = phrase.toLowerCase();
+    let idx = 0;
+    while ((idx = lower.indexOf(p, idx)) !== -1) {
+      ranges.push([idx, idx + phrase.length]);
+      idx += phrase.length;
+    }
+  }
+  console.log('[NoteHighlight/split] phrase matches:', ranges.length);
+
+  if (ranges.length === 0) {
+    const words = String(quote).toLowerCase().replace(/[*"'`()]/g, '').split(/\s+/).filter(w => w.length >= 3);
+    for (let i = 0; i <= words.length - 3; i++) {
+      const tri = words.slice(i, i + 3).join(' ');
+      if (tri.length < 12) continue;
+      let idx = 0;
+      while ((idx = lower.indexOf(tri, idx)) !== -1) {
+        ranges.push([idx, idx + tri.length]);
+        idx += tri.length;
+      }
+    }
+    console.log('[NoteHighlight/split] trigram matches:', ranges.length);
+  }
+
+  if (ranges.length === 0) return escapeHTML(full);
+
+  ranges.sort((a, b) => a[0] - b[0]);
+  const merged = [ranges[0].slice()];
+  for (let i = 1; i < ranges.length; i++) {
+    const prev = merged[merged.length - 1];
+    const curr = ranges[i];
+    if (curr[0] <= prev[1]) prev[1] = Math.max(prev[1], curr[1]);
+    else merged.push(curr.slice());
+  }
+
+  let out = '';
+  let cursor = 0;
+  for (const [start, end] of merged) {
+    if (cursor < start) out += escapeHTML(full.slice(cursor, start));
+    out += `<mark class="super-split-note-highlight" data-split-note-highlight="true">${escapeHTML(full.slice(start, end))}</mark>`;
+    cursor = end;
+  }
+  if (cursor < full.length) out += escapeHTML(full.slice(cursor));
+  return out;
+}
+
+async function renderSplitNote(viewerEl, noteId, overrideParams, highlightQuote = null) {
+  console.log('[NoteHighlight/split] renderSplitNote noteId=', noteId, 'quote?', !!highlightQuote);
   const params = overrideParams || await window.getCurrentParams();
   const data = await fetchClinicalNote(noteId, params);
 
@@ -2422,11 +2510,19 @@ async function renderSplitNote(viewerEl, noteId, overrideParams) {
         ${note.visitType ? ` &middot; ${escapeHTML(note.visitType)}` : ''}
       </div>
       <div class="super-split__content-body">
-        <pre class="super-split__note-text">${escapeHTML(note.noteText || 'No note content available.')}</pre>
+        <pre class="super-split__note-text">${buildSplitNoteHTML(note.noteText, highlightQuote)}</pre>
       </div>
       ${note.signedDate ? `<div class="super-split__content-footer">Signed: ${formatDateTimeDisplay(note.signedDate)}</div>` : ''}
     </div>
   `;
+
+  if (highlightQuote) {
+    requestAnimationFrame(() => {
+      const first = viewerEl.querySelector('[data-split-note-highlight="true"]');
+      console.log('[NoteHighlight/split] marks in DOM:', viewerEl.querySelectorAll('[data-split-note-highlight="true"]').length);
+      if (first) first.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    });
+  }
 }
 
 /** Render therapy document inline in split viewer */

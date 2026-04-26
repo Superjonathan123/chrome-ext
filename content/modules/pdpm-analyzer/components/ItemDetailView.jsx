@@ -247,7 +247,7 @@ export function ItemDetailView({ item, context, onBack, onSplitChange, onDismiss
       const params = { assessmentId: context?.assessmentId, orgSlug, facilityName };
 
       if (viewingNote && window.renderSplitNote) {
-        await window.renderSplitNote(el, viewer.id, params);
+        await window.renderSplitNote(el, viewer.id, params, quote || null);
       } else if (viewingTherapy && window.renderSplitTherapy) {
         await window.renderSplitTherapy(el, viewer.id, quote, params);
       } else {

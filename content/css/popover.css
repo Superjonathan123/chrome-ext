@@ -783,6 +783,14 @@
   margin: 0;
 }
 
+.super-split-note-highlight {
+  background: #fef3c7;
+  color: inherit;
+  padding: 1px 2px;
+  border-radius: 2px;
+  box-shadow: 0 0 0 1px rgba(234, 179, 8, 0.35);
+}
+
 .super-split__therapy-section {
   margin-bottom: 12px;
   font-size: 13px;

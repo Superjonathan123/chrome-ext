@@ -15,7 +15,7 @@ function inferSourceType(ev) {
   if (ev.sourceType) return ev.sourceType;
   const eid = ev.evidenceId || '';
   if (eid.startsWith('therapy-doc-')) return 'therapy-doc';
-  if (eid.startsWith('pcc-prognote-') || eid.startsWith('patient-practnote-')) return 'progress-note';
+  if (eid.startsWith('pcc-prognote-') || eid.startsWith('pcc-practnote-') || eid.startsWith('patient-practnote-')) return 'progress-note';
   if (eid.startsWith('order-')) return 'order';
   if (eid.startsWith('lab-')) return 'lab-result';
   if (eid.startsWith('mar-')) return 'mar';

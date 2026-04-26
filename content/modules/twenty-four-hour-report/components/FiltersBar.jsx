@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'preact/hooks';
+import { categoryInfo } from '../utils/formatFinding.js';
 
 /**
  * FiltersBar — search + category selector + clear + result count.
@@ -72,7 +73,7 @@ function CategoryDropdown({ value, onChange, categories }) {
     };
   }, [open]);
 
-  const label = value || 'All Categories';
+  const selected = value ? categoryInfo(value) : null;
 
   return (
     <div class="thr__category-wrap" ref={wrapRef}>
@@ -83,7 +84,14 @@ function CategoryDropdown({ value, onChange, categories }) {
         aria-expanded={open}
         onClick={() => setOpen(o => !o)}
       >
-        <span>{label}</span>
+        {selected ? (
+          <span>
+            {selected.emoji && <span class="thr__chip-emoji" aria-hidden="true">{selected.emoji}</span>}
+            {selected.label}
+          </span>
+        ) : (
+          <span>All Categories</span>
+        )}
         <span class="thr__caret">▾</span>
       </button>
       {open && (
@@ -99,19 +107,23 @@ function CategoryDropdown({ value, onChange, categories }) {
               All Categories
             </button>
           </li>
-          {categories.map(cat => (
-            <li key={cat}>
-              <button
-                type="button"
-                class={`thr__category-opt ${value === cat ? 'is-active' : ''}`}
-                role="option"
-                aria-selected={value === cat}
-                onClick={() => { onChange(cat); setOpen(false); }}
-              >
-                {cat}
-              </button>
-            </li>
-          ))}
+          {categories.map(cat => {
+            const info = categoryInfo(cat);
+            return (
+              <li key={cat}>
+                <button
+                  type="button"
+                  class={`thr__category-opt ${value === cat ? 'is-active' : ''}`}
+                  role="option"
+                  aria-selected={value === cat}
+                  onClick={() => { onChange(cat); setOpen(false); }}
+                >
+                  {info?.emoji && <span class="thr__chip-emoji" aria-hidden="true">{info.emoji}</span>}
+                  {info?.label || cat}
+                </button>
+              </li>
+            );
+          })}
         </ul>
       )}
     </div>

@@ -5,7 +5,7 @@
 set -e
 
 # Get version from manifest
-VERSION=$(node -e "console.log(JSON.parse(require('fs').readFileSync('dist/manifest.json','utf8')).version)")
+VERSION=$(node -e "console.log(JSON.parse(require('fs').readFileSync('manifest.json','utf8')).version)")
 TAG="v${VERSION}"
 MESSAGE="${1:-Build ${TAG}}"
 
@@ -25,8 +25,14 @@ gh release delete "${TAG}" --yes 2>/dev/null || true
 git tag -d "${TAG}" 2>/dev/null || true
 git push origin ":refs/tags/${TAG}" 2>/dev/null || true
 
-# Create new release
-gh release create "${TAG}" super-ltc-extension.zip \
+# Create new release with extension zip + installer scripts as separate assets
+gh release create "${TAG}" \
+  super-ltc-extension.zip \
+  update-super-ltc.bat \
+  update-super-ltc.command \
+  update-super-ltc-silent.ps1 \
+  install-auto-updater.bat \
+  uninstall-auto-updater.bat \
   --title "${TAG}" \
   --notes "${MESSAGE}"
 

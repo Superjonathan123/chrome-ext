@@ -3,12 +3,15 @@
 // Will eventually house TopBar, ModuleRouter, and FAB integration
 
 import { useState } from 'preact/hooks';
+import { UpdateBanner } from './UpdateBanner.jsx';
 
 export const App = () => {
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
     <>
+      <UpdateBanner />
+
       {/* Placeholder: FAB integration will come later */}
       {/* For now, vanilla fab.js handles the floating button */}
 

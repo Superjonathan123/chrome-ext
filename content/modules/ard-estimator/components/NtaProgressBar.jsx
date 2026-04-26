@@ -28,10 +28,17 @@ export function NtaProgressBar({ currentPoints, potentialPoints }) {
   if (currentPoints == null) return null;
 
   const hasPotential = potentialPoints != null && potentialPoints > currentPoints;
-  const currentPct = Math.min((currentPoints / MAX_DISPLAY) * 100, 100);
-  const potentialPct = hasPotential ? Math.min((potentialPoints / MAX_DISPLAY) * 100, 100) : 0;
   const currentTier = getTierForPoints(currentPoints);
   const potentialTier = hasPotential ? getTierForPoints(potentialPoints) : null;
+
+  // Fill through the END of the current tier so the green clearly reaches
+  // the labeled tier segment (otherwise 1 pt fills only 5% of the bar and
+  // visually highlights NF instead of NE).
+  const segDenom = MAX_DISPLAY + 1;
+  const currentPct = Math.min(((currentTier.max + 1) / segDenom) * 100, 100);
+  const potentialPct = hasPotential
+    ? Math.min(((potentialTier.max + 1) / segDenom) * 100, 100)
+    : 0;
 
   return (
     <div className="ard-est__nta-bar">

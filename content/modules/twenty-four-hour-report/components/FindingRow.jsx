@@ -6,6 +6,8 @@
  * by onOpenInPCC which persists state for the auto-restore flow.
  */
 
+import { categoryInfo, subcategoryLabel, findingText } from '../utils/formatFinding.js';
+
 const SEVERITY_LABEL = {
   critical: 'Critical',
   high: 'High',
@@ -41,9 +43,9 @@ export function FindingRow({ finding, onOpenInPCC }) {
   const sevLabel = SEVERITY_LABEL[sev] || sev;
   const name = patientDisplayName(finding);
   const room = finding.room || finding.patientRoom || '';
-  const category = finding.category || '';
-  const type = finding.type || finding.findingType || '';
-  const text = finding.findingText || finding.narrative || finding.description || '';
+  const cat = categoryInfo(finding.category);
+  const subLabel = subcategoryLabel(finding.subcategory || finding.type || finding.findingType);
+  const text = findingText(finding);
   const findingId = finding.id || finding.findingId || null;
   const patientId = finding.patientId || finding.residentId || null;
   const href = pccPatientUrl(patientId);
@@ -64,8 +66,13 @@ export function FindingRow({ finding, onOpenInPCC }) {
           <span class={`thr__sev-badge thr__sev-badge--${sev}`}>{sevLabel}</span>
           <span class="thr__row-name">{name}</span>
           {room && <span class="thr__row-meta">{room}</span>}
-          {category && <span class="thr__chip">{category}</span>}
-          {type && <span class="thr__chip thr__chip--type">{type}</span>}
+          {cat && (
+            <span class="thr__chip">
+              {cat.emoji && <span class="thr__chip-emoji" aria-hidden="true">{cat.emoji}</span>}
+              {cat.label}
+            </span>
+          )}
+          {subLabel && <span class="thr__chip thr__chip--type">{subLabel}</span>}
         </div>
         {text && <p class="thr__row-text">{text}</p>}
       </div>
