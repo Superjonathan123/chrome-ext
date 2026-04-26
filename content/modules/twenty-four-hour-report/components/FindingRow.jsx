@@ -58,8 +58,18 @@ export function FindingRow({ finding, onOpenInPCC }) {
     onOpenInPCC?.(finding, { href });
   };
 
+  // Use the finding's category as a categorical type for analytics. Never
+  // include patient name, MRN, room, or finding free-text — those are PHI.
+  const trackType = finding.category || 'unknown';
+
   return (
-    <li class="thr__row" data-finding-id={findingId || undefined} data-severity={sev}>
+    <li
+      class="thr__row"
+      data-finding-id={findingId || undefined}
+      data-severity={sev}
+      data-track="report_24hr_finding_clicked"
+      data-track-prop-finding-type={trackType}
+    >
       <span class={`thr__row-bar thr__row-bar--${sev}`} aria-hidden="true" />
       <div class="thr__row-main">
         <div class="thr__row-heading">

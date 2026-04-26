@@ -42,6 +42,7 @@ export function FiltersBar({
         />
 
         {hasActiveFilters && (
+          // NO_TRACK — onClear emits report_24hr_filter_changed in the parent
           <button class="thr__clear" onClick={onClear} aria-label="Clear filters">
             <span class="thr__clear-x">×</span> Clear
           </button>

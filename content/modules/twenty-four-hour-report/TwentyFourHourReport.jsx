@@ -6,7 +6,7 @@
  *
  * See docs/plans/2026-04-23-24hr-report-extension-design.md.
  */
-import { useMemo, useRef, useState } from 'preact/hooks';
+import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
 import { useReportData } from './hooks/useReportData.js';
 import { useRestoreFromPCC } from './hooks/useRestoreFromPCC.js';
 import { formatFacilityDate, todayInFacilityTz } from './utils/api.js';
@@ -16,6 +16,19 @@ import { FindingRow } from './components/FindingRow.jsx';
 import { LoadingState } from './components/LoadingState.jsx';
 import { EmptyDay } from './components/EmptyDay.jsx';
 import { writeRestorePayload } from './utils/restore.js';
+import { track } from '../../utils/analytics.js';
+
+/**
+ * Bucket free-text search input length so we can track filter usage without
+ * leaking the actual search text (which can include patient names).
+ */
+function searchLengthBucket(s) {
+  const len = (s || '').trim().length;
+  if (len === 0) return 'empty';
+  if (len <= 3) return 'short';
+  if (len <= 10) return 'medium';
+  return 'long';
+}
 
 const ALL_SEVERITIES = ['critical', 'high', 'medium', 'low'];
 
@@ -75,10 +88,16 @@ export function TwentyFourHourReport({ facilityName, orgSlug, restore, onClose }
   const canGoNext = !!currentDate && currentDate < today;
   const showJumpToToday = !!currentDate && !!latestAvailable && currentDate !== latestAvailable;
 
+  // Fire panel-open event once on mount.
+  useEffect(() => {
+    track('report_24hr_opened', { source: 'fab' });
+  }, []);
+
   // Filter state — lives at the panel root so filters + cards + list share it.
   const [activeSeverities, setActiveSeverities] = useState(new Set(ALL_SEVERITIES));
 
   const toggleSeverity = (sev) => {
+    track('report_24hr_filter_changed', { filter: 'severity', value: sev });
     setActiveSeverities(prev => {
       const next = new Set(prev);
       // If everything is active, clicking a card isolates that severity
@@ -104,6 +123,25 @@ export function TwentyFourHourReport({ facilityName, orgSlug, restore, onClose }
 
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState(null);
+
+  // Track search input as a length bucket — never the raw text (PHI risk).
+  const lastSearchBucketRef = useRef('empty');
+  const handleSearchChange = (next) => {
+    setSearch(next);
+    const bucket = searchLengthBucket(next);
+    if (bucket !== lastSearchBucketRef.current) {
+      lastSearchBucketRef.current = bucket;
+      track('report_24hr_filter_changed', { filter: 'search', value: bucket });
+    }
+  };
+
+  const handleCategoryChange = (next) => {
+    setCategory(next);
+    track('report_24hr_filter_changed', {
+      filter: 'category',
+      value: next || 'all',
+    });
+  };
 
   const allFindings = useMemo(() => getFindings(currentReport), [currentReport]);
 
@@ -159,7 +197,9 @@ export function TwentyFourHourReport({ facilityName, orgSlug, restore, onClose }
     activeSeverities.size !== ALL_SEVERITIES.length;
 
   const clearFilters = () => {
+    track('report_24hr_filter_changed', { filter: 'clear', value: 'all' });
     setSearch('');
+    lastSearchBucketRef.current = 'empty';
     setCategory(null);
     setActiveSeverities(new Set(ALL_SEVERITIES));
   };
@@ -207,6 +247,7 @@ export function TwentyFourHourReport({ facilityName, orgSlug, restore, onClose }
                 <span class="thr__facility">{facilityName}</span>
               )}
             </div>
+            {/* NO_TRACK */}
             <button
               class="thr__close"
               onClick={onClose}
@@ -217,6 +258,7 @@ export function TwentyFourHourReport({ facilityName, orgSlug, restore, onClose }
             </button>
           </div>
           <div class="thr__header-date">
+            {/* NO_TRACK */}
             <button
               class="thr__nav-btn"
               onClick={goPrevDay}
@@ -228,6 +270,7 @@ export function TwentyFourHourReport({ facilityName, orgSlug, restore, onClose }
                 ? formatFacilityDate(currentDate, timezone, { weekday: 'short' })
                 : '—'}
             </span>
+            {/* NO_TRACK */}
             <button
               class="thr__nav-btn"
               onClick={goNextDay}
@@ -235,6 +278,7 @@ export function TwentyFourHourReport({ facilityName, orgSlug, restore, onClose }
               aria-label="Next day"
             >›</button>
             {showJumpToToday && (
+              // NO_TRACK
               <button
                 class="thr__jump-today"
                 onClick={() => goToDate(latestAvailable)}
@@ -254,9 +298,9 @@ export function TwentyFourHourReport({ facilityName, orgSlug, restore, onClose }
             />
             <FiltersBar
               search={search}
-              onSearchChange={setSearch}
+              onSearchChange={handleSearchChange}
               category={category}
-              onCategoryChange={setCategory}
+              onCategoryChange={handleCategoryChange}
               categories={categories}
               hasActiveFilters={hasActiveFilters}
               onClear={clearFilters}
@@ -270,6 +314,7 @@ export function TwentyFourHourReport({ facilityName, orgSlug, restore, onClose }
           {listError && (
             <div class="thr__error">
               <p>Couldn't load 24-hour reports.</p>
+              {/* NO_TRACK */}
               <button onClick={retryList}>Retry</button>
             </div>
           )}
@@ -277,6 +322,7 @@ export function TwentyFourHourReport({ facilityName, orgSlug, restore, onClose }
           {!listError && error && (
             <div class="thr__error">
               <p>Couldn't load this report.</p>
+              {/* NO_TRACK */}
               <button onClick={retry}>Retry</button>
             </div>
           )}
@@ -299,6 +345,7 @@ export function TwentyFourHourReport({ facilityName, orgSlug, restore, onClose }
           {!listError && !error && !loading && currentReport && filteredFindings.length === 0 && allFindings.length > 0 && (
             <div class="thr__placeholder">
               No findings match these filters.{' '}
+              {/* NO_TRACK — clearFilters() emits the filter-cleared event */}
               <button class="thr__inline-link" onClick={clearFilters}>Clear</button>
             </div>
           )}
