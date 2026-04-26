@@ -231,7 +231,9 @@ function _showTestAddCodeDialog() {
     </div>
     <div id="test-add-status" style="font-size: 13px; color: #666; margin-bottom: 12px; min-height: 20px;"></div>
     <div style="display: flex; gap: 8px; justify-content: flex-end;">
+      <!-- NO_TRACK: dev-only test dialog cancel -->
       <button id="test-add-cancel" style="padding: 8px 16px; background: #eee; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">Cancel</button>
+      <!-- NO_TRACK: dev-only test dialog action (manual ICD-10 add for QA) -->
       <button id="test-add-confirm" style="padding: 8px 16px; background: #4caf50; color: #fff; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">Add to PCC</button>
     </div>
   `;
@@ -341,7 +343,9 @@ function showLoginBar() {
     <div class="super-login-bar__content">
       <span class="super-login-bar__logo">S</span>
       <span class="super-login-bar__text">Super LTC is ready — log in to get started</span>
+      <!-- NO_TRACK: user_logged_in fires post-OAuth completion via storage listener -->
       <button class="super-login-bar__btn" id="super-login-bar-btn">Log In</button>
+      <!-- NO_TRACK: pure-UI dismiss of login bar -->
       <button class="super-login-bar__dismiss" id="super-login-bar-dismiss" title="Dismiss">&times;</button>
     </div>
   `;

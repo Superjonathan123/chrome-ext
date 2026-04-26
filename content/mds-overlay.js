@@ -1013,6 +1013,7 @@ function buildPopoverHTML(result) {
         <div class="super-popover-header__title">${result.mdsItem} - ${result.description}</div>
         <div class="super-popover-header__subtitle">Column ${result.column}${statusBadgeHTML}</div>
       </div>
+      <!-- NO_TRACK: close-X -->
       <button class="super-popover-close" aria-label="Close">&times;</button>
     </div>
     <div class="super-popover-body">
@@ -1080,9 +1081,12 @@ function buildPopoverHTML(result) {
       ${evidenceHTML}
     </div>
     <div class="super-popover-actions">
+      <!-- NO_TRACK: legacy MDS overlay popover action; engagement covered by downstream query_modal_opened / disagree form -->
       <button class="super-btn super-btn--agree" data-action="agree">&#10003; Agree</button>
+      <!-- NO_TRACK: legacy MDS overlay popover action -->
       <button class="super-btn super-btn--disagree" data-action="disagree">&#10007; Disagree</button>
       ${result.mdsItem && result.mdsItem.startsWith('I') ? `
+        <!-- NO_TRACK: opens QuerySendModal which fires its own query_modal_opened -->
         <button class="super-btn super-btn--query" data-action="query">? Query Physician</button>
       ` : ''}
     </div>
@@ -1267,8 +1271,9 @@ function renderEvidence(evidence) {
 
   const chipsHTML = showChips ? `
     <div class="super-ev-filters">
+      <!-- NO_TRACK: evidence category filter sub-control inside popover -->
       <button class="super-ev-chip super-ev-chip--active" data-ev-filter="all">All (${evidence.length})</button>
-      ${catKeys.map(cat => `<button class="super-ev-chip" data-ev-filter="${cat}">${OVERLAY_CATEGORY_LABELS[cat] || cat} (${categories[cat]})</button>`).join('')}
+      ${catKeys.map(cat => `<button class="super-ev-chip" data-ev-filter="${cat}">${OVERLAY_CATEGORY_LABELS[cat] || cat} (${categories[cat]})</button>`).join('')} <!-- NO_TRACK: evidence category filter sub-control -->
     </div>
   ` : '';
 
@@ -1612,6 +1617,7 @@ function showIncidentDetailModal(incidentId) {
         <div class="super-incident-modal__header-text">
           <span class="super-incident-modal__title">Incident Detail</span>
         </div>
+        <!-- NO_TRACK: close-X -->
         <button class="super-incident-modal__close" aria-label="Close">&times;</button>
       </div>
       <div class="super-incident-modal__body">
@@ -1995,8 +2001,9 @@ function setupPopoverListeners(popover, result) {
             const chipsDiv = document.createElement('div');
             chipsDiv.className = 'super-ev-filters';
             chipsDiv.innerHTML = `
+              <!-- NO_TRACK: evidence category filter sub-control inside popover -->
               <button class="super-ev-chip super-ev-chip--active" data-ev-filter="all">All (${allEvidence.length})</button>
-              ${catKeys.map(cat => `<button class="super-ev-chip" data-ev-filter="${cat}">${OVERLAY_CATEGORY_LABELS[cat] || cat} (${categories[cat]})</button>`).join('')}
+              ${catKeys.map(cat => `<button class="super-ev-chip" data-ev-filter="${cat}">${OVERLAY_CATEGORY_LABELS[cat] || cat} (${categories[cat]})</button>`).join('')} <!-- NO_TRACK: evidence category filter sub-control -->
             `;
             const evList = section.querySelector('.super-evidence-list');
             section.insertBefore(chipsDiv, evList);
@@ -2647,10 +2654,12 @@ async function renderSplitAdministrations(viewerEl, orderId, customDateRange, ov
         </div>
       </div>
       <div class="super-admin-modal__date-bar">
+        <!-- NO_TRACK: pure-UI week nav inside admin grid modal -->
         <button class="super-admin-modal__nav-btn" data-dir="prev" title="Previous week">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
         </button>
         <span class="super-admin-modal__date-range">📅 ${formattedDateRange}</span>
+        <!-- NO_TRACK: pure-UI week nav inside admin grid modal -->
         <button class="super-admin-modal__nav-btn" data-dir="next" title="Next week">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
         </button>
@@ -2738,7 +2747,7 @@ async function renderSplitIncident(viewerEl, incidentId) {
       // Show loading
       viewerEl.innerHTML = `
         <div class="super-split__content">
-          <button class="super-incident__note-back" type="button">
+          <button class="super-incident__note-back" type="button"><!-- NO_TRACK: back nav inside incident split-view -->
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
             Back to Incident
           </button>
@@ -2779,7 +2788,7 @@ async function renderSplitIncident(viewerEl, incidentId) {
         console.error('[Super LTC] Failed to load note:', err);
         viewerEl.innerHTML = `
           <div class="super-split__content">
-            <button class="super-incident__note-back" type="button">
+            <button class="super-incident__note-back" type="button"><!-- NO_TRACK: back nav inside incident split-view (error path) -->
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
               Back to Incident
             </button>
@@ -2812,7 +2821,7 @@ function setupNoteClickHandlers(viewerEl) {
 
       viewerEl.innerHTML = `
         <div class="super-split__content">
-          <button class="super-incident__note-back" type="button">
+          <button class="super-incident__note-back" type="button"><!-- NO_TRACK: back nav inside incident split-view -->
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
             Back to Incident
           </button>
@@ -2846,7 +2855,7 @@ function setupNoteClickHandlers(viewerEl) {
       } catch (err) {
         viewerEl.innerHTML = `
           <div class="super-split__content">
-            <button class="super-incident__note-back" type="button">
+            <button class="super-incident__note-back" type="button"><!-- NO_TRACK: back nav inside incident split-view (re-attached error path) -->
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
               Back to Incident
             </button>
@@ -2957,7 +2966,7 @@ function createAdminModalShell() {
         <div class="super-admin-modal__title">
           <span class="super-admin-modal__order-name">Loading...</span>
         </div>
-        <button class="super-admin-modal__close">&times;</button>
+        <button class="super-admin-modal__close">&times;</button><!-- NO_TRACK: close-X -->
       </div>
       <div class="super-admin-modal__body">
         <div class="super-admin-loading">
@@ -3017,7 +3026,7 @@ function buildAdminModalHTML(order, dateRange, adminRecords, reportType) {
           <span class="super-admin-modal__order-name">${escapeHTML(order.name || 'Order')}</span>
           <span class="super-admin-badge ${typeBadgeClass}">${typeBadge}</span>
         </div>
-        <button class="super-admin-modal__close">&times;</button>
+        <button class="super-admin-modal__close">&times;</button><!-- NO_TRACK: close-X -->
       </div>
       ${order.directions ? `<div class="super-admin-modal__directions">${escapeHTML(order.directions)}</div>` : ''}
       <div class="super-admin-modal__meta">
@@ -3031,12 +3040,14 @@ function buildAdminModalHTML(order, dateRange, adminRecords, reportType) {
     </div>
 
     <div class="super-admin-modal__date-bar">
+      <!-- NO_TRACK: pure-UI week nav inside admin grid modal -->
       <button class="super-admin-modal__nav-btn" data-dir="prev" title="Previous week">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M15 18l-6-6 6-6"/>
         </svg>
       </button>
       <span class="super-admin-modal__date-range">📅 ${formattedDateRange}</span>
+      <!-- NO_TRACK: pure-UI week nav inside admin grid modal -->
       <button class="super-admin-modal__nav-btn" data-dir="next" title="Next week">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M9 18l6-6-6-6"/>
@@ -3381,7 +3392,7 @@ function renderAdminModalError(modal, message) {
       <div class="super-admin-modal__title">
         <span class="super-admin-modal__order-name">Error</span>
       </div>
-      <button class="super-admin-modal__close">&times;</button>
+      <button class="super-admin-modal__close">&times;</button><!-- NO_TRACK: close-X -->
     </div>
     <div class="super-admin-modal__body">
       <div class="super-admin-error">
@@ -3516,7 +3527,7 @@ function createQueryModalShell() {
           <span class="super-query-modal__icon">?</span>
           <span class="super-query-modal__name">Query Physician</span>
         </div>
-        <button class="super-query-modal__close">&times;</button>
+        <button class="super-query-modal__close">&times;</button><!-- NO_TRACK: close-X -->
       </div>
       <div class="super-query-modal__body">
         <div class="super-query-loading">
@@ -3665,7 +3676,7 @@ function renderQueryModalContent(modal, result, context, practitioners) {
           <span class="super-query-badge">${escapeHTML(result.mdsItem)}</span>
         </div>
       </div>
-      <button class="super-query-modal__close">&times;</button>
+      <button class="super-query-modal__close">&times;</button><!-- NO_TRACK: close-X -->
     </div>
 
     <div class="super-query-modal__body">
@@ -3728,7 +3739,9 @@ function renderQueryModalContent(modal, result, context, practitioners) {
     </div>
 
     <div class="super-query-modal__footer">
+      <!-- NO_TRACK: legacy MDS overlay diagnosis-query modal cancel; modern queries/ flow tracks query_modal_closed -->
       <button class="super-query-modal__btn super-query-modal__btn--secondary" data-action="cancel">Cancel</button>
+      <!-- NO_TRACK: legacy MDS overlay diagnosis-query send; modern queries/ flow tracks query_send_started -->
       <button class="super-query-modal__btn super-query-modal__btn--primary" data-action="send" disabled>Send Query</button>
     </div>
   `;
@@ -3809,7 +3822,7 @@ function renderQueryModalError(modal, message) {
         <span class="super-query-modal__icon">!</span>
         <span class="super-query-modal__name">Error</span>
       </div>
-      <button class="super-query-modal__close">&times;</button>
+      <button class="super-query-modal__close">&times;</button><!-- NO_TRACK: close-X -->
     </div>
     <div class="super-query-modal__body">
       <div class="super-query-error">
@@ -3818,6 +3831,7 @@ function renderQueryModalError(modal, message) {
       </div>
     </div>
     <div class="super-query-modal__footer">
+      <!-- NO_TRACK: error-state close in legacy MDS overlay diagnosis-query modal -->
       <button class="super-query-modal__btn super-query-modal__btn--secondary" data-action="cancel">Close</button>
     </div>
   `;
@@ -3971,7 +3985,9 @@ function buildPanelHTML(counts, itemsToReview) {
         Super Review
       </div>
       <div class="super-panel-header__actions">
+        <!-- NO_TRACK: pure-UI panel toggle (collapse/expand) -->
         <button class="super-panel-header__btn super-panel-header__btn--toggle" aria-label="Toggle panel">&#9650;</button>
+        <!-- NO_TRACK: close-X for review panel -->
         <button class="super-panel-header__btn super-panel-header__btn--close" aria-label="Close panel">&times;</button>
       </div>
     </div>
@@ -3981,6 +3997,7 @@ function buildPanelHTML(counts, itemsToReview) {
         <span class="super-panel-count super-panel-count--mismatch">${counts.mismatch} &#10007;</span>
         <span class="super-panel-count super-panel-count--review">${counts.review} &#9888;</span>
       </div>
+      <!-- NO_TRACK: pure-UI navigation between review items in legacy MDS overlay panel -->
       <button class="super-panel-next" ${!hasItemsToReview ? 'disabled' : ''}>
         Next &rarr;
       </button>
@@ -4210,7 +4227,9 @@ function showDisagreeForm(result) {
       <label class="super-disagree-form__label">Why do you disagree?</label>
       <textarea class="super-disagree-form__input" placeholder="Describe your reasoning..." rows="3"></textarea>
       <div class="super-disagree-form__buttons">
+        <!-- NO_TRACK: cancels legacy disagree feedback form (returns to popover actions) -->
         <button class="super-btn super-btn--cancel" data-action="cancel-disagree">Cancel</button>
+        <!-- NO_TRACK: submits legacy disagree feedback (vanilla overlay; no schema event for inline disagree) -->
         <button class="super-btn super-btn--primary" data-action="submit-disagree">Submit</button>
       </div>
     </div>
@@ -4243,9 +4262,12 @@ function restorePopoverActions(popover, result) {
   if (!actionsEl) return;
 
   actionsEl.innerHTML = `
+    <!-- NO_TRACK: re-render of legacy MDS overlay popover actions (cancelled disagree) -->
     <button class="super-btn super-btn--agree" data-action="agree">&#10003; Agree</button>
+    <!-- NO_TRACK: re-render of legacy MDS overlay popover actions -->
     <button class="super-btn super-btn--disagree" data-action="disagree">&#10007; Disagree</button>
     ${result.mdsItem && result.mdsItem.startsWith('I') ? `
+      <!-- NO_TRACK: re-render of legacy popover; opens QuerySendModal which fires query_modal_opened -->
       <button class="super-btn super-btn--query" data-action="query">? Query Physician</button>
     ` : ''}
   `;

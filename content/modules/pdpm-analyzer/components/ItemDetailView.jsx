@@ -273,6 +273,7 @@ export function ItemDetailView({ item, context, onBack, onSplitChange, onDismiss
     <div class={`idv${isSplit ? ' idv--split' : ''}`}>
       {/* Header with back button */}
       <div class="idv__head">
+        {/* NO_TRACK: back nav inside ItemDetailView (parent already fires pdpm_item_drilled_in) */}
         <button class="idv__back" onClick={isSplit ? handleBackFromSplit : onBack} type="button">
           <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 11L5 7l4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
           Back

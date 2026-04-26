@@ -1031,6 +1031,7 @@ function ClinicalScores({ data, collapsed, onToggleCollapse }) {
           {/* GG breakdown toggle */}
           {gg && (
             <div class="pdpm-an__gg-toggle-wrap">
+              {/* NO_TRACK: GG breakdown sub-toggle inside already-tracked pdpm_breakdown_viewed component */}
               <button class="pdpm-an__gg-toggle" onClick={() => setShowGG(!showGG)}>
                 {showGG ? 'Hide' : 'Show'} GG Item Breakdown
                 <svg class={`pdpm-an__card-chevron${showGG ? ' pdpm-an__card-chevron--open' : ''}`} width="10" height="10" viewBox="0 0 12 12" fill="none">
@@ -1135,6 +1136,7 @@ function ErrorState({ message, onRetry }) {
     <div class="pdpm-an__state">
       <div class="pdpm-an__state-icon">⚠</div>
       <p>{message}</p>
+      {/* NO_TRACK: error-state retry inside pdpm_analyzer */}
       <button class="pdpm-an__retry-btn" onClick={onRetry}>Retry</button>
     </div>
   );
@@ -1177,6 +1179,7 @@ function AssessmentView({ assessmentData, onItemClick, onQueryClick, patientId }
 function ModeToggleButton({ mode, onToggle }) {
   const title = mode === 'panel' ? 'Expand to modal' : 'Dock as side panel';
   return (
+    /* NO_TRACK: pure-UI mode toggle (modal vs side-panel) inside pdpm_analyzer */
     <button class="pdpm-an__mode-toggle" onClick={onToggle} title={title} aria-label={title}>
       {mode === 'panel' ? (
         // Expand icon (arrows pointing outward)
@@ -1261,6 +1264,7 @@ export function PDPMAnalyzer({ context, onClose, initialMode = 'modal' }) {
         {/* Header */}
         <div class="pdpm-an__header">
           <div class="pdpm-an__header-left">
+            {/* NO_TRACK: navigates to MDS Command Center which fires its own mds_command_center_opened */}
             <button class="pdpm-an__back-btn" onClick={openCommandCenter}>
               {'\u2190'} Command Center
             </button>
@@ -1277,6 +1281,7 @@ export function PDPMAnalyzer({ context, onClose, initialMode = 'modal' }) {
               onChange={(id) => { setSelectedAssessmentId(id); setDetailItem(null); }}
             />
             <ModeToggleButton mode={mode} onToggle={toggleMode} />
+            {/* NO_TRACK: close-X */}
             <button class="pdpm-an__close-btn" onClick={onClose} aria-label="Close">{'\u2715'}</button>
           </div>
         </div>

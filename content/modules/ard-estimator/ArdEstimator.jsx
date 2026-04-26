@@ -90,8 +90,10 @@ function QueryQueue({ queueCount, batchState, progress, onClear, onGenerate }) {
             <span className="ard-est__queue-text">
               {queueCount === 1 ? 'query' : 'queries'} ready
             </span>
+            {/* NO_TRACK: clears local queue state inside ard_estimator workflow */}
             <button className="ard-est__queue-clear" onClick={onClear}>clear</button>
           </div>
+          {/* NO_TRACK: enters batch review sub-flow inside ard_estimator; query_send_started fires per-item later */}
           <button className="ard-est__queue-send-btn" onClick={onGenerate}>
             <SendIcon />
             Send Queries
@@ -280,11 +282,13 @@ export function ArdEstimator({
     <div className="ard-est__header">
       <div className="ard-est__header-left">
         {onBack && batch.state === 'idle' && (
+          /* NO_TRACK: back nav out of ard_estimator */
           <button className="ard-est__back-btn" onClick={onBack} title="Back">
             <BackIcon />
           </button>
         )}
         {batch.state === 'reviewing' && (
+          /* NO_TRACK: back nav inside ard_estimator batch-review sub-flow */
           <button className="ard-est__back-btn" onClick={batch.backToSelection} title="Back to estimate">
             <BackIcon />
           </button>
@@ -349,6 +353,7 @@ export function ArdEstimator({
         <div className="ard-est__error">
           <WarningIcon />
           <p className="ard-est__error-text">{error}</p>
+          {/* NO_TRACK: error-state retry inside ard_estimator */}
           <button className="ard-est__error-retry" onClick={refetch}>Retry</button>
         </div>
       </div>
