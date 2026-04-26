@@ -31,7 +31,7 @@ const SuperDropdown = {
     const dropdown = document.createElement('div');
     dropdown.className = 'super-dropdown';
     dropdown.innerHTML = `
-      <button type="button" class="super-dropdown__trigger" aria-haspopup="listbox">
+      <button type="button" class="super-dropdown__trigger" aria-haspopup="listbox"> <!-- NO_TRACK: generic dropdown open/close trigger -->
         <span class="super-dropdown__value">
           ${selectedItem ? this._renderSelectedItem(selectedItem) : `<span class="super-dropdown__placeholder">${placeholder}</span>`}
         </span>

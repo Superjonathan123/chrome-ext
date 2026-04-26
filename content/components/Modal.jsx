@@ -122,6 +122,7 @@ export const Modal = ({
             <span id="modal-title" className="super-modal__title">{title}</span>
             {badge && <span className="super-modal__badge">{badge}</span>}
           </div>
+          {/* NO_TRACK: generic modal close X — parent feature owns lifecycle events */}
           <button
             className="super-modal__close"
             onClick={onClose}
@@ -136,6 +137,7 @@ export const Modal = ({
         {actions.length > 0 && (
           <div className="super-modal__footer">
             {actions.map((action, index) => (
+              // NO_TRACK: footer action button — parent passes onClick that should track if needed
               <button
                 key={index}
                 className={`super-modal__btn super-modal__btn--${action.variant || 'secondary'}`}

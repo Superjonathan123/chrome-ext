@@ -1,5 +1,6 @@
-import { useState } from 'preact/hooks';
+import { useState, useEffect, useRef } from 'preact/hooks';
 import { Modal } from '../../components/Modal.jsx';
+import { track } from '../../utils/analytics.js';
 import { selectRegion, cropDataUrl, drawHighlightOnDataUrl } from './region-selector.js';
 
 export const FeedbackModal = ({ onClose, initialScreenshot = null }) => {
@@ -9,6 +10,23 @@ export const FeedbackModal = ({ onClose, initialScreenshot = null }) => {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
+
+  // Track whether the close path is a dismissal (vs. a submit-success auto-close).
+  // Set to false when submit succeeds so the post-success setTimeout(onClose) is silent.
+  const dismissTrackingRef = useRef(true);
+
+  useEffect(() => {
+    track('feedback_modal_opened', { source: 'fab' });
+  }, []);
+
+  // Dismiss path: close X / Cancel / ESC / backdrop. Submit funnel is Task 22.
+  const handleDismiss = () => {
+    if (dismissTrackingRef.current) {
+      track('feedback_modal_dismissed');
+      dismissTrackingRef.current = false; // guard against double-fire
+    }
+    onClose();
+  };
 
   const hideModal = () => {
     const overlay = document.getElementById('feedback-overlay');
@@ -109,6 +127,8 @@ export const FeedbackModal = ({ onClose, initialScreenshot = null }) => {
         throw new Error(res?.error || 'Submit failed');
       }
       setSuccess(true);
+      // Submit succeeded — the auto-close below is NOT a dismissal.
+      dismissTrackingRef.current = false;
       setTimeout(onClose, 1500);
     } catch (e) {
       console.error('[Feedback] submit failed', e);
@@ -137,13 +157,13 @@ export const FeedbackModal = ({ onClose, initialScreenshot = null }) => {
   return (
     <Modal
       isOpen={true}
-      onClose={onClose}
+      onClose={handleDismiss}
       title="Send feedback"
       size="medium"
       closeOnBackdrop={!capturing && !submitting}
       closeOnEscape={!capturing && !submitting}
       actions={[
-        { label: 'Cancel', variant: 'secondary', onClick: onClose, disabled: submitting },
+        { label: 'Cancel', variant: 'secondary', onClick: handleDismiss, disabled: submitting },
         {
           label: submitting ? 'Sending…' : 'Send feedback',
           variant: 'primary',
@@ -171,6 +191,7 @@ export const FeedbackModal = ({ onClose, initialScreenshot = null }) => {
             <div className="super-feedback__preview">
               <img src={screenshot} alt="Captured screenshot" />
               <div className="super-feedback__preview-actions">
+                {/* NO_TRACK: screenshot annotation sub-flow inside feedback modal */}
                 <button
                   type="button"
                   className="super-feedback__link"
@@ -180,6 +201,7 @@ export const FeedbackModal = ({ onClose, initialScreenshot = null }) => {
                 >
                   Highlight
                 </button>
+                {/* NO_TRACK: screenshot annotation sub-flow inside feedback modal */}
                 <button
                   type="button"
                   className="super-feedback__link"
@@ -188,6 +210,7 @@ export const FeedbackModal = ({ onClose, initialScreenshot = null }) => {
                 >
                   Crop
                 </button>
+                {/* NO_TRACK: screenshot annotation sub-flow inside feedback modal */}
                 <button
                   type="button"
                   className="super-feedback__link super-feedback__link--danger"
@@ -199,6 +222,7 @@ export const FeedbackModal = ({ onClose, initialScreenshot = null }) => {
               </div>
             </div>
           ) : (
+            // NO_TRACK: screenshot capture sub-flow inside feedback modal
             <button
               type="button"
               className="super-feedback__capture-btn"

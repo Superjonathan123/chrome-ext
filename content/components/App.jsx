@@ -20,6 +20,7 @@ export const App = () => {
         <div className="super-menu-panel">
           <div className="super-topbar-placeholder">
             <h2>Super LTC</h2>
+            {/* NO_TRACK: placeholder close X — App.jsx is a Week-1 stub, not real UI */}
             <button onClick={() => setMenuOpen(false)}>✕</button>
           </div>
           <div className="super-module-container">

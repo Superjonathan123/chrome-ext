@@ -342,6 +342,7 @@ export function ItemDetail({ variant = 'compact', data, detectionItem, mdsItem, 
             const c = columns[k];
             const yes = c?.answer?.toLowerCase() === 'yes';
             return (
+              // NO_TRACK: column tab — internal sub-flow filter, parent feature owns the open event
               <button key={k} type="button"
                 class={`sid__coltab ${activeCol === k ? 'sid__coltab--on' : ''}`}
                 onClick={() => setActiveCol(k)}>
@@ -420,6 +421,7 @@ export function ItemDetail({ variant = 'compact', data, detectionItem, mdsItem, 
             {visibleEvidence.map((ev, i) => <EvidenceCard key={i} ev={ev} index={i} onViewSource={onViewSource} />)}
           </div>
           {filteredEvidence.length > 4 && !showAllEv && (
+            // NO_TRACK: in-place show-more — parent feature owns the open event
             <button class="sid__ev-show-more" type="button" onClick={() => setShowAllEv(true)}>
               Show all {filteredEvidence.length} &darr;
             </button>
@@ -430,6 +432,7 @@ export function ItemDetail({ variant = 'compact', data, detectionItem, mdsItem, 
       {/* ── Key Findings (collapsible) ── */}
       {keyFindings.length > 0 && (
         <>
+          {/* NO_TRACK: collapsible toggle — in-place expand/collapse */}
           <button class="sid__findings-toggle" type="button" onClick={() => setFindingsOpen(!findingsOpen)}>
             <span class={`sid__findings-arrow ${findingsOpen ? 'sid__findings-arrow--open' : ''}`}>&#9654;</span>
             Key Findings ({keyFindings.length})
@@ -453,10 +456,12 @@ export function ItemDetail({ variant = 'compact', data, detectionItem, mdsItem, 
             disabled={dismissing}
           />
           <div class="sid__dismiss-form-btns">
+            {/* NO_TRACK: dismiss-form cancel — sub-flow inside ItemDetail, parent owns events */}
             <button class="sid__btn sid__btn--secondary" type="button" disabled={dismissing}
               onClick={() => { setDismissMode(false); setDismissReason(''); }}>
               Cancel
             </button>
+            {/* NO_TRACK: dismiss-form submit — onDismiss callback owned by parent feature */}
             <button class="sid__btn sid__btn--primary" type="button" disabled={dismissing}
               onClick={() => onDismiss(dismissReason)}>
               {dismissing ? 'Submitting...' : 'Submit'}
@@ -466,11 +471,13 @@ export function ItemDetail({ variant = 'compact', data, detectionItem, mdsItem, 
       ) : (
         <div class="sid__actions">
           {onDismiss && (
+            // NO_TRACK: opens dismiss-form sub-flow; parent's onDismiss owns the resolution
             <button class="sid__btn sid__btn--dismiss" type="button" onClick={() => setDismissMode(true)}>
               Dismiss
             </button>
           )}
           <div class="sid__actions-right">
+            {/* NO_TRACK: opens QuerySendModal which fires its own query_* events */}
             <button class="sid__btn sid__btn--primary" onClick={() => {
               const queryData = {
                 mdsItem: apiItem?.mdsItem || mdsItem,
@@ -482,6 +489,7 @@ export function ItemDetail({ variant = 'compact', data, detectionItem, mdsItem, 
               Query Physician
             </button>
             {mdsItem && (
+              // NO_TRACK: navigateToMDSItem is captured at the navigator level
               <button class="sid__btn sid__btn--secondary" onClick={() => window.navigateToMDSItem?.(mdsItem, assessmentId)} type="button">
                 Go to {displayCode} &#x2197;
               </button>

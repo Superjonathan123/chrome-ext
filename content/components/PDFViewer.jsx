@@ -259,6 +259,7 @@ export function PDFViewer({
         <div class="super-pdfv__header-right">
           {/* Page nav */}
           <div class="super-pdfv__group">
+            {/* NO_TRACK: PDF page nav — generic viewer affordance, parent feature owns the open event */}
             <button class="super-pdfv__tb-btn" onClick={() => goToPage(currentPage - 1)} disabled={currentPage <= 1} title="Previous page">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6" /></svg>
             </button>
@@ -274,6 +275,7 @@ export function PDFViewer({
               />
               <span class="super-pdfv__page-of">of {totalPages}</span>
             </div>
+            {/* NO_TRACK: PDF page nav — generic viewer affordance */}
             <button class="super-pdfv__tb-btn" onClick={() => goToPage(currentPage + 1)} disabled={currentPage >= totalPages} title="Next page">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6" /></svg>
             </button>
@@ -283,10 +285,12 @@ export function PDFViewer({
 
           {/* Zoom */}
           <div class="super-pdfv__group">
+            {/* NO_TRACK: PDF zoom — generic viewer affordance */}
             <button class="super-pdfv__tb-btn" onClick={() => changeZoom(-1)} disabled={zoom <= ZOOM_LEVELS[0]} title="Zoom out">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12" /></svg>
             </button>
             <span class="super-pdfv__zoom-label">{zoom}%</span>
+            {/* NO_TRACK: PDF zoom — generic viewer affordance */}
             <button class="super-pdfv__tb-btn" onClick={() => changeZoom(1)} disabled={zoom >= ZOOM_LEVELS[ZOOM_LEVELS.length - 1]} title="Zoom in">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>
             </button>
@@ -295,6 +299,7 @@ export function PDFViewer({
           <div class="super-pdfv__tb-sep" />
 
           {/* Rotate */}
+          {/* NO_TRACK: PDF rotate — generic viewer affordance */}
           <button class="super-pdfv__tb-btn" onClick={rotate} title="Rotate 90°">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <polyline points="1 4 1 10 7 10" />

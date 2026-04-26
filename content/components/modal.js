@@ -175,7 +175,8 @@ const SuperModal = {
             <span class="super-modal__title">${title}</span>
             ${badge ? `<span class="super-modal__badge">${badge}</span>` : ''}
           </div>
-          <button class="super-modal__close" aria-label="Close">&times;</button>
+          <button class="super-modal__close" aria-label="Close">&times;</button> <!-- NO_TRACK: generic modal close X -->
+
         </div>
         <div class="super-modal__body">
           ${content}

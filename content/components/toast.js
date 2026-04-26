@@ -102,8 +102,8 @@ const SuperToast = {
         ${icon ? `<span class="super-toast__icon">${icon}</span>` : ''}
         <span class="super-toast__message">${message}</span>
       </div>
-      ${action ? `<button class="super-toast__action">${action}</button>` : ''}
-      <button class="super-toast__close">&times;</button>
+      ${action ? `<button class="super-toast__action">${action}</button>` /* NO_TRACK: toast action handled by caller */ : ''}
+      <button class="super-toast__close">&times;</button> <!-- NO_TRACK: toast dismiss -->
     `;
 
     // Close button handler
