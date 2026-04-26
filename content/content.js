@@ -109,3 +109,7 @@ UpdateChecker.startPolling();
 // 9. Start PCC SPA navigation observer (fires pcc_page_viewed on path change)
 import { startPccNavObserver } from './utils/pcc-nav-observer.js';
 startPccNavObserver();
+
+// 10. Install global delegated click listener for [data-track] elements
+import { startTrackDelegate } from './utils/track-delegate.js';
+startTrackDelegate();
