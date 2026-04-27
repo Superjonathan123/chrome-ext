@@ -90,12 +90,29 @@ export default defineConfig(({ mode }) => {
     },
     build: {
       outDir,
+      // Disable <link rel="modulepreload"> tags — they resolve against the
+      // host page in a content script context.
+      modulePreload: false,
       rollupOptions: {
         input: {
           background: 'background/background.js',
           popup: 'popup/popup.html'
         }
       }
+    },
+    // Force every chunk/asset URL in JS to be resolved via chrome.runtime.getURL
+    // at runtime. Without this, Vite's __vitePreload helper builds URLs as
+    // "/" + path, which a content script resolves against the HOST PAGE
+    // (e.g. login.pointclickcare.com/assets/MDSCommandCenter-XXX.js → 404).
+    // PCC's server logs would otherwise see chunk filenames before any user
+    // logs in — leaking which features our extension has.
+    experimental: {
+      renderBuiltUrl(filename, { hostType }) {
+        if (hostType === 'js') {
+          return { runtime: `chrome.runtime.getURL(${JSON.stringify(filename)})` };
+        }
+        return { relative: true };
+      },
     },
     resolve: {
       alias: {

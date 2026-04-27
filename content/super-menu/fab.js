@@ -19,7 +19,7 @@ function createBubbles() {
         <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
       </svg>
     </button>
-    <button id="super-mds-action" class="super-dial__action super-dial__action--mds" aria-label="Open Dashboard" data-track="fab_clicked" data-track-prop-fab="mds">
+    <button id="super-mds-action" class="super-dial__action super-dial__action--mds" aria-label="MDS" data-track="fab_clicked" data-track-prop-fab="mds">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <rect x="3" y="3" width="7" height="7"/>
         <rect x="14" y="3" width="7" height="7"/>
