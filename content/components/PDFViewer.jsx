@@ -78,7 +78,7 @@ export function PDFViewer({
           console.error('[PDFViewer] Load failed:', err);
           window.SuperAnalytics?.track?.('error_shown', {
             surface: 'pdf_viewer',
-            error_code: window.SuperAnalytics.toErrorCode(err),
+            error_code: (window.SuperAnalytics?.toErrorCode?.(err) ?? 'unknown'),
             error_type: 'api_error',
           });
           setError(`Failed to load PDF: ${err.message}`);

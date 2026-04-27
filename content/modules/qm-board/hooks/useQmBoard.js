@@ -48,7 +48,7 @@ export function useQmBoard({ facilityName, orgSlug }) {
       console.error('[QMBoard] fetch failed', err);
       window.SuperAnalytics?.track?.('error_shown', {
         surface: 'qm_board',
-        error_code: window.SuperAnalytics.toErrorCode(err),
+        error_code: (window.SuperAnalytics?.toErrorCode?.(err) ?? 'unknown'),
         error_type: 'api_error',
       });
       setError(err.message || 'Failed to load QM board');

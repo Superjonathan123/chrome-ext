@@ -80,7 +80,7 @@ export function useMdsPlanner({ facilityName, orgSlug }) {
       console.error('[MdsPlanner] fetch failed', err);
       window.SuperAnalytics?.track?.('error_shown', {
         surface: 'mds_planner',
-        error_code: window.SuperAnalytics.toErrorCode(err),
+        error_code: (window.SuperAnalytics?.toErrorCode?.(err) ?? 'unknown'),
         error_type: 'api_error',
       });
       setError(err.message || 'Failed to load planner');

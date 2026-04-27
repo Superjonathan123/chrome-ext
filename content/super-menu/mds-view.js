@@ -1253,7 +1253,7 @@ async function handleImpactItemClick(mdsItem, categoryKey) {
     console.error('Super Menu: Failed to fetch MDS item data:', error);
     window.SuperAnalytics?.track?.('error_shown', {
       surface: 'mds_item_load',
-      error_code: window.SuperAnalytics.toErrorCode(error),
+      error_code: (window.SuperAnalytics?.toErrorCode?.(error) ?? 'unknown'),
       error_type: 'api_error',
     });
     SuperModal.showError(`Failed to load: ${error.message}`);
@@ -1363,7 +1363,7 @@ async function handleQueryClick(queryId, mdsItem) {
       console.error('Super Menu: Failed to fetch query details:', error);
       window.SuperAnalytics?.track?.('error_shown', {
         surface: 'query_details_load',
-        error_code: window.SuperAnalytics.toErrorCode(error),
+        error_code: (window.SuperAnalytics?.toErrorCode?.(error) ?? 'unknown'),
         error_type: 'api_error',
       });
       if (window.SuperModal) {

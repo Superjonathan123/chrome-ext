@@ -149,7 +149,7 @@ function injectMdsEstimateLinks() {
         console.error('[Super] Failed to open ARD Estimator:', err);
         window.SuperAnalytics?.track?.('error_caught', {
           surface: 'ard_estimator_open',
-          error_code: window.SuperAnalytics.toErrorCode(err),
+          error_code: (window.SuperAnalytics?.toErrorCode?.(err) ?? 'unknown'),
         });
       }
     });
@@ -314,7 +314,7 @@ function _showTestAddCodeDialog() {
       } else {
         window.SuperAnalytics?.track?.('error_shown', {
           surface: 'icd10_add_pcc',
-          error_code: window.SuperAnalytics.toErrorCode(result.error),
+          error_code: (window.SuperAnalytics?.toErrorCode?.(result.error) ?? 'unknown'),
           error_type: 'api_error',
         });
         statusEl.textContent = `Failed: ${result.error}`;
@@ -325,7 +325,7 @@ function _showTestAddCodeDialog() {
     } catch (err) {
       window.SuperAnalytics?.track?.('error_shown', {
         surface: 'icd10_add_pcc',
-        error_code: window.SuperAnalytics.toErrorCode(err),
+        error_code: (window.SuperAnalytics?.toErrorCode?.(err) ?? 'unknown'),
         error_type: 'api_error',
       });
       statusEl.textContent = `Error: ${err.message}`;

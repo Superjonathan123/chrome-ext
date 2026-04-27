@@ -375,7 +375,7 @@ const ICD10Viewer = {
       console.error('ICD10Viewer: Failed to load data:', error);
       window.SuperAnalytics?.track?.('error_shown', {
         surface: 'icd10_viewer',
-        error_code: window.SuperAnalytics.toErrorCode(error),
+        error_code: (window.SuperAnalytics?.toErrorCode?.(error) ?? 'unknown'),
         error_type: 'api_error',
       });
       this._showError(`Failed to load ICD-10 data: ${error.message}`);
@@ -532,7 +532,7 @@ const ICD10Viewer = {
       console.error('[ICD10Viewer] Failed to load document:', error);
       window.SuperAnalytics?.track?.('error_shown', {
         surface: 'icd10_pdf_viewer',
-        error_code: window.SuperAnalytics.toErrorCode(error),
+        error_code: (window.SuperAnalytics?.toErrorCode?.(error) ?? 'unknown'),
         error_type: 'api_error',
       });
       ICD10PDFViewer._renderError('Failed to load document: ' + error.message);
@@ -884,7 +884,7 @@ const ICD10Viewer = {
       console.error('[ICD10Viewer] Failed to load Query Items:', err);
       window.SuperAnalytics?.track?.('error_shown', {
         surface: 'query_items_load',
-        error_code: window.SuperAnalytics.toErrorCode(err),
+        error_code: (window.SuperAnalytics?.toErrorCode?.(err) ?? 'unknown'),
         error_type: 'api_error',
       });
       mountEl.innerHTML = `
@@ -962,7 +962,7 @@ const ICD10Viewer = {
       console.error('[ICD10Viewer] Failed to load ARD Estimator:', err);
       window.SuperAnalytics?.track?.('error_shown', {
         surface: 'ard_estimator_load',
-        error_code: window.SuperAnalytics.toErrorCode(err),
+        error_code: (window.SuperAnalytics?.toErrorCode?.(err) ?? 'unknown'),
         error_type: 'api_error',
       });
       mountEl.innerHTML = `

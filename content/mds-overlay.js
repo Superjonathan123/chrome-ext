@@ -3930,7 +3930,7 @@ function setupQueryModalListeners(modal, result, context) {
       console.error('Super LTC: Failed to send query', error);
       window.SuperAnalytics?.track?.('error_shown', {
         surface: 'mds_overlay_query_send',
-        error_code: window.SuperAnalytics.toErrorCode(error),
+        error_code: (window.SuperAnalytics?.toErrorCode?.(error) ?? 'unknown'),
         error_type: 'api_error',
       });
       sendBtn.disabled = false;
@@ -4190,7 +4190,7 @@ async function handleAction(action, result) {
       console.error('Super LTC: Failed to save agree decision:', err);
       window.SuperAnalytics?.track?.('error_shown', {
         surface: 'mds_item_decision',
-        error_code: window.SuperAnalytics.toErrorCode(err),
+        error_code: (window.SuperAnalytics?.toErrorCode?.(err) ?? 'unknown'),
         error_type: 'api_error',
       });
       showPopoverError(popover, err.message || 'Failed to save decision');
@@ -4355,7 +4355,7 @@ async function submitDisagreeFeedback(result, reason) {
     console.error('Super LTC: Failed to save disagree decision:', err);
     window.SuperAnalytics?.track?.('error_shown', {
       surface: 'mds_item_decision',
-      error_code: window.SuperAnalytics.toErrorCode(err),
+      error_code: (window.SuperAnalytics?.toErrorCode?.(err) ?? 'unknown'),
       error_type: 'api_error',
     });
     showPopoverError(popover, err.message || 'Failed to save decision');

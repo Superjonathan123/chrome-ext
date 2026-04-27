@@ -34,7 +34,7 @@ export function useCommandCenter({ facilityName, orgSlug }) {
       console.error('[MDSCommandCenter] Failed to fetch dashboard:', err);
       window.SuperAnalytics?.track?.('error_shown', {
         surface: 'mds_command_center',
-        error_code: window.SuperAnalytics.toErrorCode(err),
+        error_code: (window.SuperAnalytics?.toErrorCode?.(err) ?? 'unknown'),
         error_type: 'api_error',
       });
       setError(err.message || 'Failed to load dashboard');
