@@ -144,7 +144,9 @@
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(360px, 1fr);
   gap: 18px;
-  align-items: start;
+  /* Both columns share the same height (taller of the two). Right column's
+     internal flex layout keeps its cards top-aligned within the box. */
+  align-items: stretch;
 }
 
 .mds-pl--full .mds-pl__body {
