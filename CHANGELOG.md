@@ -4,8 +4,11 @@ All notable changes to the Super LTC Chrome extension, newest first.
 Version = `manifest.json` `version`. Each entry records what shipped in that
 bump so we can tell the current build apart from the last one at a glance.
 
-> **Store note:** **v1.0.71** was zipped for Chrome Web Store submission on
-> 2026-08-06 (`super-ltc-store.zip`) — it carries the DFS verify ARD-scoping
+> **Store note:** **v1.0.72** was zipped for Chrome Web Store submission on
+> 2026-08-12 (`super-ltc-store.zip`) — it carries the care-plan verify fix (#82)
+> that stops false "did not save" reports and duplicate re-sends, on top of
+> 1.0.71. Before that, **v1.0.71** was zipped on
+> 2026-08-06 — it carries the DFS verify ARD-scoping
 > fix (#80) on top of 1.0.70. Before that, **v1.0.70** was zipped on
 > 2026-08-05 — it carries the Case Mix tab, the QM
 > quarter roster + drill-in fixes, the ICD-10 library search, and the care-plan
@@ -18,6 +21,37 @@ bump so we can tell the current build apart from the last one at a glance.
 > 2026-07-22, v1.0.65 uploaded earlier on 2026-07-22, v1.0.64 on 2026-07-20,
 > v1.0.63 on 2026-07-13, and v1.0.57 (`6cd25b6`) before that — v1.0.58–1.0.62
 > were dev/internal only. Update this note when you `zip:store` and upload.
+
+## [1.0.72] — 2026-08-12
+
+One fix: the care-plan verify step no longer reports rows this extension wrote
+as lost, and no longer re-sends them. Reported by an MDS coordinator on
+2026-08-07 and again 2026-08-12: after adding a custom focus she was told
+"1 goal and 7 interventions did not save" — but every row was already on her
+chart, twice, because the same false zero had also triggered a repair re-send.
+One merged PR (#82) on top of 1.0.71.
+
+### Fixed
+- **Verify counted extension-written custom rows as missing, then duplicated
+  them** (#82). Custom rows have no library item behind them, so the custom-add
+  path sends the std ids (`ESOLstdneedid`/`ESOLstdgoalid`/`ESOLstdinterid`) as
+  `-1`, and PCC echoes that sentinel into the row actions (`editGoal(…,-1,…)`).
+  `parsePlanPage` demanded digits in every slot, std ids included, so no row
+  the extension has ever written was visible to the read-back: it reported 0
+  attached, `_verifyAndRepairFocus` read that as "nothing landed", re-sent the
+  batch, and duplicated the focus. The parser now requires digits only in the
+  slots it consumes (row id and parent focus) and steps over the std slots —
+  while still ignoring the page's own `function editGoal(...)` declaration.
+  Deeper guard: the parser now also counts bare `editGoal(`/`editIntervention(`
+  occurrences on the page and reports whether it accounted for every row; when
+  it can't (`parser_blind`, new telemetry field), a zero is treated as parser
+  blindness rather than chart truth — no repair, no shortfall toast, optimistic
+  counts stand. Replaying the incident against the old regex confirms that
+  layer alone would have prevented the duplication. Tests cover the `-1` shape,
+  a mixed plan, the blindness signal, and the exact sentence the nurse reads.
+  Not addressed: her edited focus text still not persisting, and a genuine
+  partial drop on the library route (3 of 5 interventions); duplicates already
+  on charts need manual cleanup.
 
 ## [1.0.71] — 2026-08-06
 
