@@ -1764,10 +1764,13 @@ function _emptyFocusState() {
  * Counts come from reading the plan back, so they describe the chart, not our
  * requests.
  */
-function _stampOutcome(result) {
+export function _stampOutcome(result) {
   if (!result) return { ok: false, message: 'Add failed — nothing was saved.' };
 
-  const shortfalls = (result.verified || []).filter((v) => !v.complete);
+  // A blind read-back means we couldn't account for every row on the page, so it
+  // says nothing about whether the nurse's work landed. Counting it as a
+  // shortfall is what told her to re-add goals that were already on the chart.
+  const shortfalls = (result.verified || []).filter((v) => !v.complete && !v.blind);
   if (result.ok && !shortfalls.length) return { ok: true, message: 'Added to care plan' };
 
   const missing = shortfalls.reduce(

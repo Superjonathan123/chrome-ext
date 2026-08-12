@@ -71,6 +71,104 @@ describe('countsByFocus', () => {
   });
 });
 
+describe('rows this extension wrote itself', () => {
+  // The captured page above contains only rows PCC's own UI created, so every
+  // std id in it is a real number. Our custom-add path sends ESOLstdneedid,
+  // ESOLstdgoalid and ESOLstdinterid as '-1' (pcc-stamp.js) because there IS no
+  // library item behind a custom row — and PCC echoes that back into the row
+  // action. A parser that demands digits in those slots cannot see any row this
+  // extension wrote, reports 0 attached, and the caller "repairs" a stamp that
+  // in fact landed — duplicating the nurse's whole focus.
+  //
+  // Only the ids we actually consume (the row id and its parent focus) are ours
+  // to require; the std slots are positional padding we must step over, whatever
+  // sentinel PCC puts there.
+  const wrap = (rows) => `<html><body><table>${rows}</table></body></html>`;
+  const customPlan = wrap(
+    '<tr><td><a href="javascript:editNeed(620074,620074)">edit</a></td>' +
+    '<td><span class="text1">Falls risk r/t weakness</span></td></tr>' +
+    '<tr><td><a href="javascript:editGoal(1455180,-1,620074,969700,-1)">g</a></td></tr>' +
+    '<tr><td><a href="javascript:editIntervention(2612345,-1,-1,620074,2612345)">i</a></td></tr>' +
+    '<tr><td><a href="javascript:editIntervention(2612346,-1,-1,620074,2612346)">i</a></td></tr>',
+  );
+
+  it('counts a custom goal and intervention whose std ids are the -1 sentinel', () => {
+    const counts = countsByFocus(parsePlanPage(customPlan));
+
+    expect(counts).toEqual({ '620074': { goals: 1, interventions: 2 } });
+  });
+
+  it('still attributes them to the right focus when a plan mixes custom and library rows', () => {
+    const mixed = wrap(
+      '<tr><td><a href="javascript:editNeed(620074,620074)">e</a></td>' +
+      '<td><span class="text1">Falls risk</span></td></tr>' +
+      '<tr><td><a href="javascript:editNeed(595423,591311)">e</a></td>' +
+      '<td><span class="text1">Self-care deficit</span></td></tr>' +
+      '<tr><td><a href="javascript:editGoal(1455180,-1,620074,969700,-1)">g</a></td></tr>' +
+      '<tr><td><a href="javascript:editGoal(1455170,1781,595423,969686,3561)">g</a></td></tr>' +
+      '<tr><td><a href="javascript:editIntervention(2612345,-1,-1,620074,2612345)">i</a></td></tr>' +
+      '<tr><td><a href="javascript:editIntervention(2520751,18454,1791,595423,2520751)">i</a></td></tr>',
+    );
+
+    expect(countsByFocus(parsePlanPage(mixed))).toEqual({
+      '620074': { goals: 1, interventions: 1 },
+      '595423': { goals: 1, interventions: 1 },
+    });
+  });
+
+  it('reports a stamp that landed as complete, so nothing gets re-sent', async () => {
+    global.fetch = vi.fn(async (url) => ({
+      ok: true, status: 200, url: String(url),
+      text: async () => (Number(String(url).match(/ESOLrow=(\d+)/)[1]) === 1 ? customPlan : ''),
+    }));
+
+    const v = await verifyStampedFocus({
+      patientId: '840072',
+      focusText: 'Falls risk r/t weakness',
+      requested: { goals: 1, interventions: 2 },
+    });
+    delete global.fetch;
+
+    expect(v).toMatchObject({
+      found: true, goalsAttached: 1, interventionsAttached: 2, complete: true,
+    });
+  });
+
+  it('flags itself blind when the page renders rows it could not attribute', () => {
+    // The shape that caused the incident: a row the parser can't read at all.
+    // Whatever PCC changes next, an unattributed row means a count of zero is
+    // the parser's failure, not the chart's.
+    const unreadable = wrap(
+      '<tr><td><a href="javascript:editNeed(620074,620074)">e</a></td>' +
+      '<td><span class="text1">Falls risk</span></td></tr>' +
+      '<tr><td><a href="javascript:editGoal(SOMETHING_NEW,-1,620074)">g</a></td></tr>',
+    );
+    const parsed = parsePlanPage(unreadable);
+
+    expect(parsed.goals).toHaveLength(0);
+    expect(parsed.unparsed.goals).toBe(1);
+    expect(parsed.blind).toBe(true);
+  });
+
+  it('is not blind on the real captured page, or on rows we wrote', () => {
+    // Guard on the guard: if this ever trips on legible markup, verification
+    // goes quiet everywhere and the read-back stops being worth anything.
+    expect(parsePlanPage(CAPTURE).blind).toBe(false);
+    expect(parsePlanPage(customPlan).blind).toBe(false);
+  });
+
+  it('does not mistake the page\'s own function declarations for rows', () => {
+    const decls = wrap(
+      '<script>function editGoal(goalid, stdneedid, genneedid, pngoalid, stdgoalid) {}' +
+      'function editIntervention(interid, stdinterid, stdneedid, genneedid, x) {}</script>',
+    );
+    const parsed = parsePlanPage(decls);
+
+    expect(parsed.goals).toEqual([]);
+    expect(parsed.interventions).toEqual([]);
+  });
+});
+
 describe('findFocusByText', () => {
   // PCC's save response hands back an id that isn't always the one holding the
   // focus on the plan (pcc-discover.js:314 calls it a phantom). The text we just

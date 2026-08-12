@@ -19,6 +19,15 @@
 // quotes, unclosed tags) and these ids live inside javascript: hrefs and onclick
 // bodies, which is text either way.
 
+/**
+ * A positional slot we step over rather than read: unquoted, and null where PCC
+ * wrote a "no library item behind this row" sentinel ('-1', 'null', empty).
+ */
+function _slot(raw) {
+  const v = String(raw ?? '').trim().replace(/^['"]|['"]$/g, '');
+  return v === '' || v === '-1' || v === 'null' ? null : v;
+}
+
 /** genneedid === needid ⟺ the focus was added custom; they differ for library adds. */
 function _kind(genNeedId, needId) {
   return genNeedId === needId ? 'custom' : 'library';
@@ -41,16 +50,26 @@ export function parsePlanPage(html) {
     focuses.push({ genNeedId, needId, kind: _kind(genNeedId, needId) });
   }
 
-  // Requiring digits in every captured slot is what keeps these off the page's
-  // own `function editGoal(goalid, stdneedid, ...)` declarations.
+  // Digits are required ONLY in the slots we actually read — the row's own id and
+  // its parent focus. That is still enough to skip the page's own
+  // `function editGoal(goalid, stdneedid, ...)` declarations, whose first slot is
+  // a parameter name rather than a number.
+  //
+  // The std slots must NOT demand digits. A custom row has no library item behind
+  // it, so our own add path sends ESOLstdneedid/ESOLstdgoalid/ESOLstdinterid as
+  // '-1' (pcc-stamp.js) and PCC echoes the sentinel straight back into the row
+  // action: `editGoal(1455180,-1,620074,...)`. Requiring `\d+` there made every
+  // row this extension wrote invisible to the read-back, which reported 0
+  // attached for work that had in fact landed — and the caller then "repaired" it,
+  // duplicating the focus. Step over those slots instead of parsing them.
   const goals = [];
-  for (const m of s.matchAll(/editGoal\(\s*['"]?(\d+)['"]?\s*,\s*['"]?(\d+)['"]?\s*,\s*['"]?(\d+)['"]?/g)) {
-    goals.push({ goalId: m[1], stdNeedId: m[2], genNeedId: m[3] });
+  for (const m of s.matchAll(/editGoal\(\s*['"]?(\d+)['"]?\s*,\s*([^,)]*?)\s*,\s*['"]?(\d+)['"]?/g)) {
+    goals.push({ goalId: m[1], stdNeedId: _slot(m[2]), genNeedId: m[3] });
   }
 
   const interventions = [];
-  for (const m of s.matchAll(/editIntervention\(\s*['"]?(\d+)['"]?\s*,\s*['"]?(\d+)['"]?\s*,\s*['"]?(\d+)['"]?\s*,\s*['"]?(\d+)['"]?/g)) {
-    interventions.push({ interId: m[1], stdInterId: m[2], stdNeedId: m[3], genNeedId: m[4] });
+  for (const m of s.matchAll(/editIntervention\(\s*['"]?(\d+)['"]?\s*,\s*([^,)]*?)\s*,\s*([^,)]*?)\s*,\s*['"]?(\d+)['"]?/g)) {
+    interventions.push({ interId: m[1], stdInterId: _slot(m[2]), stdNeedId: _slot(m[3]), genNeedId: m[4] });
   }
 
   for (const [genNeedId, text] of _focusTexts(s)) {
@@ -58,7 +77,34 @@ export function parsePlanPage(html) {
     if (f) f.text = text;
   }
 
-  return { focuses, goals, interventions };
+  // Does the parser see every row the page actually renders? Counting bare
+  // `editGoal(` / `editIntervention(` occurrences needs no knowledge of argument
+  // order, so it stays true when PCC changes the shape underneath us — and on
+  // the captured page it agrees exactly (9 goals, 39 interventions).
+  //
+  // A shortfall means rows exist that we failed to attribute, so a count of zero
+  // is OUR blindness rather than PCC dropping the nurse's work. That distinction
+  // is the difference between reporting a shortfall and re-sending rows that are
+  // already on the chart, so callers must be able to see it.
+  const unparsed = {
+    goals: _rowOccurrences(s, 'editGoal') - goals.length,
+    interventions: _rowOccurrences(s, 'editIntervention') - interventions.length,
+  };
+
+  return {
+    focuses,
+    goals,
+    interventions,
+    unparsed,
+    blind: unparsed.goals > 0 || unparsed.interventions > 0,
+  };
+}
+
+/** How many row actions the page renders for `name`, ignoring its own declaration. */
+function _rowOccurrences(s, name) {
+  const all = s.match(new RegExp(`${name}\\(`, 'g'))?.length || 0;
+  const declared = s.match(new RegExp(`function\\s+${name}\\(`, 'g'))?.length || 0;
+  return all - declared;
 }
 
 /**
@@ -154,6 +200,7 @@ export async function scanCarePlan(patientId) {
   const interventions = [];
   const seen = new Set();
   let pages = 0;
+  let blind = false;
 
   for (let i = 0; i < MAX_PAGES; i++) {
     const url = `${CARE_PLAN_DETAIL_PATH}?ESOLclientid=${encodeURIComponent(patientId)}` +
@@ -162,6 +209,9 @@ export async function scanCarePlan(patientId) {
     pages += 1;
 
     const parsed = parsePlanPage(html);
+    // Judged per page: scanCarePlan deliberately drops rows whose focus an
+    // earlier page already introduced, which would read as blindness here.
+    blind = blind || parsed.blind;
     const before = seen.size;
     for (const f of parsed.focuses) {
       if (seen.has(f.genNeedId)) continue;
@@ -175,7 +225,7 @@ export async function scanCarePlan(patientId) {
     if (seen.size === before) break;
   }
 
-  const scan = { focuses, goals, interventions, pages };
+  const scan = { focuses, goals, interventions, pages, blind };
   return { ...scan, counts: countsByFocus(scan) };
 }
 
@@ -216,6 +266,7 @@ export async function verifyStampedFocus({
       goalsAttached: 0,
       interventionsAttached: 0,
       complete: false,
+      blind: !!planScan.blind,
       pages: planScan.pages,
       scan: planScan,
     };
@@ -237,6 +288,7 @@ export async function verifyStampedFocus({
     interventionsAttached: counts.interventions,
     complete: counts.goals >= goalsRequested &&
       counts.interventions >= interventionsRequested,
+    blind: !!planScan.blind,
     pages: planScan.pages,
     scan: planScan,
   };
@@ -273,6 +325,7 @@ export async function verifyAndReport({ patientId, focusText, requested, saveRes
     n_interventions_attached: v.interventionsAttached,
     focus_found: v.found,
     complete: v.complete,
+    parser_blind: v.blind ?? null,
     id_source: v.idSource,
     id_matched_save_response: v.idMatchedSaveResponse,
     primed: extra.primed ?? null,
