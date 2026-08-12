@@ -332,9 +332,18 @@ async function _verifyAndRepairFocus({ proposal, focus, focusId, result, request
   });
   if (!v) return null;
 
-  const nothingLanded = v.found &&
+  // A zero we can't trust must never drive a write. When the read-back couldn't
+  // account for every row on the page, "nothing attached" describes the parser,
+  // not the chart — and re-sending then duplicates a focus that already landed,
+  // which is exactly how a nurse ended up resolving two copies of every goal and
+  // intervention she'd added. Report the uncertainty; don't act on it.
+  const nothingLanded = v.found && !v.blind &&
     v.goalsAttached === 0 && v.interventionsAttached === 0 &&
     (requested.goals > 0 || requested.interventions > 0);
+
+  if (v.blind) {
+    _dlog(`focus ${v.focusId}: read-back could not account for every row — not repairing`);
+  }
 
   if (nothingLanded && ctx.retry) {
     _dlog(`focus ${v.focusId}: NOTHING attached — retrying against the id on the plan`);
@@ -359,6 +368,10 @@ async function _verifyAndRepairFocus({ proposal, focus, focusId, result, request
       result.ok = false;
       result.errors.push({ ruleId: focus.ruleId, phase: 'verify', error: 'PCC accepted the focus but attached no goals or interventions' });
     }
+  } else if (v.blind) {
+    // Silent on purpose. Telling a nurse to "add them in PointClickCare" on the
+    // strength of a read-back we know is incomplete is how she ends up with a
+    // third copy of rows that were on the chart all along.
   } else if (!v.found) {
     result.ok = false;
     result.errors.push({ ruleId: focus.ruleId, phase: 'verify', error: 'Focus is not on the care plan after saving' });
@@ -367,14 +380,19 @@ async function _verifyAndRepairFocus({ proposal, focus, focusId, result, request
     result.errors.push({ ruleId: focus.ruleId, phase: 'verify', error: `Only ${v.goalsAttached}/${requested.goals} goals and ${v.interventionsAttached}/${requested.interventions} interventions attached` });
   }
 
-  // Replace the optimistic tallies with what's actually on the chart.
-  result.goalsStamped += v.goalsAttached - (ctx.countedGoals ?? 0);
-  result.interventionsStamped += v.interventionsAttached - (ctx.countedInterventions ?? 0);
+  // Replace the optimistic tallies with what's actually on the chart — but only
+  // where the chart was legible. An unaccounted-for page would otherwise report
+  // a confident zero.
+  if (!v.blind) {
+    result.goalsStamped += v.goalsAttached - (ctx.countedGoals ?? 0);
+    result.interventionsStamped += v.interventionsAttached - (ctx.countedInterventions ?? 0);
+  }
   result.verified.push({
     ruleId: focus.ruleId,
     route: v.route,
     found: v.found,
     complete: v.complete,
+    blind: v.blind,
     goalsRequested: requested.goals,
     goalsAttached: v.goalsAttached,
     interventionsRequested: requested.interventions,
