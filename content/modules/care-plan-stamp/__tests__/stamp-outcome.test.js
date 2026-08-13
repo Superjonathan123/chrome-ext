@@ -10,7 +10,7 @@
 // wrong, and each one cost her real work: re-adding rows that existed, then
 // resolving the duplicates.
 import { describe, it, expect } from 'vitest';
-import { _stampOutcome } from '../CarePlanStampModal.jsx';
+import { _stampOutcome, _libraryPickToFocus, _hasLibraryStdId } from '../CarePlanStampModal.jsx';
 
 const verified = (over = {}) => ({
   ruleId: 'r1',
@@ -67,5 +67,49 @@ describe('_stampOutcome', () => {
     expect(out.message).toBe(
       'Focus added, but 1 goal did not save. Add it in PointClickCare, or try again.',
     );
+  });
+});
+
+describe('library pick routing', () => {
+  // "Add from PCC library" is the button an MDS coordinator uses for the focuses
+  // her facility requires on the Kardex. PCC only re-applies the library's own
+  // Kardex category and positions when a focus is written through the library
+  // WIZARD — and orchestrateStamp chooses that path via isLibraryFocus(), which
+  // tests `libraryStdId`.
+  //
+  // The pick carries the std id as `_libraryStdNeedId` (a UI field, used for the
+  // remove chip and the label) and never sets `libraryStdId`. So every focus
+  // added this way is written through the CUSTOM endpoints and cannot reach the
+  // Kardex, whatever the library says.
+  //
+  // These tests pin that as the CURRENT behaviour so the reported `routed_as`
+  // is derived, not asserted. When the routing is fixed, the first one fails and
+  // tells you to update it — which is the point.
+  const pick = {
+    stdNeedId: '1801',
+    focusText: 'Res has/has potential for impairment of skin integrity',
+    label: 'skin integrity',
+    goals: [{ description: 'goal' }],
+    interventions: [{ description: 'intervention', positions: [9897] }],
+  };
+
+  it('carries the std id only in a UI field, so it routes as custom today', () => {
+    const focus = _libraryPickToFocus(pick);
+
+    expect(focus._libraryStdNeedId).toBe('1801');
+    expect(focus.libraryStdId).toBeUndefined();
+    expect(_hasLibraryStdId(focus)).toBe(false); // → custom endpoints → no Kardex
+  });
+
+  it('would report library routing the moment the field is populated', () => {
+    const focus = { ..._libraryPickToFocus(pick), libraryStdId: '1801' };
+
+    expect(_hasLibraryStdId(focus)).toBe(true);
+  });
+
+  it('treats the -1 sentinel and blanks as not-library', () => {
+    for (const id of ['-1', '', null, undefined]) {
+      expect(_hasLibraryStdId({ libraryStdId: id })).toBe(false);
+    }
   });
 });
