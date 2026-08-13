@@ -1780,6 +1780,13 @@ export function _libraryPickToFocus(p) {
     interventions: p.interventions,
     alreadyOnPlan: false,
     matchedExistingText: null,
+    // `libraryStdId` is what orchestrateStamp's isLibraryFocus() routes on. For
+    // a long time the pick carried the id ONLY as `_libraryStdNeedId` (a UI
+    // field for the remove chip and label), so every "Add from PCC library"
+    // focus was written through the CUSTOM endpoints — recreated wholesale with
+    // hardcoded RN positions, and PCC never applied the library's Kardex. That
+    // is what a facility saw as "it added it as custom".
+    libraryStdId: p.stdNeedId,
     _isLibrary: true,
     _libraryStdNeedId: p.stdNeedId,
     _libraryLabel: p.label,
@@ -2348,19 +2355,26 @@ const LibraryBrowser = ({ patientId, careplanId, miniToken, onAddPick, pickedIds
 
     // Focus text is whatever the nurse left in the textarea (free-edited).
     const filledFocus = (focusText || focus.text || '').trim();
+    // Every item carries its PCC std id and the library's verbatim text. The std
+    // id is what routes the add through PCC's library WIZARD (chkbox add), which
+    // is the only path where PCC re-applies the library's own Kardex category and
+    // positions — the whole reason a facility curates that library. The verbatim
+    // text is what the wizard will print, so the stamp can diff it against the
+    // nurse's filled text and apply her edits as post-add personalization (same
+    // add-then-edit a nurse does by hand). No kardexCategory/positions here: for
+    // a library add those are PCC's to apply, and offering pickers for them was
+    // a lie the UI told (FocusCard already hides the chips when libraryStdId is
+    // set).
     const filledGoals = pickedGoals.map((g) => ({
       description: _renderFilledText(_parsePlaceholderSegments(g.text), fills?.[g.stdId]),
+      libraryStdId: g.stdId,
+      libraryText: g.text,
     }));
-    // Library picks have no backend kardex recommendation — leave the chip
-    // empty so nurses pick deliberately (per "don't stamp everything onto
-    // Kardex" feedback). Safety (66) used to be the default and that's the
-    // exact behavior we're moving away from.
     const filledInters = pickedInters.map((iv) => ({
       description: _renderFilledText(_parsePlaceholderSegments(iv.text), fills?.[iv.stdId]),
       instruction: '',
-      kardexCategory: null,
-      _recKardex: null,
-      positions: [9897],
+      libraryStdId: iv.stdId,
+      libraryText: iv.text,
     }));
 
     const pick = {
@@ -2418,16 +2432,19 @@ const LibraryBrowser = ({ patientId, careplanId, miniToken, onAddPick, pickedIds
         label: focus.text.length > 50 ? focus.text.slice(0, 47) + '…' : focus.text,
         focusText: focus.text,
         reviewDepartments: [9042], // default Nursing — nurse can edit before stamp
-        goals: contents.goals.slice(0, GOAL_DEFAULT_LIMIT).map((g) => ({ description: g.text })),
+        // Same shape as commitConfigure: std id routes the chkbox add through
+        // PCC's wizard (Kardex/positions applied by PCC from its own library),
+        // libraryText lets the stamp diff for personalization edits.
+        goals: contents.goals.slice(0, GOAL_DEFAULT_LIMIT).map((g) => ({
+          description: g.text,
+          libraryStdId: g.stdId,
+          libraryText: g.text,
+        })),
         interventions: contents.interventions.slice(0, INTER_DEFAULT_LIMIT).map((iv) => ({
           description: iv.text,
           instruction: '',
-          // PCC's std interventions don't have Kardex/Position bound until save.
-          // Leave Kardex unset — nurses opt in deliberately (per "stop stamping
-          // everything onto the Kardex" feedback).
-          kardexCategory: null,
-          _recKardex: null,
-          positions: [9897],   // RN
+          libraryStdId: iv.stdId,
+          libraryText: iv.text,
         })),
         _meta: {
           library: labelLib,
