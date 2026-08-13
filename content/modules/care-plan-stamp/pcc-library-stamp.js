@@ -367,6 +367,27 @@ export async function attachLibraryItems({
     }
   }
 
+  // An empty id list skips the block above entirely — no wizard call, no error,
+  // nothing in the console. The focus still gets created, so every layer above
+  // reports success while the chart shows a focus with nothing under it. That is
+  // how a Kardex focus reaches PCC and Kardexes nothing, and it was invisible.
+  // Say it out loud, in the console and in telemetry.
+  const bare = interventionStdIds.length === 0;
+  if (bare) {
+    _dlog(`attachLibraryItems: NO interventions to send for focus ${genNeedId} ` +
+      `(stdNeedId=${stdNeedId}) — creating it BARE. Nothing will reach the Kardex.`);
+  }
+  if (!goalStdIds.length) _dlog(`attachLibraryItems: no goals to send for focus ${genNeedId}`);
+
+  window.SuperAnalytics?.track?.('care_plan_library_items_attached', {
+    std_need_id: stdNeedId != null ? String(stdNeedId) : null,
+    n_goals: goalStdIds.length,
+    n_interventions: interventionStdIds.length,
+    goals_ok: !out.errors.some((e) => e.phase === 'goal'),
+    interventions_ok: !out.errors.some((e) => e.phase === 'intervention'),
+    bare,
+  });
+
   return out;
 }
 

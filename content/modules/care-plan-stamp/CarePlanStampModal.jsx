@@ -591,18 +591,7 @@ export const CarePlanStampModal = ({ patientId, patientName, facilityName, orgSl
   // -------- Combined raw focuses: auto-picks + library picks --------
   const allRawFocuses = useMemo(() => {
     const auto = proposal?.focuses || [];
-    const lib = libraryPicks.map((p) => ({
-      ruleId: `library.${p.stdNeedId}`,
-      description: p.focusText,
-      reviewDepartments: p.reviewDepartments || [9042], // default Nursing
-      goals: p.goals,
-      interventions: p.interventions,
-      alreadyOnPlan: false,
-      matchedExistingText: null,
-      _isLibrary: true,
-      _libraryStdNeedId: p.stdNeedId,
-      _libraryLabel: p.label,
-    }));
+    const lib = libraryPicks.map(_libraryPickToFocus);
     return [...auto, ...lib];
   }, [proposal, libraryPicks]);
 
@@ -958,6 +947,18 @@ export const CarePlanStampModal = ({ patientId, patientName, facilityName, orgSl
       setStampedAddIds(nextStamped);
       setProgress(null);
       setStage('ready');
+
+      // Report BEFORE branching. This used to sit below the failure return, so
+      // the event only ever fired on success — `n_failed` could never be
+      // non-zero, and the whole event went dark fleet-wide the day read-back
+      // verification shipped, because from then on every custom stamp took that
+      // return. A failure signal that only fires on success is not a signal.
+      _trackCommitStamped({
+        patientId, focus, result,
+        ok: outcome.ok,
+        outcome: outcome.ok ? 'ok' : 'shortfall',
+      });
+
       if (outcome.ok) {
         window.SuperToast?.success?.(outcome.message);
       } else {
@@ -965,17 +966,6 @@ export const CarePlanStampModal = ({ patientId, patientName, facilityName, orgSl
         setErrorMsg(outcome.message);
         return; // stay on this item so she can retry it
       }
-      window.SuperAnalytics?.track?.('care_plan_audit_commit_stamped', {
-        patient_id: patientId,
-        scope: 'single',
-        n_focuses: result?.focusesStamped ?? 1,
-        n_goals: result?.goalsStamped ?? 0,
-        n_interventions: result?.interventionsStamped ?? 0,
-        n_failed: result?.errors?.length ?? 0,
-        n_goals_requested: focus.goals?.length || 0,
-        n_interventions_requested: focus.interventions?.length || 0,
-        verified: (result?.verified?.length ?? 0) > 0,
-      });
       // Advance to the next still-live toAdd item (not stamped, not skipped).
       const toAdd = audit?.toAdd || [];
       const startIdx = toAdd.findIndex((it) => it._rowId === item._rowId);
@@ -995,6 +985,10 @@ export const CarePlanStampModal = ({ patientId, patientName, facilityName, orgSl
       setProgress(null);
       setStage('ready');
       window.SuperToast?.error?.(e.message || 'Add failed');
+      // A thrown stamp used to leave no trace at all — toast and nothing else.
+      // A nurse reporting "it just doesn't work" produced zero events, which is
+      // why the last round of reports had to be diagnosed from the database.
+      _trackCommitStamped({ patientId, focus, result: null, ok: false, outcome: 'threw' });
     }
   }, [audit, careplanId, miniToken, patientId, auditFocusStates, stampedAddIds, skippedAddIds]);
 
@@ -1764,6 +1758,55 @@ function _emptyFocusState() {
  * Counts come from reading the plan back, so they describe the chart, not our
  * requests.
  */
+/** A usable PCC std id — mirrors `_hasStdId` in pcc-library-stamp.js. */
+export function _hasLibraryStdId(f) {
+  const id = f?.libraryStdId;
+  return id != null && String(id) !== '' && String(id) !== '-1';
+}
+
+/**
+ * Turn a "Add from PCC library" pick into a proposal focus.
+ *
+ * Single source of truth for that mapping so the routing telemetry cannot drift
+ * from what actually gets stamped: both the focus list and the reported
+ * `routed_as` are derived from this one function.
+ */
+export function _libraryPickToFocus(p) {
+  return {
+    ruleId: `library.${p.stdNeedId}`,
+    description: p.focusText,
+    reviewDepartments: p.reviewDepartments || [9042], // default Nursing
+    goals: p.goals,
+    interventions: p.interventions,
+    alreadyOnPlan: false,
+    matchedExistingText: null,
+    _isLibrary: true,
+    _libraryStdNeedId: p.stdNeedId,
+    _libraryLabel: p.label,
+  };
+}
+
+/**
+ * Emit `care_plan_audit_commit_stamped` for EVERY outcome — success, shortfall
+ * and throw. The counts are what actually landed (`result` is null on a throw,
+ * so they read 0), alongside what the nurse approved.
+ */
+export function _trackCommitStamped({ patientId, focus, result, ok, outcome }) {
+  window.SuperAnalytics?.track?.('care_plan_audit_commit_stamped', {
+    patient_id: patientId,
+    scope: 'single',
+    n_focuses: result?.focusesStamped ?? 0,
+    n_goals: result?.goalsStamped ?? 0,
+    n_interventions: result?.interventionsStamped ?? 0,
+    n_failed: result?.errors?.length ?? 0,
+    n_goals_requested: focus?.goals?.length || 0,
+    n_interventions_requested: focus?.interventions?.length || 0,
+    verified: (result?.verified?.length ?? 0) > 0,
+    ok,
+    outcome,
+  });
+}
+
 export function _stampOutcome(result) {
   if (!result) return { ok: false, message: 'Add failed — nothing was saved.' };
 
@@ -2320,7 +2363,7 @@ const LibraryBrowser = ({ patientId, careplanId, miniToken, onAddPick, pickedIds
       positions: [9897],
     }));
 
-    onAddPick({
+    const pick = {
       stdNeedId: focus.stdNeedId,
       label: filledFocus.length > 50 ? filledFocus.slice(0, 47) + '…' : filledFocus,
       focusText: filledFocus,
@@ -2335,7 +2378,22 @@ const LibraryBrowser = ({ patientId, careplanId, miniToken, onAddPick, pickedIds
         goalsIncluded: pickedGoals.length,
         interventionsIncluded: pickedInters.length,
       },
+    };
+
+    // Derive the routing exactly as orchestrateStamp will: isLibraryFocus() tests
+    // `libraryStdId`. Anything without that field is written through the CUSTOM
+    // endpoints, and only the library wizard makes PCC re-apply the library's own
+    // Kardex category and positions. Derived rather than asserted so this keeps
+    // telling the truth if the routing is changed.
+    const asFocus = _libraryPickToFocus(pick);
+    window.SuperAnalytics?.track?.('care_plan_autopop_library_focus_added', {
+      std_need_id: pick.stdNeedId != null ? String(pick.stdNeedId) : null,
+      n_goals_selected: filledGoals.length,
+      n_interventions_selected: filledInters.length,
+      routed_as: _hasLibraryStdId(asFocus) ? 'library' : 'custom',
     });
+
+    onAddPick(pick);
     setConfiguring(null);
   };
 
@@ -2695,7 +2753,8 @@ const LibraryConfigure = ({ state, onToggleGoal, onToggleInter, onSetItemFills, 
               className="cpas-btn cpas-btn--primary"
               onClick={onCommit}
               disabled={totalSelected === 0}
-              data-track="care_plan_autopop_library_focus_added"
+              /* Tracked in commitConfigure with what was actually picked — a
+                 click here only meant "the button was pressed". */
             >
               Add to queue
             </button>

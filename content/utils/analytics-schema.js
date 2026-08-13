@@ -268,7 +268,32 @@ export const EVENT_SCHEMA = {
   care_plan_autopop_modal_opened: ['n_proposed', 'n_already_on_plan'],
   care_plan_autopop_stamp_clicked: ['scope', 'n_focuses_to_stamp', 'n_focuses_skipped'],
   care_plan_autopop_stamped: ['scope', 'n_proposed', 'n_stamped', 'n_goals', 'n_interventions', 'n_failed', 'duration_ms'],
-  care_plan_autopop_library_focus_added: [],
+  // Was a bare click counter with NO properties, fired on "Add to queue" —
+  // before anything reached PCC. It could not distinguish "added five
+  // interventions" from "added a focus with nothing under it", which is exactly
+  // the failure a facility hit: Kardex focuses landing bare, so nothing reached
+  // the Kardex. Counts only; focus/goal wording stays in the browser.
+  care_plan_autopop_library_focus_added: [
+    'std_need_id',        // WHICH library focus — the tie-break twins differ by this alone
+    'n_goals_selected', 'n_interventions_selected',
+    // Whether this pick will be written through PCC's library wizard or the
+    // custom endpoints. Only the wizard makes PCC re-apply the library's own
+    // Kardex and position settings, so a pick that reports `custom` here cannot
+    // reach the Kardex no matter what the library says. (No showsOnKardex field:
+    // the browse scrape only yields {stdId, text}, so a kardex count here could
+    // never be populated and would read as a permanent zero.)
+    'routed_as',
+  ],
+  // What the library wizard actually SENT for a focus. attachLibraryItems skips
+  // its whole block when the id list is empty — no wizard call, no error, no log
+  // — so a focus created with nothing under it was indistinguishable from one
+  // that worked. `bare` is that case: the focus exists and carries no
+  // interventions, which is precisely how a Kardex focus reaches PCC and
+  // Kardexes nothing.
+  care_plan_library_items_attached: [
+    'std_need_id', 'n_goals', 'n_interventions',
+    'goals_ok', 'interventions_ok', 'bare',
+  ],
   care_plan_autopop_view_care_plan_clicked: [],
 
   // === Care Plan — Comprehensive (audit) flow ===
@@ -303,7 +328,14 @@ export const EVENT_SCHEMA = {
     // Failure signal. Without these the event reports only what we ASKED PCC for,
     // so a stamp that attached nothing looked identical to one that worked —
     // which is why this failure class stayed invisible in the dashboards.
-    'n_failed', 'n_goals_requested', 'n_interventions_requested', 'verified'],
+    'n_failed', 'n_goals_requested', 'n_interventions_requested', 'verified',
+    // `ok=false` is what that failure signal was for, and it could never be
+    // recorded: the event was emitted AFTER an early return on the failure path,
+    // so it only ever fired on success and `n_failed` was structurally always 0.
+    // The event went silent fleet-wide the day read-back verification shipped,
+    // because from then on every custom stamp took that early return.
+    // `outcome` names the branch: ok | shortfall | threw.
+    'ok', 'outcome'],
 
   // === Care Plan — stamp read-back verification ===
   // Emitted once per stamped focus after re-reading the live care plan, because a
@@ -326,6 +358,10 @@ export const EVENT_SCHEMA = {
     'personalize_failed', 'personalize_unmatched',
     'repair_attempted', 'repair_succeeded',
     'n_plan_pages', 'verify_ms',
+    // Emitted since the read-back landed but never listed here, so track() has
+    // been dropping it — the one field that says "a zero from this read-back
+    // means the parser, not the chart" has never reached a dashboard.
+    'parser_blind',
   ],
   // PCC refused a write. `matched_pattern` is which detector caught it — `none`
   // alongside a shortfall means PCC refused in wording we don't recognise and we
