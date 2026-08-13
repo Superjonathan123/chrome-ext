@@ -490,6 +490,29 @@ async function fetchSectionData(params) {
   return response.data;
 }
 
+// Render-outcome beacon. Client-side analytics (store shim → proxy) silently
+// drop whole batches on some machines, so overlay outcomes ride the background
+// API_REQUEST channel — the same path as the section fetch, which works from
+// every machine — and are captured into PostHog server-side. Fire-and-forget:
+// telemetry must never delay or break the overlay.
+function sendOverlayBeacon(fields) {
+  try {
+    const payload = {
+      section: fields.section || SuperOverlay.section,
+      orgSlug: fields.orgSlug || SuperOverlay.orgSlug,
+      facilityName: fields.facilityName || SuperOverlay.facilityName,
+      ...fields,
+    };
+    chrome.runtime.sendMessage({
+      type: 'API_REQUEST',
+      endpoint: '/api/extension/mds/overlay-state',
+      options: { method: 'POST', body: JSON.stringify(payload) },
+    }, () => { void chrome.runtime.lastError; });
+  } catch {
+    // Tab unloading / extension context invalidated — drop.
+  }
+}
+
 // EID-migration diagnosability (#966). The backend now echoes, on its 404s,
 // exactly what it received and which identity it resolved. Surface that so a
 // mis-wired id call is instantly visible in the console, cache the resolved
@@ -630,6 +653,7 @@ async function initSuperOverlay() {
 
     if (!data.items || data.items.length === 0) {
       console.log('Super LTC: No items in API response');
+      sendOverlayBeacon({ section: params.section, orgSlug: params.orgSlug, facilityName: params.facilityName, outcome: 'no_items' });
       return;
     }
 
@@ -657,6 +681,18 @@ async function initSuperOverlay() {
 
     SuperOverlay.initialized = true;
     console.log('Super LTC: Overlay initialized with', data.items.length, 'items');
+
+    // itemsTotal > 0 with itemsRendered = 0 means the section fetch succeeded
+    // but no badge found its DOM anchor — the "PCC changed the page under us"
+    // signature that client analytics can't be trusted to surface.
+    sendOverlayBeacon({
+      section: params.section,
+      orgSlug: params.orgSlug,
+      facilityName: params.facilityName,
+      outcome: 'rendered',
+      itemsTotal: data.items.length,
+      itemsRendered: document.querySelectorAll('.super-badge').length,
+    });
 
     // Load queries for this assessment (async, non-blocking)
     SuperLoadingStatus.addTask('queries', 'Loading queries...');
@@ -694,6 +730,7 @@ async function initSuperOverlay() {
     if (running) {
       SuperLoadingStatus.hide();
       SuperRunItCard.showRunning(running, params);
+      sendOverlayBeacon({ section: params?.section, orgSlug: params?.orgSlug, facilityName: params?.facilityName, outcome: 'solve_running' });
       return;
     }
     // Assessment not synced / not solved yet → offer the on-demand "Run it"
@@ -702,10 +739,18 @@ async function initSuperOverlay() {
     if (runnable) {
       SuperLoadingStatus.hide();
       SuperRunItCard.show(runnable);
+      sendOverlayBeacon({ section: params?.section, orgSlug: params?.orgSlug, facilityName: params?.facilityName, outcome: 'no_run_yet' });
       return;
     }
     const msg = String(error?.message || error || '');
     SuperLoadingStatus.showNotice(`Super LTC couldn't load: ${msg || 'unknown error'}`);
+    sendOverlayBeacon({
+      section: params?.section,
+      orgSlug: params?.orgSlug,
+      facilityName: params?.facilityName,
+      outcome: 'init_failed',
+      errorCode: window.SuperAnalytics?.toErrorCode?.(error) ?? 'unknown',
+    });
   }
 }
 
@@ -1033,6 +1078,9 @@ function injectBadge(questionEl, result) {
       column: String(result.column || ''),
       status: String(result.status || ''),
     });
+    // Also over the API channel — client analytics silently drop on some
+    // machines, and badge clicks are the interaction signal we lost for weeks.
+    sendOverlayBeacon({ outcome: 'interaction', interaction: 'badge_click', itemCode: String(result.mdsItem || '') });
     showPopover(badge, result);
   });
 
