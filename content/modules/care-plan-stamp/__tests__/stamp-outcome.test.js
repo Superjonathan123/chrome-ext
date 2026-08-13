@@ -77,34 +77,37 @@ describe('library pick routing', () => {
   // WIZARD — and orchestrateStamp chooses that path via isLibraryFocus(), which
   // tests `libraryStdId`.
   //
-  // The pick carries the std id as `_libraryStdNeedId` (a UI field, used for the
-  // remove chip and the label) and never sets `libraryStdId`. So every focus
-  // added this way is written through the CUSTOM endpoints and cannot reach the
-  // Kardex, whatever the library says.
+  // For a long time the pick carried the std id ONLY as `_libraryStdNeedId` (a
+  // UI field for the remove chip and the label), so every focus added this way
+  // was recreated through the CUSTOM endpoints — hardcoded RN positions, no
+  // Kardex, "New Custom Goal / New Custom Intervention" all over the chart.
+  // Confirmed live in a DNU test: `focus[0] library.1781 custom stdId=undefined`.
   //
-  // These tests pin that as the CURRENT behaviour so the reported `routed_as`
-  // is derived, not asserted. When the routing is fixed, the first one fails and
-  // tells you to update it — which is the point.
+  // These tests pin the fix: the pick routes as library, and every item carries
+  // the std id (the wizard chkbox) plus the library's verbatim text (so nurse
+  // fills/edits become post-add personalization instead of being lost).
   const pick = {
     stdNeedId: '1801',
     focusText: 'Res has/has potential for impairment of skin integrity',
     label: 'skin integrity',
-    goals: [{ description: 'goal' }],
-    interventions: [{ description: 'intervention', positions: [9897] }],
+    goals: [{ description: 'goal — filled', libraryStdId: '3601', libraryText: 'goal (specify)' }],
+    interventions: [{ description: 'intervention', instruction: '', libraryStdId: '8201', libraryText: 'intervention' }],
   };
 
-  it('carries the std id only in a UI field, so it routes as custom today', () => {
+  it('routes as library, so PCC applies the Kardex and positions itself', () => {
     const focus = _libraryPickToFocus(pick);
 
-    expect(focus._libraryStdNeedId).toBe('1801');
-    expect(focus.libraryStdId).toBeUndefined();
-    expect(_hasLibraryStdId(focus)).toBe(false); // → custom endpoints → no Kardex
+    expect(focus.libraryStdId).toBe('1801');
+    expect(_hasLibraryStdId(focus)).toBe(true); // → wizard chkbox add → Kardex applied by PCC
+    expect(focus._libraryStdNeedId).toBe('1801'); // UI field still present for the remove chip
   });
 
-  it('would report library routing the moment the field is populated', () => {
-    const focus = { ..._libraryPickToFocus(pick), libraryStdId: '1801' };
+  it('items keep the std id and verbatim library text the personalization diff needs', () => {
+    const focus = _libraryPickToFocus(pick);
 
-    expect(_hasLibraryStdId(focus)).toBe(true);
+    // orchestrateStamp: std id → chkbox add; description ≠ libraryText → owed edit.
+    expect(focus.goals[0]).toMatchObject({ libraryStdId: '3601', libraryText: 'goal (specify)' });
+    expect(focus.interventions[0]).toMatchObject({ libraryStdId: '8201' });
   });
 
   it('treats the -1 sentinel and blanks as not-library', () => {
