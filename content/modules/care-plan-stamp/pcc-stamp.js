@@ -149,7 +149,7 @@ async function createCustomFocus({ patientId, careplanId, miniToken, description
  * Create a custom goal under a focus. v0 doesn't chain anything off the goal ID,
  * so we return `true` on success rather than failing if the regex doesn't match.
  */
-async function createCustomGoal({ patientId, focusId, miniToken, description, focusDescription }) {
+async function createCustomGoal({ patientId, focusId, needId, miniToken, description, focusDescription }) {
   const { date, dateDummy } = _todayDates();
   const target = _targetDate90();
 
@@ -163,7 +163,11 @@ async function createCustomGoal({ patientId, focusId, miniToken, description, fo
     ESOLsave: 'Y',
     ESOLrefresh: 'N',
     ESOLminiToken: miniToken,
-    ESOLneedid: String(focusId),
+    // On a re-keyed library focus PCC demands the DRAFT id here alongside the
+    // committed id in ESOLgenneedid — the committed id in both fields reads as
+    // an orphaned target and the write 200s without attaching. needId falls
+    // back to focusId for custom-created focuses, which are never re-keyed.
+    ESOLneedid: String(needId ?? focusId),
     ESOLcustomgoal: 'Y',
     ESOLgenneedid: String(focusId),
     ESOLreviewid: '-1',
@@ -191,7 +195,7 @@ async function createCustomGoal({ patientId, focusId, miniToken, description, fo
  * Positions: pass `positions: number[]` (1-5 items) — PCC supports up to 5 slots.
  * Legacy callers passing `positionOne` are still accepted and treated as positions[0].
  */
-async function createCustomIntervention({ patientId, focusId, miniToken, description, instruction, kardexCategory, positions, positionOne }) {
+async function createCustomIntervention({ patientId, focusId, needId, miniToken, description, instruction, kardexCategory, positions, positionOne }) {
   const { date, dateDummy } = _todayDates();
 
   // Backward compat — if positions[] not passed, fall back to positionOne (legacy field).
@@ -205,7 +209,8 @@ async function createCustomIntervention({ patientId, focusId, miniToken, descrip
     ESOLquestion: '',
     std_freq_id: '-1',
     ESOLclientid: String(patientId),
-    ESOLneedid: String(focusId),
+    // Same draft/committed pairing as createCustomGoal — see the note there.
+    ESOLneedid: String(needId ?? focusId),
     retURL: '',
     ESOLpositionid: '-1',
     ESOLpositionid2: '-1',
@@ -265,13 +270,14 @@ function _hasStd(id) {
  * (goaledit / intereditcust). Used for non-library focuses and for the odd library
  * item that has no std id. Mutates `result` (counts + errors) in place.
  */
-async function _stampCustomItems({ proposal, focus, focusId, miniToken, goals, interventions, result, phaseBase, onProgress }) {
+async function _stampCustomItems({ proposal, focus, focusId, needId, miniToken, goals, interventions, result, phaseBase, onProgress }) {
   for (let g = 0; g < goals.length; g++) {
     onProgress?.({ ...phaseBase, phase: 'goal', subIndex: g, subTotal: goals.length });
     try {
       await createCustomGoal({
         patientId: proposal.patientId,
         focusId,
+        needId,
         miniToken,
         description: goals[g].description,
         focusDescription: focus.description,
@@ -293,6 +299,7 @@ async function _stampCustomItems({ proposal, focus, focusId, miniToken, goals, i
       await createCustomIntervention({
         patientId: proposal.patientId,
         focusId,
+        needId,
         miniToken,
         description: inter.description,
         instruction: inter.instruction,
@@ -497,6 +504,7 @@ export async function orchestrateStamp({ proposal, careplanId, miniToken, deptNa
               patientId: proposal.patientId,
               careplanId,
               focusId,
+              needId: r.needId ?? focusId,
               miniToken,
               edits: owedEdits,
             });
@@ -521,7 +529,7 @@ export async function orchestrateStamp({ proposal, careplanId, miniToken, deptNa
       }
 
       // Custom stragglers (rare) — goals/interventions the library row had no std id for.
-      await _stampCustomItems({ proposal, focus, focusId, miniToken, goals: customGoals, interventions: customInters, result, phaseBase, onProgress });
+      await _stampCustomItems({ proposal, focus, focusId, needId: libResult?.needId ?? focusId, miniToken, goals: customGoals, interventions: customInters, result, phaseBase, onProgress });
 
       await _verifyAndRepairFocus({
         proposal, focus, focusId, result, route: 'library',
@@ -538,7 +546,7 @@ export async function orchestrateStamp({ proposal, careplanId, miniToken, deptNa
           retry: (realFocusId) => attachLibraryItems({
             patientId: proposal.patientId, careplanId, miniToken,
             stdNeedId: focus.libraryStdId,
-            genNeedId: realFocusId, needId: realFocusId,
+            genNeedId: realFocusId, needId: libResult?.needId ?? realFocusId,
             goalStdIds: libGoalIds, interventionStdIds: libInterIds,
             description: focus.description,
           }),

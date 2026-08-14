@@ -1,3 +1,5 @@
+import { findFocusIdPair } from './pcc-resolve.js';
+
 /**
  * Add one or more interventions to an EXISTING PCC focus.
  *
@@ -98,6 +100,14 @@ async function addInterventions({
   const errors = [];
   let addedCount = 0;
 
+  // A chart focus that was library-added carries TWO ids (editNeed(gen, need));
+  // sending the same id in both custom-write fields makes PCC 200 without
+  // attaching. Resolve the real pair from the live plan; fall back to the
+  // single id (correct for custom-created focuses) if the walk fails.
+  let idPair = null;
+  try { idPair = await findFocusIdPair(String(patientId), String(pccFocusId)); }
+  catch (e) { console.warn('[care-plan-add-intervention] id-pair lookup failed, using single id:', e?.message); }
+
   for (let i = 0; i < interventions.length; i++) {
     const iv = interventions[i];
     const kardexId = _resolveCanonical(iv.kardexCategory, KARDEX_SYNONYMS, kardexLabels);
@@ -113,7 +123,8 @@ async function addInterventions({
     try {
       await stampClient.createCustomIntervention({
         patientId: String(patientId),
-        focusId: String(pccFocusId),
+        focusId: String(idPair?.genNeedId ?? pccFocusId),
+        needId: String(idPair?.needId ?? pccFocusId),
         miniToken,
         description: iv.description,
         instruction: iv.instruction || '',
