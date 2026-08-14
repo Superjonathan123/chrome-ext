@@ -238,14 +238,20 @@ const MedDiagAugment = {
 
     const status = cp.status || 'missing';
     wrap.classList.add(`super-meddiag-chip--cp-${status}`);
+    // 'not_expected' = neutral: no library entry expects a focus for this dx.
+    // Grey, never red — same tone as "no evaluation yet".
     const color = status === 'covered' ? '#16a34a'
       : status === 'partial' ? '#f59e0b'
+      : status === 'not_expected' ? '#94a3b8'
       : '#ef4444';
 
     const focusName = cp.matchedFocus?.focusText || '';
     const reason = cp.reason || '';
     wrap.title = [
-      status === 'covered' ? 'Covered' : status === 'partial' ? 'Partially covered' : 'Not covered',
+      status === 'covered' ? 'Covered'
+        : status === 'partial' ? 'Partially covered'
+        : status === 'not_expected' ? 'No care plan expected'
+        : 'Not covered',
       focusName,
       reason,
     ].filter(Boolean).join(' — ');
@@ -378,6 +384,7 @@ const MedDiagAugment = {
       covered: { label: 'Care Planned', color: '#16a34a', bg: '#f0fdf4', icon: this._checkBadgeSvg('#16a34a') },
       partial: { label: 'Partially Care Planned', color: '#d97706', bg: '#fffbeb', icon: this._partialBadgeSvg('#d97706') },
       missing: { label: 'Not Care Planned', color: '#dc2626', bg: '#fef2f2', icon: this._alertBadgeSvg('#dc2626') },
+      not_expected: { label: 'No Care Plan Expected', color: '#64748b', bg: '#f8fafc', icon: this._partialBadgeSvg('#64748b') },
     };
     const meta = statusMeta[status] || statusMeta.missing;
 
