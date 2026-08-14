@@ -146,13 +146,20 @@ export function findRowGroupHtml(focusLink, focusIds) {
  * Returns { url, fields, fieldName, edit } when a field's current value equals
  * a pending edit's libraryText, or null.
  */
-async function _matchEditForm({ patientId, careplanId, focusId, ids, pendingEdits }) {
+async function _matchEditForm({ patientId, careplanId, focusId, needId, ids, pendingEdits }) {
   for (const path of EDIT_PATHS) {
     for (const itemId of ids) {
       const params = new URLSearchParams({
         ESOLclientid: String(patientId),
         ESOLcareplanid: String(careplanId),
-        ESOLneedid: String(focusId),
+        // The DRAFT id, not the committed id repeated. On a re-keyed library
+        // focus, opening the editor with the committed id in BOTH fields makes
+        // the form echo the broken pair into its hidden fields — and the
+        // re-POST then 200s while PCC DELETES the row being edited (watched
+        // live in a HAR: intervention on the chart at :55, edited at :03, gone
+        // at :06). needId falls back to focusId for un-re-keyed focuses, where
+        // the same id in both fields is correct.
+        ESOLneedid: String(needId ?? focusId),
         ESOLgenneedid: String(focusId),
         ESOLreviewid: '-1',
       });
@@ -192,7 +199,7 @@ async function _matchEditForm({ patientId, careplanId, focusId, ids, pendingEdit
  * Returns { attempted, edited, failed, unmatched } — never throws past its
  * own guardrails.
  */
-export async function editStampedLibraryTexts({ patientId, careplanId, focusId, miniToken, edits }) {
+export async function editStampedLibraryTexts({ patientId, careplanId, focusId, needId, miniToken, edits }) {
   const out = { attempted: 0, edited: 0, failed: 0, unmatched: 0 };
   const pendingEdits = (edits || [])
     .filter((e) => e && normText(e.libraryText) && normText(e.targetText) &&
@@ -215,7 +222,7 @@ export async function editStampedLibraryTexts({ patientId, careplanId, focusId, 
     if (pendingEdits.every((e) => e.done)) break;
     let hit;
     try {
-      hit = await _matchEditForm({ patientId, careplanId, focusId, ids, pendingEdits });
+      hit = await _matchEditForm({ patientId, careplanId, focusId, needId, ids, pendingEdits });
     } catch (e) {
       _dlog('edit form lookup failed', ids, e?.message);
       continue;
