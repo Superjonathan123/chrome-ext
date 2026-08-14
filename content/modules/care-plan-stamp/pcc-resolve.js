@@ -39,6 +39,14 @@ async function _fetchText(url) {
 }
 
 /** Walk plan pages; return the editNeed arg pair for pccFocusId, or null. */
+export async function findFocusIdPair(patientId, pccFocusId, showResolved = 'N') {
+  const pair = await _findFocusLink(patientId, pccFocusId, showResolved);
+  // editNeed(genneedid, needid) — the row action names both ids. On a
+  // library-added (re-keyed) focus they differ, and custom writes must send
+  // gen and need separately or PCC treats the target as orphaned.
+  return pair ? { genNeedId: pair.first, needId: pair.second || pair.first } : null;
+}
+
 async function _findFocusLink(patientId, pccFocusId, showResolved) {
   const MAX_PAGES = 60;
   let row = 1;

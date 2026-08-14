@@ -257,3 +257,89 @@ describe('orchestrateStamp — read-back verification (the reported data loss)',
     expect(result.ok).toBe(true);
   });
 });
+
+describe('custom writes on a RE-KEYED library focus carry the draft/committed id pair', () => {
+  // PCC sometimes re-keys a library focus on save: create mints draft 620044,
+  // the save's 302 hands back committed genneedid 620099. Wizard adds already
+  // send the pair (ESOLneedid=draft, ESOLgenneedid=committed) — that's why they
+  // work. The CUSTOM endpoints sent the committed id in BOTH fields, and PCC
+  // treats that as an orphaned target: a new custom goal 200s and never attaches,
+  // and an EDIT of an existing row 200s and DELETES the row. Caught live in a
+  // HAR: intervention 4971128 present on the chart at 23:24:55, edited with
+  // needid==genneedid at 23:25:03, gone at 23:25:06.
+  //
+  // When PCC does NOT re-key, draft === committed and the same id in both
+  // fields is accidentally correct — which is why this looked transient. It
+  // never was.
+  function installRekeyFetchSpy(plan) {
+    const calls = [];
+    global.fetch = vi.fn(async (url, opts) => {
+      calls.push({ url: String(url), method: opts?.method || 'GET', body: opts?.body ? String(opts.body) : '' });
+      const u = String(url);
+      let html = '<html>ok</html>';
+      let finalUrl = u;
+      if (u.includes('careplandetail_rev.jsp')) {
+        html = /ESOLrow=1(&|$)/.test(u) ? plan : '<html></html>';
+      } else if (u.includes('ESOLnewFocus=true')) {
+        html = '<input name="ESOLgenneedid" value="620044">'; // draft
+      } else if (u.includes('neededit_rev.jsp') && (opts?.method || 'GET') === 'POST') {
+        // The save's 302, already followed by fetch: committed id in the URL.
+        finalUrl = '/care/chart/cp/goalwizard_rev.jsp?ESOLgenneedid=620099&ESOLneedid=620044';
+      }
+      return { ok: true, status: 200, url: finalUrl, text: async () => html };
+    });
+    return calls;
+  }
+
+  const rekeyedPlan = planPage({
+    gen: '620099', need: '620044',
+    focusText: 'FALLS: resident is at risk for falls',
+    goals: 3, interventions: 3,
+  });
+
+  const proposalWithStragglers = () => {
+    const p = libraryProposal();
+    p.focuses[0].goals.push({ description: 'custom goal typed by the nurse' }); // no std id
+    p.focuses[0].interventions.push({ description: 'custom intervention typed by the nurse' });
+    return p;
+  };
+
+  it('sends ESOLneedid=draft and ESOLgenneedid=committed on custom goal and intervention writes', async () => {
+    const calls = installRekeyFetchSpy(rekeyedPlan);
+    await orchestrateStamp({ proposal: proposalWithStragglers(), careplanId: '27133', miniToken: 'tok', deptNames: {} });
+
+    const goalPost = calls.find((c) => c.url.includes('goaledit_rev.jsp') && c.method === 'POST');
+    expect(goalPost, 'custom goal straggler should POST goaledit').toBeTruthy();
+    const gb = new URLSearchParams(goalPost.body);
+    expect(gb.get('ESOLgenneedid')).toBe('620099'); // committed
+    expect(gb.get('ESOLneedid')).toBe('620044');    // draft — NOT the committed id again
+
+    const interPost = calls.find((c) => c.url.includes('intereditcust_rev.jsp') && c.method === 'POST');
+    expect(interPost, 'custom intervention straggler should POST intereditcust').toBeTruthy();
+    const ib = new URLSearchParams(interPost.body);
+    expect(ib.get('ESOLgenneedid')).toBe('620099');
+    expect(ib.get('ESOLneedid')).toBe('620044');
+  });
+
+  it('keeps the same id in both fields when PCC did NOT re-key (custom-created focus)', async () => {
+    // On a custom focus there is no draft/committed split; both fields carry the
+    // one id PCC returned. This pins that the fix doesn't disturb that path.
+    const calls = installFetchSpy(planPage({
+      gen: '555', need: '555', focusText: 'custom focus', goals: 1, interventions: 0,
+    }));
+    await orchestrateStamp({
+      proposal: {
+        patientId: '840072',
+        focuses: [{
+          ruleId: 'custom.rule', description: 'custom focus', reviewDepartments: [9042],
+          goals: [{ description: 'a goal' }], interventions: [],
+        }],
+      },
+      careplanId: '27133', miniToken: 'tok', deptNames: {},
+    });
+    const goalPost = calls.find((c) => c.url.includes('goaledit_rev.jsp') && c.method === 'POST');
+    const gb = new URLSearchParams(goalPost.body);
+    expect(gb.get('ESOLgenneedid')).toBe('555');
+    expect(gb.get('ESOLneedid')).toBe('555');
+  });
+});
