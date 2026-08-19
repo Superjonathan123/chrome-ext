@@ -10,13 +10,19 @@ import { CertModal } from './CertModal.jsx';
 export function RevokeCertModal({ isOpen, onClose, cert, onRevoked }) {
   const [reason, setReason] = useState('');
   const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState(null);
 
   function handleRevoke() {
     if (!reason.trim()) return;
     setSubmitting(true);
+    setError(null);
     onRevoked(reason)
       .then(() => { setReason(''); onClose(); })
-      .catch(() => setSubmitting(false));
+      .catch((err) => {
+        console.error('[Certifications] Revoke failed:', err);
+        setError(err?.message || 'Could not revoke. Try again.');
+        setSubmitting(false);
+      });
   }
 
   return (
@@ -46,6 +52,7 @@ export function RevokeCertModal({ isOpen, onClose, cert, onRevoked }) {
           onInput={(e) => setReason(e.target.value)}
           placeholder="Why is this certification being revoked?"
         />
+        {error && <div class="cm-error" role="alert">{error}</div>}
       </div>
     </CertModal>
   );
