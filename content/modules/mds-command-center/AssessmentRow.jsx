@@ -6,6 +6,7 @@
  *   Line 2: Cleaned type · ARD context (colored countdown)
  */
 import { formatPaymentDelta } from '../../utils/payment.js';
+import { parseDateOnly, formatShortDate, addDays, todayDateOnly } from '../../utils/date-only.js';
 
 const URGENCY_ACCENT = {
   overdue: '#ef4444',
@@ -47,10 +48,6 @@ export function cleanAssessmentType(type) {
     .trim() || type;
 }
 
-function shortDateStr(d) {
-  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-}
-
 // Returns { dateText, completionText, deadlineText, cls, isCompleted }
 //
 // - dateText: ARD date ("Mar 14")
@@ -58,17 +55,19 @@ function shortDateStr(d) {
 // - deadlineText: urgency text ("12d overdue", "Due today", "5d left")
 // - cls: 'overdue' | 'urgent' | 'approaching' | 'ok' | 'done' | 'na'
 // - isCompleted: true if the assessment is already finalized
+//
+// ardDate is date-only ("2026-08-09"), so it must be parsed to local midnight —
+// `new Date()` reads it as UTC midnight and renders the day before out west.
 export function computeArdContext(ardDate, deadlines) {
   if (!ardDate) return { dateText: '', completionText: '', deadlineText: '', cls: 'na', isCompleted: false };
 
-  const d = new Date(ardDate);
-  if (isNaN(d)) return { dateText: '', completionText: '', deadlineText: '', cls: 'na', isCompleted: false };
-  const dateText = shortDateStr(d);
+  const d = parseDateOnly(ardDate);
+  if (!d) return { dateText: '', completionText: '', deadlineText: '', cls: 'na', isCompleted: false };
+  const dateText = formatShortDate(d);
 
   // Always compute the completion date (ARD + 14)
-  const completionDate = new Date(d);
-  completionDate.setDate(completionDate.getDate() + 14);
-  const completionText = shortDateStr(completionDate);
+  const completionDate = addDays(d, 14);
+  const completionText = formatShortDate(completionDate);
 
   const urgency = deadlines?.urgency || 'on_track';
 
@@ -77,7 +76,7 @@ export function computeArdContext(ardDate, deadlines) {
   }
 
   // Use completion days remaining from backend (ARD + 14 days - today)
-  const daysLeft = deadlines?.completionDaysRemaining ?? Math.round((completionDate - todayMidnight()) / 86400000);
+  const daysLeft = deadlines?.completionDaysRemaining ?? Math.round((completionDate - todayDateOnly()) / 86400000);
 
   let deadlineText, cls;
   if (daysLeft < 0) { deadlineText = `${Math.abs(daysLeft)}d overdue`; cls = 'overdue'; }
@@ -87,12 +86,6 @@ export function computeArdContext(ardDate, deadlines) {
   else { deadlineText = `${daysLeft}d left`; cls = 'ok'; }
 
   return { dateText, completionText, deadlineText, cls, isCompleted: false };
-}
-
-function todayMidnight() {
-  const d = new Date();
-  d.setHours(0, 0, 0, 0);
-  return d;
 }
 
 // Only show a UDA chip if something is actually wrong with it.

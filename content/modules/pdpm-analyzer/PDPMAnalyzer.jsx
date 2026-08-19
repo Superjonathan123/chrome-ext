@@ -17,13 +17,10 @@ import { formatPaymentRates } from '../../utils/payment.js';
 import { track } from '../../utils/analytics.js';
 import { MdsRunNow } from '../../super-menu/mds-run-now.js';
 import { resolveItemName } from './lib/mds-item-labels.js';
+import { formatShortDate as formatArdDate } from '../../utils/date-only.js';
 
 // ─── Assessment selector (patient scope — multiple assessments) ────────────────
 
-function formatArdDate(ardDate) {
-  if (!ardDate) return '';
-  return new Date(ardDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-}
 
 function cleanAssessmentType(raw) {
   if (!raw) return null;

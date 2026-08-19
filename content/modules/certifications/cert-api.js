@@ -280,7 +280,9 @@ const CertAPI = {
       endpoint: `/api/extension/certifications/${certId}/delay`,
       options: {
         method: 'POST',
-        body: JSON.stringify({ reason })
+        // Key must be `delayReason` — see the note on skipCert. Revoke is the
+        // odd one out: its route really does destructure plain `reason`.
+        body: JSON.stringify({ delayReason: reason })
       }
     });
 
@@ -303,7 +305,11 @@ const CertAPI = {
       endpoint: `/api/extension/certifications/${certId}/skip`,
       options: {
         method: 'POST',
-        body: JSON.stringify({ reason })
+        // Key must be `skipReason` — the route destructures that name and 400s
+        // on anything else. Do NOT "simplify" to { reason }: the web app's own
+        // skip dialog posts skipReason too, so the backend name is the shared
+        // contract and this side is the one that has to match.
+        body: JSON.stringify({ skipReason: reason })
       }
     });
 

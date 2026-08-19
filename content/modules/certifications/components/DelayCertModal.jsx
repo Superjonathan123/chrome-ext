@@ -4,13 +4,19 @@ import { CertModal } from './CertModal.jsx';
 export function DelayCertModal({ isOpen, onClose, cert, onDelayed }) {
   const [reason, setReason] = useState('');
   const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState(null);
 
   function handleDelay() {
     if (!reason.trim()) return;
     setSubmitting(true);
+    setError(null);
     onDelayed(reason)
       .then(() => { setReason(''); onClose(); })
-      .catch(() => setSubmitting(false));
+      .catch((err) => {
+        console.error('[Certifications] Delay failed:', err);
+        setError(err?.message || 'Could not mark as delayed. Try again.');
+        setSubmitting(false);
+      });
   }
 
   return (
@@ -40,6 +46,7 @@ export function DelayCertModal({ isOpen, onClose, cert, onDelayed }) {
           onInput={(e) => setReason(e.target.value)}
           placeholder="Why is this certification being delayed?"
         />
+        {error && <div class="cm-error" role="alert">{error}</div>}
       </div>
     </CertModal>
   );

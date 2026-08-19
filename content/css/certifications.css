@@ -2336,6 +2336,19 @@
   color: #94a3b8;
 }
 
+/* Failure message inside a cert action modal (skip / delay / revoke).
+   These used to swallow errors, so a 400 read as a dead button. */
+.cm-error {
+  margin-top: 8px;
+  padding: 8px 10px;
+  font-size: 12px;
+  line-height: 1.4;
+  color: #b91c1c;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 7px;
+}
+
 .cm-input:focus {
   outline: none;
   border-color: #6366f1;

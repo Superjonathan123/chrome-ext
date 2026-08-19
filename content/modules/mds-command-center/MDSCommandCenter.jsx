@@ -136,13 +136,6 @@ function formatRelative(dateStr) {
   return `${days}d ago`;
 }
 
-function formatShortDate(dateStr) {
-  if (!dateStr) return '';
-  const d = new Date(dateStr);
-  if (isNaN(d)) return dateStr;
-  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-}
-
 function cleanType(type) {
   if (!type) return '';
   return type.replace(/\s*\/\s*/g, ' ').replace(/\s{2,}/g, ' ').trim();
