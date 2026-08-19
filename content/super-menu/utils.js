@@ -29,10 +29,16 @@ function formatMarkdown(text) {
     .replace(/(<br>)+/g, '<br>');
 }
 
+// Formats date-only values (ARDs, due dates). These arrive as bare
+// "YYYY-MM-DD", which `new Date()` reads as UTC midnight — formatted in any US
+// timezone that renders as the day BEFORE. Pin to local midnight first.
+// (Global-scope script, so it can't import content/utils/date-only.js.)
 function formatDate(dateStr) {
   if (!dateStr) return '';
   try {
-    const date = new Date(dateStr);
+    const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(dateStr);
+    const date = m ? new Date(+m[1], +m[2] - 1, +m[3]) : new Date(dateStr);
+    if (isNaN(date)) return dateStr;
     return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
   } catch {
     return dateStr;
