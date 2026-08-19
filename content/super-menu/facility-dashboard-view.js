@@ -436,13 +436,20 @@ const FacilityDashboardView = {
   },
 
   /**
-   * Format date for display
+   * Format date for display.
+   *
+   * Date-only values ("YYYY-MM-DD" — ARDs, due dates) must be pinned to local
+   * midnight; `new Date()` reads them as UTC midnight and renders the day
+   * before in every US timezone.
+   *
    * @param {string} dateStr - ISO date string or YYYY-MM-DD
    * @returns {string}
    */
   _formatDate(dateStr) {
     if (!dateStr) return '';
-    const date = new Date(dateStr);
+    const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(dateStr);
+    const date = m ? new Date(+m[1], +m[2] - 1, +m[3]) : new Date(dateStr);
+    if (isNaN(date)) return dateStr;
     return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
   },
 

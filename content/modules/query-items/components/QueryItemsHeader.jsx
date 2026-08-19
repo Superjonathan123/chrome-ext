@@ -1,3 +1,5 @@
+import { formatMDY as formatDate } from '../../../utils/date-only.js';
+
 /**
  * Header showing assessment info, HIPPS display with component breakdown,
  * and summary counts.
@@ -125,12 +127,3 @@ function buildComponentChanges(pdpmData) {
   return changes;
 }
 
-function formatDate(dateStr) {
-  if (!dateStr) return '';
-  try {
-    const d = new Date(dateStr);
-    return `${d.getMonth() + 1}/${d.getDate()}/${d.getFullYear()}`;
-  } catch {
-    return dateStr;
-  }
-}
