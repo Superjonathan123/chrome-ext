@@ -1,4 +1,5 @@
 import { useState, useMemo, useEffect } from 'preact/hooks';
+import { formatObraChip, formatTherapyChip } from '../lib/gg-decline-view.js';
 import { useGgDetail } from '../hooks/useGgDetail.js';
 import { useSnooze } from '../hooks/useSnooze.js';
 import { GgItemChart } from './GgItemChart.jsx';
@@ -130,6 +131,14 @@ function GgDeclineLoaded({ alert, gg, facilityName, orgSlug, onBack }) {
 
   const activeShiftColor = SHIFTS.find(s => s.key === shift)?.color || '#3b82f6';
   const severity = decline.overallSeverity;
+  // Row context borrowed from the cached facility payload by the API. Absent on a
+  // cold facility, or where NetHealth isn't wired — chips just don't render.
+  const therapyChip = formatTherapyChip(decline.therapy);
+  const obraChip = formatObraChip(decline.nextObra);
+  const stayLabel =
+    decline.stayType === 'short' ? 'Short stay'
+    : decline.stayType === 'long' ? 'Long stay'
+    : null;
   const severityClass = severity ? (SEVERITY_PILL_CLASS[severity] || 'qmb-pill') : null;
 
   return (
@@ -139,8 +148,22 @@ function GgDeclineLoaded({ alert, gg, facilityName, orgSlug, onBack }) {
           <button type="button" className="qmb-backbar__btn" onClick={onBack}>‹ Back</button> {/* NO_TRACK */}
           <span className="qmb-backbar__title">{alert.name}</span>
           {severity && <span className={severityClass}>{severity}</span>}
+          {therapyChip && (
+            <span className={`qmc-chip qmc-chip--${therapyChip.tone}`} title={therapyChip.detail}>
+              {therapyChip.loud && '⚠ '}{therapyChip.label}
+            </span>
+          )}
+          {obraChip && (
+            <span className={`qmc-chip qmc-chip--${obraChip.tone}`}
+              title={decline.nextObra?.isOpened
+                ? `Assessment open in PCC with ARD ${decline.nextObra.actualArd}`
+                : `CMS deadline ${decline.nextObra?.dueDate} — the facility may schedule sooner`}>
+              {obraChip.label}
+            </span>
+          )}
           <div className="qmb-backbar__subline">
             <span>{decline.locationName}</span>
+            {stayLabel && <span> · {stayLabel}</span>}
             {decline.mdsArdDate && (
               // NO_TRACK
               <button

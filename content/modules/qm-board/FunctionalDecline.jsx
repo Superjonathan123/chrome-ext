@@ -16,10 +16,42 @@ import { useSnooze } from './hooks/useSnooze.js';
 import { GgDeclineDetail } from './components/GgDeclineDetail.jsx';
 import { QmLoading } from './components/QmLoading.jsx';
 import { ChevronLeft, ChevronRight, Search, X, Clock, Undo2, Info } from './components/icons.jsx';
+import {
+  applyDeclineFilters,
+  countByRunway,
+  formatObraChip,
+  formatTherapyChip,
+  payerOptions,
+  EMPTY_FILTERS,
+  RUNWAY_LABELS,
+  RUNWAY_ORDER,
+  RUNWAY_TONE,
+  UNKNOWN_PAYER,
+} from './lib/gg-decline-view.js';
 
 const MODES = [
   { value: 'therapy', label: 'Therapy Pickup' },
   { value: 'qm', label: 'QM Decline' },
+];
+
+const STAY_OPTIONS = [
+  { value: '', label: 'All stays' },
+  { value: 'short', label: 'Short stay' },
+  { value: 'long', label: 'Long stay' },
+  { value: 'unknown', label: 'Unknown' },
+];
+
+/**
+ * `unavailable` is offered deliberately. NetHealth answers for 12 of 19
+ * facilities, and inside a working facility an individual resident can still
+ * fail — those residents must stay reachable, not silently absent.
+ */
+const THERAPY_OPTIONS = [
+  { value: '', label: 'All therapy' },
+  { value: 'on_therapy', label: 'On therapy' },
+  { value: 'recently_ended', label: 'Therapy recently ended' },
+  { value: 'not_on_therapy', label: 'Not on therapy' },
+  { value: 'unavailable', label: 'Therapy unknown' },
 ];
 const SEVERITY_GROUPS = [
   { key: 'severe',   label: 'Severe',   tone: 'rose' },
@@ -34,15 +66,39 @@ export function FunctionalDeclineView({ facilityName, orgSlug, onBack }) {
   const [showInfo, setShowInfo] = useState(false);
   const [selected, setSelected] = useState(null); // { patientId, name } | null
 
+  // Row context filters. Client-side over the cached payload — as server params
+  // they would multiply the backend's cache keys and make every toggle a rebuild.
+  const [severity, setSeverity] = useState(null);
+  const [runway, setRunway] = useState(null);
+  const [stayType, setStayType] = useState(null);
+  const [payer, setPayer] = useState(null);
+  const [therapy, setTherapy] = useState(null);
+  const [sort, setSort] = useState('severity');
+
   useEffect(() => { track('functional_decline_opened', { source: 'qm_board' }); }, []);
 
   const { data, loading, error, retry } = useGgDashboard({ facilityName, orgSlug, mode });
   const { snoozeGg, unsnoozeGg, pending } = useSnooze({ facilityName, orgSlug });
 
-  const q = query.trim().toLowerCase();
-  const patients = useMemo(() => (data?.patients ?? []).filter((p) => !q || p.patientName.toLowerCase().includes(q)), [data, q]);
+  const all = data?.patients ?? [];
+  const patients = useMemo(
+    () => applyDeclineFilters(all, { ...EMPTY_FILTERS, severity, runway, stayType, payer, therapy, search: query }),
+    [all, severity, runway, stayType, payer, therapy, query]
+  );
   const snoozed = data?.snoozedPatients ?? [];
   const summary = data?.summary ?? { total: 0, withDecline: 0, severe: 0, moderate: 0, mild: 0, snoozed: 0 };
+
+  const runwayCounts = useMemo(() => countByRunway(all), [all]);
+  const payers = useMemo(() => payerOptions(all), [all]);
+  // Therapy is absent entirely on facilities without a NetHealth binding — hide
+  // the control there rather than offering a filter that can only return nothing.
+  const hasTherapySignal = all.some((p) => p.therapy && p.therapy.state !== 'unavailable');
+  // Anything not already inside the coding window can still be changed.
+  const withRunway = all.filter((p) => p.hasDecline && p.runway && p.runway !== 'no_obra' && p.runway !== 'closing').length;
+  const hasFilters = !!(query || severity || runway || stayType || payer || therapy);
+  const clearFilters = useCallback(() => {
+    setQuery(''); setSeverity(null); setRunway(null); setStayType(null); setPayer(null); setTherapy(null);
+  }, []);
 
   const doSnooze = useCallback(async (patientId) => { try { await snoozeGg(patientId, 30, null); } catch { /* hook logs */ } }, [snoozeGg]);
   const doUnsnooze = useCallback(async (patientId, snoozeId) => { try { await unsnoozeGg(patientId, snoozeId); } catch { /* hook logs */ } }, [unsnoozeGg]);
@@ -103,11 +159,69 @@ export function FunctionalDeclineView({ facilityName, orgSlug, onBack }) {
           {showInfo && <DeclineExplainer mode={mode} onClose={() => setShowInfo(false)} />}
 
           <div className="qmc-fd-summary">
-            <SummaryCard n={summary.withDecline} label="With decline" tone="slate" />
-            <SummaryCard n={summary.severe} label="Severe" tone="rose" />
-            <SummaryCard n={summary.moderate} label="Moderate" tone="amber" />
-            <SummaryCard n={summary.mild} label="Mild" tone="sky" />
+            <SummaryCard n={summary.withDecline} label="With decline" tone="slate" filter="all" active={severity === 'all'} onFilter={setSeverity} />
+            <SummaryCard n={summary.severe} label="Severe" tone="rose" filter="severe" active={severity === 'severe'} onFilter={setSeverity} />
+            <SummaryCard n={summary.moderate} label="Moderate" tone="amber" filter="moderate" active={severity === 'moderate'} onFilter={setSeverity} />
+            <SummaryCard n={summary.mild} label="Mild" tone="sky" filter="mild" active={severity === 'mild'} onFilter={setSeverity} />
           </div>
+
+          {/* Runway — how much room is left before the next OBRA codes it */}
+          <div className="qmc-fd-runway">
+            <div className="qmc-fd-runway__lead">
+              <b>{summary.withDecline}</b> declining
+              {withRunway > 0 && <> — <b>{withRunway}</b> still {withRunway === 1 ? 'has' : 'have'} runway to correct</>}
+            </div>
+            <div className="qmc-fd-runway__cards">
+              {RUNWAY_ORDER.map((b) => {
+                const on = runway === b;
+                const { title, detail } = RUNWAY_LABELS[b];
+                const n = runwayCounts[b];
+                return (
+                  <button key={b} type="button" aria-pressed={on} data-track="qm_filter_changed" data-track-prop-measure-code="gg_decline" data-track-prop-filter={`runway_${b}`}
+                    className={`qmc-fd-rcard ${on ? 'qmc-fd-rcard--on' : ''}`}
+                    onClick={() => setRunway(on ? null : b)}>
+                    <span className="qmc-fd-rcard__label">{title}</span>
+                    <span className="qmc-fd-rcard__row">
+                      <b className={`qmc-fd-rcard__n qmc-text--${n > 0 ? RUNWAY_TONE[b] : 'slate'}`}>{n}</b>
+                      <span className="qmc-fd-rcard__sub">{detail}</span>
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Row-context filters */}
+          <div className="qmc-fd-filters">
+            <select className="qmc-aide-sel" value={stayType ?? ''} aria-label="Filter by stay type"
+              onChange={(e) => setStayType(e.target.value || null)}> {/* NO_TRACK */}
+              {STAY_OPTIONS.map((o) => <option key={o.label} value={o.value}>{o.label}</option>)}
+            </select>
+            <select className="qmc-aide-sel" value={payer ?? ''} aria-label="Filter by payer"
+              onChange={(e) => setPayer(e.target.value || null)}> {/* NO_TRACK */}
+              <option value="">All payers</option>
+              {payers.map((p) => <option key={p} value={p}>{p === UNKNOWN_PAYER ? 'Unknown' : p}</option>)}
+            </select>
+            {hasTherapySignal && (
+              <select className="qmc-aide-sel" value={therapy ?? ''} aria-label="Filter by therapy status"
+                onChange={(e) => setTherapy(e.target.value || null)}> {/* NO_TRACK */}
+                {THERAPY_OPTIONS.map((o) => <option key={o.label} value={o.value}>{o.label}</option>)}
+              </select>
+            )}
+            <select className="qmc-aide-sel" value={sort} aria-label="Sort residents"
+              onChange={(e) => setSort(e.target.value)}> {/* NO_TRACK */}
+              <option value="severity">Sort: severity</option>
+              <option value="runway">Sort: soonest ARD</option>
+            </select>
+            {hasFilters && <button type="button" className="qmc-fd-clear" onClick={clearFilters}>Clear</button> /* NO_TRACK */}
+          </div>
+
+          {hasTherapySignal && (
+            <div className="qmc-fd-legend">
+              No therapy chip means no open therapy case on file. <b>ARD</b> is a date already scheduled
+              in PCC; <b>Due</b> is the CMS deadline and the facility may schedule sooner.
+            </div>
+          )}
 
           {(summary.snoozed > 0 || snoozed.length > 0) && (
             <div className="qmc-collapsible">
@@ -139,7 +253,12 @@ export function FunctionalDeclineView({ facilityName, orgSlug, onBack }) {
           {/* Roster grouped by severity */}
           <div className="qmc-worklist">
             {SEVERITY_GROUPS.map((g) => {
-              const rows = patients.filter((p) => p.overallSeverity === g.key);
+              let rows = patients.filter((p) => p.overallSeverity === g.key);
+              if (sort === 'runway') {
+                rows = [...rows].sort(
+                  (a, b) => (a.nextObra?.daysUntil ?? Infinity) - (b.nextObra?.daysUntil ?? Infinity)
+                );
+              }
               if (rows.length === 0) return null;
               return (
                 <div key={g.key}>
@@ -159,7 +278,15 @@ export function FunctionalDeclineView({ facilityName, orgSlug, onBack }) {
               );
             })}
             {patients.length === 0 && (
-              <div className="qmc-allclear">{q ? 'No patients match your search.' : 'No residents with functional decline.'}</div>
+              // An empty screen is an invitation to act, not a shrug. Name the way out.
+              <div className="qmc-allclear">
+                {hasFilters ? (
+                  <>
+                    No residents match these filters.{' '}
+                    <button type="button" className="qmc-fd-clear qmc-fd-clear--inline" onClick={clearFilters}>Clear filters</button> {/* NO_TRACK */}
+                  </>
+                ) : 'No residents with functional decline.'}
+              </div>
             )}
           </div>
         </>
@@ -207,12 +334,27 @@ function DeclineExplainer({ mode, onClose }) {
   );
 }
 
-function SummaryCard({ n, label, tone }) {
+/**
+ * Click-to-filter, matching the web screen. `filter` is the severity key this
+ * card selects (or 'all' for "any decline"); omit it for a card that is only a
+ * readout. Clicking the active card clears it.
+ */
+function SummaryCard({ n, label, tone, filter, active, onFilter }) {
+  if (!filter) {
+    return (
+      <div className="qmc-fd-card">
+        <span className={`qmc-fd-card__n qmc-text--${tone}`}>{n}</span>
+        <span className="qmc-fd-card__label">{label}</span>
+      </div>
+    );
+  }
   return (
-    <div className="qmc-fd-card">
+    <button type="button" aria-pressed={active} data-track="qm_filter_changed" data-track-prop-measure-code="gg_decline" data-track-prop-filter={`severity_${filter}`}
+      className={`qmc-fd-card qmc-fd-card--btn ${active ? 'qmc-fd-card--on' : ''}`}
+      onClick={() => onFilter(active ? null : filter)}>
       <span className={`qmc-fd-card__n qmc-text--${tone}`}>{n}</span>
       <span className="qmc-fd-card__label">{label}</span>
-    </div>
+    </button>
   );
 }
 
@@ -221,13 +363,32 @@ const fmtGg = (v) => (v == null ? '—' : Number.isInteger(v) ? `${v}` : v.toFix
 
 function PatientRow({ patient, tone, pending, onOpen, onSnooze }) {
   const declines = patient.declines ?? [];
+  const obraChip = formatObraChip(patient.nextObra);
+  const therapyChip = formatTherapyChip(patient.therapy);
   return (
     <div className="qmc-prow qmc-prow--fd">
       <span className={`qmc-prow__dot qmc-dot--${tone}`} />
       <button type="button" data-track="qm_drill_in" data-track-prop-measure-code="gg_decline" data-track-prop-view="resident" className="qmc-prow__main" onClick={onOpen}>
         <span className="qmc-prow__name-row">
           <span className="qmc-prow__name">{patient.patientName}</span>
-          {patient.locationName && <span className="qmc-row__meta">{patient.locationName}</span>}
+          {/* The facility name is dropped: this screen is already scoped to one
+              building, so it repeated on every row and said nothing. The two
+              context chips earn that space instead. */}
+          <span className="qmc-fd-ctx">
+            {therapyChip && (
+              <span className={`qmc-chip qmc-chip--${therapyChip.tone}`} title={therapyChip.detail}>
+                {therapyChip.loud && '⚠ '}{therapyChip.label}
+              </span>
+            )}
+            {obraChip && (
+              <span className={`qmc-chip qmc-chip--${obraChip.tone}`}
+                title={patient.nextObra?.isOpened
+                  ? `Assessment open in PCC with ARD ${patient.nextObra.actualArd}`
+                  : `CMS deadline ${patient.nextObra?.dueDate} — the facility may schedule sooner`}>
+                {obraChip.label}
+              </span>
+            )}
+          </span>
         </span>
         <div className="qmc-fd-chips">
           {declines.length === 0 && <span className="qmc-row__meta">decline flagged — open for detail</span>}
