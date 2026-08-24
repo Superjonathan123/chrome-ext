@@ -435,6 +435,33 @@
 .qmc-fd-card__n{font-family:ui-monospace,monospace;font-size:22px;font-weight:700;line-height:1;font-variant-numeric:tabular-nums}
 .qmc-fd-card__label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;color:var(--slate-500)}
 
+/* Runway — a SECOND filter axis beside severity. Severity says how bad it is;
+   runway says whether you can still do anything about it before the next OBRA
+   codes it. Deliberately slimmer than the severity cards so it reads secondary. */
+.qmc-fd-runway{display:flex;flex-direction:column;gap:6px}
+.qmc-fd-runway__lead{font-size:12px;color:var(--slate-600)}
+.qmc-fd-runway__lead b{color:var(--slate-900)}
+.qmc-fd-runway__cards{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.qmc-fd-rcard{display:flex;flex-direction:column;gap:1px;border-radius:10px;border:1px solid var(--slate-200);
+  background:#fff;padding:7px 8px;text-align:left;cursor:pointer}
+.qmc-fd-rcard:hover{background:var(--slate-50)}
+.qmc-fd-rcard--on{border-color:var(--slate-400);box-shadow:0 0 0 2px var(--slate-200)}
+.qmc-fd-rcard__label{font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.03em;color:var(--slate-500);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.qmc-fd-rcard__row{display:flex;align-items:baseline;gap:4px}
+.qmc-fd-rcard__n{font-family:ui-monospace,monospace;font-size:16px;font-weight:700;line-height:1;font-variant-numeric:tabular-nums}
+.qmc-fd-rcard__sub{font-size:9px;color:var(--slate-400);white-space:nowrap}
+
+.qmc-fd-filters{display:flex;flex-wrap:wrap;align-items:center;gap:6px}
+.qmc-fd-clear{border:none;background:none;padding:4px 6px;font-size:12px;font-weight:600;color:var(--slate-600);cursor:pointer}
+.qmc-fd-clear:hover{color:var(--slate-900)}
+.qmc-fd-clear--inline{text-decoration:underline;text-underline-offset:3px}
+.qmc-fd-legend{font-size:11px;line-height:1.45;color:var(--slate-400)}
+.qmc-fd-legend b{color:var(--slate-500);font-weight:600}
+
+/* Row context chips (therapy + next OBRA), right-aligned on the name row. */
+.qmc-fd-ctx{margin-left:auto;display:flex;align-items:center;gap:4px;flex-shrink:0}
+
 /* Functional Decline dashboard entry button (sky variant of the signals btn) */
 .qmc-fd-entry{border-color:var(--sky-200);background:rgba(240,249,255,.4)}
 .qmc-fd-entry:hover{background:var(--sky-50)}
@@ -1616,3 +1643,8 @@
 .qmi-fnlink:hover{background:var(--slate-50,#f8fafc)}
 .qmi-fnlink__icon{width:14px;height:14px;color:var(--slate-400)}
 .qmi-fnlink__badge{display:inline-flex;min-width:18px;align-items:center;justify-content:center;border-radius:9999px;background:var(--rose-100);padding:1px 6px;font-size:11px;font-weight:700;color:var(--rose-700);font-variant-numeric:tabular-nums}
+
+/* Severity summary cards are click-to-filter, matching the web screen. */
+.qmc-fd-card--btn{cursor:pointer;text-align:left;font:inherit}
+.qmc-fd-card--btn:hover{background:var(--slate-50)}
+.qmc-fd-card--on{border-color:var(--slate-400);box-shadow:0 0 0 2px var(--slate-200)}
