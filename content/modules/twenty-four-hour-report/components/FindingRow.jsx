@@ -56,7 +56,7 @@ function patientDisplayName(finding) {
   return joined || 'Unknown';
 }
 
-export function FindingRow({ finding, reportId, signoffEnabled, onOpenInPCC, openOnMount }) {
+export function FindingRow({ finding, reportId, signoffEnabled, onOpenInPCC, openOnMount, isHidden = false }) {
   const sev = (finding.severity || 'low').toLowerCase();
   const sevLabel = SEVERITY_LABEL[sev] || sev;
   const name = patientDisplayName(finding);
@@ -128,7 +128,7 @@ export function FindingRow({ finding, reportId, signoffEnabled, onOpenInPCC, ope
 
   return (
     <li
-      class={`thr__row${expanded ? ' thr__row--expanded' : ''}${canAct ? ' thr__row--clickable' : ''}`}
+      class={`thr__row${expanded ? ' thr__row--expanded' : ''}${canAct ? ' thr__row--clickable' : ''}${isHidden ? ' thr__row--hidden' : ''}`}
       data-finding-id={findingId || undefined}
       data-severity={sev}
       data-review-status={status}
@@ -165,6 +165,11 @@ export function FindingRow({ finding, reportId, signoffEnabled, onOpenInPCC, ope
             </span>
           )}
           {subLabel && <span class="thr__chip thr__chip--type">{subLabel}</span>}
+          {isHidden && (
+            <span class="thr__chip thr__chip--muted" title="You muted this category in your filters">
+              Hidden by your filters
+            </span>
+          )}
         </div>
         {text && <p class="thr__row-text">{text}</p>}
 

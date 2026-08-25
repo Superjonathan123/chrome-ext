@@ -164,6 +164,14 @@ export const EVENT_SCHEMA = {
   mds_planner_event_clicked: ['event_type'],
 
   report_24hr_filter_changed: ['filter', 'value'],
+  // Persisted per-user category muting. `muted_count` is how many subcategories
+  // she silenced; `mode` is 'all' (nothing muted) or 'subset'. Category keys
+  // only ever reach us via report_24hr_filter_changed's `value` — fixed
+  // taxonomy slugs, never patient-identifying.
+  report_24hr_filters_saved: ['muted_count', 'mode'],
+  // She peeked behind her own filters. If this fires often, the filter is too
+  // blunt and the taxonomy needs splitting.
+  report_24hr_hidden_revealed: ['hidden_count', 'shown'],
   report_24hr_finding_clicked: ['finding_type'],
   report_24hr_export_clicked: ['format'],
   // Sign-off on a finding. `finding_type` is the category only — never patient

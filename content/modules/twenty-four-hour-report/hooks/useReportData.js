@@ -199,6 +199,20 @@ export function useReportData({ facilityName, orgSlug, initialDate = null }) {
     fetchList();
   }, [fetchList]);
 
+  /**
+   * Drop every cached day and refetch.
+   *
+   * Needed after she changes her category filters: the server decides what is
+   * visible, so EVERY cached report is stale the moment the preference
+   * changes — not just the one on screen. The day list is refetched too,
+   * because its per-day counts are filtered the same way.
+   */
+  const invalidateAll = useCallback(() => {
+    cacheRef.current.clear();
+    fetchList();
+    if (currentDate) fetchDay(currentDate);
+  }, [currentDate, fetchDay, fetchList]);
+
   return {
     availableDates,
     availableByDate,
@@ -216,5 +230,6 @@ export function useReportData({ facilityName, orgSlug, initialDate = null }) {
     goToNearestAvailable,
     retry,
     retryList,
+    invalidateAll,
   };
 }

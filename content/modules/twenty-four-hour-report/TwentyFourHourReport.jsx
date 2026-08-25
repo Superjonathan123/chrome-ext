@@ -9,9 +9,11 @@
 import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
 import { useReportData } from './hooks/useReportData.js';
 import { useReportSchedule } from './hooks/useReportSchedule.js';
+import { useReportFilters } from './hooks/useReportFilters.js';
 import { useRestoreFromPCC } from './hooks/useRestoreFromPCC.js';
 import { formatFacilityDate, todayInFacilityTz, completeIntervalMap } from './utils/api.js';
 import { ScheduleSettings } from './components/ScheduleSettings.jsx';
+import { FilterSettings } from './components/FilterSettings.jsx';
 import { SeverityCards } from './components/SeverityCards.jsx';
 import { FiltersBar } from './components/FiltersBar.jsx';
 import { FindingRow } from './components/FindingRow.jsx';
@@ -36,12 +38,21 @@ const ALL_SEVERITIES = ['critical', 'high', 'medium', 'low'];
 
 /**
  * Extract the list of findings from the report, regardless of shape variance.
+ *
+ * `report.findings` is already filtered by HER category preferences server-side
+ * — the muted ones arrive separately in `report.hiddenFindings` so we can offer
+ * a reveal without another round-trip.
  */
 function getFindings(report) {
   if (!report) return [];
   if (Array.isArray(report.findings)) return report.findings;
   if (Array.isArray(report.items)) return report.items;
   return [];
+}
+
+/** The findings her filters are holding back. Absent on older payloads. */
+function getHiddenFindings(report) {
+  return Array.isArray(report?.hiddenFindings) ? report.hiddenFindings : [];
 }
 
 /**
@@ -77,11 +88,29 @@ export function TwentyFourHourReport({ facilityName, orgSlug, restore, onClose }
     goNextDay,
     retry,
     retryList,
+    invalidateAll,
   } = useReportData({
     facilityName,
     orgSlug,
     initialDate: restore?.date || null,
   });
+
+  const {
+    categories: filterCategories,
+    draft: filterDraft,
+    categoryState,
+    loading: filtersLoading,
+    saving: filtersSaving,
+    error: filtersError,
+    isDirty: filtersDirty,
+    muted: mutedSubcategories,
+    toggleCategory,
+    toggleSubcategory,
+    clearAll: clearAllFilters,
+    save: saveFilters,
+    revert: revertFilters,
+    retry: retryFilters,
+  } = useReportFilters();
 
   const {
     schedule,
@@ -157,6 +186,14 @@ export function TwentyFourHourReport({ facilityName, orgSlug, restore, onClose }
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState(null);
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [filtersOpen, setFiltersOpen] = useState(false);
+  // Temporary peek behind her own filters. Deliberately NOT persisted and reset
+  // on day change: it's a reveal, not a second preference.
+  const [showHidden, setShowHidden] = useState(false);
+
+  useEffect(() => {
+    setShowHidden(false);
+  }, [currentDate]);
 
   // Track search input as a length bucket — never the raw text (PHI risk).
   const lastSearchBucketRef = useRef('empty');
@@ -177,7 +214,19 @@ export function TwentyFourHourReport({ facilityName, orgSlug, restore, onClose }
     });
   };
 
-  const allFindings = useMemo(() => getFindings(currentReport), [currentReport]);
+  // Revealed muted findings are tagged so the row can mark itself — otherwise
+  // a category she muted would reappear in the list with no explanation.
+  const hiddenFindings = useMemo(
+    () => getHiddenFindings(currentReport),
+    [currentReport]
+  );
+  const hiddenCount = hiddenFindings.length;
+
+  const allFindings = useMemo(() => {
+    const visible = getFindings(currentReport);
+    if (!showHidden || hiddenCount === 0) return visible;
+    return [...visible, ...hiddenFindings.map((f) => ({ ...f, _isHidden: true }))];
+  }, [currentReport, showHidden, hiddenFindings, hiddenCount]);
 
   const categories = useMemo(() => {
     const set = new Set();
@@ -271,6 +320,59 @@ export function TwentyFourHourReport({ facilityName, orgSlug, restore, onClose }
     if (schedule?.scheduleHour != null) setSelectedHour(schedule.scheduleHour);
     if (schedule?.reportIntervalByDay) setIntervalByDay({ ...schedule.reportIntervalByDay });
     setSettingsOpen(false);
+  };
+
+  // Drop unsaved filter edits, then close — same convention as the schedule
+  // popover, so Cancel means Cancel in both.
+  const closeFilters = () => {
+    revertFilters();
+    setFiltersOpen(false);
+  };
+
+  const handleFiltersSave = async () => {
+    try {
+      const saved = await saveFilters();
+      track('report_24hr_filters_saved', {
+        muted_count: saved.size,
+        // Category-level only — never a patient-identifying value.
+        mode: saved.size === 0 ? 'all' : 'subset',
+      });
+      setFiltersOpen(false);
+      setShowHidden(false);
+      // The server decides what's visible, so every cached day is now stale.
+      invalidateAll();
+      window.SuperToast?.success?.(
+        saved.size === 0
+          ? 'Showing all categories'
+          : 'Report filters updated'
+      );
+    } catch (err) {
+      window.SuperToast?.error?.(err?.message || 'Failed to save report filters');
+    }
+  };
+
+  const handleToggleCategory = (key) => {
+    track('report_24hr_filter_changed', { filter: 'mute_category', value: key });
+    toggleCategory(key);
+  };
+
+  const handleToggleSubcategory = (key) => {
+    track('report_24hr_filter_changed', { filter: 'mute_subcategory', value: key });
+    toggleSubcategory(key);
+  };
+
+  const handleClearAllFilters = () => {
+    track('report_24hr_filter_changed', { filter: 'mute_clear', value: 'all' });
+    clearAllFilters();
+  };
+
+  const handleToggleHidden = () => {
+    const next = !showHidden;
+    track('report_24hr_hidden_revealed', {
+      hidden_count: hiddenCount,
+      shown: next,
+    });
+    setShowHidden(next);
   };
 
   const handleIntervalChange = (dayKey, value) => {
@@ -388,6 +490,27 @@ export function TwentyFourHourReport({ facilityName, orgSlug, restore, onClose }
             onReset={handleScheduleReset}
             onRetry={retrySchedule}
           />
+          <FilterSettings
+            isOpen={filtersOpen}
+            onToggle={() => {
+              if (filtersOpen) closeFilters();
+              else setFiltersOpen(true);
+            }}
+            onClose={closeFilters}
+            categories={filterCategories}
+            categoryState={categoryState}
+            draft={filterDraft}
+            loading={filtersLoading}
+            saving={filtersSaving}
+            error={filtersError}
+            isDirty={filtersDirty}
+            mutedCount={mutedSubcategories.size}
+            onToggleCategory={handleToggleCategory}
+            onToggleSubcategory={handleToggleSubcategory}
+            onClearAll={handleClearAllFilters}
+            onSave={handleFiltersSave}
+            onRetry={retryFilters}
+          />
         </header>
 
         {currentReport && (
@@ -408,6 +531,27 @@ export function TwentyFourHourReport({ facilityName, orgSlug, restore, onClose }
               visibleCount={filteredFindings.length}
               totalCount={allFindings.length}
             />
+            {hiddenCount > 0 && (
+              // The honesty line. She chose to mute these, so we don't override
+              // her — but a filter she can't see the edge of is a blind spot,
+              // and this report is the thing she signs off on.
+              <div class="thr__hidden-bar">
+                <span class="thr__hidden-text">
+                  <strong>{hiddenCount}</strong>
+                  {hiddenCount === 1 ? ' finding is' : ' findings are'} hidden by
+                  your filters
+                </span>
+                {/* NO_TRACK — handleToggleHidden emits the reveal event */}
+                <button
+                  type="button"
+                  class="thr__hidden-toggle"
+                  onClick={handleToggleHidden}
+                  aria-pressed={showHidden}
+                >
+                  {showHidden ? 'Hide again' : 'Show them'}
+                </button>
+              </div>
+            )}
           </>
         )}
 
@@ -461,6 +605,7 @@ export function TwentyFourHourReport({ facilityName, orgSlug, restore, onClose }
                 <FindingRow
                   key={f.id || i}
                   finding={f}
+                  isHidden={f._isHidden === true}
                   reportId={currentReport?.id}
                   signoffEnabled={signoffEnabled}
                   onOpenInPCC={handleOpenInPCC}
