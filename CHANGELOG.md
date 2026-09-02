@@ -4,8 +4,14 @@ All notable changes to the Super LTC Chrome extension, newest first.
 Version = `manifest.json` `version`. Each entry records what shipped in that
 bump so we can tell the current build apart from the last one at a glance.
 
-> **Store note:** **v1.0.72** was zipped for Chrome Web Store submission on
-> 2026-08-12 (`super-ltc-store.zip`) — it carries the care-plan verify fix (#82)
+> **Store note:** **v1.0.74** was zipped for Chrome Web Store submission on
+> 2026-08-20 (`super-ltc-store.zip`) — it carries the care-plan library-routing
+> and re-key fixes (#84–#86), cert Skip/Delay (#88), and the ARD off-by-one-day
+> fix (#89), on top of 1.0.72. **1.0.73 was skipped**: the store rejected it as
+> already published, but no 1.0.73 exists anywhere in this repo's history — so
+> some build outside git holds that number in the store, and what it contains is
+> unknown. Same class of drift as 1.0.68. Before that, **v1.0.72** was zipped on
+> 2026-08-12 — it carries the care-plan verify fix (#82)
 > that stops false "did not save" reports and duplicate re-sends, on top of
 > 1.0.71. Before that, **v1.0.71** was zipped on
 > 2026-08-06 — it carries the DFS verify ARD-scoping
@@ -21,6 +27,107 @@ bump so we can tell the current build apart from the last one at a glance.
 > 2026-07-22, v1.0.65 uploaded earlier on 2026-07-22, v1.0.64 on 2026-07-20,
 > v1.0.63 on 2026-07-13, and v1.0.57 (`6cd25b6`) before that — v1.0.58–1.0.62
 > were dev/internal only. Update this note when you `zip:store` and upload.
+
+## [1.0.74] — 2026-08-20
+
+Six merged PRs (#83–#89) on top of 1.0.72. The bulk of it is the care-plan
+stamp path: three of these fixes are the same complaint seen from three
+angles — focuses a nurse picked from her facility's PCC library were written
+as custom rows, custom rows attached to a re-keyed focus silently vanished,
+and none of it could be diagnosed because the stamp path emitted nothing on
+failure. Also here: cert Skip and Delay, which have never worked from the
+extension, and ARDs rendering a day early everywhere in the MDS Command
+Center.
+
+### Fixed
+- **Every ARD read one day behind PCC** (#89). WeCare's MDS auditor reported
+  it across Heritage and Jameson — H1860 showed Aug 8 for a PCC ARD of Aug 9.
+  ARDs arrive as bare `YYYY-MM-DD`, and `new Date('2026-08-09')` parses that
+  as UTC midnight, so `toLocaleDateString` renders the day before in every US
+  timezone. Stored data was never wrong, only the display. New
+  `content/utils/date-only.js` pins date-only values to local midnight, and
+  the ARD renders route through it: `AssessmentRow` (ARD, "Complete by" =
+  ARD + 14, and the countdown fallback), the global `formatDate` used by the
+  MDS list, the facility dashboard, `PDPMAnalyzer`, and `QueryItemsHeader`.
+  Sort comparators are deliberately untouched — a uniform shift doesn't
+  change ordering — and real instants (`sentAt`, `signedAt`) keep `new Date()`.
+  `vitest.config.js` already pins TZ to America/Los_Angeles so this class of
+  bug fails a test instead of shipping green on a UTC runner.
+- **Cert Skip and Delay have never worked** (#88). Reported as "the skip
+  button does nothing when you click skip and add a reason", and confirmed
+  against prod: the route destructures `{ skipReason }`, cert-api posted
+  `{ reason }`, so the guard fired on every request, for every user, since the
+  endpoint shipped. Delay had the identical mismatch. Revoke happens to post
+  the key its route wants, which is why the pattern went unnoticed. The
+  backend names are the shared contract — the web app's own skip dialog posts
+  `skipReason` — so the extension is the side that had to move. What made it
+  invisible: all three modals swallowed the failure (`.catch(() =>
+  setSubmitting(false))`), so the 400 came back, the spinner reset, and the
+  modal just sat there. They now surface the server's message inline. A
+  payload-key contract test covers all three endpoints.
+- **"Add from PCC library" picks were written as custom rows** (#85). Every
+  focus a nurse added through that button was recreated through the custom
+  endpoints — `orchestrateStamp` routes on `libraryStdId`, and the pick
+  carried its std id only as `_libraryStdNeedId`, a UI field for the remove
+  chip. So PCC never applied the library's Kardex category or positions (every
+  intervention landed hardcoded RN), and charts filled with "New Custom Goal /
+  New Custom Intervention" under focuses taken deliberately from the
+  facility's library — the complaint that had a clinical team threatening to
+  turn the feature off. The pick now sets `libraryStdId`, so the write goes
+  through PCC's own wizard and PCC applies Kardex and positions itself; the
+  personalization pass still diffs the nurse's text against what the wizard
+  printed and applies her edits post-add. The hardcoded `kardexCategory` /
+  `positions` are gone from library items.
+- **Custom writes on a re-keyed focus attached nothing — or deleted the row**
+  (#86). PCC sometimes re-keys a library focus on save: create mints a draft
+  id, the save's 302 hands back a different committed id. Wizard adds already
+  send the pair (`ESOLneedid`=draft, `ESOLgenneedid`=committed), which is why
+  they work; the custom endpoints sent the committed id in both fields, and
+  PCC treats that as an orphaned target. A new custom goal or intervention
+  200s and never attaches — and an *edit* of an existing row 200s and deletes
+  it. The deletion is on film in a HAR: four interventions on the chart at
+  23:24:55, the personalization pass edits one with `needid == genneedid` at
+  23:25:03, gone at 23:25:06. When PCC doesn't re-key, draft equals committed
+  and the same-id-twice form is accidentally correct, which is why three days
+  of reports looked transient. It never was: 6 of 35 stamps over three days,
+  ~17%, every one `route:library`. The draft id is now threaded through every
+  custom-write site — create goal/intervention, the personalization editor's
+  form GET (the row-killer, since the form echoes back whatever pair opened
+  it), the verify-repair retry, and `pcc-add-intervention`, which now resolves
+  the real `editNeed(gen, need)` pair from the live plan. Custom-created
+  focuses are byte-identical.
+- **The stamp path could not report its own failures** (#84). Three customer
+  reports in a week had to be diagnosed from the production database.
+  `care_plan_audit_commit_stamped` was emitted *after* an early return on the
+  failure branch, so it only ever fired on success — `n_failed` was
+  structurally always 0, and the event went dark fleet-wide on Aug 5, the day
+  read-back verification shipped. A thrown stamp emitted nothing at all.
+  `attachLibraryItems` skipped its whole block on an empty id list — no wizard
+  call, no error — while the focus was still created, so every layer above
+  reported success over a focus with nothing under it. `parser_blind` had been
+  emitted since the read-back landed but was never allowlisted, so `track()`
+  dropped every one. And `care_plan_autopop_library_focus_added` was a bare
+  click counter that couldn't tell five interventions from none. All four now
+  report — and the new `routed_as` field is what surfaced the library-routing
+  bug fixed in #85.
+- **MDS overlay telemetry went dark on some machines** (#83). The store shim →
+  analytics proxy path silently drops whole batches: the fleet's heaviest
+  badge clicker delivered zero client events for 12 days while completing
+  hundreds of API calls a day. Render outcomes and badge clicks now also ride
+  the background API_REQUEST channel (`POST /api/extension/mds/overlay-state`),
+  captured server-side where they can't be lost client-side. Beacons:
+  `rendered` (with `itemsTotal` vs `itemsRendered` — a gap means badges found
+  no DOM anchor, the silent-failure mode that hid for weeks), `no_items`,
+  `no_run_yet`, `solve_running`, `init_failed`, and badge clicks.
+  Fire-and-forget; never delays or breaks the overlay.
+
+### Known, not fixed here
+- The nurse's edited focus *text* still doesn't persist (carried over from
+  1.0.72).
+- Nothing verifies extension payload keys against the backend routes at build
+  time — #88's test pins the extension's side of the wire, but a backend
+  rename would still pass it.
+- The engine's non-Kardex twin selection is server-side and ships separately.
 
 ## [1.0.72] — 2026-08-12
 
