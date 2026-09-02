@@ -1,6 +1,16 @@
 // Super Menu Speed Dial FAB
 
+// PCC's New/Change MDS popup (`/clinical/mds3_popup/newmds.xhtml`) is a small
+// chromeless window holding one short form. The launcher has nothing to offer
+// there and just sits on top of the form, so keep it off that page entirely.
+// (The interview scheduler still injects itself there — see
+// modules/mds-interview-scheduler/inject-scheduler.js.)
+function isFabSuppressedPage(href = window.location.href) {
+  return href.includes('/clinical/mds3_popup/newmds.xhtml');
+}
+
 function createBubbles() {
+  if (isFabSuppressedPage()) return;
   if (document.getElementById('super-bubbles-container')) return;
 
   const container = document.createElement('div');
@@ -1342,6 +1352,7 @@ function createChatButton() {
 
 // Make available globally
 window.createBubbles = createBubbles;
+window.isFabSuppressedPage = isFabSuppressedPage;
 window.createChatButton = createChatButton;
 window.updateMDSBadge = updateMDSBadge;
 window.updateMenuBadge = updateMenuBadge;
