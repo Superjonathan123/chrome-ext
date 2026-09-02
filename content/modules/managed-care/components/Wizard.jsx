@@ -84,7 +84,6 @@ export const Wizard = ({ orgSlug, patientId, pccPublicId, patientName, facilityN
       orgSlug,
       patientId: targetPatientId,
       pccPublicId: targetPublicId,
-      patientName: targetName,
       facilityName,
     })
       .then((data) => {

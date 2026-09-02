@@ -109,9 +109,14 @@ const RecertAPI = {
   // patientId = PCC external client id, pccPublicId = resident-header MRN (the
   // anchor on EID-flipped pages); facilityName scopes the MRN lookup server-side.
   // Together they drive the prefill block.
-  async formData({ orgSlug, patientId, pccPublicId, patientName, facilityName }) {
+  //
+  // NO patientName here, on purpose: this is a GET, so every param lands in the
+  // URL — access logs, proxies, browser history. A resident's name is directly
+  // re-identifying in a way an opaque id isn't. The name rides in the POST body
+  // on create/handoff, where it's needed; a prefill can do without it.
+  async formData({ orgSlug, patientId, pccPublicId, facilityName }) {
     const res = await apiRequest(
-      `/api/extension/recertifications/form-data?${qs({ orgSlug, patientId, pccPublicId, patientName, facilityName })}`,
+      `/api/extension/recertifications/form-data?${qs({ orgSlug, patientId, pccPublicId, facilityName })}`,
       { method: 'GET' }
     );
     if (!res?.success) throw apiError(res, 'Failed to load form data');
