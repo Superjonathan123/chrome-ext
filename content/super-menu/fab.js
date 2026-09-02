@@ -1,6 +1,16 @@
 // Super Menu Speed Dial FAB
 
+// PCC's New/Change MDS popup (`/clinical/mds3_popup/newmds.xhtml`) is a small
+// chromeless window holding one short form. The launcher has nothing to offer
+// there and just sits on top of the form, so keep it off that page entirely.
+// (The interview scheduler still injects itself there — see
+// modules/mds-interview-scheduler/inject-scheduler.js.)
+function isFabSuppressedPage(href = window.location.href) {
+  return href.includes('/clinical/mds3_popup/newmds.xhtml');
+}
+
 function createBubbles() {
+  if (isFabSuppressedPage()) return;
   if (document.getElementById('super-bubbles-container')) return;
 
   const container = document.createElement('div');
@@ -771,7 +781,9 @@ const SettingsLauncher = {
 
 // Managed Care Launcher — dynamic import pattern (same as QMBoardLauncher).
 // Two doors, one panel: the FAB opens it unscoped, the resident-header button
-// passes { patientId, patientName } to scope it to one patient.
+// passes { patientId, pccPublicId, patientName } to scope it to one patient.
+// Both patient anchors ride along: on EID-flipped PCC pages the numeric client
+// id is gone and the resident-header MRN is all we have.
 const ManagedCareLauncher = {
   _overlayEl: null,
   _preactUnmount: null,
@@ -807,6 +819,7 @@ const ManagedCareLauncher = {
           orgSlug: orgSlug || '',
           facilityName: facilityName || '',
           patientId: opts.patientId || null,
+          pccPublicId: opts.pccPublicId || null,
           patientName: opts.patientName || null,
           source: opts.source || 'fab',
           onClose: () => this.close()
@@ -1342,6 +1355,7 @@ function createChatButton() {
 
 // Make available globally
 window.createBubbles = createBubbles;
+window.isFabSuppressedPage = isFabSuppressedPage;
 window.createChatButton = createChatButton;
 window.updateMDSBadge = updateMDSBadge;
 window.updateMenuBadge = updateMenuBadge;

@@ -606,6 +606,12 @@ const chatUrlObserver = new MutationObserver(() => {
       DashboardState.invalidateCache();
     }
 
+    // The launcher is suppressed on the New/Change MDS popup; if that window
+    // navigates on to a real page, build it then.
+    if (typeof isFabSuppressedPage === 'function' && !isFabSuppressedPage()) {
+      createBubbles();
+    }
+
     // Update FAB patient button visibility based on context
     if (typeof updateBubblesContext === 'function') {
       updateBubblesContext();

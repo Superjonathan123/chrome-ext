@@ -4,8 +4,19 @@ All notable changes to the Super LTC Chrome extension, newest first.
 Version = `manifest.json` `version`. Each entry records what shipped in that
 bump so we can tell the current build apart from the last one at a glance.
 
-> **Store note:** **v1.0.72** was zipped for Chrome Web Store submission on
-> 2026-08-12 (`super-ltc-store.zip`) — it carries the care-plan verify fix (#82)
+> **Store note:** **v1.0.75** was zipped for Chrome Web Store submission on
+> 2026-09-01 (`super-ltc-store.zip`) — it carries the 24-hour report's per-user
+> category filters (#91), the Functional Decline therapy/runway/payer parity
+> pass (#90), the neutral `not_expected` care-plan shield (#87), and the FAB
+> suppression on PCC's New/Change MDS popup, on top of 1.0.74. Before that,
+> **v1.0.74** was zipped on
+> 2026-08-20 — it carries the care-plan library-routing
+> and re-key fixes (#84–#86), cert Skip/Delay (#88), and the ARD off-by-one-day
+> fix (#89), on top of 1.0.72. **1.0.73 was skipped**: the store rejected it as
+> already published, but no 1.0.73 exists anywhere in this repo's history — so
+> some build outside git holds that number in the store, and what it contains is
+> unknown. Same class of drift as 1.0.68. Before that, **v1.0.72** was zipped on
+> 2026-08-12 — it carries the care-plan verify fix (#82)
 > that stops false "did not save" reports and duplicate re-sends, on top of
 > 1.0.71. Before that, **v1.0.71** was zipped on
 > 2026-08-06 — it carries the DFS verify ARD-scoping
@@ -21,6 +32,184 @@ bump so we can tell the current build apart from the last one at a glance.
 > 2026-07-22, v1.0.65 uploaded earlier on 2026-07-22, v1.0.64 on 2026-07-20,
 > v1.0.63 on 2026-07-13, and v1.0.57 (`6cd25b6`) before that — v1.0.58–1.0.62
 > were dev/internal only. Update this note when you `zip:store` and upload.
+
+## [1.0.75] — 2026-09-01
+
+Three merged PRs (#87, #90, #91) plus one unticketed fix, on top of 1.0.74.
+Nothing here is a customer-reported break — 1.0.74 cleared those. This is the
+next layer: two screens the nurse lives in getting the controls they were
+missing, one chip catching up to a backend status that would otherwise render
+as a false red, and a launcher learning where it isn't wanted.
+
+### Added
+- **"My filters" on the 24-hour report** (#91). The category filter was a
+  dropdown that reset every time she closed the panel, so the nurse who only
+  cares about falls re-picked "falls" every morning, in every building. It now
+  sticks, per user, across facilities. A popover in the panel header carries
+  eight category checkboxes; "Choose specific types instead" opens the 29
+  subcategories, because the real complaint is usually finer than a category —
+  medication errors but not "med not available", infections but not new
+  admissions. Copy works to separate it from the schedule control beside it:
+  that one is a BUILDING setting anyone can change for everyone, this one is
+  hers, hence the "Only you see this" line. Two things it deliberately does
+  not do: it never hides the fact that it's hiding (an amber "N findings are
+  hidden by your filters" bar sits above the list whenever anything is held
+  back, with a Show-them toggle, and revealed rows carry their own marker), and
+  the reveal is not a second preference — it resets on day change, a peek. The
+  server owns the taxonomy and does the filtering, so the panel renders
+  whatever categories come back rather than a hard-coded list that drifts from
+  what the AI emits; saving therefore invalidates every cached day, not just
+  the one on screen. Tri-state math lives in a pure `utils/filterState.js`
+  (19 tests, mutation-tested). New allowlisted events:
+  `report_24hr_filters_saved`, `report_24hr_hidden_revealed` — counts and
+  fixed taxonomy slugs only. **Requires Super-LTC/superapp#1148.**
+- **Therapy status, OBRA runway and stay/payer filters on Functional Decline**
+  (#90). Brings the extension's screen to parity with the web app; the fields
+  were already coming back from `/api/extension/qm-planner/gg-decline-dashboard`
+  with no surface to show them. Runway cards (Closing / Act now / Time to
+  correct / Monitor / No OBRA) are a second click-to-filter axis beside
+  severity: severity says how bad it is, runway says whether anything can still
+  be done before the next OBRA codes it. Adds stay / payer / therapy filters
+  and a soonest-ARD sort, each exposing its Unknown bucket — silently dropping
+  residents we can't classify is a safety defect, not untidiness. Row chips are
+  "On therapy" (never the raw NetHealth `typeOfCare` — "Skilled" doesn't read
+  as *someone is already treating them*) and the OBRA chip, with only "Therapy
+  ended Nd" loud. Facility name dropped from rows: the screen is scoped to one
+  building. `lib/gg-decline-view.js` is ported from the web repo's
+  `gg-decline-view.ts` per the qm-handoff convention, with the mirrored test
+  file as the anti-drift guard — the two surfaces make the same clinical claims
+  and must not diverge. 32 tests, 9/9 mutations caught.
+
+### Fixed
+- **Severity summary cards on Functional Decline weren't clickable** (#90).
+  They were plain divs, so severity filtering existed on web and not here. The
+  per-patient drill-in had the matching gap: its route bypassed the enrichment,
+  so the roster showed therapy/OBRA chips and clicking a resident showed none.
+- **`not_expected` diagnoses rendered as a red "Not Care Planned"** (#87). The
+  backend shield redesign (superapp#1128) introduced `not_expected` for
+  diagnoses no care-plan library entry claims — neutral, not a gap. With no
+  branch for it the chip fell into the red default, recreating the exact
+  false-red the redesign existed to remove. Now a grey shield reading "No Care
+  Plan Expected", same tone as "no evaluation yet".
+- **The FAB sat on top of PCC's New/Change MDS popup.**
+  `/clinical/mds3_popup/newmds.xhtml` is a small chromeless window holding one
+  short form — no patient chart, no facility chrome, nothing the speed dial can
+  open — so the launcher was pure obstruction. `isFabSuppressedPage()` guards
+  `createBubbles()`, which also skips the badge / module-status / restore work
+  behind it. The SPA URL watcher rebuilds the launcher if that window navigates
+  on to a real page, so suppression can't outlive the popup. The MDS interview
+  scheduler still injects itself there — it has its own popup check and never
+  touched the FAB.
+
+### Known, not fixed here
+- `demo/` was deliberately left out of #90: its Functional Decline fixture
+  predates the therapy/runway/payer fields and needs its own pass.
+- The nurse's edited care-plan focus *text* still doesn't persist (carried over
+  from 1.0.72 and 1.0.74).
+- Nothing verifies extension payload keys against backend routes at build time
+  (carried over from 1.0.74) — #91 and #90 both lean on field names that a
+  backend rename would break silently.
+
+## [1.0.74] — 2026-08-20
+
+Six merged PRs (#83–#89) on top of 1.0.72. The bulk of it is the care-plan
+stamp path: three of these fixes are the same complaint seen from three
+angles — focuses a nurse picked from her facility's PCC library were written
+as custom rows, custom rows attached to a re-keyed focus silently vanished,
+and none of it could be diagnosed because the stamp path emitted nothing on
+failure. Also here: cert Skip and Delay, which have never worked from the
+extension, and ARDs rendering a day early everywhere in the MDS Command
+Center.
+
+### Fixed
+- **Every ARD read one day behind PCC** (#89). WeCare's MDS auditor reported
+  it across Heritage and Jameson — H1860 showed Aug 8 for a PCC ARD of Aug 9.
+  ARDs arrive as bare `YYYY-MM-DD`, and `new Date('2026-08-09')` parses that
+  as UTC midnight, so `toLocaleDateString` renders the day before in every US
+  timezone. Stored data was never wrong, only the display. New
+  `content/utils/date-only.js` pins date-only values to local midnight, and
+  the ARD renders route through it: `AssessmentRow` (ARD, "Complete by" =
+  ARD + 14, and the countdown fallback), the global `formatDate` used by the
+  MDS list, the facility dashboard, `PDPMAnalyzer`, and `QueryItemsHeader`.
+  Sort comparators are deliberately untouched — a uniform shift doesn't
+  change ordering — and real instants (`sentAt`, `signedAt`) keep `new Date()`.
+  `vitest.config.js` already pins TZ to America/Los_Angeles so this class of
+  bug fails a test instead of shipping green on a UTC runner.
+- **Cert Skip and Delay have never worked** (#88). Reported as "the skip
+  button does nothing when you click skip and add a reason", and confirmed
+  against prod: the route destructures `{ skipReason }`, cert-api posted
+  `{ reason }`, so the guard fired on every request, for every user, since the
+  endpoint shipped. Delay had the identical mismatch. Revoke happens to post
+  the key its route wants, which is why the pattern went unnoticed. The
+  backend names are the shared contract — the web app's own skip dialog posts
+  `skipReason` — so the extension is the side that had to move. What made it
+  invisible: all three modals swallowed the failure (`.catch(() =>
+  setSubmitting(false))`), so the 400 came back, the spinner reset, and the
+  modal just sat there. They now surface the server's message inline. A
+  payload-key contract test covers all three endpoints.
+- **"Add from PCC library" picks were written as custom rows** (#85). Every
+  focus a nurse added through that button was recreated through the custom
+  endpoints — `orchestrateStamp` routes on `libraryStdId`, and the pick
+  carried its std id only as `_libraryStdNeedId`, a UI field for the remove
+  chip. So PCC never applied the library's Kardex category or positions (every
+  intervention landed hardcoded RN), and charts filled with "New Custom Goal /
+  New Custom Intervention" under focuses taken deliberately from the
+  facility's library — the complaint that had a clinical team threatening to
+  turn the feature off. The pick now sets `libraryStdId`, so the write goes
+  through PCC's own wizard and PCC applies Kardex and positions itself; the
+  personalization pass still diffs the nurse's text against what the wizard
+  printed and applies her edits post-add. The hardcoded `kardexCategory` /
+  `positions` are gone from library items.
+- **Custom writes on a re-keyed focus attached nothing — or deleted the row**
+  (#86). PCC sometimes re-keys a library focus on save: create mints a draft
+  id, the save's 302 hands back a different committed id. Wizard adds already
+  send the pair (`ESOLneedid`=draft, `ESOLgenneedid`=committed), which is why
+  they work; the custom endpoints sent the committed id in both fields, and
+  PCC treats that as an orphaned target. A new custom goal or intervention
+  200s and never attaches — and an *edit* of an existing row 200s and deletes
+  it. The deletion is on film in a HAR: four interventions on the chart at
+  23:24:55, the personalization pass edits one with `needid == genneedid` at
+  23:25:03, gone at 23:25:06. When PCC doesn't re-key, draft equals committed
+  and the same-id-twice form is accidentally correct, which is why three days
+  of reports looked transient. It never was: 6 of 35 stamps over three days,
+  ~17%, every one `route:library`. The draft id is now threaded through every
+  custom-write site — create goal/intervention, the personalization editor's
+  form GET (the row-killer, since the form echoes back whatever pair opened
+  it), the verify-repair retry, and `pcc-add-intervention`, which now resolves
+  the real `editNeed(gen, need)` pair from the live plan. Custom-created
+  focuses are byte-identical.
+- **The stamp path could not report its own failures** (#84). Three customer
+  reports in a week had to be diagnosed from the production database.
+  `care_plan_audit_commit_stamped` was emitted *after* an early return on the
+  failure branch, so it only ever fired on success — `n_failed` was
+  structurally always 0, and the event went dark fleet-wide on Aug 5, the day
+  read-back verification shipped. A thrown stamp emitted nothing at all.
+  `attachLibraryItems` skipped its whole block on an empty id list — no wizard
+  call, no error — while the focus was still created, so every layer above
+  reported success over a focus with nothing under it. `parser_blind` had been
+  emitted since the read-back landed but was never allowlisted, so `track()`
+  dropped every one. And `care_plan_autopop_library_focus_added` was a bare
+  click counter that couldn't tell five interventions from none. All four now
+  report — and the new `routed_as` field is what surfaced the library-routing
+  bug fixed in #85.
+- **MDS overlay telemetry went dark on some machines** (#83). The store shim →
+  analytics proxy path silently drops whole batches: the fleet's heaviest
+  badge clicker delivered zero client events for 12 days while completing
+  hundreds of API calls a day. Render outcomes and badge clicks now also ride
+  the background API_REQUEST channel (`POST /api/extension/mds/overlay-state`),
+  captured server-side where they can't be lost client-side. Beacons:
+  `rendered` (with `itemsTotal` vs `itemsRendered` — a gap means badges found
+  no DOM anchor, the silent-failure mode that hid for weeks), `no_items`,
+  `no_run_yet`, `solve_running`, `init_failed`, and badge clicks.
+  Fire-and-forget; never delays or breaks the overlay.
+
+### Known, not fixed here
+- The nurse's edited focus *text* still doesn't persist (carried over from
+  1.0.72).
+- Nothing verifies extension payload keys against the backend routes at build
+  time — #88's test pins the extension's side of the wire, but a backend
+  rename would still pass it.
+- The engine's non-Kardex twin selection is server-side and ships separately.
 
 ## [1.0.72] — 2026-08-12
 
