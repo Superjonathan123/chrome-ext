@@ -42,6 +42,7 @@ export const ManagedCarePanel = ({ orgSlug, facilityName, patientId, pccPublicId
               orgSlug={orgSlug}
               patientId={patientId}
               pccPublicId={pccPublicId}
+              patientName={patientName}
               facilityName={facilityName}
               onCreated={onCreated}
               onCancel={() => setShowWizard(false)}

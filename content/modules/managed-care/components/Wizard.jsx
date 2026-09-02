@@ -48,7 +48,7 @@ const fmtDate = (iso) => {
   return new Date(y, m - 1, d).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 };
 
-export const Wizard = ({ orgSlug, patientId, pccPublicId, facilityName, prefillConfig, retryTarget, onCreated, onCancel }) => {
+export const Wizard = ({ orgSlug, patientId, pccPublicId, patientName, facilityName, prefillConfig, retryTarget, onCreated, onCancel }) => {
   const [fd, setFd] = useState(null);
   const [loadError, setLoadError] = useState(null);
   const [step, setStep] = useState(1);
@@ -75,9 +75,18 @@ export const Wizard = ({ orgSlug, patientId, pccPublicId, facilityName, prefillC
   // for the live-page path.
   const targetPatientId = retryTarget?.externalPatientId || patientId;
   const targetPublicId = retryTarget?.externalPatientId ? null : pccPublicId;
+  // Last-resort anchor: the resident-header name, used only if neither id
+  // resolves. Server matches it within the facility and refuses on ambiguity.
+  const targetName = retryTarget?.externalPatientId ? null : patientName;
 
   useEffect(() => {
-    RecertAPI.formData({ orgSlug, patientId: targetPatientId, pccPublicId: targetPublicId, facilityName })
+    RecertAPI.formData({
+      orgSlug,
+      patientId: targetPatientId,
+      pccPublicId: targetPublicId,
+      patientName: targetName,
+      facilityName,
+    })
       .then((data) => {
         setFd(data);
         track('mc_wizard_opened', { prefilled: !!data?.prefill });
@@ -258,6 +267,7 @@ export const Wizard = ({ orgSlug, patientId, pccPublicId, facilityName, prefillC
         orgSlug,
         externalPatientId: targetPatientId,   // PCC client id (absent on EID-flipped pages)
         pccPublicId: targetPublicId,          // resident-header MRN — the durable anchor
+        patientName: targetName,              // "Last, First" — last-resort, unique-match-only
         // Retry from the central panel: the failed run's location is
         // authoritative, not the facility PCC is parked on.
         ...(retryTarget?.locationId
