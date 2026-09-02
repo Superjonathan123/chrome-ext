@@ -4,8 +4,13 @@ All notable changes to the Super LTC Chrome extension, newest first.
 Version = `manifest.json` `version`. Each entry records what shipped in that
 bump so we can tell the current build apart from the last one at a glance.
 
-> **Store note:** **v1.0.74** was zipped for Chrome Web Store submission on
-> 2026-08-20 (`super-ltc-store.zip`) — it carries the care-plan library-routing
+> **Store note:** **v1.0.75** was zipped for Chrome Web Store submission on
+> 2026-09-01 (`super-ltc-store.zip`) — it carries the 24-hour report's per-user
+> category filters (#91), the Functional Decline therapy/runway/payer parity
+> pass (#90), the neutral `not_expected` care-plan shield (#87), and the FAB
+> suppression on PCC's New/Change MDS popup, on top of 1.0.74. Before that,
+> **v1.0.74** was zipped on
+> 2026-08-20 — it carries the care-plan library-routing
 > and re-key fixes (#84–#86), cert Skip/Delay (#88), and the ARD off-by-one-day
 > fix (#89), on top of 1.0.72. **1.0.73 was skipped**: the store rejected it as
 > already published, but no 1.0.73 exists anywhere in this repo's history — so
@@ -27,6 +32,83 @@ bump so we can tell the current build apart from the last one at a glance.
 > 2026-07-22, v1.0.65 uploaded earlier on 2026-07-22, v1.0.64 on 2026-07-20,
 > v1.0.63 on 2026-07-13, and v1.0.57 (`6cd25b6`) before that — v1.0.58–1.0.62
 > were dev/internal only. Update this note when you `zip:store` and upload.
+
+## [1.0.75] — 2026-09-01
+
+Three merged PRs (#87, #90, #91) plus one unticketed fix, on top of 1.0.74.
+Nothing here is a customer-reported break — 1.0.74 cleared those. This is the
+next layer: two screens the nurse lives in getting the controls they were
+missing, one chip catching up to a backend status that would otherwise render
+as a false red, and a launcher learning where it isn't wanted.
+
+### Added
+- **"My filters" on the 24-hour report** (#91). The category filter was a
+  dropdown that reset every time she closed the panel, so the nurse who only
+  cares about falls re-picked "falls" every morning, in every building. It now
+  sticks, per user, across facilities. A popover in the panel header carries
+  eight category checkboxes; "Choose specific types instead" opens the 29
+  subcategories, because the real complaint is usually finer than a category —
+  medication errors but not "med not available", infections but not new
+  admissions. Copy works to separate it from the schedule control beside it:
+  that one is a BUILDING setting anyone can change for everyone, this one is
+  hers, hence the "Only you see this" line. Two things it deliberately does
+  not do: it never hides the fact that it's hiding (an amber "N findings are
+  hidden by your filters" bar sits above the list whenever anything is held
+  back, with a Show-them toggle, and revealed rows carry their own marker), and
+  the reveal is not a second preference — it resets on day change, a peek. The
+  server owns the taxonomy and does the filtering, so the panel renders
+  whatever categories come back rather than a hard-coded list that drifts from
+  what the AI emits; saving therefore invalidates every cached day, not just
+  the one on screen. Tri-state math lives in a pure `utils/filterState.js`
+  (19 tests, mutation-tested). New allowlisted events:
+  `report_24hr_filters_saved`, `report_24hr_hidden_revealed` — counts and
+  fixed taxonomy slugs only. **Requires Super-LTC/superapp#1148.**
+- **Therapy status, OBRA runway and stay/payer filters on Functional Decline**
+  (#90). Brings the extension's screen to parity with the web app; the fields
+  were already coming back from `/api/extension/qm-planner/gg-decline-dashboard`
+  with no surface to show them. Runway cards (Closing / Act now / Time to
+  correct / Monitor / No OBRA) are a second click-to-filter axis beside
+  severity: severity says how bad it is, runway says whether anything can still
+  be done before the next OBRA codes it. Adds stay / payer / therapy filters
+  and a soonest-ARD sort, each exposing its Unknown bucket — silently dropping
+  residents we can't classify is a safety defect, not untidiness. Row chips are
+  "On therapy" (never the raw NetHealth `typeOfCare` — "Skilled" doesn't read
+  as *someone is already treating them*) and the OBRA chip, with only "Therapy
+  ended Nd" loud. Facility name dropped from rows: the screen is scoped to one
+  building. `lib/gg-decline-view.js` is ported from the web repo's
+  `gg-decline-view.ts` per the qm-handoff convention, with the mirrored test
+  file as the anti-drift guard — the two surfaces make the same clinical claims
+  and must not diverge. 32 tests, 9/9 mutations caught.
+
+### Fixed
+- **Severity summary cards on Functional Decline weren't clickable** (#90).
+  They were plain divs, so severity filtering existed on web and not here. The
+  per-patient drill-in had the matching gap: its route bypassed the enrichment,
+  so the roster showed therapy/OBRA chips and clicking a resident showed none.
+- **`not_expected` diagnoses rendered as a red "Not Care Planned"** (#87). The
+  backend shield redesign (superapp#1128) introduced `not_expected` for
+  diagnoses no care-plan library entry claims — neutral, not a gap. With no
+  branch for it the chip fell into the red default, recreating the exact
+  false-red the redesign existed to remove. Now a grey shield reading "No Care
+  Plan Expected", same tone as "no evaluation yet".
+- **The FAB sat on top of PCC's New/Change MDS popup.**
+  `/clinical/mds3_popup/newmds.xhtml` is a small chromeless window holding one
+  short form — no patient chart, no facility chrome, nothing the speed dial can
+  open — so the launcher was pure obstruction. `isFabSuppressedPage()` guards
+  `createBubbles()`, which also skips the badge / module-status / restore work
+  behind it. The SPA URL watcher rebuilds the launcher if that window navigates
+  on to a real page, so suppression can't outlive the popup. The MDS interview
+  scheduler still injects itself there — it has its own popup check and never
+  touched the FAB.
+
+### Known, not fixed here
+- `demo/` was deliberately left out of #90: its Functional Decline fixture
+  predates the therapy/runway/payer fields and needs its own pass.
+- The nurse's edited care-plan focus *text* still doesn't persist (carried over
+  from 1.0.72 and 1.0.74).
+- Nothing verifies extension payload keys against backend routes at build time
+  (carried over from 1.0.74) — #91 and #90 both lean on field names that a
+  backend rename would break silently.
 
 ## [1.0.74] — 2026-08-20
 
